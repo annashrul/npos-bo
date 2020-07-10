@@ -6,7 +6,6 @@ import store from '../../redux/store';
 import setAuthToken from '../../utils/setAuthToken';
 import {setCurrentUser, logoutUser} from '../../redux/actions/authActions';
 
-import Aux from './Hoc/Aux';
 import Routes from './Routes/Routes';
 
 // Check token in localStorage
@@ -33,9 +32,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-          <Aux>
             {Routes}
-          </Aux>
       </Router>
     );
   }
