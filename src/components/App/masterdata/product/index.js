@@ -1,0 +1,121 @@
+import React,{Component} from 'react';
+import Layout from "../../_layout";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import {sessionService} from "redux-react-session";
+import connect from "react-redux/es/connect/connect";
+import Preloader from "../../../Preloader";
+import {FetchProduct} from "../../../actions/masterdata/product/product.action";
+import {ModalToggle, ModalType} from "../../../actions/modal.action";
+import {FetchPriceProduct} from "../../../actions/masterdata/price_product/price_product.action";
+import {FetchGroupProduct} from "../../../actions/masterdata/group_product/group_product.action";
+import ListGroupProduct from "./src/master_group_product/list";
+import ListPriceProduct from "./src/master_price_product/list";
+import ListProduct from "./src/master_product/list";
+
+
+class Product extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            token:'',
+            activeTab : 0,
+            selectedIndex : 0,
+            any : localStorage.getItem('any_product'),
+            by : localStorage.getItem('by_product'),
+        };
+    }
+    componentWillMount(){
+        sessionService.loadSession().then(session => {
+            this.setState({
+                token:session.token
+            },()=>{
+                this.setState({token:session.token});
+                let by = this.state.by;
+                let any = this.state.any;
+                let anyGroupProduct = localStorage.getItem("any_group_product");
+                let anyPriceProduct = localStorage.getItem("any_price_product");
+                let pageGroupProduct = localStorage.getItem("page_group_product");
+                let pagePriceProduct = localStorage.getItem("page_price_product");
+                this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
+                this.props.dispatch(FetchPriceProduct(pagePriceProduct?pagePriceProduct:1,anyPriceProduct?anyPriceProduct:''));
+                this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
+            })}
+        );
+        sessionService.loadUser()
+            .then(user=>{
+                console.log(user);
+                this.setState({
+                    id:user.id
+                },()=>{
+                })
+            })
+    }
+    //Use arrow functions to avoid binding
+    handleSelect = (index) => {
+        this.setState({selectedIndex: index}, () => {
+            console.log('Selected tab: ' + this.state.selectedIndex);
+        });
+    };
+
+
+    render(){
+        return (
+            <Layout page="Product">
+                <div className="col-12 box-margin">
+                    <div className="card">
+                        <div className="card-body">
+                            <Tabs>
+                                <TabList>
+                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Product List</Tab>
+                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Product Price</Tab>
+                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Product Group</Tab>
+                                </TabList>
+                                <TabPanel>
+                                    {
+                                        !this.props.isLoading ? ( <ListProduct
+                                            token={this.state.token}
+                                            data={this.props.product}
+                                            group={this.props.groupProduct}
+                                        /> ) : <Preloader/>
+                                    }
+                                </TabPanel>
+                                <TabPanel>
+                                    {
+                                        !this.props.isLoading1 ? ( <ListPriceProduct
+                                            token={this.state.token}
+                                            data={this.props.priceProduct}
+                                        /> ) : <Preloader/>
+                                    }
+                                </TabPanel>
+                                <TabPanel>
+                                    {
+                                        !this.props.isLoading2 ? ( <ListGroupProduct
+                                            token={this.state.token}
+                                            data={this.props.groupProduct}
+                                        /> ) : <Preloader/>
+                                    }
+                                </TabPanel>
+                            </Tabs>
+
+                        </div>
+                    </div>
+                </div>
+            </Layout>
+        );
+    }
+}
+
+
+const mapStateToProps = (state) => {
+    return {
+        authenticated: state.sessionReducer.authenticated,
+        product:state.productReducer.data,
+        priceProduct:state.priceProductReducer.data,
+        groupProduct:state.groupProductReducer.data,
+        isLoading: state.productReducer.isLoading,
+        isLoading1: state.priceProductReducer.isLoading,
+        isLoading2: state.groupProductReducer.isLoading,
+    }
+}
+
+export default connect(mapStateToProps)(Product)

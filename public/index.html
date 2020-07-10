@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+
+  <!-- These plugins only need for the run this page -->
+  <link rel="stylesheet" href="%PUBLIC_URL%/css/default-assets/notification.css">
+  <link rel="stylesheet" href="%PUBLIC_URL%/css/c3.min.css">
+
+  <!-- Master Stylesheet [If you remove this CSS file, your file will be broken undoubtedly.] -->
+  <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/react-select/dist/react-select.css">
+  <link rel="stylesheet" href="https://unpkg.com/react-tabs/style/react-tabs.css">
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+  <title>Dashboard App</title>
+  <style>
+    html,
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    li,
+    a {
+      font-family: 'Comfortaa', cursive !important;
+      font-weight: bold !important;
+    }
+
+    td,
+    th,
+    a {
+      font-size: 12px !important;
+    }
+
+    .btnBrg {
+      margin-top: 27px
+    }
+
+    /*.react-tabs [role=tab],*/
+    /*.react-tabs [role=tablist],*/
+    /*.react-tabs [role=tab]:focus,*/
+    /*.react-tabs [role=tablist]:focus {*/
+    /*border-top: none ;*/
+    /*border-left: none ;*/
+    /*border-right: none;*/
+    /*border-bottom: 2px solid #ddd;*/
+    /*outline: 0 !important;*/
+    /*}*/
+
+    .location-search-input,
+    .location-search-input:focus,
+    .location-search-input:active {
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+      border: honeydew;
+      display: block;
+      width: 100%;
+      padding: .375rem .75rem;
+      font-size: 12px;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .autocomplete-dropdown-container {
+      border-bottom: honeydew;
+      border-left: honeydew;
+      border-right: honeydew;
+      border-top: 1px solid #e6e6e6;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: absolute;
+      z-index: 1000;
+      border-radius: 0 0 2px 2px;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
+    async defer></script>
+
+</head>
+
+<body class="load">
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root"></div>
+  <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+
+  <!-- Must needed plugins to the run this Template -->
+  <script src="%PUBLIC_URL%/js/jquery.min.js"></script>
+  <script src="%PUBLIC_URL%/js/popper.min.js"></script>
+  <script src="%PUBLIC_URL%/js/bootstrap.min.js"></script>
+  <script src="%PUBLIC_URL%/js/bundle.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/date-time.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/setting.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/fullscreen.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/bootstrap-growl.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/notification-active.js"></script>
+
+  <!-- Active JS -->
+  <script src="%PUBLIC_URL%/js/default-assets/active.js"></script>
+
+  <!-- These plugins only need for the run this page -->
+  <script src="%PUBLIC_URL%/js/default-assets/peity.min.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/peity-demo.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/am-chart.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/gauge.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/serial.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/light.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/ammap.min.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/worldlow.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/radar.js"></script>
+  <script src="%PUBLIC_URL%/js/d3.min.js"></script>
+  <script src="%PUBLIC_URL%/js/c3.min.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/c3-chart-custom.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/dashboard-2.js"></script>
+</body>
+
+</html>

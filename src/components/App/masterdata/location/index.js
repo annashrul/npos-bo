@@ -1,0 +1,106 @@
+import React, {Component} from 'react'
+import Layout from "../../_layout";
+import connect from "react-redux/es/connect/connect";
+import {sessionService} from "redux-react-session";
+import {FetchLocation} from "../../../actions/masterdata/location/location.action";
+import Preloader from "../../../Preloader";
+import ListLocation from "./master_location/list";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import ListLocationCategory from "./master_location_catergory/list";
+import {FetchLocationCategory} from "../../../actions/masterdata/location_category/location_category.action";
+
+class Location extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            section:"list",
+            token:"",
+            selectedIndex : 0
+        };
+        this.handleSelect = this.handleSelect.bind(this);
+    }
+
+    componentWillMount(){
+        sessionService.loadSession().then(session => {
+            this.setState({
+                token:session.token
+            },()=>{
+                this.setState({token:session.token});
+                let anyLocation = localStorage.getItem("any_location");
+                let anyLocationCategory = localStorage.getItem("any_location_category");
+                let pageLocation = localStorage.getItem('pageLocation');
+                let pageLocationCategory = localStorage.getItem('pageLocationCategory');
+                this.props.dispatch(FetchLocation(pageLocation?pageLocation:1,anyLocation?anyLocation:''));
+                this.props.dispatch(FetchLocationCategory(pageLocationCategory?pageLocationCategory:1,anyLocationCategory?anyLocationCategory:''));
+
+            })}
+        );
+        sessionService.loadUser()
+            .then(user=>{
+                this.setState({
+                    id:user.id
+                },()=>{
+                })
+            })
+    }
+
+    handleSelect = (e,index) => {
+        // console.log(e.target.value);
+        this.setState({selectedIndex: index}, () => {
+            // console.log('Selected tab: ' + this.state.selectedIndex);
+        });
+    };
+
+    render(){
+        const {selectedIndex} = this.state;
+        return (
+            <Layout page="Location">
+                <div className="col-12 box-margin">
+                    <div className="card">
+                        <div className="card-body">
+                            <Tabs>
+                                <TabList>
+                                    <Tab onClick={(e) =>this.handleSelect(e,0)} >Location</Tab>
+                                    <Tab onClick={(e) =>this.handleSelect(e,1)} >Location Category</Tab>
+                                </TabList>
+                                <TabPanel>
+                                    {
+                                        !this.props.isLoading ? ( <ListLocation
+                                            token={this.state.token}
+
+                                            data={this.props.location}
+                                            dataLocationCategory={this.props.locationCategory}/>
+                                        ) : <Preloader/>
+                                    }
+                                </TabPanel>
+                                <TabPanel>
+                                    {
+                                        !this.props.isLoading1 ? (  <ListLocationCategory
+                                            token={this.state.token}
+                                            data={this.props.locationCategory}/>
+                                        ) : <Preloader/>
+                                    }
+                                </TabPanel>
+                            </Tabs>
+                        </div>
+                    </div>
+                </div>
+                {/*<Form/>*/}
+            </Layout>
+        );
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        authenticated: state.sessionReducer.authenticated,
+        location:state.locationReducer.data,
+        locationCategory:state.locationCategoryReducer.data,
+        isLoading: state.locationReducer.isLoading,
+        isLoading1: state.locationCategoryReducer.isLoading,
+        isOpen: state.modalReducer,
+        type: state.modalTypeReducer,
+    }
+}
+
+export default connect(mapStateToProps)(Location)
