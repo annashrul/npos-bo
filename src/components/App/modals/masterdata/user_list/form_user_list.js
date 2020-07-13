@@ -7,13 +7,13 @@ import {
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
-import FileBase64 from "react-file-base64";
+// import FileBase64 from "react-file-base64";
 import Select from 'react-select';
 import {stringifyFormData} from "helper";
 import {sendUserList, setUserListEdit, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
+// import moment from "moment";
 import moment from "moment";
-
-
+import FileBase64 from "react-file-base64";
 class FormUserList extends Component{
     constructor(props){
         super(props);
