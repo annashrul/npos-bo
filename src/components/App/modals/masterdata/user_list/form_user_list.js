@@ -11,9 +11,9 @@ import {
 import Select from 'react-select';
 import {stringifyFormData} from "helper";
 import {sendUserList, setUserListEdit, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
-// import moment from "moment";
 import moment from "moment";
 import FileBase64 from "react-file-base64";
+import {ModalToggle} from "../../../../../redux/actions/modal.action";
 class FormUserList extends Component{
     constructor(props){
         super(props);
@@ -125,10 +125,10 @@ class FormUserList extends Component{
         parseData['tgl_lahir']=this.state.tgl_lahir;
         parseData['foto']=this.state.foto.base64;
         if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
-            this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData,this.props.token));
+            this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData));
             // this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(sendUserList(parseData,this.props.token));
+            this.props.dispatch(sendUserList(parseData));
             // this.props.dispatch(ModalToggle(false));
         }
 
@@ -147,7 +147,7 @@ class FormUserList extends Component{
     toggle(e){
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(setUserListEdit([]));
         this.setState({
             show:false,
@@ -191,115 +191,115 @@ class FormUserList extends Component{
                 <ModalHeader toggle={this.toggle}>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?`Update User List`:`Add User List`}</ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
-                        <ModalBody>
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Name</label>
-                                        <input type="text" className="form-control" name="nama" value={this.state.nama}  onChange={this.handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Username</label>
-                                        <input type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Password</label>
-                                        <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Password Confirmation</label>
-                                        <input type="password" className="form-control"  name="password_confirmation" value={this.state.password_confirmation} onChange={this.handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Password Otoritation</label>
-                                        <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="inputState" className="col-form-label">Location
-                                            <input type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
-                                        <Select
-                                            required
-                                            disabled
-                                            isMulti
-                                            value={this.state.selectedOption}
-                                            onChange={this.handleOnChange}
-                                            options={this.state.opt}
-                                            name="lokasi"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="inputState" className="col-form-label">User Level</label>
-                                        <select id="inputState" className="form-control" name="user_lvl" defaultValue={this.state.user_lvl} value={this.state.user_lvl} onChange={this.handleChange} required>
-                                            <option value="0">Choose User Level</option>
-                                            {
-                                                userLevel.map(function(item,i){
-                                                    return (
-                                                        <option key={i} value={item.id}>{item.lvl}</option>
-                                                    )
-                                                })
-                                            }
-
-                                        </select>
-                                    </div>
-
-
-
-
-
-
+                    <ModalBody>
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label>Name</label>
+                                    <input type="text" className="form-control" name="nama" value={this.state.nama}  onChange={this.handleChange} />
                                 </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label htmlFor="inputState" className="col-form-label">Foto</label><br/>
-                                        <FileBase64
-                                            multiple={ false }
-                                            className="mr-3 form-control-file"
-                                            onDone={ this.getFiles.bind(this) } />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>No. Hp</label>
-                                        <input type="text" className="form-control" name="nohp" defaultValue="0" onChange={this.handleChange}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Emai</label>
-                                        <input type="email" className="form-control" aria-describedby="emailHelp" name="email" value={this.state.email} onChange={this.handleChange}  />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Birth Date</label>
-                                        <input
-                                            type="date"
-                                            name="tgl_lahir"
-                                            className="form-control"
-                                            data-parse="date"
-                                            placeholder="MM/DD//YYYY"
-                                            defaultValue={date}
-                                            value={this.state.tgl_lahir}
-                                            pattern="\d{2}\/\d{2}/\d{4}"
-                                            onChange={this.handleChange}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="inputState" className="col-form-label">Status</label>
-                                        <select id="inputState" className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                            <option value="1">Active</option>
-                                            <option value="0">In Active</option>
-                                        </select>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Address</label>
-                                        <textarea rows="2" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} style={{height:"145px"}}>-</textarea>
-                                    </div>
-
+                                <div className="form-group">
+                                    <label>Username</label>
+                                    <input type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
                                 </div>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password Confirmation</label>
+                                    <input type="password" className="form-control"  name="password_confirmation" value={this.state.password_confirmation} onChange={this.handleChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password Otoritation</label>
+                                    <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="inputState" className="col-form-label">Location
+                                        <input type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
+                                    <Select
+                                        required
+                                        disabled
+                                        isMulti
+                                        value={this.state.selectedOption}
+                                        onChange={this.handleOnChange}
+                                        options={this.state.opt}
+                                        name="lokasi"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="inputState" className="col-form-label">User Level</label>
+                                    <select id="inputState" className="form-control" name="user_lvl" defaultValue={this.state.user_lvl} value={this.state.user_lvl} onChange={this.handleChange} required>
+                                        <option value="0">Choose User Level</option>
+                                        {
+                                            userLevel.map(function(item,i){
+                                                return (
+                                                    <option key={i} value={item.id}>{item.lvl}</option>
+                                                )
+                                            })
+                                        }
+
+                                    </select>
+                                </div>
+
+
+
+
+
+
                             </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <div className="form-group" style={{textAlign:"right"}}>
-                                <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.props.toggle}><i className="ti-close" /> Cancel</button>
-                                <button type="submit" className="btn btn-primary mb-2 mr-2" ><i className="ti-save" /> Simpan</button>
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="inputState" className="col-form-label">Foto</label><br/>
+                                    <FileBase64
+                                        multiple={ false }
+                                        className="mr-3 form-control-file"
+                                        onDone={ this.getFiles.bind(this) } />
+                                </div>
+                                <div className="form-group">
+                                    <label>No. Hp</label>
+                                    <input type="text" className="form-control" name="nohp" defaultValue="0" onChange={this.handleChange}/>
+                                </div>
+                                <div className="form-group">
+                                    <label>Emai</label>
+                                    <input type="email" className="form-control" aria-describedby="emailHelp" name="email" value={this.state.email} onChange={this.handleChange}  />
+                                </div>
+                                <div className="form-group">
+                                    <label>Birth Date</label>
+                                    <input
+                                        type="date"
+                                        name="tgl_lahir"
+                                        className="form-control"
+                                        data-parse="date"
+                                        placeholder="MM/DD//YYYY"
+                                        defaultValue={date}
+                                        value={this.state.tgl_lahir}
+                                        pattern="\d{2}\/\d{2}/\d{4}"
+                                        onChange={this.handleChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="inputState" className="col-form-label">Status</label>
+                                    <select id="inputState" className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                        <option value="1">Active</option>
+                                        <option value="0">In Active</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Address</label>
+                                    <textarea rows="2" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} style={{height:"145px"}}>-</textarea>
+                                </div>
+
                             </div>
-                        </ModalFooter>
-                    </form>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="form-group" style={{textAlign:"right"}}>
+                            <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.props.toggle}><i className="ti-close" /> Cancel</button>
+                            <button type="submit" className="btn btn-primary mb-2 mr-2" ><i className="ti-save" /> Simpan</button>
+                        </div>
+                    </ModalFooter>
+                </form>
 
             </WrapperModal>
         )

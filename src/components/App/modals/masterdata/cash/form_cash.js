@@ -4,6 +4,8 @@ import connect from "react-redux/es/connect/connect";
 import {createCash, FetchCash, updateCash} from "redux/actions/masterdata/cash/cash.action";
 import {stringifyFormData} from "helper";
 import WrapperModal from "../../_wrapper.modal";
+import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
+
 
 class FormCash extends Component{
     constructor(props){
@@ -72,14 +74,9 @@ class FormCash extends Component{
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formCash"} size="md">
-                <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.toggle}>
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Cash":"Update Cash"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="modal-body">
+                    <ModalBody>
                         <div className="form-group">
                             <label>Name</label>
                             <select name="jenis" className="form-control" id="jenis" defaultValue={this.state.jenis} value={this.state.jenis} onChange={this.handleChange}>
@@ -98,15 +95,14 @@ class FormCash extends Component{
                             <label>Note</label>
                             <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleChange} required/>
                         </div>
-                    </div>
-                    <div className="modal-footer">
+                    </ModalBody>
+                    <ModalFooter>
                         <div className="form-group" style={{textAlign:"right"}}>
                             <button type="button" className="btn btn-warning mb-2 mr-2"><i className="ti-close" /> Cancel</button>
                             <button type="submit" className="btn btn-primary mb-2 mr-2" ><i className="ti-save" /> Simpan</button>
                         </div>
-                    </div>
+                    </ModalFooter>
                 </form>
-
             </WrapperModal>
         );
     }

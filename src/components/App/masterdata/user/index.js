@@ -20,7 +20,10 @@ class User extends Component{
         }
 
     }
-
+    componentWillMount(){
+        this.props.dispatch(FetchUserList());
+        this.props.dispatch(FetchUserLevel(1,'',15));
+    }
     handleSelect = (index) => {
         this.setState({selectedIndex: index}, () => {
             console.log('Selected tab: ' + this.state.selectedIndex);
@@ -87,7 +90,7 @@ class User extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
+        // authenticated: state.sessionReducer.authenticated,
         userlist: state.userListReducer.data,
         userLevel: state.userLevelReducer.data,
         isOpen:state.modalReducer,

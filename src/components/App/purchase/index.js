@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import Layout from '../../_layout'
+import Layout from 'Layout'
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {sessionService} from "redux-react-session";
 import connect from "react-redux/es/connect/connect";

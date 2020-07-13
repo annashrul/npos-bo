@@ -2,7 +2,8 @@ import React,{Component} from 'react';
 import {store,get,destroy} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
-import { Scrollbars } from "react-custom-scrollbars";
+// import { Scrollbars } from "react-custom-scrollbars";
+import {Scrollbars} from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
 import Logo from "assets/images/logo.png"
 import Select from 'react-select'

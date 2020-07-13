@@ -8,6 +8,8 @@ import {
     updateUserLevel
 } from "redux/actions/masterdata/user_level/user_level.action";
 import {FetchUserList, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
+import {ModalToggle} from "redux/actions/modal.action";
+import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
 class FormUserLevel extends Component{
     //MENU ACCESS MASTERDATA = 0-9
@@ -49,7 +51,7 @@ class FormUserLevel extends Component{
     toggle = (e) => {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalToggle(bool));
         this.setState({lvl:""});
         this.setState({})
     };
@@ -97,12 +99,12 @@ class FormUserLevel extends Component{
         parseData['lvl'] = this.state.lvl;
         parseData['access'] = akses;
         console.log(parseData);
-        if(this.props.detail.id !==undefined){
-            this.props.dispatch(updateUserLevel(this.props.detail.id,parseData,this.props.token));
-            // this.props.dispatch(ModalToggle(false));
+        if(this.props.detail !==undefined){
+            this.props.dispatch(updateUserLevel(this.props.detail.id,parseData));
+            this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(createUserLevel(parseData,this.props.token));
-            // this.props.dispatch(ModalToggle(false));
+            this.props.dispatch(createUserLevel(parseData));
+            this.props.dispatch(ModalToggle(false));
         }
 
     }
@@ -129,64 +131,62 @@ class FormUserLevel extends Component{
     render(){
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserLevel"} size="lg">
-                {/*<ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add User Level":"Update User Level"}</ModalHeader>*/}
-                {/*<form onSubmit={this.handleSubmit}>*/}
-                    {/*/!*<input type="checkbox" onChange={this.handleAllChecked}  value="checkedall" /> Check / Uncheck All*!/*/}
-
-                    {/*<ModalBody>*/}
-                        {/*<div className="row">*/}
-                            {/*<div className="col-12">*/}
-                                {/*<div className="form-group">*/}
-                                    {/*<label>Name</label>*/}
-                                    {/*<input type="text" className="form-control" name="lvl" value={this.state.lvl}  onChange={(e)=>this.handleChange(e)} />*/}
-                                {/*</div>*/}
-                                {/*/!*START SECTION SETTING*!/*/}
-                                {/*<div className="form-group">*/}
-                                    {/*<input type="checkbox" onChange={(e)=>this.handleAllChecked(e,'setting')}  value="checkedall" /> <b style={{color:'red'}}>Setting</b>*/}
-                                {/*</div>*/}
-                                {/*<div className="row">*/}
-                                    {/*{*/}
-                                        {/*this.state.setting.map((modul, index) => {*/}
-                                            {/*return (*/}
-                                                {/*modul.label!==''?*/}
-                                                {/*<div className="col-md-2" key={index} >*/}
-                                                    {/*<div className="form-group" style={{marginLeft:"10px"}}>*/}
-                                                        {/*<input onChange={(e)=>this.handleCheckChieldElement(e,'setting')} id={modul.label} className={modul.label} type="checkbox" checked={modul.isChecked} value={modul.value} /> {modul.label}*/}
-                                                    {/*</div>*/}
-                                                {/*</div>:''*/}
-                                            {/*)*/}
-                                        {/*})*/}
-                                    {/*}*/}
-                                {/*</div>*/}
-                                {/*/!* END SECTION SETTING *!/*/}
-                                {/*/!* START SECTION MASTERDATA *!/*/}
-                                {/*<div className="form-group">*/}
-                                    {/*<input type="checkbox" onChange={(e)=>this.handleAllChecked(e,'masterdata')}  value="checkedall" /> <b style={{color:'red'}}>Masterdata</b>*/}
-                                {/*</div>*/}
-                                {/*<div className="row">*/}
-                                    {/*{*/}
-                                        {/*this.state.masterdata.map((modul, index) => {*/}
-                                            {/*return (*/}
-                                                {/*modul.label!==''?<div className="col-md-2" key={index}>*/}
-                                                    {/*<div className="form-group" style={{marginLeft:"10px"}}>*/}
-                                                        {/*<input onChange={(e)=>this.handleCheckChieldElement(e,'masterdata')} id={modul.label} className={modul.label} type="checkbox" checked={modul.isChecked} value={modul.value} /> {modul.label}*/}
-                                                    {/*</div>*/}
-                                                {/*</div>:''*/}
-                                            {/*)*/}
-                                        {/*})*/}
-                                    {/*}*/}
-                                {/*</div>*/}
-                                {/*/!* END SECTION MASTERDATA *!/*/}
-                            {/*</div>*/}
-                        {/*</div>*/}
-                    {/*</ModalBody>*/}
-                    {/*<ModalFooter>*/}
-                        {/*<div className="form-group" style={{textAlign:"right"}}>*/}
-                            {/*<button type="button" className="btn btn-danger mb-2 mr-2"><i className="ti-close" /> Close</button>*/}
-                            {/*<button type="submit" className="btn btn-primary mb-2 mr-2" ><i className="ti-save" /> Save</button>*/}
-                        {/*</div>*/}
-                    {/*</ModalFooter>*/}
-                {/*</form>*/}
+                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add User Level":"Update User Level"}</ModalHeader>
+                <form onSubmit={this.handleSubmit}>
+                    <ModalBody>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="form-group">
+                                    <label>Name</label>
+                                    <input type="text" className="form-control" name="lvl" value={this.state.lvl}  onChange={(e)=>this.handleChange(e)} />
+                                </div>
+                                {/*START SECTION SETTING*/}
+                                <div className="form-group">
+                                    <input type="checkbox" onChange={(e)=>this.handleAllChecked(e,'setting')}  value="checkedall" /> <b style={{color:'red'}}>Setting</b>
+                                </div>
+                                <div className="row">
+                                    {
+                                        this.state.setting.map((modul, index) => {
+                                            return (
+                                                modul.label!==''?
+                                                    <div className="col-md-2" key={index} >
+                                                        <div className="form-group" style={{marginLeft:"10px"}}>
+                                                            <input onChange={(e)=>this.handleCheckChieldElement(e,'setting')} id={modul.label} className={modul.label} type="checkbox" checked={modul.isChecked} value={modul.value} /> {modul.label}
+                                                        </div>
+                                                    </div>:''
+                                            )
+                                        })
+                                    }
+                                </div>
+                                {/* END SECTION SETTING */}
+                                {/* START SECTION MASTERDATA */}
+                                <div className="form-group">
+                                    <input type="checkbox" onChange={(e)=>this.handleAllChecked(e,'masterdata')}  value="checkedall" /> <b style={{color:'red'}}>Masterdata</b>
+                                </div>
+                                <div className="row">
+                                    {
+                                        this.state.masterdata.map((modul, index) => {
+                                            return (
+                                                modul.label!==''?<div className="col-md-2" key={index}>
+                                                    <div className="form-group" style={{marginLeft:"10px"}}>
+                                                        <input onChange={(e)=>this.handleCheckChieldElement(e,'masterdata')} id={modul.label} className={modul.label} type="checkbox" checked={modul.isChecked} value={modul.value} /> {modul.label}
+                                                    </div>
+                                                </div>:''
+                                            )
+                                        })
+                                    }
+                                </div>
+                                {/* END SECTION MASTERDATA */}
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="form-group" style={{textAlign:"right"}}>
+                            <button type="button" className="btn btn-danger mb-2 mr-2"><i className="ti-close" /> Close</button>
+                            <button type="submit" className="btn btn-primary mb-2 mr-2" ><i className="ti-save" /> Save</button>
+                        </div>
+                    </ModalFooter>
+                </form>
             </WrapperModal>
         );
     }

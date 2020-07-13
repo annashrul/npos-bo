@@ -1,9 +1,7 @@
 import {USER_LEVEL, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {FetchCash} from "../cash/cash.action";
 import {ModalToggle} from "../../modal.action";
-import {FetchUserList} from "../user_list/user_list.action";
 
 
 export function setLoading(load){
@@ -44,20 +42,12 @@ export  const FetchUserLevel = (page=1,q,perpage) => {
 
 
 
-export const createUserLevel = (data,token) => {
+export const createUserLevel = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `userLevel`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.post(url, data, headers)
+
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
                 console.log("DATA",data);
@@ -94,20 +84,12 @@ export const createUserLevel = (data,token) => {
 }
 
 
-export const updateUserLevel = (id,data,token) => {
+export const updateUserLevel = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `userLevel/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.put(url, data, headers)
+
+        axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
@@ -142,22 +124,11 @@ export const updateUserLevel = (id,data,token) => {
     }
 }
 
-export const deleteUserLevel = (id,token) => {
+export const deleteUserLevel = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `userLevel/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        console.log("=============== DELETE ====================");
-
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 console.log("DATA",data);
