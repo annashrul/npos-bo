@@ -1,13 +1,12 @@
 import React, {Component} from 'react'
-import Layout from "../../_layout";
+import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {sessionService} from "redux-react-session";
-import {FetchLocation} from "../../../actions/masterdata/location/location.action";
-import Preloader from "../../../Preloader";
+import {FetchLocation} from "redux/actions/masterdata/location/location.action";
+import Preloader from "Preloader";
 import ListLocation from "./master_location/list";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import ListLocationCategory from "./master_location_catergory/list";
-import {FetchLocationCategory} from "../../../actions/masterdata/location_category/location_category.action";
+import {FetchLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
 
 class Location extends Component{
     constructor(props){
@@ -21,27 +20,13 @@ class Location extends Component{
     }
 
     componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
-                let anyLocation = localStorage.getItem("any_location");
-                let anyLocationCategory = localStorage.getItem("any_location_category");
-                let pageLocation = localStorage.getItem('pageLocation');
-                let pageLocationCategory = localStorage.getItem('pageLocationCategory');
-                this.props.dispatch(FetchLocation(pageLocation?pageLocation:1,anyLocation?anyLocation:''));
-                this.props.dispatch(FetchLocationCategory(pageLocationCategory?pageLocationCategory:1,anyLocationCategory?anyLocationCategory:''));
+        let anyLocation = localStorage.getItem("any_location");
+        let anyLocationCategory = localStorage.getItem("any_location_category");
+        let pageLocation = localStorage.getItem('pageLocation');
+        let pageLocationCategory = localStorage.getItem('pageLocationCategory');
+        this.props.dispatch(FetchLocation(pageLocation?pageLocation:1,anyLocation?anyLocation:''));
+        this.props.dispatch(FetchLocationCategory(pageLocationCategory?pageLocationCategory:1,anyLocationCategory?anyLocationCategory:''));
 
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
     }
 
     handleSelect = (e,index) => {
@@ -93,7 +78,6 @@ class Location extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
         location:state.locationReducer.data,
         locationCategory:state.locationCategoryReducer.data,
         isLoading: state.locationReducer.isLoading,

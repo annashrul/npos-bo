@@ -1,13 +1,13 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
+import {stringifyFormData} from "helper";
 import {
     createLocationCategory,
     updateLocationCategory
-} from "../../../../actions/masterdata/location_category/location_category.action";
+} from "redux/actions/masterdata/location_category/location_category.action";
 class FormLocationCategory extends Component{
     constructor(props){
         super(props);
@@ -49,10 +49,10 @@ class FormLocationCategory extends Component{
         let parseData = stringifyFormData(data);
         parseData['nama'] = this.state.nama;
         if (this.props.detail !== undefined) {
-            this.props.dispatch(updateLocationCategory(this.state.id,parseData,this.props.token));
+            this.props.dispatch(updateLocationCategory(this.state.id,parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(createLocationCategory(parseData,this.props.token));
+            this.props.dispatch(createLocationCategory(parseData));
             this.props.dispatch(ModalToggle(false));
         }
         console.log(parseData)
