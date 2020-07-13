@@ -7,7 +7,10 @@ import setAuthToken from '../../utils/setAuthToken';
 import {setCurrentUser, logoutUser} from '../../redux/actions/authActions';
 
 import Routes from './Routes/Routes';
-
+import { DBConfig } from 'DBConfig';
+import { initDB } from 'react-indexed-db';
+ 
+initDB(DBConfig);
 // Check token in localStorage
 if(localStorage.jwtToken){
   // Set auth token header auth
