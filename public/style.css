@@ -719,12 +719,8 @@ button:focus {
   box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08); }
 
 .height-card {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-align-items: stretch;
-  align-items: stretch;
-  -webkit-justify-content: stretch;
-  justify-content: stretch; }
+  height:100vh !important
+  }
 
 .height-card > .card {
   width: 100%;
@@ -1192,7 +1188,8 @@ div.tagsinput span.tag a {
   align-items: center; }
 
 .ecaps-logo a img {
-  max-height: 25px;
+  padding:20px 25px 35px 25px;
+  margin-bottom:20px;
   width: auto;
   margin: auto; }
 
