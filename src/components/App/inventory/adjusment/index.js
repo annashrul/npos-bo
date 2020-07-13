@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
-import {MCrud} from "../../../../model/m_crud";
-import { ItemsActions } from '../../../../reducers/item_reducer'
+import {store,get,destroy} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 
 class TrxAdjustment extends Component{
@@ -9,11 +8,13 @@ class TrxAdjustment extends Component{
         super(props);
 
         this.state = {
-            addingItemName: ''
+            addingItemName: '',
+            data:''
         };
         this.create = this.create.bind(this);
         this.onChangeAddValue = this.onChangeAddValue.bind(this);
         this.createItem = this.createItem.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     onChangeAddValue(newValue) {
@@ -22,16 +23,44 @@ class TrxAdjustment extends Component{
         }));
     }
 
+    refresh(e) {
+        e.preventDefault()
+        const data=destroy('purchase_order');
+       
+        data.then(res => {
+        })
+
+        const data2 = get('purchase_order');
+        data2.then(res => {
+            this.setState({
+                data: JSON.stringify(res)
+            })
+        })
+    }
+
     create() {
         const item = {
-            Id: this.props.Index + 1,
-            Name: this.state.addingItemName,
-            Comments: []
+            kd_brg: this.state.addingItemName,
+            barcode: this.state.addingItemName,
+            satuan: this.state.addingItemName,
+            diskon: this.state.addingItemName,
+            diskon2: this.state.addingItemName,
+            diskon3: this.state.addingItemName,
+            diskon4: this.state.addingItemName,
+            ppn: this.state.addingItemName,
+            harga_beli: this.state.addingItemName,
+            qty:0
         };
-        MCrud.Create(item, (data) => { this.props.GetItems(data); });
+        store('purchase_order',item)
         this.setState({
             addingItemName: ''
         });
+        const data = get('purchase_order');
+        data.then(res => {
+            this.setState({
+                data: JSON.stringify(res)
+            })
+        })
         console.log("New item added: " + item.Name);
     }
 
@@ -47,7 +76,11 @@ class TrxAdjustment extends Component{
             <div className="main">
                 <div className="header-title">
                     <div className="title">
-
+                        <a href="#" onClick={(e)=>this.refresh(e)}>Clear</a>
+                        <br/>
+                        {
+                            this.state.data
+                        }
                         <div className="header-text">Create new item</div>
                     </div>
                 </div>
@@ -62,7 +95,7 @@ class TrxAdjustment extends Component{
                                 onChange={e => this.onChangeAddValue(e.target.value)}
                             />
                         </form>
-                        <div className="button" onClick={this.createItem}>></div>
+                        <div className="button" onClick={this.createItem}></div>
                     </div>
                 </div>
             </div>
@@ -72,12 +105,6 @@ class TrxAdjustment extends Component{
 
 
 const mapStateToPropsCreateItem = (state) => ({
-    Items: state.get('Items'),
-    Index: state.get('Index')
 });
 
-const mapDispatchToPropsCreateItem = (dispatch) => ({
-    GetItems: (items) => { dispatch(ItemsActions.SetItems(items)); },
-});
-
-export default connect(mapStateToPropsCreateItem, mapDispatchToPropsCreateItem)(TrxAdjustment);
+export default connect(mapStateToPropsCreateItem)(TrxAdjustment);

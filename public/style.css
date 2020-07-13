@@ -5750,8 +5750,6 @@ Main Components
 .people-list img {
   float: left;
   border: 1px solid #ffffff;
-  -webkit-box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
   border-radius: 50%; }
 .people-list .about {
   float: left;
@@ -11375,3 +11373,9 @@ a.mytooltip {
         transform: rotate(360deg);
     }
 }
+
+/* .react-datepicker-manager,
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  width: 100%;
+} */
