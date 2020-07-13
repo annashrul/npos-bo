@@ -1,11 +1,11 @@
 import React,{Component} from 'react';
-import Pagination from "react-js-pagination";
-import {FetchCash} from "../../../../actions/masterdata/cash/cash.action";
 import connect from "react-redux/es/connect/connect";
-import {ModalToggle, ModalType} from "../../../../actions/modal.action";
-import FormCash from "../../../modals/masterdata/cash/form_cash";
+import FormCash from "components/App/modals/masterdata/cash/form_cash";
 import Swal from "sweetalert2";
-import Paginationq from "../../../../helper";
+import Paginationq from "helper";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {FetchCash} from "redux/actions/masterdata/cash/cash.action";
+
 
 
 class ListCash extends Component{
@@ -51,7 +51,7 @@ class ListCash extends Component{
     }
 
     toggleModal(e,i) {
-        e.preventDefault()
+        e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formCash"));

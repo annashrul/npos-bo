@@ -92,6 +92,31 @@
       z-index: 1000;
       border-radius: 0 0 2px 2px;
     }
+    .modal-open .modal {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .fade.show {
+      opacity: 1;
+    }
+    .modal {
+      z-index: 1072;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1050;
+      display: none;
+      overflow: hidden;
+      outline: 0;
+    }
+    .fade {
+      opacity: 0;
+      transition: opacity .15s linear;
+    }
   </style>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
     async defer></script>

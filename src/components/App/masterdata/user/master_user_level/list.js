@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
-import Pagination from "react-js-pagination";
-import {deleteUserLevel, FetchUserLevel} from "../../../../actions/masterdata/user_level/user_level.action";
+import Paginationq from "helper";
 import connect from "react-redux/es/connect/connect";
-import {ModalToggle, ModalType} from "../../../../actions/modal.action";
-import FormUserLevel from "../../../modals/masterdata/user_level/form_user_level";
+// import FormUserLevel from "App/modals/masterdata/user_level/form_user_level";
+import FormUserLevel from "components/App/modals/masterdata/user_level/form_user_level";
+
 import Swal from "sweetalert2";
+import {FetchUserLevel,deleteUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
 
 class ListUserLevel extends Component{
     constructor(props){
@@ -33,7 +34,7 @@ class ListUserLevel extends Component{
     toggleModal(e,id) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
+        // this.props.dispatch(ModalToggle(bool));
         if(id!==null){
             this.setState({
                 detail:{"id":this.props.data.data[id].id,"access":this.props.data.data[id].access,"lvl":this.props.data.data[id].lvl}
@@ -41,7 +42,7 @@ class ListUserLevel extends Component{
         }else{
             this.setState({detail:undefined})
         }
-        this.props.dispatch(ModalType("formUserLevel"));
+        // this.props.dispatch(ModalType("formUserLevel"));
 
 
     }
@@ -127,20 +128,11 @@ class ListUserLevel extends Component{
                    }
                </div>
                <div style={{"marginTop":"20px","float":"right"}}>
-                   <Pagination
-                       activePage={parseInt(current_page)}
-                       itemsCountPerPage={per_page}
-                       totalItemsCount={total}
-                       pageRangeDisplayed={per_page}
-                       onChange={this.handlePageChange.bind(this)}
-                       itemClass="page-item"
-                       linkClass="page-link"
-                       activeClass="page-item active"
-                       disabledClass="page-item disabled"
-                       prevPageText='prev'
-                       nextPageText='next'
-                       firstPageText='first'
-                       lastPageText='last'
+                   <Paginationq
+                       current_page={current_page}
+                       per_page={per_page}
+                       total={total}
+                       callback={this.handlePageChange.bind(this)}
                    />
                </div>
                <FormUserLevel token={this.props.token} detail={this.state.detail}/>

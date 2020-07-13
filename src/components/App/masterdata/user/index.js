@@ -1,13 +1,13 @@
 import React,{Component} from 'react';
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import Layout from "../../_layout";
+import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {sessionService} from "redux-react-session";
-import {FetchUserList} from "../../../actions/masterdata/user_list/user_list.action";
 import ListUserList from "./master_user_list/list";
 import 'react-tabs/style/react-tabs.css';
-import Preloader from "../../../Preloader";
-import {FetchUserLevel} from "../../../actions/masterdata/user_level/user_level.action";
+import Preloader from "Preloader";
+import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
+import {FetchUserList} from "redux/actions/masterdata/user_list/user_list.action";
+
 import ListUserLevel from "./master_user_level/list";
 
 
@@ -20,25 +20,7 @@ class User extends Component{
         }
 
     }
-    componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
-                this.props.dispatch(FetchUserList());
-                this.props.dispatch(FetchUserLevel(1,'',15));
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                console.log(user);
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
-    }
+
     handleSelect = (index) => {
         this.setState({selectedIndex: index}, () => {
             console.log('Selected tab: ' + this.state.selectedIndex);

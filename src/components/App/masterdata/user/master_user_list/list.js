@@ -1,18 +1,21 @@
 import React,{Component} from 'react';
 import connect from "react-redux/es/connect/connect";
+import FormUserList from "components/App/modals/masterdata/user_list/form_user_list";
+
+import profile from "assets/profile.png";
+import Swal from "sweetalert2";
+import Paginationq from "helper";
+import DetailUserList from "../../../modals/masterdata/user_list/detail_user_list";
 import {
     deleteUserList,
-    FetchUserList, FetchUserListDetail,
-    FetchUserListEdit, setUserListEdit
-} from "../../../../actions/masterdata/user_list/user_list.action";
-import {ModalToggle, ModalType} from "../../../../actions/modal.action";
-import {FetchAllLocation, FetchLocation} from "../../../../actions/masterdata/location/location.action";
-import FormUserList from "../../../modals/masterdata/user_list/form_user_list";
-import {FetchUserLevel} from "../../../../actions/masterdata/user_level/user_level.action";
-import profile from "../../../../assets/profile.png";
-import Swal from "sweetalert2";
-import Paginationq from "../../../../helper";
-import DetailUserList from "../../../modals/masterdata/user_list/detail_user_list";
+    FetchUserList,
+    FetchUserListDetail,
+    FetchUserListEdit,
+    setUserListEdit
+} from "redux/actions/masterdata/user_list/user_list.action";
+import {FetchAllLocation, FetchLocation} from "redux/actions/masterdata/location/location.action";
+import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
+
 class ListUserList extends Component{
     constructor(props){
         super(props);
@@ -37,8 +40,8 @@ class ListUserList extends Component{
     toggleModal(e) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formUserList"));
+        // this.props.dispatch(ModalToggle(bool));
+        // this.props.dispatch(ModalType("formUserList"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchUserLevel(1,'','100'));
         this.props.dispatch(setUserListEdit([]));
@@ -47,8 +50,8 @@ class ListUserList extends Component{
     toggleEdit(e,id) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formUserList"));
+        // this.props.dispatch(ModalToggle(bool));
+        // this.props.dispatch(ModalType("formUserList"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchUserLevel(1,'','100'));
         this.props.dispatch(FetchUserListEdit(id));
@@ -57,8 +60,8 @@ class ListUserList extends Component{
     handleDetail(e,id){
         e.preventDefault();
         const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("detailUserList"));
+        // this.props.dispatch(ModalToggle(bool));
+        // this.props.dispatch(ModalType("detailUserList"));
         this.props.dispatch(FetchUserListDetail(id));
         this.props.dispatch(FetchAllLocation());
     }

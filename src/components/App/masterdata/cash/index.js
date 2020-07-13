@@ -1,10 +1,9 @@
 import React,{Component} from 'react';
-import Layout from "../../_layout";
+import Layout from "../../Layout";
 import ListCash from "./src/list";
 import connect from "react-redux/es/connect/connect";
-import {sessionService} from "redux-react-session";
-import {deleteCash, FetchCash} from "../../../actions/masterdata/cash/cash.action";
-import Preloader from "../../../Preloader";
+import Preloader from "Preloader";
+import {deleteCash,FetchCash} from "redux/actions/masterdata/cash/cash.action";
 
 class Cash extends Component{
     constructor(props){
@@ -20,26 +19,9 @@ class Cash extends Component{
     }
 
     componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
-                // this.getMem()
-                let type = this.state.type;
-                let any = this.state.any;
-                this.props.dispatch(FetchCash(1,type===undefined?'masuk':type,any===undefined?'':any));
-
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                console.log(user);
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
+        let type = this.state.type;
+        let any = this.state.any;
+        this.props.dispatch(FetchCash(1,type===undefined?'masuk':type,any===undefined?'':any));
     }
 
     handlePagin(param){
@@ -49,9 +31,7 @@ class Cash extends Component{
     }
 
     handleDelete(id){
-        console.log("ID",id);
-        console.log("TOKEN",this.state.token);
-        this.props.dispatch(deleteCash(id,this.state.token));
+        this.props.dispatch(deleteCash(id));
         let type = this.state.type;
         let any = this.state.any;
         this.props.dispatch(FetchCash(1,type===undefined?'masuk':type,any===undefined?'':any))
@@ -81,7 +61,7 @@ class Cash extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
+        authenticated: state.auth,
         cash:state.cashReducer.data,
         isLoading: state.cashReducer.isLoading,
         currentPage: state.cashReducer.currentPage,

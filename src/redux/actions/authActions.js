@@ -2,11 +2,12 @@ import { GET_ERRORS,SET_CURRENT_USER } from './types';
 import axios from 'axios';
 
 import setAuthToken from '../../utils/setAuthToken';
+import {HEADERS} from "./_constants";
 
 // user register
 export const registerUser = (userData, history) =>
     async dispatch=>{
-        axios.post('/auth/bo',userData)
+        axios.post(HEADERS.URL+'auth/bo',userData)
             .then(res=> history.push('/login'))
             .catch(err =>{
                 dispatch({type: GET_ERRORS, payload: err.response.data})
@@ -17,11 +18,12 @@ export const registerUser = (userData, history) =>
 export const loginUser = (userData) =>
     async dispatch =>{
         console.log(userData);
-         axios.post('/auth/bo', userData)
+         axios.post(HEADERS.URL+'auth/bo', userData)
               .then(res=>{
                   console.log(res);
                   // save token to localStorage
-                  const {token} = res.data.result.token;
+                  const token = res.data.result.token;
+
                   localStorage.setItem('jwtToken', token);
                   // Set token to Auth Header 
                   setAuthToken(token);
