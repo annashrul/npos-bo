@@ -61,7 +61,7 @@ class ListLocationCategory extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.props.dispatch(deleteLocationCategory(i,this.props.token));
+                this.props.dispatch(deleteLocationCategory(i));
             }
         })
     }
