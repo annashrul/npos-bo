@@ -1,5 +1,6 @@
 import { GET_ERRORS,SET_CURRENT_USER } from './types';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 import setAuthToken from '../../utils/setAuthToken';
 import {HEADERS} from "./_constants";
@@ -31,7 +32,11 @@ export const loginUser = (userData) =>
                   dispatch(setCurrentUser(res.data.result));
 
               }).catch(err =>{
-                  console.log(err);
+                  Swal.fire(
+                      'Something wrong.',
+                      err.response.data.msg,
+                      'error'
+                  )
                 dispatch({type: GET_ERRORS, payload: 'cek'})
               });
     }

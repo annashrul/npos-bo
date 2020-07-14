@@ -16,6 +16,15 @@ export const getOne=(id,table)=> {
     });
 }
 
+export const cekData=(column,val,table)=> {
+    const {getByIndex} = useIndexedDB(table);
+
+    return getByIndex(column, val).then(result => {
+        return result;
+    });
+}
+
+
 export const store = (table,data) => {
     const { add } = useIndexedDB(table);
     

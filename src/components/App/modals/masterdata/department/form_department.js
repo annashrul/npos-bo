@@ -1,10 +1,10 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
-import {createDepartment, updateDepartment} from "../../../../actions/masterdata/department/department.action";
+import {stringifyFormData} from "helper";
+import {createDepartment, updateDepartment} from "redux/actions/masterdata/department/department.action";
 
 class FormDepartment extends Component{
     constructor(props){
@@ -48,11 +48,11 @@ class FormDepartment extends Component{
         parseData['nama'] = this.state.nama;
         // console.log(this.props.token);
         if(this.props.detail===undefined){
-            this.props.dispatch(createDepartment(parseData,this.props.token));
+            this.props.dispatch(createDepartment(parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
             console.log(this.state.id);
-            this.props.dispatch(updateDepartment(this.state.id,parseData,this.props.token));
+            this.props.dispatch(updateDepartment(this.state.id,parseData));
             this.props.dispatch(ModalToggle(false));
         }
 

@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
-import Layout from "../../_layout";
+import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import {sessionService} from "redux-react-session";
-import {FetchSupplier} from "../../../actions/masterdata/supplier/supplier.action";
-import Preloader from "../../../Preloader";
+import {FetchSupplier} from "redux/actions/masterdata/supplier/supplier.action";
+import Preloader from "Preloader";
 import ListSupplier from "./src/list";
 
 class Supplier extends Component{
@@ -12,24 +12,9 @@ class Supplier extends Component{
         this.state={token:''}
     }
     componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
-                let any = localStorage.getItem("any_supplier");
-                let page = localStorage.getItem("page_supplier");
-                this.props.dispatch(FetchSupplier(page?page:1,any?any:''));
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                console.log(user);
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
+        let any = localStorage.getItem("any_supplier");
+        let page = localStorage.getItem("page_supplier");
+        this.props.dispatch(FetchSupplier(page?page:1,any?any:''));
     }
 
 
@@ -58,7 +43,6 @@ class Supplier extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
         supplier:state.supplierReducer.data,
         isLoading: state.supplierReducer.isLoading,
     }

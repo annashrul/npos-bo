@@ -63,16 +63,8 @@ export const createCustomer = (data,token) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `customer`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
-        axios.post(url, data, headers)
+        
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
                 if (data.status === 'success') {
@@ -110,16 +102,8 @@ export const updateCustomer = (id,data,token) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `customer/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.put(url, data, headers)
+        
+        axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
@@ -129,6 +113,7 @@ export const updateCustomer = (id,data,token) => {
                         text: data.msg,
                     });
                 } else {
+                    console.log("tes : "+token);
                     Swal.fire({
                         title: 'failed',
                         type: 'danger',

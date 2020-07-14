@@ -1,15 +1,15 @@
 import React,{Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import Pagination from "react-js-pagination";
-import Paginationq from "../../../../../helper";
+import Paginationq from "helper";
 import {
     deleteCustomerType,
     FetchCustomerType
-} from "../../../../../actions/masterdata/customer_type/customer_type.action";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
+} from "../../../../../../redux/actions/masterdata/customer_type/customer_type.action";
+import {ModalToggle, ModalType} from "../../../../../../redux/actions/modal.action";
 import Swal from "sweetalert2";
-import {deleteLocationCategory} from "../../../../../actions/masterdata/location_category/location_category.action";
-import FormCustomerType from "../../../../modals/masterdata/customer_type/form_customer_type";
+import {deleteLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
+import FormCustomerType from "components/App/modals/masterdata/customer_type/form_customer_type";
 
 class ListCustomerType extends Component{
     constructor(props){

@@ -1,17 +1,17 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
+import {stringifyFormData} from "helper";
 import {
     createLocationCategory,
     updateLocationCategory
-} from "../../../../actions/masterdata/location_category/location_category.action";
+} from "redux/actions/masterdata/location_category/location_category.action";
 import {
     createCustomerType,
     updateCustomerType
-} from "../../../../actions/masterdata/customer_type/customer_type.action";
+} from "redux/actions/masterdata/customer_type/customer_type.action";
 class FormCustomerType extends Component{
     constructor(props){
         super(props);
@@ -54,10 +54,10 @@ class FormCustomerType extends Component{
         // parseData['kode'] = this.state.kode;
         parseData['nama'] = this.state.nama;
         if (this.props.detail !== undefined) {
-            this.props.dispatch(updateCustomerType(this.props.detail.kode,parseData,this.props.token));
+            this.props.dispatch(updateCustomerType(this.props.detail.kode,parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(createCustomerType(parseData,this.props.token));
+            this.props.dispatch(createCustomerType(parseData));
             this.props.dispatch(ModalToggle(false));
         }
         console.log(parseData)

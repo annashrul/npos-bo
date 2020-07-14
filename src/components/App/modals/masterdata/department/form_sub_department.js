@@ -1,14 +1,14 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
-import {createDepartment, updateDepartment} from "../../../../actions/masterdata/department/department.action";
+import {stringifyFormData} from "helper";
+import {createDepartment, updateDepartment} from "redux/actions/masterdata/department/department.action";
 import {
     createSubDepartment,
     updateSubDepartment
-} from "../../../../actions/masterdata/department/sub_department.action";
+} from "redux/actions/masterdata/department/sub_department.action";
 
 class FormSubDepartment extends Component{
     constructor(props){
@@ -57,11 +57,11 @@ class FormSubDepartment extends Component{
         parseData['nama'] = this.state.nama;
         // console.log(this.props.token);
         if(this.props.detail===undefined){
-            this.props.dispatch(createSubDepartment(parseData,this.props.token));
+            this.props.dispatch(createSubDepartment(parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
             console.log(this.state.id);
-            this.props.dispatch(updateSubDepartment(this.state.kode,parseData,this.props.token));
+            this.props.dispatch(updateSubDepartment(this.state.kode,parseData));
             this.props.dispatch(ModalToggle(false));
         }
 

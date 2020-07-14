@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import Paginationq from "../../../helper";
-import {deleteDepartment, FetchDepartment} from "../../../actions/masterdata/department/department.action";
-import {ModalToggle, ModalType} from "../../../actions/modal.action";
-import FormDepartment from "../../modals/masterdata/department/form_department";
+import Paginationq from "helper";
+import {deleteDepartment, FetchDepartment} from "redux/actions/masterdata/department/department.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import FormDepartment from "components/App/modals/masterdata/department/form_department";
 import Swal from "sweetalert2";
 
 class ListDepartment extends Component{

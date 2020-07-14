@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
-import Preloader from "../../../Preloader";
-import Layout from "../../_layout";
+import Preloader from "Preloader";
+import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import ListDepartment from "./list_department";
 import ListSubDepartment from "./list_sub_department";
 import {sessionService} from "redux-react-session";
-import {FetchDepartment} from "../../../actions/masterdata/department/department.action";
-import {FetchSubDepartment} from "../../../actions/masterdata/department/sub_department.action";
+import {FetchDepartment} from "redux/actions/masterdata/department/department.action";
+import {FetchSubDepartment} from "redux/actions/masterdata/department/sub_department.action";
 
 class Department extends Component{
     constructor(props){
@@ -16,23 +16,8 @@ class Department extends Component{
         }
     }
     componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
-                this.props.dispatch(FetchDepartment());
-                this.props.dispatch(FetchSubDepartment());
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                console.log(user);
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
+        this.props.dispatch(FetchDepartment());
+        this.props.dispatch(FetchSubDepartment());
     }
     render(){
         return (
@@ -62,7 +47,6 @@ class Department extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
         department:state.departmentReducer.data,
         subDepartment:state.subDepartmentReducer.data,
         isLoading: state.departmentReducer.isLoading,

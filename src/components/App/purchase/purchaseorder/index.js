@@ -1,18 +1,30 @@
 import React,{Component} from 'react';
-import {store,get,destroy} from "components/model/app.model";
+import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
 import Logo from "assets/images/logo.png"
 import Select from 'react-select'
+import Swal from 'sweetalert2'
 
 const options = [
   { value: 'chocolate', label: 'Chocolate' },
   { value: 'strawberry', label: 'Strawberry' },
   { value: 'vanilla', label: 'Vanilla' }
 ]
-
+const table='purchase_order'
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
 
 class PurchaseOrder extends Component{
 
@@ -21,15 +33,84 @@ class PurchaseOrder extends Component{
 
         this.state = {
           addingItemName: "",
-          data: "",
+          databrg: [],
+          brgval:[],
           startDate: new Date(),
           searchby: 'kode barang',
+          harga_beli: 0,
+          diskon:0,
+          ppn:0,
+          qty:0
         };
-        this.create = this.create.bind(this);
-        this.onChangeAddValue = this.onChangeAddValue.bind(this);
-        this.createItem = this.createItem.bind(this);
-        this.refresh = this.refresh.bind(this);
-        this.setStartDate = this.setStartDate(this);
+        this.HandleRemove = this.HandleRemove.bind(this);
+        this.HandleAddBrg = this.HandleAddBrg.bind(this);
+        this.setStartDate = this.setStartDate.bind(this);
+        this.HandleChangeInput = this.HandleChangeInput.bind(this);
+        this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this)
+    }
+    componentDidMount(){
+        const data = get(table);
+        data.then(res => {
+            let brg = this.state.brgval
+            res.map((i)=>{
+                 brg.push({
+                    harga_beli: i.harga_beli,
+                    diskon: i.diskon,
+                    ppn: i.ppn,
+                    qty: i.qty
+                });
+            })
+            this.setState({
+                databrg: res,
+                brgval: brg
+            })
+        })
+    }
+
+    HandleChangeInput(e,id){
+        const column = e.target.name;
+        const val = e.target.value;
+       
+        const cek = cekData('barcode', id, table);
+        cek.then(res => {
+            if (res == undefined) {
+                 Toast.fire({
+                     icon: 'error',
+                     title: `not found.`
+                 })
+            } else {
+
+                let final= {}
+                Object.keys(res).forEach((k, i) => {
+                    if(k!==column){
+                       final[k] = res[k];
+                    }else{
+                        final[column]=val
+                    }
+                })
+                update(table, final)
+                 Toast.fire({
+                     icon: 'success',
+                     title: `${column} has been changed.`
+                 })
+            }
+            const data = get(table);
+            data.then(res => {
+                this.setState({
+                    databrg: res
+                })
+            })
+        })
+       
+    }
+
+    HandleChangeInputValue(e,i) {
+        const column = e.target.name;
+        const val = e.target.value;
+        let brgval = [...this.state.brgval];
+        brgval[i] = {...brgval[i], [column]: val};
+        this.setState({ brgval });
+
     }
 
     setStartDate(date) {
@@ -39,66 +120,119 @@ class PurchaseOrder extends Component{
         });
     };
 
-    onChangeAddValue(newValue) {
-        this.setState(() => ({
-            addingItemName: newValue
-        }));
-    }
-
-    refresh(e) {
+    HandleRemove(e, id){
         e.preventDefault()
-        const data=destroy('purchase_order');
-       
-        data.then(res => {
-        })
-
-        const data2 = get('purchase_order');
-        data2.then(res => {
-            this.setState({
-                data: JSON.stringify(res)
-            })
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                del(table,id);
+                const data = get(table);
+                data.then(res => {
+                    this.setState({
+                        databrg: res
+                    })
+                    Swal.fire(
+                        'Deleted!',
+                        'Your data has been deleted.',
+                        'success'
+                    )
+                })
+            }
         })
     }
 
-    create() {
-        const item = {
-            kd_brg: this.state.addingItemName,
-            barcode: this.state.addingItemName,
-            satuan: this.state.addingItemName,
-            diskon: this.state.addingItemName,
-            diskon2: this.state.addingItemName,
-            diskon3: this.state.addingItemName,
-            diskon4: this.state.addingItemName,
-            ppn: this.state.addingItemName,
-            harga_beli: this.state.addingItemName,
-            qty:0
+    HandleAddBrg(e,item,index) {
+        e.preventDefault();
+        const finaldt = {
+            kd_brg: item.kd_brg,
+            barcode:item.barcode,
+            satuan:item.satuan,
+            diskon:item.diskon,
+            diskon2:0,
+            diskon3:0,
+            diskon4:0,
+            ppn:item.ppn,
+            harga_beli:item.harga_beli,
+            qty:item.qty,
+            stock:item.stock
         };
-        store('purchase_order',item)
-        this.setState({
-            addingItemName: ''
-        });
-        const data = get('purchase_order');
-        data.then(res => {
-            this.setState({
-                data: JSON.stringify(res)
-            })
-        })
-        console.log("New item added: " + item.Name);
-    }
+        const cek = cekData('barcode',item.barcode,table);
+           cek.then(res => {
+               if(res==undefined){
+                    store(table, finaldt)
+               }else{
+                   update(table,{
+                        id:res.id,
+                        qty:parseFloat(res.qty)+1,
+                        kd_brg: res.kd_brg,
+                        barcode: res.barcode,
+                        satuan: res.satuan,
+                        diskon: res.diskon,
+                        diskon2: res.diskon2,
+                        diskon3: 0,
+                        diskon4: 0,
+                        ppn: res.ppn,
+                        stock: res.stock,
+                        harga_beli: res.harga_beli,
+                   })
+               }
+               
 
-    createItem(event) {
-        event.preventDefault();
-        (this.state.addingItemName.length > 50 || this.state.addingItemName.length === 0)
-            ? alert("Check number of symbols, it must be in range (1-50)!")
-            : this.create();
+               const data = get(table);
+               data.then(res => {
+                   let brg = []
+                   res.map((i) => {
+                       brg.push({
+                           harga_beli: i.harga_beli,
+                           diskon: i.diskon,
+                           ppn: i.ppn,
+                           qty: i.qty
+                       });
+                   })
+                   this.setState({
+                       databrg: res,
+                       brgval: brg
+                   })
+               });
+               console.log(this.state.brgval);
+
+           })
     }
 
     render() {
+        console.log(this.state.brgval);
         return (
           <Layout page="Purchase Order">
+              <div className="row align-items-center">
+                <div className="col-6">
+                    <div className="dashboard-header-title mb-3">
+                    <h5 className="mb-0 font-weight-bold">Purchase Order</h5>
+                    {/* <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p> */}
+                    </div>
+                </div>
+                {/* Dashboard Info Area */}
+                <div className="col-6">
+                    <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
+                    <div className="dashboard-btn-group d-flex align-items-center">
+                        <a href="#" className="btn btn-info ml-1">Simpan</a>
+                        <a href="#" className="btn btn-danger ml-1">Reset</a>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
             <div className="row">
-              <div className="col-lg-5 col-md-4 col-xl-3 height-card box-margin">
-                <div className="card">
+                {/* LEFT SIDE */}
+              <div className="col-lg-5 col-md-4 col-xl-3 box-margin">
+                <div className="card" style={{height: "100vh"}}>
                   <div className="card-body">
                     <div className="chat-area">
                       <div className="chat-header-text d-flex border-none mb-10">
@@ -150,11 +284,21 @@ class PurchaseOrder extends Component{
                         </div>
                       </div>
                       {/*end chat-search*/}
-                      <Scrollbars style={{ width: "100%", height: "100vh" }}>
+                      <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
                         <div className="people-list">
                           <div id="chat_user_2">
                             <ul className="chat-list list-unstyled">
-                              <li className="clearfix">
+                              <li className="clearfix" onClick={(e)=>this.HandleAddBrg(e,{
+                                  kd_brg:"100001",
+                                  barcode:"1000013",
+                                  satuan:"Karton",
+                                  diskon:10,
+                                  diskon2:0,
+                                  ppn:10,
+                                  harga_beli:5000,
+                                  qty:2,
+                                  stock:10
+                              })}>
                                 <img src={Logo} alt="avatar" />
                                 <div className="about">
                                   <div className="name">Koka Kola</div>
@@ -169,8 +313,8 @@ class PurchaseOrder extends Component{
                   </div>
                 </div>
               </div>
-              <div className="col-lg-7 col-md-8 col-xl-9 height-card box-margin">
-                <div className="card">
+              <div className="col-lg-7 col-md-8 col-xl-9 box-margin">
+                <div className="card" style={{height: "100vh"}}>
                   <div className="container" style={{ marginTop: "20px" }}>
                     <div className="row">
                       <div className="col-md-6">
@@ -312,48 +456,55 @@ class PurchaseOrder extends Component{
                   <div className="card-body">
                     <div id="tableContainer">
                       <div className="table-responsive">
+                        <Scrollbars style={{width:'100%', height: "400px", maxHeight:'100%' }}>
+
                         <table className="table table-hover">
                           <thead>
                             <tr>
-                              <th>#</th>
-                              <th>First Name</th>
-                              <th>LAST NAME</th>
-                              <th>USERNAME</th>
+                                <th>#</th>
+                                <th>barcode</th>
+                                <th>satuan</th>
+                                <th>harga beli</th>
+                                <th>diskon</th>
+                                <th>ppn</th>
+                                <th>stock</th>
+                                <th>qty</th>
+                                <th>Subtotal</th>
                             </tr>
                           </thead>
+
                           <tbody>
-                            <tr>
-                              <th>1</th>
-                              <td>Mark</td>
-                              <td>Otto</td>
-                              <td>@mdo</td>
-                            </tr>
-                            <tr>
-                              <th>2</th>
-                              <td>Jacob</td>
-                              <td>Thornton</td>
-                              <td>@fat</td>
-                            </tr>
-                            <tr>
-                              <th>3</th>
-                              <td>Larry</td>
-                              <td>the Bird</td>
-                              <td>@twitter</td>
-                            </tr>
-                            <tr>
-                              <th>4</th>
-                              <td>Larry</td>
-                              <td>Jellybean</td>
-                              <td>@lajelly</td>
-                            </tr>
-                            <tr>
-                              <th>5</th>
-                              <td>Larry</td>
-                              <td>Kikat</td>
-                              <td>@lakitkat</td>
-                            </tr>
+                            {
+                                this.state.databrg.map((item,index)=>{
+                                    let disc1=0;
+                                    let disc2=0;
+                                    if(item.diskon!=0){
+                                        disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
+                                        disc2=disc1;
+                                        if(item.diskon2!=0){
+                                            disc2 = disc1 * (parseFloat(item.diskon2) / 100);
+                                        }
+                                    }
+                                    return (
+                                        <tr key={index}>
+                                            <td>
+                                                <a href="#" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
+                                            </td>
+                                            <td>{item.barcode}</td>
+                                            <td>{item.satuan}</td>
+                                            <td><input type='text' style={{width:'80px',textAlign:'center'}} name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
+                                            <td><input type='text' name='diskon' style={{width:'35px',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
+                                            <td><input type='text' name='ppn' style={{width:'35px',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
+                                            <td>{item.stock}</td>
+                                            <td><input type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'35px',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
+                                            <td>{(parseInt(item.harga_beli)-disc2)*parseFloat(item.qty)}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
                           </tbody>
                         </table>
+                        </Scrollbars>
                       </div>
                     </div>
                   </div>
