@@ -24,7 +24,10 @@
     "react-scripts": "1.1.4",
     "react-select": "^3.1.0",
     "react-tabs": "^3.1.1",
+<<<<<<< HEAD
     "reactstrap": "^8.5.1",
+=======
+>>>>>>> 01e24c7c3f84da77bacc6504eb3addc1c4d19aa2
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.2",
     "redux-react-session": "^2.6.1",
