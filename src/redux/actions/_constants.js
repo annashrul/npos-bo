@@ -189,6 +189,17 @@ export const SUPPLIER = {
     POST_LOADING: 'SET_SUPPLIER_POST_LOADING'
 }
 /****************
+ SALES
+ *****************/
+export const SALES = {
+    LOADING: 'SET_SALES_LOADING',
+    SUCCESS: 'SET_SALES_SUCCESS',
+    FAILED: 'SET_SALES_FAILED',
+    DETAIL: 'SET_SALES_DETAIL',
+    ALL: 'SET_SALES_ALL',
+    POST_LOADING: 'SET_SALES_POST_LOADING'
+}
+/****************
     DASHBOARD
 *****************/
 /****************

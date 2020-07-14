@@ -15,6 +15,7 @@ import {priceProductReducer} from "./masterdata/price_product/price_product.redu
 import {customerReducer} from "./masterdata/customer/customer.reducer";
 import {customerTypeReducer} from "./masterdata/customer_type/customer_type.reducer";
 import {supplierReducer} from "./masterdata/supplier/supplier.action";
+import {salesReducer} from "./masterdata/sales/sales.action";
 import {departmentReducer} from "./masterdata/department/department.reducer";
 import {subDepartmentReducer} from "./masterdata/department/sub_department.reducer";
 import {stockReportReducer} from "./report/inventory/stock_report.reducer";
@@ -37,6 +38,7 @@ export default combineReducers({
     departmentReducer,
     subDepartmentReducer,
     supplierReducer,
+    salesReducer,
     stockReportReducer,
 
     auth: authReducer,
