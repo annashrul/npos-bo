@@ -18,6 +18,7 @@ import {supplierReducer} from "./masterdata/supplier/supplier.action";
 import {departmentReducer} from "./masterdata/department/department.reducer";
 import {subDepartmentReducer} from "./masterdata/department/sub_department.reducer";
 import {stockReportReducer} from "./report/inventory/stock_report.reducer";
+import {poReducer} from "./purchase/purchase_order/po.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -38,6 +39,7 @@ export default combineReducers({
     subDepartmentReducer,
     supplierReducer,
     stockReportReducer,
+    poReducer,
 
     auth: authReducer,
     errors : errorsReducer

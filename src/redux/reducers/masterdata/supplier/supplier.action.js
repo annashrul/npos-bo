@@ -3,7 +3,11 @@ import {SUPPLIER} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,
-    status:"",msg:"",data:[],dataAll:[]
+    status:"",
+    msg:"",
+    data:[],
+    dataAll:[],
+    dataSupllier:[]
 };
 
 export const supplierReducer = (state=initialState,action) => {
@@ -18,7 +22,8 @@ export const supplierReducer = (state=initialState,action) => {
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
-                dataAll:action.data.result
+                dataAll:action.data.result,
+                dataSupllier:action.data.result.data
             });
         case SUPPLIER.FAILED:
             return Object.assign({}, state, {

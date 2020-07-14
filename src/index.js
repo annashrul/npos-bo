@@ -9,7 +9,7 @@ import 'react-tabs/style/react-tabs.css';
 import 'sweetalert2/src/sweetalert2.scss'
 
 import store from './redux/store';
-axios.defaults.baseURL = 'http://192.168.100.200:3000/';
+axios.defaults.baseURL = 'http://localhost:3000/';
 
 ReactDOM.render(
     <Provider store={store}>
