@@ -15,6 +15,7 @@ import Department from '../masterdata/department';
 import PrivateRoute from '../common/PrivateRoute';
 import Adjustment from '../inventory/adjusment'
 import PurchaseOrder from '../purchase/purchaseorder'
+import Receive from '../purchase/receive'
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
@@ -30,7 +31,8 @@ const Routes = (
             <PrivateRoute path="/location" exact strict component={Location} />
             <PrivateRoute path="/product" exact strict component={Product} />
             <PrivateRoute path="/adjustment" exact strict component={Adjustment} />
-            <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
+            <PrivateRoute path="/receive" exact strict component={Receive} />
+            <PrivateRoute path="/PurchaseOrder" exact strict component={PurchaseOrder} />
         </Switch>
     </div>
 )
