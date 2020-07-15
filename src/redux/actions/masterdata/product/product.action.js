@@ -1,7 +1,7 @@
 import {PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {store,get, update,destroy,cekData,del} from "components/model/app.model";
+import {store, update,cekData} from "components/model/app.model";
 
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}
@@ -124,7 +124,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,tabl
             Swal.fire({
                 title: 'failed',
                 type: 'danger',
-                text: error.response.data.msg,
+                // text: error.response.data.msg,
             });
         })
     }
