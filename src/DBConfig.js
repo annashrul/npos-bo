@@ -34,7 +34,8 @@ export const DBConfig = {
         { name: 'password_otorisasi',keypath:'password_otorisasi',options:{unique:false}},
         { name: 'nama',keypath:'nama',options:{unique:false}},
         { name: 'alamat',keypath:'alamat',options:{unique:false}},
-        { name: 'foto',keypath:'foto',options:{unique:false}}
+        { name: 'foto',keypath:'foto',options:{unique:false}},
+        { name: 'token',keypath:'token',options:{unique:false}}
       ]
     },
 

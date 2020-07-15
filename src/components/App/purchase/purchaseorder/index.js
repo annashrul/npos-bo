@@ -25,6 +25,7 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
+      let count = 0;
 
 class PurchaseOrder extends Component{
 
@@ -37,7 +38,6 @@ class PurchaseOrder extends Component{
           brgval:[],
           tgl_order: new Date(),
           tgl_kirim: new Date(),
-          searchby: 'kode barang',
           harga_beli: 0,
           diskon:0,
           ppn:0,
@@ -48,12 +48,13 @@ class PurchaseOrder extends Component{
           catatan:"",
           jenis_trx:"Tunai",
           userid:0,
+          searchby:1,
+          search:"",
           error:{
             location:"",
             supplier:"",
             catatan:""
           }
-
         };
         this.HandleRemove = this.HandleRemove.bind(this);
         this.HandleAddBrg = this.HandleAddBrg.bind(this);
@@ -85,23 +86,52 @@ class PurchaseOrder extends Component{
               brgval: brg
           })
       })
-
-      const lokasi = get('sess');
-      lokasi.then(res => {
-        console.log(res);
-        let lk = []
-        res[0].lokasi.map((i) => {
-          lk.push({
-            value:i.kode,
-            label:i.nama
-          });
-        })
-        this.setState({
-          location_data: lk,
-          userid:res[0].id
-        })
-      })
     }
+
+    componentWillReceiveProps = (nextProps) => {
+      if (nextProps.auth.user) {
+        let lk = []
+        let loc = nextProps.auth.user.lokasi;
+        if(loc!==undefined){
+            loc.map((i) => {
+              lk.push({
+                value: i.kode,
+                label: i.nama
+              });
+            })
+            this.setState({
+              location_data: lk,
+              userid: nextProps.auth.user.id
+            })
+        }
+      }
+      if(nextProps.barang.length>0){
+        const data = get(table);
+        data.then(res => {
+          let brg = []
+          res.map((i) => {
+            brg.push({
+              harga_beli: i.harga_beli,
+              diskon: i.diskon,
+              ppn: i.ppn,
+              qty: i.qty,
+              satuan: i.satuan
+            });
+          })
+          this.setState({
+            databrg: res,
+            brgval: brg
+          })
+        });
+
+      }
+     
+    }
+
+    // shouldComponentUpdate =(nextProps, nextState) => {
+    //   console.log(nextProps.barang!==this.props.barang);
+    //   return nextProps.barang!==this.props.barang;
+    // }
 
     HandleChangeLokasi(lk){
       let err = Object.assign({}, this.state.error, {
@@ -166,16 +196,20 @@ class PurchaseOrder extends Component{
       })
     }
 
-    HandleCommonInputChange(e){
+    HandleCommonInputChange(e,errs=true){
       const column = e.target.name;
       const val = e.target.value;
-      let err = Object.assign({}, this.state.error, {
-        [column]: ""
+      this.setState({
+        [column]: val
       });
-      this.setState({ 
-        [column]:val,
-        error: err
+      if(errs){
+        let err = Object.assign({}, this.state.error, {
+          [column]: ""
         });
+        this.setState({ 
+          error: err
+          });
+      }
     }
 
     HandleChangeInput(e,id){
@@ -498,6 +532,19 @@ class PurchaseOrder extends Component{
 
     }
 
+    HandleSearch(){
+      if (this.state.supplier === "" || this.state.lokasi === "") {
+          Swal.fire(
+            'Gagal!',
+            'Pilih lokasi dan supplier terlebih dahulu.',
+            'error'
+          )
+      }else{
+        const searchby = parseInt(this.state.searchby)===1?'kd_brg':(parseInt(this.state.searchby)===2?'barcode':'deskripsi')
+        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier));
+      }
+    }
+
     render() {
       
       // if(this.props.isLoading){
@@ -550,18 +597,17 @@ class PurchaseOrder extends Component{
                           <div className="col-md-12">
                             <div className="form-group">
                                 <div className="input-group input-group-sm">
-                                <select class="form-control form-control-sm">
-                                  <option value={1}>Kode Barang</option>
-                                  <option value={2}>Barcode</option>
-                                  <option value={3}>Deskripsi</option>
-                                  <option value={4}>Kode Packing</option>
-                                </select>
-                                </div>
+                                  <select name='searchby' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                    <option value={1}>Kode Barang</option>
+                                    <option value={2}>Barcode</option>
+                                    <option value={3}>Deskripsi</option>
+                                  </select>
+                                  </div>
                                 <small
                                   id="passwordHelpBlock"
                                   class="form-text text-muted"
                                 >
-                                  Cari berdasarkan {this.state.searchby}
+                                  Cari berdasarkan {parseInt(this.state.searchby)==1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
                                 </small>
                             </div>
                           </div>
@@ -569,16 +615,31 @@ class PurchaseOrder extends Component{
                             <div className="form-group">
                               <div className="input-group input-group-sm">
                                 <input
+                                  autoFocus
                                   type="text"
                                   id="chat-search"
-                                  name="chat-search"
+                                  name="search"
                                   className="form-control form-control-sm"
                                   placeholder="Search"
+                                   onChange={(e)=>this.HandleCommonInputChange(e,false)}
+                                   onKeyPress = {
+                                     event => {
+                                       if (event.key === 'Enter') {
+                                         this.HandleSearch();
+                                       }
+                                     }
+                                   }
                                 />
                                 <span className="input-group-append">
                                   <button
                                     type="button"
                                     className="btn btn-primary"
+                                    onClick = {
+                                      event => {
+                                        event.preventDefault();
+                                        this.HandleSearch();
+                                      }
+                                    }
                                   >
                                     <i className="fa fa-search" />
                                   </button>
@@ -902,7 +963,8 @@ const mapStateToPropsCreateItem = (state) => ({
   loadingbrg: state.productReducer.isLoadingBrg,
   nota: state.poReducer.code,
   supplier: state.supplierReducer.dataSupllier,
-  isLoading:state.poReducer.isLoading
+  isLoading:state.poReducer.isLoading,
+  auth:state.auth
 });
 
 export default connect(mapStateToPropsCreateItem)(PurchaseOrder);

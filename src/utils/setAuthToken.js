@@ -2,7 +2,6 @@ import axios from 'axios';
 import {HEADERS} from "../redux/actions/_constants";
 
 const setAuthToken = token =>{
-    console.log("SET AUTH TOKEN ",token);
     if(token){
 
         // Apply to every request
