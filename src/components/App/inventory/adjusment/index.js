@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {store,get,destroy} from "components/model/app.model";
+import {store,get,destroy,} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 
 class TrxAdjustment extends Component{
@@ -43,12 +43,12 @@ class TrxAdjustment extends Component{
             kd_brg: this.state.addingItemName,
             barcode: this.state.addingItemName,
             satuan: this.state.addingItemName,
-            diskon: this.state.addingItemName,
-            diskon2: this.state.addingItemName,
+            diskon: 10,
+            diskon2: 8,
             diskon3: this.state.addingItemName,
             diskon4: this.state.addingItemName,
             ppn: this.state.addingItemName,
-            harga_beli: this.state.addingItemName,
+            harga_beli: 5000,
             qty:0
         };
         store('purchase_order',item)

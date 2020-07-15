@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import App from './components/App/App';
 import { Provider } from 'react-redux';
 import registerServiceWorker from './registerServiceWorker';
-import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css";
+import 'react-tabs/style/react-tabs.css';
+import 'sweetalert2/src/sweetalert2.scss'
 
 import store from './redux/store';
-axios.defaults.baseURL = 'http://203.190.54.4:6692/';
 
 ReactDOM.render(
     <Provider store={store}>

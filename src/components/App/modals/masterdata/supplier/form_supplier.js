@@ -1,10 +1,10 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
-import {createSupplier, updateSupplier} from "../../../../actions/masterdata/supplier/supplier.action";
+import {stringifyFormData} from "helper";
+import {createSupplier, updateSupplier} from "redux/actions/masterdata/supplier/supplier.action";
 class FormSupplier extends Component{
     constructor(props){
         super(props);
@@ -61,10 +61,10 @@ class FormSupplier extends Component{
 
         if (this.props.detail !== undefined) {
             console.log(this.state.kode);
-            this.props.dispatch(updateSupplier(this.state.kode,parseData,this.props.token));
+            this.props.dispatch(updateSupplier(this.state.kode,parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(createSupplier(parseData,this.props.token));
+            this.props.dispatch(createSupplier(parseData));
             this.props.dispatch(ModalToggle(false));
         }
 

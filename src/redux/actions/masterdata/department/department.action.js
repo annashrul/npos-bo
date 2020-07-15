@@ -39,22 +39,13 @@ export const FetchDepartment = (page=1,q='')=>{
 
 
 
-export const createDepartment = (data,token) => {
+export const createDepartment = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `departement`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
+
         console.log(data);
-        console.log(token);
-        axios.post(url, data, headers)
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
                 console.log("DATA",data);
@@ -91,22 +82,14 @@ export const createDepartment = (data,token) => {
 }
 
 
-export const updateDepartment = (id,data,token) => {
+export const updateDepartment = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `departement/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
+
         console.log("=============== PUT ====================");
         console.log(data);
-        axios.put(url, data, headers)
+        axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
                 console.log("DATA",data);
@@ -146,18 +129,10 @@ export const deleteDepartment = (id,token) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `departement/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
+
         console.log("=============== DELETE ====================");
 
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 console.log("DATA",data);

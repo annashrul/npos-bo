@@ -13,8 +13,14 @@ export const TOKEN = {
 }
 
 export const HEADERS ={
+<<<<<<< HEAD
   // URL: "http://203.190.54.4:6692/",
   URL:"http://192.168.100.200:3000/",
+=======
+  URL: "http://ptnetindo.com:6692/",
+  // URL: "http://203.190.54.4:6692/",
+  // URL:"http://192.168.100.6:5000/api/v1/",
+>>>>>>> 967974895ff9982281dbabe93b3e5fed220b1bfc
   TOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO"
@@ -31,11 +37,12 @@ export const MODALS = {
 /****************
       AUTH
 *****************/
-export const LOGIN = {
-  PROCESS: 'SET_LOGIN_PROCESS',
-  SUCCESS: 'SET_LOGIN_SUCCESS',
-  FAILED: 'SET_LOGIN_FAILED',
-  REMOVE: 'SET_LOGOUT'
+export const AUTH = {
+  FETCH_DATAS:'FETCH_DATAS',
+  GET_ERRORS:'GET_ERRORS',
+  TEST_DISPATCH:'TEST_DISPATCH',
+  SET_CURRENT_USER:'SET_CURRENT_USER',
+  SET_LOGGED_USER:'SET_LOGGED_USER'
 }
 export const REGISTER = {
   PROCESS: 'SET_REGISTER_PROCESS',
@@ -111,7 +118,9 @@ export const PRODUCT = {
     LOADING: 'SET_PRODUCT_LOADING',
     SUCCESS: 'SUCCESS_PRODUCT',
     FAILED: 'FAILED_PRODUCT',
-    DETAIL: 'DETAIL_PRODUCT'
+    DETAIL: 'DETAIL_PRODUCT',
+    LOADING_BRG: 'SET_BRG_LOADING',
+    SUCCESS_BRG: 'SET_BRG_SUCCESS',
 }
 
 /****************
@@ -188,6 +197,17 @@ export const SUPPLIER = {
     POST_LOADING: 'SET_SUPPLIER_POST_LOADING'
 }
 /****************
+ SALES
+ *****************/
+export const SALES = {
+    LOADING: 'SET_SALES_LOADING',
+    SUCCESS: 'SET_SALES_SUCCESS',
+    FAILED: 'SET_SALES_FAILED',
+    DETAIL: 'SET_SALES_DETAIL',
+    ALL: 'SET_SALES_ALL',
+    POST_LOADING: 'SET_SALES_POST_LOADING'
+}
+/****************
     DASHBOARD
 *****************/
 /****************
@@ -212,4 +232,15 @@ export const DASHBOARD = {
   FAILED: 'SET_DASHBOARD_FAILED',
   DETAIL: 'SET_DASHBOARD_DETAIL',
   POST_LOADING: 'SET_DASHBOARD_POST_LOADING'
+}
+
+/****************
+ PURCHSE ORDER
+ *****************/
+export const PO = {
+  LOADING: 'SET_PO_LOADING',
+  SUCCESS: 'SET_PO_SUCCESS',
+  FAILED: 'SET_PO_FAILED',
+  DETAIL: 'SET_PO_DETAIL',
+  SUCCESS_CODE: 'SET_PO_SUCCESS_CODE',
 }

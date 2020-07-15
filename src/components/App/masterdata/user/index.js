@@ -3,7 +3,6 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
 import ListUserList from "./master_user_list/list";
-import 'react-tabs/style/react-tabs.css';
 import Preloader from "Preloader";
 import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
 import {FetchUserList} from "redux/actions/masterdata/user_list/user_list.action";

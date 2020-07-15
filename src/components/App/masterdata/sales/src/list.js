@@ -1,17 +1,12 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
-import Pagination from "react-js-pagination";
-import Paginationq from "helper";
-import {
-    deleteCustomerType,
-    FetchCustomerType
-} from "../../../../../../redux/actions/masterdata/customer_type/customer_type.action";
-import {ModalToggle, ModalType} from "../../../../../../redux/actions/modal.action";
+import {deleteSales, FetchSales} from "redux/actions/masterdata/sales/sales.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import Paginationq, {statusQ} from "helper";
+import FormSales from "components/App/modals/masterdata/sales/form_sales";
 import Swal from "sweetalert2";
-import {deleteLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
-import FormCustomerType from "components/App/modals/masterdata/customer_type/form_customer_type";
 
-class ListCustomerType extends Component{
+class ListSales extends Component{
     constructor(props){
         super(props);
         this.handlesearch = this.handlesearch.bind(this);
@@ -22,32 +17,40 @@ class ListCustomerType extends Component{
     }
     handlePageChange(pageNumber){
         console.log(`active page is ${pageNumber}`);
+        localStorage.setItem("page_sales",pageNumber);
+        this.props.dispatch(FetchSales(pageNumber,''))
     }
     handlesearch(e){
         e.preventDefault();
         const form = e.target;
         const data = new FormData(form);
         let any = data.get('field_any');
-        localStorage.setItem('any_customer_type',any);
+        localStorage.setItem('any_sales',any);
         if(any===''||any===null||any===undefined){
-            this.props.dispatch(FetchCustomerType(1,''));
+            this.props.dispatch(FetchSales(1,''))
         }else{
-            this.props.dispatch(FetchCustomerType(1,any));
+            this.props.dispatch(FetchSales(1,any))
         }
     }
     toggleModal(e,i) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formCustomerType"));
+        this.props.dispatch(ModalType("formSales"));
         if(i===null){
             this.setState({detail:undefined});
         }else{
-            this.setState({detail:{"kode":this.props.data.data[i].kode,"nama":this.props.data.data[i].nama}});
+            this.setState({
+                detail:{
+                    "nama":this.props.data.data[i].nama,
+                    "status":this.props.data.data[i].status,
+                    "kode":this.props.data.data[i].kode,
+                }
+            })
         }
-
     }
-    handleDelete(e,i){
+    handleDelete(e,id){
+        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -59,14 +62,14 @@ class ListCustomerType extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.props.dispatch(deleteCustomerType(i,this.props.token));
+                this.props.dispatch(deleteSales(id,this.props.token));
             }
         })
+
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
-        console.log(data);
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -74,7 +77,7 @@ class ListCustomerType extends Component{
                         <div className="col-10 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
-                                <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_customer_type')}/>
+                                <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_sales')}/>
                             </div>
                         </div>
                         <div className="col-2 col-xs-4 col-md-4">
@@ -93,8 +96,9 @@ class ListCustomerType extends Component{
                         <thead className="bg-light">
                         <tr>
                             <th className="text-black" style={columnStyle}>#</th>
-                            <th className="text-black" style={columnStyle}>Code</th>
                             <th className="text-black" style={columnStyle}>Name</th>
+                            <th className="text-black" style={columnStyle}>Status</th>
+                            {/* <th className="text-black" style={columnStyle}>KODE</th> */}
                         </tr>
                         </thead>
                         <tbody>
@@ -115,8 +119,9 @@ class ListCustomerType extends Component{
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td style={columnStyle}>{v.kode}</td>
                                                 <td style={columnStyle}>{v.nama}</td>
+                                                <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
+                                                {/* <td style={columnStyle}>{v.kode}</td> */}
                                             </tr>
                                         )
                                     })
@@ -125,6 +130,7 @@ class ListCustomerType extends Component{
                         }
                         </tbody>
                     </table>
+
                 </div>
                 <div style={{"marginTop":"20px","float":"right"}}>
                     <Paginationq
@@ -134,10 +140,10 @@ class ListCustomerType extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
-                <FormCustomerType detail={this.state.detail} token={this.props.token}/>
+                <FormSales token={this.props.token} detail={this.state.detail}/>
             </div>
-        );
+        )
     }
 }
 
-export default connect()(ListCustomerType)
+export default connect()(ListSales)

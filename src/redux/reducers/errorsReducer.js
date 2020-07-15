@@ -1,4 +1,4 @@
-import { GET_ERRORS } from '../actions/types';
+import { AUTH } from '../actions/_constants';
 
 const initialState = {
     errors: {}
@@ -6,7 +6,7 @@ const initialState = {
 
 export default function(state= initialState, action){
     switch(action.type){  
-        case GET_ERRORS:
+        case AUTH.GET_ERRORS:
             return{
                 ...state,
                 errors: action.payload

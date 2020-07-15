@@ -2,32 +2,32 @@ import React,{Component} from 'react';
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import {sessionService} from "redux-react-session";
-import {FetchSupplier} from "redux/actions/masterdata/supplier/supplier.action";
+import {FetchSales} from "redux/actions/masterdata/sales/sales.action";
 import Preloader from "Preloader";
-import ListSupplier from "./src/list";
+import ListSales from "./src/list";
 
-class Supplier extends Component{
+class Sales extends Component{
     constructor(props){
         super(props);
         this.state={token:''}
     }
     componentWillMount(){
-        let any = localStorage.getItem("any_supplier");
-        let page = localStorage.getItem("page_supplier");
-        this.props.dispatch(FetchSupplier(page?page:1,any?any:''));
+        let any = localStorage.getItem("any_sales");
+        let page = localStorage.getItem("page_sales");
+        this.props.dispatch(FetchSales(page?page:1,any?any:''));
     }
 
 
 
     render(){
         return (
-            <Layout page="Supplier">
+            <Layout page="Sales">
                 <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
                             {
-                                !this.props.isLoading ? (  <ListSupplier
-                                    data={this.props.supplier}
+                                !this.props.isLoading ? (  <ListSales
+                                    data={this.props.sales}
                                     pagin={this.handlePagin}
                                     search={this.handleSearch}
                                     token={this.state.token}
@@ -43,9 +43,9 @@ class Supplier extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        supplier:state.supplierReducer.data,
-        isLoading: state.supplierReducer.isLoading,
+        sales:state.salesReducer.data,
+        isLoading: state.salesReducer.isLoading,
     }
 }
 
-export default connect(mapStateToProps)(Supplier)
+export default connect(mapStateToProps)(Sales)

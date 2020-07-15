@@ -1,37 +1,32 @@
-import {SUPPLIER} from "../../../actions/_constants";
+import {SALES} from "../../../actions/_constants";
 
 
 const initialState = {
     isLoading:true,
-    status:"",
-    msg:"",
-    data:[],
-    dataAll:[],
-    dataSupllier:[]
+    status:"",msg:"",data:[],dataAll:[]
 };
 
-export const supplierReducer = (state=initialState,action) => {
+export const salesReducer = (state=initialState,action) => {
     switch (action.type) {
-        case SUPPLIER.SUCCESS:
+        case SALES.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
             });
-        case SUPPLIER.ALL:
+        case SALES.ALL:
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
-                dataAll:action.data.result,
-                dataSupllier:action.data.result.data
+                dataAll:action.data.result
             });
-        case SUPPLIER.FAILED:
+        case SALES.FAILED:
             return Object.assign({}, state, {
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
             });
-        case SUPPLIER.LOADING:
+        case SALES.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
             });

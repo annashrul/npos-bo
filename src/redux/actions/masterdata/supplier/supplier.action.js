@@ -63,16 +63,8 @@ export const createSupplier = (data,token) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `supplier`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
-        axios.post(url, data, headers)
+
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
                 if (data.status === 'success') {
@@ -110,16 +102,8 @@ export const updateSupplier = (id,data,token) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `supplier/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.put(url, data, headers)
+
+        axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
@@ -157,17 +141,8 @@ export const deleteSupplier = (id,token) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `supplier/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
 
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
