@@ -4,7 +4,6 @@ import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import ListDepartment from "./list_department";
 import ListSubDepartment from "./list_sub_department";
-import {sessionService} from "redux-react-session";
 import {FetchDepartment} from "redux/actions/masterdata/department/department.action";
 import {FetchSubDepartment} from "redux/actions/masterdata/department/sub_department.action";
 

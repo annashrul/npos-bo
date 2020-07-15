@@ -1,11 +1,8 @@
 import {PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-<<<<<<< HEAD
-import {FetchBank} from "../bank/bank.action";
-=======
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
->>>>>>> 967974895ff9982281dbabe93b3e5fed220b1bfc
+import {FetchCash} from "../cash/cash.action";
 
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}
@@ -62,24 +59,14 @@ export const FetchProduct = (page=1,by='',q='')=>{
     }
 }
 
-<<<<<<< HEAD
-
 export const createProduct = (data) => {
+    console.log("DATA TI FORM",data)
     return (dispatch) => {
-        dispatch(setLoading(true))
+        dispatch(setLoading(true));
         const url = HEADERS.URL + `barang`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
-        console.log(data);
-        axios.post(url, data, headers)
+        axios.post(url,data)
             .then(function (response) {
-                const data = (response.data)
+                const data = (response.data);
                 console.log("DATA",data);
                 if (data.status === 'success') {
                     Swal.fire({
@@ -96,21 +83,24 @@ export const createProduct = (data) => {
                 }
                 dispatch(setLoading(false));
                 dispatch(FetchProduct(1,'',''));
-
             })
             .catch(function (error) {
-                dispatch(setLoading(false))
+                // handle error
+                dispatch(setLoading(false));
+                console.log(error);
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
-
                 if (error.response) {
                     console.log("error")
                 }
             })
-=======
+
+    }
+}
+
 export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,table='purchase_order')=>{
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
@@ -180,6 +170,5 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,tabl
                 text: error.response.data.msg,
             });
         })
->>>>>>> 967974895ff9982281dbabe93b3e5fed220b1bfc
     }
 }

@@ -82,6 +82,9 @@ class FormProduct extends Component{
 
     componentWillReceiveProps(nextProps){
         console.log("componentWillReceiveProps");
+        localStorage.setItem("isReadonlySama","false");
+        localStorage.setItem("isReadonlySamaPack","false");
+        localStorage.setItem("isReadonlySamaKarton","false");
         const {data} = nextProps.dataLocation;
         console.log("DATA",data);
         this.state.check = nextProps.dataLocation;
@@ -145,10 +148,19 @@ class FormProduct extends Component{
                 this.setState({barangSku: brgSku});
             }
         }
+        let qty_konversi=[];
+        for(let i=0;i<this.state.barangSku.length;i++){
+            qty_konversi.push(this.state.barangSku[i].konversi);
+        }
         if(localStorage.getItem("samarata") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++){
-                if(name === 'hrg_beli'){this.state.barangHarga[i].hrgBeliPCS = val;}
-                if(name === 'margin1'){this.state.barangHarga[i].margin1PCS = val;}
+                if(name === 'hrg_beli'){
+                    this.state.barangHarga[i].hrgBeliPCS = val;
+                }
+                if(name === 'margin1'){
+                    this.state.barangHarga[i].margin1PCS = val;
+                    // this.state.barangHarga[i].hrgJual1PCS = this.state.hrgjual1;
+                }
                 if(name === 'margin2'){this.state.barangHarga[i].margin2PCS = val;}
                 if(name === 'margin3'){this.state.barangHarga[i].margin3PCS = val;}
                 if(name === 'margin4'){this.state.barangHarga[i].margin4PCS = val;}
@@ -160,6 +172,54 @@ class FormProduct extends Component{
                 if(name === 'ppn'){this.state.barangHarga[i].ppnPCS = val;}
             }
         }
+
+        if(name === 'hrg_beli'){
+            this.setState({
+                hrg_beli_pack : parseInt(val*qty_konversi[1]),
+                hrg_beli_karton : parseInt(val*qty_konversi[2]),
+            });
+        }
+        if(name === "hrgjual1"){
+            this.setState({
+                margin1:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                hrgjual1_pack : parseInt(val*qty_konversi[1]),
+                hrgjual1_karton : parseInt(val*qty_konversi[2]),
+            });
+        }
+        if(name === "hrgjual2"){
+            this.setState({
+                margin2:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                hrgjual2_pack : parseInt(val*qty_konversi[1]),
+                hrgjual2_karton : parseInt(val*qty_konversi[2]),
+            });
+        }
+        if(name === "hrgjual3"){
+            this.setState({
+                margin3:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                hrgjual3_pack : parseInt(val*qty_konversi[1]),
+                hrgjual3_karton : parseInt(val*qty_konversi[2]),
+
+            });
+        }
+        if(name === "hrgjual4"){
+            this.setState({
+                margin4:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                hrgjual4_pack : parseInt(val*qty_konversi[1]),
+                hrgjual4_karton : parseInt(val*qty_konversi[2]),
+            });
+        }
+        //hrg beli = 5000*10/100
+        if(name === "margin1"){
+            this.setState({
+                hrgjual1:parseInt(this.state.hrg_beli) * (parseInt(val)/100) + parseInt(this.state.hrg_beli),
+            })
+        }
+        if(name === "margin2"){this.setState({hrgjual2:(parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli)})}
+        if(name === "margin3"){this.setState({hrgjual3:(parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli)})}
+        if(name === "margin4"){this.setState({hrgjual4:(parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli)})}
+
+        //input margin = hrg_beli + hrg_beli*(10/100)
+
     }
 
     handleSelect = (index) => {
@@ -209,6 +269,7 @@ class FormProduct extends Component{
         console.log(event.target.checked);
         let cik=[];
         event.target.checked===true?localStorage.setItem("isReadonly","true"):localStorage.setItem("isReadonly","false");
+
         for(let i=0;i<this.state.barangHarga.length;i++){
             this.state.barangHarga[i].isCheckedPCS = event.target.checked;
         }
@@ -226,6 +287,7 @@ class FormProduct extends Component{
         console.log(event.target.checked);
         console.log(event.target.name);
         if(event.target.name === 'PACK'){
+            event.target.checked===true?localStorage.setItem("isReadonlySamaPack","true"):localStorage.setItem("isReadonlySamaPack","false");
             event.target.checked===true?localStorage.setItem("isReadonlyPack","true"):localStorage.setItem("isReadonlyPack","false");
             event.target.checked===true?localStorage.setItem("samarata_pack","true"):localStorage.setItem("samarata_pack","false");
             let data=this.state.barangHarga;
@@ -236,6 +298,7 @@ class FormProduct extends Component{
 
         }
         if(event.target.name === 'KARTON'){
+            event.target.checked===true?localStorage.setItem("isReadonlySamaKarton","true"):localStorage.setItem("isReadonlySamaKarton","false");
             event.target.checked===true?localStorage.setItem("isReadonlyKarton","true"):localStorage.setItem("isReadonlyKarton","false");
             event.target.checked===true?localStorage.setItem("samarata_karton","true"):localStorage.setItem("samarata_karton","false");
             let data=this.state.barangHarga;
@@ -329,6 +392,7 @@ class FormProduct extends Component{
         }
 
 
+
     }
 
     handleSubmit(e){
@@ -362,7 +426,7 @@ class FormProduct extends Component{
                 "lokasi":this.state.barangHarga[i].lokasi,
                 "harga":this.state.barangHarga[i].hrgJual1PACK,
                 "harga_beli":this.state.barangHarga[i].hrgBeliPACK,
-                "barcode":barcode[1],
+                "barcode":barcode[1]===undefined?"0":barcode[1],
                 "ppn":this.state.barangHarga[i].ppnPACK,
                 "service":this.state.barangHarga[i].servicePACK,
                 "harga2":this.state.barangHarga[i].hrgJual2PACK,
@@ -373,7 +437,7 @@ class FormProduct extends Component{
                 "lokasi":this.state.barangHarga[i].lokasi,
                 "harga":this.state.barangHarga[i].hrgJual1KARTON,
                 "harga_beli":this.state.barangHarga[i].hrgBeliKARTON,
-                "barcode":barcode[2],
+                "barcode":barcode[2]===undefined?"0":barcode[2],
                 "ppn":this.state.barangHarga[i].ppnKARTON,
                 "service":this.state.barangHarga[i].serviceKARTON,
                 "harga2":this.state.barangHarga[i].hrgJual2KARTON,
@@ -399,7 +463,8 @@ class FormProduct extends Component{
         parseData["berat"]=this.state.berat;
         parseData["barang_sku"] = barangSku;
         parseData["barang_harga"] = barangHrg;
-        console.log(parseData);
+        console.log("FORM DATA",parseData);
+        // console.log();
         this.props.dispatch(createProduct(parseData));
 
 
@@ -624,29 +689,29 @@ class FormProduct extends Component{
                                                     <div className="col-md-6">
                                                         <div className="row">
                                                             <div className="col-md-4">
-                                                                <input type="text" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
                                                             </div>
                                                             <div className="col-md-4 text-center">
-                                                                <input type="text" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>
-                                                                <input type="text" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>
-                                                                <input type="text" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>
-                                                                <input type="text" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>
                                                             </div>
                                                             <div className="col-md-4 text-center">
-                                                                <input type="text" placeholder="hrg jual 1 pcs" className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>
-                                                                <input type="text" placeholder="hrg jual 2 pcs" className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>
-                                                                <input type="text" placeholder="hrg jual 3 pcs" className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>
-                                                                <input type="text" placeholder="hrg jual 4 pcs" className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 1 pcs" className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 2 pcs" className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 3 pcs" className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 4 pcs" className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
                                                         <div className="row">
                                                             <div className="col-md-3">
-                                                                <input type="text" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
                                                             </div>
                                                             <div className="col-md-3 text-center">
-                                                                <input type="text" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
                                                             </div>
                                                         </div>
                                                     </div>
