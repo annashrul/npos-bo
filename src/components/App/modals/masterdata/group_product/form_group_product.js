@@ -1,17 +1,17 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
+import {stringifyFormData} from "helper";
 import {
     createLocationCategory,
     updateLocationCategory
-} from "../../../../actions/masterdata/location_category/location_category.action";
+} from "redux/actions/masterdata/location_category/location_category.action";
 import {
     createGroupProduct,
     updateGroupProduct
-} from "../../../../actions/masterdata/group_product/group_product.action";
+} from "redux/actions/masterdata/group_product/group_product.action";
 class FormGroupProduct extends Component{
     constructor(props){
         super(props);
