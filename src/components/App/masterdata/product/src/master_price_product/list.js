@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
-import {toRp} from "../../../../../helper";
+import {toRp} from "helper";
 import connect from "react-redux/es/connect/connect";
-import {FetchPriceProduct} from "../../../../../actions/masterdata/price_product/price_product.action";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
-import Paginationq from "../../../../../helper";
+import {FetchPriceProduct} from "redux/actions/masterdata/price_product/price_product.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import Paginationq from "helper";
 
 class ListPriceProduct extends Component{
     constructor(props){

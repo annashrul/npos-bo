@@ -2,11 +2,16 @@ import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
+<<<<<<< HEAD
+// import { Scrollbars } from "react-custom-scrollbars";
+import {Scrollbars} from "react-custom-scrollbars";
+=======
 import {FetchBrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'
 
 import { Scrollbars } from "react-custom-scrollbars";
+>>>>>>> 967974895ff9982281dbabe93b3e5fed220b1bfc
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'

@@ -67,20 +67,20 @@ export const FetchUserList = (page=1,q) => {
     }
 };
 
-export const sendUserList = (data,token) => {
+export const sendUserList = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `user`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.post(url, data, headers)
+        // const headers = {
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `${token}`,
+        //         'username': `${HEADERS.USERNAME}`,
+        //         'password': `${HEADERS.PASSWORD}`,
+        //         'crossDomain': true
+        //     }
+        // }
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
                 console.log("DATA",data);
@@ -115,20 +115,20 @@ export const sendUserList = (data,token) => {
     }
 }
 
-export const updateUserList = (id,data,token) => {
+export const updateUserList = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `user/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.put(url, data, headers)
+        // const headers = {
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `${token}`,
+        //         'username': `${HEADERS.USERNAME}`,
+        //         'password': `${HEADERS.PASSWORD}`,
+        //         'crossDomain': true
+        //     }
+        // }
+        axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
@@ -163,21 +163,12 @@ export const updateUserList = (id,data,token) => {
     }
 }
 
-export const deleteUserList = (id,token) => {
+export const deleteUserList = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `user/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
 
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {

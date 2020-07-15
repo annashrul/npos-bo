@@ -1,9 +1,8 @@
 import React,{Component} from 'react';
 import Paginationq from "helper";
 import connect from "react-redux/es/connect/connect";
-// import FormUserLevel from "App/modals/masterdata/user_level/form_user_level";
 import FormUserLevel from "components/App/modals/masterdata/user_level/form_user_level";
-
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
 import {FetchUserLevel,deleteUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
 
@@ -33,8 +32,11 @@ class ListUserLevel extends Component{
     }
     toggleModal(e,id) {
         e.preventDefault();
-        const bool = !this.props.isOpen;
+        // const bool = !this.props.isOpen;
         // this.props.dispatch(ModalToggle(bool));
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formUserLevel"));
         if(id!==null){
             this.setState({
                 detail:{"id":this.props.data.data[id].id,"access":this.props.data.data[id].access,"lvl":this.props.data.data[id].lvl}
@@ -42,7 +44,6 @@ class ListUserLevel extends Component{
         }else{
             this.setState({detail:undefined})
         }
-        // this.props.dispatch(ModalType("formUserLevel"));
 
 
     }

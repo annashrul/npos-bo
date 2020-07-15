@@ -1,16 +1,16 @@
 import React,{Component} from 'react';
 import {connect} from "react-redux";
-import {statusQ} from "../../../../../helper";
 import {
     deleteGroupProduct,
     FetchGroupProduct
-} from "../../../../../actions/masterdata/group_product/group_product.action";
-import Paginationq from "../../../../../helper";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
+} from "redux/actions/masterdata/group_product/group_product.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
-import {deleteLocationCategory} from "../../../../../actions/masterdata/location_category/location_category.action";
-import {FetchSubDepartmentAll} from "../../../../../actions/masterdata/department/sub_department.action";
-import FormGroupProduct from "../../../../modals/masterdata/group_product/form_group_product";
+import {deleteLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
+import {FetchSubDepartmentAll} from "redux/actions/masterdata/department/sub_department.action";
+import FormGroupProduct from "components/App/modals/masterdata/group_product/form_group_product";
+import {statusQ} from "../../../../../../helper";
+import Paginationq from 'helper';
 
 class ListGroupProduct extends Component{
     constructor(props){

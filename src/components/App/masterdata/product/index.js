@@ -1,13 +1,12 @@
 import React,{Component} from 'react';
-import Layout from "../../_layout";
+import Layout from "../../Layout";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import {sessionService} from "redux-react-session";
 import connect from "react-redux/es/connect/connect";
-import Preloader from "../../../Preloader";
-import {FetchProduct} from "../../../actions/masterdata/product/product.action";
-import {ModalToggle, ModalType} from "../../../actions/modal.action";
-import {FetchPriceProduct} from "../../../actions/masterdata/price_product/price_product.action";
-import {FetchGroupProduct} from "../../../actions/masterdata/group_product/group_product.action";
+import Preloader from "Preloader";
+import {FetchProduct} from "redux/actions/masterdata/product/product.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {FetchPriceProduct} from "redux/actions/masterdata/price_product/price_product.action";
+import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
 import ListGroupProduct from "./src/master_group_product/list";
 import ListPriceProduct from "./src/master_price_product/list";
 import ListProduct from "./src/master_product/list";
@@ -25,30 +24,15 @@ class Product extends Component{
         };
     }
     componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
-                let by = this.state.by;
-                let any = this.state.any;
-                let anyGroupProduct = localStorage.getItem("any_group_product");
-                let anyPriceProduct = localStorage.getItem("any_price_product");
-                let pageGroupProduct = localStorage.getItem("page_group_product");
-                let pagePriceProduct = localStorage.getItem("page_price_product");
-                this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
-                this.props.dispatch(FetchPriceProduct(pagePriceProduct?pagePriceProduct:1,anyPriceProduct?anyPriceProduct:''));
-                this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                console.log(user);
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
+        let by = this.state.by;
+        let any = this.state.any;
+        let anyGroupProduct = localStorage.getItem("any_group_product");
+        let anyPriceProduct = localStorage.getItem("any_price_product");
+        let pageGroupProduct = localStorage.getItem("page_group_product");
+        let pagePriceProduct = localStorage.getItem("page_price_product");
+        this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
+        this.props.dispatch(FetchPriceProduct(pagePriceProduct?pagePriceProduct:1,anyPriceProduct?anyPriceProduct:''));
+        this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
     }
     //Use arrow functions to avoid binding
     handleSelect = (index) => {
@@ -108,7 +92,6 @@ class Product extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
         product:state.productReducer.data,
         priceProduct:state.priceProductReducer.data,
         groupProduct:state.groupProductReducer.data,

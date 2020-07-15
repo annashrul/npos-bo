@@ -1,16 +1,17 @@
 import React,{Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
-import FormProduct from "../../../../modals/masterdata/product/form_product";
-import {FetchGroupProduct} from "../../../../../actions/masterdata/group_product/group_product.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import FormProduct from "components/App/modals/masterdata/product/form_product";
+import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
+// import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import "jspdf-autotable";
-import {to_pdf, toRp} from "../../../../../helper";
-import {FetchLocation} from "../../../../../actions/masterdata/location/location.action";
-import {FetchProduct} from "../../../../../actions/masterdata/product/product.action";
-import Paginationq from "../../../../../helper";
-import {FetchSupplierAll} from "../../../../../actions/masterdata/supplier/supplier.action";
-import {FetchSubDepartmentAll} from "../../../../../actions/masterdata/department/sub_department.action";
+import {to_pdf, toRp} from "helper";
+import {FetchLocation} from "redux/actions/masterdata/location/location.action";
+import {FetchProduct} from "redux/actions/masterdata/product/product.action";
+import Paginationq from "helper";
+import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
+import {FetchSubDepartmentAll} from "redux/actions/masterdata/department/sub_department.action";
 
 class ListProduct extends Component{
     constructor(props){
