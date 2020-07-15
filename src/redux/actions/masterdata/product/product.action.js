@@ -105,6 +105,8 @@ export const createProduct = (data) => {
                     console.log("error")
                 }
             })
+        }
+    }
 export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,table='purchase_order')=>{
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
