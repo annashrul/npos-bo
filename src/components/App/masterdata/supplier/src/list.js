@@ -1,11 +1,11 @@
 import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
-import {deleteSupplier, FetchSupplier} from "../../../../actions/masterdata/supplier/supplier.action";
-import {ModalToggle, ModalType} from "../../../../actions/modal.action";
-import Paginationq, {statusQ} from "../../../../helper";
-import FormSupplier from "../../../modals/masterdata/supplier/form_supplier";
+import {deleteSupplier, FetchSupplier} from "redux/actions/masterdata/supplier/supplier.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import Paginationq, {statusQ} from "helper";
+import FormSupplier from "components/App/modals/masterdata/supplier/form_supplier";
 import Swal from "sweetalert2";
-import {deleteBank} from "../../../../actions/masterdata/bank/bank.action";
+import {deleteBank} from "redux/actions/masterdata/bank/bank.action";
 
 class ListSupplier extends Component{
     constructor(props){

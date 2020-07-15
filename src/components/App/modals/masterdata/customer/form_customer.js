@@ -1,14 +1,14 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
+import {stringifyFormData} from "helper";
 import {
     createLocation,
     updateLocation
-} from "../../../../actions/masterdata/location/location.action";
-import {createCustomer, setCustomerEdit, updateCustomer} from "../../../../actions/masterdata/customer/customer.action";
+} from "redux/actions/masterdata/location/location.action";
+import {createCustomer, setCustomerEdit, updateCustomer} from "redux/actions/masterdata/customer/customer.action";
 import FileBase64 from "react-file-base64";
 import moment from 'moment';
 class FormCustomer extends Component{
@@ -167,11 +167,14 @@ class FormCustomer extends Component{
         parseData['email'] = this.state.email;
         parseData['biografi'] = this.state.biografi;
         parseData['special_price'] = this.state.special_price;
-        if (this.props.dataCustomerEdit !== undefined||this.props.dataCustomerEdit!==[]) {
-            this.props.dispatch(updateCustomer(this.props.dataCustomerEdit.kd_cust,parseData,this.props.token));
+        // console.log("boolean1 : "+(this.props.dataCustomerEdit !== null))
+        // console.log("boolean2 : "+(this.props.dataCustomerEdit !== undefined))
+        // console.log("boolean3 : "+(this.props.dataCustomerEdit!==[]))
+        if (this.props.dataCustomerEdit !== undefined) {
+            this.props.dispatch(updateCustomer(this.props.dataCustomerEdit.kd_cust,parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(createCustomer(parseData,this.props.token));
+            this.props.dispatch(createCustomer(parseData));
             this.props.dispatch(ModalToggle(false));
         }
     }

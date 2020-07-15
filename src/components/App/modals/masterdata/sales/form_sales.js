@@ -4,37 +4,30 @@ import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
-import {
-    createLocationCategory,
-    updateLocationCategory
-} from "redux/actions/masterdata/location_category/location_category.action";
-import {
-    createCustomerType,
-    updateCustomerType
-} from "redux/actions/masterdata/customer_type/customer_type.action";
-class FormCustomerType extends Component{
+import {createSales, updateSales} from "redux/actions/masterdata/sales/sales.action";
+class FormSales extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            kode:'', nama:'',
+            nama:'',status:'1'
         };
     }
     componentWillReceiveProps(nextProps) {
         console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== [] && nextProps.detail !== undefined) {
             this.setState({
-                kode: nextProps.detail.kode,
                 nama: nextProps.detail.nama,
+                status: nextProps.detail.status,
+                kode: nextProps.detail.kode,
             })
         }else{
             this.setState({
-                kode:"",nama:""
+                nama:'',status:'1',kode:''
             })
         }
     }
-
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -51,28 +44,42 @@ class FormCustomerType extends Component{
         const form = e.target;
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
-        // parseData['kode'] = this.state.kode;
         parseData['nama'] = this.state.nama;
+        parseData['status'] = this.state.status;
+        parseData['kode'] = this.state.kode;
+
         if (this.props.detail !== undefined) {
-            this.props.dispatch(updateCustomerType(this.props.detail.kode,parseData));
+            console.log(this.state.kode);
+            this.props.dispatch(updateSales(this.state.kode,parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
-            this.props.dispatch(createCustomerType(parseData));
+            this.props.dispatch(createSales(parseData));
             this.props.dispatch(ModalToggle(false));
         }
-        console.log(parseData)
+
 
     }
 
     render(){
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formCustomerType"} size="md">
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Customer Type":"Update Customer Type"}</ModalHeader>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSales"} size="lg">
+                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Sales":"Update Sales"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
-                        <div className="form-group">
-                            <label>Name</label>
-                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
+                        <div className="row">
+                            <div className="col-6">
+                                <div className="form-group">
+                                    <label>Name</label>
+                                    <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
+                                </div>
+                                <div className="form-group">
+                                    <label>Status</label>
+                                    <select name="status" className="form-control" id="type" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                        <option value="0">In Active</option>
+                                        <option value="1">Active</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>
@@ -93,4 +100,4 @@ const mapStateToProps = (state) => {
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(FormCustomerType);
+export default connect(mapStateToProps)(FormSales);

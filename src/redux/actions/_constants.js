@@ -13,7 +13,8 @@ export const TOKEN = {
 }
 
 export const HEADERS ={
-  URL: "http://localhost:3000/",
+  URL: "http://ptnetindo.com:6692/",
+  // URL: "http://203.190.54.4:6692/",
   // URL:"http://192.168.100.6:5000/api/v1/",
   TOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",
@@ -189,6 +190,17 @@ export const SUPPLIER = {
     DETAIL: 'SET_SUPPLIER_DETAIL',
     ALL: 'SET_SUPPLIER_ALL',
     POST_LOADING: 'SET_SUPPLIER_POST_LOADING'
+}
+/****************
+ SALES
+ *****************/
+export const SALES = {
+    LOADING: 'SET_SALES_LOADING',
+    SUCCESS: 'SET_SALES_SUCCESS',
+    FAILED: 'SET_SALES_FAILED',
+    DETAIL: 'SET_SALES_DETAIL',
+    ALL: 'SET_SALES_ALL',
+    POST_LOADING: 'SET_SALES_POST_LOADING'
 }
 /****************
     DASHBOARD

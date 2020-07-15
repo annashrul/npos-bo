@@ -1,21 +1,21 @@
 import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
 import Pagination from "react-js-pagination";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
-import Paginationq, {statusQ} from "../../../../../helper";
+import {ModalToggle, ModalType} from "../../../../../../redux/actions/modal.action";
+import Paginationq, {statusQ} from "helper";
 import {
     deleteCustomer,
     FetchCustomer,
     FetchCustomerEdit,
     setCustomerEdit
-} from "../../../../../actions/masterdata/customer/customer.action";
-import FormCustomer from "../../../../modals/masterdata/customer/form_customer";
+} from "../../../../../../redux/actions/masterdata/customer/customer.action";
+import FormCustomer from "components/App/modals/masterdata/customer/form_customer";
 import {
     FetchCustomerType,
     FetchCustomerTypeAll
-} from "../../../../../actions/masterdata/customer_type/customer_type.action";
+} from "redux/actions/masterdata/customer_type/customer_type.action";
 import Swal from "sweetalert2";
-import Preloader from "../../../../../Preloader";
+import Preloader from "Preloader";
 
 class ListCustomer extends Component{
     constructor(props){

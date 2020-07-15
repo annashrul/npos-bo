@@ -1,56 +1,56 @@
-import {CUSTOMER, HEADERS} from "../../_constants";
-import axios from 'axios'
-import {FetchLocation, setEditLocation} from "../location/location.action";
+import {SALES, HEADERS} from "../../_constants";
+import axios from 'axios';
 import Swal from "sweetalert2";
 
-
 export function setLoading(load){
-    return {type : CUSTOMER.LOADING,load}
-}
-export function setCustomerEdit(data=[]){
-    return {type:CUSTOMER.EDIT,data}
-}
-export function setCustomer(data=[]){
-    return {type:CUSTOMER.SUCCESS,data}
-}
-export function setCustomerFailed(data=[]){
-    return {type:CUSTOMER.FAILED,data}
+    return {type : SALES.LOADING,load}
 }
 
-export const FetchCustomer = (page=1,q)=>{
+export function setSales(data=[]){
+    return {type:SALES.SUCCESS,data}
+}
+export function setSalesAll(data=[]){
+    return {type:SALES.ALL,data}
+}
+export function setSalesFailed(data=[]){
+    return {type:SALES.FAILED,data}
+}
+
+export const FetchSales = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         const headers={
             headers:{'Content-Type': 'application/x-www-form-urlencoded'}
         };
         let url = '';
-        if(q===null||q===''||q===undefined){
-            url=`customer?page=${page}`;
+        if(q===''){
+            url = `sales?page=${page}`;
         }else{
-            url=`customer?page=${page}&q=${q}`;
+            url = `sales?page=${page}&q=${q}`;
         }
+        console.log(url)
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setCustomer(data));
+                dispatch(setSales(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
         })
     }
 }
-
-export const FetchCustomerEdit = (id)=>{
+export const FetchSalesAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         const headers={
             headers:{'Content-Type': 'application/x-www-form-urlencoded'}
         };
-        axios.get(HEADERS.URL+`customer/${id}`,headers)
+        axios.get(HEADERS.URL+`sales?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;
-                dispatch(setCustomerEdit(data));
+                console.log(data);
+                dispatch(setSalesAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
@@ -59,11 +59,11 @@ export const FetchCustomerEdit = (id)=>{
 }
 
 
-export const createCustomer = (data,token) => {
+export const createSales = (data,token) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `customer`;
-        
+        const url = HEADERS.URL + `sales`;
+
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -81,7 +81,7 @@ export const createCustomer = (data,token) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchCustomer(1,''));
+                dispatch(FetchSales(localStorage.getItem("page_sales")?localStorage.getItem("page_sales"):1,''));
 
             })
             .catch(function (error) {
@@ -98,11 +98,11 @@ export const createCustomer = (data,token) => {
             })
     }
 }
-export const updateCustomer = (id,data,token) => {
+export const updateSales = (id,data,token) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `customer/${id}`;
-        
+        const url = HEADERS.URL + `sales/${id}`;
+
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
@@ -113,7 +113,6 @@ export const updateCustomer = (id,data,token) => {
                         text: data.msg,
                     });
                 } else {
-                    console.log("tes : "+token);
                     Swal.fire({
                         title: 'failed',
                         type: 'danger',
@@ -121,7 +120,7 @@ export const updateCustomer = (id,data,token) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchCustomer(1,''));
+                dispatch(FetchSales(localStorage.getItem("page_sales")?localStorage.getItem("page_sales"):1,''));
             })
             .catch(function (error) {
                 // handle error
@@ -138,21 +137,12 @@ export const updateCustomer = (id,data,token) => {
             })
     }
 }
-export const deleteCustomer = (id,token) => {
+export const deleteSales = (id,token) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `customer/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
+        const url = HEADERS.URL + `sales/${id}`;
 
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
@@ -169,7 +159,7 @@ export const deleteCustomer = (id,token) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchCustomer(localStorage.getItem("page_customer")?localStorage.getItem("page_customer"):1,''));
+                dispatch(FetchSales(localStorage.getItem("page_sales")?localStorage.getItem("page_sales"):1,''));
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
