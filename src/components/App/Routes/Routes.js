@@ -32,7 +32,7 @@ const Routes = (
             <PrivateRoute path="/product" exact strict component={Product} />
             <PrivateRoute path="/adjustment" exact strict component={Adjustment} />
             <PrivateRoute path="/receive" exact strict component={Receive} />
-            <PrivateRoute path="/PurchaseOrder" exact strict component={PurchaseOrder} />
+            <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
         </Switch>
     </div>
 )

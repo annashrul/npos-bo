@@ -86,6 +86,21 @@ class PurchaseOrder extends Component{
               brgval: brg
           })
       })
+      if(localStorage.lk!==undefined&&localStorage.lk!==''){
+        this.props.dispatch(FetchNota(localStorage.lk))
+        this.setState({
+          location:localStorage.lk
+        })
+      }
+      if (localStorage.sp !== undefined && localStorage.sp !== '') {
+        this.setState({
+          supplier: localStorage.sp
+        })
+      }
+      if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk!==undefined&&localStorage.lk!=='') {
+        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp,table))
+
+      }
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -128,10 +143,11 @@ class PurchaseOrder extends Component{
      
     }
 
-    // shouldComponentUpdate =(nextProps, nextState) => {
-    //   console.log(nextProps.barang!==this.props.barang);
-    //   return nextProps.barang!==this.props.barang;
-    // }
+    componentWillUnmount(){
+      destroy(table);
+      localStorage.removeItem('sp');
+      localStorage.removeItem('lk');
+    }
 
     HandleChangeLokasi(lk){
       let err = Object.assign({}, this.state.error, {
@@ -141,9 +157,10 @@ class PurchaseOrder extends Component{
         location:lk.value,
         error: err
       })
+      localStorage.setItem('lk', lk.value);
       this.props.dispatch(FetchNota(lk.value))
       if (this.state.supplier!==""){
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier,table))
       }
       destroy(table)
       const data = get(table);
@@ -173,8 +190,10 @@ class PurchaseOrder extends Component{
         supplier: sp.value,
         error: err
       })
+      localStorage.setItem('sp', sp.value);
+
       if (this.state.location !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value,table))
       }
       destroy(table)
       const data = get(table);
@@ -431,6 +450,8 @@ class PurchaseOrder extends Component{
         }).then((result) => {
             if (result.value) {
                 destroy(table);
+                localStorage.removeItem('sp');
+                localStorage.removeItem('lk');
                 window.location.reload(false);
             }
         })
@@ -541,7 +562,7 @@ class PurchaseOrder extends Component{
           )
       }else{
         const searchby = parseInt(this.state.searchby)===1?'kd_brg':(parseInt(this.state.searchby)===2?'barcode':'deskripsi')
-        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier));
+        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,table));
       }
     }
 
@@ -823,6 +844,11 @@ class PurchaseOrder extends Component{
                                   options={this.state.location_data} 
                                   placeholder = "Pilih Lokasi"
                                   onChange={this.HandleChangeLokasi}
+                                  value = {
+                                    this.state.location_data.find(op => {
+                                      return op.value === this.state.location
+                                    })
+                                  }
 
                                 />
                                 <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
@@ -837,6 +863,11 @@ class PurchaseOrder extends Component{
                                   options={opSupplier} 
                                   placeholder="Pilih Supplier"
                                   onChange={this.HandleChangeSupplier}
+                                  value = {
+                                    opSupplier.find(op => {
+                                      return op.value === this.state.supplier
+                                    })
+                                  }
                                 />
                                 <div class="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
                                       {this.state.error.supplier}
