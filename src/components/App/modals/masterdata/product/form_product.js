@@ -5,7 +5,7 @@ import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {stringifyFormData} from "helper";
-import {createProduct} from "redux/actions/masterdata/product/product.action";
+import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
 
 class FormProduct extends Component{
     constructor(props){
@@ -31,6 +31,35 @@ class FormProduct extends Component{
             online: '0',
             berat: '0',
             barangSku: [{"barcode": "0", "qty": "0", "konversi": "0", "satuan_jual": "0"}],
+            barangHargaEdit: [[
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedPCS":false,
+                    "hrgBeliPCS": 0,
+                    "margin1PCS":0,"margin2PCS":0,"margin3PCS":0,"margin4PCS":0,
+                    "hrgJual1PCS":0,"hrgJual2PCS":0,"hrgJual3PCS":0,"hrgJual4PCS":0,
+                    "ppnPCS": 0,
+                    "servicePCS":0
+                },
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedPACK":false,
+                    "hrgBeliPACK":0,
+                    "margin1PACK":0,"margin2PACK":0,"margin3PACK":0,"margin4PACK":0,
+                    "hrgJual1PACK":0,"hrgJual2PACK":0,"hrgJual3PACK":0,"hrgJual4PACK":0,
+                    "ppnPACK": 0,
+                    "servicePACK":0
+                },
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedKARTON":false,
+                    "hrgBeliKARTON":0,
+                    "margin1KARTON":0,"margin2KARTON":0,"margin3KARTON":0,"margin4KARTON":0,
+                    "hrgJual1KARTON":0,"hrgJual2KARTON":0,"hrgJual3KARTON":0,"hrgJual4KARTON":0,
+                    "ppnKARTON":0,
+                    "serviceKARTON":0
+                }
+            ]],
             barangHarga: [[
                 {
                     "nama_toko":"","lokasi":"",
@@ -102,65 +131,235 @@ class FormProduct extends Component{
         window.scrollTo(0, 0);
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(setProductEdit([]));
         this.setState({
 
         })
     };
-
+    componentWillMount(){
+        console.log("PROPS",this.props.dataEdit);
+        // if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
+        //     this.setState((state, props) => {
+        //         let barang_sku = typeof props.dataEdit.barang_sku === 'object' ? props.dataEdit.barang_sku : state.barangSku;
+        //         let barang_hrg = typeof props.dataEdit.barang_hrg === 'object' ? props.dataEdit.barang_hrg : state.barangHarga;
+        //         let barangSku=[];let barangHrg=[];
+        //         for(let i=0;i<barang_sku.length;i++){
+        //             barangSku.push({
+        //                 "barcode":barang_sku[i].barcode,
+        //                 "qty":barang_sku[i].satuan,
+        //                 "konversi":barang_sku[i].qty_konversi,
+        //                 "satuan_jual":barang_sku[i].satuan_jual
+        //             })
+        //         }
+        //         for(let x=0; x<barang_hrg.length;x++){
+        //             console.log("LOOPING HARGA BARANG",barang_hrg[x][1]);
+        //             barangHrg.push(
+        //                 [
+        //                     {
+        //                         "nama_toko":barang_hrg[x][0],"lokasi":barang_hrg[x][0],
+        //                         "isCheckedPCS":false,
+        //                         "hrgBeliPCS": "0",
+        //                         "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
+        //                         "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
+        //                         "ppnPCS": "0",
+        //                         "servicePCS": "0"
+        //                     },
+        //                     {
+        //                         "nama_toko":barang_hrg[x][1],"lokasi":barang_hrg[x][1],
+        //                         "isCheckedPACK":false,
+        //                         "hrgBeliPACK": "0",
+        //                         "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
+        //                         "hrgJual1PACK":"0","hrgJual2PACK":"0","hrgJual3PACK":"0","hrgJual4PACK":"0",
+        //                         "ppnPACK": "0",
+        //                         "servicePACK": "0"
+        //                     },
+        //                     {
+        //                         "nama_toko":barang_hrg[x][2],"lokasi":barang_hrg[x][2],
+        //                         "isCheckedKARTON":false,
+        //                         "hrgBeliKARTON": "0",
+        //                         "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
+        //                         "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
+        //                         "ppnKARTON": "0",
+        //                         "serviceKARTON": "0"
+        //                     }
+        //                 ]
+        //             )
+        //         }
+        //         return {
+        //             kd_brg: props.dataEdit.kd_brg,
+        //             nm_brg: props.dataEdit.nm_brg,
+        //             kel_brg: props.dataEdit.kel_brg,
+        //             jenis:props.dataEdit.kategori,
+        //             stock_min:props.dataEdit.stock_min,
+        //             group1:props.dataEdit.group1,
+        //             group2:props.dataEdit.group2,
+        //             deskripsi:props.dataEdit.deskripsi,
+        //             gambar:"",
+        //             kategori:props.dataEdit.jenis,
+        //             kcp:props.dataEdit.kcp,
+        //             poin:props.dataEdit.poin,
+        //             online:props.dataEdit.online,
+        //             berat:props.dataEdit.berat,
+        //             barangSku:barangSku,
+        //             barangHargaEdit:barangHrg
+        //         }
+        //     })
+        // }
+    }
     componentWillReceiveProps(nextProps){
-        console.log("componentWillReceiveProps");
-        localStorage.setItem("isReadonlySama","false");
-        localStorage.setItem("isReadonlySamaPack","false");
-        localStorage.setItem("isReadonlySamaKarton","false");
-        const {data} = nextProps.dataLocation;
-        console.log("DATA",data);
-        this.state.check = nextProps.dataLocation;
-        let brgHrg=[];
-        if(typeof data === 'object'){
-            data.map((v,i)=>{
-                Object.assign(v,{
-                    isChecked:false,
-                    PACK:false,
-                    KARTON:false,
-                    hrg_beli:'0',
+        console.log("componentWillReceiveProps",nextProps);
+        // localStorage.setItem("isReadonlySama","false");
+        // localStorage.setItem("isReadonlySamaPack","false");
+        // localStorage.setItem("isReadonlySamaKarton","false");
+
+        if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
+            console.log("########################## EDIT ############################");
+            let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
+            let barang_hrg = typeof nextProps.dataEdit.barang_hrg === 'object' ? nextProps.dataEdit.barang_hrg : this.state.barangHarga;
+            let barangSku=[];let barangHrg=[];let konversi=[];
+            for(let i=0;i<barang_sku.length;i++){
+                barangSku.push({
+                    "barcode":barang_sku[i].barcode,
+                    "qty":barang_sku[i].satuan,
+                    "konversi":barang_sku[i].qty_konversi,
+                    "satuan_jual":barang_sku[i].satuan_jual
                 });
-                brgHrg.push(
-                    [
-                        {
-                            "nama_toko":v.nama_toko,"lokasi": v.kode,
-                            "isCheckedPCS":false,
-                            "hrgBeliPCS": "0",
-                            "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
-                            "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
-                            "ppnPCS": "0",
-                            "servicePCS": "0"
-                        },
-                        {
-                            "nama_toko":v.nama_toko,"lokasi": v.kode,
-                           "isCheckedPACK":false,
-                            "hrgBeliPACK": "0",
-                            "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
-                            "hrgJual1PACK":"0","hrgJual2PACK":"0","hrgJual3PACK":"0","hrgJual4PACK":"0",
-                            "ppnPACK": "0",
-                            "servicePACK": "0"
-                        },
-                        {
-                            "nama_toko":v.nama_toko,"lokasi": v.kode,
-                            "isCheckedKARTON":false,
-                            "hrgBeliKARTON": "0",
-                            "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
-                            "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
-                            "ppnKARTON": "0",
-                           "serviceKARTON": "0"
-                        }
-                    ]
-                );
-            });
-            console.log("ABRANG PUSH",brgHrg);
+                konversi.push(barang_sku[i].konversi);
+            }
+            for(let x=0; x<barang_hrg.length;x++){
+               if(barang_sku.length == 3){
+                   barangHrg.push(
+                       [
+                           {
+                               "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
+                               "isCheckedPCS":true,
+                               "hrgBeliPCS": barang_hrg[x][0].harga_beli,
+                               "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
+                               "ppnPCS": barang_hrg[x][0].ppn,
+                               "servicePCS": barang_hrg[x][0].service
+                           },
+                           {
+                               "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
+                               "isCheckedPACK":false,
+                               "hrgBeliPACK": barang_hrg[x][1].harga_beli,
+                               "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                               "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                               "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                               "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                               "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
+                               "ppnPACK":barang_hrg[x][1].ppn,
+                               "servicePACK":barang_hrg[x][1].service
+                           },
+                           {
+                               "nama_toko":barang_hrg[x][2].nama_toko,"lokasi":barang_hrg[x][2].lokasi,
+                               "isCheckedKARTON":false,
+                               "hrgBeliKARTON": barang_hrg[x][2].harga_beli,
+                               "margin1KARTON":((parseInt(barang_hrg[x][2].harga)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                               "margin2KARTON":((parseInt(barang_hrg[x][2].harga2)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                               "margin3KARTON":((parseInt(barang_hrg[x][2].harga3)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                               "margin4KARTON":((parseInt(barang_hrg[x][2].harga4)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                               "hrgJual1KARTON": barang_hrg[x][2].harga,"hrgJual2KARTON": barang_hrg[x][2].harga2,"hrgJual3KARTON": barang_hrg[x][2].harga3,"hrgJual4KARTON": barang_hrg[x][2].harga4,
+                               "ppnKARTON": barang_hrg[x][2].ppn,
+                               "serviceKARTON": barang_hrg[x][2].service
+                           }
+                       ]
+                   )
+               }else{
+                   barangHrg.push(
+                       [
+                           {
+                               "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
+                               "isCheckedPCS":true,
+                               "hrgBeliPCS": barang_hrg[x][0].harga_beli,
+                               "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                               "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
+                               "ppnPCS": barang_hrg[x][0].ppn,
+                               "servicePCS": barang_hrg[x][0].service
+                           }
+                       ]
+                   )
+               }
+
+            }
             this.setState({
-                barangHarga:brgHrg
-            });
+                kd_brg: nextProps.dataEdit.kd_brg,
+                nm_brg: nextProps.dataEdit.nm_brg,
+                kel_brg: nextProps.dataEdit.kel_brg,
+                jenis:nextProps.dataEdit.kategori,
+                stock_min:nextProps.dataEdit.stock_min,
+                group1:nextProps.dataEdit.group1,
+                group2:nextProps.dataEdit.group2,
+                deskripsi:nextProps.dataEdit.deskripsi,
+                gambar:"",
+                kategori:nextProps.dataEdit.jenis,
+                kcp:nextProps.dataEdit.kcp,
+                poin:nextProps.dataEdit.poin,
+                online:nextProps.dataEdit.online,
+                berat:nextProps.dataEdit.berat,
+                barangSku:barangSku,
+                barangHarga:barangHrg
+            })
+        }else{
+            console.log("########################## ADD ############################");
+
+            const {data} = nextProps.dataLocation;
+            console.log("DATA",data);
+            this.state.check = nextProps.dataLocation;
+            let brgHrg=[];
+            if(typeof data === 'object'){
+                data.map((v,i)=>{
+                    Object.assign(v,{
+                        isChecked:false,
+                        PACK:false,
+                        KARTON:false,
+                        hrg_beli:'0',
+                    });
+                    brgHrg.push(
+                        [
+                            {
+                                "nama_toko":v.nama_toko,"lokasi": v.kode,
+                                "isCheckedPCS":false,
+                                "hrgBeliPCS": "0",
+                                "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
+                                "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
+                                "ppnPCS": "0",
+                                "servicePCS": "0"
+                            },
+                            {
+                                "nama_toko":v.nama_toko,"lokasi": v.kode,
+                                "isCheckedPACK":false,
+                                "hrgBeliPACK": "0",
+                                "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
+                                "hrgJual1PACK":"0","hrgJual2PACK":"0","hrgJual3PACK":"0","hrgJual4PACK":"0",
+                                "ppnPACK": "0",
+                                "servicePACK": "0"
+                            },
+                            {
+                                "nama_toko":v.nama_toko,"lokasi": v.kode,
+                                "isCheckedKARTON":false,
+                                "hrgBeliKARTON": "0",
+                                "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
+                                "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
+                                "ppnKARTON": "0",
+                                "serviceKARTON": "0"
+                            }
+                        ]
+                    )
+                });
+                console.log("ABRANG PUSH",brgHrg);
+                this.setState({
+                    barangHarga:brgHrg
+                });
+            }
         }
+
         // this.setState({barangHrg:brgHrg});
     }
     // onHandleChangeChild
@@ -260,10 +459,11 @@ class FormProduct extends Component{
             for(let i=0;i<this.state.barangHarga.length;i++){
                 if(name === 'hrg_beli'){
                     this.state.barangHarga[i][0].hrgBeliPCS = val;
-                    this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1]);
-                    this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2]);
-                    // this.state.hrgBeliPACK = parseInt(val*qty_konversi[1]);
-                    // this.state.hrgBeliKARTON = parseInt(val*qty_konversi[2]);
+                    if(this.state.barangSku.length === 3){
+                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1]);
+                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2]);
+                    }
+
                 }
                 if(name === 'margin1'){
                     this.state.barangHarga[i][0].margin1PCS = val;
@@ -778,10 +978,7 @@ class FormProduct extends Component{
 
     handleSubmit(e){
         e.preventDefault();
-        const form = e.target;
-        let data = new FormData(form);
         let parseData = {};
-        console.log(parseData);
         let barangSku = [];let barangHrg=[];let barcode=[];
         for(let i=0;i<this.state.barangSku.length;i++){
             barangSku.push({
@@ -859,9 +1056,13 @@ class FormProduct extends Component{
         parseData["barang_sku"] = barangSku;
         parseData["barang_harga"] = barangHrg;
         console.log("FORM DATA",parseData);
-        // console.log("DATA",this.state.barangHarga);
         // console.log();
-        this.props.dispatch(createProduct(parseData));
+        if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
+            this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
+        }else{
+            this.props.dispatch(createProduct(parseData));
+
+        }
 
 
     }
@@ -872,7 +1073,7 @@ class FormProduct extends Component{
         const {data} = this.props.data;
         const dataSupplier = this.props.dataSupplier.data;
         const dataSubDep = this.props.dataSubDept.data;
-        console.log("BARANG HARGA",this.state.barangHarga);
+        console.log("BARANG SKU STATE",this.state.barangSku);
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
@@ -1114,7 +1315,7 @@ class FormProduct extends Component{
 
                                                 </div>
                                             </div>
-                                            {localStorage.getItem("colBrgSku")=== '3' ? (()=>{
+                                            {this.state.barangSku.length === 3 ? (()=>{
                                                 let container =[];
                                                 let lbl = '';
                                                 for(let i=0; i<2; i++){
@@ -1233,99 +1434,107 @@ class FormProduct extends Component{
 
                                                                     </div>
                                                                 </div>
-                                                                {/*PACK*/}
-                                                                <div className="col-md-2">
-                                                                    <div className="form-group">
-                                                                        <div className="row">
-                                                                            <label className="col-md-8"  style={{fontSize:"10px"}}> {v[1].nama_toko} ( PACK )</label>
-                                                                            <input type="checkbox" name="lokasi" value={v[1].lokasi} checked={v[1].isCheckedPACK} onChange={(e)=>this.handleCheckChieldElementPack(e,i)}/>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-10">
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="row">
-                                                                                <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-                                                                                <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-                                                                                <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
 
-                                                                            </div>
-                                                                        </div>
-                                                                        {/*service,ppn,stock min,stock max */}
-                                                                        <div className="col-md-6">
-                                                                            <div className="row">
-                                                                                <div className="col-md-3">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-                                                                                <div className="col-md-3 text-center">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
-                                                                {/*KARTON*/}
-                                                                <div className="col-md-2">
-                                                                    <div className="form-group">
-                                                                        <div className="row">
-                                                                            <label className="col-md-8"  style={{fontSize:"10px"}}> {v[2].nama_toko} ( KARTON )</label>
-                                                                            <input type="checkbox" name="lokasi" value={v[2].lokasi} checked={v[2].isCheckedKARTON} onChange={(e)=>this.handleCheckChieldElementKarton(e,i)}/>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-md-10">
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="row">
-                                                                                <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliKARTON" value={v[2].hrgBeliKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-                                                                                <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-                                                                                <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-                                                                        {/*service,ppn,stock min,stock max */}
-                                                                        <div className="col-md-6">
-                                                                            <div className="row">
-                                                                                <div className="col-md-3">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-                                                                                <div className="col-md-3 text-center">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
                                                             </div>
+                                                            {
+                                                                this.state.barangSku.length === 3 ? (
+                                                                    <div className="row">
+                                                                        {/*PACK*/}
+                                                                        <div className="col-md-2">
+                                                                            <div className="form-group">
+                                                                                <div className="row">
+                                                                                    <label className="col-md-8"  style={{fontSize:"10px"}}> {v[1].nama_toko} ( PACK )</label>
+                                                                                    <input type="checkbox" name="lokasi" value={v[1].lokasi} checked={v[1].isCheckedPACK} onChange={(e)=>this.handleCheckChieldElementPack(e,i)}/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-md-10">
+                                                                            <div className="row">
+                                                                                <div className="col-md-6">
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-4">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                        <div className="col-md-4">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                        <div className="col-md-4">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                {/*service,ppn,stock min,stock max */}
+                                                                                <div className="col-md-6">
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-3">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                        <div className="col-md-3 text-center">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        {/*KARTON*/}
+                                                                        <div className="col-md-2">
+                                                                            <div className="form-group">
+                                                                                <div className="row">
+                                                                                    <label className="col-md-8"  style={{fontSize:"10px"}}> {v[2].nama_toko} ( KARTON )</label>
+                                                                                    <input type="checkbox" name="lokasi" value={v[2].lokasi} checked={v[2].isCheckedKARTON} onChange={(e)=>this.handleCheckChieldElementKarton(e,i)}/>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-md-10">
+                                                                            <div className="row">
+                                                                                <div className="col-md-6">
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-4">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliKARTON" value={v[2].hrgBeliKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                        <div className="col-md-4">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                        <div className="col-md-4">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                {/*service,ppn,stock min,stock max */}
+                                                                                <div className="col-md-6">
+                                                                                    <div className="row">
+                                                                                        <div className="col-md-3">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                        <div className="col-md-3 text-center">
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                ) : ""
+                                                            }
+
                                                             <hr/>
 
                                                         </div>

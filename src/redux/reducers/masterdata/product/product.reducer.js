@@ -7,6 +7,7 @@ const initialState = {
     status:"",
     msg:"",
     data:[],
+    dataEdit:[],
     result_brg:[],
     pagin_brg:[],
     msg_brg:"",
@@ -20,6 +21,10 @@ export const productReducer = (state=initialState,action) => {
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
+            });
+        case PRODUCT.EDIT_PRODUCT:
+            return Object.assign({}, state,{
+                dataEdit:action.data.result
             });
         case PRODUCT.SUCCESS_BRG:
              return Object.assign({}, state, {

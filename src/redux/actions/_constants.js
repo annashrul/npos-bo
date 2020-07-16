@@ -116,6 +116,7 @@ export const PRODUCT = {
     DETAIL: 'DETAIL_PRODUCT',
     LOADING_BRG: 'SET_BRG_LOADING',
     SUCCESS_BRG: 'SET_BRG_SUCCESS',
+    EDIT_PRODUCT: 'SET_EDIT_PRODUCT',
 }
 
 /****************

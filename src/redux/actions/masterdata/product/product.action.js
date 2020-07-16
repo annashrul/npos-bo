@@ -2,6 +2,8 @@ import {PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {store, update,cekData} from "components/model/app.model";
+import {FetchBank} from "../bank/bank.action";
+import {FetchCash} from "../cash/cash.action";
 
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}
@@ -10,7 +12,9 @@ export function setLoadingbrg(load){
 export function setProductbrg(data=[]){
     return {type:PRODUCT.SUCCESS_BRG,data}
 }
-
+export function setProductEdit(data=[]){
+    return {type:PRODUCT.EDIT_PRODUCT,data}
+}
 export function setLoading(load){
     return {type : PRODUCT.LOADING,load}
 }
@@ -98,7 +102,48 @@ export const createProduct = (data) => {
             })
 
         }
+    };
+
+export const deleteProduct = (id) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `barang/${id}`;
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                console.log("DATA",data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchProduct(1,''));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                console.log(error);
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
     }
+}
+
+
 export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,table='purchase_order')=>{
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
@@ -168,5 +213,69 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,tabl
                 // text: error.response.data.msg,
             });
         })
+    }
+}
+
+
+export const FetchProductEdit = (kode)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`barang/update/${kode}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setProductEdit(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoading(false));
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                text: error.response.data.msg,
+            });
+        })
+    }
+}
+
+
+export const updateProduct = (id,data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `barang/${id}`;
+
+        axios.put(url, data)
+            .then(function (response) {
+                const data = (response.data);
+                console.log("DATA",data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchProduct(1,'',''));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+                console.log(error);
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
     }
 }
