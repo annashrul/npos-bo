@@ -182,7 +182,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={columnStyle}>Group</th>
                             <th className="text-black" style={columnStyle}>Supplier</th>
                             <th className="text-black" style={columnStyle}>Sub Dept</th>
-                            <th className="text-black" style={columnStyle}>Purchase Price</th>
+
                             <th className="text-black" style={columnStyle}>Category</th>
                             <th className="text-black" style={columnStyle}>Stock Min</th>
                             <th className="text-black" style={columnStyle}>Product Type</th>
@@ -209,9 +209,9 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.group1}</td>
-                                                <td style={columnStyle}>{v.group2}</td>
-                                                <td style={columnStyle}>{toRp(v.hrg_beli)}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
+                                                <td style={columnStyle}>{v.supplier}</td>
+
                                                 <td style={columnStyle}>{v.kategori}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
                                                 <td style={columnStyle}>{v.jenis}</td>

@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
-// import { Scrollbars } from "react-custom-scrollbars";
 import {FetchBrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'
@@ -14,7 +13,7 @@ import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
 
-const table='purchase_order'
+const table='receive  '
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -26,9 +25,8 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
-      let count = 0;
 
-class PurchaseOrder extends Component{
+class Receive extends Component{
 
     constructor(props) {
         super(props);
@@ -968,4 +966,4 @@ const mapStateToPropsCreateItem = (state) => ({
   auth:state.auth
 });
 
-export default connect(mapStateToPropsCreateItem)(PurchaseOrder);
+export default connect(mapStateToPropsCreateItem)(Receive);
