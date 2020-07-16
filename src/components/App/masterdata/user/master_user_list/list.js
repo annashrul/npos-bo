@@ -15,6 +15,7 @@ import {
 } from "redux/actions/masterdata/user_list/user_list.action";
 import {FetchAllLocation, FetchLocation} from "redux/actions/masterdata/location/location.action";
 import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
+import {ModalToggle, ModalType} from "../../../../../redux/actions/modal.action";
 
 class ListUserList extends Component{
     constructor(props){
@@ -40,8 +41,8 @@ class ListUserList extends Component{
     toggleModal(e) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
-        // this.props.dispatch(ModalType("formUserList"));
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formUserList"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchUserLevel(1,'','100'));
         this.props.dispatch(setUserListEdit([]));
@@ -50,8 +51,8 @@ class ListUserList extends Component{
     toggleEdit(e,id) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
-        // this.props.dispatch(ModalType("formUserList"));
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formUserList"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchUserLevel(1,'','100'));
         this.props.dispatch(FetchUserListEdit(id));
@@ -60,8 +61,8 @@ class ListUserList extends Component{
     handleDetail(e,id){
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
-        // this.props.dispatch(ModalType("detailUserList"));
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("detailUserList"));
         this.props.dispatch(FetchUserListDetail(id));
         this.props.dispatch(FetchAllLocation());
     }

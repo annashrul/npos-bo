@@ -1,16 +1,18 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "../../../../actions/modal.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import FormLocation from "../../../modals/masterdata/location/form_location";
+import FormLocation from "components/App/modals/masterdata/location/form_location";
 import {
     deleteLocation,
     FetchAllLocation,
     FetchDetailLocation, FetchEditLocation, FetchLocation,
     setEditLocation
-} from "../../../../actions/masterdata/location/location.action";
+} from "redux/actions/masterdata/location/location.action";
 import Swal from "sweetalert2";
-import DetailLocationModal from "../../../modals/masterdata/location/detail_location";
-import Paginationq from "../../../../helper";
+import DetailLocationModal from "components/App/modals/masterdata/location/detail_location";
+// import DetailLocationModal from "components/App/modals/masterdata/cash/form_cash";
+
+import Paginationq from "helper";
 
 class ListLocation extends Component{
     constructor(props) {
@@ -67,7 +69,7 @@ class ListLocation extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.props.dispatch(deleteLocation(id,this.props.token));
+                this.props.dispatch(deleteLocation(id));
             }
         })
     }

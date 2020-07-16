@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
-import Paginationq from "../../../../helper";
-import {ModalToggle, ModalType} from "../../../../actions/modal.action";
+import Paginationq from "helper";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {
     deleteLocationCategory,
     FetchLocationCategory
-} from "../../../../actions/masterdata/location_category/location_category.action";
-import FormLocationCategory from "../../../modals/masterdata/location_category/form_location_category";
+} from "redux/actions/masterdata/location_category/location_category.action";
+import FormLocationCategory from "components/App/modals/masterdata/location_category/form_location_category";
 import Swal from "sweetalert2";
 class ListLocationCategory extends Component{
     constructor(props) {
@@ -61,7 +61,7 @@ class ListLocationCategory extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.props.dispatch(deleteLocationCategory(i,this.props.token));
+                this.props.dispatch(deleteLocationCategory(i));
             }
         })
     }

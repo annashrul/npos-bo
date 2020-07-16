@@ -5,6 +5,7 @@ import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import {statusQ} from "helper";
 import moment from "moment";
+import {ModalToggle} from "redux/actions/modal.action";
 class DetailUserList extends Component{
     constructor(props){
         super(props);
@@ -45,7 +46,7 @@ class DetailUserList extends Component{
     toggle(e){
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalToggle(bool));
     };
 
 

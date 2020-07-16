@@ -1,11 +1,12 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "../../../../helper";
-import {createLocation,updateLocation} from "../../../../actions/masterdata/location/location.action";
-import PlacesAutocomplete, {geocodeByAddress, getLatLng,} from 'react-places-autocomplete'
+import {stringifyFormData} from "helper";
+import {createLocation,updateLocation} from "redux/actions/masterdata/location/location.action";
+// import PlacesAutocomplete, {geocodeByAddress, getLatLng,} from 'react-places-autocomplete'
+import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 class FormLocation extends Component{
     constructor(props){
         super(props);

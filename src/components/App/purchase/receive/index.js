@@ -13,7 +13,7 @@ import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
 
-const table='purchase_order'
+const table='receive  '
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -25,9 +25,8 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
-      let count = 0;
 
-class PurchaseOrder extends Component{
+class Receive extends Component{
 
     constructor(props) {
         super(props);
@@ -967,4 +966,4 @@ const mapStateToPropsCreateItem = (state) => ({
   auth:state.auth
 });
 
-export default connect(mapStateToPropsCreateItem)(PurchaseOrder);
+export default connect(mapStateToPropsCreateItem)(Receive);
