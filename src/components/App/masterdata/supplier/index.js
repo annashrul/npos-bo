@@ -1,7 +1,6 @@
 import React,{Component} from 'react';
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {sessionService} from "redux-react-session";
 import {FetchSupplier} from "redux/actions/masterdata/supplier/supplier.action";
 import Preloader from "Preloader";
 import ListSupplier from "./src/list";

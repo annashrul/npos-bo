@@ -21,6 +21,10 @@ export const HEADERS ={
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO"
 }
 
+export const LOC_VERIF ={
+  password:"netindo35a"
+}
+
 /****************
       MODAL
 *****************/
@@ -116,6 +120,7 @@ export const PRODUCT = {
     DETAIL: 'DETAIL_PRODUCT',
     LOADING_BRG: 'SET_BRG_LOADING',
     SUCCESS_BRG: 'SET_BRG_SUCCESS',
+    EDIT_PRODUCT: 'SET_EDIT_PRODUCT',
 }
 
 /****************

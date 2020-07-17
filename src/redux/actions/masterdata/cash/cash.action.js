@@ -91,56 +91,7 @@ export const createCash = (data) => {
                     console.log("error")
                 }
             })
-            // .then(({ data, config }) => {
-            //     console.log({
-            //         data,
-            //         headers: config.headers,
-            //     });
-            // });
-        // const url = HEADERS.URL + `kas`;
-        // const headers = {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `${token}`,
-        //         'username': `${HEADERS.USERNAME}`,
-        //         'password': `${HEADERS.PASSWORD}`,
-        //         'crossDomain': true
-        //     }
-        // }
-        // console.log(data);
-        // axios.post(url, data)
-        //     .then(function (response) {
-        //         const data = (response.data);
-        //         console.log("DATA",data);
-        //         if (data.status === 'success') {
-        //             Swal.fire({
-        //                 title: 'Success',
-        //                 type: 'success',
-        //                 text: data.msg,
-        //             });
-        //         } else {
-        //             Swal.fire({
-        //                 title: 'failed',
-        //                 type: 'danger',
-        //                 text: data.msg,
-        //             });
-        //         }
-        //         dispatch(setLoading(false));
-        //         dispatch(FetchCash(1,'masuk',''));
-        //     })
-        //     .catch(function (error) {
-        //         // handle error
-        //         dispatch(setLoading(false));
-        //         console.log(error);
-        //         Swal.fire({
-        //             title: 'failed',
-        //             type: 'danger',
-        //             text: error.response.data.msg,
-        //         });
-        //         if (error.response) {
-        //             console.log("error")
-        //         }
-        //     })
+
     }
 }
 

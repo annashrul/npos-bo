@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
+// import { Scrollbars } from "react-custom-scrollbars";
 import {FetchBrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'

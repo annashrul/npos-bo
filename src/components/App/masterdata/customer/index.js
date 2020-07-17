@@ -2,7 +2,6 @@ import React,{Component} from 'react'
 import Preloader from "Preloader";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {sessionService} from "redux-react-session";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {FetchCustomer} from "redux/actions/masterdata/customer/customer.action";
 import ListCustomer from "./src/master_customer/list";

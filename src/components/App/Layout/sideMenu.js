@@ -61,6 +61,7 @@ class SideMenu extends Component {
                             <li className={path==='/location'?"active":''}><Link to="/location"> <i className="zmdi zmdi-apps" />Location </Link></li>
                             <li className={path==='/department'?"active":''}><Link to="/department"> <i className="zmdi zmdi-apps" />Department </Link></li>
                             <li className={path==='/supplier'?"active":''}><Link to="/supplier"> <i className="zmdi zmdi-apps" />Supplier </Link></li>
+                            <li className={path==='/sales'?"active":''}><Link to="/sales"> <i className="zmdi zmdi-apps" />Sales </Link></li>
                             <li className={path==='/cash'?"active":''}><Link to="/cash"> <i className="zmdi zmdi-apps" />Cash </Link></li>
                             <li className={path==='/customer'?"active":''}><Link to="/customer"> <i className="zmdi zmdi-apps" />Customer </Link></li>
                             <li className={path==='/product'?"active":''}><Link to="/product"> <i className="zmdi zmdi-apps" />Product </Link></li>

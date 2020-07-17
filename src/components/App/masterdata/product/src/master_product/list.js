@@ -8,10 +8,12 @@ import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import "jspdf-autotable";
 import {to_pdf, toRp} from "helper";
 import {FetchLocation} from "redux/actions/masterdata/location/location.action";
-import {FetchProduct} from "redux/actions/masterdata/product/product.action";
+import {FetchProduct,deleteProduct} from "redux/actions/masterdata/product/product.action";
 import Paginationq from "helper";
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
 import {FetchSubDepartmentAll} from "redux/actions/masterdata/department/sub_department.action";
+import Swal from "sweetalert2";
+import {FetchProductEdit, setProductEdit} from "../../../../../../redux/actions/masterdata/product/product.action";
 
 class ListProduct extends Component{
     constructor(props){
@@ -35,9 +37,30 @@ class ListProduct extends Component{
     }
     handleDelete = (e,kode) => {
         e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.dispatch(deleteProduct(kode));
+            }
+        })
     };
     handleEdit = (e,kode) => {
         e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formProduct"));
+        this.props.dispatch(FetchGroupProduct(1,''));
+        this.props.dispatch(FetchLocation());
+        this.props.dispatch(FetchSupplierAll());
+        this.props.dispatch(FetchSubDepartmentAll());
+        this.props.dispatch(FetchProductEdit(kode));
     };
     handlesearch(event){
         event.preventDefault();
@@ -65,6 +88,7 @@ class ListProduct extends Component{
         this.props.dispatch(FetchLocation());
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
+        this.props.dispatch(setProductEdit([]));
     }
 
     exportPDF = () => {
@@ -182,7 +206,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={columnStyle}>Group</th>
                             <th className="text-black" style={columnStyle}>Supplier</th>
                             <th className="text-black" style={columnStyle}>Sub Dept</th>
-                            <th className="text-black" style={columnStyle}>Purchase Price</th>
+
                             <th className="text-black" style={columnStyle}>Category</th>
                             <th className="text-black" style={columnStyle}>Stock Min</th>
                             <th className="text-black" style={columnStyle}>Product Type</th>
@@ -201,17 +225,19 @@ class ListProduct extends Component{
                                                             Action
                                                         </button>
                                                         <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kode)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kode)}>Delete</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kode)}>Set Harga Customer</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kode)}>Detail</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.group1}</td>
-                                                <td style={columnStyle}>{v.group2}</td>
-                                                <td style={columnStyle}>{toRp(v.hrg_beli)}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
+                                                <td style={columnStyle}>{v.supplier}</td>
+
                                                 <td style={columnStyle}>{v.kategori}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
                                                 <td style={columnStyle}>{v.jenis}</td>
@@ -237,6 +263,7 @@ class ListProduct extends Component{
                     dataLocation={this.props.location}
                     dataSupplier={this.props.supplier}
                     dataSubDept={this.props.subDept}
+                    dataEdit={this.props.productEdit}
                 />
             </div>
         )
@@ -249,7 +276,8 @@ const mapStateToProps = (state) => {
         isOpen:state.modalReducer,
         location:state.locationReducer.data,
         supplier:state.supplierReducer.dataAll,
-        subDept:state.subDepartmentReducer.all
+        subDept:state.subDepartmentReducer.all,
+        productEdit:state.productReducer.dataEdit
     }
 }
 
