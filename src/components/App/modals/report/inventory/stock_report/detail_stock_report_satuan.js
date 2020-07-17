@@ -11,8 +11,6 @@ class DetailStockReportSatuan extends Component{
         super(props);
         this.toggle = this.toggle.bind(this);
     }
-
-
     toggle(e){
         e.preventDefault();
         const bool = !this.props.isOpen;
