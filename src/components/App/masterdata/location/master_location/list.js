@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import FormLocation from "components/App/modals/masterdata/location/form_location";
+import FormLocationPrompt from "components/App/modals/masterdata/location/form_location_prompt";
 import {
     deleteLocation,
     FetchAllLocation,
@@ -41,7 +42,7 @@ class ListLocation extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formLocation"));
+        this.props.dispatch(ModalType("formLocationPrompt"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(setEditLocation([]));
 
@@ -181,6 +182,9 @@ class ListLocation extends Component{
                     dataDetailLocation={this.props.dataEditLocation}
                     dataLocation={this.props.dataLocation}
                     dataLocationCategory={this.props.dataLocationCategory}
+                    token={this.props.token}
+                />
+                <FormLocationPrompt
                     token={this.props.token}
                 />
                 <DetailLocationModal  dataDetailLocation={this.props.dataDetailLocation}/>

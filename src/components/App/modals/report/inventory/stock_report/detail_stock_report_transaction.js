@@ -2,8 +2,8 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
-import {toRp} from "../../../../../helper";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {toRp} from "helper";
 import moment from "moment";
 class DetailStockReportTransaction extends Component{
     constructor(props){
