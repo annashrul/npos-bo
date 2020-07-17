@@ -12,7 +12,6 @@ import { initDB } from 'react-indexed-db';
 
 initDB(DBConfig);
 // Check token in localStorage
-console.log(localStorage.npos);
   if (localStorage.npos) {
     store.dispatch(setLoggedin(true))
     const sess = get('sess');

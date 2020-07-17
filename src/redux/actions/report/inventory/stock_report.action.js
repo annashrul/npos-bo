@@ -28,16 +28,6 @@ export function setStockReportFailed(data=[]){
 export const FetchStockReport = (token,page=1,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        console.log("############### TOKEN ###############",token);
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
         let que = '';
         if(dateFrom===''&&dateTo===''&&location===''){
@@ -53,7 +43,7 @@ export const FetchStockReport = (token,page=1,dateFrom='',dateTo='',location='')
             que = `report/stock?page=${page}&lokasi=${location}`;
         }
         console.log(`${que}`);
-        axios.get(HEADERS.URL+`${que}`,headers)
+        axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
@@ -67,15 +57,6 @@ export const FetchStockReport = (token,page=1,dateFrom='',dateTo='',location='')
 export const FetchStockReportDetailSatuan = (token,page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
         let que = '';
         if(dateFrom===''&&dateTo===''&&location===''){
             que = `report/stock/${code}?page=${page}`;
@@ -90,7 +71,7 @@ export const FetchStockReportDetailSatuan = (token,page=1,code,dateFrom='',dateT
             que = `report/stock/${code}?page=${page}&lokasi=${location}`;
         }
         console.log(`${que}`);
-        axios.get(HEADERS.URL+`${que}`,headers)
+        axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
@@ -104,15 +85,6 @@ export const FetchStockReportDetailSatuan = (token,page=1,code,dateFrom='',dateT
 export const FetchStockReportDetailTransaction = (token,page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
         // let que = '';
         // if(dateFrom===''&&dateTo===''&&location===''){
         //     que = `report/stock/${code}/detail?page=${page}`;
@@ -127,7 +99,7 @@ export const FetchStockReportDetailTransaction = (token,page=1,code,dateFrom='',
         //     que = `report/stock/${code}/detail?page=${page}&lokasi=${location}`;
         // }
         // console.log(`${que}`);
-        axios.get(HEADERS.URL+`report/stock/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`,headers)
+        axios.get(HEADERS.URL+`report/stock/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);

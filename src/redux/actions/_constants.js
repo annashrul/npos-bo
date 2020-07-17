@@ -21,6 +21,10 @@ export const HEADERS ={
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO"
 }
 
+export const LOC_VERIF ={
+  password:"netindo35a"
+}
+
 /****************
       MODAL
 *****************/
@@ -241,4 +245,12 @@ export const PO = {
   FAILED: 'SET_PO_FAILED',
   DETAIL: 'SET_PO_DETAIL',
   SUCCESS_CODE: 'SET_PO_SUCCESS_CODE',
+}
+
+export const RECEIVE = {
+  LOADING: 'SET_RECEIVE_LOADING',
+  SUCCESS: 'SET_RECEIVE_SUCCESS',
+  FAILED: 'SET_RECEIVE_FAILED',
+  DETAIL: 'SET_RECEIVE_DETAIL',
+  SUCCESS_CODE: 'SET_RECEIVE_SUCCESS_CODE',
 }

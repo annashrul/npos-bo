@@ -2,10 +2,10 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "../../../../../actions/modal.action";
-import {toRp} from "../../../../../helper";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {toRp} from "helper";
 import DetailStockReportTransaction from "./detail_stock_report_transaction";
-import {FetchStockReportDetailTransaction} from "../../../../../actions/report/inventory/stock_report.action";
+import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/stock_report.action";
 class DetailStockReportSatuan extends Component{
     constructor(props){
         super(props);

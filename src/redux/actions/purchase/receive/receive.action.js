@@ -1,5 +1,5 @@
 import {
-    PO,
+    RECEIVE,
     HEADERS
 } from "../../_constants"
 import axios from "axios"
@@ -9,63 +9,40 @@ import {destroy} from "components/model/app.model";
 
 export function setLoading(load) {
     return {
-        type: PO.LOADING,
+        type: RECEIVE.LOADING,
         load
     }
 }
 export function setPO(data = []) {
     return {
-        type: PO.SUCCESS,
+        type: RECEIVE.SUCCESS,
         data
     }
 }
 export function setCode(data = []) {
     return {
-        type: PO.SUCCESS_CODE,
+        type: RECEIVE.SUCCESS_CODE,
         data
     }
 }
 export function setNewest(dataNew = []) {
     return {
-        type: PO.SUCCESS_NEWEST,
+        type: RECEIVE.SUCCESS_NEWEST,
         dataNew
     }
 }
 
 export function setPOFailed(data = []) {
     return {
-        type: PO.FAILED,
+        type: RECEIVE.FAILED,
         data
     }
 }
-
-export const FetchPO = () => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        const headers = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        axios.get(HEADERS.URL + "chartdata", headers)
-            .then(function (response) {
-                const data = response.data
-                dispatch(setPO(data))
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-
-    }
-}
-
 export const FetchNota = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
        
-        axios.get(HEADERS.URL + `purchaseorder/getcode?prefix=PO&lokasi=${lokasi}`)
+        axios.get(HEADERS.URL + `receive/getcode?lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
                 console.log(data);
@@ -80,10 +57,10 @@ export const FetchNota = (lokasi) => {
     }
 }
 
-export const storePo = (data) => {
+export const storeReceive= (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `purchaseorder`;
+        const url = HEADERS.URL + `receive`;
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -103,7 +80,7 @@ export const storePo = (data) => {
                             win.focus();
                         }
                     }
-                    destroy('purchase_order');
+                    destroy('receive');
                     localStorage.removeItem('sp');
                     localStorage.removeItem('lk');
                     window.location.reload(false);

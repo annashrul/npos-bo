@@ -1,13 +1,13 @@
 import React,{Component} from 'react'
-import Layout from '../../_layout'
+import Layout from 'components/App/Layout'
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import ListLocation from "../../masterdata/location/master_location/list";
-import Preloader from "../../../Preloader";
+import ListLocation from "components/App/masterdata/location/master_location/list";
+import Preloader from "Preloader";
 import ListLocationCategory from "../../masterdata/location/master_location_catergory/list";
 import {sessionService} from "redux-react-session";
-import {FetchLocation} from "../../../actions/masterdata/location/location.action";
-import {FetchLocationCategory} from "../../../actions/masterdata/location_category/location_category.action";
-import {FetchStockReport} from "../../../actions/report/inventory/stock_report.action";
+import {FetchLocation} from "redux/actions/masterdata/location/location.action";
+import {FetchLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
+import {FetchStockReport} from "redux/actions/report/inventory/stock_report.action";
 import connect from "react-redux/es/connect/connect";
 import ListStockReport from "./stock/list";
 class InventoryReport extends Component{
@@ -20,23 +20,23 @@ class InventoryReport extends Component{
         this.handleSelect = this.handleSelect.bind(this);
     }
     componentWillMount(){
-        sessionService.loadSession().then(session => {
-            this.setState({
-                token:session.token
-            },()=>{
-                this.setState({token:session.token});
+        // sessionService.loadSession().then(session => {
+        //     this.setState({
+        //         token:session.token
+        //     },()=>{
+                // this.setState({token:session.token});
                 let anyStockReport = localStorage.getItem("any_stock_report");
                 let pageStockReport = localStorage.getItem('page_stock_report');
-                this.props.dispatch(FetchStockReport(session.token,pageStockReport?pageStockReport:1,'','',''));
-            })}
-        );
-        sessionService.loadUser()
-            .then(user=>{
-                this.setState({
-                    id:user.id
-                },()=>{
-                })
-            })
+                this.props.dispatch(FetchStockReport(null,pageStockReport?pageStockReport:1,'','',''));
+        //     })}
+        // );
+        // sessionService.loadUser()
+        //     .then(user=>{
+        //         this.setState({
+        //             id:user.id
+        //         },()=>{
+        //         })
+        //     })
     }
 
     handleSelect = (e,index) => {
@@ -94,7 +94,7 @@ class InventoryReport extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.sessionReducer.authenticated,
+        // authenticated: state.sessionReducer.authenticated,
         stockReport:state.stockReportReducer.data,
         total:state.stockReportReducer.total,
         isLoading: state.stockReportReducer.isLoading,
