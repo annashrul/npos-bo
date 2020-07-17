@@ -165,7 +165,7 @@ class FormCustomer extends Component{
         parseData['foto'] = this.state.foto;
         parseData['jenis_kelamin'] = this.state.jenis_kelamin;
         parseData['email'] = this.state.email;
-        parseData['biografi'] = this.state.biografi;
+        parseData['biografi'] = '-';
         parseData['special_price'] = this.state.special_price;
         // console.log("boolean1 : "+(this.props.dataCustomerEdit !== null))
         // console.log("boolean2 : "+(this.props.dataCustomerEdit !== undefined))

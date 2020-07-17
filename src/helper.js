@@ -72,6 +72,10 @@ export const statusQ = (lbl,txt) => {
 
 };
 
+export const getMargin = (hrg_jual,hrg_beli) => {
+    return ((parseInt(hrg_jual)-parseInt(hrg_beli))/parseInt(hrg_beli))*100;
+};
+
 class Paginationq extends Component{
     constructor(props){
         super(props);

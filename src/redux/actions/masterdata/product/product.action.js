@@ -8,7 +8,9 @@ import {FetchCash} from "../cash/cash.action";
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}
 }
-
+export function setProductDetail(data=[]){
+    return {type:PRODUCT.DETAIL,data}
+}
 export function setProductbrg(data=[]){
     return {type:PRODUCT.SUCCESS_BRG,data}
 }
@@ -240,5 +242,27 @@ export const updateProduct = (id,data) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+
+export const FetchProductDetail = (kode)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`barang/${kode}?isbo=true`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setProductDetail(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoading(false));
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                text: error.response.data.msg,
+            });
+        })
     }
 }

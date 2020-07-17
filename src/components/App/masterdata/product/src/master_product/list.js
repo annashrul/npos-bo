@@ -13,7 +13,14 @@ import Paginationq from "helper";
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
 import {FetchSubDepartmentAll} from "redux/actions/masterdata/department/sub_department.action";
 import Swal from "sweetalert2";
-import {FetchProductEdit, setProductEdit} from "../../../../../../redux/actions/masterdata/product/product.action";
+import {
+    FetchProductDetail,
+    FetchProductEdit,
+    setProductEdit
+} from "redux/actions/masterdata/product/product.action";
+import DetailProduct from "../../../../modals/masterdata/product/detail_product";
+import {FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
+import CustomerPrice from "../../../../modals/masterdata/customer/customer_price";
 
 class ListProduct extends Component{
     constructor(props){
@@ -29,6 +36,7 @@ class ListProduct extends Component{
                 {id: 2, value: "barcode", label:'Barcode'},
                 {id: 3, value: "nm_brg", label:'Name'},
             ],
+            detail:{}
         }
     }
 
@@ -77,8 +85,22 @@ class ListProduct extends Component{
         }
     }
 
-
-
+    loc_detail(e,kode) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("detailProduct"));
+        this.props.dispatch(FetchProductDetail(kode));
+    }
+    handlePriceCustomer(e,kode,nm_brg){
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("CustomerPrice"));
+        localStorage.setItem("nm_brg_price_customer",nm_brg);
+        localStorage.setItem("kd_brg_price_customer",kode);
+        this.props.dispatch(FetchCustomerPrice(kode,1,''));
+    }
     toggleModal(e) {
         e.preventDefault();
         const bool = !this.props.isOpen;
@@ -225,8 +247,8 @@ class ListProduct extends Component{
                                                             Action
                                                         </button>
                                                         <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kode)}>Set Harga Customer</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kode)}>Detail</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>
                                                             <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
                                                             <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
                                                         </div>
@@ -265,6 +287,8 @@ class ListProduct extends Component{
                     dataSubDept={this.props.subDept}
                     dataEdit={this.props.productEdit}
                 />
+                <DetailProduct dataDetail={this.props.productDetail}/>
+                <CustomerPrice dataCustomerPrice={this.props.customerPrice}/>
             </div>
         )
     }
@@ -277,7 +301,9 @@ const mapStateToProps = (state) => {
         location:state.locationReducer.data,
         supplier:state.supplierReducer.dataAll,
         subDept:state.subDepartmentReducer.all,
-        productEdit:state.productReducer.dataEdit
+        productEdit:state.productReducer.dataEdit,
+        productDetail:state.productReducer.dataDetail,
+        customerPrice:state.customerReducer.dataPrice,
     }
 }
 
