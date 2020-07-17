@@ -65,6 +65,7 @@ class PurchaseOrder extends Component{
         this.setTglOrder=this.setTglOrder.bind(this);
         this.setTglEx=this.setTglEx.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
+        this.HandleSearch = this.HandleSearch.bind(this);
     }
 
     componentDidMount(){
@@ -98,7 +99,7 @@ class PurchaseOrder extends Component{
         })
       }
       if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk!==undefined&&localStorage.lk!=='') {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp,table))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty))
 
       }
     }
@@ -160,7 +161,7 @@ class PurchaseOrder extends Component{
       localStorage.setItem('lk', lk.value);
       this.props.dispatch(FetchNota(lk.value))
       if (this.state.supplier!==""){
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier,table))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
       }
       destroy(table)
       const data = get(table);
@@ -553,6 +554,48 @@ class PurchaseOrder extends Component{
 
     }
 
+    autoSetQty(kode,data){
+      const cek = cekData('kd_brg', kode, table);
+      return cek.then(res => {
+          if (res == undefined) {
+              console.log('GADA');
+              store(table, {
+                  kd_brg: data[0].kd_brg,
+                  barcode: data[0].barcode,
+                  satuan: data[0].satuan,
+                  diskon: 0,
+                  diskon2: 0,
+                  diskon3: 0,
+                  diskon4: 0,
+                  ppn: 0,
+                  harga_beli: data[0].harga_beli,
+                  qty: 1,
+                  stock: data[0].stock,
+                  nm_brg: data[0].nm_brg,
+                  tambahan: data[0].tambahan
+              })
+          } else {
+                  update(table, {
+                      id: res.id,
+                      qty: parseFloat(res.qty) + 1,
+                      kd_brg: res.kd_brg,
+                      barcode: res.barcode,
+                      satuan: res.satuan,
+                      diskon: res.diskon,
+                      diskon2: res.diskon2,
+                      diskon3: 0,
+                      diskon4: 0,
+                      ppn: res.ppn,
+                      stock: res.stock,
+                      harga_beli: res.harga_beli,
+                      nm_brg: res.nm_brg,
+                      tambahan: res.tambahan
+                  })
+          }
+          return true
+      })
+    }
+
     HandleSearch(){
       if (this.state.supplier === "" || this.state.lokasi === "") {
           Swal.fire(
@@ -562,7 +605,9 @@ class PurchaseOrder extends Component{
           )
       }else{
         const searchby = parseInt(this.state.searchby)===1?'kd_brg':(parseInt(this.state.searchby)===2?'barcode':'deskripsi')
-        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,table));
+        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty));
+        this.setState({search: ''});
+        
       }
     }
 
@@ -642,6 +687,7 @@ class PurchaseOrder extends Component{
                                   name="search"
                                   className="form-control form-control-sm"
                                   placeholder="Search"
+                                  value={this.state.search}
                                    onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                    onKeyPress = {
                                      event => {

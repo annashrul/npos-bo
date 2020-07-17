@@ -4,7 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 import {FetchBrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
-import {FetchNota,storePo} from 'redux/actions/purchase/receive/receive.action'
+import {FetchNota,storeReceive} from 'redux/actions/purchase/receive/receive.action'
 import './style.css';
 import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
@@ -35,8 +35,7 @@ class Receive extends Component{
           addingItemName: "",
           databrg: [],
           brgval:[],
-          tgl_order: new Date(),
-          tgl_kirim: new Date(),
+          tanggal: new Date(),
           harga_beli: 0,
           diskon:0,
           ppn:0,
@@ -55,6 +54,9 @@ class Receive extends Component{
           discount_harga:0,
           pajak:0,
           search:"",
+          grandtotal:0,
+          no_po:'-',
+          pre_receive:'-',
           error:{
             location:"",
             supplier:"",
@@ -69,31 +71,16 @@ class Receive extends Component{
         this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeSupplier = this.HandleChangeSupplier.bind(this);
-        this.setTglOrder=this.setTglOrder.bind(this);
-        this.setTglEx=this.setTglEx.bind(this);
+        this.setTanggal=this.setTanggal.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
+        this.HandleSearch = this.HandleSearch.bind(this);
+        this.getData = this.getData.bind(this);
     }
 
     componentDidMount() {
       this.props.dispatch(FetchSupplierAll())
-      const data = get(table);
-      data.then(res => {
-        let brg = this.state.brgval
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            qty_bonus: i.qty_bonus,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData()
+
       if (localStorage.lk !== undefined && localStorage.lk !== '') {
         this.props.dispatch(FetchNota(localStorage.lk))
         this.setState({
@@ -106,7 +93,7 @@ class Receive extends Component{
         })
       }
       if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk !== undefined && localStorage.lk !== '') {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp,table))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty))
 
       }
     }
@@ -130,24 +117,7 @@ class Receive extends Component{
         }
       }
       if(nextProps.barang.length>0){
-        const data = get(table);
-        data.then(res => {
-          let brg = []
-          res.map((i) => {
-            brg.push({
-              harga_beli: i.harga_beli,
-              diskon: i.diskon,
-              ppn: i.ppn,
-              qty: i.qty,
-              qty_bonus: i.qty_bonus,
-              satuan: i.satuan
-            });
-          })
-          this.setState({
-            databrg: res,
-            brgval: brg
-          })
-        });
+        this.getData()
 
       }
      
@@ -170,27 +140,11 @@ class Receive extends Component{
       localStorage.setItem('lk', lk.value);
       this.props.dispatch(FetchNota(lk.value))
       if (this.state.supplier !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier,table))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
       }
       destroy(table)
-      const data = get(table);
-      data.then(res => {
-        let brg = []
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            qty_bonus: i.qty_bonus,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData()
+      
     }
 
     HandleChangeSupplier(sp) {
@@ -204,35 +158,33 @@ class Receive extends Component{
       localStorage.setItem('sp', sp.value);
 
       if (this.state.location !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value,table))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty))
       }
       destroy(table)
-      const data = get(table);
-      data.then(res => {
-        let brg = []
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            qty_bonus: i.qty_bonus,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData()
     }
 
-    HandleCommonInputChange(e,errs=true){
+    HandleCommonInputChange(e,errs=true,st=0){
       const column = e.target.name;
       const val = e.target.value;
-      this.setState({
-        [column]: val
-      });
+      
+      if (column === 'discount_persen' || column === 'pajak'){
+        if (val < 0 || val=='') this.setState({[column]: 0});
+        else if (val >100) this.setState({[column]: 100});
+        else this.setState({[column]: val});
+
+        if (column === 'discount_persen'){
+          this.setState({ 'discount_harga': (st*(val/100)) });
+        }
+      } else if (column === 'discount_harga') {
+        const disper = (val/st) * 100;
+        this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:val });
+      }else{
+        this.setState({
+          [column]: val
+        });
+      }
+
       if(errs){
         let err = Object.assign({}, this.state.error, {
           [column]: ""
@@ -270,12 +222,7 @@ class Receive extends Component{
                      title: `${column} has been changed.`
                  })
             }
-            const data = get(table);
-            data.then(res => {
-                this.setState({
-                    databrg: res
-                })
-            })
+            this.getData()
         })
        
     }
@@ -327,39 +274,16 @@ class Receive extends Component{
                       title: `${column} has been changed.`
                   })
               }
-              const data = get(table);
-               data.then(res => {
-                   let brg = []
-                   res.map((i) => {
-                       brg.push({
-                           harga_beli: i.harga_beli,
-                           diskon: i.diskon,
-                           ppn: i.ppn,
-                           qty: i.qty,
-                           qty_bonus: i.qty_bonus,
-                           satuan: i.satuan
-                       });
-                   })
-                   this.setState({
-                       databrg: res,
-                       brgval: brg
-                   })
-               });
+              this.getData()
           })
         }
 
     }
 
-    setTglOrder(date) {
+    setTanggal(date) {
         this.setState({
-          tgl_order: date
+          tanggal: date
         });
-    };
-
-    setTglEx(date) {
-      this.setState({
-        tgl_kirim: date
-      });
     };
 
     HandleRemove(e, id){
@@ -375,35 +299,19 @@ class Receive extends Component{
         }).then((result) => {
             if (result.value) {
                 del(table,id);
-                const data = get(table);
-                data.then(res => {
-                      let brg = []
-                      res.map((i) => {
-                        brg.push({
-                          harga_beli: i.harga_beli,
-                          diskon: i.diskon,
-                          ppn: i.ppn,
-                          qty: i.qty,
-                          qty_bonus: i.qty_bonus,
-                          satuan: i.satuan
-                        });
-                      })
-                      this.setState({
-                        databrg: res,
-                        brgval: brg
-                      })
+                this.getData()
                     Swal.fire(
                         'Deleted!',
                         'Your data has been deleted.',
                         'success'
                     )
-                })
             }
         })
     }
 
-    HandleAddBrg(e,item,index) {  
+    HandleAddBrg(e,item) {  
         e.preventDefault();
+        console.log(item);
         const finaldt = {
             kd_brg: item.kd_brg,
             barcode:item.barcode,
@@ -415,7 +323,7 @@ class Receive extends Component{
             ppn:item.ppn,
             harga_beli:item.harga_beli,
             qty:item.qty,
-            qty_bonus:item.qty_bonus,
+            qty_bonus: item.qty_bonus,
             stock:item.stock,
             nm_brg:item.nm_brg,
             tambahan:item.tambahan
@@ -445,23 +353,7 @@ class Receive extends Component{
                }
                
 
-               const data = get(table);
-               data.then(res => {
-                   let brg = []
-                   res.map((i) => {
-                       brg.push({
-                           harga_beli: i.harga_beli,
-                           diskon: i.diskon,
-                           ppn: i.ppn,
-                           qty: i.qty,
-                           satuan: i.satuan
-                       });
-                   })
-                   this.setState({
-                       databrg: res,
-                       brgval: brg
-                   })
-               });
+               this.getData()
            })
     }
 
@@ -570,21 +462,25 @@ class Receive extends Component{
                       harga_beli: item.harga_beli,
                       qty: item.qty,
                       qty_bonus: item.qty_bonus
-
                     })
                   })
                   let data_final = {
-                    tgl_order: moment(this.state.tgl_order).format("YYYY-MM-DD"),
-                    tgl_kirim: moment(this.state.tgl_kirim).format("YYYY-MM-DD"),
-                    catatan: this.state.catatan,
-                    jenis_transaksi: this.state.jenis_trx,
-                    supplier: this.state.supplier,
-                    lokasi: this.state.location,
-                    userid: this.state.userid,
+                    tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
+                    type: this.state.jenis_trx,
+                    tgl_jatuh_tempo: this.state.tanggal,
+                    no_po: this.state.no_po,
+                    pre_receive: this.state.pre_receive,
                     sub_total: subtotal,
+                    supplier: this.state.supplier,
+                    nota_supplier: this.state.notasupplier,
+                    nama_penerima: this.state.penerima,
+                    discount_harga: this.state.discount_harga,
+                    ppn: this.state.pajak,
+                    lokasi_beli: this.state.location,
+                    userid: this.state.userid,
                     detail: detail
                   };
-                  this.props.dispatch(storePo(data_final));
+                  this.props.dispatch(storeReceive(data_final));
                 }
               })
             }
@@ -592,18 +488,85 @@ class Receive extends Component{
       }
 
     }
+  
+    autoSetQty(kode, data) {
+      const cek = cekData('kd_brg', kode, table);
+      return cek.then(res => {
+        if (res == undefined) {
+          console.log('GADA');
+          store(table, {
+            kd_brg: data[0].kd_brg,
+            barcode: data[0].barcode,
+            satuan: data[0].satuan,
+            diskon: 0,
+            diskon2: 0,
+            diskon3: 0,
+            diskon4: 0,
+            ppn: 0,
+            harga_beli: data[0].harga_beli,
+            qty: 1,
+            qty_bonus: 0,
+            stock: data[0].stock,
+            nm_brg: data[0].nm_brg,
+            tambahan: data[0].tambahan
+          })
+        } else {
+          update(table, {
+            id: res.id,
+            qty: parseFloat(res.qty) + 1,
+            kd_brg: res.kd_brg,
+            barcode: res.barcode,
+            satuan: res.satuan,
+            diskon: res.diskon,
+            diskon2: res.diskon2,
+            diskon3: 0,
+            diskon4: 0,
+            ppn: res.ppn,
+            qty_bonus:res.qty_bonus,
+            stock: res.stock,
+            harga_beli: res.harga_beli,
+            nm_brg: res.nm_brg,
+            tambahan: res.tambahan
+          })
+        }
+        return true
+      })
+    }
 
-    HandleSearch(){
+    HandleSearch() {
       if (this.state.supplier === "" || this.state.lokasi === "") {
-          Swal.fire(
-            'Gagal!',
-            'Pilih lokasi dan supplier terlebih dahulu.',
-            'error'
-          )
-      }else{
-        const searchby = parseInt(this.state.searchby)===1?'kd_brg':(parseInt(this.state.searchby)===2?'barcode':'deskripsi')
-        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,table));
+        Swal.fire(
+          'Gagal!',
+          'Pilih lokasi dan supplier terlebih dahulu.',
+          'error'
+        )
+      } else {
+        const searchby = parseInt(this.state.searchby) === 1 ? 'kd_brg' : (parseInt(this.state.searchby) === 2 ? 'barcode' : 'deskripsi')
+        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
+        this.setState({search: ''});
+
       }
+    }
+
+    getData(){
+      const data = get(table);
+      data.then(res => {
+        let brg = []
+        res.map((i) => {
+          brg.push({
+            harga_beli: i.harga_beli,
+            diskon: i.diskon,
+            ppn: i.ppn,
+            qty: i.qty,
+            qty_bonus: i.qty_bonus,
+            satuan: i.satuan
+          });
+        })
+        this.setState({
+          databrg: res,
+          brgval: brg
+        })
+      });
     }
 
     render() {
@@ -623,6 +586,7 @@ class Receive extends Component{
       }
        let subtotal = 0;
        let grandtotal = 0;
+      //  let grandtotal = this.state.grandtotal;
         return (
           <Layout page="Receive Pembelian">
               <div className="row align-items-center">
@@ -682,12 +646,14 @@ class Receive extends Component{
                                   id="chat-search"
                                   name="search"
                                   className="form-control form-control-sm"
+                                  value={this.state.search}
                                   placeholder="Search"
                                    onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                    onKeyPress = {
                                      event => {
                                        if (event.key === 'Enter') {
                                          this.HandleSearch();
+                                         
                                        }
                                      }
                                    }
@@ -786,8 +752,8 @@ class Receive extends Component{
                                   </div>
                                   <DatePicker
                                     className="form-control rounded-right"
-                                    selected={this.state.tgl_order}
-                                    onChange={this.setTglOrder}
+                                    selected={this.state.tanggal}
+                                    onChange={this.setTanggal}
                                   />
                                 </div>
                               </div>
@@ -999,7 +965,7 @@ class Receive extends Component{
                                         ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
                                     }
                                     subtotal+=((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty);
-                                    grandtotal=this.state.ppn;
+                                    // console.log('gt',grandtotal);
                                     return (
                                         <tr key={index} >
                                             <td>
@@ -1026,6 +992,7 @@ class Receive extends Component{
                                         </tr>
                                     )
                                 })
+
                             }
                           </tbody>
                         </table>
@@ -1042,32 +1009,23 @@ class Receive extends Component{
                                 <div className="row" style={{marginBottom: '3px'}}>
                                   <label className="col-sm-4">Discount</label>
                                   <div className="col-sm-3">
-                                    <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="discount_persen" className="form-control" placeholder="%" />
+                                    <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,subtotal)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
                                   </div>
                                   <div className="col-sm-5">
-                                    <input type="text" onChange={(e)=>this.HandleCommonInputChange(e)}  name="discount_harga" className="form-control text-right" placeholder="Rp" />
+                                    <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,subtotal)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
                                   </div>
                                 </div>
                                 <div className="row" style={{marginBottom: '3px'}}>
                                   <label className="col-sm-4">Pajak %</label>
                                   <div className="col-sm-3">
-                                    <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  className="form-control" placeholder="%" />
-                                  </div>
-                                </div>
-                                <div className="row" style={{marginBottom: '3px'}}>
-                                  <div className="col-sm-8">
-                                    <input type="hidden" name="total" className="form-control text-right" readOnly  />
-                                  </div>
-                                </div>
-                                <div className="row" style={{marginBottom: '3px'}}>
-                                  <div className="col-sm-8">
-                                    <input type="hidden" name="total_return" className="form-control text-right" readOnly  />
+                                    <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
                                   </div>
                                 </div>
                                 <div className="row" style={{marginBottom: '3px'}}>
                                   <label className="col-sm-4">Grand Total</label>
                                   <div className="col-sm-8">
-                                    <input type="text" name="grand_total" className="form-control text-right" readOnly value={grandtotal} />
+                                 
+                                    <input type="text" name="grand_total" className="form-control text-right" readOnly value={(subtotal - (subtotal * (parseFloat(this.state.discount_persen) / 100))) + (subtotal * (parseFloat(this.state.pajak) / 100))} />
                                   </div>
                                 </div>
                               </form>

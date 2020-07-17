@@ -57,10 +57,10 @@ export const FetchNota = (lokasi) => {
     }
 }
 
-export const storePo = (data) => {
+export const storeReceive= (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `purchaseorder`;
+        const url = HEADERS.URL + `receive`;
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -80,7 +80,9 @@ export const storePo = (data) => {
                             win.focus();
                         }
                     }
-                    destroy('purchase_order');
+                    destroy('receive');
+                    localStorage.removeItem('sp');
+                    localStorage.removeItem('lk');
                     window.location.reload(false);
                 })
                 dispatch(setLoading(false));

@@ -104,6 +104,8 @@ export const storePo = (data) => {
                         }
                     }
                     destroy('purchase_order');
+                    localStorage.removeItem('sp');
+                    localStorage.removeItem('lk');
                     window.location.reload(false);
                 })
                 dispatch(setLoading(false));

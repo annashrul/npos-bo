@@ -3,7 +3,6 @@ import { useIndexedDB } from 'react-indexed-db';
 export  const get=(table)=>{
     const {getAll} = useIndexedDB(table);
     return getAll().then(result => {
-        console.log('DI MODEL', result);
         return result;
     });
 }
