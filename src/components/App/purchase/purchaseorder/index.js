@@ -71,23 +71,7 @@ class PurchaseOrder extends Component{
 
     componentDidMount(){
       this.props.dispatch(FetchSupplierAll())
-      const data = get(table);
-      data.then(res => {
-          let brg = this.state.brgval
-          res.map((i)=>{
-                brg.push({
-                  harga_beli: i.harga_beli,
-                  diskon: i.diskon,
-                  ppn: i.ppn,
-                  qty: i.qty,
-                  satuan: i.satuan
-              });
-          })
-          this.setState({
-              databrg: res,
-              brgval: brg
-          })
-      })
+      this.getData();
       if(localStorage.lk!==undefined&&localStorage.lk!==''){
         this.props.dispatch(FetchNota(localStorage.lk))
         this.setState({
@@ -123,23 +107,7 @@ class PurchaseOrder extends Component{
         }
       }
       if(nextProps.barang.length>0){
-        const data = get(table);
-        data.then(res => {
-          let brg = []
-          res.map((i) => {
-            brg.push({
-              harga_beli: i.harga_beli,
-              diskon: i.diskon,
-              ppn: i.ppn,
-              qty: i.qty,
-              satuan: i.satuan
-            });
-          })
-          this.setState({
-            databrg: res,
-            brgval: brg
-          })
-        });
+        this.getData();
 
       }
      
@@ -165,23 +133,7 @@ class PurchaseOrder extends Component{
         this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
       }
       destroy(table)
-      const data = get(table);
-      data.then(res => {
-        let brg = []
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData();
     }
 
     HandleChangeSupplier(sp) {
@@ -195,26 +147,10 @@ class PurchaseOrder extends Component{
       localStorage.setItem('sp', sp.value);
 
       if (this.state.location !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value,table))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty))
       }
       destroy(table)
-      const data = get(table);
-      data.then(res => {
-        let brg =[]
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData();
     }
 
     HandleCommonInputChange(e,errs=true){
@@ -260,12 +196,7 @@ class PurchaseOrder extends Component{
                      title: `${column} has been changed.`
                  })
             }
-            const data = get(table);
-            data.then(res => {
-                this.setState({
-                    databrg: res
-                })
-            })
+            this.getData();
         })
        
     }
@@ -316,23 +247,7 @@ class PurchaseOrder extends Component{
                       title: `${column} has been changed.`
                   })
               }
-              const data = get(table);
-               data.then(res => {
-                   let brg = []
-                   res.map((i) => {
-                       brg.push({
-                           harga_beli: i.harga_beli,
-                           diskon: i.diskon,
-                           ppn: i.ppn,
-                           qty: i.qty,
-                           satuan: i.satuan
-                       });
-                   })
-                   this.setState({
-                       databrg: res,
-                       brgval: brg
-                   })
-               });
+              this.getData();
           })
         }
 
@@ -362,17 +277,15 @@ class PurchaseOrder extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                del(table,id);
-                const data = get(table);
-                data.then(res => {
-                    this.setState({
-                        databrg: res
-                    })
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    )
+                del(table,id)
+                .then(res=>{
+                  this.getData();
+                  Swal.fire(
+                      'Deleted!',
+                      'Your data has been deleted.',
+                      'success'
+                  )
+
                 })
             }
         })
@@ -419,23 +332,7 @@ class PurchaseOrder extends Component{
                }
                
 
-               const data = get(table);
-               data.then(res => {
-                   let brg = []
-                   res.map((i) => {
-                       brg.push({
-                           harga_beli: i.harga_beli,
-                           diskon: i.diskon,
-                           ppn: i.ppn,
-                           qty: i.qty,
-                           satuan: i.satuan
-                       });
-                   })
-                   this.setState({
-                       databrg: res,
-                       brgval: brg
-                   })
-               });
+               this.getData();
            })
     }
 
@@ -610,6 +507,25 @@ class PurchaseOrder extends Component{
         this.setState({search: ''});
         
       }
+    }
+    getData() {
+      const data = get(table);
+      data.then(res => {
+        let brg = []
+        res.map((i) => {
+          brg.push({
+            harga_beli: i.harga_beli,
+            diskon: i.diskon,
+            ppn: i.ppn,
+            qty: i.qty,
+            satuan: i.satuan
+          });
+        })
+        this.setState({
+          databrg: res,
+          brgval: brg
+        })
+      });
     }
 
     render() {

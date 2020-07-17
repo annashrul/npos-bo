@@ -19,6 +19,19 @@ export function setPO(data = []) {
         data
     }
 }
+
+export function setPoData(data = []) {
+    return {
+        type: PO.PO_DATA,
+        data
+    }
+}
+export function setReport(data = []) {
+    return {
+        type: PO.REPORT_SUCCESS,
+        data
+    }
+}
 export function setCode(data = []) {
     return {
         type: PO.SUCCESS_CODE,
@@ -39,18 +52,30 @@ export function setPOFailed(data = []) {
     }
 }
 
-export const FetchPO = () => {
+export const FetchPoReport = (page=1, perpage=10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        axios.get(HEADERS.URL + "chartdata", headers)
+        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setPO(data))
+                dispatch(setReport(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+export const FetchPoData = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setPoData(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {

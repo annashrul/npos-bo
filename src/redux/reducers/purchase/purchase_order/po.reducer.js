@@ -7,7 +7,10 @@ const initialState = {
     data: [],
     msg:"",
     status:"",
-    code:"-"
+    code:"-",
+    po_data:[],
+    report:[],
+    report_data:[]
 };
 
 export const poReducer = (state = initialState, action) => {
@@ -18,6 +21,15 @@ export const poReducer = (state = initialState, action) => {
                 msg: action.data.msg,
                 data: action.data.result,
                 total: action.data.result.total
+            });
+        case PO.REPORT_SUCCESS:
+            return Object.assign({}, state, {
+                report: action.data.result,
+                report_data: action.data.result.data
+            });
+        case PO.PO_DATA:
+            return Object.assign({}, state, {
+                po_data: action.data.result
             });
         case PO.SUCCESS_CODE:
             return Object.assign({}, state, {

@@ -3,8 +3,11 @@ import {store,get, update,destroy,cekData,del} from "components/model/app.model"
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 import {FetchBrg} from 'redux/actions/masterdata/product/product.action'
+import {FetchCheck} from 'redux/actions/site.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storeReceive} from 'redux/actions/purchase/receive/receive.action'
+import {FetchPoReport,FetchPoData,setPoData} from 'redux/actions/purchase/purchase_order/po.action'
+
 import './style.css';
 import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
@@ -57,6 +60,9 @@ class Receive extends Component{
           grandtotal:0,
           no_po:'-',
           pre_receive:'-',
+          data_nota:[],
+          ambil_data:1,
+          ambil_nota:'',
           error:{
             location:"",
             supplier:"",
@@ -75,6 +81,7 @@ class Receive extends Component{
         this.HandleReset = this.HandleReset.bind(this);
         this.HandleSearch = this.HandleSearch.bind(this);
         this.getData = this.getData.bind(this);
+        this.HandleChangeNota = this.HandleChangeNota.bind(this);
     }
 
     componentDidMount() {
@@ -118,9 +125,70 @@ class Receive extends Component{
       }
       if(nextProps.barang.length>0){
         this.getData()
+      }
+
+      if(nextProps.po_report){
+        let nota = []
+        let po = nextProps.po_report;
+        if (po !== undefined) {
+          po.map((i) => {
+            nota.push({
+              value: i.no_po,
+              label: i.no_po+" ("+i.nama_supplier+")"
+            });
+          })
+          this.setState({
+            data_nota: nota
+          })
+        }
 
       }
-     
+
+      if (nextProps.po_data){
+        if (nextProps.po_data.master!==undefined){
+          if(this.props.po_data===undefined){
+            this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
+            this.setState({
+              location: nextProps.po_data.master.lokasi,
+              supplier: nextProps.po_data.master.kode_supplier,
+              catatan: nextProps.po_data.master.catatan,
+              jenis_trx: nextProps.po_data.master.jenis,
+              no_po: nextProps.po_data.master.no_po
+            })
+
+            nextProps.po_data.detail.map(item=>{
+                const datas = {
+                  kd_brg: item.kode_barang,
+                  barcode: item.barcode,
+                  satuan: item.satuan,
+                  diskon: item.diskon,
+                  diskon2: item.disc2,
+                  diskon3: item.disc3,
+                  diskon4: item.disc4,
+                  ppn: item.ppn,
+                  harga_beli: item.harga_beli,
+                  qty: item.jumlah_beli,
+                  qty_bonus: 0,
+                  stock: item.stock,
+                  nm_brg: item.nm_brg,
+                  tambahan: item.tambahan
+                };
+                  store(table, datas)
+                this.getData();
+
+            })
+          }
+
+        }
+      }
+
+      if(nextProps.checkNotaPem){
+        this.setState({
+          error: Object.assign({}, this.state.error, {
+            notasupplier: "Nota supplier sudah digunakan."
+          })
+        })
+      }
     }
 
     componentWillUnmount() {
@@ -129,10 +197,24 @@ class Receive extends Component{
       localStorage.removeItem('lk');
     }
 
+    HandleChangeNota(nota){
+      this.props.dispatch(setPoData([]))
+      this.setState({
+        ambil_nota: nota.value,
+      })
+      localStorage.setItem('nota', nota.value);
+      this.props.dispatch(FetchPoData(nota.value));
+      destroy(table)
+      localStorage.removeItem('sp');
+      localStorage.removeItem('lk');
+      this.getData()
+    }
+
     HandleChangeLokasi(lk) {
       let err = Object.assign({}, this.state.error, {
         location: ""
       });
+      console.log(err);
       this.setState({
         location: lk.value,
         error: err
@@ -151,6 +233,7 @@ class Receive extends Component{
       let err = Object.assign({}, this.state.error, {
         supplier: ""
       });
+      console.log(err);
       this.setState({
         supplier: sp.value,
         error: err
@@ -183,6 +266,22 @@ class Receive extends Component{
         this.setState({
           [column]: val
         });
+      }
+
+      if (column === 'notasupplier'){
+        this.props.dispatch(FetchCheck({
+          table: 'master_beli',
+          kolom: 'nonota',
+          value: val
+        }))
+      }
+
+      if (column === 'ambil_data') {
+        if(val==2){
+          this.props.dispatch(FetchPoReport(1, 1000))
+        }
+        destroy(table)
+        this.getData()
       }
 
       if(errs){
@@ -382,7 +481,7 @@ class Receive extends Component{
 
       // validator head form
       let err = this.state.error;
-      if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "") {
+      if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "" || this.props.checkNotaPem) {
         if(this.state.catatan===""){
           err = Object.assign({}, err, {
             catatan:"Catatan tidak boleh kosong."
@@ -404,9 +503,9 @@ class Receive extends Component{
             penerima: "Penerima tidak boleh kosong."
           });
         }
-        if (this.state.notasupplier === "") {
+        if (this.state.notasupplier === "" || this.props.checkNotaPem) {
           err = Object.assign({}, err, {
-            notasupplier: "Nota supplier tidak boleh kosong."
+            notasupplier: this.props.checkNotaPem ?"Nota supplier telah digunakan.":"Nota supplier tidak boleh kosong."
           });
         }
         this.setState({
@@ -599,10 +698,7 @@ class Receive extends Component{
                 {/* Dashboard Info Area */}
                 <div className="col-6">
                     <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
-                    <div className="dashboard-btn-group d-flex align-items-center">
-                        <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-info ml-1">Simpan</a>
-                        <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
-                    </div>
+                    
                     </div>
                 </div>
                 </div>
@@ -610,6 +706,55 @@ class Receive extends Component{
             <div className="row" style={{marginTop:'20px'}}>
                 {/* LEFT SIDE */}
               <div className="col-lg-5 col-md-4 col-xl-3 box-margin">
+                  {/* AMBIL DATA */}
+                <div className="card mb-3" style={{height: "auto"}}>
+                  <div className="card-body">
+                    <div className="chat-area">
+                      <div className="chat-header-text d-flex border-none mb-10">
+                        <div className="chat-about">
+                          <div className="chat-with font-13">Ambil Data</div>
+                        </div>
+                      </div>
+                      <div className="chat-search">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <div className="form-group">
+                                <div className="input-group input-group-sm">
+                                  <select name='ambil_data' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                    <option value={1}>Pembelian Langsung</option>
+                                    <option value={2}>Purchase Order</option>
+                                    <option value={3}>Pre-Receive</option>
+                                  </select>
+                                  </div>
+                                <small
+                                  id="passwordHelpBlock"
+                                  class="form-text text-muted"
+                                >
+                                  {parseInt(this.state.ambil_data)==1?'Pembelian langsung.':(parseInt(this.state.ambil_data)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
+                                </small>
+                            </div>
+                          </div>
+                          <div className="col-md-12" style={parseInt(this.state.ambil_data)==1?{display:'none'}:{display:'block'}}>
+                            <div className="form-group">
+                              <Select 
+                                    options={this.state.data_nota} 
+                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'PO':'Pre-Receive')}
+                                    onChange={this.HandleChangeNota}
+                                    // value = {
+                                    //   this.state.ambil_nota.find(op => {
+                                    //     return op.value === this.state.ambil_nota
+                                    //   })
+                                    // }
+
+                                  />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* List barang */}
                 <div className="card" style={{height: "auto"}}>
                   <div className="card-body">
                     <div className="chat-area">
@@ -661,6 +806,7 @@ class Receive extends Component{
                                 <span className="input-group-append">
                                   <button
                                     type="button"
+                                    style={{zIndex:0}}
                                     className="btn btn-primary"
                                     onClick = {
                                       event => {
@@ -725,6 +871,7 @@ class Receive extends Component{
               <div className="col-lg-7 col-md-8 col-xl-9 box-margin">
                 <div className="card" style={{height: "auto"}}>
                   <div className="container" style={{ marginTop: "20px" }}>
+                    {/* HEADER FORM */}
                     <form className=''>
                       <div className="row">
                         <div className="col-md-6">
@@ -996,8 +1143,14 @@ class Receive extends Component{
                             }
                           </tbody>
                         </table>
-                        <div className='row' style={{zoom:'70%'}}>
-                          <div className="offset-md-7 col-md-5">
+                        <div className='row'>
+                          <div className="col-md-7">
+                            <div className="dashboard-btn-group d-flex align-items-center">
+                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                            </div>
+                          </div>
+                          <div className="col-md-5" style={{zoom:'70%'}}>
                             <div className="pull-right">
                               <form className="form_head">
                                 <div className="row" style={{marginBottom: '3px'}}>
@@ -1052,7 +1205,10 @@ const mapStateToPropsCreateItem = (state) => ({
   nota: state.receiveReducer.code,
   supplier: state.supplierReducer.dataSupllier,
   isLoading:state.receiveReducer.isLoading,
-  auth:state.auth
+  auth:state.auth,
+  po_report: state.poReducer.report_data,
+  po_data: state.poReducer.po_data,
+  checkNotaPem: state.siteReducer.check
 });
 
 export default connect(mapStateToPropsCreateItem)(Receive);
