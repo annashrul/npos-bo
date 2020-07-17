@@ -47,13 +47,16 @@ class Product extends Component{
             <Layout page="Product">
                 <div className="col-12 box-margin">
                     <div className="card">
-                        <div className="card-body">
-                            <Tabs>
+                        <Tabs>
+                            <div className="card-body">
                                 <TabList>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Product List</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Product Price</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Product Group</Tab>
                                 </TabList>
+                            </div>
+                            <div className="card-header" style={{"height":"5px","backgroundColor":"#f9fafb"}}></div>
+                            <div className="card-body">
                                 <TabPanel>
                                     {
                                         !this.props.isLoading ? ( <ListProduct
@@ -79,9 +82,8 @@ class Product extends Component{
                                         /> ) : <Preloader/>
                                     }
                                 </TabPanel>
-                            </Tabs>
-
-                        </div>
+                            </div>
+                        </Tabs>
                     </div>
                 </div>
             </Layout>

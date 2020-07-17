@@ -17,6 +17,9 @@ export function setProductbrg(data=[]){
 export function setProductEdit(data=[]){
     return {type:PRODUCT.EDIT_PRODUCT,data}
 }
+export function setProductCode(data=[]){
+    return {type:PRODUCT.CODE_PRODUCT,data}
+}
 export function setLoading(load){
     return {type : PRODUCT.LOADING,load}
 }
@@ -45,7 +48,7 @@ export const FetchProduct = (page=1,by='',q='')=>{
         }else{
             url = `barang?page=${page}&q=${q}&searchby=${by}&isbo=true`;
         }
-
+        console.log(url)
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
@@ -263,6 +266,24 @@ export const FetchProductDetail = (kode)=>{
                 type: 'danger',
                 text: error.response.data.msg,
             });
+        })
+    }
+}
+
+
+
+export const FetchProductCode = ()=>{
+    return (dispatch) => {
+        // dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`barang/code`)
+            .then(function(response){
+                const data = response.data;
+                dispatch(setProductCode(data));
+                // dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoading(false));
+
         })
     }
 }

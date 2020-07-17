@@ -32,6 +32,34 @@
     -->
   <title>Dashboard App</title>
   <style>
+    .react-tabs__tab-list{
+      border-bottom: none!important;
+    }
+    .react-tabs__tab--selected {
+      /*background: #fff;*/
+      border-color: white!important;
+      /*color: black;*/
+      color: #fff!important;
+      background-color: #1e88e5!important;
+      border-radius: 5px 5px 5px 5px!important;
+    }
+    .react-tabs__tab {
+      display: inline-block!important;
+      border: 1px solid  #1e88e5!important;
+      /*border-bottom: none!important;*/
+      bottom: -1px!important;
+      position: relative!important;
+      list-style: none!important;
+      padding: 6px 12px!important;
+      cursor: pointer!important;
+      border-radius: 5px 5px 5px 5px!important;
+      margin-right: 3px!important;
+    }
+    .fade {
+      transition: opacity .15s linear;
+      width: 100%!important;
+      height: 100%!important;
+    }
     html,
     body,
     h1,

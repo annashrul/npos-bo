@@ -8,7 +8,6 @@ import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
 import Preloader from "Preloader";
-import {sessionService} from "redux-react-session";
 import DetailStockReportTransaction
     from "components/App/modals/report/inventory/stock_report/detail_stock_report_transaction";
 

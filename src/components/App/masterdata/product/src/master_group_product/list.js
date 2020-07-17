@@ -152,16 +152,16 @@ class ListGroupProduct extends Component{
                        }
                        </tbody>
                    </table>
+                   <div style={{"marginTop":"20px","float":"right"}}>
+                       <Paginationq
+                           current_page={current_page}
+                           per_page={per_page}
+                           total={total}
+                           callback={this.handlePageChange.bind(this)}
+                       />
+                   </div>
+               </div>
 
-               </div>
-               <div style={{"marginTop":"20px","float":"right"}}>
-                   <Paginationq
-                       current_page={current_page}
-                       per_page={per_page}
-                       total={total}
-                       callback={this.handlePageChange.bind(this)}
-                   />
-               </div>
                <FormGroupProduct group2={this.props.group2} detail={this.state.detail} token={this.props.token}/>
            </div>
         )

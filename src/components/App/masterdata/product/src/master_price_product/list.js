@@ -25,6 +25,7 @@ class ListPriceProduct extends Component{
         }else{
             this.props.dispatch(FetchPriceProduct(pageNumber,''));
         }
+        console.log(any);
 
     }
     handlesearch(e){
@@ -125,15 +126,16 @@ class ListPriceProduct extends Component{
                         }
                         </tbody>
                     </table>
+                    <div style={{"marginTop":"20px","float":"right"}}>
+                        <Paginationq
+                            current_page={current_page}
+                            per_page={per_page}
+                            total={total}
+                            callback={this.handlePageChange.bind(this)}
+                        />
+                    </div>
                 </div>
-                <div style={{"marginTop":"20px","float":"right"}}>
-                    <Paginationq
-                        current_page={current_page}
-                        per_page={per_page}
-                        total={total}
-                        callback={this.handlePageChange.bind(this)}
-                    />
-                </div>
+
             </div>
 
         )

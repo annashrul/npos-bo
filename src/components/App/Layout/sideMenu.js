@@ -54,6 +54,7 @@ class SideMenu extends Component {
             <nav>
                 <ul className="sidebar-menu" data-widget="tree" style={{marginTop: '30%'}}>
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Dashboard </Link></li>
+                    <li  className={path==='/setting'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Setting </Link></li>
                     <li className={this.state.isMasterdata===true?"treeview active menu-open" : "treeview"}>
                         <a href="javascript:void(0)" onClick={(e) => this.changeMenu('masterdata')}><i className="zmdi zmdi-apps" /> <span>Masterdata</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">

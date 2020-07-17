@@ -6,6 +6,7 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {stringifyFormData} from "helper";
 import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
+import {FetchProductCode} from "../../../../../redux/actions/masterdata/product/product.action";
 
 class FormProduct extends Component{
     constructor(props){
@@ -119,13 +120,25 @@ class FormProduct extends Component{
             hrgJual1KARTON: 0, hrgJual2KARTON: 0, hrgJual3KARTON: 0, hrgJual4KARTON: 0,
             serviceKARTON: 0, ppnKARTON: 0,
             purchasePrice: {},
+            generateCode:false,
+            codeServer:0
         };
         this.handleChange = this.handleChange.bind(this);
         this.onHandleChangeChild = this.onHandleChangeChild.bind(this);
         this.onHandleChangeChildPack = this.onHandleChangeChildPack.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.generateCode = this.generateCode.bind(this);
     }
-
+    generateCode(e){
+        this.setState({generateCode: e.target.checked,});
+        if(e.target.checked === true){
+            console.log(this.state.codeServer);
+            this.state.kd_brg = this.state.codeServer;
+        }else{
+            this.state.kd_brg = "";
+        }
+        console.log(e.target.checked);
+    }
     toggle = (e) => {
         e.preventDefault();
         window.scrollTo(0, 0);
@@ -211,7 +224,7 @@ class FormProduct extends Component{
         // localStorage.setItem("isReadonlySama","false");
         // localStorage.setItem("isReadonlySamaPack","false");
         // localStorage.setItem("isReadonlySamaKarton","false");
-
+        this.state.codeServer = nextProps.productCode;
         if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
             console.log("########################## EDIT ############################");
             let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
@@ -1077,21 +1090,25 @@ class FormProduct extends Component{
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Product":"Update Product"}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>
+                    {this.props.detail===undefined?"Add Product":"Update Product"}
+                </ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <Tabs>
+
                             <TabList>
                                 <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Form 1</Tab>
                                 <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Form 2</Tab>
                                 <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Form 3</Tab>
                             </TabList>
+                            <hr/>
                             <TabPanel>
                                 <div className="row">
                                     <div className="col-md-4">
                                         <div className="form-group">
-                                            <label>Code</label>
+                                            <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.generateCode} onChange={this.generateCode}/> Kode Barang</label>
                                             <input type="text" className="form-control" name="kd_brg" value={this.state.kd_brg} onChange={(e)=>this.handleChange(e,null)} required/>
                                         </div>
                                         <div className="form-group">

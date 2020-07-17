@@ -48,12 +48,15 @@ class User extends Component{
             <Layout page="User">
                 <div className="col-12 box-margin">
                     <div className="card">
-                        <div className="card-body">
-                            <Tabs>
+                        <Tabs>
+                            <div className="card-body mb-1">
                                 <TabList>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>User List</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>User Level</Tab>
                                 </TabList>
+                            </div>
+                            <hr/>
+                            <div className="card-body">
                                 <TabPanel>
                                     {
                                         !this.props.isLoading?
@@ -61,7 +64,7 @@ class User extends Component{
                                                 token={this.state.token}
                                                 userListData={this.props.userlist}
                                                 pagin={this.handlePagin}/>
-                                        :<Preloader/>
+                                            :<Preloader/>
                                     }
 
                                 </TabPanel>
@@ -73,13 +76,13 @@ class User extends Component{
                                                 data={this.props.userLevel}
                                                 pagin={this.handlePagin}
                                             />
-                                        :<Preloader/>
+                                            :<Preloader/>
                                     }
                                     {/*<MasterUserLevel/>*/}
                                 </TabPanel>
-                            </Tabs>
+                            </div>
 
-                        </div>
+                        </Tabs>
                     </div>
                 </div>
             </Layout>

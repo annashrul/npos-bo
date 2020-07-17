@@ -21,6 +21,7 @@ import {
 import DetailProduct from "../../../../modals/masterdata/product/detail_product";
 import {FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
 import CustomerPrice from "../../../../modals/masterdata/customer/customer_price";
+import {FetchProductCode} from "../../../../../../redux/actions/masterdata/product/product.action";
 
 class ListProduct extends Component{
     constructor(props){
@@ -69,6 +70,8 @@ class ListProduct extends Component{
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
         this.props.dispatch(FetchProductEdit(kode));
+        this.props.dispatch(FetchProductCode());
+
     };
     handlesearch(event){
         event.preventDefault();
@@ -111,6 +114,7 @@ class ListProduct extends Component{
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
         this.props.dispatch(setProductEdit([]));
+        this.props.dispatch(FetchProductCode());
     }
 
     exportPDF = () => {
@@ -136,10 +140,9 @@ class ListProduct extends Component{
         const loc_edit = this.handleEdit;
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-
+        console.log("NYOKOT CODE",this.props.productCode);
         return (
             <div>
-
                 <form onSubmit={this.handlesearch} noValidate>
                     <div className="row">
                         <div className="col-md-3">
@@ -286,6 +289,7 @@ class ListProduct extends Component{
                     dataSupplier={this.props.supplier}
                     dataSubDept={this.props.subDept}
                     dataEdit={this.props.productEdit}
+                    productCode={this.props.productCode}
                 />
                 <DetailProduct dataDetail={this.props.productDetail}/>
                 <CustomerPrice dataCustomerPrice={this.props.customerPrice}/>
@@ -304,6 +308,7 @@ const mapStateToProps = (state) => {
         productEdit:state.productReducer.dataEdit,
         productDetail:state.productReducer.dataDetail,
         customerPrice:state.customerReducer.dataPrice,
+        productCode:state.productReducer.productCode
     }
 }
 

@@ -4,7 +4,6 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import ListLocation from "components/App/masterdata/location/master_location/list";
 import Preloader from "Preloader";
 import ListLocationCategory from "../../masterdata/location/master_location_catergory/list";
-import {sessionService} from "redux-react-session";
 import {FetchLocation} from "redux/actions/masterdata/location/location.action";
 import {FetchLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
 import {FetchStockReport} from "redux/actions/report/inventory/stock_report.action";
