@@ -16,7 +16,8 @@ import PrivateRoute from '../common/PrivateRoute';
 import Adjustment from '../inventory/adjusment'
 import PurchaseOrder from '../purchase/purchaseorder'
 import Receive from '../purchase/receive'
-import InventoryReport from '../report/inventory'
+import InventoryReport from '../report/inventory/stock'
+import AdjustmentReport from '../report/inventory/adjustment'
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
@@ -35,6 +36,7 @@ const Routes = (
             <PrivateRoute path="/receive" exact strict component={Receive} />
             <PrivateRoute path="/PurchaseOrder" exact strict component={PurchaseOrder} />
             <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />
+            <PrivateRoute path="/adjustment_report" exact strict component={AdjustmentReport} />
         </Switch>
     </div>
 )

@@ -13,6 +13,12 @@ export function setLoading(load) {
         load
     }
 }
+export function setLoadingDetail(load) {
+    return {
+        type: PO.LOADING_DETAIL,
+        load
+    }
+}
 export function setPO(data = []) {
     return {
         type: PO.SUCCESS,
@@ -121,5 +127,48 @@ export const storePo = (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `purchaseorder/stock?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `purchaseorder/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `purchaseorder/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `purchaseorder/stock?page=${page}&lokasi=${location}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPO(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const poReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoadingDetail(true));
+        axios.get(HEADERS.URL+`purchaseorder/report/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(poReportDetail(data));
+                dispatch(setLoadingDetail(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }

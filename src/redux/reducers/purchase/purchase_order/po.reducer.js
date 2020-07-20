@@ -4,6 +4,7 @@ import {
 
 const initialState = {
     isLoading: false,
+    isLoadingDetail: false,
     data: [],
     msg:"",
     status:"",
@@ -32,6 +33,10 @@ export const poReducer = (state = initialState, action) => {
         case PO.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
+            });
+        case PO.LOADING_DETAIL:
+            return Object.assign({}, state, {
+                isLoadingDetail: action.load
             });
         default:
             return state
