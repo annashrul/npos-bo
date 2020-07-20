@@ -4,6 +4,11 @@ import {connect} from 'react-redux';
 import Layout from '../Layout';
 import Chart from "react-apexcharts";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import moment from 'moment';
+import Select from 'react-select';
+import DateRangePicker from "dz-daterangepicker-material";
+import "dz-daterangepicker-material/dist/index.css";
+
 class Dashboard extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +17,8 @@ class Dashboard extends Component {
         this.handleSelect3 = this.handleSelect3.bind(this);
 
         this.state = {
+            startDate: new Date(2020, 4, 1),
+            endDate: new Date(2020, 4, 10),
             grossSales:"123,456,789",
             netSales:"123,456,789",
             trxNum:"123,456,789",
@@ -266,6 +273,8 @@ class Dashboard extends Component {
           };
     }
 
+    onChange = date => this.setState({ date })
+
     handleSelect = (e,index) => {
         this.setState({selectedIndex: index}, () => {
             // console.log('Selected tab: ' + this.state.selectedIndex);
@@ -282,13 +291,82 @@ class Dashboard extends Component {
         });
     };
 
+    handleDate = (start,end) => {
+        this.setDate({
+            startDate: start,
+            endDate:end
+        })
+    };
+    
+
 
     render() {
         const {isAuthenticated, user} = this.props.auth;
 
+        // const [date, setDate] = React.useState({
+        //     startDate: new Date(2020, 4, 1),
+        //     endDate: new Date(2020, 4, 10)
+        //   })
+       
+          const onChange = (start, end) => {
+            //   setDate({
+                // startDate: start,
+                // endDate: end,
+            //   })
+            console.log(moment(start).format()+" - "+moment(end).format());
+          }
+        
         return (
             <Layout page="Dashboard">
+                <div className="row">
+                    <div className="col-12 box-margin">
+                        <div className="card bg-boxshadow">
+                            <div className="card-body px-3 py-2">
+                                {/* <div className="user-important-data-info d-sm-flex align-items-center justify-content-between"> */}
+                                    <div className="row">
+                                        <div className="col-2">
+                                            <DateRangePicker
+                                                startDate={this.state.startDate}
+                                                endDate={this.state.endDate}
+                                                onChange={onChange}
+                                                startWeek={'monday'}
+                                                onlyView={false}
+                                                datePicker={false}
+                                                textFieldProps={{}}
+                                                popoverProps={{}}
+                                                />
+                                        </div>
+                                        <div className="col-2">
+                                            <div className="form-group" style={{'padding-top': '8px', 'margin-bottom':'unset'}}>
+                                                {/* <label className="control-label font-12">
+                                                Lokasi
+                                                </label> */}
+                                                <Select 
+                                                // options={this.state.location_data} 
+                                                placeholder = "Pilih Lokasi"
+                                                // onChange={this.HandleChangeLokasi}
+                                                // value = {
+                                                //     this.state.location_data.find(op => {
+                                                //     return op.value === this.state.location
+                                                //     })
+                                                // }
 
+                                                />
+                                                {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                                    {this.state.error.location}
+                                                </div> */}
+                                            </div>
+                                        </div>
+                                        <div className="col-2" style={{'padding-top': '9px', 'margin-bottom':'unset'}}>
+                                        <button type="button" className="btn btn-primary">LOAD DATA</button>
+                                        </div>
+                                    </div>
+
+                                {/* </div> */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-md-6 col-xl-3 box-margin">
                         <div className="card text-white bg-primary">
@@ -327,7 +405,7 @@ class Dashboard extends Component {
                     <div class="col-md-4 box-margin">
                         <div class="card text-center">
                             <div class="card-body">
-                                <h4 class="card-title">Special title treatment</h4>
+                                <h4 class="card-title">Custom</h4>
                                 
                             </div>
                         </div>
