@@ -32,23 +32,18 @@ export function setProductFailed(data=[]){
     return {type:PRODUCT.FAILED,data}
 }
 
-export const FetchProduct = (page=1,by='',q='')=>{
+export const FetchProduct = (page=1,where)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
-        let url = '';
-        if(q===''&&by===''){
-            url = `barang?page=${page}&isbo=true`;
-        }else if(q===''||by===''||by===''){
-            url = `barang?page=${page}&isbo=true`;
-        }else if(by===''){
-            url = `barang?page=${page}&isbo=true`;
-        }else{
-            url = `barang?page=${page}&q=${q}&searchby=${by}&isbo=true`;
+        let url =``;
+        if(where!==''){
+             url=`barang?page=${page}&isbo=true&${where}`;
+        }else {
+             url=`barang?page=${page}&isbo=true`;
         }
-        console.log(url)
+
+
+        console.log("URL ACTION PRODUCT",HEADERS.URL+`${url}`);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;

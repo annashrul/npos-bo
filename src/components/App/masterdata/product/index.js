@@ -30,7 +30,8 @@ class Product extends Component{
         let anyPriceProduct = localStorage.getItem("any_price_product");
         let pageGroupProduct = localStorage.getItem("page_group_product");
         let pagePriceProduct = localStorage.getItem("page_price_product");
-        this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
+        // this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
+        this.props.dispatch(FetchProduct(1, ''));
         this.props.dispatch(FetchPriceProduct(pagePriceProduct?pagePriceProduct:1,anyPriceProduct?anyPriceProduct:''));
         this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
     }

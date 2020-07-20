@@ -18,29 +18,101 @@ import {
     FetchProductEdit,
     setProductEdit
 } from "redux/actions/masterdata/product/product.action";
-import DetailProduct from "../../../../modals/masterdata/product/detail_product";
+import DetailProduct from "components/App/modals/masterdata/product/detail_product";
 import {FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
-import CustomerPrice from "../../../../modals/masterdata/customer/customer_price";
-import {FetchProductCode} from "../../../../../../redux/actions/masterdata/product/product.action";
-
+import CustomerPrice from "components/App/modals/masterdata/customer/customer_price";
+import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+import moment from "moment";
+import imgY from 'assets/status-Y.png';
+import imgT from 'assets/status-T.png';
+const range = {
+    Today: [moment(), moment()],
+    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+    "Last 30 Days": [moment().subtract(29, "days"), moment()],
+    "This Month": [moment().startOf("month"), moment().endOf("month")],
+    "Last Month": [
+        moment()
+            .subtract(1, "month")
+            .startOf("month"),
+        moment()
+            .subtract(1, "month")
+            .endOf("month")
+    ],
+    "Last Year": [
+        moment()
+            .subtract(1, "year")
+            .startOf("year"),
+        moment()
+            .subtract(1, "year")
+            .endOf("year")
+    ]
+};
 class ListProduct extends Component{
     constructor(props){
         super(props);
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        console.log("CONSTURTOR DATE FROM",localStorage.getItem("startDateProduct")===''?'string kosong':localStorage.getItem("startDateProduct"));
         this.state = {
             isExcel : false,
             array1: [],
             byValue : '',
-            searchBy: [
-                {id: 1, value: "kd_brg",label:'Code'},
+            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
+            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
+            sortBy: [
+                {id: 1, value: "kd_brg",label:'Kode Barang'},
                 {id: 2, value: "barcode", label:'Barcode'},
-                {id: 3, value: "nm_brg", label:'Name'},
+                {id: 3, value: "nm_brg", label:'Nama Barang'},
+                {id: 3, value: "deskripsi", label:'Deskripsi'},
+                {id: 3, value: "kel_brg", label:'Kelompok'},
+                {id: 3, value: "supplier", label:'Supplier'},
+                {id: 3, value: "subdept", label:'Sub Dept'},
             ],
+            searchJenis: [
+                {id: 0, value: "1",label:'Dijual'},
+                {id: 1, value: "0", label:'Tidak Dijual'},
+            ],
+            searchKategori: [
+                {id: 0, value: "0",label:'Karton'},
+                {id: 1, value: "1", label:'Satuan'},
+                {id: 2, value: "2", label:'Paket'},
+                {id: 3, value: "3", label:'Servis'},
+            ],
+            searchKelompok: [
+                {id: 0, value: "MAKANAN",label:'Makanan'},
+                {id: 1, value: "MINUMAN", label:'Minuman'},
+            ],
+            semuaPeriode:false,
             detail:{}
         }
     }
-
+    // componentWillUnmount(){
+    //     localStorage.removeItem("startDateProduct");
+    //     localStorage.removeItem("endDateProduct");
+    //     localStorage.removeItem("semuaPeriode");
+    //     localStorage.removeItem('any_product');
+    //     localStorage.removeItem('by_product');
+    //     localStorage.removeItem('kategori_barang');
+    //     console.log("################################## REMOVE STORAGE #########################");
+    // }
+    // componentWillMount(){
+    //     this.props.dispatch(FetchProduct(1,''));
+    //
+    // }
+    handleChange(event){
+        event.target.checked===true?localStorage.setItem("semuaPeriode","true"):localStorage.setItem("semuaPeriode","false")
+        this.setState({
+            [event.target.name]: event.target.value,
+            semuaPeriode:!this.state.semuaPeriode
+        });
+        console.log("LOCAL STORAGE",localStorage.getItem("semuaPeriode"));
+        console.log("STATE",this.state.semuaPeriode);
+        console.log("EVENT",event.target.checked);
+    }
     handlePageChange(pageNumber){
         this.props.dispatch(FetchProduct(pageNumber));
     }
@@ -77,15 +149,49 @@ class ListProduct extends Component{
         event.preventDefault();
         const form = event.target;
         const data = new FormData(form);
+        console.log("DATA FORM",data);
         let any = data.get('field_any');
-        let by = data.get('by_product');
+        let sortName = data.get('sort_name');
+        let kategori = data.get("kategori_barang");
+        let jenis = data.get("jenis_barang");
+        let dateFrom=this.state.startDate;
+        let dateTo=this.state.endDate;
         localStorage.setItem('any_product',`${any}`);
-        localStorage.setItem('by_product',`${by}`);
-        if(any!==''||any!==null||any!==undefined){
-            this.props.dispatch(FetchProduct(1,by,any));
-        }else{
-            this.props.dispatch(FetchProduct(1,'',''));
+        localStorage.setItem('by_product',`${sortName}`);
+        localStorage.setItem('jenis_barang',`${jenis}`);
+        localStorage.setItem('kategori_barang',`${kategori}`);
+        localStorage.setItem("startDateProduct",`${dateFrom}`);
+        localStorage.setItem("endDateProduct",`${dateTo}`);
+        let where='';
+        if(localStorage.getItem("semuaPeriode")==="false" || localStorage.getItem("semuaPeriode")===null){
+            if(dateFrom!==null&&dateTo!==null){
+                if(where!==''){where+='&';}
+                where+=`datefrom=${dateFrom}&dateto=${dateTo}`;
+            }
         }
+        // if(kategori!==''){
+        //     if(where!==''){where+='&';}
+        //     where+=`kategori=${kategori}`;
+        // }
+        // if(jenis!==''){
+        //     if(where!==''){where+='&';}
+        //     where+=`jenis=${jenis}`;
+        // }
+
+        this.props.dispatch(FetchProduct(1,where));
+        console.log(where);
+        // if(any!==''||any!==null||any!==undefined){
+        //     this.props.dispatch(FetchProduct(1,by,any,'',''));
+        // }
+
+        // if()
+        // if(localStorage.getItem("semuaPeriode") === "true"){
+        //     this.props.dispatch(FetchProduct(1,'','','','',''));
+        //     if(dateFrom!==''&&dateFrom!==null&&dateTo!==''&&dateTo!==null){
+        //         this.props.dispatch(FetchProduct(1,'','',dateFrom,dateTo,''));
+        //     }
+        // }
+
     }
 
     loc_detail(e,kode) {
@@ -134,48 +240,87 @@ class ListProduct extends Component{
             footer
         );
     }
-
+    handleEvent = (event, picker) => {
+        console.log("start: ", picker.startDate);
+        console.log("end: ", picker.endDate._d.toISOString());
+        // end:  2020-07-02T16:59:59.999Z
+        const awal = picker.startDate._d.toISOString().substring(0,10);
+        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        localStorage.setItem("startDateProduct",`${awal}`);
+        localStorage.setItem("endDateProduct",`${akhir}`);
+        this.setState({
+            startDate:awal,
+            endDate:akhir
+        });
+        // console.log(picker.startDate._d.toISOString());
+        // console.log(picker.endDate._d.toISOString());
+    };
     render(){
         const loc_delete = this.handleDelete;
         const loc_edit = this.handleEdit;
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        console.log("NYOKOT CODE",this.props.productCode);
+        console.log("TANGGAL",this.state.startDate);
+        console.log("TANGGAL",this.state.endDate);
+
+
+
         return (
             <div>
+
                 <form onSubmit={this.handlesearch} noValidate>
                     <div className="row">
-                        <div className="col-md-3">
+                        <div className="col-6 col-xs-6 col-md-3">
                             <div className="form-group">
                                 <label htmlFor="exampleFormControlSelect1">Serach By</label>
-                                <select className="form-control form-control-lg" id="by_product" name="by_product">
-                                    {
-                                        this.state.searchBy.map((v,i)=>{
-                                            return (<option key={i} value={v.value} selected={localStorage.getItem('by_product')===v.value?true:false}>{v.label}</option>)
-                                        })
-                                    }
-                                </select>
+                                <div className="input-group">
+                                    <select className="form-control form-control-lg" id="sort_name" name="sort_name">
+                                        {
+                                            this.state.sortBy.map((v,i)=>{
+                                                return (<option key={i} value={v.value} selected={localStorage.getItem('sort_name')===v.value?true:false}>{v.label}</option>)
+                                            })
+                                        }
+                                    </select>
+                                    <select className="form-control form-control-lg" id="sort_by" name="sort_by" onChange={this.handleChange}>
+                                        <option value="ASC">ASC</option>
+                                        <option value="DESC">DESC</option>
+                                    </select>
+                                </div>
                             </div>
+
                         </div>
-                        <div className="col-10 col-xs-10 col-md-3">
+
+                        <div className="col-6 col-xs-6 col-md-2">
                             <div className="form-group">
-                                <label>Search</label>
-                                <input type="text" className="form-control form-control-lg" name="field_any" defaultValue={localStorage.getItem('any_product')}/>
+                                <label>Periode Input</label><br/>
+                                <label htmlFor="inputState" className="col-form-label"><input name="semua_periode" type="checkbox" checked={localStorage.getItem("semuaPeriode")==="true"?true:false} onChange={this.handleChange}/> semua periode</label>
                             </div>
                         </div>
-                        <div className="col-2 col-xs-4 col-md-4">
+                        <div className="col-6 col-xs6 col-md-2">
+                            <div className="form-group">
+                                <label htmlFor=""> Periode </label>
+                                <DateRangePicker
+                                    ranges={range}
+                                    alwaysShowCalendars={true}
+                                    onEvent={this.handleEvent}
+                                >
+                                    <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                    {/*<input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>*/}
+                                </DateRangePicker>
+                            </div>
+                        </div>
+                        <div className="col-12 col-xs-12 col-md-2">
                             <div className="form-group">
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
-                                <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={this.exportPDF} className="btn btn-primary">Export PDF</button>
-
-                                <ReactHTMLTableToExcel
-                                    className="btn btn-primary btnBrg"
-                                    table="emp"
-                                    filename="barang"
-                                    sheet="barang"
-                                    buttonText="export excel">
-                                </ReactHTMLTableToExcel>
+                                <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={this.exportPDF} className="btn btn-primary"><i className="fa fa-file-pdf-o"></i></button>
+                                {/*<ReactHTMLTableToExcel*/}
+                                    {/*className="btn btn-primary btnBrg"*/}
+                                    {/*table="emp"*/}
+                                    {/*filename="barang"*/}
+                                    {/*sheet="barang"*/}
+                                    {/*buttonText="export excel">*/}
+                                {/*</ReactHTMLTableToExcel>*/}
                             </div>
                         </div>
 
@@ -199,6 +344,7 @@ class ListProduct extends Component{
                         </tr>
                         </thead>
                         <tbody>
+
                         {
                             (
                                 typeof data === 'object' ?
@@ -227,20 +373,58 @@ class ListProduct extends Component{
                         <tr>
                             <th className="text-black" style={columnStyle}>#</th>
                             <th className="text-black" style={columnStyle}>Code</th>
-                            <th className="text-black" style={columnStyle}>Name</th>
-                            <th className="text-black" style={columnStyle}>Group</th>
+                            <th className="text-black" style={columnStyle}>Nama</th>
+                            <th className="text-black" style={columnStyle}>Kelompok</th>
                             <th className="text-black" style={columnStyle}>Supplier</th>
                             <th className="text-black" style={columnStyle}>Sub Dept</th>
-
-                            <th className="text-black" style={columnStyle}>Category</th>
+                            <th className="text-black" style={columnStyle}>Kategori</th>
+                            <th className="text-black" style={columnStyle}>Jenis</th>
                             <th className="text-black" style={columnStyle}>Stock Min</th>
-                            <th className="text-black" style={columnStyle}>Product Type</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="text" className="form-control" placeholder="Kode Barang"/></td>
+                            <td><input type="text" className="form-control" placeholder="Nama Barang"/></td>
+                            <td>
+                                <select className="form-control form-control-lg" id="kelompok_barang" name="kelompok_barang">
+                                    <option value="">Pilih Kelompok</option>
+                                    {
+                                        this.state.searchKelompok.map((v,i)=>{
+                                            return (<option key={i} value={v.value} selected={localStorage.getItem('kelompok_barang')===v.value?true:false}>{v.label}</option>)
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td><input type="text" className="form-control" placeholder="Supplier"/></td>
+                            <td><input type="text" className="form-control" placeholder="Sub Dept"/></td>
+                            <td>
+                                <select className="form-control form-control-lg" id="kategori_barang" name="kategori_barang">
+                                    <option value="">Pilih Kategori</option>
+                                    {
+                                        this.state.searchKategori.map((v,i)=>{
+                                            return (<option key={i} value={v.value} selected={localStorage.getItem('kategori_barang')===v.value?true:false}>{v.label}</option>)
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select className="form-control form-control-lg" id="jenis_barang" name="jenis_barang">
+                                    <option value="">Pilih Jenis</option>
+                                    {
+                                        this.state.searchJenis.map((v,i)=>{
+                                            return (<option key={i} value={v.value} selected={localStorage.getItem('jenis_barang')===v.value?true:false}>{v.label}</option>)
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td></td>
                         </tr>
                         </thead>
                         <tbody>
+
                         {
                             (
-                                typeof data === 'object' ?
+                                typeof data === 'object' ? data.length > 0 ?
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
@@ -264,12 +448,12 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.supplier}</td>
 
                                                 <td style={columnStyle}>{v.kategori}</td>
+                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
-                                                <td style={columnStyle}>{v.jenis}</td>
                                             </tr>
                                         )
                                     })
-                                    : "No data."
+                                    : "No data." : "No data."
                             )
                         }
                         </tbody>
