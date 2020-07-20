@@ -11,6 +11,7 @@ class SideMenu extends Component {
             isTransaction: false,
             isInventory: false,
             isReport: false,
+            isReceive: false,
             pageMenu : ''
         }
         this.subChangeMenu = this.subChangeMenu.bind(this);
@@ -39,6 +40,9 @@ class SideMenu extends Component {
         }
         if(param === 'report'){
             this.setState({isReport : !this.state.isReport});
+        }
+        if(param === 'receive'){
+            this.setState({isReceive : !this.state.isReceive});
         }
     }
 
@@ -72,6 +76,13 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Sale </Link></li>
                             <li className={path==='/debt'?"active":''}><Link to="/debt"> <i className="zmdi zmdi-apps" />Debt </Link></li>
                             <li className={path==='/account_receivable'?"active":''}><Link to="/account_receivable"> <i className="zmdi zmdi-apps" />Accounts Receivable</Link></li>
+                        </ul>
+                    </li>
+                    <li className={this.state.isReceive===true?"treeview active menu-open" : "treeview"}>
+                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('receive')}><i className="zmdi zmdi-apps" /> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
+                        <ul className="treeview-menu">
+                            <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
+                            <li className={path==='/receive'?"active":''}><Link to="/receive"> <i className="zmdi zmdi-apps" />Receive Pembelian</Link></li>
                         </ul>
                     </li>
                     <li className={this.state.isReport===true?"treeview active menu-open" : "treeview"}>

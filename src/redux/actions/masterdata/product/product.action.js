@@ -8,7 +8,9 @@ import {FetchCash} from "../cash/cash.action";
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}
 }
-
+export function setProductDetail(data=[]){
+    return {type:PRODUCT.DETAIL,data}
+}
 export function setProductbrg(data=[]){
     return {type:PRODUCT.SUCCESS_BRG,data}
 }
@@ -143,8 +145,7 @@ export const deleteProduct = (id) => {
     }
 }
 
-
-export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,table='purchase_order')=>{
+export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=>{
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}`;
@@ -157,50 +158,14 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,tabl
                 const data = response.data;
                 if(data.result.data.length===1){
                     const barang = data.result.data;
-                    const cek = cekData('kd_brg', barang[0].kd_brg, table);
-                    cek.then(res => {
-                        if (res == undefined) {
-                            console.log('GADA');
-                            store(table, {
-                                kd_brg: barang[0].kd_brg,
-                                barcode: barang[0].barcode,
-                                satuan: barang[0].satuan,
-                                diskon: 0,
-                                diskon2: 0,
-                                diskon3: 0,
-                                diskon4: 0,
-                                ppn: 0,
-                                harga_beli: barang[0].harga_beli,
-                                qty: 1,
-                                stock: barang[0].stock,
-                                nm_brg: barang[0].nm_brg,
-                                tambahan: barang[0].tambahan
-                            })
-                        } else {
-                                update(table, {
-                                    id: res.id,
-                                    qty: parseFloat(res.qty) + 1,
-                                    kd_brg: res.kd_brg,
-                                    barcode: res.barcode,
-                                    satuan: res.satuan,
-                                    diskon: res.diskon,
-                                    diskon2: res.diskon2,
-                                    diskon3: 0,
-                                    diskon4: 0,
-                                    ppn: res.ppn,
-                                    stock: res.stock,
-                                    harga_beli: res.harga_beli,
-                                    nm_brg: res.nm_brg,
-                                    tambahan: res.tambahan
-                                })
-                        }
+                    const cek=db(barang[0].kd_brg,barang)
+                    cek.then(re=>{
                         dispatch(setProductbrg(data));
                         dispatch(setLoadingbrg(false));
-
                     })
                 }else{
-                        dispatch(setProductbrg(data));
-                        dispatch(setLoadingbrg(false));
+                    dispatch(setProductbrg(data));
+                    dispatch(setLoadingbrg(false));
                 }
                
             }).catch(function(error){
@@ -277,5 +242,27 @@ export const updateProduct = (id,data) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+
+export const FetchProductDetail = (kode)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`barang/${kode}?isbo=true`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setProductDetail(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoading(false));
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                text: error.response.data.msg,
+            });
+        })
     }
 }

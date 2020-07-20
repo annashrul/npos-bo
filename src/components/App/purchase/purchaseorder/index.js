@@ -66,27 +66,27 @@ class PurchaseOrder extends Component{
         this.setTglOrder=this.setTglOrder.bind(this);
         this.setTglEx=this.setTglEx.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
+        this.HandleSearch = this.HandleSearch.bind(this);
     }
 
     componentDidMount(){
       this.props.dispatch(FetchSupplierAll())
-      const data = get(table);
-      data.then(res => {
-          let brg = this.state.brgval
-          res.map((i)=>{
-                brg.push({
-                  harga_beli: i.harga_beli,
-                  diskon: i.diskon,
-                  ppn: i.ppn,
-                  qty: i.qty,
-                  satuan: i.satuan
-              });
-          })
-          this.setState({
-              databrg: res,
-              brgval: brg
-          })
-      })
+      this.getData();
+      if(localStorage.lk!==undefined&&localStorage.lk!==''){
+        this.props.dispatch(FetchNota(localStorage.lk))
+        this.setState({
+          location:localStorage.lk
+        })
+      }
+      if (localStorage.sp !== undefined && localStorage.sp !== '') {
+        this.setState({
+          supplier: localStorage.sp
+        })
+      }
+      if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk!==undefined&&localStorage.lk!=='') {
+        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty))
+
+      }
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -107,32 +107,17 @@ class PurchaseOrder extends Component{
         }
       }
       if(nextProps.barang.length>0){
-        const data = get(table);
-        data.then(res => {
-          let brg = []
-          res.map((i) => {
-            brg.push({
-              harga_beli: i.harga_beli,
-              diskon: i.diskon,
-              ppn: i.ppn,
-              qty: i.qty,
-              satuan: i.satuan
-            });
-          })
-          this.setState({
-            databrg: res,
-            brgval: brg
-          })
-        });
+        this.getData();
 
       }
      
     }
 
-    // shouldComponentUpdate =(nextProps, nextState) => {
-    //   console.log(nextProps.barang!==this.props.barang);
-    //   return nextProps.barang!==this.props.barang;
-    // }
+    componentWillUnmount(){
+      destroy(table);
+      localStorage.removeItem('sp');
+      localStorage.removeItem('lk');
+    }
 
     HandleChangeLokasi(lk){
       let err = Object.assign({}, this.state.error, {
@@ -142,28 +127,13 @@ class PurchaseOrder extends Component{
         location:lk.value,
         error: err
       })
+      localStorage.setItem('lk', lk.value);
       this.props.dispatch(FetchNota(lk.value))
       if (this.state.supplier!==""){
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
       }
       destroy(table)
-      const data = get(table);
-      data.then(res => {
-        let brg = []
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData();
     }
 
     HandleChangeSupplier(sp) {
@@ -174,27 +144,13 @@ class PurchaseOrder extends Component{
         supplier: sp.value,
         error: err
       })
+      localStorage.setItem('sp', sp.value);
+
       if (this.state.location !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty))
       }
       destroy(table)
-      const data = get(table);
-      data.then(res => {
-        let brg =[]
-        res.map((i) => {
-          brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
-            qty: i.qty,
-            satuan: i.satuan
-          });
-        })
-        this.setState({
-          databrg: res,
-          brgval: brg
-        })
-      })
+      this.getData();
     }
 
     HandleCommonInputChange(e,errs=true){
@@ -240,12 +196,7 @@ class PurchaseOrder extends Component{
                      title: `${column} has been changed.`
                  })
             }
-            const data = get(table);
-            data.then(res => {
-                this.setState({
-                    databrg: res
-                })
-            })
+            this.getData();
         })
        
     }
@@ -296,23 +247,7 @@ class PurchaseOrder extends Component{
                       title: `${column} has been changed.`
                   })
               }
-              const data = get(table);
-               data.then(res => {
-                   let brg = []
-                   res.map((i) => {
-                       brg.push({
-                           harga_beli: i.harga_beli,
-                           diskon: i.diskon,
-                           ppn: i.ppn,
-                           qty: i.qty,
-                           satuan: i.satuan
-                       });
-                   })
-                   this.setState({
-                       databrg: res,
-                       brgval: brg
-                   })
-               });
+              this.getData();
           })
         }
 
@@ -342,17 +277,15 @@ class PurchaseOrder extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                del(table,id);
-                const data = get(table);
-                data.then(res => {
-                    this.setState({
-                        databrg: res
-                    })
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    )
+                del(table,id)
+                .then(res=>{
+                  this.getData();
+                  Swal.fire(
+                      'Deleted!',
+                      'Your data has been deleted.',
+                      'success'
+                  )
+
                 })
             }
         })
@@ -399,23 +332,7 @@ class PurchaseOrder extends Component{
                }
                
 
-               const data = get(table);
-               data.then(res => {
-                   let brg = []
-                   res.map((i) => {
-                       brg.push({
-                           harga_beli: i.harga_beli,
-                           diskon: i.diskon,
-                           ppn: i.ppn,
-                           qty: i.qty,
-                           satuan: i.satuan
-                       });
-                   })
-                   this.setState({
-                       databrg: res,
-                       brgval: brg
-                   })
-               });
+               this.getData();
            })
     }
 
@@ -432,6 +349,8 @@ class PurchaseOrder extends Component{
         }).then((result) => {
             if (result.value) {
                 destroy(table);
+                localStorage.removeItem('sp');
+                localStorage.removeItem('lk');
                 window.location.reload(false);
             }
         })
@@ -533,6 +452,48 @@ class PurchaseOrder extends Component{
 
     }
 
+    autoSetQty(kode,data){
+      const cek = cekData('kd_brg', kode, table);
+      return cek.then(res => {
+          if (res == undefined) {
+              console.log('GADA');
+              store(table, {
+                  kd_brg: data[0].kd_brg,
+                  barcode: data[0].barcode,
+                  satuan: data[0].satuan,
+                  diskon: 0,
+                  diskon2: 0,
+                  diskon3: 0,
+                  diskon4: 0,
+                  ppn: 0,
+                  harga_beli: data[0].harga_beli,
+                  qty: 1,
+                  stock: data[0].stock,
+                  nm_brg: data[0].nm_brg,
+                  tambahan: data[0].tambahan
+              })
+          } else {
+                  update(table, {
+                      id: res.id,
+                      qty: parseFloat(res.qty) + 1,
+                      kd_brg: res.kd_brg,
+                      barcode: res.barcode,
+                      satuan: res.satuan,
+                      diskon: res.diskon,
+                      diskon2: res.diskon2,
+                      diskon3: 0,
+                      diskon4: 0,
+                      ppn: res.ppn,
+                      stock: res.stock,
+                      harga_beli: res.harga_beli,
+                      nm_brg: res.nm_brg,
+                      tambahan: res.tambahan
+                  })
+          }
+          return true
+      })
+    }
+
     HandleSearch(){
       if (this.state.supplier === "" || this.state.lokasi === "") {
           Swal.fire(
@@ -542,8 +503,29 @@ class PurchaseOrder extends Component{
           )
       }else{
         const searchby = parseInt(this.state.searchby)===1?'kd_brg':(parseInt(this.state.searchby)===2?'barcode':'deskripsi')
-        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier));
+        this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty));
+        this.setState({search: ''});
+        
       }
+    }
+    getData() {
+      const data = get(table);
+      data.then(res => {
+        let brg = []
+        res.map((i) => {
+          brg.push({
+            harga_beli: i.harga_beli,
+            diskon: i.diskon,
+            ppn: i.ppn,
+            qty: i.qty,
+            satuan: i.satuan
+          });
+        })
+        this.setState({
+          databrg: res,
+          brgval: brg
+        })
+      });
     }
 
     render() {
@@ -622,6 +604,7 @@ class PurchaseOrder extends Component{
                                   name="search"
                                   className="form-control form-control-sm"
                                   placeholder="Search"
+                                  value={this.state.search}
                                    onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                    onKeyPress = {
                                      event => {
@@ -824,6 +807,11 @@ class PurchaseOrder extends Component{
                                   options={this.state.location_data} 
                                   placeholder = "Pilih Lokasi"
                                   onChange={this.HandleChangeLokasi}
+                                  value = {
+                                    this.state.location_data.find(op => {
+                                      return op.value === this.state.location
+                                    })
+                                  }
 
                                 />
                                 <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
@@ -838,6 +826,11 @@ class PurchaseOrder extends Component{
                                   options={opSupplier} 
                                   placeholder="Pilih Supplier"
                                   onChange={this.HandleChangeSupplier}
+                                  value = {
+                                    opSupplier.find(op => {
+                                      return op.value === this.state.supplier
+                                    })
+                                  }
                                 />
                                 <div class="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
                                       {this.state.error.supplier}
