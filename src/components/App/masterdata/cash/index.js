@@ -17,6 +17,20 @@ class Cash extends Component{
         this.handlePagin=this.handlePagin.bind(this);
         this.handleDelete=this.handleDelete.bind(this);
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[16]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
 
     componentWillMount(){
         let type = this.state.type;
@@ -67,6 +81,8 @@ const mapStateToProps = (state) => {
         currentPage: state.cashReducer.currentPage,
         per_page: state.cashReducer.per_page,
         total: state.cashReducer.total,
+        auth: state.auth
+
     }
 }
 

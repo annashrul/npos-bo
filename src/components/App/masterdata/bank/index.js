@@ -15,6 +15,20 @@ class Bank extends Component{
         }
         this.handlePagin=this.handlePagin.bind(this);
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[18]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
 
     componentWillMount(){
         let any = this.state.any;
@@ -54,6 +68,8 @@ const mapStateToProps = (state) => {
         authenticated: state.auth,
         bank:state.bankReducer.data,
         isLoading: state.bankReducer.isLoading,
+        auth: state.auth
+
     }
 }
 

@@ -19,8 +19,12 @@ import {salesReducer} from "./masterdata/sales/sales.action";
 import {departmentReducer} from "./masterdata/department/department.reducer";
 import {subDepartmentReducer} from "./masterdata/department/sub_department.reducer";
 import {stockReportReducer} from "./report/inventory/stock_report.reducer";
+import {adjustmentReducer} from "./adjustment/adjustment.reducer";
 import {poReducer} from "./purchase/purchase_order/po.reducer";
 import {receiveReducer} from "./purchase/receive/receive.reducer";
+import {siteReducer} from "./site.reducer";
+import {dnReducer} from "./inventory/delivery_note/dn.reducer";
+import {alokasiReducer} from './inventory/alokasi/alokasi.reducer'
 
 export default combineReducers({
     modalReducer,
@@ -42,8 +46,12 @@ export default combineReducers({
     supplierReducer,
     salesReducer,
     stockReportReducer,
+    adjustmentReducer,
     poReducer,
     receiveReducer,
+    siteReducer,
+    dnReducer,
+    alokasiReducer,
 
     auth: authReducer,
     errors : errorsReducer

@@ -19,6 +19,20 @@ class User extends Component{
         }
 
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[11]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
     componentWillMount(){
         this.props.dispatch(FetchUserList());
         this.props.dispatch(FetchUserLevel(1,'',15));
@@ -97,7 +111,9 @@ const mapStateToProps = (state) => {
         userLevel: state.userLevelReducer.data,
         isOpen:state.modalReducer,
         isLoading: state.userListReducer.isLoading,
-        isLoading1: state.userLevelReducer.isLoading
+        isLoading1: state.userLevelReducer.isLoading,
+        auth: state.auth
+
     }
 }
 export default connect(mapStateToProps)(User)

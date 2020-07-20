@@ -1,54 +1,49 @@
 import {
-    PO
+    DN
 } from "../../../actions/_constants";
 
 const initialState = {
     isLoading: false,
-    isLoadingDetail: false,
     data: [],
     msg:"",
     status:"",
     code:"-",
-    po_data:[],
+    dn_data:[],
     report:[],
     report_data:[]
 };
 
-export const poReducer = (state = initialState, action) => {
+export const dnReducer = (state = initialState, action) => {
     switch (action.type) {
-        case PO.SUCCESS:
+        case DN.SUCCESS:
             return Object.assign({}, state, {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result,
                 total: action.data.result.total
             });
-        case PO.REPORT_SUCCESS:
+        case DN.REPORT_SUCCESS:
             return Object.assign({}, state, {
                 report: action.data.result,
                 report_data: action.data.result.data
             });
-        case PO.PO_DATA:
+        case DN.DN_DATA:
             return Object.assign({}, state, {
-                po_data: action.data.result
+                dn_data: action.data.result
             });
-        case PO.SUCCESS_CODE:
+        case DN.SUCCESS_CODE:
             return Object.assign({}, state, {
                 code: action.data.result
             });
-        case PO.FAILED:
+        case DN.FAILED:
             return Object.assign({}, state, {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result
             });
-        case PO.LOADING:
+        case DN.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
-            });
-        case PO.LOADING_DETAIL:
-            return Object.assign({}, state, {
-                isLoadingDetail: action.load
             });
         default:
             return state

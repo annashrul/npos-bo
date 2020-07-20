@@ -56,6 +56,7 @@ class ListProduct extends Component{
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleSearchBy = this.handleSearchBy.bind(this);
         console.log("CONSTURTOR DATE FROM",localStorage.getItem("startDateProduct")===''?'string kosong':localStorage.getItem("startDateProduct"));
         this.state = {
             isExcel : false,
@@ -145,6 +146,32 @@ class ListProduct extends Component{
         this.props.dispatch(FetchProductCode());
 
     };
+    handleSearchBy(event){
+        let column = event.target.name;
+        let val = event.target.value;
+        let where = '';
+        if(column==='kategori_barang'){
+            localStorage.removeItem("jenis_barang");
+            localStorage.removeItem("kelompok_barang");
+            let kategori = localStorage.setItem("kategori_barang",val);
+
+        }
+        if(column==='jenis_barang'){
+
+            localStorage.removeItem("kelompok_barang");
+            localStorage.removeItem("kategori_barang");
+            let jenis = localStorage.setItem("jenis_barang",val);
+            if(where!==''){where+='&';}
+            where+=`searchby=jenis&q=${jenis}`;
+        }
+        if(column==='kelompok_barang'){
+            localStorage.removeItem("kategori_barang");
+            localStorage.removeItem("jenis_barang");
+            let kelompok = localStorage.setItem("kelompok_barang",val);
+        }
+        this.props.dispatch(FetchProduct(1,where));
+
+    }
     handlesearch(event){
         event.preventDefault();
         const form = event.target;
@@ -180,18 +207,6 @@ class ListProduct extends Component{
 
         this.props.dispatch(FetchProduct(1,where));
         console.log(where);
-        // if(any!==''||any!==null||any!==undefined){
-        //     this.props.dispatch(FetchProduct(1,by,any,'',''));
-        // }
-
-        // if()
-        // if(localStorage.getItem("semuaPeriode") === "true"){
-        //     this.props.dispatch(FetchProduct(1,'','','','',''));
-        //     if(dateFrom!==''&&dateFrom!==null&&dateTo!==''&&dateTo!==null){
-        //         this.props.dispatch(FetchProduct(1,'','',dateFrom,dateTo,''));
-        //     }
-        // }
-
     }
 
     loc_detail(e,kode) {
@@ -309,18 +324,18 @@ class ListProduct extends Component{
                                 </DateRangePicker>
                             </div>
                         </div>
-                        <div className="col-12 col-xs-12 col-md-2">
+                        <div className="col-12 col-xs-12 col-md-4">
                             <div className="form-group">
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={this.exportPDF} className="btn btn-primary"><i className="fa fa-file-pdf-o"></i></button>
-                                {/*<ReactHTMLTableToExcel*/}
-                                    {/*className="btn btn-primary btnBrg"*/}
-                                    {/*table="emp"*/}
-                                    {/*filename="barang"*/}
-                                    {/*sheet="barang"*/}
-                                    {/*buttonText="export excel">*/}
-                                {/*</ReactHTMLTableToExcel>*/}
+                                <ReactHTMLTableToExcel
+                                    className="btn btn-primary btnBrg"
+                                    table="emp"
+                                    filename="barang"
+                                    sheet="barang"
+                                    buttonText="export excel">
+                                </ReactHTMLTableToExcel>
                             </div>
                         </div>
 
@@ -329,6 +344,7 @@ class ListProduct extends Component{
 
                 </form>
                 <div className="table-responsive" style={{overflowX: "auto"}}>
+                    {/*DATA EXCEL*/}
                     <table className="table table-hover"  id="emp" style={{display:"none"}}>
                         <thead className="bg-light">
                         <tr>
@@ -354,12 +370,11 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.group1}</td>
-                                                <td style={columnStyle}>{v.group2}</td>
-                                                <td style={columnStyle}>{toRp(v.hrg_beli)}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
+                                                <td style={columnStyle}>{v.supplier}</td>
                                                 <td style={columnStyle}>{v.kategori}</td>
+                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
-                                                <td style={columnStyle}>{v.jenis}</td>
                                             </tr>
                                         )
                                     })
@@ -367,7 +382,15 @@ class ListProduct extends Component{
                             )
                         }
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colSpan="7"></td>
+                            <td>0</td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
                     </table>
+                    {/*END DATA EXCEL*/}
                     <table className="table table-hover table-bordered">
                         <thead className="bg-light">
                         <tr>
@@ -386,7 +409,7 @@ class ListProduct extends Component{
                             <td><input type="text" className="form-control" placeholder="Kode Barang"/></td>
                             <td><input type="text" className="form-control" placeholder="Nama Barang"/></td>
                             <td>
-                                <select className="form-control form-control-lg" id="kelompok_barang" name="kelompok_barang">
+                                <select className="form-control form-control-lg" id="kelompok_barang" name="kelompok_barang" onChange={this.handleSearchBy}>
                                     <option value="">Pilih Kelompok</option>
                                     {
                                         this.state.searchKelompok.map((v,i)=>{
@@ -398,7 +421,7 @@ class ListProduct extends Component{
                             <td><input type="text" className="form-control" placeholder="Supplier"/></td>
                             <td><input type="text" className="form-control" placeholder="Sub Dept"/></td>
                             <td>
-                                <select className="form-control form-control-lg" id="kategori_barang" name="kategori_barang">
+                                <select className="form-control form-control-lg" id="kategori_barang" name="kategori_barang" onChange={this.handleSearchBy}>
                                     <option value="">Pilih Kategori</option>
                                     {
                                         this.state.searchKategori.map((v,i)=>{
@@ -408,7 +431,7 @@ class ListProduct extends Component{
                                 </select>
                             </td>
                             <td>
-                                <select className="form-control form-control-lg" id="jenis_barang" name="jenis_barang">
+                                <select className="form-control form-control-lg" id="jenis_barang" name="jenis_barang" onChange={this.handleSearchBy}>
                                     <option value="">Pilih Jenis</option>
                                     {
                                         this.state.searchJenis.map((v,i)=>{

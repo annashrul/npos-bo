@@ -13,9 +13,28 @@ export function setLoading(load) {
         load
     }
 }
+export function setLoadingDetail(load) {
+    return {
+        type: PO.LOADING_DETAIL,
+        load
+    }
+}
 export function setPO(data = []) {
     return {
         type: PO.SUCCESS,
+        data
+    }
+}
+
+export function setPoData(data = []) {
+    return {
+        type: PO.PO_DATA,
+        data
+    }
+}
+export function setReport(data = []) {
+    return {
+        type: PO.REPORT_SUCCESS,
         data
     }
 }
@@ -39,18 +58,30 @@ export function setPOFailed(data = []) {
     }
 }
 
-export const FetchPO = () => {
+export const FetchPoReport = (page=1, perpage=10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }
-        axios.get(HEADERS.URL + "chartdata", headers)
+        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setPO(data))
+                dispatch(setReport(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+export const FetchPoData = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setPoData(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -123,5 +154,48 @@ export const storePo = (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `purchaseorder/stock?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `purchaseorder/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `purchaseorder/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `purchaseorder/stock?page=${page}&lokasi=${location}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPO(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const poReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoadingDetail(true));
+        axios.get(HEADERS.URL+`purchaseorder/report/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(poReportDetail(data));
+                dispatch(setLoadingDetail(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }

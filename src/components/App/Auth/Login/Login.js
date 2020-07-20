@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import BgAuth from "../../../../assets/img/bg-img/1.png"
-
+import BgAuth from "../../../../assets/images/logo2.png"
+import './login.css'
 import {loginUser} from '../../../../redux/actions/authActions';
+import Swal from 'sweetalert2'
 
 class Login extends Component {
     constructor(props) {
@@ -33,11 +34,19 @@ class Login extends Component {
     submitHandelar = (event)=>{
         event.preventDefault();
         const {email,password} = this.state;
-        const user = {
-            username: email,
-            password: password
+        if(email!==''&&password!==''){
+            const user = {
+                username: email,
+                password: password
+            }
+            this.props.loginUser(user);
+        }else{
+            Swal.fire(
+                'Error!',
+                'Isi username dan password terlebih dahulu.',
+                'error'
+            )
         }
-        this.props.loginUser(user);
     }
 
     handleInputChange =(event)=> {
@@ -55,71 +64,50 @@ class Login extends Component {
         const {user} = this.props;
         console.log(errors);
         return (
-             <div className="main-content- h-100vh">
-                <div className="container h-100">
-                    <div className="row h-100 align-items-center justify-content-center">
-                        <div className="col-12">
-                            {/* Middle Box */}
-                            <div className="middle-box">
-                                <div className="card">
-                                    <div className="card-body p-4">
-                                        <div className="row align-items-center">
-                                            <div className="col-md-6">
-                                                <div className="xs-d-none mb-50-xs break-320-576-none">
-                                                    <img src={BgAuth} alt="" />
-                                                </div>
-                                            </div>
-                                            <div className="col-md-6">
-                                                {/* Logo */}
-                                                <h4 className="font-18 mb-30">Welcome back! Log in to your account.</h4>
-                                                {/* <form action="#"> */}
-                                                    <div className="form-group">
-                                                        <label className="float-left" htmlFor="emailaddress">Username</label>
-                                                        {/* <input autoFocus type="text" name="username" onChange={this.handleOnChange} required placeholder="Username" className="form-control"  /> */}
-                                                        <input type="text" 
-                                                            className="form-control" 
-                                                            placeholder="Username" 
-                                                            name="email"  
-                                                            value={email}
-                                                            onChange={this.handleInputChange}/>
-                                                        {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <a href="forget-password.html" className="text-dark float-right" />
-                                                        <label className="float-left" htmlFor="password">Password</label>
-                                                        <input 
-                                                            type="password" 
-                                                            className="form-control" 
-                                                            placeholder="Password" 
-                                                            name="password"        
-                                                            value={password}
-                                                            onChange={this.handleInputChange}/>
-                                                        {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
-                                                        {/* <input type="password" name="password" onChange={this.handleOnChange} required placeholder="Password" className="form-control"  /> */}
+        <div class="limiter">
+            <div class="container-login100">
+                <div class="wrap-login100 p-b-160 p-t-50">
+                    <form class="login100-form validate-form" action="#">
 
-                                                        {/* <input className="form-control" type="password" required id="password" placeholder="Enter your password" /> */}
-                                                    </div>
-                                                    <div className="form-group d-flex justify-content-between align-items-center mb-3">
-                                                        <div className="checkbox d-inline mb-0">
-                                                            <input type="checkbox" name="checkbox-1" id="checkbox-8" />
-                                                            <label htmlFor="checkbox-8" className="cr mb-0">Remember me</label>
-                                                        </div>
-                                                        <span className="font-13 text-primary"><a href="javascript:void(0)">Forgot your password?</a></span>
-                                                    </div>
-                                                    <div className="form-group mb-0">
-                                                        <button className="btn btn-primary btn-block" type="submit" onClick={this.submitHandelar}> Log In </button>
-                                                    </div>
-                                                {/* </form> */}
-                                            </div> {/* end card-body */}
-                                        </div>
-                                        {/* end card */}
-                                    </div>
-                                </div>
-                            </div>
+                        <span class="login100-form-title p-b-43 mb-5">
+                        <img src={BgAuth} className='img-responsive' width='100px' style={{textAlign:'center',marginLeft:'auto',marginRight:'auto',display:'block'}}/>
+                        {/* Account Login */}
+                        </span>
+                        <div class="wrap-input100 rs1 validate-input" data-validate="Username is required">
+                            <input type="text" 
+                                className = {email!==''?'input100 has-val':'input100'}
+                                placeholder="Username" 
+                                name="email"  
+                                value={email}
+                                onChange={this.handleInputChange}/>
+                            <span class="label-input100">Username</span>
+                            {errors.email && (<div className="invalid-feedback">{errors.email}</div>)}
                         </div>
-                    </div>
+                        <div class="wrap-input100 rs2 validate-input" data-validate="Password is required">
+                            <input 
+                                type="password" 
+                                className = {password!==''?'input100 has-val':'input100'}
+                                placeholder="Password" 
+                                name="password"        
+                                value={password}
+                                onChange={this.handleInputChange}/>
+                            <span class="label-input100">Password</span>
+                            {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
+                        </div>
+                        <div class="container-login100-form-btn">
+                            <button class="login100-form-btn" type="submit" onClick={this.submitHandelar}>
+                            Sign in
+                            </button>
+                        </div>
+                        <div class="text-center w-full p-t-23">
+                            <a href="#" class="txt1">
+                            {/* Login ke backoffice. */}
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
               );
     }
 }

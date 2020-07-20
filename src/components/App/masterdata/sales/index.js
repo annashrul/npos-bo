@@ -16,6 +16,20 @@ class Sales extends Component{
         this.props.dispatch(FetchSales(page?page:1,any?any:''));
     }
 
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[17]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
 
 
     render(){
@@ -44,6 +58,8 @@ const mapStateToProps = (state) => {
     return {
         sales:state.salesReducer.data,
         isLoading: state.salesReducer.isLoading,
+        auth: state.auth
+
     }
 }
 

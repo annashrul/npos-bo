@@ -1,51 +1,93 @@
 import {
-    RECEIVE,
+    DN,
     HEADERS
-} from "../../_constants"
+} from "../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {destroy} from "components/model/app.model";
+import {
+    destroy
+} from "components/model/app.model";
 
 
 export function setLoading(load) {
     return {
-        type: RECEIVE.LOADING,
+        type: DN.LOADING,
         load
     }
 }
-export function setPO(data = []) {
+export function setDN(data = []) {
     return {
-        type: RECEIVE.SUCCESS,
+        type: DN.SUCCESS,
+        data
+    }
+}
+
+export function setDnData(data = []) {
+    return {
+        type: DN.DN_DATA,
+        data
+    }
+}
+export function setReport(data = []) {
+    return {
+        type: DN.REPORT_SUCCESS,
         data
     }
 }
 export function setCode(data = []) {
     return {
-        type: RECEIVE.SUCCESS_CODE,
+        type: DN.SUCCESS_CODE,
         data
     }
 }
-export function setNewest(dataNew = []) {
+export function setPOFailed(data = []) {
     return {
-        type: RECEIVE.SUCCESS_NEWEST,
-        dataNew
+        type: DN.FAILED,
+        data
     }
 }
 
-export function setPOFailed(data = []) {
-    return {
-        type: RECEIVE.FAILED,
-        data
+export const FetchDnReport = (page = 1, perpage = 10) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setReport(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
     }
 }
+
+export const FetchDnData = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setDnData(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
 export const FetchNota = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-       
-        axios.get(HEADERS.URL + `receive/getcode?lokasi=${lokasi}`)
+
+        axios.get(HEADERS.URL + `deliverynote/getcode?lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
                 dispatch(setCode(data))
                 dispatch(setLoading(false));
             })
@@ -57,10 +99,10 @@ export const FetchNota = (lokasi) => {
     }
 }
 
-export const storeReceive= (data) => {
+export const storeDN = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `receive`;
+        const url = HEADERS.URL + `deliverynote`;
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -80,12 +122,12 @@ export const storeReceive= (data) => {
                             win.focus();
                         }
                     }
-                    destroy('receive');
-                    localStorage.removeItem('sp');
+                    destroy('delivery_note');
+                    localStorage.removeItem('lk2');
                     localStorage.removeItem('lk');
                     localStorage.removeItem('ambil_data');
                     localStorage.removeItem('nota');
-                    localStorage.removeItem('catatan');
+                    localStorage.removeItem('catatan');;
                     window.location.reload(false);
                 })
                 dispatch(setLoading(false));

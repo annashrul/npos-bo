@@ -23,6 +23,20 @@ class Product extends Component{
             by : localStorage.getItem('by_product'),
         };
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[10]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
     componentWillMount(){
         let by = this.state.by;
         let any = this.state.any;
@@ -101,6 +115,8 @@ const mapStateToProps = (state) => {
         isLoading: state.productReducer.isLoading,
         isLoading1: state.priceProductReducer.isLoading,
         isLoading2: state.groupProductReducer.isLoading,
+        auth: state.auth
+
     }
 }
 

@@ -1,51 +1,93 @@
 import {
-    RECEIVE,
+    ALOKASI,
     HEADERS
-} from "../../_constants"
+} from "../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {destroy} from "components/model/app.model";
+import {
+    destroy
+} from "components/model/app.model";
 
 
 export function setLoading(load) {
     return {
-        type: RECEIVE.LOADING,
+        type: ALOKASI.LOADING,
         load
     }
 }
-export function setPO(data = []) {
+export function setALOKASI(data = []) {
     return {
-        type: RECEIVE.SUCCESS,
+        type: ALOKASI.SUCCESS,
+        data
+    }
+}
+
+export function setALOKASIData(data = []) {
+    return {
+        type: ALOKASI.ALOKASI_DATA,
+        data
+    }
+}
+export function setReport(data = []) {
+    return {
+        type: ALOKASI.REPORT_SUCCESS,
         data
     }
 }
 export function setCode(data = []) {
     return {
-        type: RECEIVE.SUCCESS_CODE,
+        type: ALOKASI.SUCCESS_CODE,
         data
     }
 }
-export function setNewest(dataNew = []) {
+export function setPOFailed(data = []) {
     return {
-        type: RECEIVE.SUCCESS_NEWEST,
-        dataNew
+        type: ALOKASI.FAILED,
+        data
     }
 }
 
-export function setPOFailed(data = []) {
-    return {
-        type: RECEIVE.FAILED,
-        data
-    }
-}
-export const FetchNota = (lokasi) => {
+export const FetchDnReport = (page = 1, perpage = 10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-       
-        axios.get(HEADERS.URL + `receive/getcode?lokasi=${lokasi}`)
+        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                dispatch(setReport(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+export const FetchDnData = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setALOKASIData(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+export const FetchNota = (lokasi, prefix) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+
+        axios.get(HEADERS.URL + `alokasi/getcode?lokasi=${lokasi}&prefix=${prefix}`)
+            .then(function (response) {
+                const data = response.data
                 dispatch(setCode(data))
                 dispatch(setLoading(false));
             })
@@ -57,10 +99,10 @@ export const FetchNota = (lokasi) => {
     }
 }
 
-export const storeReceive= (data) => {
+export const storeAlokasi = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `receive`;
+        const url = HEADERS.URL + `alokasi`;
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -80,12 +122,12 @@ export const storeReceive= (data) => {
                             win.focus();
                         }
                     }
-                    destroy('receive');
-                    localStorage.removeItem('sp');
+                    destroy('alokasi');
+                    localStorage.removeItem('lk2');
                     localStorage.removeItem('lk');
                     localStorage.removeItem('ambil_data');
                     localStorage.removeItem('nota');
-                    localStorage.removeItem('catatan');
+                    localStorage.removeItem('catatan');;
                     window.location.reload(false);
                 })
                 dispatch(setLoading(false));
