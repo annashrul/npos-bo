@@ -93,6 +93,7 @@ class SideMenu extends Component {
                         <a href="javascript:void(0)" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
                             <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report"> <i className="zmdi zmdi-apps" />Inventory</Link></li>
+                            <li className={path==='/adjustment_report'?"active":''}><Link to="/adjustment_report"> <i className="zmdi zmdi-apps" />Adjustment</Link></li>
                         </ul>
                     </li>
                 </ul>

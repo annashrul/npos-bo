@@ -13,14 +13,17 @@ export const TOKEN = {
 }
 
 export const HEADERS ={
-  // URL: "http://203.190.54.4:6692/",
+  URL: "http://203.190.54.4:6692/",
   // URL:"http://192.168.100.200:3000/",
-  URL:"http://192.168.100.10:3000/",
+  // URL:"http://192.168.100.10:3000/",
   TOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO"
 }
 
+/****************
+      PASSWORD MODAL ADD LOCATION
+*****************/
 export const LOC_VERIF ={
   password:"netindo35a"
 }
@@ -199,6 +202,18 @@ export const SUPPLIER = {
     POST_LOADING: 'SET_SUPPLIER_POST_LOADING'
 }
 /****************
+ ADJUSTMENT
+ *****************/
+export const ADJUSTMENT = {
+    LOADING: 'SET_ADJUSTMENT_LOADING',
+    SUCCESS: 'SET_ADJUSTMENT_SUCCESS',
+    FAILED: 'SET_ADJUSTMENT_FAILED',
+    DETAIL: 'SET_ADJUSTMENT_DETAIL',
+    ALL: 'SET_ADJUSTMENT_ALL',
+    POST_LOADING: 'SET_ADJUSTMENT_POST_LOADING',
+    DETAIL_TRANSAKSI: 'SET_ADJUSTMENT_DETAIL_TRANSAKSI',
+}
+/****************
  SALES
  *****************/
 export const SALES = {
@@ -241,6 +256,7 @@ export const DASHBOARD = {
  *****************/
 export const PO = {
   LOADING: 'SET_PO_LOADING',
+  LOADING_DETAIL: 'SET_PO_LOADING_DETAIL',
   SUCCESS: 'SET_PO_SUCCESS',
   FAILED: 'SET_PO_FAILED',
   DETAIL: 'SET_PO_DETAIL',
