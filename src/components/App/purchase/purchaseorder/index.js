@@ -3,7 +3,7 @@ import {store,get, update,destroy,cekData,del} from "components/model/app.model"
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 // import { Scrollbars } from "react-custom-scrollbars";
-import {FetchBrg} from 'redux/actions/masterdata/product/product.action'
+import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'
 
@@ -114,6 +114,7 @@ class PurchaseOrder extends Component{
     }
 
     componentWillUnmount(){
+      this.props.dispatch(setProductbrg({status:'',msg:'',result:{data:[]}}));
       destroy(table);
       localStorage.removeItem('sp');
       localStorage.removeItem('lk');
@@ -934,7 +935,7 @@ class PurchaseOrder extends Component{
                           </tbody>
                              <tfoot>
                                 <tr style={{background:'#eee'}}>
-                                    <td colSpan='9' style={{textAlign:'right'}}>Total</td>
+                                    <td colSpan='9' style={{textAlign:'right !important'}}>Total</td>
                                     <td colSpan='1'>{subtotal}</td>
                                 </tr>
                             </tfoot>

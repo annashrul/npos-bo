@@ -78,7 +78,11 @@ class SideMenu extends Component {
                             <li className={path==='/account_receivable'?"active":''}><Link to="/account_receivable"> <i className="zmdi zmdi-apps" />Accounts Receivable</Link></li>
                         </ul>
                     </li>
-                    <li className={this.state.isReceive===true?"treeview active menu-open" : "treeview"}>
+                    <li className={
+                        this.state.isReceive===true  ||
+                        path==='/purchase_order' ||
+                        path === '/receive'
+                        ?"treeview active menu-open" : "treeview"}>
                         <a href="javascript:void(0)" onClick={(e) => this.changeMenu('receive')}><i className="zmdi zmdi-apps" /> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
                             <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
