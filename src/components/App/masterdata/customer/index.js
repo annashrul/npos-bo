@@ -15,6 +15,21 @@ class Customer extends Component{
             token:""
         }
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[15]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
+
     componentWillMount(){
         let anyCustomer = localStorage.getItem("any_customer");
         let anyCustomerType = localStorage.getItem("any_customer_type");
@@ -70,6 +85,8 @@ const mapStateToProps = (state) => {
         isOpen:state.modalReducer,
         isLoading: state.customerReducer.isLoading,
         isLoading1: state.customerTypeReducer.isLoading,
+        auth: state.auth
+
     }
 }
 export default connect(mapStateToProps)(Customer)

@@ -337,7 +337,7 @@ class Dashboard extends Component {
                                                 />
                                         </div>
                                         <div className="col-2">
-                                            <div className="form-group" style={{'padding-top': '8px', 'margin-bottom':'unset'}}>
+                                            <div className="form-group" style={{'paddingTop': '8px', 'marginBottom':'unset'}}>
                                                 {/* <label className="control-label font-12">
                                                 Lokasi
                                                 </label> */}
@@ -357,7 +357,7 @@ class Dashboard extends Component {
                                                 </div> */}
                                             </div>
                                         </div>
-                                        <div className="col-2" style={{'padding-top': '9px', 'margin-bottom':'unset'}}>
+                                        <div className="col-2" style={{'paddingTop': '9px', 'marginBottom':'unset'}}>
                                         <button type="button" className="btn btn-primary">LOAD DATA</button>
                                         </div>
                                     </div>
@@ -402,18 +402,18 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div class="col-md-4 box-margin">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h4 class="card-title">Custom</h4>
+                    <div className="col-md-4 box-margin">
+                        <div className="card text-center">
+                            <div className="card-body">
+                                <h4 className="card-title">Custom</h4>
                                 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8 box-margin">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h4 class="card-title">MONTHLY SALES AMOUNT</h4>
+                    <div className="col-md-8 box-margin">
+                        <div className="card text-center">
+                            <div className="card-body">
+                                <h4 className="card-title">MONTHLY SALES AMOUNT</h4>
                                 <Chart
                                     options={this.state.options}
                                     series={this.state.series}
@@ -425,10 +425,10 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div class="col-md-12 box-margin">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h4 class="card-title">MONTHLY TRANSACTIONS</h4>
+                    <div className="col-md-12 box-margin">
+                        <div className="card text-center">
+                            <div className="card-body">
+                                <h4 className="card-title">MONTHLY TRANSACTIONS</h4>
                                 <Chart
                                     options={this.state.options2}
                                     series={this.state.series2}
@@ -440,13 +440,13 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div class="col-md-12 box-margin">
+                    <div className="col-md-12 box-margin">
                         <div className="card">
                             <div className="row">
-                                <div class="col-md-4">
-                                    <div class="text-center">
-                                        <div class="card-body">
-                                            <h4 class="card-title">SALES THIS WEEK</h4>
+                                <div className="col-md-4">
+                                    <div className="text-center">
+                                        <div className="card-body">
+                                            <h4 className="card-title">SALES THIS WEEK</h4>
                                             <Chart
                                                 options={this.state.options3}
                                                 series={this.state.series3}
@@ -456,10 +456,10 @@ class Dashboard extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="text-center">
-                                        <div class="card-body">
-                                            <h4 class="card-title">HOURLY GROSS SALES AMOUNT</h4>
+                                <div className="col-md-8">
+                                    <div className="text-center">
+                                        <div className="card-body">
+                                            <h4 className="card-title">HOURLY GROSS SALES AMOUNT</h4>
                                             <Chart
                                                 options={this.state.options4}
                                                 series={this.state.series4}
@@ -473,11 +473,11 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div class="col-md-12 box-margin">
+                    <div className="col-md-12 box-margin">
                         <div className="card">
                             <div className="row">
-                                <div class="col-md-6">
-                                    <div class="card-body">
+                                <div className="col-md-6">
+                                    <div className="card-body">
                                         <Tabs>
                                             <TabList>
                                                 <Tab onClick={(e) =>this.handleSelect(e,1)} >Volume</Tab>
@@ -485,7 +485,7 @@ class Dashboard extends Component {
                                             </TabList>
                                             <TabPanel>
                                                 {/* <div class="card-body"> */}
-                                                    <h4 class="card-title">TOP 8 ITEMS VOLUME</h4>
+                                                    <h4 className="card-title">TOP 8 ITEMS VOLUME</h4>
                                                     <Chart
                                                         options={this.state.options5a}
                                                         series={this.state.series5a}
@@ -495,7 +495,7 @@ class Dashboard extends Component {
                                                 {/* </div> */}
                                             </TabPanel>
                                             <TabPanel>
-                                                <h4 class="card-title">TOP 8 ITEMS SALES</h4>
+                                                <h4 className="card-title">TOP 8 ITEMS SALES</h4>
                                                 <Chart
                                                     options={this.state.options5b}
                                                     series={this.state.series5b}
@@ -506,8 +506,8 @@ class Dashboard extends Component {
                                         </Tabs>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card-body">
+                                <div className="col-md-6">
+                                    <div className="card-body">
                                         <Tabs>
                                             <TabList>
                                                 <Tab onClick={(e) =>this.handleSelect2(e,1)} >Volume</Tab>
@@ -515,7 +515,7 @@ class Dashboard extends Component {
                                             </TabList>
                                             <TabPanel>
                                                 {/* <div class="card-body"> */}
-                                                    <h4 class="card-title">TOP 8 ITEMS VOLUME</h4>
+                                                    <h4 className="card-title">TOP 8 ITEMS VOLUME</h4>
                                                     <Chart
                                                         options={this.state.options6a}
                                                         series={this.state.series6a}
@@ -525,7 +525,7 @@ class Dashboard extends Component {
                                                 {/* </div> */}
                                             </TabPanel>
                                             <TabPanel>
-                                                <h4 class="card-title">TOP 8 ITEMS SALES</h4>
+                                                <h4 className="card-title">TOP 8 ITEMS SALES</h4>
                                                 <Chart
                                                     options={this.state.options6b}
                                                     series={this.state.series6b}
@@ -541,12 +541,12 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div class="col-md-12 box-margin">
+                    <div className="col-md-12 box-margin">
                         <div className="card">
                             <div className="row">
-                                <div class="col-md-6">
-                                    <div class="card-body">
-                                        <h4 class="card-title">TOP 5 SUPPLIER VOLUME</h4>
+                                <div className="col-md-6">
+                                    <div className="card-body">
+                                        <h4 className="card-title">TOP 5 SUPPLIER VOLUME</h4>
                                         <Chart
                                             options={this.state.options7a}
                                             series={this.state.series7a}
@@ -555,9 +555,9 @@ class Dashboard extends Component {
                                             />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card-body">
-                                        <h4 class="card-title">TOP 5 SUPPLIER SALES</h4>
+                                <div className="col-md-6">
+                                    <div className="card-body">
+                                        <h4 className="card-title">TOP 5 SUPPLIER SALES</h4>
                                         <Chart
                                             options={this.state.options7b}
                                             series={this.state.series7b}

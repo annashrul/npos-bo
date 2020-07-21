@@ -34,13 +34,13 @@ class FormUserLevel extends Component{
             masterdata: [
                 {id: 10, value: "0", isChecked: false,label:'product'},
                 {id: 11, value: "0", isChecked: false,label:'user'},
-                {id: 12, value: "0", isChecked: false,label:'subdept'},
+                {id: 12, value: "0", isChecked: false,label:'department'},
                 {id: 13, value: "0", isChecked: false,label:'supplier'},
                 {id: 14, value: "0", isChecked: false,label:'location'},
                 {id: 15, value: "0", isChecked: false,label:'customer'},
                 {id: 16, value: "0", isChecked: false,label:'cash'},
-                {id: 17, value: "0", isChecked: false,label:''},
-                {id: 18, value: "0", isChecked: false,label:''},
+                {id: 17, value: "0", isChecked: false,label:'sales'},
+                {id: 18, value: "0", isChecked: false,label:'bank'},
                 {id: 19, value: "0", isChecked: false,label:''},
             ],
             lvl : "",
@@ -167,8 +167,8 @@ class FormUserLevel extends Component{
                                     {
                                         this.state.masterdata.map((modul, index) => {
                                             return (
-                                                modul.label!==''?<div className="col-md-2" key={index}>
-                                                    <div className="form-group" style={{marginLeft:"10px"}}>
+                                                modul.label!==''?<div className="col-md-3" key={index}>
+                                                    <div className="form-group" style={{marginLeft:"6px"}}>
                                                         <input onChange={(e)=>this.handleCheckChieldElement(e,'masterdata')} id={modul.label} className={modul.label} type="checkbox" checked={modul.isChecked} value={modul.value} /> {modul.label}
                                                     </div>
                                                 </div>:''

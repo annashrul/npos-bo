@@ -4,8 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchCheck} from 'redux/actions/site.action'
-import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
-import {FetchNota,storeReceive} from 'redux/actions/purchase/receive/receive.action'
+import {FetchNota,storeAlokasi} from 'redux/actions/inventory/alokasi.action'
 import {FetchPoReport,FetchPoData,setPoData} from 'redux/actions/purchase/purchase_order/po.action'
 
 import { Scrollbars } from "react-custom-scrollbars";
@@ -15,7 +14,7 @@ import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
 
-const table='receive'
+const table='alokasi'
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -28,7 +27,7 @@ const Toast = Swal.mixin({
     }
 })
 
-class Receive extends Component{
+class Alokasi extends Component{
 
     constructor(props) {
         super(props);
@@ -38,36 +37,24 @@ class Receive extends Component{
           databrg: [],
           brgval:[],
           tanggal: new Date(),
-          harga_beli: 0,
-          diskon:0,
-          ppn:0,
           qty:0,
           location_data:[],
           location:"",
-          supplier:"",
+          location2:"",
           catatan:"",
-          notasupplier:"",
-          penerima:"",
-          jenis_trx:"Tunai",
           userid:0,
           searchby:1,
-          qty_bonus:0,
-          discount_persen:0,
-          discount_harga:0,
-          pajak:0,
           search:"",
-          grandtotal:0,
-          no_po:'-',
-          pre_receive:'-',
+          nota_pembelian:'-',
           data_nota:[],
           ambil_data:1,
           ambil_nota:'',
+          jenis_trx:'Alokasi',
           error:{
             location:"",
-            supplier:"",
+            location2: "",
             catatan:"",
-            notasupplier:"",
-            penerima: ""
+            qty:[]
           }
         };
         this.HandleRemove = this.HandleRemove.bind(this);
@@ -75,7 +62,7 @@ class Receive extends Component{
         this.HandleChangeInput = this.HandleChangeInput.bind(this);
         this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-        this.HandleChangeSupplier = this.HandleChangeSupplier.bind(this);
+        this.HandleChangeLokasi2 = this.HandleChangeLokasi2.bind(this);
         this.setTanggal=this.setTanggal.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
         this.HandleSearch = this.HandleSearch.bind(this);
@@ -84,7 +71,6 @@ class Receive extends Component{
     }
 
     componentDidMount() {
-      this.props.dispatch(FetchSupplierAll())
       this.getData()
       if (localStorage.catatan !== undefined && localStorage.catatan !== '') {
         this.setState({
@@ -112,18 +98,17 @@ class Receive extends Component{
       }
       
       if (localStorage.lk !== undefined && localStorage.lk !== '') {
-        this.props.dispatch(FetchNota(localStorage.lk))
+        this.props.dispatch(FetchNota(localStorage.lk,))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty))
+
         this.setState({
           location: localStorage.lk
         })
       }
-      if (localStorage.sp !== undefined && localStorage.sp !== '') {
+      if (localStorage.lk2 !== undefined && localStorage.lk2 !== '') {
         this.setState({
-          supplier: localStorage.sp
+          location2: localStorage.lk2
         })
-      }
-      if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk !== undefined && localStorage.lk !== '') {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty))
       }
     }
 
@@ -168,7 +153,6 @@ class Receive extends Component{
       if (nextProps.po_data){
         if (nextProps.po_data.master!==undefined){
           if(this.props.po_data===undefined){
-            console.log("PO HITTTTTTTT");
             this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
             this.setState({
               location: nextProps.po_data.master.lokasi,
@@ -207,13 +191,7 @@ class Receive extends Component{
         }
       }
 
-      if(nextProps.checkNotaPem){
-        this.setState({
-          error: Object.assign({}, this.state.error, {
-            notasupplier: "Nota supplier sudah digunakan."
-          })
-        })
-      }
+    
     }
 
     componentWillUnmount() {
@@ -255,58 +233,44 @@ class Receive extends Component{
       let err = Object.assign({}, this.state.error, {
         location: ""
       });
-      console.log(err);
       this.setState({
         location: lk.value,
         error: err
       })
       localStorage.setItem('lk', lk.value);
-      this.props.dispatch(FetchNota(lk.value))
-      if (this.state.supplier !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
-      }
+      let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
+      this.props.dispatch(FetchNota(lk.value, prefix))
+      this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty))
       destroy(table)
       this.getData()
       
     }
 
-    HandleChangeSupplier(sp) {
+    HandleChangeLokasi2(sp) {
       let err = Object.assign({}, this.state.error, {
-        supplier: ""
+        location2: ""
       });
       console.log(err);
       this.setState({
-        supplier: sp.value,
+        location2: sp.value,
         error: err
       })
-      localStorage.setItem('sp', sp.value);
-
-      if (this.state.location !== "") {
-        this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty))
-      }
-      destroy(table)
-      this.getData()
+      localStorage.setItem('lk2', sp.value);
     }
 
     HandleCommonInputChange(e,errs=true,st=0){
       const column = e.target.name;
       const val = e.target.value;
-      
-      if (column === 'discount_persen' || column === 'pajak'){
-        if (val < 0 || val=='') this.setState({[column]: 0});
-        else if (val >100) this.setState({[column]: 100});
-        else this.setState({[column]: val});
+      this.setState({
+        [column]: val
+      });
 
-        if (column === 'discount_persen'){
-          this.setState({ 'discount_harga': (st*(val/100)) });
+      if(column==='jenis_trx'){
+        if(this.state.location!==''){
+          let prefix = val.toLowerCase()==='alokasi'?'MC':(val.toLowerCase()==='mutasi'?'MU':'TR');
+          this.props.dispatch(FetchNota(this.state.location, prefix))
         }
-      } else if (column === 'discount_harga') {
-        const disper = (val/st) * 100;
-        this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:val });
-      }else{
-        this.setState({
-          [column]: val
-        });
+
       }
 
       if (column === 'notasupplier'){
@@ -336,7 +300,7 @@ class Receive extends Component{
       }
     }
 
-    HandleChangeInput(e,id){
+    HandleChangeInput(e,id,idx){
         const column = e.target.name;
         const val = e.target.value;
        
@@ -357,6 +321,7 @@ class Receive extends Component{
                         final[column]=val
                     }
                 })
+                
                 update(table, final)
                  Toast.fire({
                      icon: 'success',
@@ -394,19 +359,14 @@ class Receive extends Component{
 
                   let final= {
                       id: res.id,
-                      qty: 0,
                       kd_brg: res.kd_brg,
-                      barcode: newbrg.barcode,
-                      satuan: newbrg.satuan,
-                      diskon: res.diskon,
-                      diskon2: res.diskon2,
-                      diskon3: 0,
-                      diskon4: 0,
-                      ppn: res.ppn,
-                      qty_bonus: res.qty_bonus,
-                      stock: newbrg.stock,
-                      harga_beli: newbrg.harga_beli,
                       nm_brg: res.nm_brg,
+                      barcode: newbrg.barcode,
+                      satuan: res.satuan,
+                      harga_beli: newbrg.harga_beli,
+                      hrg_jual: newbrg.harga,
+                      stock: newbrg.stock,
+                      qty: 1,
                       tambahan: res.tambahan
                   }
                   update(table, final)
@@ -452,22 +412,16 @@ class Receive extends Component{
 
     HandleAddBrg(e,item) {  
         e.preventDefault();
-        console.log(item);
         const finaldt = {
             kd_brg: item.kd_brg,
-            barcode:item.barcode,
-            satuan:item.satuan,
-            diskon:item.diskon,
-            diskon2:0,
-            diskon3:0,
-            diskon4:0,
-            ppn:item.ppn,
-            harga_beli:item.harga_beli,
-            qty:item.qty,
-            qty_bonus: item.qty_bonus,
-            stock:item.stock,
-            nm_brg:item.nm_brg,
-            tambahan:item.tambahan
+            nm_brg: item.nm_brg,
+            barcode: item.barcode,
+            satuan: item.satuan,
+            harga_beli: item.harga_beli,
+            hrg_jual: item.hrg_jual,
+            stock: item.stock,
+            qty: item.qty,
+            tambahan: item.tambahan
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
            cek.then(res => {
@@ -476,19 +430,14 @@ class Receive extends Component{
                }else{
                    update(table,{
                         id:res.id,
-                        qty:parseFloat(res.qty)+1,
                         kd_brg: res.kd_brg,
+                        nm_brg: res.nm_brg,
                         barcode: res.barcode,
                         satuan: res.satuan,
-                        diskon: res.diskon,
-                        diskon2: res.diskon2,
-                        diskon3: 0,
-                        diskon4: 0,
-                        ppn: res.ppn,
-                        stock: res.stock,
                         harga_beli: res.harga_beli,
-                        nm_brg:res.nm_brg,
-                        qty_bonus:item.qty_bonus,
+                        hrg_jual: res.hrg_jual,
+                        stock: res.stock,
+                        qty: parseFloat(res.qty)+1,
                         tambahan: res.tambahan
                    })
                }
@@ -511,11 +460,10 @@ class Receive extends Component{
         }).then((result) => {
             if (result.value) {
                  destroy(table);
-                 localStorage.removeItem('sp');
+                 localStorage.removeItem('lk2');
                  localStorage.removeItem('lk');
                  localStorage.removeItem('ambil_data');
                  localStorage.removeItem('nota');
-                 localStorage.removeItem('catatan');
                 window.location.reload(false);
             }
         })
@@ -527,7 +475,7 @@ class Receive extends Component{
       // validator head form
       console.log(this.state.catatan);
       let err = this.state.error;
-      if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "" || this.props.checkNotaPem) {
+      if (this.state.catatan === "" || this.state.location === "" || this.state.location2 === "") {
         if(this.state.catatan===""){
           err = Object.assign({}, err, {
             catatan:"Catatan tidak boleh kosong."
@@ -535,25 +483,16 @@ class Receive extends Component{
         }
         if (this.state.location === "") {
           err = Object.assign({}, err, {
-            location: "Lokasi tidak boleh kosong."
+            location: "Lokasi asal tidak boleh kosong."
           });
         }
   
-        if (this.state.supplier === "") {
+        if (this.state.location2 === "") {
           err = Object.assign({}, err, {
-            supplier: "Supplier tidak boleh kosong."
+            location2: "Lokasi tujuan tidak boleh kosong."
           });
         }
-        if (this.state.penerima === "") {
-          err = Object.assign({}, err, {
-            penerima: "Penerima tidak boleh kosong."
-          });
-        }
-        if (this.state.notasupplier === "" || this.props.checkNotaPem) {
-          err = Object.assign({}, err, {
-            notasupplier: this.props.checkNotaPem ?"Nota supplier telah digunakan.":"Nota supplier tidak boleh kosong."
-          });
-        }
+       
         this.setState({
           error: err
         })
@@ -563,12 +502,12 @@ class Receive extends Component{
             if (res.length==0){
                Swal.fire(
                  'Error!',
-                 'Pilih barang untuk melanjutkan Pembelian.',
+                 `Pilih barang untuk melanjutkan ${this.state.jenis_trx}.`,
                  'error'
                )
             }else{
               Swal.fire({
-                title: 'Simpan Receive Pembelian?',
+                title: `Simpan ${this.state.jenis_trx}?`,
                 text: "Pastikan data yang anda masukan sudah benar!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -578,54 +517,50 @@ class Receive extends Component{
                 cancelButtonText: 'Tidak!'
               }).then((result) => {
                 if (result.value) {
+                  let err_stock="";
                   let subtotal = 0;
                   let detail = [];
                   res.map(item => {
-                    let disc1 = 0;
-                    let disc2 = 0;
-                    let ppn = 0;
-                    if (item.diskon != 0) {
-                      disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
-                      disc2 = disc1;
-                      if (item.diskon2 != 0) {
-                        disc2 = disc1 * (parseFloat(item.diskon2) / 100);
-                      }
-                    }
-                    if (item.ppn != 0) {
-                      ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
-                    }
-                    subtotal += ((parseInt(item.harga_beli) - disc2) + ppn) * parseFloat(item.qty);
+                    subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
+                    if(item.qty<item.stock) err_stock=`Qty barang melebihi stock persediaan.`;
                     detail.push({
-                      kd_brg: item.kd_brg,
-                      barcode: item.barcode,
-                      satuan: item.satuan,
-                      diskon: item.diskon,
-                      diskon2: item.diskon2,
-                      diskon3: item.diskon3,
-                      diskon4: item.diskon4,
-                      ppn: item.ppn,
-                      harga_beli: item.harga_beli,
-                      qty: item.qty,
-                      qty_bonus: item.qty_bonus
+                      kd_brg:item.kd_brg,
+                      barcode:item.barcode,
+                      satuan:item.satuan,
+                      qty:item.qty,
+                      hrg_beli: item.harga_beli,
+                      hrg_jual:item.hrg_jual
                     })
                   })
                   let data_final = {
-                    tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
-                    type: this.state.jenis_trx,
-                    tgl_jatuh_tempo: this.state.tanggal,
-                    no_po: this.state.no_po,
-                    pre_receive: this.state.pre_receive,
-                    sub_total: subtotal,
-                    supplier: this.state.supplier,
-                    nota_supplier: this.state.notasupplier,
-                    nama_penerima: this.state.penerima,
-                    discount_harga: this.state.discount_harga,
-                    ppn: this.state.pajak,
-                    lokasi_beli: this.state.location,
+                    tgl_mutasi: moment(this.state.tanggal).format("YYYY-MM-DD"),
+                    lokasi_asal:this.state.location,
+                    lokasi_tujuan:this.state.location2,
+                    catatan:this.state.catatan,
+                    kode_pembelian:this.state.nota_pembelian,
+                    subtotal,
                     userid: this.state.userid,
+                    jenis_trx: this.state.jenis_trx,
                     detail: detail
                   };
-                  this.props.dispatch(storeReceive(data_final));
+                  if(err_stock===''){
+                    this.props.dispatch(storeAlokasi(data_final));
+                  }else{
+                    Swal.fire({
+                        title: `Anda yakin akan melanjutkan transaksi?`,
+                        text: err_stock,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya!',
+                        cancelButtonText: 'Tidak!'
+                      }).then((result) => {
+                          if (result.value) {
+                            this.props.dispatch(storeAlokasi(data_final));
+                          }
+                        })
+                  }
                 }
               })
             }
@@ -641,36 +576,26 @@ class Receive extends Component{
           console.log('GADA');
           store(table, {
             kd_brg: data[0].kd_brg,
+            nm_brg: data[0].nm_brg,
             barcode: data[0].barcode,
             satuan: data[0].satuan,
-            diskon: 0,
-            diskon2: 0,
-            diskon3: 0,
-            diskon4: 0,
-            ppn: 0,
             harga_beli: data[0].harga_beli,
-            qty: 1,
-            qty_bonus: 0,
+            hrg_jual: data[0].hrg_jual,
             stock: data[0].stock,
-            nm_brg: data[0].nm_brg,
+            qty: 1,
             tambahan: data[0].tambahan
           })
         } else {
           update(table, {
             id: res.id,
             qty: parseFloat(res.qty) + 1,
-            kd_brg: res.kd_brg,
+             kd_brg: res.kd_brg,
+            nm_brg: res.nm_brg,
             barcode: res.barcode,
             satuan: res.satuan,
-            diskon: res.diskon,
-            diskon2: res.diskon2,
-            diskon3: 0,
-            diskon4: 0,
-            ppn: res.ppn,
-            qty_bonus:res.qty_bonus,
-            stock: res.stock,
             harga_beli: res.harga_beli,
-            nm_brg: res.nm_brg,
+            hrg_jual: res.hrg_jual,
+            stock: res.stock,
             tambahan: res.tambahan
           })
         }
@@ -696,48 +621,41 @@ class Receive extends Component{
     getData(){
       const data = get(table);
       data.then(res => {
-        let brg = []
+        let brg = [];
+        let err = [];
         res.map((i) => {
           brg.push({
-            harga_beli: i.harga_beli,
-            diskon: i.diskon,
-            ppn: i.ppn,
             qty: i.qty,
-            qty_bonus: i.qty_bonus,
             satuan: i.satuan
           });
+          err.push({
+            qty:''
+          })
         })
         this.setState({
           databrg: res,
-          brgval: brg
+          brgval: brg,
+          error: Object.assign({}, this.state.eror, {
+            qty: err
+          })
         })
       });
     }
 
     render() {
-      
       // if(this.props.isLoading){
       //   return <Preloader/>
       // }
 
-      let opSupplier=[];
-      if(this.props.supplier!=[]){
-        this.props.supplier.map(i=>{
-            opSupplier.push({
-              value: i.kode,
-              label: i.nama
-          })
-        })
-      }
        let subtotal = 0;
        let grandtotal = 0;
       //  let grandtotal = this.state.grandtotal;
         return (
-          <Layout page="Receive Pembelian">
+          <Layout page="Alokasi">
               <div className="row align-items-center">
                 <div className="col-6">
                     <div className="dashboard-header-title mb-3">
-                    <h5 className="mb-0 font-weight-bold">Receive Pembelian</h5>
+                    <h5 className="mb-0 font-weight-bold">Alokasi</h5>
                     {/* <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p> */}
                     </div>
                 </div>
@@ -767,16 +685,15 @@ class Receive extends Component{
                             <div className="form-group">
                                 <div className="input-group input-group-sm">
                                   <select name='ambil_data' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                    <option value={1} selected={this.state.ambil_data == 1}>Pembelian Langsung</option>
-                                    <option value={2} selected={this.state.ambil_data==2}>Purchase Order</option>
-                                    <option value={3} selected={this.state.ambil_data==3}>Pre-Receive</option>
+                                    <option value={1} selected={this.state.ambil_data == 1}>Langsung</option>
+                                    <option value={2} selected={this.state.ambil_data==2}>Delivery Note</option>
                                   </select>
                                   </div>
                                 <small
                                   id="passwordHelpBlock"
                                   class="form-text text-muted"
                                 >
-                                  {parseInt(this.state.ambil_data)==1?'Pembelian langsung.':(parseInt(this.state.ambil_data)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
+                                  {parseInt(this.state.ambil_data)==1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
                                 </small>
                             </div>
                           </div>
@@ -880,17 +797,14 @@ class Receive extends Component{
                                     return(
                                       <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                           kd_brg:i.kd_brg,
+                                          nm_brg:i.nm_brg,
                                           barcode:i.barcode,
                                           satuan:i.satuan,
-                                          diskon:0,
-                                          diskon2:0,
-                                          ppn:0,
-                                          harga_beli: i.harga_beli,
-                                          qty:1,
-                                          qty_bonus:0,
+                                          harga_beli:i.harga_beli,
+                                          hrg_jual: i.hrg_jual,
                                           stock:i.stock,
-                                          nm_brg:i.nm_brg,
-                                          tambahan:i.tambahan
+                                          qty:1,
+                                          tambahan:i.tambahan,
                                       })}>
                                         <img src={i.gambar} alt="avatar" />
                                         <div className="about">
@@ -921,18 +835,18 @@ class Receive extends Component{
                     <form className=''>
                       <div className="row">
                         <div className="col-md-6">
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              readOnly
-                              className="form-control-plaintext form-control-sm"
-                              id="nota"
-                              style={{fontWeight:'bolder'}}
-                              value={this.props.nota}
-                            />
-                          </div>
                           <div className="row">
                             <div className="col-md-8">
+                              <div className="form-group">
+                                <input
+                                  type="text"
+                                  readOnly
+                                  className="form-control-plaintext form-control-sm"
+                                  id="nota"
+                                  style={{fontWeight:'bolder'}}
+                                  value={this.props.nota}
+                                />
+                              </div>
                               <div className="form-group">
                                 <label className="control-label font-12">
                                   Tanggal Order
@@ -950,22 +864,6 @@ class Receive extends Component{
                                   />
                                 </div>
                               </div>
-                              <div className="form-group">
-                                <label className="control-label font-12">
-                                  Penerima
-                                </label>
-                                
-                                <input
-                                  type="text"
-                                  id="chat-search"
-                                  name="penerima"
-                                  className="form-control"
-                                   onChange={(e)=>this.HandleCommonInputChange(e,true)}
-                                />
-                                <div class="invalid-feedback" style={this.state.error.penerima!==""?{display:'block'}:{display:'none'}}>
-                                      {this.state.error.penerima}
-                                </div>
-                              </div>
                             </div>
                             <div className="col-md-4">
                               <div className="form-group">
@@ -978,15 +876,16 @@ class Receive extends Component{
                                     id="customRadio1"
                                     name="jenis_trx"
                                     onChange={(e=>this.HandleCommonInputChange(e))}
-                                    value="Tunai"
+                                    value="Alokasi"
                                     className="custom-control-input"
-                                    checked={this.state.jenis_trx==='Tunai'}
+                                    checked={this.state.jenis_trx==='Alokasi'}
                                   />
                                   <label
                                     className="custom-control-label"
                                     htmlFor="customRadio1"
+                                    data-toggle="tooltip" data-placement="bottom" title="Pemindahan stock antar cabang melalui ekspedisi."
                                   >
-                                    Tunai
+                                    Alokasi
                                   </label>
                                 </div>
                               </div>
@@ -997,16 +896,18 @@ class Receive extends Component{
                                     id="customRadio2"
                                     name="jenis_trx"
                                     onChange={(e=>this.HandleCommonInputChange(e))}
-                                    value="Kredit"
+                                    value="Mutasi"
                                     className="custom-control-input"
-                                    checked={this.state.jenis_trx==='Kredit'}
+                                    checked={this.state.jenis_trx==='Mutasi'}
 
                                   />
                                   <label
                                     className="custom-control-label"
                                     htmlFor="customRadio2"
+                                    data-toggle="tooltip" data-placement="bottom" title="Pemindahan stock antar cabang secara langsung."
+
                                   >
-                                    Kredit
+                                    Mutasi
                                   </label>
                                 </div>
                               </div>
@@ -1017,16 +918,17 @@ class Receive extends Component{
                                     id="customRadio3"
                                     name="jenis_trx"
                                     onChange={(e=>this.HandleCommonInputChange(e))}
-                                    value="Konsinyasi"
+                                    value="Transaksi"
                                     className="custom-control-input"
-                                    checked={this.state.jenis_trx==='Konsinyasi'}
+                                    checked={this.state.jenis_trx==='Transaksi'}
 
                                   />
                                   <label
                                     className="custom-control-label"
                                     htmlFor="customRadio3"
+                                    data-toggle="tooltip" data-placement="bottom" title="Pemindahan stock antar cabang secara jual-beli."
                                   >
-                                    Konsinyasi
+                                    Transaksi
                                   </label>
                                 </div>
                               </div>
@@ -1038,11 +940,11 @@ class Receive extends Component{
                             <div className="col-md-6">
                               <div className="form-group">
                                 <label className="control-label font-12">
-                                  Lokasi
+                                  Lokasi Asal
                                 </label>
                                 <Select 
                                   options={this.state.location_data} 
-                                  placeholder = "Pilih Lokasi"
+                                  placeholder = "Pilih Lokasi Asal"
                                   onChange={this.HandleChangeLokasi}
                                   value = {
                                     this.state.location_data.find(op => {
@@ -1057,40 +959,26 @@ class Receive extends Component{
                               </div>
                               <div className="form-group">
                                 <label className="control-label font-12">
-                                  Supplier
+                                  Lokasi Tujuan
                                 </label>
-                                <Select 
-                                  options={opSupplier} 
-                                  placeholder="Pilih Supplier"
-                                  onChange={this.HandleChangeSupplier}
-                                  value = {
-                                    opSupplier.find(op => {
-                                      return op.value === this.state.supplier
-                                    })
-                                  }
-                                />
-                                <div class="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
-                                      {this.state.error.supplier}
+                                 <Select 
+                                      options={this.state.location_data.filter(
+                                        option => option.value !== this.state.location
+                                      )}
+                                      placeholder="Pilih Lokasi Tujuan"
+                                      onChange={this.HandleChangeLokasi2}
+                                      value = {
+                                        this.state.location_data.find(op => {
+                                          return op.value === this.state.location2
+                                        })
+                                      }
+                                    />
+                                <div class="invalid-feedback" style={this.state.error.location2!==""?{display:'block'}:{display:'none'}}>
+                                      {this.state.error.location2}
                                 </div>
                               </div>
                             </div>
                             <div className="col-md-6">
-                              <div className="form-group">
-                                <label className="control-label font-12">
-                                  Nota Supplier
-                                </label>
-                                
-                                <input
-                                  type="text"
-                                  id="chat-search"
-                                  name="notasupplier"
-                                  className="form-control"
-                                   onChange={(e)=>this.HandleCommonInputChange(e)}
-                                />
-                                <div class="invalid-feedback" style={this.state.error.notasupplier!==""?{display:'block'}:{display:'none'}}>
-                                      {this.state.error.notasupplier}
-                                </div>
-                              </div>
                               <div className="form-group">
                                 <label className="control-label font-12">
                                   Catatan
@@ -1098,7 +986,7 @@ class Receive extends Component{
                                 <textarea
                                   className="form-control"
                                   id="exampleTextarea1"
-                                  rows={3}
+                                  rows={5}
                                   onChange={(e=>this.HandleCommonInputChange(e))}
                                   name="catatan"
                                   value={this.state.catatan}
@@ -1125,18 +1013,16 @@ class Receive extends Component{
                       <div className="table-responsive" style={{overflowX:'hidden'}}>
 
                         <table className="table table-hover table-bordered tableBodyScroll">
-                          <thead>
+                          <thead >
                             <tr>
                                 <th>#</th>
-                                <th>Nama barang</th>
-                                <th>barcode</th>
-                                <th>satuan</th>
-                                <th>harga beli</th>
-                                <th>diskon</th>
-                                <th>ppn</th>
-                                <th>stock</th>
-                                <th>qty</th>
-                                <th>bonus</th>
+                                <th>Nama</th>
+                                <th>Barcode</th>
+                                <th>Satuan</th>
+                                <th>Harga beli</th>
+                                <th>Harga jual1</th>
+                                <th>Stock</th>
+                                <th>Qty</th>
                                 <th>Subtotal</th>
                             </tr>
                           </thead>
@@ -1144,20 +1030,8 @@ class Receive extends Component{
                           <tbody>
                             {
                                 this.state.databrg.map((item,index)=>{
-                                    let disc1=0;
-                                    let disc2=0;
-                                    let ppn=0;
-                                    if(item.diskon!=0){
-                                        disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
-                                        disc2=disc1;
-                                        if(item.diskon2!=0){
-                                            disc2 = disc1 * (parseFloat(item.diskon2) / 100);
-                                        }
-                                      }
-                                    if(item.ppn!=0){
-                                        ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
-                                    }
-                                    subtotal+=((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty);
+                                    
+                                    subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty);
                                     // console.log('gt',grandtotal);
                                     return (
                                         <tr key={index} >
@@ -1175,13 +1049,16 @@ class Receive extends Component{
                                                   })
                                                 }
                                               </select></td>
-                                            <td><input type='text' style={{width:'100%',textAlign:'center'}} name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
-                                            <td><input type='text' name='diskon' style={{width:'100%',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
-                                            <td><input type='text' name='ppn' style={{width:'100%',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
+                                            <td>{item.harga_beli}</td>
+                                            <td>{item.hrg_jual}</td>
                                             <td>{item.stock}</td>
-                                            <td><input type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
-                                            <td><input type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
-                                            <td>{((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty)}</td>
+                                            <td>
+                                              <input type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
+                                              <div class="invalid-feedback" style={parseInt(this.state.brgval[index].qty)>parseInt(item.stock)?{display:'block'}:{display:'none'}}>
+                                                  Qty Melebihi Stock.
+                                              </div>
+                                            </td>
+                                            <td>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty)}</td>
                                         </tr>
                                     )
                                 })
@@ -1205,28 +1082,6 @@ class Receive extends Component{
                                     <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={subtotal} readOnly />
                                   </div>
                                 </div>
-                                <div className="row" style={{marginBottom: '3px'}}>
-                                  <label className="col-sm-4">Discount</label>
-                                  <div className="col-sm-3">
-                                    <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,subtotal)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
-                                  </div>
-                                  <div className="col-sm-5">
-                                    <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,subtotal)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
-                                  </div>
-                                </div>
-                                <div className="row" style={{marginBottom: '3px'}}>
-                                  <label className="col-sm-4">Pajak %</label>
-                                  <div className="col-sm-3">
-                                    <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
-                                  </div>
-                                </div>
-                                <div className="row" style={{marginBottom: '3px'}}>
-                                  <label className="col-sm-4">Grand Total</label>
-                                  <div className="col-sm-8">
-                                 
-                                    <input type="text" name="grand_total" className="form-control text-right" readOnly value={(subtotal - (subtotal * (parseFloat(this.state.discount_persen) / 100))) + (subtotal * (parseFloat(this.state.pajak) / 100))} />
-                                  </div>
-                                </div>
                               </form>
                             </div>
                             </div>
@@ -1248,13 +1103,13 @@ class Receive extends Component{
 const mapStateToPropsCreateItem = (state) => ({
   barang: state.productReducer.result_brg,
   loadingbrg: state.productReducer.isLoadingBrg,
-  nota: state.receiveReducer.code,
+  nota: state.alokasiReducer.code,
   supplier: state.supplierReducer.dataSupllier,
-  isLoading:state.receiveReducer.isLoading,
+  isLoading:state.alokasiReducer.isLoading,
   auth:state.auth,
   po_report: state.poReducer.report_data,
   po_data: state.poReducer.po_data,
   checkNotaPem: state.siteReducer.check
 });
 
-export default connect(mapStateToPropsCreateItem)(Receive);
+export default connect(mapStateToPropsCreateItem)(Alokasi);

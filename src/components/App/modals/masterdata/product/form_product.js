@@ -6,6 +6,8 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {stringifyFormData} from "helper";
 import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
+import {FetchProductCode} from "../../../../../redux/actions/masterdata/product/product.action";
+import NumberFormat from 'react-number-format';
 
 class FormProduct extends Component{
     constructor(props){
@@ -119,13 +121,26 @@ class FormProduct extends Component{
             hrgJual1KARTON: 0, hrgJual2KARTON: 0, hrgJual3KARTON: 0, hrgJual4KARTON: 0,
             serviceKARTON: 0, ppnKARTON: 0,
             purchasePrice: {},
+            generateCode:false,
+            codeServer:0,
+            error:''
         };
         this.handleChange = this.handleChange.bind(this);
         this.onHandleChangeChild = this.onHandleChangeChild.bind(this);
         this.onHandleChangeChildPack = this.onHandleChangeChildPack.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.generateCode = this.generateCode.bind(this);
     }
-
+    generateCode(e){
+        this.setState({generateCode: e.target.checked,});
+        if(e.target.checked === true){
+            console.log(this.state.codeServer);
+            this.state.kd_brg = this.state.codeServer;
+        }else{
+            this.state.kd_brg = "";
+        }
+        console.log(e.target.checked);
+    }
     toggle = (e) => {
         e.preventDefault();
         window.scrollTo(0, 0);
@@ -211,7 +226,7 @@ class FormProduct extends Component{
         // localStorage.setItem("isReadonlySama","false");
         // localStorage.setItem("isReadonlySamaPack","false");
         // localStorage.setItem("isReadonlySamaKarton","false");
-
+        this.state.codeServer = nextProps.productCode;
         if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
             console.log("########################## EDIT ############################");
             let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
@@ -370,7 +385,11 @@ class FormProduct extends Component{
         let hrg_jual_2_pcs = 0;let margin2_pcs=0;
         let hrg_jual_3_pcs = 0;let margin3_pcs=0;
         let hrg_jual_4_pcs = 0;let margin4_pcs=0;
-        this.setState({ [event.target.name]: event.target.value });
+        // this.setState({
+        //     kd_brg: event.target.value,
+        //     error: event.target.validationMessage
+        // });
+        this.setState({ [event.target.name]: event.target.value,error: event.target.validationMessage });
         console.log("VALUE HRG JUAL 1 PCS",localStorage.getItem("hrgjual1PCS"));
         if(i!==null){
             let barangSku = [...this.state.barangSku];
@@ -510,29 +529,7 @@ class FormProduct extends Component{
 
     handleSelect = (index) => {
 
-        this.setState({selectedIndex: index}, () => {
-            console.log('Selected tab: ' + this.state.selectedIndex);
-            if(index === 0){
-                localStorage.setItem("form1",JSON.stringify({
-                    "kd_brg":this.state.kd_brg,
-                    "nm_brg":this.state.nm_brg,
-                    "kel_brg":this.state.kel_brg,
-                    "stock":this.state.stock,
-                    "kategori":this.state.kategori,
-                    "stock_min":this.state.stock_min,
-                    "group1":this.state.group1,
-                    "group2":this.state.group2,
-                    "deskripsi":this.state.deskripsi,
-                    "gambar":this.state.gambar,
-                    "jenis":this.state.jenis,
-                    "kcp":this.state.kcp,
-                    "poin":this.state.poin,
-                    "online":this.state.online,
-                    "berat":this.state.berat,
-                }));
-            }
-
-        });
+        this.setState({selectedIndex: index}, () => {});
 
 
         console.log(localStorage.getItem("form_product"))
@@ -1067,6 +1064,8 @@ class FormProduct extends Component{
 
     }
 
+
+
     render(){
         const { isCustomizeVisible } = this.state;
         const dynamicVar = 'test';
@@ -1077,26 +1076,33 @@ class FormProduct extends Component{
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Product":"Update Product"}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>
+                    {this.props.detail===undefined?"Add Product":"Update Product"}
+                </ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <Tabs>
+
                             <TabList>
                                 <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Form 1</Tab>
                                 <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Form 2</Tab>
                                 <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Form 3</Tab>
                             </TabList>
+                            <hr/>
                             <TabPanel>
                                 <div className="row">
                                     <div className="col-md-4">
+
                                         <div className="form-group">
-                                            <label>Code</label>
+                                            <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.generateCode} onChange={this.generateCode}/> Kode Barang</label>
                                             <input type="text" className="form-control" name="kd_brg" value={this.state.kd_brg} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <div className="invalid-feedback d-block">{this.state.error}</div>
                                         </div>
                                         <div className="form-group">
                                             <label>Name</label>
                                             <input type="text" className="form-control" name="nm_brg" value={this.state.nm_brg} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <div className="invalid-feedback d-block">{this.state.error}</div>
                                         </div>
                                         <div className="form-group">
                                             <label>Group</label>
@@ -1106,10 +1112,12 @@ class FormProduct extends Component{
                                                     typeof data === 'object' ? data.map((v,i)=>{return (<option key={i} value={v.kel_brg} >{v.nm_kel_brg}</option>)}) : (<option value="" >no data</option>)
                                                 }
                                             </select>
+                                            <div className="invalid-feedback d-block">{this.state.error}</div>
                                         </div>
                                         <div className="form-group">
                                             <label>Stock</label>
                                             <input type="text" className="form-control" name="stock" value={this.state.stock} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <div className="invalid-feedback d-block">{this.state.error}</div>
                                         </div>
                                         <div className="form-group">
                                             <label>Product Category</label>
@@ -1287,6 +1295,8 @@ class FormProduct extends Component{
                                                         <div className="row">
                                                             <div className="col-md-4">
                                                                 <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
+                                                                {/*<NumberFormat className="form-control" thousandSeparator={true} name="hrg_beli" value={parseInt(this.state.hrg_beli)} onKeyUp={this.handleAll.bind(this)}/>*/}
+
                                                             </div>
                                                             <div className="col-md-4 text-center">
                                                                 <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>

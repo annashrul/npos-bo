@@ -11376,3 +11376,36 @@ a.mytooltip {
 .react-datepicker__input-container {
   width: 100%;
 } */
+
+
+table.tableBodyScroll tr,
+table.tableBodyScroll tbody,
+table.tableBodyScroll td {
+  text-align: center !important;
+}
+
+table.tableBodyScroll td {
+  text-align: center !important;
+}
+
+table.tableBodyScroll {
+  zoom: 83%
+}
+
+table.tableBodyScroll tbody {
+  display: block;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+table.tableBodyScroll thead {
+  display: table;
+  width: 98%;
+  table-layout: fixed;
+}
+
+table.tableBodyScroll tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}

@@ -15,7 +15,20 @@ class Supplier extends Component{
         let page = localStorage.getItem("page_supplier");
         this.props.dispatch(FetchSupplier(page?page:1,any?any:''));
     }
-
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[13]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
 
 
     render(){
@@ -44,6 +57,8 @@ const mapStateToProps = (state) => {
     return {
         supplier:state.supplierReducer.data,
         isLoading: state.supplierReducer.isLoading,
+        auth: state.auth
+
     }
 }
 

@@ -16,7 +16,8 @@ initDB(DBConfig);
     store.dispatch(setLoggedin(true))
     const sess = get('sess');
       sess.then(res => {
-        if (res[0].token) {
+        console.log(res);
+        if (res.length!==0) {
           // Set auth token header auth
           setAuthToken(res[0].token);
           store.dispatch(setCurrentUser(res[0]))
@@ -35,6 +36,7 @@ initDB(DBConfig);
           // }
         }else{
           store.dispatch(logoutUser());
+          localStorage.removeItem('npos')
           // TODO: Clear current profile
           // Redirect to login
           window.location.href = '/login';
