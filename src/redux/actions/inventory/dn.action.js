@@ -50,7 +50,7 @@ export function setPOFailed(data = []) {
 export const FetchDnReport = (page = 1, perpage = 10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
+        axios.get(HEADERS.URL + `deliverynote/report?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
                 dispatch(setReport(data))
@@ -67,7 +67,7 @@ export const FetchDnReport = (page = 1, perpage = 10) => {
 export const FetchDnData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
+        axios.get(HEADERS.URL + `deliverynote/ambil_data/${nota}`)
             .then(function (response) {
                 const data = response.data
                 dispatch(setDnData(data))

@@ -5,7 +5,7 @@ import Layout from "components/App/Layout"
 import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchCheck} from 'redux/actions/site.action'
 import {FetchNota,storeAlokasi} from 'redux/actions/inventory/alokasi.action'
-import {FetchPoReport,FetchPoData,setPoData} from 'redux/actions/purchase/purchase_order/po.action'
+import {FetchDnReport,FetchDnData,setDnData} from 'redux/actions/inventory/dn.action'
 
 import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
@@ -45,11 +45,11 @@ class Alokasi extends Component{
           userid:0,
           searchby:1,
           search:"",
-          nota_pembelian:'-',
+          no_delivery_note: '-',
           data_nota:[],
           ambil_data:1,
           ambil_nota:'',
-          jenis_trx:'Alokasi',
+          jenis_trx:'Mutasi',
           error:{
             location:"",
             location2: "",
@@ -80,7 +80,7 @@ class Alokasi extends Component{
 
       if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
         if (localStorage.ambil_data == 2) {
-          this.props.dispatch(FetchPoReport(1, 1000))
+          this.props.dispatch(FetchDnReport(1, 1000))
         }
         this.setState({
           ambil_data: localStorage.ambil_data
@@ -92,13 +92,15 @@ class Alokasi extends Component{
         this.setState({
           ambil_nota: localStorage.nota
         })
-        // this.props.dispatch(FetchPoData(localStorage.nota));
+        // this.props.dispatch(FetchDnData(localStorage.nota));
         // destroy(table)
         // this.getData()
       }
       
       if (localStorage.lk !== undefined && localStorage.lk !== '') {
-        this.props.dispatch(FetchNota(localStorage.lk,))
+        let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
+
+        this.props.dispatch(FetchNota(localStorage.lk, prefix))
         this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty))
 
         this.setState({
@@ -134,14 +136,14 @@ class Alokasi extends Component{
         this.getData()
       }
 
-      if(nextProps.po_report){
+      if(nextProps.dn_report){
         let nota = []
-        let po = nextProps.po_report;
+        let po = nextProps.dn_report;
         if (po !== undefined) {
           po.map((i) => {
             nota.push({
-              value: i.no_po,
-              label: i.no_po+" ("+i.nama_supplier+")"
+              value: i.no_delivery_note,
+              label: i.no_delivery_note
             });
           })
           this.setState({
@@ -150,36 +152,31 @@ class Alokasi extends Component{
         }
 
       }
-      if (nextProps.po_data){
-        if (nextProps.po_data.master!==undefined){
-          if(this.props.po_data===undefined){
-            this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
+      if (nextProps.dn_data){
+        if (nextProps.dn_data.master!==undefined){
+          if(this.props.dn_data===undefined){
+            let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
+            this.props.dispatch(FetchNota(nextProps.dn_data.master.kd_lokasi_1,prefix))
             this.setState({
-              location: nextProps.po_data.master.lokasi,
-              supplier: nextProps.po_data.master.kode_supplier,
-              catatan: nextProps.po_data.master.catatan,
-              jenis_trx: nextProps.po_data.master.jenis,
-              no_po: nextProps.po_data.master.no_po
+              location: nextProps.dn_data.master.kd_lokasi_1,
+              location2: nextProps.dn_data.master.kd_lokasi_2,
+              catatan: nextProps.dn_data.master.catatan,
+              no_delivery_note: nextProps.dn_data.master.no_delivery_note
             })
-            localStorage.setItem('lk', nextProps.po_data.master.lokasi)
-            localStorage.setItem('sp', nextProps.po_data.master.kode_supplier)
-            localStorage.setItem('catatan', nextProps.po_data.master.catatan)
+            localStorage.setItem('lk', nextProps.dn_data.master.kd_lokasi_1)
+            localStorage.setItem('lk2', nextProps.dn_data.master.kd_lokasi_2)
+            localStorage.setItem('catatan', nextProps.dn_data.master.catatan)
 
-            nextProps.po_data.detail.map(item=>{
+            nextProps.dn_data.detail.map(item=>{
                 const datas = {
-                  kd_brg: item.kode_barang,
+                  kd_brg: item.kd_brg,
+                  nm_brg: item.nm_brg,
                   barcode: item.barcode,
                   satuan: item.satuan,
-                  diskon: item.diskon,
-                  diskon2: item.disc2,
-                  diskon3: item.disc3,
-                  diskon4: item.disc4,
-                  ppn: item.ppn,
                   harga_beli: item.harga_beli,
-                  qty: item.jumlah_beli,
-                  qty_bonus: 0,
+                  hrg_jual: item.harga,
                   stock: item.stock,
-                  nm_brg: item.nm_brg,
+                  qty: item.qty,
                   tambahan: item.tambahan
                 };
                 store(table, datas)
@@ -206,7 +203,7 @@ class Alokasi extends Component{
     }
 
     HandleChangeNota(nota){
-      this.props.dispatch(setPoData([]))
+      this.props.dispatch(setDnData([]))
       this.setState({
         ambil_nota: nota.value,
         error: {
@@ -221,7 +218,7 @@ class Alokasi extends Component{
 
 
       localStorage.setItem('nota', nota.value);
-      this.props.dispatch(FetchPoData(nota.value));
+      this.props.dispatch(FetchDnData(nota.value));
       destroy(table)
       localStorage.removeItem('sp');
       localStorage.removeItem('lk');
@@ -283,7 +280,7 @@ class Alokasi extends Component{
 
       if (column === 'ambil_data') {
         if(val==2){
-          this.props.dispatch(FetchPoReport(1, 1000))
+          this.props.dispatch(FetchDnReport(1, 1000))
         }
         localStorage.setItem('ambil_data',val);
         destroy(table)
@@ -522,7 +519,7 @@ class Alokasi extends Component{
                   let detail = [];
                   res.map(item => {
                     subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
-                    if(item.qty<item.stock) err_stock=`Qty barang melebihi stock persediaan.`;
+                    if(item.qty>item.stock) err_stock=`Qty barang melebihi stock persediaan.`;
                     detail.push({
                       kd_brg:item.kd_brg,
                       barcode:item.barcode,
@@ -537,7 +534,7 @@ class Alokasi extends Component{
                     lokasi_asal:this.state.location,
                     lokasi_tujuan:this.state.location2,
                     catatan:this.state.catatan,
-                    kode_pembelian:this.state.nota_pembelian,
+                    kode_delivery_note: this.state.ambil_nota,
                     subtotal,
                     userid: this.state.userid,
                     jenis_trx: this.state.jenis_trx,
@@ -701,7 +698,7 @@ class Alokasi extends Component{
                             <div className="form-group">
                               <Select 
                                     options={this.state.data_nota} 
-                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'PO':'Pre-Receive')}
+                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'DN':'')}
                                     onChange={this.HandleChangeNota}
                                     value = {
                                       this.state.data_nota.find(op => {
@@ -877,6 +874,7 @@ class Alokasi extends Component{
                                     name="jenis_trx"
                                     onChange={(e=>this.HandleCommonInputChange(e))}
                                     value="Alokasi"
+                                    disabled
                                     className="custom-control-input"
                                     checked={this.state.jenis_trx==='Alokasi'}
                                   />
@@ -1030,7 +1028,7 @@ class Alokasi extends Component{
                           <tbody>
                             {
                                 this.state.databrg.map((item,index)=>{
-                                    
+            console.log(this.state.jenis_trx);
                                     subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty);
                                     // console.log('gt',grandtotal);
                                     return (
@@ -1107,8 +1105,8 @@ const mapStateToPropsCreateItem = (state) => ({
   supplier: state.supplierReducer.dataSupllier,
   isLoading:state.alokasiReducer.isLoading,
   auth:state.auth,
-  po_report: state.poReducer.report_data,
-  po_data: state.poReducer.po_data,
+  dn_report: state.dnReducer.report_data,
+  dn_data: state.dnReducer.dn_data,
   checkNotaPem: state.siteReducer.check
 });
 
