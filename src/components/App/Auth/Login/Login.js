@@ -61,8 +61,6 @@ class Login extends Component {
 
     render() {
         const {email,password, errors} = this.state;
-        const {user} = this.props;
-        console.log(errors);
         return (
         <div class="limiter">
             <div class="container-login100">

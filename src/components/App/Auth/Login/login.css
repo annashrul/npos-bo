@@ -108,10 +108,10 @@ button:hover {
     padding: 15px;
 
     background: #ff6f00;
-    background: -webkit-linear-gradient(left, #ffab40, #ff6f00);
-    background: -o-linear-gradient(left, #ffab40, #ff6f00);
-    background: -moz-linear-gradient(left, #ffab40, #ff6f00);
-    background: linear-gradient(left, #ffab40, #ff6f00);
+    background: -webkit-linear-gradient('to left', #ffab40, #ff6f00);
+    background: -o-linear-gradient('to left', #ffab40, #ff6f00);
+    background: -moz-linear-gradient('to left', #ffab40, #ff6f00);
+    background: linear-gradient('to left', #ffab40, #ff6f00);
 
 }
 
@@ -291,10 +291,10 @@ input.input100 {
     opacity: 0;
 
     background: #2575fc;
-    background: -webkit-linear-gradient(right, #6a11cb, #2575fc);
-    background: -o-linear-gradient(right, #6a11cb, #2575fc);
-    background: -moz-linear-gradient(right, #6a11cb, #2575fc);
-    background: linear-gradient(right, #6a11cb, #2575fc);
+    background: -webkit-linear-gradient('to right', #6a11cb, #2575fc);
+    background: -o-linear-gradient('to right', #6a11cb, #2575fc);
+    background: -moz-linear-gradient('to right', #6a11cb, #2575fc);
+    background: linear-gradient('to right', #6a11cb, #2575fc);
 
     -webkit-transition: all 0.4s;
     -o-transition: all 0.4s;
