@@ -45,10 +45,10 @@ class Header extends Component {
               <ul className="right-side-content d-flex align-items-center">
                   {/* <!-- Full Screen Mode --> */}
                   <li className="full-screen-mode ml-1">
-                      <a href="javascript:" id="fullScreenMode" ><i className="zmdi zmdi-fullscreen" style={{'font-size': 'xx-large'}}></i></a>
+                      <a href="#" id="fullScreenMode" ><i className="zmdi zmdi-fullscreen" style={{'fontSize': 'xx-large'}}></i></a>
                   </li>
                   <li className="nav-item dropdown">
-                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="zmdi zmdi-account-circle" style={{'font-size': 'xx-large'}} aria-hidden="true"></i> <span className="active-status"></span></button>
+                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="zmdi zmdi-account-circle" style={{'fontSize': 'xx-large'}} aria-hidden="true"></i> <span className="active-status"></span></button>
                       <div className="dropdown-menu dropdown-menu-right">
                           {/* <!-- Top Notifications Area --> */}
                           <div className="user-profile-area">

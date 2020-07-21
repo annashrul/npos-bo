@@ -14,6 +14,20 @@ class Department extends Component{
             token:''
         }
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[12]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
     componentWillMount(){
         this.props.dispatch(FetchDepartment());
         this.props.dispatch(FetchSubDepartment());
@@ -50,6 +64,8 @@ const mapStateToProps = (state) => {
         subDepartment:state.subDepartmentReducer.data,
         isLoading: state.departmentReducer.isLoading,
         isLoading1: state.subDepartmentReducer.isLoading,
+        auth: state.auth
+
     }
 }
 

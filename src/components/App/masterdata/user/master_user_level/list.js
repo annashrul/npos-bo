@@ -95,7 +95,7 @@ class ListUserLevel extends Component{
                        (
                            typeof data === 'object' ? data.map((v,i)=>{
                                return (
-                                   <div className="col-xl-3 col-md-6 height-card box-margin" key={i}>
+                                   <div className="col-xl-3 col-md-6" key={i}>
                                        <div className="card">
                                            <div className="card-body">
                                                <div className="row">
@@ -128,7 +128,8 @@ class ListUserLevel extends Component{
                        )
                    }
                </div>
-               <div style={{"marginTop":"20px","float":"right"}}>
+
+               <div className="row" style={{"float":"right"}}>
                    <Paginationq
                        current_page={current_page}
                        per_page={per_page}

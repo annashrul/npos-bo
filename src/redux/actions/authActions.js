@@ -27,7 +27,6 @@ export const loginUser = (userData) =>
                 Swal.close() 
                 // save token to localStorage
                 const token = res.data.result.token;
-
                 localStorage.setItem('npos', btoa(token));
                 store('sess', {
                     id: res.data.result.id,

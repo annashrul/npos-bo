@@ -23,6 +23,20 @@ class Product extends Component{
             by : localStorage.getItem('by_product'),
         };
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[10]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
     componentWillMount(){
         let by = this.state.by;
         let any = this.state.any;
@@ -30,7 +44,8 @@ class Product extends Component{
         let anyPriceProduct = localStorage.getItem("any_price_product");
         let pageGroupProduct = localStorage.getItem("page_group_product");
         let pagePriceProduct = localStorage.getItem("page_price_product");
-        this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
+        // this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
+        this.props.dispatch(FetchProduct(1, ''));
         this.props.dispatch(FetchPriceProduct(pagePriceProduct?pagePriceProduct:1,anyPriceProduct?anyPriceProduct:''));
         this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
     }
@@ -47,13 +62,16 @@ class Product extends Component{
             <Layout page="Product">
                 <div className="col-12 box-margin">
                     <div className="card">
-                        <div className="card-body">
-                            <Tabs>
+                        <Tabs>
+                            <div className="card-body">
                                 <TabList>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Product List</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Product Price</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Product Group</Tab>
                                 </TabList>
+                            </div>
+                            <div className="card-header" style={{"height":"5px","backgroundColor":"#f9fafb"}}></div>
+                            <div className="card-body">
                                 <TabPanel>
                                     {
                                         !this.props.isLoading ? ( <ListProduct
@@ -79,9 +97,8 @@ class Product extends Component{
                                         /> ) : <Preloader/>
                                     }
                                 </TabPanel>
-                            </Tabs>
-
-                        </div>
+                            </div>
+                        </Tabs>
                     </div>
                 </div>
             </Layout>
@@ -98,6 +115,8 @@ const mapStateToProps = (state) => {
         isLoading: state.productReducer.isLoading,
         isLoading1: state.priceProductReducer.isLoading,
         isLoading2: state.groupProductReducer.isLoading,
+        auth: state.auth
+
     }
 }
 

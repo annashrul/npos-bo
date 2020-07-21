@@ -1,12 +1,15 @@
-import React, {Component} from 'react'
+import React, {Fragment,Component} from 'react'
 import Layout from "../../Layout";
-import connect from "react-redux/es/connect/connect";
+// import connect from "react-redux/es/connect/connect";
+import {connect} from 'react-redux'
+
 import {FetchLocation} from "redux/actions/masterdata/location/location.action";
 import Preloader from "Preloader";
 import ListLocation from "./master_location/list";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import ListLocationCategory from "./master_location_catergory/list";
 import {FetchLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
+// const BrowserHistory = require('react-router/lib/BrowserHistory').default;
 
 class Location extends Component{
     constructor(props){
@@ -17,6 +20,20 @@ class Location extends Component{
             selectedIndex : 0
         };
         this.handleSelect = this.handleSelect.bind(this);
+    }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[14]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
     }
 
     componentWillMount(){
@@ -84,6 +101,8 @@ const mapStateToProps = (state) => {
         isLoading1: state.locationCategoryReducer.isLoading,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
+        auth: state.auth
+
     }
 }
 

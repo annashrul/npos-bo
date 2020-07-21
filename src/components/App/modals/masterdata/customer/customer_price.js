@@ -55,6 +55,8 @@ class CustomerPrice extends Component{
         this.props.dispatch(ModalToggle(bool));
         localStorage.removeItem("nm_brg_price_customer");
         localStorage.removeItem("kd_brg_price_customer");
+        localStorage.removeItem("q_price_customer");
+        localStorage.removeItem("page_price_customer");
     };
     handlePageChange(pageNumber){
         let q=localStorage.getItem("q_price_customer");

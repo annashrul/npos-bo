@@ -19,6 +19,20 @@ class User extends Component{
         }
 
     }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            let access = nextProps.auth.user.access;
+            if(access!==undefined){
+                if(nextProps.auth.user.access[11]['label']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
     componentWillMount(){
         this.props.dispatch(FetchUserList());
         this.props.dispatch(FetchUserLevel(1,'',15));
@@ -48,12 +62,15 @@ class User extends Component{
             <Layout page="User">
                 <div className="col-12 box-margin">
                     <div className="card">
-                        <div className="card-body">
-                            <Tabs>
+                        <Tabs>
+                            <div className="card-body mb-1">
                                 <TabList>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>User List</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>User Level</Tab>
                                 </TabList>
+                            </div>
+                            <hr/>
+                            <div className="card-body">
                                 <TabPanel>
                                     {
                                         !this.props.isLoading?
@@ -61,7 +78,7 @@ class User extends Component{
                                                 token={this.state.token}
                                                 userListData={this.props.userlist}
                                                 pagin={this.handlePagin}/>
-                                        :<Preloader/>
+                                            :<Preloader/>
                                     }
 
                                 </TabPanel>
@@ -73,13 +90,13 @@ class User extends Component{
                                                 data={this.props.userLevel}
                                                 pagin={this.handlePagin}
                                             />
-                                        :<Preloader/>
+                                            :<Preloader/>
                                     }
                                     {/*<MasterUserLevel/>*/}
                                 </TabPanel>
-                            </Tabs>
+                            </div>
 
-                        </div>
+                        </Tabs>
                     </div>
                 </div>
             </Layout>
@@ -94,7 +111,9 @@ const mapStateToProps = (state) => {
         userLevel: state.userLevelReducer.data,
         isOpen:state.modalReducer,
         isLoading: state.userListReducer.isLoading,
-        isLoading1: state.userLevelReducer.isLoading
+        isLoading1: state.userLevelReducer.isLoading,
+        auth: state.auth
+
     }
 }
 export default connect(mapStateToProps)(User)

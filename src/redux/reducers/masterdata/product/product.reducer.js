@@ -12,11 +12,17 @@ const initialState = {
     result_brg:[],
     pagin_brg:[],
     msg_brg:"",
-    status_brg:""
+    status_brg:"",
+    productCode:""
 };
 
 export const productReducer = (state=initialState,action) => {
     switch (action.type) {
+        case PRODUCT.CODE_PRODUCT:
+            console.log("GET CODE REDUCER",action.data);
+            return Object.assign({}, state,{
+                productCode:action.data.result.code,
+            });
         case PRODUCT.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,
