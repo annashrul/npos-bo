@@ -8,11 +8,17 @@ import {FetchCash} from "../cash/cash.action";
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}
 }
+export function setLoadingBrgSale(load){
+    return {type : PRODUCT.LOADING_BRG_SALE,load}
+}
 export function setProductDetail(data=[]){
     return {type:PRODUCT.DETAIL,data}
 }
 export function setProductbrg(data=[]){
     return {type:PRODUCT.SUCCESS_BRG,data}
+}
+export function setProductbrgSale(data=[]){
+    return {type:PRODUCT.SUCCESS_BRG_SALE,data}
 }
 export function setProductEdit(data=[]){
     return {type:PRODUCT.EDIT_PRODUCT,data}
@@ -32,24 +38,39 @@ export function setProductFailed(data=[]){
     return {type:PRODUCT.FAILED,data}
 }
 
-export const FetchProduct = (page=1,where)=>{
+export const FetchProduct = (page=1,where,param='',db=null)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let url =``;
-        if(where!==''){
-             url=`barang?page=${page}&isbo=true&${where}`;
-        }else {
-             url=`barang?page=${page}&isbo=true`;
+        if(param===''){
+            if(where!==''){
+                url=`barang?page=${page}&isbo=true&${where}`;
+            }else {
+                url=`barang?page=${page}&isbo=true`;
+            }
         }
-
-
+        if(param === 'sale'){
+            if(where!==''){
+                url=`barang?page=${page}&${where}`;
+            }
+        }
         console.log("URL ACTION PRODUCT",HEADERS.URL+`${url}`);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setProduct(data));
-                dispatch(setLoading(false));
+                if(db!==null){
+                    const barang = data.result.data;
+                    const cek=db(barang[0].kd_brg,barang);
+                    cek.then(re=>{
+                        dispatch(setProductbrg(data));
+                        dispatch(setLoadingbrg(false));
+                    })
+                }else{
+                    dispatch(setProduct(data));
+                    dispatch(setLoading(false));
+                }
+
             }).catch(function(error){
             console.log(error);
             dispatch(setLoading(false));
@@ -144,12 +165,13 @@ export const deleteProduct = (id) => {
 }
 
 export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=>{
+    console.log("DATA DB",db);
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
-        if(lokasi!==null) url+=`&lokasi=${lokasi}`
-        if(supplier!==null) url+=`&supplier=${supplier}`
+        if(lokasi!==null) url+=`&lokasi=${lokasi}`;
+        if(supplier!==null) url+=`&supplier=${supplier}`;
 
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
@@ -282,3 +304,44 @@ export const FetchProductCode = ()=>{
         })
     }
 }
+
+export const FetchProductSale = (page=1,where,param='',db)=>{
+    return (dispatch) => {
+        dispatch(setLoadingBrgSale(true));
+        let url =``;
+        if(param === 'sale'){
+            if(where!==''){
+                url=`barang?page=${page}&${where}`;
+            }else{
+                url=`barang?page=${page}`;
+            }
+        }
+        console.log("URL ACTION PRODUCT SALE",HEADERS.URL+`${url}`);
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                if(data.result.data.length===1) {
+                    const barang = data.result.data;
+                    const cek = db(barang[0].kd_brg, barang);
+                    console.log("LOG ACTION INSERT TO INDEXED DB PENJUALAN", cek);
+                    cek.then(re => {
+                        dispatch(setProductbrgSale(data));
+                        dispatch(setLoadingBrgSale(false));
+                    })
+                }else{
+                    dispatch(setProductbrgSale(data));
+                    dispatch(setLoadingBrgSale(false));
+                }
+
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoadingBrgSale(false));
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                text: error.response.data.msg,
+            });
+        })
+    }
+}
+

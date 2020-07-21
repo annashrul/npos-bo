@@ -12,6 +12,7 @@ class SideMenu extends Component {
             isInventory: false,
             isReport: false,
             isReceive: false,
+            isSale:false,
             pageMenu : '',
             dataUser:[],
             dataUser0:'',
@@ -53,12 +54,15 @@ class SideMenu extends Component {
         if(param === 'receive'){
             this.setState({isReceive : !this.state.isReceive});
         }
+        if(param === 'sale'){
+            this.setState({isSale : !this.state.isSale});
+        }
     }
     componentDidMount(){
         let dataUser=[];
         console.log("componentwillmount",this.props.auth.user.access);
         let loc =this.props.auth.user.access;
-        if(loc!==undefined){
+        if(loc!==undefined&&loc!==null){
             this.setState({
                 product:this.props.auth.user.access[10]['label'],
                 user:this.props.auth.user.access[11]['label'],
@@ -75,17 +79,18 @@ class SideMenu extends Component {
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
             let loc =nextProps.auth.user.access;
-            if(loc!==undefined){
+            console.log(loc!==null?"aya":"kosong");
+            if(loc!==undefined&&loc!==null){
                 this.setState({
-                    product:nextProps.auth.user.access[10]['label'],
-                    user:nextProps.auth.user.access[11]['label'],
-                    department:nextProps.auth.user.access[12]['label'],
-                    supplier:nextProps.auth.user.access[13]['label'],
-                    location:nextProps.auth.user.access[14]['label'],
-                    customer:nextProps.auth.user.access[15]['label'],
-                    cash:nextProps.auth.user.access[16]['label'],
-                    sales:nextProps.auth.user.access[17]['label'],
-                    bank:nextProps.auth.user.access[18]['label'],
+                    product:nextProps.auth.user.access[10]['label']!==null?nextProps.auth.user.access[10]['label']:"0",
+                    user:nextProps.auth.user.access[11]['label']!==null?nextProps.auth.user.access[11]['label']:"0",
+                    department:nextProps.auth.user.access[12]['label']!==null?nextProps.auth.user.access[12]['label']:"0",
+                    supplier:nextProps.auth.user.access[13]['label']!==null?nextProps.auth.user.access[13]['label']:"0",
+                    location:nextProps.auth.user.access[14]['label']!==null?nextProps.auth.user.access[14]['label']:"0",
+                    customer:nextProps.auth.user.access[15]['label']!==null?nextProps.auth.user.access[15]['label']:"0",
+                    cash:nextProps.auth.user.access[16]['label']!==null?nextProps.auth.user.access[16]['label']:"0",
+                    sales:nextProps.auth.user.access[17]['label']!==null?nextProps.auth.user.access[17]['label']:"0",
+                    bank:nextProps.auth.user.access[18]['label']!==null?nextProps.auth.user.access[18]['label']:"0",
                 })
             }
         }
@@ -153,6 +158,12 @@ class SideMenu extends Component {
                         <ul className="treeview-menu">
                             <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
                             <li className={path==='/receive'?"active":''}><Link to="/receive"> <i className="zmdi zmdi-apps" />Receive Pembelian</Link></li>
+                        </ul>
+                    </li>
+                    <li className={this.state.isSale===true  || path==='/sale'?"treeview active menu-open" : "treeview"}>
+                        <a href="#" onClick={(e) => this.changeMenu('sale')}><i className="zmdi zmdi-apps" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
+                        <ul className="treeview-menu">
+                            <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
                     <li className={this.state.isReport===true?"treeview active menu-open" : "treeview"}>

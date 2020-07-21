@@ -454,6 +454,7 @@ class PurchaseOrder extends Component{
     }
 
     autoSetQty(kode,data){
+    console.log("DATA SET QTY",data);
       const cek = cekData('kd_brg', kode, table);
       return cek.then(res => {
           if (res == undefined) {
@@ -511,6 +512,7 @@ class PurchaseOrder extends Component{
     }
     getData() {
       const data = get(table);
+      console.log(data);
       data.then(res => {
         let brg = []
         res.map((i) => {
