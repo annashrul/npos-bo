@@ -19,6 +19,18 @@ export function setPO(data = []) {
         data
     }
 }
+export function setPoData(data = []) {
+    return {
+        type: RECEIVE.RECEIVE_DATA,
+        data
+    }
+}
+export function setReport(data = []) {
+    return {
+        type: RECEIVE.SUCCESS_REPORT,
+        data
+    }
+}
 export function setCode(data = []) {
     return {
         type: RECEIVE.SUCCESS_CODE,
@@ -103,5 +115,39 @@ export const storeReceive= (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+export const FetchReport = (page = 1, perpage = 10,q='') => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `receive/report?page=${page}&perpage=${perpage}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setReport(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+export const FetchReceiveData = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setPoData(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
     }
 }
