@@ -95,7 +95,6 @@ export const FetchPoData = (nota) => {
 export const FetchNota = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-       
         axios.get(HEADERS.URL + `purchaseorder/getcode?prefix=PO&lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
