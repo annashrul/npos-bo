@@ -289,9 +289,13 @@ class Dashboard extends Component {
                    }],
                 }
         };
+
+        socket.on('refresh_dashboard',(data)=>{
+            this.refreshData();
+        })
         
         socket.on("set_dashboard", (data) => {
-            console.log("SET_DASHBOARD", data);
+            // console.log("SET_DASHBOARD", data);
             this.setState({
                 lokasi_sales: data.lokasi_sales,
                 lokasi_tr: data.lokasi_tr,
@@ -307,12 +311,16 @@ class Dashboard extends Component {
         });
     }
 
-    componentWillMount(){
+    refreshData(){
         socket.emit('get_dashboard', {
             datefrom: '-',
             dateto: '-',
             location: '-'
         })
+    }
+
+    componentWillMount(){
+        this.refreshData()
     }
 
     componentDidMount() {
@@ -384,8 +392,6 @@ class Dashboard extends Component {
             startDate:awal,
             endDate:akhir
         });
-        // console.log(picker.startDate._d.toISOString());
-        // console.log(picker.endDate._d.toISOString());
     };
     
 
