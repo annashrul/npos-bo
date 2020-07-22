@@ -12,6 +12,9 @@ import { Line } from 'peity-react';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
+import socketIOClient from "socket.io-client";
+import {HEADERS} from 'redux/actions/_constants'
+
 const range = {
     Today: [moment(), moment()],
     Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
@@ -35,6 +38,7 @@ const range = {
             .endOf("year")
     ]
 };
+const socket = socketIOClient(HEADERS.URL);
 
 class Dashboard extends Component {
     constructor(props) {
@@ -56,361 +60,259 @@ class Dashboard extends Component {
             dataB: [9,7,3,5,2,5,3,9,6,5],
             dataC: [5,3,9,3,5,2,6,5,9,7],
             dataD: [7,3,5,2,5,3,9,6,5,9],
+            
 
-            // seriesA: [{
-            //     data: [1,2,3,4,5,6,7,8,9,0].slice()
-            // }],
-            // optionsA: {
-            //     chart: {
-            //         id: 'realtime',
-            //         height: 350,
-            //         type: 'line',
-            //         animations: {
-            //         enabled: true,
-            //         easing: 'linear',
-            //         dynamicAnimation: {
-            //             speed: 1000
-            //         }
-            //         },
-            //         toolbar: {
-            //         show: false
-            //         },
-            //         zoom: {
-            //         enabled: false
-            //         }
-            //     },
-            //     dataLabels: {
-            //         enabled: false
-            //     },
-            //     stroke: {
-            //         curve: 'smooth'
-            //     },
-            //     title: {
-            //         text: 'Dynamic Updating Chart',
-            //         align: 'left'
-            //     },
-            //     markers: {
-            //         size: 0
-            //     },
-            //     xaxis: {
-            //         type: 'datetime',
-            //         range: 10,
-            //     },
-            //     yaxis: {
-            //         max: 100
-            //     },
-            //     legend: {
-            //         show: false
-            //     },
-            // },
+           lokasi_sales: {
+                   options: {
+                       chart: {
+                           id: "basic-bar"
+                       },
+                       xaxis: {
+                           categories: []
+                       }
+                   },
+                   series: [{
+                           name: "Bulan Lalu",
+                           data: []
+                       },
+                       {
+                           name: "Bulan Sekarang",
+                           data: []
+                       }
+                   ],
+            },
+           lokasi_tr: {
+                   options: {
+                       chart: {
+                           id: "basic-bar"
+                       },
+                       xaxis: {
+                           categories: []
+                       }
+                   },
+                   series: [{
+                           name: "Bulan Lalu",
+                           data: []
+                       },
+                       {
+                           name: "Bulan Sekarang",
+                           data: []
+                       }
+                   ],
+            },
+           daily: {
+                   options: {
+                       chart: {
+                           id: "basic-bar"
+                       },
+                       xaxis: {
+                           categories: ["Monday", "Thuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                       },
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0'],
+                       dataLabels: {
+                           enabled: false
+                       },
+                       plotOptions: {
+                           bar: {
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: [0,0,0,0,0,0,0]
+                   }],
+            },
+           hourly: {
+                   options: {
+                       chart: {
+                           type: 'area'
+                       },
+                       xaxis: {
+                           categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                       stroke: {
+                           curve: 'smooth'
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                   }],
+            },
+           top_item_qty: {
+                   options: {
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                       xaxis: {
+                           categories: [],
+                       },
+                       plotOptions: {
+                           bar: {
+                               horizontal: true,
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: []
+                   }],
+            },
+           top_item_sale:{ options: {
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                       xaxis: {
+                           categories: [],
+                       },
+                       plotOptions: {
+                           bar: {
+                               horizontal: true,
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: []
+                   }],},
+           top_cat_qty:{ options: {
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                       xaxis: {
+                           categories: [],
+                       },
+                       plotOptions: {
+                           bar: {
+                               horizontal: true,
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: []
+                   }],},
+           top_cat_sale:{ options: {
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                       xaxis: {
+                           categories: [],
+                       },
+                       plotOptions: {
+                           bar: {
+                               horizontal: true,
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: []
+                   }],},
+           top_sp_qty:{ options: {
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                       xaxis: {
+                           categories: [],
+                       },
+                       plotOptions: {
+                           bar: {
+                               horizontal: true,
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                   },
+                   series: [{
+                       // name: "Bulan Lalu",
+                       data: []
+                   }],},
+           top_sp_sale:{ 
+               options: {
+                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                       xaxis: {
+                           categories: [],
+                       },
+                       plotOptions: {
+                           bar: {
+                               horizontal: true,
+                               columnWidth: '45%',
+                               distributed: true
+                           }
+                       },
+                       legend: {
+                           show: false
+                       },
+                       dataLabels: {
+                           enabled: false
+                       },
+                   },
+                   series: [{
+                       data: []
+                   }],
+                }
+        };
+        
+        socket.on("set_dashboard", (data) => {
+            console.log("SET_DASHBOARD", data);
+            this.setState({
+                lokasi_sales: data.lokasi_sales,
+                lokasi_tr: data.lokasi_tr,
+                hourly: data.hourly,
+                daily: data.daily,
+                top_item_qty: data.top_item_qty,
+                top_item_sale: data.top_item_sale,
+                top_cat_qty: data.top_cat_qty,
+                top_cat_sale: data.top_cat_sale,
+                top_sp_qty: data.top_sp_qty,
+                top_sp_sale: data.top_sp_sale,
+            })
+        });
+    }
 
-            seriesStock: [76, 67, 61, 90],
-            optionsStock: {
-              chart: {
-                // height: 300,
-                type: 'radialBar',
-              },
-              plotOptions: {
-                radialBar: {
-                  offsetY: 0,
-                  startAngle: 0,
-                  endAngle: 270,
-                  hollow: {
-                    margin: 5,
-                    size: '30%',
-                    background: 'transparent',
-                    image: undefined,
-                  },
-                  dataLabels: {
-                    name: {
-                      show: false,
-                    },
-                    value: {
-                      show: false,
-                    }
-                  }
-                }
-              },
-              colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5'],
-              labels: ['STOCK IN', 'STOCK OUT', 'STOCK TOTAL', 'STOCK ALL'],
-              legend: {
-                show: true,
-                floating: true,
-                fontSize: '10px',
-                position: 'left',
-                offsetX: 70,
-                offsetY: 2,
-                labels: {
-                  useSeriesColors: true,
-                },
-                markers: {
-                  size: 0
-                },
-                formatter: function(seriesName, opts) {
-                  return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
-                },
-                itemMargin: {
-                  vertical: 3
-                }
-              },
-              responsive: [{
-                breakpoint: 480,
-                options: {
-                  legend: {
-                      show: false
-                  }
-                }
-              }]
-            },
-
-            // chart1
-            options: {
-              chart: {
-                id: "basic-bar"
-              },
-              xaxis: {
-                categories: ["TOKO KOPO", "TOKO GARUT", "TOKO RANCAEKEK", "HO", "HO", "TOKO KOPO", "TOKO GARUT", "TOKO RANCAEKEK", "HO", "HO",'cek','ceekkk']
-              }
-            },
-            series: [
-              {
-                name: "Bulan Lalu",
-                data: [30, 34, 67, 89, 54, 30, 34, 67, 89, 54, 89, 54]
-              },
-              {
-                name: "Bulan Sekarang",
-                data: [20, 64, 37, 69, 94, 30, 34, 67, 89, 54, 89, 54]
-              }
-            ],
-            // chart2
-            options2: {
-              chart: {
-                id: "basic-bar"
-              },
-              xaxis: {
-                categories: ["TOKO KOPO","TOKO GARUT","TOKO RANCAEKEK","HO"]
-              }
-            },
-            series2: [
-              {
-                name: "Bulan Lalu",
-                data: [70,54,27,69,94]
-              },
-              {
-                name: "Bulan Sekarang",
-                data: [80,74,37,59,34]
-              }
-            ],
-            // daily
-            options3: {
-              chart: {
-                id: "basic-bar"
-              },
-              xaxis: {
-                categories: ["Monday","Thuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-              },
-              colors:['#F44336', '#E91E63', '#9C27B0','#F44336', '#E91E63', '#9C27B0', '#9C27B0'],
-              dataLabels: {
-                enabled: false
-              },
-              plotOptions: {
-                bar: {
-                  columnWidth: '45%',
-                  distributed: true
-                }
-              },
-              legend: {
-                show: false
-              },
-            },
-            series3: [
-              {
-                // name: "Bulan Lalu",
-                data: [15000,13000,27000,69000,94000,45000,12000]
-              }
-            ],
-            // hourly
-            options4: {
-                chart: {
-                    type: 'area'
-                },
-                xaxis: {
-                    categories: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    curve: 'smooth'
-                },
-            },
-            series4: [
-              {
-                // name: "Bulan Lalu",
-                data: [0,0,0,0,0,0,0,0,0,70,54,27,69,94,0,0,0,0,0,0,0,0,0,0]
-              }
-            ],
-            // chart5a
-            options5a: {
-                colors:['#F44336', '#E91E63', '#9C27B0','#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0','#F44336'],
-                xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                  'United States', 'China', 'Germany'],
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        columnWidth: '45%',
-                        distributed: true
-                    }
-                },
-                legend: {
-                  show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-            },
-            series5a: [
-              {
-                // name: "Bulan Lalu",
-                data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-              }
-            ],
-            // chart5b
-            options5b: {
-                colors:['#F44336', '#E91E63', '#9C27B0','#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0','#F44336'],
-                xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                  'United States', 'China', 'Germany'],
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        columnWidth: '45%',
-                        distributed: true
-                    }
-                },
-                legend: {
-                  show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-            },
-            series5b: [
-              {
-                // name: "Bulan Lalu",
-                data: [700, 330, 548, 170, 840, 280, 590, 7100, 4200, 9380]
-              }
-            ],
-            // chart6a
-            options6a: {
-                colors:['#F44336', '#E91E63', '#9C27B0','#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0','#F44336'],
-                xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                  'United States', 'China', 'Germany'],
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        columnWidth: '45%',
-                        distributed: true
-                    }
-                },
-                legend: {
-                  show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-            },
-            series6a: [
-              {
-                // name: "Bulan Lalu",
-                data: [700, 330, 548, 170, 840, 280, 590, 7100, 4200, 9380]
-              }
-            ],
-            // chart6b
-            options6b: {
-                colors:['#F44336', '#E91E63', '#9C27B0','#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0','#F44336'],
-                xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                  'United States', 'China', 'Germany'],
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        columnWidth: '45%',
-                        distributed: true
-                    }
-                },
-                legend: {
-                  show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-            },
-            series6b: [
-              {
-                // name: "Bulan Lalu",
-                data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-              }
-            ],
-            // chart7a
-            options7a: {
-                colors:['#E91E63', '#9C27B0', '#9C27B0', '#9C27B0','#F44336'],
-                xaxis: {
-                    categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy'],
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        columnWidth: '45%',
-                        distributed: true
-                    }
-                },
-                legend: {
-                  show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-            },
-            series7a: [
-              {
-                // name: "Bulan Lalu",
-                data: [280, 590, 7100, 4200, 9380]
-              }
-            ],
-            // chart7b
-            options7b: {
-                colors:['#F44336', '#E91E63', '#9C27B0', '#9C27B0','#F44336'],
-                xaxis: {
-                    categories: ['France', 'Japan', 'United States', 'China', 'Germany'],
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        columnWidth: '45%',
-                        distributed: true
-                    }
-                },
-                legend: {
-                  show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-            },
-            series7b: [
-              {
-                // name: "Bulan Lalu",
-                data: [400, 430, 448, 470, 540]
-              }
-            ],
-          };
+    componentWillMount(){
+        socket.emit('get_dashboard', {
+            datefrom: '-',
+            dateto: '-',
+            location: '-'
+        })
     }
 
     componentDidMount() {
@@ -418,44 +320,39 @@ class Dashboard extends Component {
             () => this.tick(),
             2000
           );
+        
+    }
 
-        //   setInterval(
-        //       function(){
-        //           var t=Math.round(20*Math.random()),f=i.text().split(",");f.shift(),f.push(t),i.text(f.join(",")).change()
-        //         },1e3
-        // )
-      }
+    componentWillUnmount() {
+    clearInterval(this.interval);
+    }
 
-      componentWillUnmount() {
-        clearInterval(this.interval);
-      }
+    tick() {
+    // var array = [];
+    var arrayA = [5,3,9,6,5,9,7,3,5,2];
+    var arrayB = [5,3,9,6,5,9,7,3,5,2];
+    var arrayC = [5,3,9,6,5,9,7,3,5,2];
+    var arrayD = [5,3,9,6,5,9,7,3,5,2];
 
-      tick() {
-        // var array = [];
-        var arrayA = [5,3,9,6,5,9,7,3,5,2];
-        var arrayB = [5,3,9,6,5,9,7,3,5,2];
-        var arrayC = [5,3,9,6,5,9,7,3,5,2];
-        var arrayD = [5,3,9,6,5,9,7,3,5,2];
+    arrayA.sort(() => 0.5 - Math.random());
+    arrayB.sort(() => 0.7 - Math.random());
+    arrayC.sort(() => 0.9 - Math.random());
+    arrayD.sort(() => 0.3 - Math.random());
+    // as we need at least players to form a pair
+    while (arrayA.length) { 
+    const randA = [arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop()];
+    const randB = [arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop()];
+    const randC = [arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop()];
+    const randD = [arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop()];
 
-        arrayA.sort(() => 0.5 - Math.random());
-        arrayB.sort(() => 0.7 - Math.random());
-        arrayC.sort(() => 0.9 - Math.random());
-        arrayD.sort(() => 0.3 - Math.random());
-        // as we need at least players to form a pair
-        while (arrayA.length) { 
-        const randA = [arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop()];
-        const randB = [arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop()];
-        const randC = [arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop()];
-        const randD = [arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop()];
-
-        this.setState({
-            dataA: randA,
-            dataB: randB,
-            dataC: randC,
-            dataD: randD
-          });
-        }
-      }
+    this.setState({
+        dataA: randA,
+        dataB: randB,
+        dataC: randC,
+        dataD: randD
+        });
+    }
+    }
 
     onChange = date => this.setState({ date })
 
@@ -494,18 +391,9 @@ class Dashboard extends Component {
 
 
     render() {
-        const {isAuthenticated, user} = this.props.auth;
 
-        // const [date, setDate] = React.useState({
-        //     startDate: new Date(2020, 4, 1),
-        //     endDate: new Date(2020, 4, 10)
-        //   })
-       
           const onChange = (start, end) => {
-            //   setDate({
-                // startDate: start,
-                // endDate: end,
-            //   })
+           
             console.log(moment(start).format()+" - "+moment(end).format());
           }
         
@@ -640,13 +528,13 @@ class Dashboard extends Component {
                     <div className="col-md-4 box-margin">
                         <div className="card text-center">
                             <div className="card-body">
-                                <h4 className="card-title">STOCK</h4>
+                                {/* <h4 className="card-title">STOCK</h4>
                                 <Chart
                                     options={this.state.optionsStock}
                                     series={this.state.seriesStock}
                                     type="radialBar"
                                     height="300"
-                                    />
+                                    /> */}
                             </div>
                         </div>
                     </div>
@@ -655,8 +543,8 @@ class Dashboard extends Component {
                             <div className="card-body">
                                 <h4 className="card-title">MONTHLY SALES AMOUNT</h4>
                                 <Chart
-                                    options={this.state.options}
-                                    series={this.state.series}
+                                    options={this.state.lokasi_sales.options}
+                                    series={this.state.lokasi_sales.series}
                                     type="bar"
                                     height="300"
                                     />
@@ -670,8 +558,8 @@ class Dashboard extends Component {
                             <div className="card-body">
                                 <h4 className="card-title">MONTHLY TRANSACTIONS</h4>
                                 <Chart
-                                    options={this.state.options2}
-                                    series={this.state.series2}
+                                    options={this.state.lokasi_tr.options}
+                                    series={this.state.lokasi_tr.series}
                                     type="bar"
                                     height="300"
                                     />
@@ -688,8 +576,8 @@ class Dashboard extends Component {
                                         <div className="card-body">
                                             <h4 className="card-title">SALES THIS WEEK</h4>
                                             <Chart
-                                                options={this.state.options3}
-                                                series={this.state.series3}
+                                                options={this.state.daily.options}
+                                                series={this.state.daily.series}
                                                 type="bar"
                                                 height="300"
                                                 />
@@ -701,8 +589,8 @@ class Dashboard extends Component {
                                         <div className="card-body">
                                             <h4 className="card-title">HOURLY GROSS SALES AMOUNT</h4>
                                             <Chart
-                                                options={this.state.options4}
-                                                series={this.state.series4}
+                                                options={this.state.hourly.options}
+                                                series={this.state.hourly.series}
                                                 height="300"
                                                 />
                                         </div>
@@ -727,8 +615,8 @@ class Dashboard extends Component {
                                                 {/* <div class="card-body"> */}
                                                     <h4 className="card-title">TOP 8 ITEMS VOLUME</h4>
                                                     <Chart
-                                                        options={this.state.options5a}
-                                                        series={this.state.series5a}
+                                                        options={this.state.top_item_qty.options}
+                                                        series={this.state.top_item_qty.series}
                                                         type="bar"
                                                         height="300"
                                                         />
@@ -737,8 +625,8 @@ class Dashboard extends Component {
                                             <TabPanel>
                                                 <h4 className="card-title">TOP 8 ITEMS SALES</h4>
                                                 <Chart
-                                                    options={this.state.options5b}
-                                                    series={this.state.series5b}
+                                                    options={this.state.top_item_sale.options}
+                                                    series={this.state.top_item_sale.series}
                                                     type="bar"
                                                     height="300"
                                                     />
@@ -755,20 +643,20 @@ class Dashboard extends Component {
                                             </TabList>
                                             <TabPanel>
                                                 {/* <div class="card-body"> */}
-                                                    <h4 className="card-title">TOP 8 ITEMS VOLUME</h4>
+                                                    <h4 className="card-title">TOP 8 CATEGORY VOLUME</h4>
                                                     <Chart
-                                                        options={this.state.options6a}
-                                                        series={this.state.series6a}
+                                                        options={this.state.top_cat_qty.options}
+                                                        series={this.state.top_cat_qty.series}
                                                         type="bar"
                                                         height="300"
                                                         />
                                                 {/* </div> */}
                                             </TabPanel>
                                             <TabPanel>
-                                                <h4 className="card-title">TOP 8 ITEMS SALES</h4>
+                                                <h4 className="card-title">TOP 8 CATEGORY SALES</h4>
                                                 <Chart
-                                                    options={this.state.options6b}
-                                                    series={this.state.series6b}
+                                                    options={this.state.top_cat_sale.options}
+                                                    series={this.state.top_cat_sale.series}
                                                     type="bar"
                                                     height="300"
                                                     />
@@ -788,8 +676,8 @@ class Dashboard extends Component {
                                     <div className="card-body">
                                         <h4 className="card-title">TOP 5 SUPPLIER VOLUME</h4>
                                         <Chart
-                                            options={this.state.options7a}
-                                            series={this.state.series7a}
+                                            options={this.state.top_sp_qty.options}
+                                            series={this.state.top_sp_qty.series}
                                             type="bar"
                                             height="300"
                                             />
@@ -799,8 +687,8 @@ class Dashboard extends Component {
                                     <div className="card-body">
                                         <h4 className="card-title">TOP 5 SUPPLIER SALES</h4>
                                         <Chart
-                                            options={this.state.options7b}
-                                            series={this.state.series7b}
+                                            options={this.state.top_sp_sale.options}
+                                            series={this.state.top_sp_sale.series}
                                             type="bar"
                                             height="300"
                                             />
