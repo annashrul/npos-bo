@@ -13,9 +13,9 @@ import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
 import {FetchCustomerAll} from "redux/actions/masterdata/customer/customer.action";
-import {FetchProduct, FetchProductSale} from "../../../../redux/actions/masterdata/product/product.action";
-import StickyBox from "react-sticky-box";
-import {toRp} from "../../../../helper";
+import {FetchProduct, FetchProductSale} from "redux/actions/masterdata/product/product.action";
+// import StickyBox from "react-sticky-box";
+import {toRp} from "helper";
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -595,7 +595,7 @@ class Sale extends Component{
 
                 <div style={{ height: "100vh"}}>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}>
+                        {/* <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}> */}
                             <div className="card">
                                 <div className="card-body">
                                     <div className="chat-area">
@@ -715,7 +715,7 @@ class Sale extends Component{
                                     </div>
                                 </div>
                             </div>
-                        </StickyBox>
+                        {/* </StickyBox> */}
                         <div style={{ height: "auto",width:"80%"}}>
                             <div className="card">
                                 <div className="container" style={{marginTop: "20px"}}>

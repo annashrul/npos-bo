@@ -84,7 +84,6 @@ class DeliveryNote extends Component{
           searchby:1,
           search:"",
           no_faktur_beli:"-",
-          nota_pembelian:'-',
           data_nota:[],
           ambil_data:1,
           ambil_nota:'',
@@ -540,7 +539,7 @@ class DeliveryNote extends Component{
                     lokasi_asal:this.state.location,
                     lokasi_tujuan:this.state.location2,
                     catatan:this.state.catatan,
-                    kode_pembelian:this.state.nota_pembelian,
+                    kode_pembelian: this.state.ambil_nota,
                     subtotal,
                     userid: this.state.userid,
                     detail: detail
