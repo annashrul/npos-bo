@@ -31,15 +31,14 @@ class DetailAlokasi extends Component{
                             <table className="table table-hover table-bordered">
                                 <thead className="bg-light">
                                 <tr>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">Factur No.</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">Code</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">Product Name</th>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">QTY</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">Buy Price</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">Sell Price</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">Type</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">Barcode</th>
+                                    <th className="text-black" style={columnStyle}>Factur No.</th>
+                                    <th className="text-black" style={columnStyle}>Code</th>
+                                    <th className="text-black" style={columnStyle}>Product Name</th>
+                                    <th className="text-black" style={columnStyle}>QTY</th>
+                                    <th className="text-black" style={columnStyle}>Buy Price</th>
+                                    <th className="text-black" style={columnStyle}>Sell Price</th>
+                                    <th className="text-black" style={columnStyle}>Type</th>
+                                    <th className="text-black" style={columnStyle}>Barcode</th>
                                 </tr>
                                 
                                 </thead>
@@ -48,46 +47,25 @@ class DetailAlokasi extends Component{
                                     (
                                         typeof data === 'object' ? data.length > 0 ?
                                             data.map((v,i)=>{
-                                                // totPrice1=totPrice1+v.harga;
-                                                // totPrice2=totPrice2+v.harga2;
-                                                // totPrice3=totPrice3+v.harga3;
-                                                // totPrice4=totPrice4+v.harga4;
-                                                // totFirstStock=totFirstStock+v.stock_awal;
-                                                // totLastStock=totLastStock+v.stock_akhir;
-                                                // totStockIn=totStockIn+v.stock_masuk;
-                                                // totStockOut=totStockOut+v.stock_keluar;
-                                                // totHpp=totHpp+v.harga_beli;
-                                                // totProfitPrice1=totProfitPrice1+v.profit_hrg1;
-                                                // totProfitPrice2=totProfitPrice2+v.profit_hrg2;
-                                                // totProfitPrice3=totProfitPrice3+v.profit_hrg3;
-                                                // totProfitPrice4=totProfitPrice4+v.profit_hrg4;
-                                                // sumTotPrice1=sumTotPrice1+v.total_hrg1;
-                                                // sumTotPrice2=sumTotPrice2+v.total_hrg2;
-                                                // sumTotPrice3=sumTotPrice3+v.total_hrg3;
-                                                // sumTotPrice4=sumTotPrice4+v.total_hrg4;
                                                 return (
                                                     <tr key={i}>
-                                                        <td style={columnStyle}>{/* Example split danger button */}
-                                                            <a className="btn btn-sm btn-primary" href="javascript:void(0)" onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
-                                                        </td>
-                                                        <td>{v.lokasi}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga2)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga3)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga4)}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_awal}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_akhir}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga_beli)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg1)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg2)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg3)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg4)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg1)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg2)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg3)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg4)}</td>
+
+                                                                {/* "no_faktur_mutasi": "MC-2006190001-2",
+                                                                        "kd_brg": "010000003",
+                                                                        "qty": "10",
+                                                                        "hrg_beli": "170000",
+                                                                        "hrg_jual": "180000",
+                                                                        "barcode": "123123123",
+                                                                        "satuan": "Karton",
+                                                                        "nm_brg": "seprit orange" */}
+                                                        <td style={{textAlign:"right"}}>{v.no_faktur_mutasi}</td>
+                                                        <td style={{textAlign:"right"}}>{v.kd_brg}</td>
+                                                        <td style={{textAlign:"right"}}>{v.nm_brg}</td>
+                                                        <td style={{textAlign:"right"}}>{v.qty}</td>
+                                                        <td style={{textAlign:"right"}}>{v.hrg_beli}</td>
+                                                        <td style={{textAlign:"right"}}>{v.hrg_jual}</td>
+                                                        <td style={{textAlign:"right"}}>{v.satuan}</td>
+                                                        <td style={{textAlign:"right"}}>{v.barcode}</td>
                                                     </tr>
                                                 )
                                             }) : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
