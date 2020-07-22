@@ -3,7 +3,7 @@ import {
 } from "../../../actions/_constants";
 
 const initialState = {
-    isLoading: false,
+    isLoading: true,
     isLoadingDetail: false,
     data: [],
     msg:"",
@@ -11,7 +11,8 @@ const initialState = {
     code:"-",
     po_data:[],
     report:[],
-    report_data:[]
+    report_data:[],
+    dataReportDetail:[]
 };
 
 export const poReducer = (state = initialState, action) => {
@@ -31,6 +32,12 @@ export const poReducer = (state = initialState, action) => {
         case PO.PO_DATA:
             return Object.assign({}, state, {
                 po_data: action.data.result
+            });
+        case PO.PO_REPORT_DETAIL:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                dataReportDetail:action.data.result
             });
         case PO.SUCCESS_CODE:
             return Object.assign({}, state, {

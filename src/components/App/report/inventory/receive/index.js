@@ -1,20 +1,20 @@
 import React,{Component} from 'react';
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {fetchPoReport} from "redux/actions/purchase/purchase_order/po.action";
+import {FetchReport} from "redux/actions/purchase/receive/receive.action";
 import Preloader from "Preloader";
-import ListPoReport from "./src/list";
+import ListReceiveReport from "./src/list";
 
-class PoReport extends Component{
+class ReceiveReport extends Component{
     constructor(props){
         super(props);
         this.state={token:''};
         this.handleSelect = this.handleSelect.bind(this);
     }
     componentWillMount(){
-        let any = localStorage.getItem("any_po_report");
-        let page = localStorage.getItem("page_po_report");
-        this.props.dispatch(fetchPoReport(page?page:1,any?any:''));
+        let any = localStorage.getItem("any_receive_report");
+        let page = localStorage.getItem("page_receive_report");
+        this.props.dispatch(FetchReport(page?page:1,any?any:''));
     }
 
     handleSelect = (e,index) => {
@@ -25,13 +25,13 @@ class PoReport extends Component{
 
     render(){
         return (
-            <Layout page="PoReport">
+            <Layout page="ReceiveReport">
                 <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
                             {
-                                !this.props.isLoading ? (  <ListPoReport
-                                    data={this.props.poReport}
+                                !this.props.isLoading ? (  <ListReceiveReport
+                                    data={this.props.receiveReport}
                                     pagin={this.handlePagin}
                                     search={this.handleSearch}
                                     token={this.state.token}
@@ -47,13 +47,13 @@ class PoReport extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        poReport:state.poReducer.data,
-        total:state.poReducer.total,
-        isLoading: state.poReducer.isLoading,
-        isLoadingDetail: state.poReducer.isLoadingDetail,
+        receiveReport:state.receiveReducer.data,
+        // total:state.receiveReducer.total,
+        isLoading: state.receiveReducer.isLoading,
+        // isLoadingDetail: state.poReducer.isLoadingDetail,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
 
-export default connect(mapStateToProps)(PoReport)
+export default connect(mapStateToProps)(ReceiveReport)

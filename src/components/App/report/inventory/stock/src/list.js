@@ -160,7 +160,7 @@ class ListStockReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    // console.log("mapStateToProps",state);
+    console.log("mapStateToProps",state);
     return {
         // detail:this.state.detail,
         isLoading: state.stockReportReducer.isLoading,

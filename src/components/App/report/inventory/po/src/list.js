@@ -1,10 +1,11 @@
 import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
-import {deleteAdjustment, FetchAdjustment, FetchAdjustmentDetail} from "redux/actions/adjustment/adjustment.action";
+import {fetchPoReport, poReportDetail} from "redux/actions/purchase/purchase_order/po.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq, {statusQ} from "helper";
-import DetailAdjustment from "components/App/modals/report/inventory/adjustment_report/detail_adjustment_report";
+import DetailPoReport from "components/App/modals/report/purchase/purchase_order/detail_po_report";
 import Swal from "sweetalert2";
+import moment from "moment";
 
 class ListPoReport extends Component{
     constructor(props){
@@ -17,46 +18,46 @@ class ListPoReport extends Component{
     }
     handlePageChange(pageNumber){
         console.log(`active page is ${pageNumber}`);
-        localStorage.setItem("page_customer",pageNumber);
-        this.props.dispatch(FetchAdjustment(pageNumber,''))
+        localStorage.setItem("page_po",pageNumber);
+        this.props.dispatch(fetchPoReport(pageNumber,''))
     }
     handlesearch(e){
         e.preventDefault();
         const form = e.target;
         const data = new FormData(form);
         let any = data.get('field_any');
-        localStorage.setItem('any_customer',any);
+        localStorage.setItem('any_po',any);
         if(any===''||any===null||any===undefined){
-            this.props.dispatch(FetchAdjustment(1,''))
+            this.props.dispatch(fetchPoReport(1,''))
         }else{
-            this.props.dispatch(FetchAdjustment(1,any))
+            this.props.dispatch(fetchPoReport(1,any))
         }
     }
-    toggleModal(e, kd_trx) {
+    toggleModal(e, no_po) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("detailAdjustment"));
-        this.props.dispatch(FetchAdjustmentDetail(1,kd_trx))
+        this.props.dispatch(ModalType("poReportDetail"));
+        this.props.dispatch(poReportDetail(1,no_po))
     }
-    handleDelete(e,id){
-        console.log(id);
-        e.preventDefault();
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
-                this.props.dispatch(deleteAdjustment(id,this.props.token));
-            }
-        })
+    // handleDelete(e,id){
+    //     console.log(id);
+    //     e.preventDefault();
+    //     Swal.fire({
+    //         title: 'Are you sure?',
+    //         text: "You won't be able to revert this!",
+    //         type: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Yes, delete it!'
+    //     }).then((result) => {
+    //         if (result.value) {
+    //             this.props.dispatch(deleteAdjustment(id,this.props.token));
+    //         }
+    //     })
 
-    }
+    // }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {data} = this.props.data;
@@ -67,7 +68,7 @@ class ListPoReport extends Component{
                         <div className="col-10 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
-                                <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_customer')}/>
+                                <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_por')}/>
                             </div>
                         </div>
                         <div className="col-2 col-xs-4 col-md-4">
@@ -106,16 +107,16 @@ class ListPoReport extends Component{
                                                             Action
                                                         </button>
                                                         <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.kd_trx)}>Detail</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.no_po)}>Detail</a>
                                                             {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a> */}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td style={columnStyle}>{v.kd_trx}</td>
-                                                <td style={columnStyle}>{v.tgl}</td>
-                                                <td style={columnStyle}>{v.username}</td>
+                                                <td style={columnStyle}>{v.no_po}</td>
+                                                <td style={columnStyle}>{moment(v.tgl_po).format("YYYY-MM-DD")}</td>
+                                                <td style={columnStyle}>{v.nama_supplier}</td>
                                                 <td style={columnStyle}>{v.lokasi}</td>
-                                                <td style={columnStyle}>{v.keterangan}</td>
+                                                <td style={columnStyle}>{v.catatan}</td>
                                             </tr>
                                         )
                                     })
@@ -134,22 +135,21 @@ class ListPoReport extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div> */}
-                <DetailAdjustment token={this.props.token} detail={this.state.detail}/>
+                <DetailPoReport token={this.props.token} poReportDetail={this.state.poReportDetail}/>
             </div>
         )
     }
 }
 
 const mapStateToProps = (state) => {
-    // console.log("mapStateToProps",state);
+    console.log("mapStateToProps",state);
     return {
         // detail:this.state.detail,
-        isLoading: state.adjustmentReducer.isLoading,
-        adjustmentDetailSatuan:state.adjustmentReducer.dataDetailSatuan,
-        // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
+        isLoading: state.poReducer.isLoading,
+        poReportDetail: state.poReducer.dataReportDetail,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 };
 
-export default connect(mapStateToProps)(ListAdjustmentReport)
+export default connect(mapStateToProps)(ListPoReport)

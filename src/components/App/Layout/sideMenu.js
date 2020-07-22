@@ -111,7 +111,7 @@ class SideMenu extends Component {
         const path = this.props.location.pathname;
         return (
             <nav>
-                <ul className="sidebar-menu" data-widget="tree" style={{marginTop: '50%'}}>
+                <ul className="sidebar-menu" data-widget="tree" style={{marginTop: '32%'}}>
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Dashboard </Link></li>
                     <li  className={path==='/setting'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Setting </Link></li>
                     <li className={
@@ -173,6 +173,9 @@ class SideMenu extends Component {
                         <ul className="treeview-menu">
                             <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report"> <i className="zmdi zmdi-apps" />Inventory</Link></li>
                             <li className={path==='/adjustment_report'?"active":''}><Link to="/adjustment_report"> <i className="zmdi zmdi-apps" />Adjustment</Link></li>
+                            <li className={path==='/po_report'?"active":''}><Link to="/po_report"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
+                            <li className={path==='/receive_report'?"active":''}><Link to="/receive_report"> <i className="zmdi zmdi-apps" />Receive</Link></li>
+                            <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report"> <i className="zmdi zmdi-apps" />Alokasi</Link></li>
                         </ul>
                     </li>
                 </ul>
