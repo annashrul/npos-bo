@@ -17,93 +17,31 @@ class DetailAlokasi extends Component{
         localStorage.removeItem("barcode");
         localStorage.removeItem("name");
     };
-    // handelDetailTrx(e,code,location,barcode,name){
-    //     e.preventDefault();
-    //     const bool = !this.props.isOpen;
-    //     localStorage.setItem("codeDetailTrx",code);
-    //     localStorage.setItem("locationDetailTrx",location);
-    //     localStorage.setItem("barcodeDetailTrx",barcode);
-    //     localStorage.setItem("nameDetailTrx",name);
-    //     this.props.dispatch(ModalType("detailStockReportTransaction"));
-    //     this.props.dispatch(FetchStockReportDetailTransaction(this.props.token,1,code,'','',localStorage.getItem("locationDetailTrx")))
-    // };
-
 
     render(){
         console.log("############# STATE SIITU",this.props);
         const {data} = this.props.alokasiDetail;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let totPrice1=0;
-        let totPrice2=0;
-        let totPrice3=0;
-        let totPrice4=0;
-        let totFirstStock=0;
-        let totLastStock=0;
-        let totStockIn=0;
-        let totStockOut=0;
-        let totHpp=0;
-        let totProfitPrice1=0;
-        let totProfitPrice2=0;
-        let totProfitPrice3=0;
-        let totProfitPrice4=0;
-        let sumTotPrice1=0;
-        let sumTotPrice2=0;
-        let sumTotPrice3=0;
-        let sumTotPrice4=0;
         return (
             <div>
                 <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAlokasi"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
                     <ModalHeader toggle={this.toggle}>Detail Alokasi</ModalHeader>
                     <ModalBody>
-                        <table className="table">
-                            <tbody>
-                            <tr>
-                                <td className="text-black">Code</td>
-                                <td className="text-black">: {localStorage.getItem("code")}</td>
-                            </tr>
-                            <tr>
-                                <td className="text-black">Barcode</td>
-                                <td className="text-black">: {localStorage.getItem("barcode")}</td>
-                            </tr>
-                            <tr>
-                                <td className="text-black">Product name</td>
-                                <td className="text-black">: {localStorage.getItem("name")}</td>
-                            </tr>
-
-                            </tbody>
-                        </table>
                         <div className="table-responsive" style={{overflowX: "auto"}}>
                             <table className="table table-hover table-bordered">
                                 <thead className="bg-light">
                                 <tr>
                                     <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">Location</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">PRICE</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">STOCK</th>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">HPP</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">PROFIT</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">TOTAL</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">Factur No.</th>
+                                    <th className="text-black" style={columnStyle} colSpan="4">Code</th>
+                                    <th className="text-black" style={columnStyle} colSpan="4">Product Name</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">QTY</th>
+                                    <th className="text-black" style={columnStyle} colSpan="4">Buy Price</th>
+                                    <th className="text-black" style={columnStyle} colSpan="4">Sell Price</th>
+                                    <th className="text-black" style={columnStyle} colSpan="4">Type</th>
+                                    <th className="text-black" style={columnStyle} colSpan="4">Barcode</th>
                                 </tr>
-                                <tr>
-                                    <td className="text-black" style={columnStyle}>1</td>
-                                    <td className="text-black" style={columnStyle}>2</td>
-                                    <td className="text-black" style={columnStyle}>3</td>
-                                    <td className="text-black" style={columnStyle}>4</td>
-
-                                    <td className="text-black" style={columnStyle}>First Stock</td>
-                                    <td className="text-black" style={columnStyle}>Stock In</td>
-                                    <td className="text-black" style={columnStyle}>Stock Out</td>
-                                    <td className="text-black" style={columnStyle}>Last Stock</td>
-
-                                    <td className="text-black" style={columnStyle}>1</td>
-                                    <td className="text-black" style={columnStyle}>2</td>
-                                    <td className="text-black" style={columnStyle}>3</td>
-                                    <td className="text-black" style={columnStyle}>4</td>
-                                    <td className="text-black" style={columnStyle}>1</td>
-                                    <td className="text-black" style={columnStyle}>2</td>
-                                    <td className="text-black" style={columnStyle}>3</td>
-                                    <td className="text-black" style={columnStyle}>4</td>
-                                </tr>
+                                
                                 </thead>
                                 <tbody>
                                 {

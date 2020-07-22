@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {FetchReceiveReport} from "redux/actions/purchase/receive/receive.action";
+import {FetchReport} from "redux/actions/purchase/receive/receive.action";
 import Preloader from "Preloader";
 import ListReceiveReport from "./src/list";
 
@@ -14,7 +14,7 @@ class ReceiveReport extends Component{
     componentWillMount(){
         let any = localStorage.getItem("any_receive_report");
         let page = localStorage.getItem("page_receive_report");
-        this.props.dispatch(FetchReceiveReport(page?page:1,any?any:''));
+        this.props.dispatch(FetchReport(page?page:1,any?any:''));
     }
 
     handleSelect = (e,index) => {
