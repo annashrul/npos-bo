@@ -99,6 +99,7 @@ export const DBConfig = {
                 { name: 'nm_brg', keypath: 'nm_brg', options: { unique: false } },
                 { name: 'barcode', keypath: 'barcode', options: { unique: false } },
                 { name: 'satuan', keypath: 'satuan', options: { unique: false } },
+                { name: 'harga_old', keypath: 'harga_old', options: { unique: false } },
                 { name: 'harga', keypath: 'harga', options: { unique: false } },
                 { name: 'harga2', keypath: 'harga2', options: { unique: false } },
                 { name: 'harga3', keypath: 'harga3', options: { unique: false } },
@@ -108,6 +109,9 @@ export const DBConfig = {
                 { name: 'diskon_persen', keypath: 'diskon_persen', options: { unique: false } },
                 { name: 'diskon_nominal', keypath: 'diskon_nominal', options: { unique: false } },
                 { name: 'ppn', keypath: 'ppn', options: { unique: false } },
+                { name: 'hrg_beli', keypath: 'hrg_beli', options: { unique: false } },
+                { name: 'kategori', keypath: 'kategori', options: { unique: false } },
+                { name: 'services', keypath: 'services', options: { unique: false } },
                 { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
 
             ]

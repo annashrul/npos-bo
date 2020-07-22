@@ -2,20 +2,17 @@ import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
-// import { Scrollbars } from "react-custom-scrollbars";
-import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
-import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'
-
-import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
-import Preloader from 'Preloader'
 import moment from 'moment';
 import {FetchCustomerAll} from "redux/actions/masterdata/customer/customer.action";
-import {FetchProduct, FetchProductSale} from "redux/actions/masterdata/product/product.action";
-// import StickyBox from "react-sticky-box";
+import {FetchBrg,setProductbrg,FetchProduct, FetchProductSale} from "redux/actions/masterdata/product/product.action";
+import StickyBox from "react-sticky-box";
 import {toRp} from "helper";
+import FormSale from "../../modals/sale/form_sale";
+import {ModalToggle,ModalType} from "redux/actions/modal.action";
+import {FetchNotaSale} from "redux/actions/sale/sale.action";
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -49,16 +46,22 @@ class Sale extends Component{
             location_data:[],
             location:"",
             customer:"",
-            catatan:"",
+            catatan:"-",
             jenis_trx:"Tunai",
             userid:0,
             searchby:1,
             search:"",
+            subtotal:0,
+            discount_persen:0,
+            discount_harga:0,
+            pajak:0,
             error:{
                 location:"",
                 customer:"",
                 catatan:""
-            }
+            },
+            detail:[],
+            master:{}
         };
         this.HandleRemove = this.HandleRemove.bind(this);
         this.HandleAddBrg = this.HandleAddBrg.bind(this);
@@ -77,7 +80,7 @@ class Sale extends Component{
         console.log("LOCAL STORAGE LOKASI",localStorage.lk)
         console.log("LOCAL STORAGE CUSTOMER",localStorage.cs)
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
-            this.props.dispatch(FetchNota(localStorage.lk))
+            this.props.dispatch(FetchNotaSale());
             this.setState({
                 location:localStorage.lk
             })
@@ -140,7 +143,7 @@ class Sale extends Component{
             error: err
         })
         localStorage.setItem('lk', lk.value);
-        this.props.dispatch(FetchNota(lk.value));
+        this.props.dispatch(FetchNotaSale());
         if (this.state.customer!==""){
             // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.customer, this.autoSetQty))
             // let where=`lokasi=${lk.value}&customer=${this.state.customer}&q=010000013`;
@@ -176,9 +179,25 @@ class Sale extends Component{
         this.getData();
     }
 
-    HandleCommonInputChange(e,errs=true){
+    HandleCommonInputChange(e,errs=true,st=0){
         const column = e.target.name;
         const val = e.target.value;
+        if (column === 'discount_persen' || column === 'pajak'){
+            if (val < 0 || val=='') this.setState({[column]: 0});
+            else if (val >100) this.setState({[column]: 100});
+            else this.setState({[column]: val});
+
+            if (column === 'discount_persen'){
+                this.setState({ 'discount_harga': (st*(val/100)) });
+            }
+        } else if (column === 'discount_harga') {
+            const disper = (val/st) * 100;
+            this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:val });
+        }else{
+            this.setState({
+                [column]: val
+            });
+        }
         this.setState({
             [column]: val
         });
@@ -292,6 +311,7 @@ class Sale extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
+                this.state.subtotal=0;
                 del(table,id)
                     .then(res=>{
                         this.getData();
@@ -306,6 +326,7 @@ class Sale extends Component{
         })
     }
 
+
     HandleAddBrg(e,item,index) {
         e.preventDefault();
         console.log("ITEM",item);
@@ -314,6 +335,7 @@ class Sale extends Component{
             nm_brg: item.nm_brg,
             barcode: item.barcode,
             satuan: item.satuan,
+            harga_old:item.harga,
             harga: item.harga,
             harga2: item.harga2,
             harga3: item.harga3,
@@ -323,6 +345,9 @@ class Sale extends Component{
             diskon_nominal: item.diskon_nominal,
             ppn: item.ppn,
             qty: item.qty,
+            hrg_beli:item.hrg_beli,
+            kategori:item.kategori,
+            services:item.services,
             tambahan: []
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
@@ -377,7 +402,6 @@ class Sale extends Component{
 
     HandleSubmit(e){
         e.preventDefault();
-
         // validator head form
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
@@ -410,56 +434,93 @@ class Sale extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
-                        title: 'Simpan Purchase Order?',
-                        text: "Pastikan data yang anda masukan sudah benar!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Simpan!',
-                        cancelButtonText: 'Tidak!'
-                    }).then((result) => {
-                        if (result.value) {
-                            let subtotal = 0;
-                            let master = {
-                                "tempo":moment(new Date()).format("yyyy-MM-DD"),
-                                "hr": "-",
-                                "kartu": "-",
-                                "dis_persen": 0,
-                                "kd_sales": "1",
-                                "jam": moment(new Date()).format("hh:mm:ss"),
-                                "tgl": this.state.tgl_order,
-                                "compliment": "-",
-                                "kd_kasir": this.state.userid,
-                                "no_kartu": "-",
-                                "optional_note": "",
-                                "id_hold": "-",
-                                "diskon": 0,
-                                "compliment_rp": "0",
-                                "jml_kartu": 0,
-                                "charge": 0,
-                                "change": 0,
-                                "rounding": 0,
-                                "tax": 0,
-                                "nominal_poin": 0,
-                                "tunai": 180000,
-                                "poin_tukar": 0,
-                                "gt": 180000,
-                                "pemilik_kartu": "-",
-                                "jenis_trx": "Tunai",
-                                "kd_cust": "",
-                                "kode_trx": "T22006300032Q",
-                                "subtotal": 180000,
-                                "lokasi": "LK/0001",
-                                "kassa": "Q",
-                                "jns_kartu": "-",
-                                "status": "LUNAS"
-                            };
-                            let detail = [];
+                    const bool = !this.props.isOpen;
+                    this.props.dispatch(ModalToggle(bool));
+                    this.props.dispatch(ModalType("formSale"));
+                    let subtotal = 0;
+                    let detail = [];
 
+                    res.map(item => {
+                        let disc1 = 0;
+                        let disc2 = 0;
+                        let ppn = 0;
+                        let hrg=parseInt(item.harga);
+                        let ppnInt=parseInt(item.ppn);
+                        let disc_rp=parseInt(item.diskon_nominal);
+                        let disc_per=parseInt(item.diskon_persen);
+                        if(disc_per!==0){
+                            disc1 = hrg-(hrg*(disc_per/100));
+                            disc2 = disc1;
+                            if(disc_rp!==0){
+                                disc2 = disc1-(disc1*(disc_rp/100))
+                            }
                         }
+                        else if(disc_rp!==0){
+                            disc1 = hrg-(hrg*(disc_rp/100));
+                            disc2 = disc1;
+                            if(disc_per!==0){
+                                disc2 = disc1-(disc1*(disc_per/100))
+                            }
+                        }
+                        if(ppnInt!==0){
+                            ppn = hrg*(ppnInt/100);
+                        }
+
+                        subtotal+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+                        detail.push({
+                            kode_trx:this.props.nota,
+                            subtotal:(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty),
+                            price:item.harga,
+                            qty:item.qty,
+                            kategori:item.kategori,
+                            tax:item.ppn,
+                            services:item.services,
+                            sku:item.barcode,
+                            open_price:item.harga===item.harga_old?0:item.harga,
+                            hrg_beli:item.hrg_beli,
+                            diskon:0
+                        })
+                    });
+                    moment.locale("id");
+                    let master = {
+                        "tempo": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
+                        "hr": "S",
+                        "kartu": "-",
+                        "dis_persen": this.state.discount_persen,
+                        "kd_sales": 1,
+                        "jam": moment(new Date()).format("HH:mm:ss"),
+                        "tgl": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
+                        "compliment": "-",
+                        "kd_kasir": this.state.userid,
+                        "no_kartu": "0",
+                        "optional_note": "",
+                        "id_hold": "-",
+                        "diskon": this.state.discount_harga,
+                        "compliment_rp": "0",
+                        "jml_kartu": 0,
+                        "charge": 0,
+                        "change": 0,
+                        "rounding": 0,
+                        "tax": this.state.pajak,
+                        "nominal_poin": 0,
+                        "tunai": 0,
+                        "poin_tukar": 0,
+                        "gt": (subtotal - (subtotal * (parseFloat(this.state.discount_persen) / 100))) + (subtotal * (parseFloat(this.state.pajak) / 100)),
+                        "pemilik_kartu": "-",
+                        "jenis_trx": "TUNAI",
+                        "kd_cust": this.state.customer,
+                        "kode_trx":this.props.nota,
+                        "subtotal": subtotal,
+                        "lokasi": this.state.location,
+                        "kassa": "A",
+                        "jns_kartu": "Debit",
+                        "status": "LUNAS"
+                    };
+                    this.setState({
+                        master:master,
+                        detail:detail
                     })
+                    console.log("DATA DETAIL",detail);
                 }
             })
         }
@@ -477,6 +538,7 @@ class Sale extends Component{
                     nm_brg: data[0].nm_brg,
                     barcode: data[0].barcode,
                     satuan: data[0].satuan,
+                    harga_old:data[0].harga,
                     harga: data[0].harga,
                     harga2: data[0].harga2,
                     harga3: data[0].harga3,
@@ -486,6 +548,9 @@ class Sale extends Component{
                     diskon_nominal: data[0].diskon_nominal,
                     ppn: data[0].ppn,
                     qty: 1,
+                    hrg_beli:data[0].hrg_beli,
+                    kategori:data[0].kategori,
+                    services:data[0].service,
                     tambahan: []
                 })
             } else {
@@ -572,7 +637,7 @@ class Sale extends Component{
                 })
             })
         }
-        let subtotal=0;
+        let totalsub=0;
         return (
             <Layout page="Penjualan Barang">
                 <div className="row align-items-center">
@@ -583,19 +648,12 @@ class Sale extends Component{
                         </div>
                     </div>
                     {/* Dashboard Info Area */}
-                    <div className="col-6">
-                        <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
-                            <div className="dashboard-btn-group d-flex align-items-center">
-                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-info ml-1">Simpan</a>
-                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div style={{ height: "100vh"}}>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        {/* <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}> */}
+                         <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="chat-area">
@@ -679,6 +737,7 @@ class Sale extends Component{
                                                                             nm_brg: i.nm_brg,
                                                                             barcode: i.barcode,
                                                                             satuan: i.satuan,
+                                                                            harga_old:i.harga,
                                                                             harga: i.harga,
                                                                             harga2: i.harga2,
                                                                             harga3: i.harga3,
@@ -688,6 +747,9 @@ class Sale extends Component{
                                                                             diskon_nominal: i.diskon_nominal,
                                                                             ppn: i.ppn,
                                                                             qty: 1,
+                                                                            hrg_beli:i.hrg_beli,
+                                                                            kategori:i.kategori,
+                                                                            services:i.service,
                                                                             tambahan: []
                                                                         })}>
                                                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar"/>
@@ -715,7 +777,7 @@ class Sale extends Component{
                                     </div>
                                 </div>
                             </div>
-                        {/* </StickyBox> */}
+                         </StickyBox>
                         <div style={{ height: "auto",width:"80%"}}>
                             <div className="card">
                                 <div className="container" style={{marginTop: "20px"}}>
@@ -804,7 +866,7 @@ class Sale extends Component{
                                                                 className="form-control"
                                                                 id="exampleTextarea1"
                                                                 rows={3}
-                                                                defaultValue={""}
+                                                                defaultValue={this.state.catatan}
                                                                 onChange={(e => this.HandleCommonInputChange(e))}
                                                                 name="catatan"
                                                             />
@@ -831,8 +893,8 @@ class Sale extends Component{
                                                 <th>barcode</th>
                                                 <th>satuan</th>
                                                 <th>harga</th>
-                                                <th>diskon 1 (%)</th>
-                                                <th>diskon 2 (%)</th>
+                                                <th>disc 1 (%)</th>
+                                                <th>disc 2 (%)</th>
                                                 <th>ppn</th>
                                                 <th>qty</th>
                                                 <th>Subtotal</th>
@@ -870,7 +932,7 @@ class Sale extends Component{
                                                         ppn = hrg*(ppnInt/100);
                                                     }
 
-                                                    subtotal+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+                                                    totalsub+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
 
                                                     return (
                                                         <tr key={index}>
@@ -935,16 +997,65 @@ class Sale extends Component{
                                             <tr style={{background: '#eee'}}>
                                                 <td colSpan='9' style={{textAlign: 'right !important'}}>Total
                                                 </td>
-                                                <td colSpan='1' style={{textAlign:"right"}}>{toRp(subtotal)}</td>
+                                                <td colSpan='1' style={{textAlign:"right"}}>{toRp(totalsub)}</td>
                                             </tr>
                                             </tfoot>
                                         </table>
+
+                                    </div>
+
+                                </div>
+                                <div className="card-header">
+                                    <div className='row'>
+                                        <div className="col-md-7">
+                                            <div className="dashboard-btn-group d-flex align-items-center">
+                                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-5">
+                                            <div className="pull-right">
+                                                <form className="form_head">
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Sub Total</label>
+                                                        <div className="col-sm-8">
+                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={totalsub} readOnly />
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Discount</label>
+                                                        <div className="col-sm-3">
+                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,totalsub)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
+                                                        </div>
+                                                        <div className="col-sm-5">
+                                                            <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,totalsub)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Pajak %</label>
+                                                        <div className="col-sm-3">
+                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Grand Total</label>
+                                                        <div className="col-sm-8">
+
+                                                            <input type="text" name="grand_total" className="form-control text-right" readOnly value={(totalsub - (totalsub * (parseFloat(this.state.discount_persen) / 100))) + (totalsub * (parseFloat(this.state.pajak) / 100))} />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+                <FormSale master={this.state.master} detail={this.state.detail} subtotal={totalsub}/>
             </Layout>
         );
     }
@@ -954,9 +1065,9 @@ class Sale extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     barang: state.productReducer.result_brg_sale,
     loadingbrg: state.productReducer.isLoadingBrgSale,
-    nota: state.poReducer.code,
+    nota: state.saleReducer.code,
     customer: state.customerReducer.all,
-    isLoading:state.poReducer.isLoading,
+    isLoading:state.saleReducer.isLoading,
     auth:state.auth
 });
 

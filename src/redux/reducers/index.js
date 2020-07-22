@@ -25,6 +25,8 @@ import {receiveReducer} from "./purchase/receive/receive.reducer";
 import {siteReducer} from "./site.reducer";
 import {dnReducer} from "./inventory/delivery_note/dn.reducer";
 import {alokasiReducer} from './inventory/alokasi/alokasi.reducer'
+import {saleReducer} from "./sale/sale.reducer";
+import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -52,7 +54,8 @@ export default combineReducers({
     siteReducer,
     dnReducer,
     alokasiReducer,
-
+    saleReducer,
+    mutationReducer,
     auth: authReducer,
     errors : errorsReducer
 });

@@ -38,7 +38,6 @@ class CustomerPrice extends Component{
         this.setState({ dataCustomer });
     }
     handleOnEnter(i){
-
         console.log(this.state.dataCustomer);
         let data={};
         data['kd_cust'] = this.state.dataCustomer[i].kd_cust;

@@ -21,6 +21,7 @@ import DeliveyNote from '../inventory/delivery_note'
 import Alokasi from '../inventory/alokasi'
 import InventoryReport from '../report/inventory/stock'
 import AdjustmentReport from '../report/inventory/adjustment'
+import ApprovalMutasi from "../inventory/approval_mutasi";
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
@@ -39,6 +40,7 @@ const Routes = (
             <PrivateRoute path="/receive" exact strict component={Receive} />
             <PrivateRoute path="/sale" exact strict component={Sale} />
             <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
+            <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
             <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />
             <PrivateRoute path="/delivery_note" exact strict component={DeliveyNote} />
             <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
