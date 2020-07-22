@@ -29,17 +29,17 @@ class Dashboard extends Component {
                 id: "basic-bar"
               },
               xaxis: {
-                categories: ["TOKO KOPO","TOKO GARUT","TOKO RANCAEKEK","HO"]
+                categories: ["TOKO KOPO", "TOKO GARUT", "TOKO RANCAEKEK", "HO", "HO", "TOKO KOPO", "TOKO GARUT", "TOKO RANCAEKEK", "HO", "HO",'cek','ceekkk']
               }
             },
             series: [
               {
                 name: "Bulan Lalu",
-                data: [30,34,67,89,54]
+                data: [30, 34, 67, 89, 54, 30, 34, 67, 89, 54, 89, 54]
               },
               {
                 name: "Bulan Sekarang",
-                data: [20,64,37,69,94]
+                data: [20, 64, 37, 69, 94, 30, 34, 67, 89, 54, 89, 54]
               }
             ],
             // chart2
@@ -61,7 +61,7 @@ class Dashboard extends Component {
                 data: [80,74,37,59,34]
               }
             ],
-            // chart3
+            // daily
             options3: {
               chart: {
                 id: "basic-bar"
@@ -89,7 +89,7 @@ class Dashboard extends Component {
                 data: [15000,13000,27000,69000,94000,45000,12000]
               }
             ],
-            // chart4
+            // hourly
             options4: {
                 chart: {
                     type: 'area'
