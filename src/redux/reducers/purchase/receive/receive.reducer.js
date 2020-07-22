@@ -10,6 +10,7 @@ const initialState = {
     receiveReportDetail: [],
     msg:"",
     status:"",
+    receive_data:[],
     code:"-"
 };
 
@@ -21,6 +22,10 @@ export const receiveReducer = (state = initialState, action) => {
                 msg: action.data.msg,
                 data: action.data.result,
                 total: action.data.result.total
+            });
+        case RECEIVE.RECEIVE_DATA:
+            return Object.assign({}, state, {
+                receive_data: action.data.result
             });
         case RECEIVE.SUCCESS_CODE:
             return Object.assign({}, state, {

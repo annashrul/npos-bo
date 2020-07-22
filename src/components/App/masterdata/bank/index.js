@@ -18,7 +18,7 @@ class Bank extends Component{
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
             let access = nextProps.auth.user.access;
-            if(access!==undefined){
+            if(access!==undefined&&access!==null){
                 if(nextProps.auth.user.access[18]['label']==="0"){
                     alert("bukan halaman kamu");
                     this.props.history.push({

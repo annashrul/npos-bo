@@ -3,7 +3,7 @@ import {CUSTOMER} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,
-    status:"",msg:"",data:[],edit:[],dataPrice:[]
+    status:"",msg:"",data:[],edit:[],dataPrice:[],all:[]
 };
 
 export const customerReducer = (state=initialState,action) => {
@@ -13,6 +13,10 @@ export const customerReducer = (state=initialState,action) => {
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
+            });
+        case CUSTOMER.ALL:
+            return Object.assign({}, state,{
+                all:action.data.result.data
             });
         case CUSTOMER.LIST_PRICE:
             return Object.assign({}, state,{

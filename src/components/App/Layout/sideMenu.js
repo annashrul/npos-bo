@@ -8,10 +8,11 @@ class SideMenu extends Component {
         super(props);
         this.state ={
             isMasterdata: false,
-            isTransaction: false,
+            isInventory: false,
             isInventory: false,
             isReport: false,
             isReceive: false,
+            isSale:false,
             pageMenu : '',
             dataUser:[],
             dataUser0:'',
@@ -42,9 +43,9 @@ class SideMenu extends Component {
             this.setState({isMasterdata : !this.state.isMasterdata});
             console.log("COUNTER",this.state.isMasterdata);
         }
-        if(param === 'transaction'){
+        if(param === 'inventory'){
             this.setState({
-                isTransaction : !this.state.isTransaction,
+                isInventory : !this.state.isInventory,
             });
         }
         if(param === 'report'){
@@ -53,42 +54,46 @@ class SideMenu extends Component {
         if(param === 'receive'){
             this.setState({isReceive : !this.state.isReceive});
         }
+        if(param === 'sale'){
+            this.setState({isSale : !this.state.isSale});
+        }
     }
     componentDidMount(){
-        // let dataUser=[];
-        // console.log("componentwillmount",this.props.auth.user.access);
-        // let loc =this.props.auth.user.access;
-        // if(loc!==undefined){
-        //     this.setState({
-        //         product:this.props.auth.user.access[10]['label'],
-        //         user:this.props.auth.user.access[11]['label'],
-        //         department:this.props.auth.user.access[12]['label'],
-        //         supplier:this.props.auth.user.access[13]['label'],
-        //         location:this.props.auth.user.access[14]['label'],
-        //         customer:this.props.auth.user.access[15]['label'],
-        //         cash:this.props.auth.user.access[16]['label'],
-        //         sales:this.props.auth.user.access[17]['label'],
-        //         bank:this.props.auth.user.access[18]['label'],
-        //     })
-        // }
+        let dataUser=[];
+        console.log("componentwillmount",this.props.auth.user.access);
+        let loc =this.props.auth.user.access;
+        if(loc!==undefined&&loc!==null){
+            this.setState({
+                product:this.props.auth.user.access[10]['label'],
+                user:this.props.auth.user.access[11]['label'],
+                department:this.props.auth.user.access[12]['label'],
+                supplier:this.props.auth.user.access[13]['label'],
+                location:this.props.auth.user.access[14]['label'],
+                customer:this.props.auth.user.access[15]['label'],
+                cash:this.props.auth.user.access[16]['label'],
+                sales:this.props.auth.user.access[17]['label'],
+                bank:this.props.auth.user.access[18]['label'],
+            })
+        }
     }
     componentWillReceiveProps = (nextProps) => {
-        // if (nextProps.auth.user) {
-        //     let loc =nextProps.auth.user.access;
-        //     if(loc!==undefined){
-        //         this.setState({
-        //             product:nextProps.auth.user.access[10]['label'],
-        //             user:nextProps.auth.user.access[11]['label'],
-        //             department:nextProps.auth.user.access[12]['label'],
-        //             supplier:nextProps.auth.user.access[13]['label'],
-        //             location:nextProps.auth.user.access[14]['label'],
-        //             customer:nextProps.auth.user.access[15]['label'],
-        //             cash:nextProps.auth.user.access[16]['label'],
-        //             sales:nextProps.auth.user.access[17]['label'],
-        //             bank:nextProps.auth.user.access[18]['label'],
-        //         })
-        //     }
-        // }
+        if (nextProps.auth.user) {
+            let loc =nextProps.auth.user.access;
+            console.log(loc!==null?"aya":"kosong");
+            if(loc!==undefined&&loc!==null){
+                this.setState({
+                    product:nextProps.auth.user.access[10]['label']!==null?nextProps.auth.user.access[10]['label']:"0",
+                    user:nextProps.auth.user.access[11]['label']!==null?nextProps.auth.user.access[11]['label']:"0",
+                    department:nextProps.auth.user.access[12]['label']!==null?nextProps.auth.user.access[12]['label']:"0",
+                    supplier:nextProps.auth.user.access[13]['label']!==null?nextProps.auth.user.access[13]['label']:"0",
+                    location:nextProps.auth.user.access[14]['label']!==null?nextProps.auth.user.access[14]['label']:"0",
+                    customer:nextProps.auth.user.access[15]['label']!==null?nextProps.auth.user.access[15]['label']:"0",
+                    cash:nextProps.auth.user.access[16]['label']!==null?nextProps.auth.user.access[16]['label']:"0",
+                    sales:nextProps.auth.user.access[17]['label']!==null?nextProps.auth.user.access[17]['label']:"0",
+                    bank:nextProps.auth.user.access[18]['label']!==null?nextProps.auth.user.access[18]['label']:"0",
+                })
+            }
+        }
     }
     render() {
         // masterdata: [
@@ -135,14 +140,17 @@ class SideMenu extends Component {
                             {/*<li className={path==='/bank'?"active":''}><Link to="/bank"> <i className="zmdi zmdi-apps" />Bank </Link></li>*/}
                         </ul>
                     </li>
-                    <li className={this.state.isTransaction===true?"treeview active menu-open" : "treeview"}>
-                        <a href="#" onClick={(e) => this.changeMenu('transaction')}><i className="zmdi zmdi-apps" /> <span>Transaction</span> <i className="fa fa-angle-right" /></a>
+                    <li className={
+                        this.state.isInventory===true || 
+                        path==='/delivery_note' || 
+                        path === '/alokasi' ||
+                        path === '/adjustment'
+                        ?"treeview active menu-open" : "treeview"}>
+                        <a href="#" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-apps" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
-                            <li className={path==='/inventory'?"active":''}><Link to="/inventory"> <i className="zmdi zmdi-apps" />Ineventory</Link></li>
-                            <li className={path==='/purchase'?"active":''}><Link to="/purchase"> <i className="zmdi zmdi-apps" />Purchase </Link></li>
-                            <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Sale </Link></li>
-                            <li className={path==='/debt'?"active":''}><Link to="/debt"> <i className="zmdi zmdi-apps" />Debt </Link></li>
-                            <li className={path==='/account_receivable'?"active":''}><Link to="/account_receivable"> <i className="zmdi zmdi-apps" />Accounts Receivable</Link></li>
+                            <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note"> <i className="zmdi zmdi-apps" />Delivery Note</Link></li>
+                            <li className={path==='/alokasi'?"active":''}><Link to="/alokasi"> <i className="zmdi zmdi-apps" />Alokasi </Link></li>
+                            <li className={path==='/adjustment'?"active":''}><Link to="/adjustment"> <i className="zmdi zmdi-apps" />Adjustment </Link></li>
                         </ul>
                     </li>
                     <li className={this.state.isReceive===true  || path==='/purchase_order' || path === '/receive' ?"treeview active menu-open" : "treeview"}>
@@ -150,6 +158,12 @@ class SideMenu extends Component {
                         <ul className="treeview-menu">
                             <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
                             <li className={path==='/receive'?"active":''}><Link to="/receive"> <i className="zmdi zmdi-apps" />Receive Pembelian</Link></li>
+                        </ul>
+                    </li>
+                    <li className={this.state.isSale===true  || path==='/sale'?"treeview active menu-open" : "treeview"}>
+                        <a href="#" onClick={(e) => this.changeMenu('sale')}><i className="zmdi zmdi-apps" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
+                        <ul className="treeview-menu">
+                            <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
                     <li className={this.state.isReport===true?"treeview active menu-open" : "treeview"}>

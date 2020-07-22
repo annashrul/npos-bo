@@ -19,15 +19,15 @@ export function setPO(data = []) {
         data
     }
 }
-export function setReceive(data = []) {
+export function setPoData(data = []) {
     return {
         type: RECEIVE.RECEIVE_DATA,
         data
     }
 }
-export function setReceiveDetail(data = []) {
+export function setReport(data = []) {
     return {
-        type: RECEIVE.RECEIVE_REPORT_DETAIL,
+        type: RECEIVE.SUCCESS_REPORT,
         data
     }
 }
@@ -117,46 +117,37 @@ export const storeReceive= (data) => {
             })
     }
 }
-export const FetchReceiveReport = (page=1,dateFrom='',dateTo='',location='')=>{
+
+export const FetchReport = (page = 1, perpage = 10,q='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-        let que = '';
-        if(dateFrom===''&&dateTo===''&&location===''){
-            que = `receive/report?page=${page}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `receive/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `receive/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        }
-        if(location!==''){
-            que = `receive/report?page=${page}&lokasi=${location}`;
-        }
-        console.log(`${que}`);
-        axios.get(HEADERS.URL+`${que}`)
-            .then(function(response){
-                const data = response.data;
-                console.log(data);
-                dispatch(setReceive(data));
+        axios.get(HEADERS.URL + `receive/report?page=${page}&perpage=${perpage}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setReport(data))
                 dispatch(setLoading(false));
-            }).catch(function(error){
-            console.log(error)
-        })
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
     }
 }
-export const FetchReceiveReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+
+export const FetchReceiveData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`purchaseorder/report/${code}?page=${page}`)
-            .then(function(response){
-                const data = response.data;
-                console.log(data);
-                dispatch(setReceiveDetail(data));
+        axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setPoData(data))
                 dispatch(setLoading(false));
-            }).catch(function(error){
-            console.log(error)
-        })
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
     }
 }

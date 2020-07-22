@@ -1,6 +1,5 @@
 import {CUSTOMER, HEADERS} from "../../_constants";
 import axios from 'axios'
-import {FetchLocation, setEditLocation} from "../location/location.action";
 import Swal from "sweetalert2";
 
 
@@ -12,6 +11,9 @@ export function setCustomerEdit(data=[]){
 }
 export function setCustomer(data=[]){
     return {type:CUSTOMER.SUCCESS,data}
+}
+export function setCustomerAll(data=[]){
+    return {type:CUSTOMER.ALL,data}
 }
 export function setCustomerPrice(data=[]){
     return {type:CUSTOMER.LIST_PRICE,data}
@@ -37,6 +39,21 @@ export const FetchCustomer = (page=1,q)=>{
                 const data = response.data;
                 console.log(data);
                 dispatch(setCustomer(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchCustomerAll = ()=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+
+        axios.get(HEADERS.URL+`customer?page=1&perpage=100`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setCustomerAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)

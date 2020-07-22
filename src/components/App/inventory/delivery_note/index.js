@@ -1,19 +1,21 @@
 import React,{Component} from 'react';
-import {store,get, update,destroy,cekData,del} from "components/model/app.model";
-import connect from "react-redux/es/connect/connect";
-import Layout from "components/App/Layout"
-import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
-import {FetchCheck} from 'redux/actions/site.action'
-import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
-import {FetchNota,storeDN} from 'redux/actions/inventory/dn.action'
-import {FetchPoReport,FetchPoData,setPoData} from 'redux/actions/purchase/purchase_order/po.action'
-
-import { Scrollbars } from "react-custom-scrollbars";
+import axios from 'axios';
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
+import connect from "react-redux/es/connect/connect";
 import moment from 'moment';
+import AsyncSelect from 'react-select/async';
+
+import {store,get, update,destroy,cekData,del} from "components/model/app.model";
+import Layout from "components/App/Layout"
+import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
+import {FetchCheck} from 'redux/actions/site.action'
+import {FetchNota,storeDN} from 'redux/actions/inventory/dn.action'
+import {FetchReceiveData,setPoData} from 'redux/actions/purchase/receive/receive.action'
+import { Scrollbars } from "react-custom-scrollbars";
+import {HEADERS} from 'redux/actions/_constants'
 
 const table='delivery_note'
 const Toast = Swal.mixin({
@@ -28,6 +30,41 @@ const Toast = Swal.mixin({
     }
 })
 
+const filterColors = (inputValue) => {
+  let search = 'receive/report?page=1&perpage=40';
+  if (inputValue !== '') search = 'receive/report?page=1&perpage=40&q='+inputValue;
+  return axios.get(HEADERS.URL + search)
+          .then(function (response) {
+              const data = response.data
+              let options=[]
+              data.result.data.map((i) => {
+                options.push({
+                  value: i.no_faktur_beli,
+                  label: i.no_faktur_beli
+                });
+              })
+              console.log("OPSYEN", options);
+              
+              // this.setState({
+              //   data_nota: nota
+              // })
+              return options;
+              
+          })
+          .catch(function (error) {
+              // handle error
+              console.log(error);
+              return [];
+          })
+};
+
+const loadOptions = (inputValue,callback) => {
+
+  const results = filterColors(inputValue);
+  results.then(res=>{
+    callback(res)
+  })
+};
 class DeliveryNote extends Component{
 
     constructor(props) {
@@ -46,7 +83,7 @@ class DeliveryNote extends Component{
           userid:0,
           searchby:1,
           search:"",
-          nota_pembelian:'-',
+          no_faktur_beli:"-",
           data_nota:[],
           ambil_data:1,
           ambil_nota:'',
@@ -80,7 +117,7 @@ class DeliveryNote extends Component{
 
       if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
         if (localStorage.ambil_data == 2) {
-          this.props.dispatch(FetchPoReport(1, 1000))
+          // this.props.dispatch(FetchPoReport(1, 1000))
         }
         this.setState({
           ambil_data: localStorage.ambil_data
@@ -92,7 +129,7 @@ class DeliveryNote extends Component{
         this.setState({
           ambil_nota: localStorage.nota
         })
-        // this.props.dispatch(FetchPoData(localStorage.nota));
+        // this.props.dispatch(FetchReceiveData(localStorage.nota));
         // destroy(table)
         // this.getData()
       }
@@ -111,7 +148,6 @@ class DeliveryNote extends Component{
         })
       }
     }
-
 
     componentWillReceiveProps = (nextProps) => {
       if (nextProps.auth.user) {
@@ -133,54 +169,29 @@ class DeliveryNote extends Component{
       if(nextProps.barang.length>0){
         this.getData()
       }
-
-      if(nextProps.po_report){
-        let nota = []
-        let po = nextProps.po_report;
-        if (po !== undefined) {
-          po.map((i) => {
-            nota.push({
-              value: i.no_po,
-              label: i.no_po+" ("+i.nama_supplier+")"
-            });
-          })
-          this.setState({
-            data_nota: nota
-          })
-        }
-
-      }
-      if (nextProps.po_data){
-        if (nextProps.po_data.master!==undefined){
-          if(this.props.po_data===undefined){
-            console.log("PO HITTTTTTTT");
-            this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
+      
+      if (nextProps.receive_data){
+        if (nextProps.receive_data.master!==undefined){
+          if(this.props.receive_data===undefined){
+            this.props.dispatch(FetchNota(nextProps.receive_data.master.lokasi))
             this.setState({
-              location: nextProps.po_data.master.lokasi,
-              supplier: nextProps.po_data.master.kode_supplier,
-              catatan: nextProps.po_data.master.catatan,
-              jenis_trx: nextProps.po_data.master.jenis,
-              no_po: nextProps.po_data.master.no_po
+              location: nextProps.receive_data.master.lokasi,
+              catatan: nextProps.receive_data.master.catatan,
+              no_faktur_beli: nextProps.receive_data.master.no_faktur_beli
             })
-            localStorage.setItem('lk', nextProps.po_data.master.lokasi)
-            localStorage.setItem('sp', nextProps.po_data.master.kode_supplier)
-            localStorage.setItem('catatan', nextProps.po_data.master.catatan)
+            localStorage.setItem('lk', nextProps.receive_data.master.lokasi)
+            localStorage.setItem('catatan', nextProps.receive_data.master.catatan)
 
-            nextProps.po_data.detail.map(item=>{
+            nextProps.receive_data.detail.map(item=>{
                 const datas = {
                   kd_brg: item.kode_barang,
+                  nm_brg: item.nm_brg,
                   barcode: item.barcode,
                   satuan: item.satuan,
-                  diskon: item.diskon,
-                  diskon2: item.disc2,
-                  diskon3: item.disc3,
-                  diskon4: item.disc4,
-                  ppn: item.ppn,
                   harga_beli: item.harga_beli,
-                  qty: item.jumlah_beli,
-                  qty_bonus: 0,
+                  hrg_jual: item.harga,
                   stock: item.stock,
-                  nm_brg: item.nm_brg,
+                  qty: item.qty,
                   tambahan: item.tambahan
                 };
                 store(table, datas)
@@ -222,7 +233,7 @@ class DeliveryNote extends Component{
 
 
       localStorage.setItem('nota', nota.value);
-      this.props.dispatch(FetchPoData(nota.value));
+      this.props.dispatch(FetchReceiveData(nota.value));
       destroy(table)
       localStorage.removeItem('sp');
       localStorage.removeItem('lk');
@@ -276,7 +287,7 @@ class DeliveryNote extends Component{
 
       if (column === 'ambil_data') {
         if(val==2){
-          this.props.dispatch(FetchPoReport(1, 1000))
+          // this.props.dispatch(FetchPoReport(1, 1000))
         }
         localStorage.setItem('ambil_data',val);
         destroy(table)
@@ -528,7 +539,7 @@ class DeliveryNote extends Component{
                     lokasi_asal:this.state.location,
                     lokasi_tujuan:this.state.location2,
                     catatan:this.state.catatan,
-                    kode_pembelian:this.state.nota_pembelian,
+                    kode_pembelian: this.state.ambil_nota,
                     subtotal,
                     userid: this.state.userid,
                     detail: detail
@@ -615,6 +626,7 @@ class DeliveryNote extends Component{
       });
     }
 
+
     render() {
       
       // if(this.props.isLoading){
@@ -670,14 +682,22 @@ class DeliveryNote extends Component{
                           </div>
                           <div className="col-md-12" style={parseInt(this.state.ambil_data)==1?{display:'none'}:{display:'block'}}>
                             <div className="form-group">
-                              <Select 
-                                    options={this.state.data_nota} 
+                              <AsyncSelect
                                     placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'Pembelian':'')}
                                     onChange={this.HandleChangeNota}
-                                    value = {
-                                      this.state.data_nota.find(op => {
-                                        return op.value === this.state.ambil_nota
-                                      })
+                                    value = {{
+                                      label: this.state.ambil_nota,
+                                      value: this.state.ambil_nota
+                                    }}
+                                    cacheOptions
+                                    loadOptions={loadOptions}
+                                    defaultOptions
+                                    filterOptions = {
+                                      (options, filter, currentValues) => {
+                                        // Do no filtering, just return all options
+                                        console.log("options =", options)
+                                        return options;
+                                      }
                                     }
 
                                   />
@@ -1008,7 +1028,7 @@ const mapStateToPropsCreateItem = (state) => ({
   isLoading:state.receiveReducer.isLoading,
   auth:state.auth,
   po_report: state.poReducer.report_data,
-  po_data: state.poReducer.po_data,
+  receive_data: state.receiveReducer.receive_data,
   checkNotaPem: state.siteReducer.check
 });
 
