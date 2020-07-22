@@ -67,7 +67,6 @@ class Sale extends Component{
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeCustomer = this.HandleChangeCustomer.bind(this);
         this.setTglOrder=this.setTglOrder.bind(this);
-        this.setTglEx=this.setTglEx.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
         this.HandleSearch = this.HandleSearch.bind(this);
     }
@@ -281,12 +280,6 @@ class Sale extends Component{
         });
     };
 
-    setTglEx(date) {
-        this.setState({
-            tgl_kirim: date
-        });
-    };
-
     HandleRemove(e, id){
         e.preventDefault()
         Swal.fire({
@@ -429,6 +422,40 @@ class Sale extends Component{
                     }).then((result) => {
                         if (result.value) {
                             let subtotal = 0;
+                            let master = {
+                                "tempo":moment(new Date()).format("yyyy-MM-DD"),
+                                "hr": "-",
+                                "kartu": "-",
+                                "dis_persen": 0,
+                                "kd_sales": "1",
+                                "jam": moment(new Date()).format("hh:mm:ss"),
+                                "tgl": this.state.tgl_order,
+                                "compliment": "-",
+                                "kd_kasir": this.state.userid,
+                                "no_kartu": "-",
+                                "optional_note": "",
+                                "id_hold": "-",
+                                "diskon": 0,
+                                "compliment_rp": "0",
+                                "jml_kartu": 0,
+                                "charge": 0,
+                                "change": 0,
+                                "rounding": 0,
+                                "tax": 0,
+                                "nominal_poin": 0,
+                                "tunai": 180000,
+                                "poin_tukar": 0,
+                                "gt": 180000,
+                                "pemilik_kartu": "-",
+                                "jenis_trx": "Tunai",
+                                "kd_cust": "",
+                                "kode_trx": "T22006300032Q",
+                                "subtotal": 180000,
+                                "lokasi": "LK/0001",
+                                "kassa": "Q",
+                                "jns_kartu": "-",
+                                "status": "LUNAS"
+                            };
                             let detail = [];
 
                         }
@@ -536,11 +563,6 @@ class Sale extends Component{
     }
 
     render() {
-
-        // if(this.props.isLoading){
-        //   return <Preloader/>
-        // }
-        console.log("DB LOCAL",this.props.barang);
         let opCustomer=[];
         if(this.props.customer!=[]){
             this.props.customer.map(i=>{
@@ -830,39 +852,26 @@ class Sale extends Component{
                                                     // 2000-(2000*(10/100)) = 1800 // diskon 1 (%)
                                                     // 1800-(1800*(10/100)) = 1620 // diskon 2 (%)
                                                     // 2000+(2000*(10/100)) = 2200 // ppn
-
                                                     if(disc_per!==0){
                                                         disc1 = hrg-(hrg*(disc_per/100));
                                                         disc2 = disc1;
-                                                        //1800
                                                         if(disc_rp!==0){
-                                                            // 1800-(1800*(10/100))
                                                             disc2 = disc1-(disc1*(disc_rp/100))
                                                         }
                                                     }else if(disc_rp!==0){
                                                         disc1 = hrg-(hrg*(disc_rp/100));
                                                         disc2 = disc1;
-                                                        //1800
                                                         if(disc_per!==0){
-                                                            // 1800-(1800*(10/100))
                                                             disc2 = disc1-(disc1*(disc_per/100))
                                                         }
-
                                                     }
 
                                                     if(ppnInt!==0){
                                                         ppn = hrg*(ppnInt/100);
                                                     }
-                                                    console.log("DISOKN 2",disc2)
+
                                                     subtotal+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
 
-
-                                                    // disc1 = hrg-(hrg*(disc_per/100));
-                                                    // disc2 = disc1-(disc1*(disc_rp/100));
-                                                    // ppn = hrg+(hrg*(ppnInt/100));
-                                                    // subtotal+=(disc1+disc2+ppn)*parseInt(item.qty);
-                                                    // subtotal+=(item.harga_beli-disc2+ppn)*parseFloat(item.qty);
-                                                    // subtotal += (hrg-disc1-disc2+ppn)*parseInt(item.qty);
                                                     return (
                                                         <tr key={index}>
                                                             <td>
