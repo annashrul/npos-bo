@@ -1,18 +1,11 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-// import ListLocation from "components/App/masterdata/location/master_location/list";
 import Preloader from "Preloader";
-import {FetchLocation} from "redux/actions/masterdata/location/location.action";
-import {FetchLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
-// import ListLocationCategory from "../../../masterdata/location/master_location_category/list";
-// import {sessionService} from "redux-react-session";
-// import {FetchLocation} from "redux/actions/masterdata/location/location.action";
-// import {FetchLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
-import {FetchStockReport} from "redux/actions/report/inventory/stock_report.action";
+import {FetchAlokasi} from "redux/actions/inventory/alokasi.action";
 import connect from "react-redux/es/connect/connect";
-import ListStockReport from "./src/list";
-class InventoryReport extends Component{
+import ListAlokasiReport from "./src/list";
+class AlokasiReport extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -27,9 +20,10 @@ class InventoryReport extends Component{
         //         token:session.token
         //     },()=>{
                 // this.setState({token:session.token});
-                let anyStockReport = localStorage.getItem("any_stock_report");
-                let pageStockReport = localStorage.getItem('page_stock_report');
-                this.props.dispatch(FetchStockReport(null,pageStockReport?pageStockReport:1,'','',''));
+                let any = localStorage.getItem("any_alokasi_report");
+                let page = localStorage.getItem('page_alokasi_report');
+                // this.props.dispatch(FetchAlokasi(null,pageAlokasiReport?pageAlokasiReport:1,'','',''));
+                this.props.dispatch(FetchAlokasi(page?page:1,any?any:''));
         //     })}
         // );
         // sessionService.loadUser()
@@ -48,61 +42,36 @@ class InventoryReport extends Component{
     };
     render(){
         return (
-            <Layout page="Inventory Report">
-                {/*{this.props.isLoadingDetailSatuan?<Preloader/>:*/}
-                <div className="col-12">
+            <Layout page="AlokasiReport">
+                <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
-                            <Tabs>
-                                <TabList>
-                                    <Tab onClick={(e) =>this.handleSelect(e,0)} >Stock</Tab>
-                                    <Tab onClick={(e) =>this.handleSelect(e,1)} >Stock Opname</Tab>
-                                    <Tab onClick={(e) =>this.handleSelect(e,2)} >Purchase</Tab>
-                                    <Tab onClick={(e) =>this.handleSelect(e,3)} >Sale</Tab>
-                                    <Tab onClick={(e) =>this.handleSelect(e,4)} >Adjusment</Tab>
-                                </TabList>
-                                <TabPanel>
-                                    {
-                                        !this.props.isLoading ? ( <ListStockReport
-                                            token={this.state.token}
-                                            data={this.props.stockReport}
-                                            total={this.props.total}
-                                            />
-                                        ) : <Preloader/>
-                                    }
-                                </TabPanel>
-                                <TabPanel>
-                                    <h1>Stock Opname</h1>
-                                </TabPanel>
-                                <TabPanel>
-                                    <h1>Purchase</h1>
-                                </TabPanel>
-                                <TabPanel>
-                                    <h1>Sale</h1>
-                                </TabPanel>
-                                <TabPanel>
-                                    <h1>Adjusment</h1>
-                                </TabPanel>
-                            </Tabs>
+                            {
+                                !this.props.isLoading ? (  <ListAlokasiReport
+                                    data={this.props.alokasiReport}
+                                    // pagin={this.handlePagin}
+                                    // search={this.handleSearch}
+                                    // token={this.state.token}
+                                /> ) : <Preloader/>
+                            }
                         </div>
                     </div>
-
                 </div>
-                {/*}*/}
             </Layout>
-        );
+            );
     }
 }
 
 const mapStateToProps = (state) => {
+    console.log("mapstate alokasi", state.alokasiReducer);
     return {
         // authenticated: state.sessionReducer.authenticated,
-        stockReport:state.stockReportReducer.data,
-        total:state.stockReportReducer.total,
-        isLoading: state.stockReportReducer.isLoading,
-        isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
+        alokasiReport:state.alokasiReducer.data,
+        // total:state.alokasiReducer.total,
+        isLoading: state.alokasiReducer.isLoading,
+        isLoadingDetail: state.alokasiReducer.isLoadingDetail,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(InventoryReport);
+export default connect(mapStateToProps)(AlokasiReport);

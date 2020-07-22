@@ -4,6 +4,7 @@ import {
 
 const initialState = {
     isLoading: false,
+    isLoadingDetail:false,
     data: [],
     msg:"",
     status:"",
@@ -20,7 +21,7 @@ export const alokasiReducer = (state = initialState, action) => {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result,
-                total: action.data.result.total
+                // total: action.data.result.total
             });
         case ALOKASI.REPORT_SUCCESS:
             return Object.assign({}, state, {
@@ -44,6 +45,10 @@ export const alokasiReducer = (state = initialState, action) => {
         case ALOKASI.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
+            });
+        case ALOKASI.LOADING_DETAIL:
+            return Object.assign({}, state, {
+                isLoadingDetail: action.load
             });
         default:
             return state

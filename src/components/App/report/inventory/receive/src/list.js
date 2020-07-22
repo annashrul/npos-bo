@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
-// import {FetchReceiveReport, FetchReceiveReportDetail} from "redux/actions/purchase/receive/receive.action";
+import {FetchReport, FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq, {statusQ} from "helper";
 import DetailReceiveReport from "components/App/modals/report/purchase/receive/detail_receive_report";
@@ -19,7 +19,7 @@ class ListReceiveReport extends Component{
     handlePageChange(pageNumber){
         console.log(`active page is ${pageNumber}`);
         localStorage.setItem("page_receive",pageNumber);
-        // this.props.dispatch(FetchReceiveReport(pageNumber,''))
+        this.props.dispatch(FetchReport(pageNumber,''))
     }
     handlesearch(e){
         e.preventDefault();
@@ -28,9 +28,9 @@ class ListReceiveReport extends Component{
         let any = data.get('field_any');
         localStorage.setItem('any_receive',any);
         if(any===''||any===null||any===undefined){
-            // this.props.dispatch(FetchReceiveReport(1,''))
+            this.props.dispatch(FetchReport(1,''))
         }else{
-            // this.props.dispatch(FetchReceiveReport(1,any))
+            this.props.dispatch(FetchReport(1,any))
         }
     }
     toggleModal(e, no_po) {
@@ -38,7 +38,7 @@ class ListReceiveReport extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("receiveReportDetail"));
-        // this.props.dispatch(FetchReceiveReportDetail(1,no_po))
+        this.props.dispatch(FetchReportDetail(1,no_po))
     }
     // handleDelete(e,id){
     //     console.log(id);
