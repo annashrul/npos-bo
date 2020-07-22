@@ -6,8 +6,35 @@ import Chart from "react-apexcharts";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import moment from 'moment';
 import Select from 'react-select';
-import DateRangePicker from "dz-daterangepicker-material";
-import "dz-daterangepicker-material/dist/index.css";
+import { Line } from 'peity-react';
+// import DateRangePicker from "dz-daterangepicker-material";
+// import "dz-daterangepicker-material/dist/index.css";
+import DateRangePicker from 'react-bootstrap-daterangepicker';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+
+const range = {
+    Today: [moment(), moment()],
+    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+    "Last 30 Days": [moment().subtract(29, "days"), moment()],
+    "This Month": [moment().startOf("month"), moment().endOf("month")],
+    "Last Month": [
+        moment()
+            .subtract(1, "month")
+            .startOf("month"),
+        moment()
+            .subtract(1, "month")
+            .endOf("month")
+    ],
+    "Last Year": [
+        moment()
+            .subtract(1, "year")
+            .startOf("year"),
+        moment()
+            .subtract(1, "year")
+            .endOf("year")
+    ]
+};
 
 class Dashboard extends Component {
     constructor(props) {
@@ -17,12 +44,125 @@ class Dashboard extends Component {
         this.handleSelect3 = this.handleSelect3.bind(this);
 
         this.state = {
-            startDate: new Date(2020, 4, 1),
-            endDate: new Date(2020, 4, 10),
+            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
+            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
+
             grossSales:"123,456,789",
             netSales:"123,456,789",
             trxNum:"123,456,789",
             avgTrx:"123,456,789",
+
+            dataA: [5,3,9,6,5,9,7,3,5,2],
+            dataB: [9,7,3,5,2,5,3,9,6,5],
+            dataC: [5,3,9,3,5,2,6,5,9,7],
+            dataD: [7,3,5,2,5,3,9,6,5,9],
+
+            // seriesA: [{
+            //     data: [1,2,3,4,5,6,7,8,9,0].slice()
+            // }],
+            // optionsA: {
+            //     chart: {
+            //         id: 'realtime',
+            //         height: 350,
+            //         type: 'line',
+            //         animations: {
+            //         enabled: true,
+            //         easing: 'linear',
+            //         dynamicAnimation: {
+            //             speed: 1000
+            //         }
+            //         },
+            //         toolbar: {
+            //         show: false
+            //         },
+            //         zoom: {
+            //         enabled: false
+            //         }
+            //     },
+            //     dataLabels: {
+            //         enabled: false
+            //     },
+            //     stroke: {
+            //         curve: 'smooth'
+            //     },
+            //     title: {
+            //         text: 'Dynamic Updating Chart',
+            //         align: 'left'
+            //     },
+            //     markers: {
+            //         size: 0
+            //     },
+            //     xaxis: {
+            //         type: 'datetime',
+            //         range: 10,
+            //     },
+            //     yaxis: {
+            //         max: 100
+            //     },
+            //     legend: {
+            //         show: false
+            //     },
+            // },
+
+            seriesStock: [76, 67, 61, 90],
+            optionsStock: {
+              chart: {
+                // height: 300,
+                type: 'radialBar',
+              },
+              plotOptions: {
+                radialBar: {
+                  offsetY: 0,
+                  startAngle: 0,
+                  endAngle: 270,
+                  hollow: {
+                    margin: 5,
+                    size: '30%',
+                    background: 'transparent',
+                    image: undefined,
+                  },
+                  dataLabels: {
+                    name: {
+                      show: false,
+                    },
+                    value: {
+                      show: false,
+                    }
+                  }
+                }
+              },
+              colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5'],
+              labels: ['STOCK IN', 'STOCK OUT', 'STOCK TOTAL', 'STOCK ALL'],
+              legend: {
+                show: true,
+                floating: true,
+                fontSize: '10px',
+                position: 'left',
+                offsetX: 70,
+                offsetY: 2,
+                labels: {
+                  useSeriesColors: true,
+                },
+                markers: {
+                  size: 0
+                },
+                formatter: function(seriesName, opts) {
+                  return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+                },
+                itemMargin: {
+                  vertical: 3
+                }
+              },
+              responsive: [{
+                breakpoint: 480,
+                options: {
+                  legend: {
+                      show: false
+                  }
+                }
+              }]
+            },
+
             // chart1
             options: {
               chart: {
@@ -273,6 +413,50 @@ class Dashboard extends Component {
           };
     }
 
+    componentDidMount() {
+        this.interval = setInterval(
+            () => this.tick(),
+            2000
+          );
+
+        //   setInterval(
+        //       function(){
+        //           var t=Math.round(20*Math.random()),f=i.text().split(",");f.shift(),f.push(t),i.text(f.join(",")).change()
+        //         },1e3
+        // )
+      }
+
+      componentWillUnmount() {
+        clearInterval(this.interval);
+      }
+
+      tick() {
+        // var array = [];
+        var arrayA = [5,3,9,6,5,9,7,3,5,2];
+        var arrayB = [5,3,9,6,5,9,7,3,5,2];
+        var arrayC = [5,3,9,6,5,9,7,3,5,2];
+        var arrayD = [5,3,9,6,5,9,7,3,5,2];
+
+        arrayA.sort(() => 0.5 - Math.random());
+        arrayB.sort(() => 0.7 - Math.random());
+        arrayC.sort(() => 0.9 - Math.random());
+        arrayD.sort(() => 0.3 - Math.random());
+        // as we need at least players to form a pair
+        while (arrayA.length) { 
+        const randA = [arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop()];
+        const randB = [arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop()];
+        const randC = [arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop()];
+        const randD = [arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop()];
+
+        this.setState({
+            dataA: randA,
+            dataB: randB,
+            dataC: randC,
+            dataD: randD
+          });
+        }
+      }
+
     onChange = date => this.setState({ date })
 
     handleSelect = (e,index) => {
@@ -291,11 +475,20 @@ class Dashboard extends Component {
         });
     };
 
-    handleDate = (start,end) => {
-        this.setDate({
-            startDate: start,
-            endDate:end
-        })
+    handleEvent = (event, picker) => {
+        console.log("start: ", picker.startDate);
+        console.log("end: ", picker.endDate._d.toISOString());
+        // end:  2020-07-02T16:59:59.999Z
+        const awal = picker.startDate._d.toISOString().substring(0,10);
+        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        localStorage.setItem("startDateProduct",`${awal}`);
+        localStorage.setItem("endDateProduct",`${akhir}`);
+        this.setState({
+            startDate:awal,
+            endDate:akhir
+        });
+        // console.log(picker.startDate._d.toISOString());
+        // console.log(picker.endDate._d.toISOString());
     };
     
 
@@ -325,19 +518,20 @@ class Dashboard extends Component {
                                 {/* <div className="user-important-data-info d-sm-flex align-items-center justify-content-between"> */}
                                     <div className="row">
                                         <div className="col-2">
+                                        <div className="form-group">
+                                            {/* <label className="control-label font-12">Periode </label> */}
                                             <DateRangePicker
-                                                startDate={this.state.startDate}
-                                                endDate={this.state.endDate}
-                                                onChange={onChange}
-                                                startWeek={'monday'}
-                                                onlyView={false}
-                                                datePicker={false}
-                                                textFieldProps={{}}
-                                                popoverProps={{}}
-                                                />
+                                                ranges={range}
+                                                alwaysShowCalendars={true}
+                                                onEvent={this.handleEvent}
+                                            >
+                                                <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                {/*<input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>*/}
+                                            </DateRangePicker>
+                                        </div>
                                         </div>
                                         <div className="col-2">
-                                            <div className="form-group" style={{'paddingTop': '8px', 'marginBottom':'unset'}}>
+                                            <div className="form-group">
                                                 {/* <label className="control-label font-12">
                                                 Lokasi
                                                 </label> */}
@@ -357,8 +551,13 @@ class Dashboard extends Component {
                                                 </div> */}
                                             </div>
                                         </div>
-                                        <div className="col-2" style={{'paddingTop': '9px', 'marginBottom':'unset'}}>
-                                        <button type="button" className="btn btn-primary">LOAD DATA</button>
+                                        <div className="col-2">
+                                            <div className="form-group">
+                                                {/* <label className="control-label font-12">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </label> */}
+                                                <button type="button" className="btn btn-primary">LOAD DATA</button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -372,7 +571,16 @@ class Dashboard extends Component {
                         <div className="card text-white bg-primary">
                             <div className="card-header border-bottom-0">GROSS SALES</div>
                             <div className="card-body">
-                                <h2 className="text-white float-right">{this.state.grossSales}</h2>
+                                <div className="row">
+                                    <div className="col-md-5">
+                                        <Line height={32} width={128}
+                                            values={this.state.dataA}
+                                        />
+                                    </div>
+                                    <div className="col-md-7">
+                                        <h2 className="text-white float-right">{this.state.grossSales}</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -380,7 +588,16 @@ class Dashboard extends Component {
                         <div className="card text-white bg-secondary">
                             <div className="card-header border-bottom-0">NET SALES</div>
                             <div className="card-body">
-                                <h2 className="text-white float-right">{this.state.netSales}</h2>
+                            <div className="row">
+                                    <div className="col-md-5">
+                                        <Line height={32} width={128}
+                                            values={this.state.dataB}
+                                        />
+                                    </div>
+                                    <div className="col-md-7">
+                                        <h2 className="text-white float-right">{this.state.netSales}</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -388,7 +605,16 @@ class Dashboard extends Component {
                         <div className="card text-white bg-success">
                             <div className="card-header border-bottom-0">NUMBER OF TRANSACTION</div>
                             <div className="card-body">
-                                <h2 className="text-white float-right">{this.state.trxNum}</h2>
+                            <div className="row">
+                                    <div className="col-md-5">
+                                        <Line height={32} width={128}
+                                            values={this.state.dataC}
+                                        />
+                                    </div>
+                                    <div className="col-md-7">
+                                        <h2 className="text-white float-right">{this.state.trxNum}</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -396,7 +622,16 @@ class Dashboard extends Component {
                         <div className="card text-white bg-danger">
                             <div className="card-header border-bottom-0">AVG. SALES PER TRANSACTION</div>
                             <div className="card-body">
-                                <h2 className="text-white float-right">{this.state.avgTrx}</h2>
+                            <div className="row">
+                                    <div className="col-md-5">
+                                        <Line height={32} width={128}
+                                            values={this.state.dataD}
+                                        />
+                                    </div>
+                                    <div className="col-md-7">
+                                        <h2 className="text-white float-right">{this.state.avgTrx}</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -405,8 +640,13 @@ class Dashboard extends Component {
                     <div className="col-md-4 box-margin">
                         <div className="card text-center">
                             <div className="card-body">
-                                <h4 className="card-title">Custom</h4>
-                                
+                                <h4 className="card-title">STOCK</h4>
+                                <Chart
+                                    options={this.state.optionsStock}
+                                    series={this.state.seriesStock}
+                                    type="radialBar"
+                                    height="300"
+                                    />
                             </div>
                         </div>
                     </div>

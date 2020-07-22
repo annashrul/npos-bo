@@ -5,30 +5,24 @@ import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {toRp} from "helper";
 import moment from "moment";
-class DetailAdjustmentReport extends Component{
+class DetailPoReport extends Component{
     constructor(props){
         super(props);
-        this.toggle = this.toggle.bind(this);
     }
 
-
-    toggle(e){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(false));
-        this.props.dispatch(ModalType("detailAdjustment"));
-
-    };
-
     render(){
-        const {data} = this.props.detail;
-        let totAdjustmentIn=0;
-        let totAdjustmentOut=0;
-        let totQty=0;
+        console.log("detail poreport", this.props);
+        // const {data} = this.props.data;
+        if(this.props.poReportDetail===''||this.props.poReportDetail===null||this.props.poReportDetail===undefined){
+            const {data} = [];
+        } else {
+            const {data} = this.props.poReportDetail;
+        }
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        // console.log(data);
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAdjustment"} size="lg">
-                <ModalHeader toggle={this.toggle}>Detail Adjustment Report </ModalHeader>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "poReportDetail"} size="lg">
+                <ModalHeader>Detail Purchase Order Report </ModalHeader>
                 <ModalBody>
                     <table className="table">
                         <tbody>
@@ -50,7 +44,7 @@ class DetailAdjustmentReport extends Component{
                         </tr>
                         </tbody>
                     </table>
-                    <div className="table-responsive" style={{overflowX: "auto"}}>
+                    {/* <div className="table-responsive" style={{overflowX: "auto"}}>
                         <table className="table table-hover table-bordered">
                             <thead className="bg-light">
                             <tr>
@@ -97,7 +91,7 @@ class DetailAdjustmentReport extends Component{
                             </tr>
                             </tfoot>
                         </table>
-                    </div>
+                    </div> */}
                 </ModalBody>
             </WrapperModal>
         );
@@ -108,9 +102,9 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
-        adjustmentDetailTransaction:state.adjustmentReducer.dataDetailTransaksi,
-        isLoading: state.adjustmentReducer.isLoading,
+        // poReportDetail:state.poReducer.poReportDetail,
+        // isLoading: state.poReducer.isLoading,
     }
 }
 // const mapDispatch
-export default connect(mapStateToProps)(DetailAdjustmentReport);
+export default connect(mapStateToProps)(DetailPoReport);

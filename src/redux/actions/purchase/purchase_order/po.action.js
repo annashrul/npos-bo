@@ -32,12 +32,18 @@ export function setPoData(data = []) {
         data
     }
 }
-export function setReport(data = []) {
-    return {
-        type: PO.REPORT_SUCCESS,
-        data
-    }
-}
+// export function setReport(data = []) {
+//     return {
+//         type: PO.REPORT_SUCCESS,
+//         data
+//     }
+// }
+// export function setReportDetail(data = []) {
+//     return {
+//         type: PO.PO_REPORT_DETAIL,
+//         data
+//     }
+// }
 export function setCode(data = []) {
     return {
         type: PO.SUCCESS_CODE,
@@ -58,13 +64,20 @@ export function setPOFailed(data = []) {
     }
 }
 
+export function setPoReport(data=[]){
+    return {type:PO.SUCCESS,data}
+}
+export function setPoReportDetail(data=[]){
+    return {type:PO.DETAIL,data}
+}
+
 export const FetchPoReport = (page=1, perpage=10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setReport(data))
+                dispatch(setPoReport(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -161,23 +174,23 @@ export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
         let que = '';
         if(dateFrom===''&&dateTo===''&&location===''){
-            que = `purchaseorder/stock?page=${page}`;
+            que = `purchaseorder/report?page=${page}`;
         }
         if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `purchaseorder/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+            que = `purchaseorder/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
         }
         if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `purchaseorder/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+            que = `purchaseorder/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
         }
         if(location!==''){
-            que = `purchaseorder/stock?page=${page}&lokasi=${location}`;
+            que = `purchaseorder/report?page=${page}&lokasi=${location}`;
         }
         console.log(`${que}`);
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setPO(data));
+                dispatch(setPoReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
@@ -186,13 +199,13 @@ export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
 }
 export const poReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
-        dispatch(setLoadingDetail(true));
-        axios.get(HEADERS.URL+`purchaseorder/report/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`)
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`purchaseorder/report/${code}?page=${page}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(poReportDetail(data));
-                dispatch(setLoadingDetail(false));
+                dispatch(setPoReportDetail(data));
+                dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
         })
