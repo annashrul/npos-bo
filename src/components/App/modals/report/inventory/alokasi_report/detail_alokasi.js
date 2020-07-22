@@ -48,23 +48,23 @@ class DetailAlokasi extends Component{
                                     (
                                         typeof data === 'object' ? data.length > 0 ?
                                             data.map((v,i)=>{
-                                                totPrice1=totPrice1+v.harga;
-                                                totPrice2=totPrice2+v.harga2;
-                                                totPrice3=totPrice3+v.harga3;
-                                                totPrice4=totPrice4+v.harga4;
-                                                totFirstStock=totFirstStock+v.stock_awal;
-                                                totLastStock=totLastStock+v.stock_akhir;
-                                                totStockIn=totStockIn+v.stock_masuk;
-                                                totStockOut=totStockOut+v.stock_keluar;
-                                                totHpp=totHpp+v.harga_beli;
-                                                totProfitPrice1=totProfitPrice1+v.profit_hrg1;
-                                                totProfitPrice2=totProfitPrice2+v.profit_hrg2;
-                                                totProfitPrice3=totProfitPrice3+v.profit_hrg3;
-                                                totProfitPrice4=totProfitPrice4+v.profit_hrg4;
-                                                sumTotPrice1=sumTotPrice1+v.total_hrg1;
-                                                sumTotPrice2=sumTotPrice2+v.total_hrg2;
-                                                sumTotPrice3=sumTotPrice3+v.total_hrg3;
-                                                sumTotPrice4=sumTotPrice4+v.total_hrg4;
+                                                // totPrice1=totPrice1+v.harga;
+                                                // totPrice2=totPrice2+v.harga2;
+                                                // totPrice3=totPrice3+v.harga3;
+                                                // totPrice4=totPrice4+v.harga4;
+                                                // totFirstStock=totFirstStock+v.stock_awal;
+                                                // totLastStock=totLastStock+v.stock_akhir;
+                                                // totStockIn=totStockIn+v.stock_masuk;
+                                                // totStockOut=totStockOut+v.stock_keluar;
+                                                // totHpp=totHpp+v.harga_beli;
+                                                // totProfitPrice1=totProfitPrice1+v.profit_hrg1;
+                                                // totProfitPrice2=totProfitPrice2+v.profit_hrg2;
+                                                // totProfitPrice3=totProfitPrice3+v.profit_hrg3;
+                                                // totProfitPrice4=totProfitPrice4+v.profit_hrg4;
+                                                // sumTotPrice1=sumTotPrice1+v.total_hrg1;
+                                                // sumTotPrice2=sumTotPrice2+v.total_hrg2;
+                                                // sumTotPrice3=sumTotPrice3+v.total_hrg3;
+                                                // sumTotPrice4=sumTotPrice4+v.total_hrg4;
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
@@ -93,28 +93,7 @@ class DetailAlokasi extends Component{
                                             }) : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
                                 }
                                 </tbody>
-                                <tfoot>
-                                <tr style={{backgroundColor:"#EEEEEE"}}>
-                                    <td colSpan="2">TOTAL</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice1)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice2)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice3)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice4)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totFirstStock}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totStockIn}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totStockOut}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totLastStock}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totHpp)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice1)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice2)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice3)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice4)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice1)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice2)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice3)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice4)}</td>
-                                </tr>
-                                </tfoot>
+                                
                             </table>
                         </div>
                     </ModalBody>
