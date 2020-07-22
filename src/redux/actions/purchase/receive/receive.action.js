@@ -19,6 +19,18 @@ export function setPO(data = []) {
         data
     }
 }
+export function setReceive(data = []) {
+    return {
+        type: RECEIVE.RECEIVE_DATA,
+        data
+    }
+}
+export function setReceiveDetail(data = []) {
+    return {
+        type: RECEIVE.RECEIVE_REPORT_DETAIL,
+        data
+    }
+}
 export function setCode(data = []) {
     return {
         type: RECEIVE.SUCCESS_CODE,
@@ -103,5 +115,48 @@ export const storeReceive= (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+export const FetchReceiveReport = (page=1,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `receive/report?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `receive/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `receive/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `receive/report?page=${page}&lokasi=${location}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setReceive(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchReceiveReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`purchaseorder/report/${code}?page=${page}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setReceiveDetail(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }

@@ -21,7 +21,7 @@ class Layout extends Component {
                 <div className="ecaps-sidemenu-area">
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/"><img className="desktop-logo" src={Logo} alt="Desktop Logo" /> <img className="small-logo" src={Logo} alt="Mobile Logo" /></Link>
+                        <Link to="/"><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{paddingTop:'9px'}} /> <img className="small-logo" src={Logo} alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="ecaps-sidenav" id="ecapsSideNav">

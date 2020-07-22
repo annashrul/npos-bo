@@ -4,9 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {toRp} from "helper";
-import DetailStockReportTransaction from "./detail_stock_report_transaction";
-import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/stock_report.action";
-class DetailStockReportSatuan extends Component{
+class DetailAlokasi extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -19,21 +17,21 @@ class DetailStockReportSatuan extends Component{
         localStorage.removeItem("barcode");
         localStorage.removeItem("name");
     };
-    handelDetailTrx(e,code,location,barcode,name){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        localStorage.setItem("codeDetailTrx",code);
-        localStorage.setItem("locationDetailTrx",location);
-        localStorage.setItem("barcodeDetailTrx",barcode);
-        localStorage.setItem("nameDetailTrx",name);
-        this.props.dispatch(ModalType("detailStockReportTransaction"));
-        this.props.dispatch(FetchStockReportDetailTransaction(this.props.token,1,code,'','',localStorage.getItem("locationDetailTrx")))
-    };
+    // handelDetailTrx(e,code,location,barcode,name){
+    //     e.preventDefault();
+    //     const bool = !this.props.isOpen;
+    //     localStorage.setItem("codeDetailTrx",code);
+    //     localStorage.setItem("locationDetailTrx",location);
+    //     localStorage.setItem("barcodeDetailTrx",barcode);
+    //     localStorage.setItem("nameDetailTrx",name);
+    //     this.props.dispatch(ModalType("detailStockReportTransaction"));
+    //     this.props.dispatch(FetchStockReportDetailTransaction(this.props.token,1,code,'','',localStorage.getItem("locationDetailTrx")))
+    // };
 
 
     render(){
         console.log("############# STATE SIITU",this.props);
-        const {data} = this.props.stockReportDetailSatuan;
+        const {data} = this.props.alokasiDetail;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         let totPrice1=0;
         let totPrice2=0;
@@ -54,8 +52,8 @@ class DetailStockReportSatuan extends Component{
         let sumTotPrice4=0;
         return (
             <div>
-                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailStockReportSatuan"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
-                    <ModalHeader toggle={this.toggle}>Detail Stock Report Satuan</ModalHeader>
+                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAlokasi"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+                    <ModalHeader toggle={this.toggle}>Detail Alokasi</ModalHeader>
                     <ModalBody>
                         <table className="table">
                             <tbody>
@@ -184,7 +182,6 @@ class DetailStockReportSatuan extends Component{
                     </ModalBody>
 
                 </WrapperModal>
-                <DetailStockReportTransaction token={this.props.token} stockReportDetailTransaction={this.props.stockReportDetailTransaction}/>
             </div>
         );
     }
@@ -195,9 +192,9 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
-        stockReportDetailTransaction:state.stockReportReducer.dataDetailTransaksi,
+        // stockReportDetailTransaction:state.stockReportReducer.dataDetailTransaksi,
         isLoading: state.stockReportReducer.isLoading,
     }
 }
 // const mapDispatch
-export default connect(mapStateToProps)(DetailStockReportSatuan);
+export default connect(mapStateToProps)(DetailAlokasi);

@@ -1,17 +1,12 @@
 import React,{Component} from 'react'
 import Paginationq from "helper";
-import FormLocation from "components/App/modals/masterdata/location/form_location";
-import DetailLocationModal from "components/App/modals/masterdata/location/detail_location";
-import {FetchLocation} from "redux/actions/masterdata/location/location.action";
-import {FetchStockReport, FetchStockReportDetailSatuan} from "redux/actions/report/inventory/stock_report.action";
+import {FetchAlokasiReport, FetchAlokasiReportDetail} from "redux/actions/report/inventory/stock_report.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
+import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import Preloader from "Preloader";
-import DetailStockReportTransaction
-    from "components/App/modals/report/inventory/stock_report/detail_stock_report_transaction";
 
-class ListStockReport extends Component{
+class ListAlokasiReport extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -26,7 +21,7 @@ class ListStockReport extends Component{
     }
     handlePageChange(pageNumber){
         this.setState({activePage: pageNumber});
-        localStorage.setItem("page_stock_report",pageNumber);
+        localStorage.setItem("page_alokasi_report",pageNumber);
         // this.props.dispatch(FetchLocation(pageNumber,localStorage.getItem("any_location")?localStorage.getItem("any_location"):''))
     }
     toggle(e,code,barcode,name){
@@ -38,25 +33,25 @@ class ListStockReport extends Component{
         console.log(`${code} ${barcode} ${name}`);
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("detailStockReportSatuan"));
+        this.props.dispatch(ModalType("detailAlokasiReport"));
         // this.setState({
         //     detail:{"code":localStorage.getItem("code")}
         // });
         // this.state.detail = {"code":"11111"};
-        this.props.dispatch(FetchStockReportDetailSatuan(this.props.token,1,code,'','',''))
+        this.props.dispatch(FetchAlokasiReportDetail(1,code,'','',''))
     };
 
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {per_page,current_page,from,to,data} = this.props.data;
-        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total;
+        // const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total;
 
-        let total_dn_per=0;
-        let total_first_stock_per=0;
-        let total_last_stock_per=0;
-        let total_stock_in_per=0;
-        let total_stock_out_per=0;
+        // let total_dn_per=0;
+        // let total_first_stock_per=0;
+        // let total_last_stock_per=0;
+        // let total_stock_in_per=0;
+        // let total_stock_out_per=0;
         // console.log("############ TOTAL DATA ##############",this.props.total);
         return (
 
@@ -152,7 +147,7 @@ class ListStockReport extends Component{
                         {/*callback={this.handlePageChange.bind(this)}*/}
                     {/*/>*/}
                 {/*</div>*/}
-               <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan}/>
+               <DetailAlokasi token={this.props.token} alokasiDetail={this.props.alokasiDetail}/>
                 {/*<DetailStockReportTransaction token={this.props.token}/>*/}
             </div>
         );
@@ -163,8 +158,8 @@ const mapStateToProps = (state) => {
     console.log("mapStateToProps",state);
     return {
         // detail:this.state.detail,
-        isLoading: state.stockReportReducer.isLoading,
-        stockReportDetailSatuan:state.stockReportReducer.dataDetailSatuan,
+        isLoading: state.alokasiReducer.isLoading,
+        alokasiDetail:state.alokasiReducer.dataDetail,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

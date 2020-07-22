@@ -15,6 +15,11 @@ export function setLoading(load) {
         load
     }
 }
+export function setLoadingDetail(load){
+    return {
+        type : ALOKASI.LOADING_DETAIL,
+        load}
+}
 export function setALOKASI(data = []) {
     return {
         type: ALOKASI.SUCCESS,
@@ -45,6 +50,13 @@ export function setPOFailed(data = []) {
         type: ALOKASI.FAILED,
         data
     }
+}
+
+export function setAlokasi(data=[]){
+    return {type:ALOKASI.SUCCESS,data}
+}
+export function setAlokasiDetail(data=[]){
+    return {type:ALOKASI.DETAIL,data}
 }
 
 export const FetchDnReport = (page = 1, perpage = 10) => {
@@ -145,5 +157,62 @@ export const storeAlokasi = (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+export const FetchAlokasi = (page=1,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `alokasi/report?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `alokasi/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `alokasi/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `alokasi/report?page=${page}&lokasi=${location}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setAlokasi(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchAlokasiDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `alokasi/report/${code}?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setAlokasiDetail(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }
