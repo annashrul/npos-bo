@@ -13,7 +13,7 @@ export function setBank(data=[]){
 export function setBankFailed(data=[]){
     return {type:BANK.FAILED,data}
 }
-export const FetchBank = (page=1,param)=>{
+export const FetchBank = (page=1,param,perpage=10)=>{
     return (dispatch) => {
 
         dispatch(setLoading(true));
@@ -23,12 +23,11 @@ export const FetchBank = (page=1,param)=>{
         let que = '';
         if(param===null){
             console.log(param);
-            que = `bank?page=${page}`;
+            que = `bank?page=${page}&perpage=${perpage}`;
         }else{
             console.log(param);
-            que = `bank?page=${page}&q=${param}`;
+            que = `bank?page=${page}&q=${param}&perpage=${perpage}`;
         }
-        // console.log(`${que}`);
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;

@@ -295,9 +295,13 @@ class Dashboard extends Component {
                    }],
                 }
         };
+
+        socket.on('refresh_dashboard',(data)=>{
+            this.refreshData();
+        })
         
         socket.on("set_dashboard", (data) => {
-            console.log("SET_DASHBOARD", data);
+            // console.log("SET_DASHBOARD", data);
             this.setState({
                 grossSales:toRp(parseInt(data.header.penjualan)),
                 netSales:toRp(parseInt(data.header.net_sales)),
@@ -399,6 +403,10 @@ class Dashboard extends Component {
         
     }
 
+    componentWillMount(){
+        this.refreshData()
+    }
+
     componentDidMount() {
         this.interval = setInterval(
             () => this.tick(),
@@ -468,8 +476,6 @@ class Dashboard extends Component {
             startDate:awal,
             endDate:akhir
         });
-        // console.log(picker.startDate._d.toISOString());
-        // console.log(picker.endDate._d.toISOString());
     };
 
     handleSubmit = (event) => {
