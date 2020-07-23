@@ -219,6 +219,16 @@ export const ADJUSTMENT = {
     GET_CODE:"SET_CODE_ADJUSMENT"
 }
 /****************
+ OPNAME
+ *****************/
+export const OPNAME = {
+    LOADING: 'SET_OPNAME_LOADING',
+    SUCCESS: 'SET_OPNAME_SUCCESS',
+    FAILED: 'SET_OPNAME_FAILED',
+    DATA_POSTING:"SET_DATA_POSTING",
+    FAILED_POSING:"SET_FAILED_POSTING"
+}
+/****************
  SALES
  *****************/
 export const SALES = {
