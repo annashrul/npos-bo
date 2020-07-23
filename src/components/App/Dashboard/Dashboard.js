@@ -7,8 +7,7 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import moment from 'moment';
 import Select from 'react-select';
 import { Line } from 'peity-react';
-// import DateRangePicker from "dz-daterangepicker-material";
-// import "dz-daterangepicker-material/dist/index.css";
+import {toRp} from "helper";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
@@ -46,21 +45,28 @@ class Dashboard extends Component {
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSelect2 = this.handleSelect2.bind(this);
         this.handleSelect3 = this.handleSelect3.bind(this);
+        this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
 
         this.state = {
             startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
             endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
 
             grossSales:"123,456,789",
+            wGrossSales:110,
             netSales:"123,456,789",
+            wNetSales:110,
             trxNum:"123,456,789",
+            wTrxNum:110,
             avgTrx:"123,456,789",
+            wAvgTrx:110,
 
             dataA: [5,3,9,6,5,9,7,3,5,2],
             dataB: [9,7,3,5,2,5,3,9,6,5],
             dataC: [5,3,9,3,5,2,6,5,9,7],
             dataD: [7,3,5,2,5,3,9,6,5,9],
-            
+
+            location_data:[],
+            location:"",
 
            lokasi_sales: {
                    options: {
@@ -293,6 +299,10 @@ class Dashboard extends Component {
         socket.on("set_dashboard", (data) => {
             console.log("SET_DASHBOARD", data);
             this.setState({
+                grossSales:toRp(parseInt(data.header.penjualan)),
+                netSales:toRp(parseInt(data.header.net_sales)),
+                trxNum:data.header.transaksi,
+                avgTrx:toRp(parseInt(data.header.avg)),
                 lokasi_sales: data.lokasi_sales,
                 lokasi_tr: data.lokasi_tr,
                 hourly: data.hourly,
@@ -303,16 +313,90 @@ class Dashboard extends Component {
                 top_cat_sale: data.top_cat_sale,
                 top_sp_qty: data.top_sp_qty,
                 top_sp_sale: data.top_sp_sale,
-            })
+            });
+            if(String(toRp(data.header.penjualan)).length <= 1){
+                this.setState({wGrossSales:280})
+            } else if (String(toRp(data.header.penjualan)).length <= 3) {
+                this.setState({wGrossSales:220})
+            } else if (String(toRp(data.header.penjualan)).length <= 5) {
+                this.setState({wGrossSales:200})
+            } else if (String(toRp(data.header.penjualan)).length <= 7) {
+                this.setState({wGrossSales:160})
+            } else if (String(toRp(data.header.penjualan)).length <= 9) {
+                this.setState({wGrossSales:120})
+            } else if (String(toRp(data.header.penjualan)).length > 9) {
+                this.setState({wGrossSales:80})
+            }
+            if(String(toRp(data.header.net_sales)).length <= 1){
+                this.setState({wNetSales:280})
+            } else if (String(toRp(data.header.net_sales)).length <= 3) {
+                this.setState({wNetSales:220})
+            } else if (String(toRp(data.header.net_sales)).length <= 5) {
+                this.setState({wNetSales:200})
+            } else if (String(toRp(data.header.net_sales)).length <= 7) {
+                this.setState({wNetSales:160})
+            } else if (String(toRp(data.header.net_sales)).length <= 9) {
+                this.setState({wNetSales:120})
+            } else if (String(toRp(data.header.net_sales)).length > 9) {
+                this.setState({wNetSales:80})
+            }
+            if(String(data.header.transaksi).length <= 1){
+                this.setState({wTrxNum:280})
+            } else if (String(data.header.transaksi).length <= 3) {
+                this.setState({wTrxNum:220})
+            } else if (String(data.header.transaksi).length <= 5) {
+                this.setState({wTrxNum:200})
+            } else if (String(data.header.transaksi).length <= 7) {
+                this.setState({wTrxNum:160})
+            } else if (String(data.header.transaksi).length <= 9) {
+                this.setState({wTrxNum:120})
+            } else if (String(data.header.transaksi).length > 9) {
+                this.setState({wTrxNum:80})
+            }
+            if(String(toRp(data.header.avg)).length <= 1){
+                this.setState({wAvgTrx:280})
+            } else if (String(toRp(data.header.avg)).length <= 3) {
+                this.setState({wAvgTrx:220})
+            } else if (String(toRp(data.header.avg)).length <= 5) {
+                this.setState({wAvgTrx:220})
+            } else if (String(toRp(data.header.avg)).length <= 7) {
+                this.setState({wAvgTrx:180})
+            } else if (String(toRp(data.header.avg)).length <= 9) {
+                this.setState({wAvgTrx:140})
+            } else if (String(toRp(data.header.avg)).length > 9) {
+                this.setState({wAvgTrx:80})
+            }
+            console.log("data", data.header.penjualan);
+            console.log("length", String(data.header.penjualan).length);
         });
     }
+
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+          let lk = []
+          let loc = nextProps.auth.user.lokasi;
+          if(loc!==undefined){
+              loc.map((i) => {
+                lk.push({
+                  value: i.kode,
+                  label: i.nama
+                });
+              })
+              this.setState({
+                location_data: lk,
+                userid: nextProps.auth.user.id
+              })
+          }
+        }
+      }
 
     componentWillMount(){
         socket.emit('get_dashboard', {
             datefrom: '-',
             dateto: '-',
             location: '-'
-        })
+        });
+        
     }
 
     componentDidMount() {
@@ -387,6 +471,36 @@ class Dashboard extends Component {
         // console.log(picker.startDate._d.toISOString());
         // console.log(picker.endDate._d.toISOString());
     };
+
+    handleSubmit = (event) => {
+        console.log("tes","klik");
+        var loc = this.state.location;
+        var dateFrom = this.state.startDate;
+        var dateTo = this.state.endDate;
+        if(this.state.location == '' || this.state.location == undefined){
+            loc = "-";
+        }
+        socket.emit('get_dashboard', {
+            datefrom: dateFrom,
+            dateto: dateTo,
+            location: loc
+        });
+        console.log("dateFrom", dateFrom);
+        console.log("dateTo", dateTo);
+        console.log("loc", loc);
+    }
+
+    HandleChangeLokasi(lk) {
+        let err = Object.assign({}, this.state.error, {
+            location: ""
+        });
+        console.log(err);
+        this.setState({
+            location: lk.value,
+            error: err
+        })
+        localStorage.setItem('lk', lk.value);
+    }
     
 
 
@@ -424,16 +538,15 @@ class Dashboard extends Component {
                                                 Lokasi
                                                 </label> */}
                                                 <Select 
-                                                // options={this.state.location_data} 
-                                                placeholder = "Pilih Lokasi"
-                                                // onChange={this.HandleChangeLokasi}
-                                                // value = {
-                                                //     this.state.location_data.find(op => {
-                                                //     return op.value === this.state.location
-                                                //     })
-                                                // }
-
-                                                />
+                                                    options={this.state.location_data} 
+                                                    placeholder = "Pilih Lokasi"
+                                                    onChange={this.HandleChangeLokasi}
+                                                    value = {
+                                                        this.state.location_data.find(op => {
+                                                        return op.value === this.state.location
+                                                        })
+                                                    }
+                                                    />
                                                 {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                     {this.state.error.location}
                                                 </div> */}
@@ -444,7 +557,7 @@ class Dashboard extends Component {
                                                 {/* <label className="control-label font-12">
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </label> */}
-                                                <button type="button" className="btn btn-primary">LOAD DATA</button>
+                                                <button type="button" onClick={(e)=>this.handleSubmit(e)} className="btn btn-primary">REFRESH DATA</button>
                                             </div>
                                         </div>
                                     </div>
@@ -459,15 +572,15 @@ class Dashboard extends Component {
                         <div className="card text-white bg-primary">
                             <div className="card-header border-bottom-0">GROSS SALES</div>
                             <div className="card-body">
-                                <div className="row">
-                                    <div className="col-md-5">
-                                        <Line height={32} width={128}
+                                <div className="row" style={{paddingLeft:12,paddingRight:12}}>
+                                    {/* <div className="col-md-4"> */}
+                                        <Line height={32} width={this.state.wGrossSales}
                                             values={this.state.dataA}
                                         />
-                                    </div>
-                                    <div className="col-md-7">
-                                        <h2 className="text-white float-right">{this.state.grossSales}</h2>
-                                    </div>
+                                    {/* </div>
+                                    <div className="col-md-8"> */}
+                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.grossSales}</h2>
+                                    {/* </div> */}
                                 </div>
                             </div>
                         </div>
@@ -476,15 +589,15 @@ class Dashboard extends Component {
                         <div className="card text-white bg-secondary">
                             <div className="card-header border-bottom-0">NET SALES</div>
                             <div className="card-body">
-                            <div className="row">
-                                    <div className="col-md-5">
-                                        <Line height={32} width={128}
+                            <div className="row" style={{paddingLeft:12,paddingRight:12}}>
+                                    {/* <div className="col-md-4"> */}
+                                        <Line height={32} width={this.state.wNetSales}
                                             values={this.state.dataB}
                                         />
-                                    </div>
-                                    <div className="col-md-7">
-                                        <h2 className="text-white float-right">{this.state.netSales}</h2>
-                                    </div>
+                                    {/* </div> */}
+                                    {/* <div className="col-md-8"> */}
+                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.netSales}</h2>
+                                    {/* </div> */}
                                 </div>
                             </div>
                         </div>
@@ -493,15 +606,15 @@ class Dashboard extends Component {
                         <div className="card text-white bg-success">
                             <div className="card-header border-bottom-0">NUMBER OF TRANSACTION</div>
                             <div className="card-body">
-                            <div className="row">
-                                    <div className="col-md-5">
-                                        <Line height={32} width={128}
+                            <div className="row" style={{paddingLeft:12,paddingRight:12}}>
+                                    {/* <div className="col-md-4"> */}
+                                        <Line height={32} width={this.state.wTrxNum}
                                             values={this.state.dataC}
                                         />
-                                    </div>
-                                    <div className="col-md-7">
-                                        <h2 className="text-white float-right">{this.state.trxNum}</h2>
-                                    </div>
+                                    {/* </div> */}
+                                    {/* <div className="col-md-8"> */}
+                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.trxNum}</h2>
+                                    {/* </div> */}
                                 </div>
                             </div>
                         </div>
@@ -510,35 +623,35 @@ class Dashboard extends Component {
                         <div className="card text-white bg-danger">
                             <div className="card-header border-bottom-0">AVG. SALES PER TRANSACTION</div>
                             <div className="card-body">
-                            <div className="row">
-                                    <div className="col-md-5">
-                                        <Line height={32} width={128}
+                            <div className="row" style={{paddingLeft:12,paddingRight:12}}>
+                                    {/* <div className="col-md-4"> */}
+                                        <Line height={32} width={this.state.wAvgTrx}
                                             values={this.state.dataD}
                                         />
-                                    </div>
-                                    <div className="col-md-7">
-                                        <h2 className="text-white float-right">{this.state.avgTrx}</h2>
-                                    </div>
+                                    {/* </div> */}
+                                    {/* <div className="col-md-8"> */}
+                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.avgTrx}</h2>
+                                    {/* </div> */}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-4 box-margin">
+                    {/* <div className="col-md-4 box-margin">
                         <div className="card text-center">
                             <div className="card-body">
-                                {/* <h4 className="card-title">STOCK</h4>
+                                <h4 className="card-title">STOCK</h4>
                                 <Chart
                                     options={this.state.optionsStock}
                                     series={this.state.seriesStock}
                                     type="radialBar"
                                     height="300"
-                                    /> */}
+                                    />
                             </div>
                         </div>
-                    </div>
-                    <div className="col-md-8 box-margin">
+                    </div> */}
+                    <div className="col-md-12 box-margin">
                         <div className="card text-center">
                             <div className="card-body">
                                 <h4 className="card-title">MONTHLY SALES AMOUNT</h4>
@@ -674,16 +787,60 @@ class Dashboard extends Component {
                             <div className="row">
                                 <div className="col-md-6">
                                     <div className="card-body">
-                                        <h4 className="card-title">TOP 5 SUPPLIER VOLUME</h4>
-                                        <Chart
+                                        <Tabs>
+                                            <TabList>
+                                                <Tab onClick={(e) =>this.handleSelect3(e,1)} >Volume</Tab>
+                                                <Tab onClick={(e) =>this.handleSelect3(e,2)} >Sales</Tab>
+                                            </TabList>
+                                            <TabPanel>
+                                                {/* <div class="card-body"> */}
+                                                    <h4 className="card-title">TOP 5 SUPPLIER VOLUME</h4>
+                                                    <Chart
+                                                        options={this.state.top_sp_qty.options}
+                                                        series={this.state.top_sp_qty.series}
+                                                        type="bar"
+                                                        height="300"
+                                                        />
+                                                {/* </div> */}
+                                            </TabPanel>
+                                            <TabPanel>
+                                                <h4 className="card-title">TOP 5 SUPPLIER SALES</h4>
+                                                <Chart
+                                                    options={this.state.top_sp_sale.options}
+                                                    series={this.state.top_sp_sale.series}
+                                                    type="bar"
+                                                    height="300"
+                                                    />
+                                            </TabPanel>
+                                        </Tabs>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="card-body">
+                                        <h4 className="card-title">STOCK</h4>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                        {/* <Chart
                                             options={this.state.top_sp_qty.options}
                                             series={this.state.top_sp_qty.series}
                                             type="bar"
                                             height="300"
-                                            />
+                                            /> */}
                                     </div>
                                 </div>
-                                <div className="col-md-6">
+                                {/* <div className="col-md-6">
                                     <div className="card-body">
                                         <h4 className="card-title">TOP 5 SUPPLIER SALES</h4>
                                         <Chart
@@ -693,7 +850,7 @@ class Dashboard extends Component {
                                             height="300"
                                             />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
