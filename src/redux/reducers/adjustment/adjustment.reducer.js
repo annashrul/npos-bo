@@ -3,11 +3,15 @@ import {ADJUSTMENT} from "../../actions/_constants";
 const initialState = {
     isLoading:true,isLoadingDetailSatuan:false,
     status:"",msg:"",total:{total_dn:0,total_stock_awal:0,total_stock_masuk:0,total_stock_keluar:0,total_stock_akhir:0},
-    data:[],dataDetailSatuan:[],dataDetailTransaksi:[]
+    data:[],dataDetailSatuan:[],dataDetailTransaksi:[],get_code:'-'
 };
 
 export const adjustmentReducer = (state=initialState,action) => {
     switch (action.type) {
+        case ADJUSTMENT.GET_CODE:
+            return Object.assign({}, state,{
+                get_code: action.data.result
+            });
         case ADJUSTMENT.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,
