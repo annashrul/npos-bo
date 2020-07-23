@@ -328,7 +328,6 @@ class Dashboard extends Component {
             () => this.tick(),
             2000
           );
-        
     }
 
     componentWillUnmount() {
