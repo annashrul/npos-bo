@@ -1,11 +1,11 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "../../../../actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import FileBase64 from "react-file-base64";
-import {stringifyFormData} from "../../../../helper";
-import {createBank} from "../../../../actions/masterdata/bank/bank.action";
+import {stringifyFormData} from "helper";
+import {createBank} from "redux/actions/masterdata/bank/bank.action";
 
 class FormBank extends Component{
     constructor(props){
