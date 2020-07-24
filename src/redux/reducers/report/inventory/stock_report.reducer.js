@@ -1,7 +1,7 @@
 import {STOCK_REPORT} from "../../../actions/_constants";
 
 const initialState = {
-    isLoading:true,isLoadingDetailSatuan:false,
+    isLoading:false,isLoadingDetailSatuan:false,
     status:"",msg:"",total:{total_dn:0,total_stock_awal:0,total_stock_masuk:0,total_stock_keluar:0,total_stock_akhir:0},
     data:[],dataDetailSatuan:[],dataDetailTransaksi:[]
 };

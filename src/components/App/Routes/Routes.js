@@ -26,8 +26,10 @@ import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
+import Closing from '../report/inventory/closing'
 import Sale from '../sale/product_sale'
 import Company from "../setting/company";
+
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
@@ -57,6 +59,7 @@ const Routes = (
             <PrivateRoute path="/po_report" exact strict component={PoReport} />
             <PrivateRoute path="/receive_report" exact strict component={ReceiveReport} />
             <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
+            <PrivateRoute path="/closing" exact strict component={Closing} />
         </Switch>
     </div>
 )

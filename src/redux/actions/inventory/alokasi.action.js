@@ -159,7 +159,7 @@ export const storeAlokasi = (data) => {
             })
     }
 }
-export const FetchAlokasi = (token='',page=1,q='')=>{
+export const FetchAlokasi = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001

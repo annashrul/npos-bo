@@ -27,6 +27,7 @@ import {dnReducer} from "./inventory/delivery_note/dn.reducer";
 import {alokasiReducer} from './inventory/alokasi/alokasi.reducer'
 import {saleReducer} from "./sale/sale.reducer";
 import {mutationReducer} from "./inventory/mutation/mutation.reducer";
+import {closingReducer} from "./report/closing/closing.reducer";
 import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
 
@@ -59,6 +60,7 @@ export default combineReducers({
     alokasiReducer,
     saleReducer,
     mutationReducer,
+    closingReducer,
     opnameReducer,
     auth: authReducer,
     errors : errorsReducer

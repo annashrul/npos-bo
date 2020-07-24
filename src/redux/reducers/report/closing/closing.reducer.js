@@ -1,56 +1,52 @@
 import {
-    PO
+    CLOSING
 } from "../../../actions/_constants";
 
 const initialState = {
-    isLoading: true,
-    isLoadingDetail: false,
+    isLoading: false,
+    isLoadingDetail:false,
     data: [],
     msg:"",
     status:"",
     code:"-",
-    po_data:[],
+    closing_data: [],
     report:[],
-    report_data:[],
-    dataReportDetail:[]
+    report_data:[]
 };
 
-export const poReducer = (state = initialState, action) => {
+export const closingReducer = (state = initialState, action) => {
     switch (action.type) {
-        case PO.SUCCESS:
+        case CLOSING.SUCCESS:
             return Object.assign({}, state, {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result,
-                total: action.data.result.total,
+                // total: action.data.result.total
+            });
+        case CLOSING.REPORT_SUCCESS:
+            return Object.assign({}, state, {
                 report: action.data.result,
                 report_data: action.data.result.data
             });
-        case PO.PO_DATA:
+        case CLOSING.CLOSING_DATA:
             return Object.assign({}, state, {
-                po_data: action.data.result
+                closing_data: action.data.result
             });
-        case PO.PO_REPORT_DETAIL:
-            return Object.assign({}, state,{
-                status:action.data.status,
-                msg:action.data.msg,
-                dataReportDetail:action.data.result
-            });
-        case PO.SUCCESS_CODE:
+        case CLOSING.SUCCESS_CODE:
             return Object.assign({}, state, {
                 code: action.data.result
             });
-        case PO.FAILED:
+        case CLOSING.FAILED:
             return Object.assign({}, state, {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result
             });
-        case PO.LOADING:
+        case CLOSING.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
             });
-        case PO.LOADING_DETAIL:
+        case CLOSING.LOADING_DETAIL:
             return Object.assign({}, state, {
                 isLoadingDetail: action.load
             });

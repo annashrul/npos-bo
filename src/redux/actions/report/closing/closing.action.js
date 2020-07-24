@@ -1,72 +1,71 @@
 import {
-    PO,
+    CLOSING,
     HEADERS
 } from "../../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {destroy} from "components/model/app.model";
+import {
+    destroy
+} from "components/model/app.model";
 
 
 export function setLoading(load) {
     return {
-        type: PO.LOADING,
+        type: CLOSING.LOADING,
         load
     }
 }
-export function setLoadingDetail(load) {
+export function setLoadingDetail(load){
     return {
-        type: PO.LOADING_DETAIL,
-        load
-    }
+        type : CLOSING.LOADING_DETAIL,
+        load}
 }
-export function setPO(data = []) {
+export function setCLOSING(data = []) {
     return {
-        type: PO.SUCCESS,
+        type: CLOSING.SUCCESS,
         data
     }
 }
 
-export function setPoData(data = []) {
+export function setCLOSINGData(data = []) {
     return {
-        type: PO.PO_DATA,
+        type: CLOSING.CLOSING_DATA,
         data
     }
 }
-
+export function setReport(data = []) {
+    return {
+        type: CLOSING.REPORT_SUCCESS,
+        data
+    }
+}
 export function setCode(data = []) {
     return {
-        type: PO.SUCCESS_CODE,
+        type: CLOSING.SUCCESS_CODE,
         data
     }
 }
-export function setNewest(dataNew = []) {
-    return {
-        type: PO.SUCCESS_NEWEST,
-        dataNew
-    }
-}
-
 export function setPOFailed(data = []) {
     return {
-        type: PO.FAILED,
+        type: CLOSING.FAILED,
         data
     }
 }
 
-export function setPoReport(data=[]){
-    return {type:PO.SUCCESS,data}
-}
-export function setPoReportDetail(data=[]){
-    return {type:PO.DETAIL,data}
+// export function setClosing(data=[]){
+//     return {type:CLOSING.SUCCESS,data}
+// }
+export function setClosingDetail(data=[]){
+    return {type:CLOSING.DETAIL,data}
 }
 
-export const FetchPoReport = (page=1, perpage=10) => {
+export const FetchDnReport = (page = 1, perpage = 10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
+        axios.get(HEADERS.URL + `purchaseorder/report/closing?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setPoReport(data));
+                dispatch(setReport(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -77,13 +76,13 @@ export const FetchPoReport = (page=1, perpage=10) => {
     }
 }
 
-export const FetchPoData = (nota) => {
+export const FetchDnData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setPoData(data))
+                dispatch(setCLOSINGData(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -94,13 +93,13 @@ export const FetchPoData = (nota) => {
     }
 }
 
-export const FetchNota = (lokasi) => {
+export const FetchNota = (lokasi, prefix) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/getcode?prefix=PO&lokasi=${lokasi}`)
+
+        axios.get(HEADERS.URL + `getcode?lokasi=${lokasi}&prefix=${prefix}`)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
                 dispatch(setCode(data))
                 dispatch(setLoading(false));
             })
@@ -112,10 +111,10 @@ export const FetchNota = (lokasi) => {
     }
 }
 
-export const storePo = (data) => {
+export const storeClosing = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `purchaseorder`;
+        const url = HEADERS.URL + `alokasi`;
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -135,9 +134,12 @@ export const storePo = (data) => {
                             win.focus();
                         }
                     }
-                    destroy('purchase_order');
-                    localStorage.removeItem('sp');
+                    destroy('alokasi');
+                    localStorage.removeItem('lk2');
                     localStorage.removeItem('lk');
+                    localStorage.removeItem('ambil_data');
+                    localStorage.removeItem('nota');
+                    localStorage.removeItem('catatan');;
                     window.location.reload(false);
                 })
                 dispatch(setLoading(false));
@@ -157,43 +159,60 @@ export const storePo = (data) => {
             })
     }
 }
-export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
+export const FetchClosing = (page=1,dateFrom='',lokasi='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-        let que = '';
-        if(dateFrom===''&&dateTo===''&&location===''){
-            que = `purchaseorder/report?page=${page}`;
+        let url = '';
+        url = `report/closing?page=${page}`;
+        // if(q===''){
+        //     url = `report/closing?page=${page}`;
+        // }else{
+        //     url = `report/closing?page=${page}&q=${q}`;
+        // }
+        console.log("url closing",`${url}`);
+        const headers = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${atob(localStorage.getItem('npos'))}`,
+                'username': `${HEADERS.USERNAME}`,
+                'password': `${HEADERS.PASSWORD}`,
+                'crossDomain': true
+            }
         }
-        if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `purchaseorder/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `purchaseorder/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        }
-        if(location!==''){
-            que = `purchaseorder/report?page=${page}&lokasi=${location}`;
-        }
-        console.log(`${que}`);
-        axios.get(HEADERS.URL+`${que}`)
+        axios.get(HEADERS.URL+`${url}`+`&datefrom=2020-07-01&lokasi=LK%2F0001`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setPoReport(data));
+                dispatch(setCLOSING(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
         })
     }
 }
-export const poReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchClosingDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`purchaseorder/report/${code}?page=${page}`)
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `report/${code}?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `report/${code}?page=${page}&lokasi=${location}`;
+        }
+        console.log("url alokasi",`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setPoReportDetail(data));
+                dispatch(setCLOSINGData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
