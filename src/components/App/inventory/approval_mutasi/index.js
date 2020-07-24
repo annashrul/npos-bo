@@ -136,7 +136,7 @@ class ApprovalMutasi extends Component{
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>
-                                            <th className="text-black" style={columnStyle}>No Fakturs Mutasi</th>
+                                            <th className="text-black" style={columnStyle}>No Faktur Mutasi</th>
                                             <th className="text-black" style={columnStyle}>Tanggal</th>
                                             <th className="text-black" style={columnStyle}>Lokasi</th>
                                             <th className="text-black" style={columnStyle}>Total Qty</th>

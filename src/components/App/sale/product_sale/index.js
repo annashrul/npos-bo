@@ -252,7 +252,7 @@ class Sale extends Component{
         this.setState({ brgval });
 
         const cek = cekData('barcode', barcode, table);
-       if(column === 'satuan'){
+        if(column === 'satuan'){
            cek.then(res => {
                if (res == undefined) {
                    Toast.fire({

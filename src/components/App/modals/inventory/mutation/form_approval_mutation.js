@@ -5,7 +5,7 @@ import connect from "react-redux/es/connect/connect";
 import {ModalToggle} from "redux/actions/modal.action";
 import {stringifyFormData} from "helper";
 import {saveCustomerPrice,FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
-import {saveApprovalMutation} from "../../../../../redux/actions/inventory/mutation.action";
+import {FetchApprovalMutation, saveApprovalMutation} from "../../../../../redux/actions/inventory/mutation.action";
 
 class FormApprovalMutation extends Component{
     constructor(props){
@@ -15,7 +15,10 @@ class FormApprovalMutation extends Component{
         this.handleOnEnter = this.handleOnEnter.bind(this);
         this.state = {
             dataApproval: [],
-            q:''
+            q:'',
+            error:{
+
+            }
         }
     }
     componentWillReceiveProps(nextProps){
@@ -50,14 +53,27 @@ class FormApprovalMutation extends Component{
         data['sisa_approval']   = this.state.dataApproval[i].sisa_approval;
         data['barcode']         = this.state.dataApproval[i].barcode;
         console.log(data);
+        let total_qty =  this.state.dataApproval[i].total_qty;
+        let total_approval =  this.state.dataApproval[i].total_approval;
+        let jumlah = parseInt(total_qty)-parseInt(total_approval);
+
+        // console.log("JUMLAH",parseInt(total_qty)-parseInt(total_approval));
         if(parseInt(this.state.dataApproval[i].sisa_approval)>0){
-            this.props.dispatch(saveApprovalMutation(data));
+        //     if(parseInt(this.state.dataApproval[i].sisa_approval) > jumlah){
+        //         this.setState({error:"qty approval tidak boleh melebihi total qty"});
+        //     }else{
+                this.props.dispatch(saveApprovalMutation(data));
+        //     }
         }
+            // else{
+        //     this.setState({error:"qty approval harus lebih dari 0"});
+        // }
     }
     toggle(e){
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(FetchApprovalMutation(1,''))
     };
 
     render(){
@@ -102,6 +118,11 @@ class FormApprovalMutation extends Component{
                                                         }
                                                     }
                                                 }/>
+                                                <div className="invalid-feedback"
+                                                     style={parseInt(v.sisa_approval) > (parseInt(v.total_qty)-parseInt(v.total_approval)) ? {display: 'block'} : {display: 'none'}}>
+                                                    Qty Approval Melebihi Total Qty.
+                                                </div>
+                                                {/*<small style={{color:"red",fontWeight:"bold"}}>{this.state.error}</small>*/}
                                                 {/*<div className="row">*/}
                                                     {/*<div className="col-md-6">*/}
                                                         {/*<input type="text" name="sisa_approval" className="form-control" value={v.sisa_approval} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {*/}

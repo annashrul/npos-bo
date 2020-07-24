@@ -21,6 +21,8 @@ import Alokasi from '../inventory/alokasi'
 import InventoryReport from '../report/inventory/stock'
 import AdjustmentReport from '../report/inventory/adjustment'
 import ApprovalMutasi from "../inventory/approval_mutasi";
+import Opname from "../inventory/opname";
+import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
@@ -33,6 +35,7 @@ axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6Ik
 axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
 axios.defaults.headers.common['password'] = `${HEADERS.PASSWORD}`;
 axios.defaults.headers.common['Content-Type'] = `application/x-www-form-urlencoded`;
+import Sale from '../sale/product_sale'
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
@@ -48,7 +51,10 @@ const Routes = (
             <PrivateRoute path="/location" exact strict component={Location} />
             <PrivateRoute path="/product" exact strict component={Product} />
             <PrivateRoute path="/adjustment" exact strict component={Adjustment} />
+            <PrivateRoute path="/opname" exact strict component={Opname} />
+            <PrivateRoute path="/approval_opname" exact strict component={ListPosting} />
             <PrivateRoute path="/receive" exact strict component={Receive} />
+            <PrivateRoute path="/sale" exact strict component={Sale} />
             <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
             <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
             <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />

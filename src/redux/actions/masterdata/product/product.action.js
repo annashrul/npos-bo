@@ -172,13 +172,13 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
         if(supplier!==null) url+=`&supplier=${supplier}`;
-
+        console.log("FETCH BARANG URL",url);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
                 if(data.result.data.length===1){
                     const barang = data.result.data;
-                    const cek=db(barang[0].kd_brg,barang)
+                    const cek=db(barang[0].kd_brg,barang);
                     cek.then(re=>{
                         dispatch(setProductbrg(data));
                         dispatch(setLoadingbrg(false));

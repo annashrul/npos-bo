@@ -62,24 +62,20 @@ class FormSales extends Component{
 
     render(){
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSales"} size="lg">
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSales"} size="md">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Sales":"Update Sales"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
-                        <div className="row">
-                            <div className="col-6">
-                                <div className="form-group">
-                                    <label>Name</label>
-                                    <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
-                                </div>
-                                <div className="form-group">
-                                    <label>Status</label>
-                                    <select name="status" className="form-control" id="type" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                        <option value="0">In Active</option>
-                                        <option value="1">Active</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div className="form-group">
+                            <label>Name</label>
+                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
+                        </div>
+                        <div className="form-group">
+                            <label>Status</label>
+                            <select name="status" className="form-control" id="type" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                <option value="0">In Active</option>
+                                <option value="1">Active</option>
+                            </select>
                         </div>
                     </ModalBody>
                     <ModalFooter>
