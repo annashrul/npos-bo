@@ -32,18 +32,7 @@ export function setPoData(data = []) {
         data
     }
 }
-// export function setReport(data = []) {
-//     return {
-//         type: PO.REPORT_SUCCESS,
-//         data
-//     }
-// }
-// export function setReportDetail(data = []) {
-//     return {
-//         type: PO.PO_REPORT_DETAIL,
-//         data
-//     }
-// }
+
 export function setCode(data = []) {
     return {
         type: PO.SUCCESS_CODE,
@@ -77,7 +66,7 @@ export const FetchPoReport = (page=1, perpage=10) => {
         axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setPoReport(data))
+                dispatch(setPoReport(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
