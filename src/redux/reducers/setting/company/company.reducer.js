@@ -2,6 +2,7 @@ import {COMPANY} from "../../../actions/_constants";
 
 const initialState = {
     isLoadingGet: false,
+    isLoadingPost: false,
     dataGet: [],
     msgGet:"",
     statusGet:"",
@@ -26,7 +27,10 @@ export const companyReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 isLoadingGet: action.load
             });
-
+        case COMPANY.LOADING_POST:
+            return Object.assign({}, state, {
+                isLoadingPost: action.load
+            });
         default:
             return state
     }
