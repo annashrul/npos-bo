@@ -357,7 +357,7 @@ class Dashboard extends Component {
 
     componentWillUnmount(){
         localStorage.removeItem('startDateProduct');
-        localStorage.removeItem('endDateProduct');
+        localStorage.removeItem('endDateDashboard');
     }
 
     onChange = date => this.setState({ date })
