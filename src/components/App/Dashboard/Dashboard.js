@@ -6,7 +6,6 @@ import Chart from "react-apexcharts";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import moment from 'moment';
 import Select from 'react-select';
-import { Line } from 'peity-react';
 import {toRp} from "helper";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
@@ -44,8 +43,8 @@ class Dashboard extends Component {
         super(props);
         
         this.state = {
-            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
-            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
+            startDate:localStorage.getItem("startDateDashboard")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateDashboard"),
+            endDate:localStorage.getItem("endDateDashboard")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateDashboard"),
 
             grossSales:"0",
             wGrossSales:110,
@@ -314,60 +313,6 @@ class Dashboard extends Component {
                 top_sp_qty: data.top_sp_qty,
                 top_sp_sale: data.top_sp_sale,
             });
-            // if(String(toRp(data.header.penjualan)).length <= 1){
-            //     this.setState({wGrossSales:280})
-            // } else if (String(toRp(data.header.penjualan)).length <= 3) {
-            //     this.setState({wGrossSales:220})
-            // } else if (String(toRp(data.header.penjualan)).length <= 5) {
-            //     this.setState({wGrossSales:200})
-            // } else if (String(toRp(data.header.penjualan)).length <= 7) {
-            //     this.setState({wGrossSales:160})
-            // } else if (String(toRp(data.header.penjualan)).length <= 9) {
-            //     this.setState({wGrossSales:120})
-            // } else if (String(toRp(data.header.penjualan)).length > 9) {
-            //     this.setState({wGrossSales:80})
-            // }
-            // if(String(toRp(data.header.net_sales)).length <= 1){
-            //     this.setState({wNetSales:280})
-            // } else if (String(toRp(data.header.net_sales)).length <= 3) {
-            //     this.setState({wNetSales:220})
-            // } else if (String(toRp(data.header.net_sales)).length <= 5) {
-            //     this.setState({wNetSales:200})
-            // } else if (String(toRp(data.header.net_sales)).length <= 7) {
-            //     this.setState({wNetSales:160})
-            // } else if (String(toRp(data.header.net_sales)).length <= 9) {
-            //     this.setState({wNetSales:120})
-            // } else if (String(toRp(data.header.net_sales)).length > 9) {
-            //     this.setState({wNetSales:80})
-            // }
-            // if(String(data.header.transaksi).length <= 1){
-            //     this.setState({wTrxNum:280})
-            // } else if (String(data.header.transaksi).length <= 3) {
-            //     this.setState({wTrxNum:220})
-            // } else if (String(data.header.transaksi).length <= 5) {
-            //     this.setState({wTrxNum:200})
-            // } else if (String(data.header.transaksi).length <= 7) {
-            //     this.setState({wTrxNum:160})
-            // } else if (String(data.header.transaksi).length <= 9) {
-            //     this.setState({wTrxNum:120})
-            // } else if (String(data.header.transaksi).length > 9) {
-            //     this.setState({wTrxNum:80})
-            // }
-            // if(String(toRp(data.header.avg)).length <= 1){
-            //     this.setState({wAvgTrx:280})
-            // } else if (String(toRp(data.header.avg)).length <= 3) {
-            //     this.setState({wAvgTrx:220})
-            // } else if (String(toRp(data.header.avg)).length <= 5) {
-            //     this.setState({wAvgTrx:220})
-            // } else if (String(toRp(data.header.avg)).length <= 7) {
-            //     this.setState({wAvgTrx:180})
-            // } else if (String(toRp(data.header.avg)).length <= 9) {
-            //     this.setState({wAvgTrx:140})
-            // } else if (String(toRp(data.header.avg)).length > 9) {
-            //     this.setState({wAvgTrx:80})
-            // }
-            // console.log("data", data.header.penjualan);
-            // console.log("length", String(data.header.penjualan).length);
         });
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSelect2 = this.handleSelect2.bind(this);
@@ -398,14 +343,6 @@ class Dashboard extends Component {
           }
         }
       }
-
-    refreshData(){
-        socket.emit('get_dashboard', {
-            datefrom: this.state.startDate,
-            dateto: this.state.endDate,
-            location: this.state.location
-        })
-    }
 
     componentWillMount(){
         this.refreshData();
@@ -482,8 +419,8 @@ class Dashboard extends Component {
         // end:  2020-07-02T16:59:59.999Z
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("startDateProduct",`${awal}`);
-        localStorage.setItem("endDateProduct",`${akhir}`);
+        localStorage.setItem("startDateDashboard",`${awal}`);
+        localStorage.setItem("endDateDashboard",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
@@ -612,61 +549,6 @@ class Dashboard extends Component {
                     </div>
                 </div>
 
-                <div className="row" style={{display:'none'}}>
-                    <div className="col-12 box-margin">
-                        <div className="card bg-boxshadow"  style={{height: '58px'}}>
-                            <div className="card-body px-3 py-2">
-                                {/* <div className="user-important-data-info d-sm-flex align-items-center justify-content-between"> */}
-                                    <div className="row">
-                                        <div className="col-2">
-                                        <div className="form-group">
-                                            {/* <label className="control-label font-12">Periode </label> */}
-                                            <DateRangePicker
-                                                ranges={range}
-                                                alwaysShowCalendars={true}
-                                                onEvent={this.handleEvent}
-                                            >
-                                                <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
-                                                {/*<input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>*/}
-                                            </DateRangePicker>
-                                        </div>
-                                        </div>
-                                        <div className="col-2">
-                                            <div className="form-group">
-                                                {/* <label className="control-label font-12">
-                                                Lokasi
-                                                </label> */}
-                                                <Select 
-                                                    options={this.state.location_data} 
-                                                    placeholder = "Pilih Lokasi"
-                                                    defaultValue={{ label: "Select Location", value: "-" }}
-                                                    onChange={this.HandleChangeLokasi}
-                                                    value = {
-                                                        this.state.location_data.find(op => {
-                                                        return op.value === this.state.location
-                                                        })
-                                                    }
-                                                    />
-                                                {/* <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
-                                                    {this.state.error.location}
-                                                </div> */}
-                                            </div>
-                                        </div>
-                                        <div className="col-2">
-                                            <div className="form-group">
-                                                {/* <label className="control-label font-12">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                </label> */}
-                                                <button type="button" onClick={(e)=>this.handleSubmit(e)} className="btn btn-primary">REFRESH DATA</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                {/* </div> */}
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-md-6 col-xl-3 box-margin">
                         <div className="card">
