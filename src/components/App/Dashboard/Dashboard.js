@@ -42,8 +42,8 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate:localStorage.getItem("startDateProduct")===null?moment().format("YYYY-MM-DD"):localStorage.getItem("startDateProduct"),
-            endDate:localStorage.getItem("endDateProduct")===null?moment().format("YYYY-MM-DD"):localStorage.getItem("endDateProduct"),
+            startDate:localStorage.getItem("startDateDashboard")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateDashboard"),
+            endDate:localStorage.getItem("endDateDashboard")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateDashboard"),
 
             grossSales:"0",
             wGrossSales:110,
