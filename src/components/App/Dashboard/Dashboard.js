@@ -6,7 +6,6 @@ import Chart from "react-apexcharts";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import moment from 'moment';
 import Select from 'react-select';
-import { Line } from 'peity-react';
 import {toRp} from "helper";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
@@ -324,13 +323,12 @@ class Dashboard extends Component {
 
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
-          let lk = []
+          let lk = [{
+              value: "-",
+              label: "Semua Lokasi"
+          }]
           let loc = nextProps.auth.user.lokasi;
           if(loc!==undefined){
-              lk.push({
-                  value: "-",
-                  label: "Semua Lokasi"
-              });
               loc.map((i) => {
                 lk.push({
                   value: i.kode,
@@ -356,7 +354,6 @@ class Dashboard extends Component {
 
     componentWillMount(){
         this.refreshData();
-        
     }
 
     onChange = date => this.setState({ date })
@@ -392,10 +389,6 @@ class Dashboard extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        
-        var loc = this.state.location;
-        var dateFrom = this.state.startDate;
-        var dateTo = this.state.endDate;
         this.refreshData();
     }
 
