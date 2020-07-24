@@ -28,6 +28,7 @@ import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import Closing from '../report/inventory/closing'
 import Sale from '../sale/product_sale'
+import Company from "../setting/company";
 
 import axios from 'axios';
 import {HEADERS} from "../../../redux/actions/_constants";
@@ -36,11 +37,13 @@ axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6Ik
 axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
 axios.defaults.headers.common['password'] = `${HEADERS.PASSWORD}`;
 axios.defaults.headers.common['Content-Type'] = `application/x-www-form-urlencoded`;
+
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
         <Switch>
             <PrivateRoute path="/" exact strict component={Dashboard} />
+            <PrivateRoute path="/company" exact strict component={Company} />
             <PrivateRoute path="/bank" exact strict component={Bank} />
             <PrivateRoute path="/cash" exact strict component={Cash} />
             <PrivateRoute path="/customer" exact strict component={Customer} />

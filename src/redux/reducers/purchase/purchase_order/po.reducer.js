@@ -22,10 +22,7 @@ export const poReducer = (state = initialState, action) => {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result,
-                total: action.data.result.total
-            });
-        case PO.REPORT_SUCCESS:
-            return Object.assign({}, state, {
+                total: action.data.result.total,
                 report: action.data.result,
                 report_data: action.data.result.data
             });

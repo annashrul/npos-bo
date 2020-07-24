@@ -42,22 +42,18 @@ const socket = socketIOClient(HEADERS.URL);
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        this.handleSelect = this.handleSelect.bind(this);
-        this.handleSelect2 = this.handleSelect2.bind(this);
-        this.handleSelect3 = this.handleSelect3.bind(this);
-        this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-
+        
         this.state = {
             startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
             endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
 
-            grossSales:"123,456,789",
+            grossSales:"0",
             wGrossSales:110,
-            netSales:"123,456,789",
+            netSales:"0",
             wNetSales:110,
-            trxNum:"123,456,789",
+            trxNum:"0",
             wTrxNum:110,
-            avgTrx:"123,456,789",
+            avgTrx:"0",
             wAvgTrx:110,
 
             dataA: [5,3,9,6,5,9,7,3,5,2],
@@ -66,7 +62,7 @@ class Dashboard extends Component {
             dataD: [7,3,5,2,5,3,9,6,5,9],
 
             location_data:[],
-            location:"",
+            location:"-",
 
            lokasi_sales: {
                    options: {
@@ -297,11 +293,11 @@ class Dashboard extends Component {
         };
 
         socket.on('refresh_dashboard',(data)=>{
-            this.refreshData();
+            // this.refreshData();
         })
         
         socket.on("set_dashboard", (data) => {
-            // console.log("SET_DASHBOARD", data);
+            console.log("SET_DASHBOARD", data);
             this.setState({
                 grossSales:toRp(parseInt(data.header.penjualan)),
                 netSales:toRp(parseInt(data.header.net_sales)),
@@ -373,6 +369,10 @@ class Dashboard extends Component {
             // console.log("data", data.header.penjualan);
             // console.log("length", String(data.header.penjualan).length);
         });
+        this.handleSelect = this.handleSelect.bind(this);
+        this.handleSelect2 = this.handleSelect2.bind(this);
+        this.handleSelect3 = this.handleSelect3.bind(this);
+        this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -380,12 +380,17 @@ class Dashboard extends Component {
           let lk = []
           let loc = nextProps.auth.user.lokasi;
           if(loc!==undefined){
+              lk.push({
+                  value: "-",
+                  label: "Semua Lokasi"
+              });
               loc.map((i) => {
                 lk.push({
                   value: i.kode,
                   label: i.nama
                 });
               })
+              
               this.setState({
                 location_data: lk,
                 userid: nextProps.auth.user.id
@@ -403,16 +408,16 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
+        this.refreshData();
+        
+    }
+
+    refreshData(){
         socket.emit('get_dashboard', {
             datefrom: this.state.startDate,
             dateto: this.state.endDate,
             location: this.state.location
         });
-        
-    }
-
-    componentWillMount(){
-        this.refreshData()
     }
 
     // componentDidMount() {
@@ -420,7 +425,6 @@ class Dashboard extends Component {
     //         () => this.tick(),
     //         2000
     //       );
-        
     // }
 
     // componentWillUnmount() {
@@ -525,16 +529,92 @@ class Dashboard extends Component {
 
     render() {
 
-          const onChange = (start, end) => {
-           
-            console.log(moment(start).format()+" - "+moment(end).format());
-          }
-        
         return (
             <Layout page="Dashboard">
-                <div className="row">
+                <div className="row align-items-center">
+                    <div className="col-6">
+                        <div className="dashboard-header-title mb-3">
+                        <h5 className="mb-0 font-weight-bold">Dashboard</h5>
+                        <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p>
+                        </div>
+                    </div>
+                    {/* Dashboard Info Area */}
+                    <div className="col-6">
+                        <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
+                            <div className="dashboard-clock">
+                                <div id="dashboardDate">Friday, 24 July</div>
+                                <ul className="d-flex align-items-center justify-content-end">
+                                <li id="hours">12</li>
+                                <li>:</li>
+                                <li id="min">31</li>
+                                <li>:</li>
+                                <li id="sec">46</li>
+                                </ul>
+                            </div>
+                            <div className="dashboard-btn-group d-flex align-items-center">
+                                <button type="button" onClick={(e)=>this.handleSubmit(e)} className="btn btn-primary ml-1 float-right"><i className="fa fa-refresh"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row align-items-center">
+                    <div className="col-6">
+                        {/* <div className="dashboard-header-title mb-3">
+                        <h5 className="mb-0 font-weight-bold">Dashboard</h5>
+                        <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p>
+                        </div> */}
+                    </div>
+                    {/* Dashboard Info Area */}
+                    <div className="col-6">
+                        <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
+                                <div className="col-8 text-right">
+                                    <div className="form-group">
+                                        {/* <label className="control-label font-12">Periode </label> */}
+                                        <DateRangePicker
+                                            className='float-right'
+                                            ranges={range}
+                                            alwaysShowCalendars={true}
+                                            onEvent={this.handleEvent}
+                                        >
+                                            <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
+                                        </DateRangePicker>
+                                    </div>
+                                </div>
+                                <div className="col-4 text-right" style={{paddingRight:'unset'}}>
+                                    <div className="form-group">
+                                        {/* <label className="control-label font-12">
+                                        Lokasi
+                                        </label> */}
+                                        <Select 
+                                            options={this.state.location_data} 
+                                            placeholder = "Pilih Lokasi"
+                                            defaultValue={{ label: "Select Location", value: "-" }}
+                                            onChange={this.HandleChangeLokasi}
+                                            value = {
+                                                this.state.location_data.find(op => {
+                                                return op.value === this.state.location
+                                                })
+                                            }
+                                            />
+                                        {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                            {this.state.error.location}
+                                        </div> */}
+                                    </div>
+                                </div>
+                                {/* <div className="col-2">
+                                    <div className="form-group">
+                                        <button type="button" onClick={(e)=>this.handleSubmit(e)} className="btn btn-primary">REFRESH DATA</button>
+                                    </div>
+                                </div> */}
+
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row" style={{display:'none'}}>
                     <div className="col-12 box-margin">
-                        <div className="card bg-boxshadow">
+                        <div className="card bg-boxshadow"  style={{height: '58px'}}>
                             <div className="card-body px-3 py-2">
                                 {/* <div className="user-important-data-info d-sm-flex align-items-center justify-content-between"> */}
                                     <div className="row">
@@ -634,19 +714,6 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    {/* <div className="col-md-4 box-margin">
-                        <div className="card text-center">
-                            <div className="card-body">
-                                <h4 className="card-title">STOCK</h4>
-                                <Chart
-                                    options={this.state.optionsStock}
-                                    series={this.state.seriesStock}
-                                    type="radialBar"
-                                    height="300"
-                                    />
-                            </div>
-                        </div>
-                    </div> */}
                     <div className="col-md-12 box-margin">
                         <div className="card text-center">
                             <div className="card-body">

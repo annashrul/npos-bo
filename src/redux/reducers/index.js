@@ -29,11 +29,13 @@ import {saleReducer} from "./sale/sale.reducer";
 import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {closingReducer} from "./report/closing/closing.reducer";
 import {opnameReducer} from "./inventory/opname/opname.reducer";
+import {companyReducer} from "./setting/company/company.reducer";
 
 export default combineReducers({
     modalReducer,
     modalTypeReducer,
     dashboardReducer,
+    companyReducer,
     userLevelReducer,
     userListReducer,
     locationCategoryReducer,
