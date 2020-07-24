@@ -10,6 +10,7 @@ import moment from "moment";
 import 'moment/locale/id'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {HEADERS} from 'redux/actions/_constants'
+import { toRp } from '../../../../../../helper';
 
 const range = {
     Today: [moment(), moment()],
@@ -268,18 +269,248 @@ class ListClosing extends Component{
                                                         uang: "35194300.00" */}
                                                         <div className="row">
                                                             <div className="col-10">
-                                                                <div className="ml-3">
+                                                                {/* <div className="ml-3"> */}
                                                                     <h6 className="mb-0">{v.lokasi}</h6>
                                                                     <p className="text-12 mb-0">{moment(v.tanggal).locale('id').format("LLLL")}</p>
                                                                     <hr></hr>
                                                                     {/* <button type="submit" className="btn btn-primary"><i className="fa fa-excel"> Re-closing</i></button> */}
                                                                     <div className="row">
                                                                         <div className="col-6">
-                                                                            <p className="text-12 mb-0 text-left">Total Sales</p>
+                                                                            <p className="text-10 mb-0 text-left">Total Sales</p>
                                                                         </div>
                                                                         <div className="col-6" >
-                                                                            <p className="text-12 mb-0 text-right">{v.total_cash_sales}</p>
-                                                                    
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Discount Item</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Discount Total</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Discount Total</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Net Omset</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Tax</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 texttoRp-left(">Service)</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Rounding</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Total Omset</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Cash</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">EDC Seatle</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Total Debit</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Total Kredit</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Compliment</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Point</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Receive Amount</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Other Income</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Total Income</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Cash in Hand</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Return</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Tax</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Service</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Discount</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Paid Out</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Total Outcome</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Total Cash Sales</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Cashier Cash</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Status</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr style={{margin:'unset'}}></hr>
+                                                                    <div className="row">
+                                                                        <div className="col-6">
+                                                                            <p className="text-10 mb-0 text-left">Note</p>
+                                                                        </div>
+                                                                        <div className="col-6" >
+                                                                            <p className="text-12 mb-0 text-right">{toRp(v.total_cash_sales)}</p>
                                                                         </div>
                                                                     </div>
                                                                     {/* <p className="text-12 mb-0">{v.total_cash_sales}</p>
@@ -301,7 +532,7 @@ class ListClosing extends Component{
                                                                     <p className="text-12 mb-0">{v.total_cash_sales}</p>
                                                                     <p className="text-12 mb-0">{v.total_cash_sales}</p>
                                                                     <p className="text-12 mb-0">{v.total_cash_sales}</p> */}
-                                                                </div>
+                                                                {/* </div> */}
                                                             </div>
                                                             <div className="col-2">
                                                                 <div className="dashboard-dropdown">
