@@ -41,7 +41,8 @@ class FormCustomer extends Component{
         // console.log(this.props.dataCustomerEdit);
         // const {nextprops} = this.props.dataCustomerEdit;
         // console.log(moment(this.props.dataCustomerEdit.tgl_ultah).format('DD/MM/yyyy'));
-        if(this.props.dataCustomerEdit!==undefined){
+        if(this.props.dataCustomerEdit!==undefined && this.props.dataCustomerEdit.length!==0){
+            console.log("DIEDIT");
             this.setState({
                 kd_cust:this.props.dataCustomerEdit.kd_cust,
                 nama:this.props.dataCustomerEdit.nama,
@@ -80,46 +81,7 @@ class FormCustomer extends Component{
         }
 
     }
-    componentWillReceiveProps(nextProps) {
-        // console.log('componentWillReceiveProps', nextProps.dataCustomerEdit);
-        // if (nextProps.dataCustomerEdit !== [] && nextProps.dataCustomerEdit !== undefined) {
-        //     this.setState({
-        //         kd_cust:nextProps.dataCustomerEdit.kd_cust,
-        //         nama:nextProps.dataCustomerEdit.nama,
-        //         alamat:nextProps.dataCustomerEdit.alamat,
-        //         status:nextProps.dataCustomerEdit.status,
-        //         tgl_ultah:nextProps.dataCustomerEdit.tgl_ultah,
-        //         tlp:nextProps.dataCustomerEdit.tlp,
-        //         cust_type:nextProps.dataCustomerEdit.cust_type,
-        //         password:nextProps.dataCustomerEdit.password,
-        //         register:nextProps.dataCustomerEdit.register,
-        //         foto:nextProps.dataCustomerEdit.foto,
-        //         email:nextProps.dataCustomerEdit.email,
-        //         biografi:nextProps.dataCustomerEdit.biografi,
-        //         special_price:nextProps.dataCustomerEdit.special_price,
-        //         jenis_kelamin:nextProps.dataCustomerEdit.jenis_kelamin,
-        //         discount:nextProps.dataCustomerEdit.discount,
-        //     })
-        // }else{
-        //     this.setState({
-        //         kd_cust:'',
-        //         nama:'',
-        //         alamat:'',
-        //         status:'1',
-        //         tgl_ultah:'-',
-        //         tlp:'0',
-        //         cust_type:'-',
-        //         password:'',
-        //         register:'-',
-        //         foto:'-',
-        //         jenis_kelamin:'1',
-        //         email:'',
-        //         biografi:'',
-        //         special_price:'1',
-        //         discount:'0'
-        //     })
-        // }
-    }
+   
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -174,6 +136,7 @@ class FormCustomer extends Component{
             this.props.dispatch(updateCustomer(this.props.dataCustomerEdit.kd_cust,parseData));
             this.props.dispatch(ModalToggle(false));
         }else{
+            console.log(parseData);
             this.props.dispatch(createCustomer(parseData));
             this.props.dispatch(ModalToggle(false));
         }
@@ -256,9 +219,9 @@ class FormCustomer extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label>Status</label>
-                                    <select className="form-control" name="jenis_kelamin" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                        <option value="1">Active</option>
-                                        <option value="0">In Active</option>
+                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                        <option value="1" selected={this.state.status==='1'}>Active</option>
+                                        <option value="0" selected={this.state.status==='0'}>In Active</option>
                                     </select>
                                 </div>
                                 <div className="form-group">
