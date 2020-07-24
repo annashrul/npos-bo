@@ -1,11 +1,10 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import Preloader from "Preloader";
-import {FetchAlokasi} from "redux/actions/inventory/alokasi.action";
+import {FetchClosing} from "redux/actions/report/closing/closing.action";
 import connect from "react-redux/es/connect/connect";
-import ListAlokasiReport from "./src/list";
-class AlokasiReport extends Component{
+import ListClosing from "./src/list";
+class Closing extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -20,9 +19,9 @@ class AlokasiReport extends Component{
         //         token:session.token
         //     },()=>{
                 // this.setState({token:session.token});
-                let any = localStorage.getItem("any_alokasi_report");
-                let page = localStorage.getItem('page_alokasi_report');
-                this.props.dispatch(FetchAlokasi(page?page:1,any?any:''));
+                let any = localStorage.getItem("any_closing_report");
+                let page = localStorage.getItem('page_closing_report');
+                this.props.dispatch(FetchClosing(page?page:1,any?any:''));
         //     })}
         // );
         // sessionService.loadUser()
@@ -41,13 +40,13 @@ class AlokasiReport extends Component{
     };
     render(){
         return (
-            <Layout page="AlokasiReport">
+            <Layout page="Closing">
                 <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
                             {
-                                !this.props.isLoading ? (  <ListAlokasiReport
-                                    data={this.props.alokasiReport}
+                                !this.props.isLoading ? (  <ListClosing
+                                    data={this.props.closing}
                                     // pagin={this.handlePagin}
                                     // search={this.handleSearch}
                                     // token={this.state.token}
@@ -62,15 +61,15 @@ class AlokasiReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapstate alokasi", state.alokasiReducer);
+    console.log("mapstate closing", state.closingReducer);
     return {
         // authenticated: state.sessionReducer.authenticated,
-        alokasiReport:state.alokasiReducer.data,
-        // total:state.alokasiReducer.total,
-        isLoading: state.alokasiReducer.isLoading,
-        isLoadingDetail: state.alokasiReducer.isLoadingDetail,
+        closing:state.closingReducer.data,
+        // total:state.closingReducer.total,
+        isLoading: state.closingReducer.isLoading,
+        // isLoadingDetail: state.closingReducer.isLoadingDetail,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(AlokasiReport);
+export default connect(mapStateToProps)(Closing);

@@ -403,9 +403,9 @@ class Dashboard extends Component {
         
     }
 
-    componentWillMount(){
-        this.refreshData()
-    }
+    // componentWillMount(){
+    //     this.refreshData()
+    // }
 
     componentDidMount() {
         this.interval = setInterval(
@@ -479,7 +479,9 @@ class Dashboard extends Component {
     };
 
     handleSubmit = (event) => {
+        event.preventDefault()
         console.log("tes","klik");
+        
         var loc = this.state.location;
         var dateFrom = this.state.startDate;
         var dateTo = this.state.endDate;
@@ -546,6 +548,7 @@ class Dashboard extends Component {
                                                 <Select 
                                                     options={this.state.location_data} 
                                                     placeholder = "Pilih Lokasi"
+                                                    defaultValue={{ label: "Select Location", value: "-" }}
                                                     onChange={this.HandleChangeLokasi}
                                                     value = {
                                                         this.state.location_data.find(op => {
