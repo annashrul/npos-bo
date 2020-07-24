@@ -318,60 +318,60 @@ class Dashboard extends Component {
                 top_sp_qty: data.top_sp_qty,
                 top_sp_sale: data.top_sp_sale,
             });
-            if(String(toRp(data.header.penjualan)).length <= 1){
-                this.setState({wGrossSales:280})
-            } else if (String(toRp(data.header.penjualan)).length <= 3) {
-                this.setState({wGrossSales:220})
-            } else if (String(toRp(data.header.penjualan)).length <= 5) {
-                this.setState({wGrossSales:200})
-            } else if (String(toRp(data.header.penjualan)).length <= 7) {
-                this.setState({wGrossSales:160})
-            } else if (String(toRp(data.header.penjualan)).length <= 9) {
-                this.setState({wGrossSales:120})
-            } else if (String(toRp(data.header.penjualan)).length > 9) {
-                this.setState({wGrossSales:80})
-            }
-            if(String(toRp(data.header.net_sales)).length <= 1){
-                this.setState({wNetSales:280})
-            } else if (String(toRp(data.header.net_sales)).length <= 3) {
-                this.setState({wNetSales:220})
-            } else if (String(toRp(data.header.net_sales)).length <= 5) {
-                this.setState({wNetSales:200})
-            } else if (String(toRp(data.header.net_sales)).length <= 7) {
-                this.setState({wNetSales:160})
-            } else if (String(toRp(data.header.net_sales)).length <= 9) {
-                this.setState({wNetSales:120})
-            } else if (String(toRp(data.header.net_sales)).length > 9) {
-                this.setState({wNetSales:80})
-            }
-            if(String(data.header.transaksi).length <= 1){
-                this.setState({wTrxNum:280})
-            } else if (String(data.header.transaksi).length <= 3) {
-                this.setState({wTrxNum:220})
-            } else if (String(data.header.transaksi).length <= 5) {
-                this.setState({wTrxNum:200})
-            } else if (String(data.header.transaksi).length <= 7) {
-                this.setState({wTrxNum:160})
-            } else if (String(data.header.transaksi).length <= 9) {
-                this.setState({wTrxNum:120})
-            } else if (String(data.header.transaksi).length > 9) {
-                this.setState({wTrxNum:80})
-            }
-            if(String(toRp(data.header.avg)).length <= 1){
-                this.setState({wAvgTrx:280})
-            } else if (String(toRp(data.header.avg)).length <= 3) {
-                this.setState({wAvgTrx:220})
-            } else if (String(toRp(data.header.avg)).length <= 5) {
-                this.setState({wAvgTrx:220})
-            } else if (String(toRp(data.header.avg)).length <= 7) {
-                this.setState({wAvgTrx:180})
-            } else if (String(toRp(data.header.avg)).length <= 9) {
-                this.setState({wAvgTrx:140})
-            } else if (String(toRp(data.header.avg)).length > 9) {
-                this.setState({wAvgTrx:80})
-            }
-            console.log("data", data.header.penjualan);
-            console.log("length", String(data.header.penjualan).length);
+            // if(String(toRp(data.header.penjualan)).length <= 1){
+            //     this.setState({wGrossSales:280})
+            // } else if (String(toRp(data.header.penjualan)).length <= 3) {
+            //     this.setState({wGrossSales:220})
+            // } else if (String(toRp(data.header.penjualan)).length <= 5) {
+            //     this.setState({wGrossSales:200})
+            // } else if (String(toRp(data.header.penjualan)).length <= 7) {
+            //     this.setState({wGrossSales:160})
+            // } else if (String(toRp(data.header.penjualan)).length <= 9) {
+            //     this.setState({wGrossSales:120})
+            // } else if (String(toRp(data.header.penjualan)).length > 9) {
+            //     this.setState({wGrossSales:80})
+            // }
+            // if(String(toRp(data.header.net_sales)).length <= 1){
+            //     this.setState({wNetSales:280})
+            // } else if (String(toRp(data.header.net_sales)).length <= 3) {
+            //     this.setState({wNetSales:220})
+            // } else if (String(toRp(data.header.net_sales)).length <= 5) {
+            //     this.setState({wNetSales:200})
+            // } else if (String(toRp(data.header.net_sales)).length <= 7) {
+            //     this.setState({wNetSales:160})
+            // } else if (String(toRp(data.header.net_sales)).length <= 9) {
+            //     this.setState({wNetSales:120})
+            // } else if (String(toRp(data.header.net_sales)).length > 9) {
+            //     this.setState({wNetSales:80})
+            // }
+            // if(String(data.header.transaksi).length <= 1){
+            //     this.setState({wTrxNum:280})
+            // } else if (String(data.header.transaksi).length <= 3) {
+            //     this.setState({wTrxNum:220})
+            // } else if (String(data.header.transaksi).length <= 5) {
+            //     this.setState({wTrxNum:200})
+            // } else if (String(data.header.transaksi).length <= 7) {
+            //     this.setState({wTrxNum:160})
+            // } else if (String(data.header.transaksi).length <= 9) {
+            //     this.setState({wTrxNum:120})
+            // } else if (String(data.header.transaksi).length > 9) {
+            //     this.setState({wTrxNum:80})
+            // }
+            // if(String(toRp(data.header.avg)).length <= 1){
+            //     this.setState({wAvgTrx:280})
+            // } else if (String(toRp(data.header.avg)).length <= 3) {
+            //     this.setState({wAvgTrx:220})
+            // } else if (String(toRp(data.header.avg)).length <= 5) {
+            //     this.setState({wAvgTrx:220})
+            // } else if (String(toRp(data.header.avg)).length <= 7) {
+            //     this.setState({wAvgTrx:180})
+            // } else if (String(toRp(data.header.avg)).length <= 9) {
+            //     this.setState({wAvgTrx:140})
+            // } else if (String(toRp(data.header.avg)).length > 9) {
+            //     this.setState({wAvgTrx:80})
+            // }
+            // console.log("data", data.header.penjualan);
+            // console.log("length", String(data.header.penjualan).length);
         });
     }
 
@@ -394,57 +394,65 @@ class Dashboard extends Component {
         }
       }
 
+    refreshData(){
+        socket.emit('get_dashboard', {
+            datefrom: this.state.startDate,
+            dateto: this.state.endDate,
+            location: this.state.location
+        })
+    }
+
     componentWillMount(){
         socket.emit('get_dashboard', {
-            datefrom: '-',
-            dateto: '-',
-            location: '-'
+            datefrom: this.state.startDate,
+            dateto: this.state.endDate,
+            location: this.state.location
         });
         
     }
 
-    // componentWillMount(){
-    //     this.refreshData()
+    componentWillMount(){
+        this.refreshData()
+    }
+
+    // componentDidMount() {
+    //     this.interval = setInterval(
+    //         () => this.tick(),
+    //         2000
+    //       );
+        
     // }
 
-    componentDidMount() {
-        this.interval = setInterval(
-            () => this.tick(),
-            2000
-          );
-        
-    }
+    // componentWillUnmount() {
+    // clearInterval(this.interval);
+    // }
 
-    componentWillUnmount() {
-    clearInterval(this.interval);
-    }
+    // tick() {
+    // // var array = [];
+    // var arrayA = [5,3,9,6,5,9,7,3,5,2];
+    // var arrayB = [5,3,9,6,5,9,7,3,5,2];
+    // var arrayC = [5,3,9,6,5,9,7,3,5,2];
+    // var arrayD = [5,3,9,6,5,9,7,3,5,2];
 
-    tick() {
-    // var array = [];
-    var arrayA = [5,3,9,6,5,9,7,3,5,2];
-    var arrayB = [5,3,9,6,5,9,7,3,5,2];
-    var arrayC = [5,3,9,6,5,9,7,3,5,2];
-    var arrayD = [5,3,9,6,5,9,7,3,5,2];
+    // arrayA.sort(() => 0.5 - Math.random());
+    // arrayB.sort(() => 0.7 - Math.random());
+    // arrayC.sort(() => 0.9 - Math.random());
+    // arrayD.sort(() => 0.3 - Math.random());
+    // // as we need at least players to form a pair
+    // while (arrayA.length) { 
+    // const randA = [arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop()];
+    // const randB = [arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop()];
+    // const randC = [arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop()];
+    // const randD = [arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop()];
 
-    arrayA.sort(() => 0.5 - Math.random());
-    arrayB.sort(() => 0.7 - Math.random());
-    arrayC.sort(() => 0.9 - Math.random());
-    arrayD.sort(() => 0.3 - Math.random());
-    // as we need at least players to form a pair
-    while (arrayA.length) { 
-    const randA = [arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop()];
-    const randB = [arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop()];
-    const randC = [arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop()];
-    const randD = [arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop()];
-
-    this.setState({
-        dataA: randA,
-        dataB: randB,
-        dataC: randC,
-        dataD: randD
-        });
-    }
-    }
+    // this.setState({
+    //     dataA: randA,
+    //     dataB: randB,
+    //     dataC: randC,
+    //     dataD: randD
+    //     });
+    // }
+    // }
 
     onChange = date => this.setState({ date })
 
@@ -476,6 +484,7 @@ class Dashboard extends Component {
             startDate:awal,
             endDate:akhir
         });
+        this.refreshData();
     };
 
     handleSubmit = (event) => {
@@ -488,11 +497,12 @@ class Dashboard extends Component {
         if(this.state.location == '' || this.state.location == undefined){
             loc = "-";
         }
-        socket.emit('get_dashboard', {
-            datefrom: dateFrom,
-            dateto: dateTo,
-            location: loc
-        });
+        // socket.emit('get_dashboard', {
+        //     datefrom: dateFrom,
+        //     dateto: dateTo,
+        //     location: loc
+        // });
+        this.refreshData();
         console.log("dateFrom", dateFrom);
         console.log("dateTo", dateTo);
         console.log("loc", loc);
@@ -508,6 +518,7 @@ class Dashboard extends Component {
             error: err
         })
         localStorage.setItem('lk', lk.value);
+        this.refreshData();
     }
     
 
@@ -556,7 +567,7 @@ class Dashboard extends Component {
                                                         })
                                                     }
                                                     />
-                                                {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                                {/* <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                     {this.state.error.location}
                                                 </div> */}
                                             </div>
@@ -578,69 +589,45 @@ class Dashboard extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-6 col-xl-3 box-margin">
-                        <div className="card text-white bg-primary">
-                            <div className="card-header border-bottom-0">GROSS SALES</div>
+                        <div className="card">
+                            <div className="card-header bg-transparent border-bottom-0">GROSS SALES</div>
                             <div className="card-body">
-                                <div className="row" style={{paddingLeft:12,paddingRight:12}}>
-                                    {/* <div className="col-md-4"> */}
-                                        <Line height={32} width={this.state.wGrossSales}
-                                            values={this.state.dataA}
-                                        />
-                                    {/* </div>
-                                    <div className="col-md-8"> */}
-                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.grossSales}</h2>
-                                    {/* </div> */}
+                                <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
+                                    <h2><i className="fa fa-area-chart text-primary"></i></h2>
+                                    <h2 style={{paddingLeft:5}}>{this.state.grossSales}</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6 col-xl-3 box-margin">
-                        <div className="card text-white bg-secondary">
-                            <div className="card-header border-bottom-0">NET SALES</div>
+                        <div className="card">
+                            <div className="card-header bg-transparent border-bottom-0">NET SALES</div>
                             <div className="card-body">
-                            <div className="row" style={{paddingLeft:12,paddingRight:12}}>
-                                    {/* <div className="col-md-4"> */}
-                                        <Line height={32} width={this.state.wNetSales}
-                                            values={this.state.dataB}
-                                        />
-                                    {/* </div> */}
-                                    {/* <div className="col-md-8"> */}
-                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.netSales}</h2>
-                                    {/* </div> */}
+                                <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
+                                    <h2><i className="fa fa-bar-chart text-secondary"></i></h2>
+                                    <h2 style={{paddingLeft:5}}>{this.state.netSales}</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6 col-xl-3 box-margin">
-                        <div className="card text-white bg-success">
-                            <div className="card-header border-bottom-0">NUMBER OF TRANSACTION</div>
+                        <div className="card">
+                            <div className="card-header bg-transparent border-bottom-0">NUMBER OF TRANSACTION</div>
                             <div className="card-body">
-                            <div className="row" style={{paddingLeft:12,paddingRight:12}}>
-                                    {/* <div className="col-md-4"> */}
-                                        <Line height={32} width={this.state.wTrxNum}
-                                            values={this.state.dataC}
-                                        />
-                                    {/* </div> */}
-                                    {/* <div className="col-md-8"> */}
-                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.trxNum}</h2>
-                                    {/* </div> */}
+                                <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
+                                    <h2><i className="fa fa-line-chart text-success"></i></h2>
+                                    <h2 style={{paddingLeft:5}}>{this.state.trxNum}</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6 col-xl-3 box-margin">
-                        <div className="card text-white bg-danger">
-                            <div className="card-header border-bottom-0">AVG. SALES PER TRANSACTION</div>
+                        <div className="card">
+                            <div className="card-header bg-transparent border-bottom-0">AVG. SALES PER TRANSACTION</div>
                             <div className="card-body">
-                            <div className="row" style={{paddingLeft:12,paddingRight:12}}>
-                                    {/* <div className="col-md-4"> */}
-                                        <Line height={32} width={this.state.wAvgTrx}
-                                            values={this.state.dataD}
-                                        />
-                                    {/* </div> */}
-                                    {/* <div className="col-md-8"> */}
-                                        <h2 style={{paddingLeft:5}} className="text-white">{this.state.avgTrx}</h2>
-                                    {/* </div> */}
+                                <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
+                                    <h2><i className="fa fa-pie-chart text-danger"></i></h2>
+                                    <h2 style={{paddingLeft:5}}>{this.state.avgTrx}</h2>
                                 </div>
                             </div>
                         </div>
@@ -723,144 +710,139 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-12 box-margin">
+                    <div className="col-md-6 box-margin">
                         <div className="card">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="card-body">
-                                        <Tabs>
-                                            <TabList>
-                                                <Tab onClick={(e) =>this.handleSelect(e,1)} >Volume</Tab>
-                                                <Tab onClick={(e) =>this.handleSelect(e,2)} >Sales</Tab>
-                                            </TabList>
-                                            <TabPanel>
-                                                {/* <div class="card-body"> */}
-                                                    <h4 className="card-title">TOP 8 ITEMS VOLUME</h4>
-                                                    <Chart
-                                                        options={this.state.top_item_qty.options}
-                                                        series={this.state.top_item_qty.series}
-                                                        type="bar"
-                                                        height="300"
-                                                        />
-                                                {/* </div> */}
-                                            </TabPanel>
-                                            <TabPanel>
-                                                <h4 className="card-title">TOP 8 ITEMS SALES</h4>
-                                                <Chart
-                                                    options={this.state.top_item_sale.options}
-                                                    series={this.state.top_item_sale.series}
-                                                    type="bar"
-                                                    height="300"
-                                                    />
-                                            </TabPanel>
-                                        </Tabs>
-                                    </div>
+                            {/* <div className="card-body"> */}
+                                <Tabs>
+                                <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
+                                    <h4 className="card-title mt-3">TOP 8 ITEMS</h4>
+                                    <TabList>
+                                        <Tab onClick={(e) =>this.handleSelect(e,1)} >Volume</Tab>
+                                        <Tab onClick={(e) =>this.handleSelect(e,2)} >Sales</Tab>
+                                    </TabList>
                                 </div>
-                                <div className="col-md-6">
-                                    <div className="card-body">
-                                        <Tabs>
-                                            <TabList>
-                                                <Tab onClick={(e) =>this.handleSelect2(e,1)} >Volume</Tab>
-                                                <Tab onClick={(e) =>this.handleSelect2(e,2)} >Sales</Tab>
-                                            </TabList>
-                                            <TabPanel>
-                                                {/* <div class="card-body"> */}
-                                                    <h4 className="card-title">TOP 8 CATEGORY VOLUME</h4>
-                                                    <Chart
-                                                        options={this.state.top_cat_qty.options}
-                                                        series={this.state.top_cat_qty.series}
-                                                        type="bar"
-                                                        height="300"
-                                                        />
-                                                {/* </div> */}
-                                            </TabPanel>
-                                            <TabPanel>
-                                                <h4 className="card-title">TOP 8 CATEGORY SALES</h4>
-                                                <Chart
-                                                    options={this.state.top_cat_sale.options}
-                                                    series={this.state.top_cat_sale.series}
-                                                    type="bar"
-                                                    height="300"
-                                                    />
-                                            </TabPanel>
-                                        </Tabs>
-                                    </div>
+                                <div className="card-body">
+                                    <TabPanel>
+                                        {/* <div className="card-body"> */}
+                                            <Chart
+                                                options={this.state.top_item_qty.options}
+                                                series={this.state.top_item_qty.series}
+                                                type="bar"
+                                                height="300"
+                                                />
+                                        {/* </div> */}
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <Chart
+                                            options={this.state.top_item_sale.options}
+                                            series={this.state.top_item_sale.series}
+                                            type="bar"
+                                            height="300"
+                                            />
+                                    </TabPanel>
                                 </div>
-                            </div>
+                                </Tabs>
+                            {/* </div> */}
+                        </div>
+                    </div>
+                    <div className="col-md-6 box-margin">
+                        <div className="card">
+                                <Tabs>
+                                <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
+                                    <h4 className="card-title mt-3">TOP 8 CATEGORY</h4>
+                                    <TabList>
+                                        <Tab onClick={(e) =>this.handleSelect2(e,1)} >Volume</Tab>
+                                        <Tab onClick={(e) =>this.handleSelect2(e,2)} >Sales</Tab>
+                                    </TabList>
+                                </div>
+                                <div className="card-body">
+                                    <TabPanel>
+                                            <Chart
+                                                options={this.state.top_cat_qty.options}
+                                                series={this.state.top_cat_qty.series}
+                                                type="bar"
+                                                height="300"
+                                                />
+                                        {/* </div> */}
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <Chart
+                                            options={this.state.top_cat_sale.options}
+                                            series={this.state.top_cat_sale.series}
+                                            type="bar"
+                                            height="300"
+                                            />
+                                    </TabPanel>
+                                </div>
+                                </Tabs>
                         </div>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-12 box-margin">
+                    <div className="col-md-6 box-margin">
                         <div className="card">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="card-body">
-                                        <Tabs>
-                                            <TabList>
-                                                <Tab onClick={(e) =>this.handleSelect3(e,1)} >Volume</Tab>
-                                                <Tab onClick={(e) =>this.handleSelect3(e,2)} >Sales</Tab>
-                                            </TabList>
-                                            <TabPanel>
-                                                {/* <div class="card-body"> */}
-                                                    <h4 className="card-title">TOP 5 SUPPLIER VOLUME</h4>
-                                                    <Chart
-                                                        options={this.state.top_sp_qty.options}
-                                                        series={this.state.top_sp_qty.series}
-                                                        type="bar"
-                                                        height="300"
-                                                        />
-                                                {/* </div> */}
-                                            </TabPanel>
-                                            <TabPanel>
-                                                <h4 className="card-title">TOP 5 SUPPLIER SALES</h4>
-                                                <Chart
-                                                    options={this.state.top_sp_sale.options}
-                                                    series={this.state.top_sp_sale.series}
-                                                    type="bar"
-                                                    height="300"
-                                                    />
-                                            </TabPanel>
-                                        </Tabs>
-                                    </div>
+                            {/* <div className="card-body"> */}
+                                <Tabs>
+                                <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
+                                    <h4 className="card-title mt-3">TOP 5 SUPPLIER</h4>
+                                    <TabList>
+                                        <Tab onClick={(e) =>this.handleSelect3(e,1)} >Volume</Tab>
+                                        <Tab onClick={(e) =>this.handleSelect3(e,2)} >Sales</Tab>
+                                    </TabList>
                                 </div>
-                                <div className="col-md-6">
-                                    <div className="card-body">
-                                        <h4 className="card-title">STOCK</h4>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        <br></br>
-                                        {/* <Chart
+                                <div className="card-body">
+                                    <TabPanel>
+                                        <Chart
                                             options={this.state.top_sp_qty.options}
                                             series={this.state.top_sp_qty.series}
                                             type="bar"
                                             height="300"
-                                            /> */}
-                                    </div>
-                                </div>
-                                {/* <div className="col-md-6">
-                                    <div className="card-body">
-                                        <h4 className="card-title">TOP 5 SUPPLIER SALES</h4>
+                                            />
+                                    </TabPanel>
+                                    <TabPanel>
                                         <Chart
                                             options={this.state.top_sp_sale.options}
                                             series={this.state.top_sp_sale.series}
                                             type="bar"
                                             height="300"
                                             />
+                                    </TabPanel>
+                                </div>
+                                </Tabs>
+                            {/* </div> */}
+                        </div>
+                    </div>
+                    <div className="col-md-6 box-margin">
+                        <div className="card">
+                                <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
+                                    <h4 className="card-title mt-3">STOCK</h4>
+                                </div>
+                                <div className="card-body">
+                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                        <div className="d-flex align-items-center mr-3">
+                                            <div className="download-file-icon mr-3">
+                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                            </div>
+                                            <div className="user-text-table">
+                                                <h6 className="d-inline-block font-15 mb-0">Bala - bala</h6>
+                                                <p className="mb-0">20 siki</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" className="download-link badge badge-primary badge-pill">Stok aya keneh</a>
                                     </div>
-                                </div> */}
-                            </div>
+                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                        <div className="d-flex align-items-center mr-3">
+                                            <div className="download-file-icon mr-3">
+                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                            </div>
+                                            <div className="user-text-table">
+                                                <h6 className="d-inline-block font-15 mb-0">Gehu</h6>
+                                                <p className="mb-0">0 siki</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" className="download-link badge badge-danger badge-pill">Stok beak</a>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
