@@ -53,6 +53,17 @@ export const REGISTER = {
   SETEMAIL: 'SET_EMAIL',
 }
 /****************
+ COMPANY
+ *****************/
+export const COMPANY = {
+    LOADING_GET: 'SET_COMPANY_LOADING_GET',
+    SUCCESS_GET: 'SUCCESS_COMPANY_GET',
+    FAILED_GET: 'FAILED_COMPANY_GET',
+    LOADING_POST: 'SET_COMPANY_LOADING_POST',
+    SUCCESS_POST: 'SUCCESS_COMPANY_POST',
+    FAILED_POST: 'FAILED_COMPANY_POST',
+}
+/****************
     USERS
 *****************/
 export const USER_LIST = {

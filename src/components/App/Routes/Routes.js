@@ -27,11 +27,13 @@ import PoReport from '../report/inventory/po'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import Sale from '../sale/product_sale'
+import Company from "../setting/company";
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />
         <Switch>
             <PrivateRoute path="/" exact strict component={Dashboard} />
+            <PrivateRoute path="/company" exact strict component={Company} />
             <PrivateRoute path="/bank" exact strict component={Bank} />
             <PrivateRoute path="/cash" exact strict component={Cash} />
             <PrivateRoute path="/customer" exact strict component={Customer} />

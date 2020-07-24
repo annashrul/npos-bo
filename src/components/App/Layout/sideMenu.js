@@ -7,6 +7,7 @@ class SideMenu extends Component {
     constructor(props){
         super(props);
         this.state ={
+            isSetting:false,
             isMasterdata: false,
             isInventory: false,
             isReport: false,
@@ -38,6 +39,9 @@ class SideMenu extends Component {
 
     changeMenu(param){
         const path = this.props.location.pathname;
+        if(param === 'setting'){
+            this.setState({isSetting : !this.state.isSetting});
+        }
         if(param === 'masterdata'){
             this.setState({isMasterdata : !this.state.isMasterdata});
             console.log("COUNTER",this.state.isMasterdata);
@@ -112,10 +116,21 @@ class SideMenu extends Component {
             <nav>
                 <ul className="sidebar-menu" data-widget="tree" style={{marginTop: '32%'}}>
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Dashboard </Link></li>
-                    <li  className={path==='/setting'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Setting </Link></li>
                     <li className={
-                        this.state.isMasterdata===true || path==='/user'||
+                        this.state.isSetting===true || path==='/user'||
                         path==='/location' ||
+                        path==='/company'
+                        ?"treeview active menu-open" : "treeview"
+                    }>
+                        <a href="#" onClick={(e) => this.changeMenu('setting')}><i className="zmdi zmdi-apps" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
+                        <ul className="treeview-menu">
+                            <li className={path==='/company'?"active":''}><Link to="/company"> <i className="zmdi zmdi-apps" />Perusahaan</Link></li>
+                            <li className={path==='/user'?"active":''} ><Link to="/user"> <i className="zmdi zmdi-apps" />User</Link></li>
+                            <li className={path==='/location'?"active":''} ><Link to="/location"> <i className="zmdi zmdi-apps" />Lokasi</Link></li>
+                        </ul>
+                    </li>
+                    <li className={
+                        this.state.isMasterdata===true ||
                         path==='/department' ||
                         path==='/supplier' ||
                         path==='/sales' ||
@@ -128,10 +143,8 @@ class SideMenu extends Component {
                         <a href="#" onClick={(e) => this.changeMenu('masterdata')}><i className="zmdi zmdi-apps" /> <span>Masterdata</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
                             <li className={path==='/product'?"active":''} style={this.state.product==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product"> <i className="zmdi zmdi-apps" />Product</Link></li>
-                            <li className={path==='/user'?"active":''} style={this.state.user==="0"?{"display":"none"}:{"display":"block"}}><Link to="/user"> <i className="zmdi zmdi-apps" />User</Link></li>
                             <li className={path==='/department'?"active":''} style={this.state.department==="0"?{"display":"none"}:{"display":"block"}}><Link to="/department"> <i className="zmdi zmdi-apps" />Department </Link></li>
                             <li className={path==='/supplier'?"active":''} style={this.state.supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/supplier"> <i className="zmdi zmdi-apps" />Supplier </Link></li>
-                            <li className={path==='/location'?"active":''} style={this.state.location==="0"?{"display":"none"}:{"display":"block"}}><Link to="/location"> <i className="zmdi zmdi-apps" />Location </Link></li>
                             <li className={path==='/customer'?"active":''} style={this.state.customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/customer"> <i className="zmdi zmdi-apps" />Customer </Link></li>
                             <li className={path==='/cash'?"active":''} style={this.state.cash==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash"> <i className="zmdi zmdi-apps" />Cash </Link></li>
                             <li className={path==='/sales'?"active":''} style={this.state.sales==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sales"> <i className="zmdi zmdi-apps" />Sales </Link></li>
