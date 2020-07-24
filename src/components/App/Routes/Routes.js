@@ -27,15 +27,8 @@ import PoReport from '../report/inventory/po'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import Closing from '../report/inventory/closing'
-
-import axios from 'axios';
-import {HEADERS} from "../../../redux/actions/_constants";
-
-axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1NTAxNDA2LCJleHAiOjE1OTgwOTM0MDZ9.kMJwmttCOcfNhj_3SWs89i421jgIC4-O-ec3zG2-KWQ`;
-axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
-axios.defaults.headers.common['password'] = `${HEADERS.PASSWORD}`;
-axios.defaults.headers.common['Content-Type'] = `application/x-www-form-urlencoded`;
 import Sale from '../sale/product_sale'
+
 const Routes = (
     <div>
         <Route path="/login" exact strict component={Login} />

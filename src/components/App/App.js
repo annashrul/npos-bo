@@ -13,6 +13,7 @@ import { initDB } from 'react-indexed-db';
 initDB(DBConfig);
 // Check token in localStorage
   if (localStorage.npos) {
+    setAuthToken(atob(localStorage.npos));
     store.dispatch(setLoggedin(true))
     const sess = get('sess');
       sess.then(res => {
