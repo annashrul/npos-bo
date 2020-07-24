@@ -17,10 +17,14 @@ export function setOpnameFailed(data=[]){
     return {type:OPNAME.FAILED,data}
 }
 
-export const FetchPostingOpname = (page=1)=>{
+export const FetchPostingOpname = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let url=`opname/report?page=${page}&status=0`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;

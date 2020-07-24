@@ -297,7 +297,7 @@ class Dashboard extends Component {
         };
 
         socket.on('refresh_dashboard',(data)=>{
-            this.refreshData();
+            // this.refreshData();
         })
         
         socket.on("set_dashboard", (data) => {
@@ -404,7 +404,7 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
-        this.refreshData()
+        // this.refreshData()
     }
 
     componentDidMount() {
