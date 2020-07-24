@@ -163,7 +163,6 @@ class ListCustomer extends Component{
                     // this.props.dataCustomerEdit!==undefined?
                         <FormCustomer
                             dataCustomerEdit={this.props.dataCustomerEdit}
-                            token={this.props.token}
                             dataCustomerTypeAll={this.props.dataCustomerTypeAll}
                         />
                         // : <Preloader/>

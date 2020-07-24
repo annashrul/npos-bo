@@ -8,6 +8,7 @@ const initialState = {
     msg:"",
     status:"",
     check:false,
+    triggerEcaps:false
 };
 
 export const siteReducer = (state = initialState, action) => {
@@ -15,6 +16,10 @@ export const siteReducer = (state = initialState, action) => {
         case SITE.SUCCESS_CHECK:
             return Object.assign({}, state, {
                 check:action.data.result===0?false:true
+            });
+        case SITE.TRIGGER_ECAPS:
+            return Object.assign({}, state, {
+                triggerEcaps: action.data
             });
         case SITE.LOADING:
             return Object.assign({}, state, {

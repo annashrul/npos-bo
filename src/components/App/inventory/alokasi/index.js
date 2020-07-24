@@ -160,7 +160,7 @@ class Alokasi extends Component{
             this.setState({
               location: nextProps.dn_data.master.kd_lokasi_1,
               location2: nextProps.dn_data.master.kd_lokasi_2,
-              catatan: nextProps.dn_data.master.catatan,
+              catatan: nextProps.dn_data.master.keterangan,
               no_delivery_note: nextProps.dn_data.master.no_delivery_note
             })
             localStorage.setItem('lk', nextProps.dn_data.master.kd_lokasi_1)
@@ -169,7 +169,7 @@ class Alokasi extends Component{
 
             nextProps.dn_data.detail.map(item=>{
                 const datas = {
-                  kd_brg: item.kd_brg,
+                  kd_brg: item.kode_barang,
                   nm_brg: item.nm_brg,
                   barcode: item.barcode,
                   satuan: item.satuan,

@@ -62,7 +62,7 @@ export const FetchCustomerTypeAll = ()=>{
 }
 
 
-export const createCustomerType = (data,token) => {
+export const createCustomerType = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `customerType`;
@@ -101,7 +101,7 @@ export const createCustomerType = (data,token) => {
             })
     }
 }
-export const updateCustomerType = (id,data,token) => {
+export const updateCustomerType = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `customerType/${id}`;
@@ -140,21 +140,12 @@ export const updateCustomerType = (id,data,token) => {
             })
     }
 }
-export const deleteCustomerType = (id,token) => {
+export const deleteCustomerType = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `customerType/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
 
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
