@@ -680,10 +680,10 @@ class DeliveryNote extends Component{
                                 </small>
                             </div>
                           </div>
-                          <div className="col-md-12" style={parseInt(this.state.ambil_data)==1?{display:'none'}:{display:'block'}}>
+                          <div className="col-md-12" style={parseInt(this.state.ambil_data)===1?{display:'none'}:{display:'block'}}>
                             <div className="form-group">
                               <AsyncSelect
-                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'Pembelian':'')}
+                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===1?'':'Pembelian')}
                                     onChange={this.HandleChangeNota}
                                     value = {{
                                       label: this.state.ambil_nota,

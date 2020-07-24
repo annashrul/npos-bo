@@ -292,7 +292,8 @@ class Dashboard extends Component {
         };
 
         socket.on('refresh_dashboard',(data)=>{
-            // this.refreshData();
+            console.log("refresh_dashboard");
+            this.refreshData();
         })
         
         socket.on("set_dashboard", (data) => {
@@ -322,13 +323,12 @@ class Dashboard extends Component {
 
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
-          let lk = []
+          let lk = [{
+              value: "-",
+              label: "Semua Lokasi"
+          }]
           let loc = nextProps.auth.user.lokasi;
           if(loc!==undefined){
-              lk.push({
-                  value: "-",
-                  label: "Semua Lokasi"
-              });
               loc.map((i) => {
                 lk.push({
                   value: i.kode,
@@ -344,56 +344,17 @@ class Dashboard extends Component {
         }
       }
 
+    refreshData(start=null,end=null,loc=null){
+        socket.emit('get_dashboard', {
+            datefrom: start!==null?start:this.state.startDate,
+            dateto: end!==null?end:this.state.endDate,
+            location: loc!==null?loc:this.state.location
+        })
+    }
+
     componentWillMount(){
         this.refreshData();
-        
     }
-
-    refreshData(){
-        socket.emit('get_dashboard', {
-            datefrom: this.state.startDate,
-            dateto: this.state.endDate,
-            location: this.state.location
-        });
-    }
-
-    // componentDidMount() {
-    //     this.interval = setInterval(
-    //         () => this.tick(),
-    //         2000
-    //       );
-    // }
-
-    // componentWillUnmount() {
-    // clearInterval(this.interval);
-    // }
-
-    // tick() {
-    // // var array = [];
-    // var arrayA = [5,3,9,6,5,9,7,3,5,2];
-    // var arrayB = [5,3,9,6,5,9,7,3,5,2];
-    // var arrayC = [5,3,9,6,5,9,7,3,5,2];
-    // var arrayD = [5,3,9,6,5,9,7,3,5,2];
-
-    // arrayA.sort(() => 0.5 - Math.random());
-    // arrayB.sort(() => 0.7 - Math.random());
-    // arrayC.sort(() => 0.9 - Math.random());
-    // arrayD.sort(() => 0.3 - Math.random());
-    // // as we need at least players to form a pair
-    // while (arrayA.length) { 
-    // const randA = [arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop(), arrayA.pop()];
-    // const randB = [arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop(), arrayB.pop()];
-    // const randC = [arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop(), arrayC.pop()];
-    // const randD = [arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop(), arrayD.pop()];
-
-    // this.setState({
-    //     dataA: randA,
-    //     dataB: randB,
-    //     dataC: randC,
-    //     dataD: randD
-    //     });
-    // }
-    // }
 
     onChange = date => this.setState({ date })
 
@@ -414,8 +375,6 @@ class Dashboard extends Component {
     };
 
     handleEvent = (event, picker) => {
-        console.log("start: ", picker.startDate);
-        console.log("end: ", picker.endDate._d.toISOString());
         // end:  2020-07-02T16:59:59.999Z
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
@@ -425,41 +384,24 @@ class Dashboard extends Component {
             startDate:awal,
             endDate:akhir
         });
-        this.refreshData();
+        this.refreshData(awal,akhir,null);
     };
 
     handleSubmit = (event) => {
         event.preventDefault()
-        console.log("tes","klik");
-        
-        var loc = this.state.location;
-        var dateFrom = this.state.startDate;
-        var dateTo = this.state.endDate;
-        if(this.state.location == '' || this.state.location == undefined){
-            loc = "-";
-        }
-        // socket.emit('get_dashboard', {
-        //     datefrom: dateFrom,
-        //     dateto: dateTo,
-        //     location: loc
-        // });
         this.refreshData();
-        console.log("dateFrom", dateFrom);
-        console.log("dateTo", dateTo);
-        console.log("loc", loc);
     }
 
     HandleChangeLokasi(lk) {
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        console.log(err);
         this.setState({
             location: lk.value,
             error: err
         })
-        localStorage.setItem('lk', lk.value);
-        this.refreshData();
+        this.refreshData(null, null, lk.value)
+
     }
     
 
@@ -472,7 +414,6 @@ class Dashboard extends Component {
                     <div className="col-6">
                         <div className="dashboard-header-title mb-3">
                         <h5 className="mb-0 font-weight-bold">Dashboard</h5>
-                        <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p>
                         </div>
                     </div>
                     {/* Dashboard Info Area */}
@@ -495,58 +436,41 @@ class Dashboard extends Component {
                     </div>
                 </div>
 
-                <div className="row align-items-center">
-                    <div className="col-6">
-                        {/* <div className="dashboard-header-title mb-3">
-                        <h5 className="mb-0 font-weight-bold">Dashboard</h5>
-                        <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p>
-                        </div> */}
-                    </div>
+                <div className = "row  mb-3" >
                     {/* Dashboard Info Area */}
-                    <div className="col-6">
-                        <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
-                                <div className="col-8 text-right">
-                                    <div className="form-group">
-                                        {/* <label className="control-label font-12">Periode </label> */}
-                                        <DateRangePicker
-                                            className='float-right'
-                                            ranges={range}
-                                            alwaysShowCalendars={true}
-                                            onEvent={this.handleEvent}
-                                        >
-                                            <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
-                                        </DateRangePicker>
-                                    </div>
-                                </div>
-                                <div className="col-4 text-right" style={{paddingRight:'unset'}}>
-                                    <div className="form-group">
-                                        {/* <label className="control-label font-12">
-                                        Lokasi
-                                        </label> */}
-                                        <Select 
-                                            options={this.state.location_data} 
-                                            placeholder = "Pilih Lokasi"
-                                            defaultValue={{ label: "Select Location", value: "-" }}
-                                            onChange={this.HandleChangeLokasi}
-                                            value = {
-                                                this.state.location_data.find(op => {
-                                                return op.value === this.state.location
-                                                })
-                                            }
-                                            />
-                                        {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
-                                            {this.state.error.location}
-                                        </div> */}
-                                    </div>
-                                </div>
-                                {/* <div className="col-2">
-                                    <div className="form-group">
-                                        <button type="button" onClick={(e)=>this.handleSubmit(e)} className="btn btn-primary">REFRESH DATA</button>
-                                    </div>
-                                </div> */}
-
+                    <div className="col-2">
+                            <div className="form-group">
+                                {/* <label className="control-label font-12">Periode </label> */}
+                                <DateRangePicker
+                                    ranges={range}
+                                    alwaysShowCalendars={true}
+                                    onEvent={this.handleEvent}
+                                >
+                                    <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
+                                </DateRangePicker>
+                            </div>
                         </div>
-                    </div>
+                        <div className="col-2">
+                            <div className="form-group">
+                                {/* <label className="control-label font-12">
+                                Lokasi
+                                </label> */}
+                                <Select 
+                                    options={this.state.location_data} 
+                                    placeholder = "Pilih Lokasi"
+                                    defaultValue={{ label: "Select Location", value: "-" }}
+                                    onChange={this.HandleChangeLokasi}
+                                    value = {
+                                        this.state.location_data.find(op => {
+                                        return op.value === this.state.location
+                                        })
+                                    }
+                                    />
+                                {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                    {this.state.error.location}
+                                </div> */}
+                            </div>
+                            </div>
                 </div>
 
                 <div className="row">
@@ -556,7 +480,7 @@ class Dashboard extends Component {
                             <div className="card-body">
                                 <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
                                     <h2><i className="fa fa-area-chart text-primary"></i></h2>
-                                    <h2 style={{paddingLeft:5}}>{this.state.grossSales}</h2>
+                                    <h2 style={{paddingLeft:5}} className="font-20">{this.state.grossSales}</h2>
                                 </div>
                             </div>
                         </div>
@@ -567,7 +491,7 @@ class Dashboard extends Component {
                             <div className="card-body">
                                 <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
                                     <h2><i className="fa fa-bar-chart text-secondary"></i></h2>
-                                    <h2 style={{paddingLeft:5}}>{this.state.netSales}</h2>
+                                    <h2 style={{paddingLeft:5}} className="font-20">{this.state.netSales}</h2>
                                 </div>
                             </div>
                         </div>
@@ -578,7 +502,7 @@ class Dashboard extends Component {
                             <div className="card-body">
                                 <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
                                     <h2><i className="fa fa-line-chart text-success"></i></h2>
-                                    <h2 style={{paddingLeft:5}}>{this.state.trxNum}</h2>
+                                    <h2 style={{paddingLeft:5}} className="font-20">{this.state.trxNum}</h2>
                                 </div>
                             </div>
                         </div>
@@ -589,7 +513,7 @@ class Dashboard extends Component {
                             <div className="card-body">
                                 <div className="row justify-content-between" style={{paddingLeft:12,paddingRight:12}}>
                                     <h2><i className="fa fa-pie-chart text-danger"></i></h2>
-                                    <h2 style={{paddingLeft:5}}>{this.state.avgTrx}</h2>
+                                    <h2 style={{paddingLeft:5}} className="font-20">{this.state.avgTrx}</h2>
                                 </div>
                             </div>
                         </div>
