@@ -41,7 +41,6 @@ const socket = socketIOClient(HEADERS.URL);
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        
         this.state = {
             startDate:localStorage.getItem("startDateDashboard")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateDashboard"),
             endDate:localStorage.getItem("endDateDashboard")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateDashboard"),
@@ -356,6 +355,11 @@ class Dashboard extends Component {
         this.refreshData();
     }
 
+    componentWillUnmount(){
+        localStorage.removeItem('startDateProduct');
+        localStorage.removeItem('endDateProduct');
+    }
+
     onChange = date => this.setState({ date })
 
     handleSelect = (e,index) => {
@@ -378,8 +382,6 @@ class Dashboard extends Component {
         // end:  2020-07-02T16:59:59.999Z
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("startDateDashboard",`${awal}`);
-        localStorage.setItem("endDateDashboard",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
@@ -440,7 +442,6 @@ class Dashboard extends Component {
                     {/* Dashboard Info Area */}
                     <div className="col-2">
                             <div className="form-group">
-                                {/* <label className="control-label font-12">Periode </label> */}
                                 <DateRangePicker
                                     ranges={range}
                                     alwaysShowCalendars={true}
@@ -452,9 +453,6 @@ class Dashboard extends Component {
                         </div>
                         <div className="col-2">
                             <div className="form-group">
-                                {/* <label className="control-label font-12">
-                                Lokasi
-                                </label> */}
                                 <Select 
                                     options={this.state.location_data} 
                                     placeholder = "Pilih Lokasi"
@@ -466,9 +464,6 @@ class Dashboard extends Component {
                                         })
                                     }
                                     />
-                                {/* <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
-                                    {this.state.error.location}
-                                </div> */}
                             </div>
                             </div>
                 </div>

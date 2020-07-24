@@ -16,7 +16,7 @@ class Layout extends Component {
         //     return <Redirect to = '/auth' /> ;
         // }
         return (
-            <div className="ecaps-page-wrapper">
+            <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-deactive menu-collasped-active":"ecaps-page-wrapper sidemenu-hover-deactive"}>
                 {/* Side Menu */}
                 <div className="ecaps-sidemenu-area">
                     {/* Desktop Logo */}
@@ -56,9 +56,10 @@ class Layout extends Component {
     }
 }
 
-const mapStateToProps = ({auth}) =>{
+const mapStateToProps = ({auth,siteReducer}) =>{
      return{
-       auth: auth
+       auth: auth,
+       triggerEcaps: siteReducer.triggerEcaps
      }
 }
 export default connect(mapStateToProps)(Layout);

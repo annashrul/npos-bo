@@ -107,11 +107,11 @@ button:hover {
     align-items: center;
     padding: 15px;
 
-    background: #ff6f00;
-    background: -webkit-linear-gradient('to left', #ffab40, #ff6f00);
+    background: #333;
+    /* background: -webkit-linear-gradient('to left', #ffab40, #ff6f00);
     background: -o-linear-gradient('to left', #ffab40, #ff6f00);
     background: -moz-linear-gradient('to left', #ffab40, #ff6f00);
-    background: linear-gradient('to left', #ffab40, #ff6f00);
+    background: linear-gradient('to left', #ffab40, #ff6f00); */
 
 }
 

@@ -4,6 +4,15 @@ import {
 } from "./_constants"
 import axios from "axios"
 
+export const setEcaps = (bool) => dispatch => {
+    dispatch(setEcaps_(bool));
+}
+export function setEcaps_(bool) {
+    return {
+        type: SITE.TRIGGER_ECAPS,
+        data:bool
+    }
+}
 
 export function setLoading(load) {
     return {
