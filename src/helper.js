@@ -58,7 +58,7 @@ export const addFooters = doc => {
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),
-    var number_string = angka.toString(),
+    var number_string = (angka==''||angka==undefined)? String(0.0) : angka.toString(),
         split = number_string.split('.'),
         sisa = split[0].length % 3,
         rupiah = split[0].substr(0, sisa),

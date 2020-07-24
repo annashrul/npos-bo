@@ -16,7 +16,6 @@ initDB(DBConfig);
     store.dispatch(setLoggedin(true))
     const sess = get('sess');
       sess.then(res => {
-        console.log(res);
         if (res.length!==0) {
           // Set auth token header auth
           setAuthToken(res[0].token);

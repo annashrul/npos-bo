@@ -1,15 +1,9 @@
 import React,{Component} from 'react'
-import Paginationq from "helper";
-import FormLocation from "components/App/modals/masterdata/location/form_location";
-import DetailLocationModal from "components/App/modals/masterdata/location/detail_location";
-import {FetchLocation} from "redux/actions/masterdata/location/location.action";
 import {FetchStockReport, FetchStockReportDetailSatuan} from "redux/actions/report/inventory/stock_report.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
 import Preloader from "Preloader";
-import DetailStockReportTransaction
-    from "components/App/modals/report/inventory/stock_report/detail_stock_report_transaction";
 
 class ListStockReport extends Component{
     constructor(props){
@@ -43,7 +37,7 @@ class ListStockReport extends Component{
         //     detail:{"code":localStorage.getItem("code")}
         // });
         // this.state.detail = {"code":"11111"};
-        this.props.dispatch(FetchStockReportDetailSatuan(this.props.token,1,code,'','',''))
+        this.props.dispatch(FetchStockReportDetailSatuan(1,code,'','',''))
     };
 
 
@@ -165,7 +159,7 @@ const mapStateToProps = (state) => {
         // detail:this.state.detail,
         isLoading: state.stockReportReducer.isLoading,
         stockReportDetailSatuan:state.stockReportReducer.dataDetailSatuan,
-        // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
+        isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }

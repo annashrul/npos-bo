@@ -1,7 +1,7 @@
 import {
-    ALOKASI,
+    CLOSING,
     HEADERS
-} from "../_constants"
+} from "../../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {
@@ -11,58 +11,58 @@ import {
 
 export function setLoading(load) {
     return {
-        type: ALOKASI.LOADING,
+        type: CLOSING.LOADING,
         load
     }
 }
 export function setLoadingDetail(load){
     return {
-        type : ALOKASI.LOADING_DETAIL,
+        type : CLOSING.LOADING_DETAIL,
         load}
 }
-export function setALOKASI(data = []) {
+export function setCLOSING(data = []) {
     return {
-        type: ALOKASI.SUCCESS,
+        type: CLOSING.SUCCESS,
         data
     }
 }
 
-export function setALOKASIData(data = []) {
+export function setCLOSINGData(data = []) {
     return {
-        type: ALOKASI.ALOKASI_DATA,
+        type: CLOSING.CLOSING_DATA,
         data
     }
 }
 export function setReport(data = []) {
     return {
-        type: ALOKASI.REPORT_SUCCESS,
+        type: CLOSING.REPORT_SUCCESS,
         data
     }
 }
 export function setCode(data = []) {
     return {
-        type: ALOKASI.SUCCESS_CODE,
+        type: CLOSING.SUCCESS_CODE,
         data
     }
 }
 export function setPOFailed(data = []) {
     return {
-        type: ALOKASI.FAILED,
+        type: CLOSING.FAILED,
         data
     }
 }
 
-// export function setAlokasi(data=[]){
-//     return {type:ALOKASI.SUCCESS,data}
+// export function setClosing(data=[]){
+//     return {type:CLOSING.SUCCESS,data}
 // }
-export function setAlokasiDetail(data=[]){
-    return {type:ALOKASI.DETAIL,data}
+export function setClosingDetail(data=[]){
+    return {type:CLOSING.DETAIL,data}
 }
 
 export const FetchDnReport = (page = 1, perpage = 10) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
+        axios.get(HEADERS.URL + `purchaseorder/report/closing?page=${page}&perpage=${perpage}&status=0`)
             .then(function (response) {
                 const data = response.data
                 dispatch(setReport(data))
@@ -82,7 +82,7 @@ export const FetchDnData = (nota) => {
         axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
             .then(function (response) {
                 const data = response.data
-                dispatch(setALOKASIData(data))
+                dispatch(setCLOSINGData(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -97,7 +97,7 @@ export const FetchNota = (lokasi, prefix) => {
     return (dispatch) => {
         dispatch(setLoading(true));
 
-        axios.get(HEADERS.URL + `alokasi/getcode?lokasi=${lokasi}&prefix=${prefix}`)
+        axios.get(HEADERS.URL + `getcode?lokasi=${lokasi}&prefix=${prefix}`)
             .then(function (response) {
                 const data = response.data
                 dispatch(setCode(data))
@@ -111,7 +111,7 @@ export const FetchNota = (lokasi, prefix) => {
     }
 }
 
-export const storeAlokasi = (data) => {
+export const storeClosing = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `alokasi`;
@@ -159,50 +159,60 @@ export const storeAlokasi = (data) => {
             })
     }
 }
-export const FetchAlokasi = (page=1,q='')=>{
+export const FetchClosing = (page=1,dateFrom='',lokasi='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
         let url = '';
-        if(q===''){
-            url = `alokasi/report?page=${page}`;
-        }else{
-            url = `alokasi/report?page=${page}&q=${q}`;
+        url = `report/closing?page=${page}`;
+        // if(q===''){
+        //     url = `report/closing?page=${page}`;
+        // }else{
+        //     url = `report/closing?page=${page}&q=${q}`;
+        // }
+        console.log("url closing",`${url}`);
+        const headers = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${atob(localStorage.getItem('npos'))}`,
+                'username': `${HEADERS.USERNAME}`,
+                'password': `${HEADERS.PASSWORD}`,
+                'crossDomain': true
+            }
         }
-        console.log("url alokasi",`${url}`);
-        axios.get(HEADERS.URL+`${url}`)
+        axios.get(HEADERS.URL+`${url}`+`&datefrom=2020-07-01&lokasi=LK%2F0001`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setALOKASI(data));
+                dispatch(setCLOSING(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
         })
     }
 }
-export const FetchAlokasiDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchClosingDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let que = '';
         if(dateFrom===''&&dateTo===''&&location===''){
-            que = `alokasi/report/${code}?page=${page}`;
+            que = `report/${code}?page=${page}`;
         }
         if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+            que = `report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
         }
         if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+            que = `report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
         }
         if(location!==''){
-            que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
+            que = `report/${code}?page=${page}&lokasi=${location}`;
         }
         console.log("url alokasi",`${que}`);
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setALOKASIData(data));
+                dispatch(setCLOSINGData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)

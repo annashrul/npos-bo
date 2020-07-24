@@ -135,7 +135,7 @@ class ListPriceProduct extends Component{
                         />
                     </div>
                 </div>
-
+                {/*<FormPr*/}
             </div>
 
         )

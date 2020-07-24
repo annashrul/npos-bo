@@ -9,7 +9,6 @@ class SideMenu extends Component {
         this.state ={
             isMasterdata: false,
             isInventory: false,
-            isInventory: false,
             isReport: false,
             isReceive: false,
             isSale:false,
@@ -145,7 +144,9 @@ class SideMenu extends Component {
                         path==='/delivery_note' || 
                         path === '/alokasi' ||
                         path === '/adjustment'||
-                        path === '/approval_mutasi'
+                        path === '/approval_mutasi'||
+                        path === '/opname'||
+                        path === '/approval_opname'
                         ?"treeview active menu-open" : "treeview"}>
                         <a href="#" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-apps" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
@@ -153,6 +154,8 @@ class SideMenu extends Component {
                             <li className={path==='/alokasi'?"active":''}><Link to="/alokasi"> <i className="zmdi zmdi-apps" />Alokasi </Link></li>
                             <li className={path==='/approval_mutasi'?"active":''}><Link to="/approval_mutasi"> <i className="zmdi zmdi-apps" />Approval Mutasi </Link></li>
                             <li className={path==='/adjustment'?"active":''}><Link to="/adjustment"> <i className="zmdi zmdi-apps" />Adjustment </Link></li>
+                            <li className={path==='/opname'?"active":''}><Link to="/opname"> <i className="zmdi zmdi-apps" />Opname </Link></li>
+                            <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname"> <i className="zmdi zmdi-apps" />Approval Opname </Link></li>
                         </ul>
                     </li>
                     <li className={this.state.isReceive===true  || path==='/purchase_order' || path === '/receive' ?"treeview active menu-open" : "treeview"}>
@@ -176,6 +179,7 @@ class SideMenu extends Component {
                             <li className={path==='/po_report'?"active":''}><Link to="/po_report"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
                             <li className={path==='/receive_report'?"active":''}><Link to="/receive_report"> <i className="zmdi zmdi-apps" />Receive</Link></li>
                             <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report"> <i className="zmdi zmdi-apps" />Alokasi</Link></li>
+                            <li className={path==='/closing'?"active":''}><Link to="/closing"> <i className="zmdi zmdi-apps" />Closing</Link></li>
                         </ul>
                     </li>
                 </ul>

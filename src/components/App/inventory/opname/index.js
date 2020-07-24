@@ -9,6 +9,7 @@ import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.act
 import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
 import {FetchCodeAdjustment, storeAdjusment} from "../../../../redux/actions/adjustment/adjustment.action";
+import {storeOpname} from "../../../../redux/actions/inventory/opname.action";
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -21,8 +22,8 @@ const Toast = Swal.mixin({
     }
 })
 
-const table='adjusment';
-class TrxAdjustment extends Component{
+const table='opname';
+class TrxOpname extends Component{
     constructor(props) {
         super(props);
         this.state={
@@ -35,7 +36,6 @@ class TrxAdjustment extends Component{
             searchby:"",
             search:"",
             userid:0,
-
             error:{
                 location:"",
                 catatan:""
@@ -101,7 +101,6 @@ class TrxAdjustment extends Component{
             error: err
         })
         localStorage.setItem('lk', lk.value);
-        // let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
         this.props.dispatch(FetchCodeAdjustment(lk.value));
         this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
         destroy(table);
@@ -171,10 +170,7 @@ class TrxAdjustment extends Component{
             group1:item.group1,
             group2:item.group2,
             stock:item.stock,
-            qty_adjust:item.qty_adjust,
-            status:item.status,
-            saldo_stock:item.saldo_stock,
-            tambahan:[],
+            qty_fisik:item.qty_fisik,
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
@@ -201,9 +197,7 @@ class TrxAdjustment extends Component{
                     group1:res.group1,
                     group2:res.group2,
                     stock:res.stock,
-                    qty_adjust:res.qty_adjust,
-                    status:res.status,
-                    tambahan:[],
+                    qty_fisik:res.qty_fisik,
                 })
             }
             this.getData()
@@ -313,12 +307,12 @@ class TrxAdjustment extends Component{
                 if (res.length==0){
                     Swal.fire(
                         'Error!',
-                        'Pilih barang untuk melanjutkan Adjusment.',
+                        'Pilih barang untuk melanjutkan Opname.',
                         'error'
                     )
                 }else{
                     Swal.fire({
-                        title: 'Simpan Adjusment?',
+                        title: 'Simpan Opname?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
                         showCancelButton: true,
@@ -334,28 +328,18 @@ class TrxAdjustment extends Component{
                             data['kd_kasir'] = this.state.userid;
                             data['tgl'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
                             data['lokasi'] = this.state.location;
-                            data['keterangan'] = this.state.catatan;
                             res.map(item => {
-                                let saldo_stock=item.saldo_stock;
-                                if(item.status === 'kurang'){
-                                    saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
-                                    console.log(parseInt(item.qty_adjust))
-                                    console.log(parseInt(item.stock))
-                                }
-                                if(item.status === 'tambah'){
-                                    saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
-                                }
                                 detail.push({
-                                    "brcd_brg": item.barcode,
-                                    "status": item.status,
-                                    "qty_adjust": item.qty_adjust,
-                                    "stock_terakhir": saldo_stock,
-                                    "hrg_beli": item.harga_beli
+                                    "kd_brg": item.kd_brg,
+                                    "qty_fisik": item.qty_fisik,
+                                    "stock_terakhir": item.stock,
+                                    "hrg_beli": item.harga_beli,
+                                    "barcode": item.barcode
                                 })
                             });
                             data['detail'] = detail;
-                            console.log("SUBMITTED",data)
-                            this.props.dispatch(storeAdjusment(data));
+                            console.log("SUBMITTED",data);
+                            this.props.dispatch(storeOpname(data));
                         }
                     })
 
@@ -390,9 +374,7 @@ class TrxAdjustment extends Component{
                     group1:data[0].group1,
                     group2:data[0].group1,
                     stock:data[0].stock,
-                    qty_adjust:data[0].qty_adjust,
-                    saldo_stock:data[0].saldo_stock,
-                    tambahan:[]
+                    qty_fisik:data[0].qty_fisik,
                 })
             } else {
                 update(table, {
@@ -415,9 +397,7 @@ class TrxAdjustment extends Component{
                     group1:res.group1,
                     group2:res.group1,
                     stock:res.stock,
-                    saldo_stock:res.saldo_stock,
-                    qty_adjust:parseFloat(res.qty_adjust) + 1,
-                    tambahan: []
+                    qty_fisik:parseFloat(res.qty_fisik) + 1,
                 })
             }
             return true
@@ -430,8 +410,7 @@ class TrxAdjustment extends Component{
             let brg = [];
             res.map((i) => {
                 brg.push({
-                    qty_adjust: i.qty_adjust,
-                    status: i.status,
+                    qty_fisik: i.qty_fisik,
                 });
             })
             this.setState({
@@ -443,10 +422,10 @@ class TrxAdjustment extends Component{
     render() {
         console.log("DATA BARANG TI STATE",this.state.brgval);
         return (
-            <Layout page="Adjusment">
+            <Layout page="Opname">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Adjusment</h4>
+                        <h4>Opname</h4>
                     </div>
                     <div className="row">
                         <div className="col-md-3">
@@ -490,12 +469,12 @@ class TrxAdjustment extends Component{
                                             />
                                             <span className="input-group-append">
                                               <button type="button" className="btn btn-primary"
-                                                  onClick={
-                                                      event => {
-                                                          event.preventDefault();
-                                                          this.HandleSearch();
-                                                      }
-                                                  }>
+                                                      onClick={
+                                                          event => {
+                                                              event.preventDefault();
+                                                              this.HandleSearch();
+                                                          }
+                                                      }>
                                                 <i className="fa fa-search"/>
                                               </button>
                                             </span>
@@ -528,10 +507,7 @@ class TrxAdjustment extends Component{
                                                                         group1:i.group1,
                                                                         group2:i.group2,
                                                                         stock:i.stock,
-                                                                        qty_adjust:0,
-                                                                        status:'tambah',
-                                                                        saldo_stock:i.stock,
-                                                                        tambahan:[]
+                                                                        qty_fisik:0,
                                                                     })}>
                                                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar" />
                                                                         <div className="about">
@@ -559,35 +535,22 @@ class TrxAdjustment extends Component{
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <div className="form-group">
-                                                        <label htmlFor="">Kode Adjusment</label>
-                                                        <input
-                                                            type="text"
-                                                            readOnly
-                                                            className="form-control"
-                                                            id="nota"
-                                                            style={{fontWeight: 'bolder'}}
-                                                            value={this.props.nota}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Tanggal Order
-                                                        </label>
-                                                        <div className="input-group">
-                                                            <DatePicker
-                                                                className="form-control rounded-right"
-                                                                selected={this.state.tgl_order}
-                                                                onChange={this.setTglOrder}
-                                                            />
-                                                        </div>
-                                                    </div>
+                                            <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    Tanggal Order
+                                                </label>
+                                                <div className="input-group">
+                                                    <DatePicker
+                                                        className="form-control rounded-right"
+                                                        selected={this.state.tgl_order}
+                                                        onChange={this.setTglOrder}
+                                                    />
                                                 </div>
                                             </div>
+
+
+                                        </div>
+                                        <div className="col-md-6">
 
                                             <div className="form-group">
                                                 <label className="control-label font-12">
@@ -609,28 +572,6 @@ class TrxAdjustment extends Component{
                                                     {this.state.error.location}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="col-md-6">
-
-                                            <div className="form-group">
-                                                <label className="control-label font-12">
-                                                    Catatan
-                                                </label>
-                                                <textarea
-                                                    style={{height: "119px"}}
-                                                    className="form-control"
-                                                    id="exampleTextarea1"
-                                                    rows={3}
-                                                    defaultValue={this.state.catatan}
-                                                    onChange={(e => this.HandleCommonInputChange(e))}
-                                                    name="catatan"
-                                                />
-                                                <div className="invalid-feedback"
-                                                     style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                    {this.state.error.catatan}
-                                                </div>
-
-                                            </div>
 
                                         </div>
                                         <div className="table-responsive">
@@ -642,26 +583,14 @@ class TrxAdjustment extends Component{
                                                     <th>barcode</th>
                                                     <th>Nama</th>
                                                     <th>Satuan</th>
-                                                    <th>Harga Beli</th>
                                                     <th>Stock Sistem</th>
-                                                    <th>Jenis</th>
-                                                    <th>Stock Adjust</th>
-                                                    <th>Saldo Stock</th>
+                                                    <th>Stock Fisik</th>
                                                 </tr>
                                                 </thead>
 
                                                 <tbody>
                                                 {
                                                     this.state.databrg.map((item, index) => {
-                                                        let saldo_stock=item.saldo_stock;
-                                                        if(item.status === 'kurang'){
-                                                            saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
-                                                            console.log(parseInt(item.qty_adjust))
-                                                            console.log(parseInt(item.stock))
-                                                        }
-                                                        if(item.status === 'tambah'){
-                                                            saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
-                                                        }
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
@@ -673,17 +602,8 @@ class TrxAdjustment extends Component{
                                                                 <td>{item.barcode}</td>
                                                                 <td>{item.nm_brg}</td>
                                                                 <td>{item.satuan}</td>
-
-                                                                <td><input readOnly={true} type='text' name='harga_beli' value={item.harga_beli} style={{width: '35px', textAlign: 'center'}}/></td>
-                                                                <td><input readOnly={true} type='text' name='stock' value={item.stock} style={{width: '50px', textAlign: 'center'}}/></td>
-                                                                <td>
-                                                                    <select name='status' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].status} defaultValue={this.state.brgval[index].status}>
-                                                                        <option value="tambah">Tambah</option>
-                                                                        <option value="kurang">Kurang</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td><input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust} style={{width: '50px', textAlign: 'center'}}/></td>
-                                                                <td style={{textAlign:"right"}}>{saldo_stock}</td>
+                                                                <td><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
+                                                                <td><input type='text' name='qty_fisik' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_fisik} className="form-control"/></td>
                                                             </tr>
                                                         )
                                                     })
@@ -717,4 +637,4 @@ const mapStateToPropsCreateItem = (state) => ({
     nota:state.adjustmentReducer.get_code
 });
 
-export default connect(mapStateToPropsCreateItem)(TrxAdjustment);
+export default connect(mapStateToPropsCreateItem)(TrxOpname);

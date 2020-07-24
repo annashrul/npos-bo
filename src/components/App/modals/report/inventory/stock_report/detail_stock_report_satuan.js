@@ -27,7 +27,7 @@ class DetailStockReportSatuan extends Component{
         localStorage.setItem("barcodeDetailTrx",barcode);
         localStorage.setItem("nameDetailTrx",name);
         this.props.dispatch(ModalType("detailStockReportTransaction"));
-        this.props.dispatch(FetchStockReportDetailTransaction(this.props.token,1,code,'','',localStorage.getItem("locationDetailTrx")))
+        this.props.dispatch(FetchStockReportDetailTransaction(1,code,'','',localStorage.getItem("locationDetailTrx")))
     };
 
 

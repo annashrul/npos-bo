@@ -3,7 +3,7 @@ import {deleteBank, FetchBank} from "redux/actions/masterdata/bank/bank.action";
 import connect from "react-redux/es/connect/connect";
 import Paginationq, {statusQ} from "helper";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-// import FormBank from "../../../modals/masterdata/bank/form_bank";
+import FormBank from "components/App/modals/masterdata/bank/form_bank";
 import Swal from "sweetalert2";
 class ListBank extends Component{
     constructor(props){
@@ -34,7 +34,7 @@ class ListBank extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        // this.props.dispatch(ModalType("formBank"));
+        this.props.dispatch(ModalType("formBank"));
     }
 
     handleDelete(e,id){
@@ -158,7 +158,7 @@ class ListBank extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
-                {/* <FormBank token={this.props.token}/> */}
+                 <FormBank token={this.props.token}/>
             </div>
         );
     }

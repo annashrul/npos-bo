@@ -25,25 +25,32 @@ export function setStockReportFailed(data=[]){
 
 //FILTER STOCK REPORT//
 // perpage=10,page=1,searchby=kd_brg,dateFrom=2020-01-01,dateTo=2020-07-01,lokasi=LK%2F0001
-export const FetchStockReport = (token,page=1,dateFrom='',dateTo='',location='')=>{
+export const FetchStockReport = (page=1,dateFrom='',dateTo='',location='',q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-        let que = '';
-        if(dateFrom===''&&dateTo===''&&location===''){
-            que = `report/stock?page=${page}`;
+        // let que = '';
+        // if(dateFrom===''&&dateTo===''&&location===''){
+        //     que = `report/stock?page=${page}`;
+        // }
+        // if(dateFrom!==''&&dateTo!==''&&location===''){
+        //     que = `report/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        // }
+        // if(dateFrom!==''&&dateTo!==''&&location!==''){
+        //     que = `report/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        // }
+        // if(location!==''){
+        //     que = `report/stock?page=${page}&lokasi=${location}`;
+        // }
+        // console.log(`${que}`);
+        let url = '';
+        if(q===''){
+            url = `report/stock?page=${page}`;
+        }else{
+            url = `report/stock?page=${page}&q=${q}`;
         }
-        if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `report/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `report/stock?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        }
-        if(location!==''){
-            que = `report/stock?page=${page}&lokasi=${location}`;
-        }
-        console.log(`${que}`);
-        axios.get(HEADERS.URL+`${que}`)
+        console.log("url stock",`${url}`);
+        axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
@@ -54,7 +61,7 @@ export const FetchStockReport = (token,page=1,dateFrom='',dateTo='',location='')
         })
     }
 }
-export const FetchStockReportDetailSatuan = (token,page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchStockReportDetailSatuan = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let que = '';
@@ -82,7 +89,7 @@ export const FetchStockReportDetailSatuan = (token,page=1,code,dateFrom='',dateT
         })
     }
 }
-export const FetchStockReportDetailTransaction = (token,page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchStockReportDetailTransaction = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // let que = '';
