@@ -95,7 +95,7 @@ class FormSale extends Component{
             parsedata['split'] = [];
             parsedata['join'] = [];
             parsedata['detail']=this.props.detail;
-            parsedata['cetak_nota'] = true;
+
             console.log("SUBMITED",parsedata);
             this.props.dispatch(storeSale(parsedata));
         }

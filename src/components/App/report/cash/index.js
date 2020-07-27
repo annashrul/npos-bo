@@ -7,31 +7,8 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
 import Preloader from "../../../../Preloader";
-import {toRp} from "../../../../helper";
+import {rangeDate, toRp} from "../../../../helper";
 
-const range = {
-    Today: [moment(), moment()],
-    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-    "Last 7 Days": [moment().subtract(6, "days"), moment()],
-    "Last 30 Days": [moment().subtract(29, "days"), moment()],
-    "This Month": [moment().startOf("month"), moment().endOf("month")],
-    "Last Month": [
-        moment()
-            .subtract(1, "month")
-            .startOf("month"),
-        moment()
-            .subtract(1, "month")
-            .endOf("month")
-    ],
-    "Last Year": [
-        moment()
-            .subtract(1, "year")
-            .startOf("year"),
-        moment()
-            .subtract(1, "year")
-            .endOf("year")
-    ]
-};
 class ReportCash extends Component{
     constructor(props){
         super(props);
@@ -42,8 +19,8 @@ class ReportCash extends Component{
             location:"",
             kassa_data: [],
             kassa:"",
-            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
-            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct")
+            startDate:moment(new Date()).format("yyyy-MM-DD"),
+            endDate:moment(new Date()).format("yyyy-MM-DD")
         }
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeKassa = this.HandleChangeKassa.bind(this);
@@ -126,6 +103,16 @@ class ReportCash extends Component{
                 type: localStorage.type_cash_report
             })
         }
+        if (localStorage.date_from_cash_report !== undefined && localStorage.date_from_cash_report !== null) {
+            this.setState({
+                startDate: localStorage.date_from_cash_report
+            })
+        }
+        if (localStorage.date_to_cash_report !== undefined && localStorage.date_to_cash_report !== null) {
+            this.setState({
+                endDate: localStorage.date_to_cash_report
+            })
+        }
     }
     HandleChangeType(type) {
         this.setState({
@@ -148,8 +135,8 @@ class ReportCash extends Component{
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("startDateProduct",`${awal}`);
-        localStorage.setItem("endDateProduct",`${akhir}`);
+        localStorage.setItem("date_from_cash_report",`${awal}`);
+        localStorage.setItem("date_to_cash_report",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
@@ -162,8 +149,8 @@ class ReportCash extends Component{
     }
     checkingParameter(pageNumber){
         let where='';
-        let dateFrom=this.state.startDate;
-        let dateTo=this.state.endDate;
+        let dateFrom=localStorage.getItem("date_from_cash_report");
+        let dateTo=localStorage.getItem("date_to_cash_report");
         let tipe=localStorage.getItem("type_cash_report");
         let lokasi=localStorage.getItem("location_cash_report");
         let kassa=localStorage.getItem("kassa_cash_report");
@@ -202,7 +189,7 @@ class ReportCash extends Component{
                                 <div className="form-group">
                                     <label htmlFor=""> Periode </label>
                                     <DateRangePicker
-                                        ranges={range}
+                                        ranges={rangeDate}
                                         alwaysShowCalendars={true}
                                         onEvent={this.handleEvent}
                                     >

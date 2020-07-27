@@ -18,6 +18,7 @@ import {
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import {HEADERS} from "../../../../redux/actions/_constants";
 
 class SaleArchive extends Component{
     constructor(props){
@@ -461,10 +462,8 @@ class SaleArchive extends Component{
                                                                             </button>
                                                                             <div className="dropdown-menu">
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)">Download</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)">Pdf</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)">Nota</a>
+                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
