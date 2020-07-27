@@ -87,7 +87,7 @@ export const toRp = (angka) => {
     }
 
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    return 'Rp. ' + rupiah;
+    return rupiah;
 };
 
 export const statusQ = (lbl,txt) => {

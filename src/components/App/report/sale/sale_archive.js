@@ -8,6 +8,11 @@ import Select from "react-select";
 import Paginationq from "helper";
 import Preloader from "../../../../Preloader";
 import {rangeDate, toRp} from "../../../../helper";
+import {FetchReportSale} from "redux/actions/sale/sale.action";
+import Swal from "sweetalert2";
+import {deleteReportSale, FetchReportDetailSale} from "../../../../redux/actions/sale/sale.action";
+import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
+import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
 
 class SaleArchive extends Component{
     constructor(props){
@@ -17,23 +22,24 @@ class SaleArchive extends Component{
             type:"",
             location_data:[],
             location:"",
-            kassa_data: [],
-            kassa:"",
-            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
-            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct")
+            any_sale_report:"",
+            startDate:moment(new Date()).format("yyyy-MM-DD"),
+            endDate:moment(new Date()).format("yyyy-MM-DD")
         }
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-        this.HandleChangeKassa = this.HandleChangeKassa.bind(this);
         this.HandleChangeType = this.HandleChangeType.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleDetail = this.handleDetail.bind(this);
 
     }
     componentWillReceiveProps = (nextProps) => {
         let type = [
             {kode:"",value: "Semua Tipe"},
-            {kode:"masuk",value: "Kas Masuk"},
-            {kode:"keluar",value: "Kas Keluar"},
+            {kode:"0",value: "Tunai"},
+            {kode:"1",value: "Non Tunai"},
         ];
         let data_type=[];
         type.map((i) => {
@@ -42,24 +48,8 @@ class SaleArchive extends Component{
                 label: i.value
             });
         });
-        let kassa = [
-            {value: "Semua Kassa",kode: ""},
-            {value: "A",kode: "A"},{value: "B",kode: "B"},{value: "C",kode: "C"},{value: "D",kode: "D"},{value: "E",kode: "E"},{value: "F",kode: "F"},{value: "G",kode: "G"},{value: "H",kode: "H"},
-            {value: "I",kode: "I"},{value: "J",kode: "J"},{value: "K",kode: "K"},{value: "L",kode: "L"},{value: "M",kode: "M"},{value: "N",kode: "N"},{value: "O",kode: "O"},{value: "P",kode: "P"},
-            {value: "Q",kode: "Q"},{value: "R",kode: "R"},{value: "S",kode: "S"},{value: "T",kode: "T"},{value: "U",kode: "U"},{value: "V",kode: "V"},{value: "W",kode: "W"},{value: "X",kode: "X"},
-            {value: "Y",kode: "Y"},{value: "Z",kode: "Z"}
-        ];
-        let data_kassa=[];
-
-        kassa.map((i) => {
-            data_kassa.push({
-                value: i.kode,
-                label: i.value
-            });
-        });
 
         this.setState({
-            kassa_data: data_kassa,
             type_data: data_type,
         });
         if (nextProps.auth.user) {
@@ -69,7 +59,6 @@ class SaleArchive extends Component{
             }];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
-                // loc.push({"kode":"","nama":"Semua Lokasi"});
                 loc.map((i) => {
                     lk.push({
                         value: i.kode,
@@ -82,51 +71,58 @@ class SaleArchive extends Component{
             }
         }
     }
-
     componentWillMount(){
-        let page=localStorage.getItem("pageNumber_cash_report");
+        let page=localStorage.getItem("pageNumber_sale_report");
         this.checkingParameter(page===undefined&&page===null?1:page);
     }
     componentDidMount(){
-        if (localStorage.location_cash_report !== undefined && localStorage.location_cash_report !== '') {
+        if (localStorage.location_sale_report !== undefined && localStorage.location_sale_report !== '') {
             this.setState({
-                location: localStorage.location_cash_report
+                location: localStorage.location_sale_report
             })
         }
-        if (localStorage.kassa_cash_report !== undefined && localStorage.kassa_cash_report !== '') {
+
+        if (localStorage.type_sale_report !== undefined && localStorage.type_sale_report !== '') {
             this.setState({
-                kassa: localStorage.kassa_cash_report
+                type: localStorage.type_sale_report
             })
         }
-        if (localStorage.type_cash_report !== undefined && localStorage.type_cash_report !== '') {
+        if (localStorage.any_sale_report !== undefined && localStorage.any_sale_report !== '') {
             this.setState({
-                type: localStorage.type_cash_report
+                any: localStorage.any_sale_report
             })
         }
+        if (localStorage.date_from_sale_report !== undefined && localStorage.date_from_sale_report !== null) {
+            this.setState({
+                startDate: localStorage.date_from_sale_report
+            })
+        }
+        if (localStorage.date_to_sale_report !== undefined && localStorage.date_to_sale_report !== null) {
+            this.setState({
+                endDate: localStorage.date_to_sale_report
+            })
+        }
+    }
+    handleChange(event){
+        this.setState({ [event.target.name]: event.target.value });
     }
     HandleChangeType(type) {
         this.setState({
             type: type.value,
         });
-        localStorage.setItem('type_cash_report', type.value);
+        localStorage.setItem('type_sale_report', type.value);
     }
     HandleChangeLokasi(lk) {
         this.setState({
             location: lk.value,
         });
-        localStorage.setItem('location_cash_report', lk.value);
-    }
-    HandleChangeKassa(ks) {
-        this.setState({
-            kassa: ks.value,
-        });
-        localStorage.setItem('kassa_cash_report', ks.value);
+        localStorage.setItem('location_sale_report', lk.value);
     }
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("startDateProduct",`${awal}`);
-        localStorage.setItem("endDateProduct",`${akhir}`);
+        localStorage.setItem("date_from_sale_report",`${awal}`);
+        localStorage.setItem("date_to_sale_report",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
@@ -134,39 +130,95 @@ class SaleArchive extends Component{
     };
     handleSearch(e){
         e.preventDefault();
-        let page=localStorage.getItem("pageNumber_cash_report");
+        localStorage.setItem("any_sale_report",this.state.any_sale_report);
+        let page=localStorage.getItem("pageNumber_sale_report");
         this.checkingParameter(page===undefined&&page===null?1:page);
     }
     checkingParameter(pageNumber){
         let where='';
-        let dateFrom=this.state.startDate;
-        let dateTo=this.state.endDate;
-        let tipe=localStorage.getItem("type_cash_report");
-        let lokasi=localStorage.getItem("location_cash_report");
-        let kassa=localStorage.getItem("kassa_cash_report");
-        if(dateFrom!==''||dateTo!==''){
+        let dateFrom=localStorage.getItem("date_from_sale_report");
+        let dateTo=localStorage.getItem("date_to_sale_report");
+        let tipe=localStorage.getItem("type_sale_report");
+        let lokasi=localStorage.getItem("location_sale_report");
+        let any=localStorage.getItem("any_sale_report");
+        if(dateFrom!==null&&dateTo!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
+        }else{
+            if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
         }
         if(tipe!==''){
-            if(where!==''){where+='&'}where+=`type_kas=${tipe}`
+            if(where!==''){where+='&'}where+=`tipe=${tipe}`
         }
         if(lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         }
-        if(kassa!==''){
-            if(where!==''){where+='&'}where+=`kassa=${kassa}`
+        if(any !== undefined&&any!==''){
+            if(where!==''){where+='&'}where+=`q=${any}`
         }
-        this.props.dispatch(FetchCashReport(pageNumber,where));
+        this.props.dispatch(FetchReportSale(pageNumber===null?1:pageNumber,where));
     }
     handlePageChange(pageNumber){
-        localStorage.setItem("pageNumber_cash_report",pageNumber);
+        localStorage.setItem("pageNumber_sale_report",pageNumber);
         this.checkingParameter(pageNumber);
     }
+    handleDelete(e,id){
+        console.log(id);
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.dispatch(deleteReportSale(id));
+            }
+        })
+
+    }
+    handleDetail(e,kode){
+        e.preventDefault();
+        console.log(kode);
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("detailSaleReport"));
+        this.props.dispatch(FetchReportDetailSale(kode));
+    }
+
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.cashReport;
-
-        console.log("RENDER LAPORAN KAS",this.props.cashReport);
+        const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
+        const {
+            omset,
+            dis_item,
+            sub_total,
+            dis_persen,
+            dis_rp,
+            kas_lain,
+            gt,
+            bayar,
+            jml_kartu,
+            charge,
+            change,
+            voucher,
+            rounding
+        } = this.props.totalPenjualan;
+        let omset_per = 0;
+        let dis_item_per = 0;
+        let sub_total_per = 0;
+        let dis_persen_per = 0;
+        let dis_rp_per = 0;
+        let kas_lain_per = 0;
+        let gt_per = 0;
+        let bayar_per = 0;
+        let jml_kartu_per = 0;
+        let charge_per = 0;
+        let change_per = 0;
+        let voucher_per = 0;
+        let rounding_per = 0;
         return (
             <Layout page="Laporan Arsip Penjualan">
                 <div className="card">
@@ -208,29 +260,11 @@ class SaleArchive extends Component{
                             <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">
-                                        Kassa
-                                    </label>
-                                    <Select
-                                        options={this.state.kassa_data}
-                                        placeholder="Pilih Kassa"
-                                        onChange={this.HandleChangeKassa}
-                                        value={
-                                            this.state.kassa_data.find(op => {
-                                                return op.value === this.state.kassa
-                                            })
-                                        }
-
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Tipe Kas
+                                        Tipe Transaksi
                                     </label>
                                     <Select
                                         options={this.state.type_data}
-                                        placeholder="Pilih Tipe Kas"
+                                        placeholder="Pilih Tipe Transaksi"
                                         onChange={this.HandleChangeType}
                                         value={
                                             this.state.type_data.find(op => {
@@ -239,6 +273,12 @@ class SaleArchive extends Component{
                                         }
 
                                     />
+                                </div>
+                            </div>
+                            <div className="col-6 col-xs-6 col-md-2">
+                                <div className="form-group">
+                                    <label htmlFor="">Cari</label>
+                                    <input type="text" name="any_sale_report" className="form-control" value={this.state.any_sale_report} placeholder="Kode/Kasir/Customer" onChange={(e)=>this.handleChange(e)}/>
                                 </div>
                             </div>
                             <div className="col-6 col-xs-6 col-md-1">
@@ -254,46 +294,144 @@ class SaleArchive extends Component{
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>
-                                            <th className="text-black" style={columnStyle}>Kd Trx</th>
-                                            <th className="text-black" style={columnStyle}>Tgl</th>
-                                            <th className="text-black" style={columnStyle}>Jumlah</th>
-                                            <th className="text-black" style={columnStyle}>Keterangan</th>
-                                            <th className="text-black" style={columnStyle}>Lokasi</th>
-                                            <th className="text-black" style={columnStyle}>Kassa</th>
-                                            <th className="text-black" style={columnStyle}>Kasir</th>
-                                            <th className="text-black" style={columnStyle}>Tipe</th>
-                                            <th className="text-black" style={columnStyle}>Jenis</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>#</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
+                                            <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="text-black" style={columnStyle}>Item</th>
+                                            <th className="text-black" style={columnStyle}>(rp)</th>
+                                            <th className="text-black" style={columnStyle}>(%)</th>
                                         </tr>
                                         </thead>
                                         {
                                             !this.props.isLoadingReport?(
                                                 <tbody>
-
                                                 {
-                                                    (
-                                                        typeof data === 'object' ? data.length > 0 ?
-                                                            data.map((v,i)=>{
-                                                                return(
-                                                                    <tr key={i}>
-                                                                        <td style={columnStyle}>{v.kd_trx}</td>
-                                                                        <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}</td>
-                                                                        <td style={columnStyle}>{toRp(v.jumlah)}</td>
-                                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                                        <td style={columnStyle}>{v.lokasi}</td>
-                                                                        <td style={columnStyle}>{v.kassa}</td>
-                                                                        <td style={columnStyle}>{v.kasir}</td>
-                                                                        <td style={columnStyle}>{v.type}</td>
-                                                                        <td style={columnStyle}>{v.jenis}</td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                            : "No data." : "No data."
-                                                    )
+                                                    typeof data==='object'? data.length>0?
+
+                                                        data.map((v,i)=>{
+                                                            omset_per = omset_per + parseInt(v.omset);
+                                                            dis_item_per = dis_item_per + parseInt(v.diskon_item);
+                                                            dis_persen_per = dis_persen_per + parseInt(v.dis_persen);
+                                                            dis_rp_per = dis_rp_per + parseInt(v.dis_rp);
+                                                            kas_lain_per = kas_lain_per + parseInt(v.kas_lain);
+                                                            gt_per = gt_per + parseInt(v.omset - v.diskon_item - v.dis_rp - v.kas_lain);
+                                                            bayar_per = bayar_per + parseInt(v.bayar);
+                                                            jml_kartu_per = jml_kartu_per + parseInt(v.jml_kartu);
+                                                            charge_per = charge_per + parseInt(v.charge);
+                                                            change_per = change_per + parseInt(v.change);
+                                                            voucher_per = voucher_per + parseInt(v.voucher);
+                                                            rounding_per = rounding_per + parseInt(v.rounding);
+
+
+                                                            return (
+                                                                <tr>
+                                                                    <td style={columnStyle}>
+                                                                        <div className="btn-group">
+                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                Aksi
+                                                                            </button>
+                                                                            <div className="dropdown-menu">
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)">Download</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)">Pdf</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)">Nota</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style={columnStyle}>{v.kd_trx}</td>
+                                                                    <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
+                                                                    <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
+                                                                    <td style={columnStyle}>{v.nama}</td>
+                                                                    <td style={columnStyle}>{v.kd_kasir}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
+                                                                    <td style={{textAlign:"right"}}>{v.dis_persen}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
+                                                                    <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
+                                                                    <td style={columnStyle}>{v.kas_lain}</td>
+                                                                    <td style={columnStyle}>{v.ket_kas_lain}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
+                                                                    <td>{v.kartu}</td>
+                                                                    <td>{v.status}</td>
+                                                                    <td>{v.lokasi}</td>
+                                                                    <td>{v.jenis_trx}</td>
+                                                                </tr>
+                                                            );
+
+
+                                                        }) : "No data." : "No data."
                                                 }
                                                 </tbody>
                                             ):<Preloader/>
                                         }
-
+                                        <tfoot>
+                                        <tr>
+                                            <td colSpan="6">TOTAL PERPAGE</td>
+                                            <td style={{textAlign:"right"}}>{toRp(omset_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_rp_per)}</td>
+                                            <td style={{textAlign:"right"}}>{dis_persen_per}</td>
+                                            <td colSpan="4"></td>
+                                            <td style={{textAlign:"right"}}>{toRp(kas_lain_per)}</td>
+                                            <td colSpan="1"></td>
+                                            <td style={{textAlign:"right"}}>{toRp(gt_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(rounding_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(bayar_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(change_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(jml_kartu_per)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(charge_per)}</td>
+                                            <td colSpan="4"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colSpan="6">TOTAL</td>
+                                            <td style={{textAlign:"right"}}>{toRp(omset)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_item)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_rp)}</td>
+                                            <td style={{textAlign:"right"}}>{dis_persen}</td>
+                                            <td colSpan="4"></td>
+                                            <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>
+                                            <td colSpan="1"></td>
+                                            <td style={{textAlign:"right"}}>{toRp(gt)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(rounding)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(bayar)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(change)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(jml_kartu)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(charge)}</td>
+                                            <td colSpan="4"></td>
+                                        </tr>
+                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -309,6 +447,7 @@ class SaleArchive extends Component{
                         </div>
                     </div>
                 </div>
+                <DetailSaleReport detailSale={this.props.detailSale}/>
             </Layout>
         );
     }
@@ -317,8 +456,11 @@ class SaleArchive extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        cashReport:state.cashReducer.dataReport,
-        isLoadingReport: state.cashReducer.isLoadingReport,
+        saleReport:state.saleReducer.report,
+        totalPenjualan:state.saleReducer.total_penjualan,
+        isLoadingReport: state.saleReducer.isLoadingReport,
+        detailSale:state.saleReducer.dataDetail,
+        isLoadingDetail: state.saleReducer.isLoadingDetail,
         auth: state.auth
     }
 }

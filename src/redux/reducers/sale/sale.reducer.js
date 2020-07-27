@@ -5,6 +5,7 @@ const initialState = {
     isLoadingDetail: false,
     isLoadingReport: false,
     data: [],
+    dataDetail:[],
     msg:"",
     status:"",
     code:"-",
@@ -30,6 +31,10 @@ const initialState = {
 
 export const saleReducer = (state = initialState, action) => {
     switch (action.type) {
+        case SALE.REPORT_DETAIL_SUCCESS:
+            return Object.assign({}, state, {
+                dataDetail: action.data.result,
+            });
         case SALE.SUCCESS:
             return Object.assign({}, state, {
                 status: action.data.status,
@@ -41,7 +46,7 @@ export const saleReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 report: action.data.result,
                 report_data: action.data.result.data,
-                total: action.data.result.total_penjualan,
+                total_penjualan: action.data.result.total_penjualan,
             });
         case SALE.SALE_DATA:
             return Object.assign({}, state, {
