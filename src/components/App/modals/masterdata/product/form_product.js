@@ -6,11 +6,11 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {stringifyFormData} from "helper";
 import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
-import {FetchProductCode} from "../../../../../redux/actions/masterdata/product/product.action";
+import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
 import NumberFormat from 'react-number-format';
-import {FetchCheck, setCheck, setLoading} from "../../../../../redux/actions/site.action";
+import {FetchCheck, setCheck, setLoading} from "redux/actions/site.action";
 import axios from "axios";
-import {HEADERS} from "../../../../../redux/actions/_constants";
+import {HEADERS} from "redux/actions/_constants";
 
 class FormProduct extends Component{
     constructor(props){

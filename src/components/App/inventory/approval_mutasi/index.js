@@ -139,7 +139,7 @@ class ApprovalMutasi extends Component{
                                             <th className="text-black" style={columnStyle}>No Faktur Mutasi</th>
                                             <th className="text-black" style={columnStyle}>Tanggal</th>
                                             <th className="text-black" style={columnStyle}>Lokasi</th>
-                                            <th className="text-black" style={columnStyle}>Total Qty</th>
+                                            <th className="text-black" style={columnStyle}>Total Item</th>
                                             <th className="text-black" style={columnStyle}>Total Approval</th>
                                             <th className="text-black" style={columnStyle}>#</th>
                                         </tr>
