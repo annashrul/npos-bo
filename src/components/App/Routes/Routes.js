@@ -32,6 +32,7 @@ import Company from "../setting/company";
 
 import axios from 'axios';
 import {HEADERS} from "../../../redux/actions/_constants";
+import ReportCash from "../report/cash";
 
 axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1NTAxNDA2LCJleHAiOjE1OTgwOTM0MDZ9.kMJwmttCOcfNhj_3SWs89i421jgIC4-O-ec3zG2-KWQ`;
 axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
@@ -68,6 +69,7 @@ const Routes = (
             <PrivateRoute path="/receive_report" exact strict component={ReceiveReport} />
             <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
+            <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
         </Switch>
     </div>
 )

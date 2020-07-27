@@ -6,10 +6,18 @@ const initialState = {
     status:"",msg:"",data:[], currentPage:0,
     per_page:0,
     total:0,
+    dataReport:[],
+    isLoadingReport:false
 };
 
 export const cashReducer = (state=initialState,action) => {
     switch (action.type) {
+        case CASH.SUCCESS_REPORT:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                dataReport:action.data.result
+            });
         case CASH.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,
@@ -21,6 +29,10 @@ export const cashReducer = (state=initialState,action) => {
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
+            });
+        case CASH.LOADING_REPORT:
+            return Object.assign({}, state, {
+                isLoadingReport: action.load
             });
         case CASH.LOADING:
             return Object.assign({}, state, {

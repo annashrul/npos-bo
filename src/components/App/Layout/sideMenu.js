@@ -184,7 +184,7 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
-                    <li className={this.state.isReport===true?"treeview active menu-open" : "treeview"}>
+                    <li className={this.state.isReport===true || path==='/report_cash'?"treeview active menu-open" : "treeview"}>
                         <a href="#" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
                             <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report"> <i className="zmdi zmdi-apps" />Inventory</Link></li>
@@ -193,6 +193,7 @@ class SideMenu extends Component {
                             <li className={path==='/receive_report'?"active":''}><Link to="/receive_report"> <i className="zmdi zmdi-apps" />Receive</Link></li>
                             <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report"> <i className="zmdi zmdi-apps" />Alokasi</Link></li>
                             <li className={path==='/closing'?"active":''}><Link to="/closing"> <i className="zmdi zmdi-apps" />Closing</Link></li>
+                            <li className={path==='/report_cash'?"active":''}><Link to="/report_cash"> <i className="zmdi zmdi-apps" />Kas</Link></li>
                         </ul>
                     </li>
                 </ul>

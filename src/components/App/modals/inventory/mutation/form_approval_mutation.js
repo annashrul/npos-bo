@@ -18,7 +18,8 @@ class FormApprovalMutation extends Component{
             q:'',
             error:{
 
-            }
+            },
+
         }
     }
     componentWillReceiveProps(nextProps){
@@ -34,8 +35,12 @@ class FormApprovalMutation extends Component{
                     "hrg_beli":v.hrg_beli,
                     "total_qty":v.total_qty,
                     "total_approval":v.total_approval,
-                    "sisa_approval":0
+                    "sisa_approval":0,
+                    "isReadonly":parseInt(v.total_qty)===parseInt(v.total_approval)?true:false,
                 });
+                // Object.assign(v,{
+                //     isReadonly:false,
+                // });
             })
             : "";
         this.setState({dataApproval:data});
@@ -49,25 +54,27 @@ class FormApprovalMutation extends Component{
     }
     handleOnEnter(i){
         let data={};
-        data['kd_trx']          = localStorage.getItem("kd_trx_mutasi");
-        data['sisa_approval']   = this.state.dataApproval[i].sisa_approval;
-        data['barcode']         = this.state.dataApproval[i].barcode;
-        console.log(data);
-        let total_qty =  this.state.dataApproval[i].total_qty;
-        let total_approval =  this.state.dataApproval[i].total_approval;
-        let jumlah = parseInt(total_qty)-parseInt(total_approval);
+        if(parseInt(this.state.dataApproval[i].sisa_approval) > (parseInt(this.state.dataApproval[i].total_qty)-parseInt(this.state.dataApproval[i].total_approval))){
 
-        // console.log("JUMLAH",parseInt(total_qty)-parseInt(total_approval));
-        if(parseInt(this.state.dataApproval[i].sisa_approval)>0){
-        //     if(parseInt(this.state.dataApproval[i].sisa_approval) > jumlah){
-        //         this.setState({error:"qty approval tidak boleh melebihi total qty"});
-        //     }else{
+        }else{
+            data['kd_trx']          = localStorage.getItem("kd_trx_mutasi");
+            data['sisa_approval']   = this.state.dataApproval[i].sisa_approval;
+            data['barcode']         = this.state.dataApproval[i].barcode;
+            // console.log(data);
+            let total_qty =  this.state.dataApproval[i].total_qty;
+            let total_approval =  this.state.dataApproval[i].total_approval;
+            let jumlah = parseInt(total_qty)-parseInt(total_approval);
+            if(parseInt(this.state.dataApproval[i].sisa_approval)>0){
                 this.props.dispatch(saveApprovalMutation(data));
-        //     }
+                this.state.dataApproval[i].isReadonly=true;
+                console.log(this.state.dataApproval[i].isReadonly);
+            }
+            this.setState({});
         }
-            // else{
-        //     this.setState({error:"qty approval harus lebih dari 0"});
-        // }
+
+
+
+
     }
     toggle(e){
         e.preventDefault();
@@ -111,7 +118,7 @@ class FormApprovalMutation extends Component{
                                             <td style={columnStyle}>{v.total_qty}</td>
                                             <td style={columnStyle}>{v.total_approval}</td>
                                             <td style={columnStyle}>
-                                                <input type="text" name="sisa_approval" className="form-control" value={v.sisa_approval} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {
+                                                <input readOnly={v.isReadonly} type="text" name="sisa_approval" className="form-control" value={v.sisa_approval} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {
                                                     event => {
                                                         if (event.key === 'Enter') {
                                                             this.handleOnEnter(i);
