@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import React,{Component} from "react";
 import Pagination from "react-js-pagination";
 import connect from "react-redux/es/connect/connect";
+import moment from "moment";
 
 
 export const stringifyFormData = (fd) => {
@@ -54,7 +55,22 @@ export const addFooters = doc => {
     //
     // }
 }
+export const rangeDate = {
+    Today: [moment(), moment()],
+    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+    "Last 30 Days": [moment().subtract(29, "days"), moment()],
+    "This Month": [moment().startOf("month"), moment().endOf("month")],
+    "Last Month": [
+        moment().subtract(1, "month").startOf("month"),
+        moment().subtract(1, "month").endOf("month")
+    ],
+    "Last Year": [
+        moment().subtract(1, "year").startOf("year"),
+        moment().subtract(1, "year").endOf("year")
+    ]
 
+};
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),

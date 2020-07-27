@@ -29,12 +29,7 @@ export function setSaleData(data = []) {
         data
     }
 }
-export function setReport(data = []) {
-    return {
-        type: SALE.REPORT_SUCCESS,
-        data
-    }
-}
+
 export function setCode(data = []) {
     return {
         type: SALE.SUCCESS_CODE,
@@ -49,7 +44,24 @@ export function setSaleFailed(data = []) {
         data
     }
 }
-
+export function setReport(data = []) {
+    return {
+        type: SALE.REPORT_SUCCESS,
+        data
+    }
+}
+export function setReportFailed(data = []) {
+    return {
+        type: SALE.REPORT_FAILED,
+        data
+    }
+}
+export function setLoadingReport(load) {
+    return {
+        type: SALE.REPORT_LOADING,
+        load
+    }
+}
 export const FetchNotaSale = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -110,3 +122,27 @@ export const storeSale = (data) => {
             })
     }
 }
+
+export const FetchReportSale = (page=1,where='') => {
+    return (dispatch) => {
+        dispatch(setLoadingReport(true));
+        let url=`report/arsip_penjualan?page=${page}`;
+        if(where!==''){
+            url+=`&${where}`;
+        }
+        axios.get(HEADERS.URL + url)
+            .then(function (response) {
+                const data = response.data
+                console.log(data);
+                dispatch(setReport(data))
+                dispatch(setLoadingReport(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+

@@ -27,6 +27,7 @@ import PoReport from '../report/inventory/po'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import Closing from '../report/inventory/closing'
+import SaleArchive from '../report/sale/sale_archive'
 import Sale from '../sale/product_sale'
 import Company from "../setting/company";
 
@@ -70,6 +71,7 @@ const Routes = (
             <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
+            <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
         </Switch>
     </div>
 )
