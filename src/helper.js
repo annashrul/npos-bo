@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import React,{Component} from "react";
 import Pagination from "react-js-pagination";
 import connect from "react-redux/es/connect/connect";
+import moment from "moment";
 
 
 export const stringifyFormData = (fd) => {
@@ -42,19 +43,22 @@ export const addFooters = doc => {
     doc.setFontSize(7);
     doc.text(width-40, height - 30, 'Page - ' + doc.page);
     doc.page ++;
-
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(8);
     return doc;
-    // for (var i = 1; i <= pageCount; i++) {
-    //     doc.setPage(i)
-    //     doc.text('Page ' + String(i) + ' of ' + String(pageCount), doc.internal.pageSize.width / 2, 287, {
-    //         align: 'center'
-    //     });
-    //
-    // }
 }
-
+export const rangeDate = {
+    'Hari Ini': [moment(), moment()],
+    'KemarIn': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
+    '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
+    'Minggu Ini': [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
+    'Minggu Lalu': [moment().subtract(1, 'weeks').startOf('isoWeek'), moment().subtract(1, 'weeks').endOf('isoWeek')],
+    'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
+    'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+    'Tahun Ini': [moment().startOf('year'), moment().endOf('year')],
+    'Tahun Lalu': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+};
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),
@@ -71,7 +75,7 @@ export const toRp = (angka) => {
     }
 
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    return 'Rp. ' + rupiah;
+    return rupiah;
 };
 
 export const statusQ = (lbl,txt) => {

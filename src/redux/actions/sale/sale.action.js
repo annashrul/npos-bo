@@ -2,6 +2,8 @@ import {SALE,HEADERS} from "../_constants";
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {destroy} from "components/model/app.model";
+import {FetchBank} from "../masterdata/bank/bank.action";
+import {setReportDetail} from "../purchase/receive/receive.action";
 
 
 export function setLoading(load) {
@@ -29,12 +31,13 @@ export function setSaleData(data = []) {
         data
     }
 }
-export function setReport(data = []) {
+export function setSaleReportData(data = []) {
     return {
-        type: SALE.REPORT_SUCCESS,
+        type: SALE.REPORT_DETAIL_SUCCESS,
         data
     }
 }
+
 export function setCode(data = []) {
     return {
         type: SALE.SUCCESS_CODE,
@@ -49,7 +52,30 @@ export function setSaleFailed(data = []) {
         data
     }
 }
-
+export function setReport(data = []) {
+    return {
+        type: SALE.REPORT_SUCCESS,
+        data
+    }
+}
+export function setReportExcel(data = []) {
+    return {
+        type: SALE.REPORT_SUCCESS_EXCEL,
+        data
+    }
+}
+export function setReportFailed(data = []) {
+    return {
+        type: SALE.REPORT_FAILED,
+        data
+    }
+}
+export function setLoadingReport(load) {
+    return {
+        type: SALE.REPORT_LOADING,
+        load
+    }
+}
 export const FetchNotaSale = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -85,7 +111,7 @@ export const storeSale = (data) => {
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     if (result.value) {
-                        const win = window.open('http://google.com', '_blank');
+                        const win = window.open(data.result.nota, '_blank');
                         if (win != null) {
                             win.focus();
                         }
@@ -104,6 +130,130 @@ export const storeSale = (data) => {
                     text: error.response.data.msg,
                 });
 
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
+
+export const FetchReportSale = (page=1,where='') => {
+
+    return (dispatch) => {
+        dispatch(setLoadingReport(true));
+        let url=`report/arsip_penjualan?page=${page}`;
+        if(where!==''){
+            url+=`&${where}`;
+        }
+        console.log("URL LAPORAN PENJUALAN",url);
+        axios.get(HEADERS.URL + url)
+            .then(function (response) {
+                const data = response.data
+                console.log(data);
+                dispatch(setLoadingReport(false));
+                dispatch(setReport(data))
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoadingReport(false));
+                console.log(error);
+            })
+
+    }
+}
+export const FetchReportSaleExcel = (page=1,where='',perpage=10000) => {
+    return (dispatch) => {
+        let url=`report/arsip_penjualan?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=`&${where}`;
+        }
+        axios.get(HEADERS.URL + url)
+            .then(function (response) {
+                const data = response.data
+                console.log(data);
+                dispatch(setReportExcel(data))
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+export const FetchReportDetailSale = (kd_trx) => {
+    return (dispatch) => {
+        dispatch(setLoadingDetail(true));
+        console.log(`report/arsip_penjualan/${kd_trx}`);
+        axios.get(HEADERS.URL + `report/arsip_penjualan/${kd_trx}`)
+            .then(function (response) {
+                const data = response.data;
+                console.log(data);
+                dispatch(setSaleReportData(data));
+                dispatch(setLoadingDetail(false));
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+
+    }
+}
+
+
+export const deleteReportSale = (kd_trx) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `pos/remove_penjualan/${kd_trx}`;
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                console.log("DATA",data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoadingReport(false));
+                let where='';
+                let dateFrom=localStorage.getItem("date_from_sale_report");
+                let dateTo=localStorage.getItem("date_to_sale_report");
+                let tipe=localStorage.getItem("type_sale_report");
+                let lokasi=localStorage.getItem("location_sale_report");
+                let any=localStorage.getItem("any_sale_report");
+                if(dateFrom!==null&&dateTo!==null){
+                    if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
+                }else{
+                    if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
+                }
+                if(tipe!==''){
+                    if(where!==''){where+='&'}where+=`tipe=${tipe}`
+                }
+                if(lokasi!==''){
+                    if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
+                }
+                if(any !== undefined&&any!==''){
+                    if(where!==''){where+='&'}where+=`q=${any}`
+                }
+                let page=localStorage.getItem("pageNumber_sale_report");
+                dispatch(FetchReportSale(page===undefined&&page===null?1:page,where));
+            })
+            .catch(function (error) {
+                dispatch(setLoadingReport(false));
+                console.log(error);
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
                 if (error.response) {
                     console.log("error")
                 }

@@ -483,6 +483,7 @@ class Sale extends Component{
                     });
                     moment.locale("id");
                     let master = {
+                        "cetak_nota":true,
                         "tempo": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
                         "hr": "S",
                         "kartu": "-",
