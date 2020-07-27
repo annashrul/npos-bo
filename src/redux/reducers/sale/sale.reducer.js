@@ -26,6 +26,22 @@ const initialState = {
         change: 0,
         voucher: 0,
         rounding: 0
+    },
+    report_excel:[],
+    total_penjualan_excel:{
+        omset: 0,
+        dis_item: 0,
+        sub_total: 0,
+        dis_persen: 0,
+        dis_rp: 0,
+        kas_lain: 0,
+        gt: 0,
+        bayar: 0,
+        jml_kartu: 0,
+        charge: 0,
+        change: 0,
+        voucher: 0,
+        rounding: 0
     }
 };
 
@@ -41,6 +57,11 @@ export const saleReducer = (state = initialState, action) => {
                 msg: action.data.msg,
                 data: action.data.result,
                 total: action.data.result.total
+            });
+        case SALE.REPORT_SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result,
+                total_penjualan_excel: action.data.result.total_penjualan,
             });
         case SALE.REPORT_SUCCESS:
             return Object.assign({}, state, {

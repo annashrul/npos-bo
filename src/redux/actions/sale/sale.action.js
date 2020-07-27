@@ -58,6 +58,12 @@ export function setReport(data = []) {
         data
     }
 }
+export function setReportExcel(data = []) {
+    return {
+        type: SALE.REPORT_SUCCESS_EXCEL,
+        data
+    }
+}
 export function setReportFailed(data = []) {
     return {
         type: SALE.REPORT_FAILED,
@@ -105,7 +111,7 @@ export const storeSale = (data) => {
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     if (result.value) {
-                        const win = window.open('http://google.com', '_blank');
+                        const win = window.open(data.result.nota, '_blank');
                         if (win != null) {
                             win.focus();
                         }
@@ -132,6 +138,7 @@ export const storeSale = (data) => {
 }
 
 export const FetchReportSale = (page=1,where='') => {
+
     return (dispatch) => {
         dispatch(setLoadingReport(true));
         let url=`report/arsip_penjualan?page=${page}`;
@@ -143,8 +150,28 @@ export const FetchReportSale = (page=1,where='') => {
             .then(function (response) {
                 const data = response.data
                 console.log(data);
-                dispatch(setReport(data))
                 dispatch(setLoadingReport(false));
+                dispatch(setReport(data))
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoadingReport(false));
+                console.log(error);
+            })
+
+    }
+}
+export const FetchReportSaleExcel = (page=1,where='',perpage=10000) => {
+    return (dispatch) => {
+        let url=`report/arsip_penjualan?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=`&${where}`;
+        }
+        axios.get(HEADERS.URL + url)
+            .then(function (response) {
+                const data = response.data
+                console.log(data);
+                dispatch(setReportExcel(data))
             })
             .catch(function (error) {
                 // handle error
@@ -153,6 +180,7 @@ export const FetchReportSale = (page=1,where='') => {
 
     }
 }
+
 export const FetchReportDetailSale = (kd_trx) => {
     return (dispatch) => {
         dispatch(setLoadingDetail(true));

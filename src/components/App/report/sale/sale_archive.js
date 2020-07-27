@@ -10,9 +10,14 @@ import Preloader from "../../../../Preloader";
 import {rangeDate, toRp} from "../../../../helper";
 import {FetchReportSale} from "redux/actions/sale/sale.action";
 import Swal from "sweetalert2";
-import {deleteReportSale, FetchReportDetailSale} from "../../../../redux/actions/sale/sale.action";
+import {
+    deleteReportSale,
+    FetchReportDetailSale,
+    FetchReportSaleExcel
+} from "../../../../redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 class SaleArchive extends Component{
     constructor(props){
@@ -156,6 +161,7 @@ class SaleArchive extends Component{
             if(where!==''){where+='&'}where+=`q=${any}`
         }
         this.props.dispatch(FetchReportSale(pageNumber===null?1:pageNumber,where));
+        this.props.dispatch(FetchReportSaleExcel(pageNumber===null?1:pageNumber,where));
     }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_sale_report",pageNumber);
@@ -189,23 +195,11 @@ class SaleArchive extends Component{
     }
 
     render(){
+        console.log("LAPORAN EXCEL", this.props.saleReportExcel);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
-        const {
-            omset,
-            dis_item,
-            sub_total,
-            dis_persen,
-            dis_rp,
-            kas_lain,
-            gt,
-            bayar,
-            jml_kartu,
-            charge,
-            change,
-            voucher,
-            rounding
-        } = this.props.totalPenjualan;
+        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
+        // const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
         let omset_per = 0;
         let dis_item_per = 0;
         let sub_total_per = 0;
@@ -281,18 +275,130 @@ class SaleArchive extends Component{
                                     <input type="text" name="any_sale_report" className="form-control" value={this.state.any_sale_report} placeholder="Kode/Kasir/Customer" onChange={(e)=>this.handleChange(e)}/>
                                 </div>
                             </div>
-                            <div className="col-6 col-xs-6 col-md-1">
+                            <div className="col-6 col-xs-6 col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12"></label>
-                                    <button style={{marginTop:"28px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"></i>
                                     </button>
+                                    <ReactHTMLTableToExcel
+                                        className="btn btn-primary btnBrg"
+                                        table="report_sale_to_excel"
+                                        filename="laporan_penjualan"
+                                        sheet="barang"
+                                        buttonText="export excel">
+                                    </ReactHTMLTableToExcel>
                                 </div>
+
                             </div>
                             <div className="col-md-12">
+                                {/*DATA EXCEL*/}
+                                <table className="table table-hover"  id="report_sale_to_excel" style={{display:"none"}}>
+                                    <thead className="bg-light">
+                                    <tr>
+                                        <th className="text-black" colSpan={23}>{this.state.startDate} - {this.state.startDate}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" colSpan={23}>{this.state.location}</th>
+                                    </tr>
+
+                                    <tr>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
+                                        <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" style={columnStyle}>Item</th>
+                                        <th className="text-black" style={columnStyle}>(rp)</th>
+                                        <th className="text-black" style={columnStyle}>(%)</th>
+                                    </tr>
+                                    </thead>
+                                    {
+                                        <tbody>
+                                        {
+                                            typeof this.props.saleReportExcel.data==='object'? this.props.saleReportExcel.data.length>0?
+                                                this.props.saleReportExcel.data.map((v,i)=>{
+                                                    return (
+                                                        <tr key={i}>
+                                                            <td style={columnStyle}>{v.kd_trx}</td>
+                                                            <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
+                                                            <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
+                                                            <td style={columnStyle}>{v.nama}</td>
+                                                            <td style={columnStyle}>{v.kd_kasir}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
+                                                            <td style={{textAlign:"right"}}>{v.dis_persen}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
+                                                            <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
+                                                            <td style={columnStyle}>{v.kas_lain}</td>
+                                                            <td style={columnStyle}>{v.ket_kas_lain}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
+                                                            <td>{v.kartu}</td>
+                                                            <td>{v.status}</td>
+                                                            <td>{v.lokasi}</td>
+                                                            <td>{v.jenis_trx}</td>
+                                                        </tr>
+                                                    );
+
+
+                                                }) : "No data." : "No data."
+                                        }
+                                        </tbody>
+                                    }
+                                    <tfoot>
+                                    <tr>
+                                        <td colSpan="5">TOTAL</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.omset)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_item)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_rp)}</td>
+                                        <td style={{textAlign:"right"}}>{this.props.totalPenjualanExcel.dis_persen}</td>
+                                        <td colSpan="4"></td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.kas_lain)}</td>
+                                        <td colSpan="1"></td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.gt)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.rounding)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.bayar)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.change)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.jml_kartu)}</td>
+                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.charge)}</td>
+                                        <td colSpan="4"></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                {/*END DATA EXCEL*/}
                                 <div className="table-responsive" style={{overflowX: "auto"}}>
+
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
+
                                         <tr>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>#</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
@@ -347,7 +453,7 @@ class SaleArchive extends Component{
 
 
                                                             return (
-                                                                <tr>
+                                                                <tr key={i}>
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -458,6 +564,8 @@ const mapStateToProps = (state) => {
     return {
         saleReport:state.saleReducer.report,
         totalPenjualan:state.saleReducer.total_penjualan,
+        saleReportExcel:state.saleReducer.report_excel,
+        totalPenjualanExcel:state.saleReducer.total_penjualan_excel,
         isLoadingReport: state.saleReducer.isLoadingReport,
         detailSale:state.saleReducer.dataDetail,
         isLoadingDetail: state.saleReducer.isLoadingDetail,
