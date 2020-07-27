@@ -7,6 +7,7 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import moment from 'moment';
 import Select from 'react-select';
 import {toRp} from "helper";
+import {FetchStock} from 'redux/actions/dashboard/dashboard.action'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
@@ -320,6 +321,10 @@ class Dashboard extends Component {
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     }
 
+    componentDidMount(){
+        this.props.dispatch(FetchStock());
+    }
+
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
           let lk = [{
@@ -353,6 +358,7 @@ class Dashboard extends Component {
 
     componentWillMount(){
         this.refreshData();
+        // this.props.dispatch(FetchStock());
     }
 
     componentWillUnmount(){
@@ -405,11 +411,17 @@ class Dashboard extends Component {
         this.refreshData(null, null, lk.value)
 
     }
+
+    HandleStock(e){
+        e.preventDefault();
+        this.props.dispatch(FetchStock())
+    }
     
 
 
     render() {
 
+        console.log("stock list res",this.props.stock)
         return (
             <Layout page="Dashboard">
                 <div className="row align-items-center">
@@ -545,35 +557,33 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-12 box-margin">
+                    <div className="col-md-4 box-margin">
                         <div className="card">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <div className="text-center">
-                                        <div className="card-body">
-                                            <h4 className="card-title">SALES THIS WEEK</h4>
-                                            <Chart
-                                                options={this.state.daily.options}
-                                                series={this.state.daily.series}
-                                                type="bar"
-                                                height="300"
-                                                />
-                                        </div>
-                                    </div>
+                                <div className="card-header bg-transparent text-center">
+                                    <h4 className="card-title mt-3">SALES THIS WEEK</h4>
                                 </div>
-                                <div className="col-md-8">
-                                    <div className="text-center">
-                                        <div className="card-body">
-                                            <h4 className="card-title">HOURLY GROSS SALES AMOUNT</h4>
-                                            <Chart
-                                                options={this.state.hourly.options}
-                                                series={this.state.hourly.series}
-                                                height="300"
-                                                />
-                                        </div>
-                                    </div>
+                                <div className="card-body">
+                                <Chart
+                                    options={this.state.daily.options}
+                                    series={this.state.daily.series}
+                                    type="bar"
+                                    height="300"
+                                    />
                                 </div>
-                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-8 box-margin">
+                        <div className="card">
+                                <div className="card-header bg-transparent text-center">
+                                    <h4 className="card-title mt-3">HOURLY GROSS SALES AMOUNT</h4>
+                                </div>
+                                <div className="card-body">
+                                <Chart
+                                    options={this.state.hourly.options}
+                                    series={this.state.hourly.series}
+                                    height="300"
+                                    />
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -684,32 +694,35 @@ class Dashboard extends Component {
                         <div className="card">
                                 <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
                                     <h4 className="card-title mt-3">STOCK</h4>
+                                    <button type="button" onClick={(e)=>this.HandleStock(e)} className="btn btn-primary"><i className="fa fa-refresh"></i></button>
                                 </div>
-                                <div className="card-body">
-                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
-                                        <div className="d-flex align-items-center mr-3">
-                                            <div className="download-file-icon mr-3">
-                                                <img src="img/filemanager-img/1.png" alt=""></img>
-                                            </div>
-                                            <div className="user-text-table">
-                                                <h6 className="d-inline-block font-15 mb-0">Bala - bala</h6>
-                                                <p className="mb-0">20 siki</p>
-                                            </div>
-                                        </div>
-                                        <a href="#" className="download-link badge badge-primary badge-pill">Stok aya keneh</a>
-                                    </div>
-                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
-                                        <div className="d-flex align-items-center mr-3">
-                                            <div className="download-file-icon mr-3">
-                                                <img src="img/filemanager-img/1.png" alt=""></img>
-                                            </div>
-                                            <div className="user-text-table">
-                                                <h6 className="d-inline-block font-15 mb-0">Gehu</h6>
-                                                <p className="mb-0">0 siki</p>
-                                            </div>
-                                        </div>
-                                        <a href="#" className="download-link badge badge-danger badge-pill">Stok beak</a>
-                                    </div>
+                                <div className="card-body" style={{height: '355px', overflowY: 'scroll'}}>
+                                    {
+                                        this.props.stock.length!==0?
+                                        (
+                                            this.props.stock.map((i,inx)=>{
+                                                return(
+                                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                                        <div className="d-flex align-items-center mr-3">
+                                                            <div className="download-file-icon mr-3">
+                                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                                            </div>
+                                                            <div className="user-text-table">
+                                                            <h6 className="d-inline-block font-15 mb-0">{i.nm_brg}</h6>
+                                                            <p className="mb-0">Stock {i.stock}</p>
+                                                            </div>
+                                                        </div>
+                                                        <a href="#" className={"download-link badge " + (i.stock<=0?' badge-danger ':' badge-primary ') + " badge-pill"} style={{padding:'8px'}}>{i.stock<=0?'Stock kosong':'Stock ada'}</a>
+                                                    </div>
+                                                )
+                                            })
+                                        )
+                                        :
+                                        (
+                                            <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Tidak tersedia.</div>
+                                        )
+                                    }
+                                    
                                 </div>
                         </div>
                     </div>
@@ -719,13 +732,16 @@ class Dashboard extends Component {
         );
     }
 }
-Dashboard.propTypes = {
-    auth: PropTypes.object
-}
+// Dashboard.propTypes = {
+//     auth: PropTypes.object
+// }
 
-const mapStateToProps = ({auth}) =>{
+const mapStateToProps = (state) =>{
+    console.log("mapStatt=======", state)
+    console.log("mapStatt++++++++++", state.dashboardReducer.data)
      return{
-       auth: auth
+       auth: state.auth,
+       stock: state.dashboardReducer.data
      }
 }
 export default connect(mapStateToProps)(Dashboard);
