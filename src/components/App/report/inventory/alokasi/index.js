@@ -34,6 +34,17 @@ class AlokasiReport extends Component{
         //     })
     }
 
+    componentWillReceiveProps = (nextProps) => {
+        console.log("log lok",nextProps);
+    }
+    
+    HandleChangeLokasi(lk) {
+        this.setState({
+            location: lk.value
+        })
+        localStorage.setItem('lk_alokasi_report', lk.value);
+    }
+
     handleSelect = (e,index) => {
         this.setState({selectedIndex: index}, () => {
             // console.log('Selected tab: ' + this.state.selectedIndex);
@@ -64,7 +75,7 @@ class AlokasiReport extends Component{
 const mapStateToProps = (state) => {
     console.log("mapstate alokasi", state.alokasiReducer);
     return {
-        // authenticated: state.sessionReducer.authenticated,
+        auth: state.auth,
         alokasiReport:state.alokasiReducer.data,
         // total:state.alokasiReducer.total,
         isLoading: state.alokasiReducer.isLoading,
