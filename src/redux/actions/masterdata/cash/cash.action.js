@@ -6,13 +6,24 @@ import Swal from "sweetalert2";
 export function setLoading(load){
     return {type : CASH.LOADING,load}
 }
-
 export function setCash(data=[]){
     return {type:CASH.SUCCESS,data}
 }
 export function setCashFailed(data=[]){
     return {type:CASH.FAILED,data}
 }
+
+
+export function setLoadingReport(load){
+    return {type : CASH.LOADING_REPORT,load}
+}
+export function setCashReport(data=[]){
+    return {type:CASH.SUCCESS_REPORT,data}
+}
+export function setCashFailedReport(data=[]){
+    return {type:CASH.FAILED_REPORT,data}
+}
+
 export const FetchCash = (page=1,type='masuk',param)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -53,7 +64,6 @@ export const FetchCashDetail = (id)=>{
         })
     }
 }
-
 export const createCash = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -94,9 +104,6 @@ export const createCash = (data) => {
 
     }
 }
-
-
-
 export const updateCash = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -137,7 +144,6 @@ export const updateCash = (id,data) => {
             })
     }
 }
-
 export const deleteCash = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -185,5 +191,27 @@ export const deleteCash = (id) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+
+export const FetchCashReport = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoadingReport(true));
+        // pos/report?page=1&param=kas&kassa=A&lokasi=LK%2F0001&datefrom=2020-01-01&dateto=2020-07-30&type_kas=masuk
+        let url = `pos/report?page=${page}&param=kas&isbo=true`;
+        if(where!==''){
+            url+=`&${where}`;
+        }
+        console.log("URL LAPORAN KAS",url)
+        axios.post(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("DATA ",data);
+                dispatch(setCashReport(data));
+                dispatch(setLoadingReport(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }

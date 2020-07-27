@@ -343,153 +343,153 @@ class ListProduct extends Component{
                     </div>
 
                 </form>
-                <div className="table-responsive" style={{overflowX: "auto"}}>
-                    {/*DATA EXCEL*/}
-                    <table className="table table-hover"  id="emp" style={{display:"none"}}>
-                        <thead className="bg-light">
-                        <tr>
-                            <th className="text-black" style={columnStyle}>Code</th>
-                            <th className="text-black" style={columnStyle}>Name</th>
-                            <th className="text-black" style={columnStyle}>Group</th>
-                            <th className="text-black" style={columnStyle}>Supplier</th>
-                            <th className="text-black" style={columnStyle}>Sub Dept</th>
-                            <th className="text-black" style={columnStyle}>Purchase Price</th>
-                            <th className="text-black" style={columnStyle}>Category</th>
-                            <th className="text-black" style={columnStyle}>Stock Min</th>
-                            <th className="text-black" style={columnStyle}>Product Type</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                    <div className="table-responsive" style={{overflowX: "auto"}}>
+                        {/*DATA EXCEL*/}
+                        <table className="table table-hover"  id="emp" style={{display:"none"}}>
+                            <thead className="bg-light">
+                            <tr>
+                                <th className="text-black" style={columnStyle}>Code</th>
+                                <th className="text-black" style={columnStyle}>Name</th>
+                                <th className="text-black" style={columnStyle}>Group</th>
+                                <th className="text-black" style={columnStyle}>Supplier</th>
+                                <th className="text-black" style={columnStyle}>Sub Dept</th>
+                                <th className="text-black" style={columnStyle}>Purchase Price</th>
+                                <th className="text-black" style={columnStyle}>Category</th>
+                                <th className="text-black" style={columnStyle}>Stock Min</th>
+                                <th className="text-black" style={columnStyle}>Product Type</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                        {
-                            (
-                                typeof data === 'object' ?
-                                    data.map((v,i)=>{
-                                        return(
-                                            <tr key={i}>
-                                                <td style={columnStyle}>{v.kd_brg}</td>
-                                                <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.subdept}</td>
-                                                <td style={columnStyle}>{v.supplier}</td>
-                                                <td style={columnStyle}>{v.kategori}</td>
-                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
-                                                <td style={columnStyle}>{v.stock_min}</td>
-                                            </tr>
-                                        )
-                                    })
-                                    : "No data."
-                            )
-                        }
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colSpan="7"></td>
-                            <td>0</td>
-                            <td></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    {/*END DATA EXCEL*/}
-                    <table className="table table-hover table-bordered">
-                        <thead className="bg-light">
-                        <tr>
-                            <th className="text-black" style={columnStyle}>#</th>
-                            <th className="text-black" style={columnStyle}>Code</th>
-                            <th className="text-black" style={columnStyle}>Nama</th>
-                            <th className="text-black" style={columnStyle}>Kelompok</th>
-                            <th className="text-black" style={columnStyle}>Supplier</th>
-                            <th className="text-black" style={columnStyle}>Sub Dept</th>
-                            <th className="text-black" style={columnStyle}>Kategori</th>
-                            <th className="text-black" style={columnStyle}>Jenis</th>
-                            <th className="text-black" style={columnStyle}>Stock Min</th>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><input type="text" className="form-control" placeholder="Kode Barang"/></td>
-                            <td><input type="text" className="form-control" placeholder="Nama Barang"/></td>
-                            <td>
-                                <select className="form-control form-control-lg" id="kelompok_barang" name="kelompok_barang" onChange={this.handleSearchBy}>
-                                    <option value="">Pilih Kelompok</option>
-                                    {
-                                        this.state.searchKelompok.map((v,i)=>{
-                                            return (<option key={i} value={v.value} selected={localStorage.getItem('kelompok_barang')===v.value?true:false}>{v.label}</option>)
+                            {
+                                (
+                                    typeof data === 'object' ?
+                                        data.map((v,i)=>{
+                                            return(
+                                                <tr key={i}>
+                                                    <td style={columnStyle}>{v.kd_brg}</td>
+                                                    <td style={columnStyle}>{v.nm_brg}</td>
+                                                    <td style={columnStyle}>{v.kel_brg}</td>
+                                                    <td style={columnStyle}>{v.subdept}</td>
+                                                    <td style={columnStyle}>{v.supplier}</td>
+                                                    <td style={columnStyle}>{v.kategori}</td>
+                                                    <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
+                                                    <td style={columnStyle}>{v.stock_min}</td>
+                                                </tr>
+                                            )
                                         })
-                                    }
-                                </select>
-                            </td>
-                            <td><input type="text" className="form-control" placeholder="Supplier"/></td>
-                            <td><input type="text" className="form-control" placeholder="Sub Dept"/></td>
-                            <td>
-                                <select className="form-control form-control-lg" id="kategori_barang" name="kategori_barang" onChange={this.handleSearchBy}>
-                                    <option value="">Pilih Kategori</option>
-                                    {
-                                        this.state.searchKategori.map((v,i)=>{
-                                            return (<option key={i} value={v.value} selected={localStorage.getItem('kategori_barang')===v.value?true:false}>{v.label}</option>)
-                                        })
-                                    }
-                                </select>
-                            </td>
-                            <td>
-                                <select className="form-control form-control-lg" id="jenis_barang" name="jenis_barang" onChange={this.handleSearchBy}>
-                                    <option value="">Pilih Jenis</option>
-                                    {
-                                        this.state.searchJenis.map((v,i)=>{
-                                            return (<option key={i} value={v.value} selected={localStorage.getItem('jenis_barang')===v.value?true:false}>{v.label}</option>)
-                                        })
-                                    }
-                                </select>
-                            </td>
-                            <td></td>
-                        </tr>
-                        </thead>
-                        <tbody>
+                                        : "No data."
+                                )
+                            }
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colSpan="7"></td>
+                                <td>0</td>
+                                <td></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                        {/*END DATA EXCEL*/}
+                        <table className="table table-hover table-bordered">
+                            <thead className="bg-light">
+                            <tr>
+                                <th className="text-black" style={columnStyle}>#</th>
+                                <th className="text-black" style={columnStyle}>Code</th>
+                                <th className="text-black" style={columnStyle}>Nama</th>
+                                <th className="text-black" style={columnStyle}>Kelompok</th>
+                                <th className="text-black" style={columnStyle}>Supplier</th>
+                                <th className="text-black" style={columnStyle}>Sub Dept</th>
+                                <th className="text-black" style={columnStyle}>Kategori</th>
+                                <th className="text-black" style={columnStyle}>Jenis</th>
+                                <th className="text-black" style={columnStyle}>Stock Min</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="text" className="form-control" placeholder="Kode Barang"/></td>
+                                <td><input type="text" className="form-control" placeholder="Nama Barang"/></td>
+                                <td>
+                                    <select className="form-control form-control-lg" id="kelompok_barang" name="kelompok_barang" onChange={this.handleSearchBy}>
+                                        <option value="">Pilih Kelompok</option>
+                                        {
+                                            this.state.searchKelompok.map((v,i)=>{
+                                                return (<option key={i} value={v.value} selected={localStorage.getItem('kelompok_barang')===v.value?true:false}>{v.label}</option>)
+                                            })
+                                        }
+                                    </select>
+                                </td>
+                                <td><input type="text" className="form-control" placeholder="Supplier"/></td>
+                                <td><input type="text" className="form-control" placeholder="Sub Dept"/></td>
+                                <td>
+                                    <select className="form-control form-control-lg" id="kategori_barang" name="kategori_barang" onChange={this.handleSearchBy}>
+                                        <option value="">Pilih Kategori</option>
+                                        {
+                                            this.state.searchKategori.map((v,i)=>{
+                                                return (<option key={i} value={v.value} selected={localStorage.getItem('kategori_barang')===v.value?true:false}>{v.label}</option>)
+                                            })
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <select className="form-control form-control-lg" id="jenis_barang" name="jenis_barang" onChange={this.handleSearchBy}>
+                                        <option value="">Pilih Jenis</option>
+                                        {
+                                            this.state.searchJenis.map((v,i)=>{
+                                                return (<option key={i} value={v.value} selected={localStorage.getItem('jenis_barang')===v.value?true:false}>{v.label}</option>)
+                                            })
+                                        }
+                                    </select>
+                                </td>
+                                <td></td>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                        {
-                            (
-                                typeof data === 'object' ? data.length > 0 ?
-                                    data.map((v,i)=>{
-                                        return(
-                                            <tr key={i}>
-                                                <td style={columnStyle}>
-                                                    <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
+                            {
+                                (
+                                    typeof data === 'object' ? data.length > 0 ?
+                                        data.map((v,i)=>{
+                                            return(
+                                                <tr key={i}>
+                                                    <td style={columnStyle}>
+                                                        <div className="btn-group">
+                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                Action
+                                                            </button>
+                                                            <div className="dropdown-menu">
+                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>
+                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>
+                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
+                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td style={columnStyle}>{v.kd_brg}</td>
-                                                <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.subdept}</td>
-                                                <td style={columnStyle}>{v.supplier}</td>
+                                                    </td>
+                                                    <td style={columnStyle}>{v.kd_brg}</td>
+                                                    <td style={columnStyle}>{v.nm_brg}</td>
+                                                    <td style={columnStyle}>{v.kel_brg}</td>
+                                                    <td style={columnStyle}>{v.subdept}</td>
+                                                    <td style={columnStyle}>{v.supplier}</td>
 
-                                                <td style={columnStyle}>{v.kategori}</td>
-                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
-                                                <td style={columnStyle}>{v.stock_min}</td>
-                                            </tr>
-                                        )
-                                    })
-                                    : "No data." : "No data."
-                            )
-                        }
-                        </tbody>
-                    </table>
-                    <div style={{"marginTop":"20px","float":"right"}}>
-                        <Paginationq
-                            current_page={current_page}
-                            per_page={per_page}
-                            total={total}
-                            callback={this.handlePageChange.bind(this)}
-                        />
+                                                    <td style={columnStyle}>{v.kategori}</td>
+                                                    <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
+                                                    <td style={columnStyle}>{v.stock_min}</td>
+                                                </tr>
+                                            )
+                                        })
+                                        : "No data." : "No data."
+                                )
+                            }
+                            </tbody>
+                        </table>
+                        <div style={{"marginTop":"20px","float":"right"}}>
+                            <Paginationq
+                                current_page={current_page}
+                                per_page={per_page}
+                                total={total}
+                                callback={this.handlePageChange.bind(this)}
+                            />
+                        </div>
                     </div>
-                </div>
                 <FormProduct
                     data={this.props.group}
                     dataLocation={this.props.location}
