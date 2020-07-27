@@ -159,6 +159,47 @@ export const storeClosing = (data) => {
             })
     }
 }
+
+export const reClosing = (data) => {
+    console.log("DATA TI CLOSING",data)
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `pos/reclosing`;
+        axios.post(url,data)
+            .then(function (response) {
+                const data = (response.data);
+                console.log("DATA",data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                // dispatch(FetchProduct(1,'',''));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+                console.log(error);
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+};
 export const FetchClosing = (page=1,dateFrom='',lokasi='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));

@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types';
 import Paginationq from "helper";
-import {FetchClosing, FetchClosingDetail} from "redux/actions/report/closing/closing.action";
+import {FetchClosing, reClosing} from "redux/actions/report/closing/closing.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 // import DetailClosing from "components/App/modals/report/inventory/closing_report/detail_closing";
@@ -9,6 +9,7 @@ import Preloader from "Preloader";
 import Select from 'react-select';
 import moment from "moment";
 import 'moment/locale/id'
+import Swal from "sweetalert2";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {HEADERS} from 'redux/actions/_constants'
 import { toRp } from '../../../../../../helper';
@@ -109,6 +110,28 @@ class ListClosing extends Component{
         localStorage.setItem('lk_closing_report', lk.value);
     }
 
+    handleReclosing(e,id){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Reclosing?',
+            // text: "You won't be able to revert this!",
+            icon: 'info',
+            showCancelButton: true,
+            // confirmButtonColor: '#3085d6',
+            // cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Reclosing!'
+          }).then((result) => {
+            if (result.value) {
+                let parseData = {}
+                parseData['id'] = id;
+                parseData['tgl'] = moment(new Date()).format("YYYY-MM-DD");
+                console.log("data reclosing",parseData);
+                this.props.dispatch(reClosing(parseData))
+            }
+          })
+        
+    }
+
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
@@ -196,7 +219,7 @@ class ListClosing extends Component{
                                                                         <button className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
                                                                         <div className="dropdown-menu dropdown-menu-right"
                                                                             aria-labelledby="dashboardDropdown50">
-                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDetail(e,v.id)}><i className="fa fa-history"></i> Reclosing</a>
+                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleReclosing(e,v.id)}><i className="fa fa-history"></i> Reclosing</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
