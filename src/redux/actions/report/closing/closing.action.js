@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import {
     destroy
 } from "components/model/app.model";
-
+import moment from "moment";
 
 export function setLoading(load) {
     return {
@@ -212,16 +212,8 @@ export const FetchClosing = (page=1,dateFrom='',lokasi='')=>{
         //     url = `report/closing?page=${page}&q=${q}`;
         // }
         console.log("url closing",`${url}`);
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${atob(localStorage.getItem('npos'))}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.get(HEADERS.URL+`${url}`+`&datefrom=2020-07-01&lokasi=LK%2F0001`)
+        
+        axios.get(HEADERS.URL+`${url}`+`&datefrom=`+moment(dateFrom).format("yyyy-MM-DD")+`&lokasi=`+lokasi)
             .then(function(response){
                 const data = response.data;
                 console.log(data);

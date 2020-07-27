@@ -405,6 +405,11 @@ class Dashboard extends Component {
         this.refreshData(null, null, lk.value)
 
     }
+
+    HandleStock(e){
+        e.preventDefault();
+
+    }
     
 
 
@@ -685,7 +690,55 @@ class Dashboard extends Component {
                                 <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
                                     <h4 className="card-title mt-3">STOCK</h4>
                                 </div>
-                                <div className="card-body">
+                                <div className="card-body" style={{height: '355px', overflowY: 'scroll'}}>
+                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                        <div className="d-flex align-items-center mr-3">
+                                            <div className="download-file-icon mr-3">
+                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                            </div>
+                                            <div className="user-text-table">
+                                                <h6 className="d-inline-block font-15 mb-0">Bala - bala</h6>
+                                                <p className="mb-0">20 siki</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" className="download-link badge badge-primary badge-pill">Stok aya keneh</a>
+                                    </div>
+                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                        <div className="d-flex align-items-center mr-3">
+                                            <div className="download-file-icon mr-3">
+                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                            </div>
+                                            <div className="user-text-table">
+                                                <h6 className="d-inline-block font-15 mb-0">Gehu</h6>
+                                                <p className="mb-0">0 siki</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" className="download-link badge badge-danger badge-pill">Stok beak</a>
+                                    </div>
+                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                        <div className="d-flex align-items-center mr-3">
+                                            <div className="download-file-icon mr-3">
+                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                            </div>
+                                            <div className="user-text-table">
+                                                <h6 className="d-inline-block font-15 mb-0">Bala - bala</h6>
+                                                <p className="mb-0">20 siki</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" className="download-link badge badge-primary badge-pill">Stok aya keneh</a>
+                                    </div>
+                                    <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
+                                        <div className="d-flex align-items-center mr-3">
+                                            <div className="download-file-icon mr-3">
+                                                <img src="img/filemanager-img/1.png" alt=""></img>
+                                            </div>
+                                            <div className="user-text-table">
+                                                <h6 className="d-inline-block font-15 mb-0">Gehu</h6>
+                                                <p className="mb-0">0 siki</p>
+                                            </div>
+                                        </div>
+                                        <a href="#" className="download-link badge badge-danger badge-pill">Stok beak</a>
+                                    </div>
                                     <div className="widget-download-file d-flex align-items-center justify-content-between mb-4">
                                         <div className="d-flex align-items-center mr-3">
                                             <div className="download-file-icon mr-3">

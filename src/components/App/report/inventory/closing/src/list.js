@@ -13,41 +13,18 @@ import Swal from "sweetalert2";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {HEADERS} from 'redux/actions/_constants'
 import { toRp } from '../../../../../../helper';
-
-const range = {
-    Today: [moment(), moment()],
-    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-    "Last 7 Days": [moment().subtract(6, "days"), moment()],
-    "Last 30 Days": [moment().subtract(29, "days"), moment()],
-    "This Month": [moment().startOf("month"), moment().endOf("month")],
-    "Last Month": [
-        moment()
-            .subtract(1, "month")
-            .startOf("month"),
-        moment()
-            .subtract(1, "month")
-            .endOf("month")
-    ],
-    "Last Year": [
-        moment()
-            .subtract(1, "year")
-            .startOf("year"),
-        moment()
-            .subtract(1, "year")
-            .endOf("year")
-    ]
-};
-
+import DatePicker from 'react-datepicker';
 class ListClosing extends Component{
     constructor(props){
         super(props);
         // this.toggle = this.toggle.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+        this.hanleEvent=this.handleEvent.bind(this);
         this.state={
             location_data:[],
             location:"",
-            startDate:localStorage.getItem("startDateClosing")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateClosing"),
-            endDate:localStorage.getItem("endDateClosing")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateClosing"),
+            startDate:new Date(),
+            // endDate:localStorage.getItem("endDateClosing")==='' || localStorage.getItem("endDateClosing")===null || localStorage.getItem("endDateClosing")=== undefined?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateClosing"),
             token:'',
             detail:{}
         }
@@ -56,58 +33,54 @@ class ListClosing extends Component{
     handlePageChange(pageNumber){
         this.setState({activePage: pageNumber});
         localStorage.setItem("page_closing_report",pageNumber);
-        this.props.dispatch(FetchClosing(pageNumber))
+        this.props.dispatch(FetchClosing(pageNumber, this.state.startDate,this.state.location))
     }
     
-    handleEvent = (event, picker) => {
-        console.log("start: ", picker.startDate);
-        console.log("end: ", picker.endDate._d.toISOString());
-        // end:  2020-07-02T16:59:59.999Z
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("startDateProduct",`${awal}`);
-        localStorage.setItem("endDateProduct",`${akhir}`);
+    handleEvent = date => {
         this.setState({
-            startDate:awal,
-            endDate:akhir
+            startDate: date
         });
+        console.log("date",date)
     };
     
     componentWillReceiveProps = (nextProps) => {
-        console.log("=================== nextProps closing",nextProps);
+        console.log("nextProps", nextProps)
         if (nextProps.auth.user) {
-          let lk = []
-          let loc = nextProps.auth.user.lokasi;
-          if(loc!==undefined){
-              lk.push({
-                  value: "-",
-                  label: "Semua Lokasi"
-              });
-              loc.map((i) => {
-                lk.push({
-                  value: i.kode,
-                  label: i.nama
-                });
-              })
-              
-              this.setState({
-                location_data: lk,
-                userid: nextProps.auth.user.id
-              })
-              console.log("get loc closing",loc);
-          }
+            let lk = []
+            let loc = nextProps.auth.user.lokasi;
+            if(loc!==undefined){
+                    lk.push({
+                        value: '-',
+                        label: 'Pilih Lokasi'
+                        });
+                loc.map((i) => {
+                    lk.push({
+                    value: i.kode,
+                    label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    // userid: nextProps.auth.user.id
+                })
+                // console.log("nextProps lok 1", this.state.location_data)
+                // console.log("nextProps bool 1", nextProps.auth.user)
+                // console.log("nextProps lk 1", lk)
+                // console.log("nextProps loc 1", loc)
+            }
+            // console.log("nextProps lok 2", this.state.location_data)
+            // console.log("nextProps bool 2", nextProps.auth.user)
+            // console.log("nextProps lk 2", lk)
+            // console.log("nextProps loc 2", loc)
         }
-      }
-      HandleChangeLokasi(lk) {
-        let err = Object.assign({}, this.state.error, {
-            location: ""
-        });
-        console.log(err);
+        // console.log("nextProps lok 3", this.state.location_data)
+        // console.log("nextProps bool 3", nextProps.auth.user)
+    }
+    HandleChangeLokasi(lk){
         this.setState({
-            location: lk.value,
-            error: err
+            location:lk.value
         })
-        localStorage.setItem('lk_closing_report', lk.value);
+        localStorage.setItem('lk', lk.value);
     }
 
     handleReclosing(e,id){
@@ -132,6 +105,12 @@ class ListClosing extends Component{
         
     }
 
+    HandleSubmit(e){
+        e.preventDefault()
+        this.props.dispatch(FetchClosing(1,this.state.startDate,this.state.location))
+        console.log("lok lagi", this.state.location_data)
+    }
+
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
@@ -144,6 +123,7 @@ class ListClosing extends Component{
         // let total_stock_out_per=0;
         console.log("############ TOTAL DATA ##############",this.props.data);
         console.log("############ LOKASI ##############",this.state.location_data);
+        console.log("############ LOKASI ##############",this.state.location);
         return (
 
             <div>
@@ -153,15 +133,11 @@ class ListClosing extends Component{
                                 <div className="col-4 text-left">
                                     <div className="form-group">
                                         {/* <label className="control-label font-12">Periode </label> */}
-                                        <DateRangePicker
-                                            className='float-right'
-                                            style={{marginTop:1}}
-                                            ranges={range}
-                                            alwaysShowCalendars={true}
-                                            onEvent={this.handleEvent}
-                                        >
-                                            <input type="text" className="form-control" name="date_closing" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
-                                        </DateRangePicker>
+                                        <DatePicker
+                                            className="form-control rounded-right"
+                                            selected={this.state.startDate}
+                                            onChange={this.handleEvent}
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-4 text-left">
@@ -172,7 +148,7 @@ class ListClosing extends Component{
                                         <Select 
                                             options={this.state.location_data} 
                                             placeholder = "Pilih Lokasi"
-                                            defaultValue={{ label: "Select Location", value: "-" }}
+                                            // defaultValue={{ label: "Select Location", value: "-" }}
                                             onChange={this.HandleChangeLokasi}
                                             value = {
                                                 this.state.location_data.find(op => {
@@ -187,7 +163,7 @@ class ListClosing extends Component{
                                 </div>
                                 <div className="col-4 text-left" style={{paddingRight:'unset'}}>
                                     <div className="form-group">
-                                        <button type="button" className="btn btn-primary">SHOW</button>
+                                        <button type="button" className="btn btn-primary" onClick={(e=>this.HandleSubmit(e))}>SHOW</button>
                                     </div>
                                 </div>
 
@@ -494,7 +470,7 @@ const mapStateToProps = (state) => {
     console.log("mapStateToProps",state);
     return {
         // detail:this.state.detail,
-        auth:state,
+        auth:state.auth,
         isLoading: state.closingReducer.isLoading,
         closingDetail:state.closingReducer.closing_data,
         // isLoadingDetailSatuan: state.stockReducer.isLoadingDetailSatuan,

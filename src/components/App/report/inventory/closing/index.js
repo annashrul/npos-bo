@@ -21,7 +21,7 @@ class Closing extends Component{
                 // this.setState({token:session.token});
                 let any = localStorage.getItem("any_closing_report");
                 let page = localStorage.getItem('page_closing_report');
-                this.props.dispatch(FetchClosing(page?page:1,any?any:''));
+                // this.props.dispatch(FetchClosing(page?page:1,any?any:''));
         //     })}
         // );
         // sessionService.loadUser()
@@ -38,6 +38,25 @@ class Closing extends Component{
             // console.log('Selected tab: ' + this.state.selectedIndex);
         });
     };
+componentWillReceiveProps = (nextProps) => {
+    console.log("nextProps index", nextProps)
+    // if (nextProps.auth.user) {
+    //     let lk = []
+    //     let loc = nextProps.auth.user.lokasi;
+    //     if(loc!==undefined){
+    //         loc.map((i) => {
+    //             lk.push({
+    //             value: i.kode,
+    //             label: i.nama
+    //             });
+    //         })
+    //         this.setState({
+    //             location_data: lk,
+    //             userid: nextProps.auth.user.id
+    //         })
+    //     }
+    // }
+}
     render(){
         return (
             <Layout page="Closing">
@@ -59,6 +78,7 @@ class Closing extends Component{
             );
     }
 }
+
 
 const mapStateToProps = (state) => {
     console.log("mapstate closing", state.closingReducer);
