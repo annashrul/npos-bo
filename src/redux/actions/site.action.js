@@ -34,7 +34,7 @@ export const FetchCheck = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = response.data
-
+                console.log(data);
                 dispatch(setCheck(data))
                 dispatch(setLoading(false));
 

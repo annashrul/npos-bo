@@ -8,6 +8,9 @@ import {stringifyFormData} from "helper";
 import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
 import {FetchProductCode} from "../../../../../redux/actions/masterdata/product/product.action";
 import NumberFormat from 'react-number-format';
+import {FetchCheck, setCheck, setLoading} from "../../../../../redux/actions/site.action";
+import axios from "axios";
+import {HEADERS} from "../../../../../redux/actions/_constants";
 
 class FormProduct extends Component{
     constructor(props){
@@ -17,22 +20,45 @@ class FormProduct extends Component{
             isCustomizeVisible: true,
             selectedOption: null,
             selectedIndex: 0,
+            error_barcode1:false,
+            error_barcode2:false,
+            error_barcode3:false,
+            pesan_barcode1:"",
+            pesan_barcode2:"",
+            pesan_barcode3:"",
+            error:{
+                kd_brg:"",
+                nm_brg:"",
+                kel_brg:"",
+                stock:"",
+                kategori:"",
+                stock_min:"",
+                group1:"",
+                group2:"",
+                deskripsi:"",
+                jenis:"",
+                kcp:"",
+                poin:"",
+                online:"",
+                berat:"",
+                barang_sku_err:[]
+            },
             kd_brg: '',
             nm_brg: '',
             kel_brg: '',
             stock: '0',
-            kategori: '0',
+            kategori: '',
             stock_min: '0',
             group1: '',
             group2: '',
             deskripsi: '-',
             gambar: '',
-            jenis: '1',
+            jenis: '',
             kcp: '',
             poin: '0',
             online: '0',
             berat: '0',
-            barangSku: [{"barcode": "0", "qty": "0", "konversi": "0", "satuan_jual": "0"}],
+            barangSku: [{"barcode": "", "qty": "", "konversi": "", "satuan_jual": ""}],
             barangHargaEdit: [[
                 {
                     "nama_toko":"","lokasi":"",
@@ -123,19 +149,28 @@ class FormProduct extends Component{
             purchasePrice: {},
             generateCode:false,
             codeServer:0,
-            error:''
+
         };
         this.handleChange = this.handleChange.bind(this);
         this.onHandleChangeChild = this.onHandleChangeChild.bind(this);
         this.onHandleChangeChildPack = this.onHandleChangeChildPack.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.generateCode = this.generateCode.bind(this);
+        this.checkData = this.checkData.bind(this);
     }
     generateCode(e){
         this.setState({generateCode: e.target.checked,});
         if(e.target.checked === true){
             console.log(this.state.codeServer);
             this.state.kd_brg = this.state.codeServer;
+            this.props.dispatch(FetchCheck({
+                table: 'barang',
+                kolom: 'kd_brg',
+                value: this.state.codeServer
+            }));
+            let err = this.state.error;
+            err = Object.assign({}, err, {kd_brg:""});
+            this.setState({error: err});
         }else{
             this.state.kd_brg = "";
         }
@@ -151,82 +186,14 @@ class FormProduct extends Component{
 
         })
     };
-    componentWillMount(){
-        console.log("PROPS",this.props.dataEdit);
-        // if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
-        //     this.setState((state, props) => {
-        //         let barang_sku = typeof props.dataEdit.barang_sku === 'object' ? props.dataEdit.barang_sku : state.barangSku;
-        //         let barang_hrg = typeof props.dataEdit.barang_hrg === 'object' ? props.dataEdit.barang_hrg : state.barangHarga;
-        //         let barangSku=[];let barangHrg=[];
-        //         for(let i=0;i<barang_sku.length;i++){
-        //             barangSku.push({
-        //                 "barcode":barang_sku[i].barcode,
-        //                 "qty":barang_sku[i].satuan,
-        //                 "konversi":barang_sku[i].qty_konversi,
-        //                 "satuan_jual":barang_sku[i].satuan_jual
-        //             })
-        //         }
-        //         for(let x=0; x<barang_hrg.length;x++){
-        //             console.log("LOOPING HARGA BARANG",barang_hrg[x][1]);
-        //             barangHrg.push(
-        //                 [
-        //                     {
-        //                         "nama_toko":barang_hrg[x][0],"lokasi":barang_hrg[x][0],
-        //                         "isCheckedPCS":false,
-        //                         "hrgBeliPCS": "0",
-        //                         "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
-        //                         "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
-        //                         "ppnPCS": "0",
-        //                         "servicePCS": "0"
-        //                     },
-        //                     {
-        //                         "nama_toko":barang_hrg[x][1],"lokasi":barang_hrg[x][1],
-        //                         "isCheckedPACK":false,
-        //                         "hrgBeliPACK": "0",
-        //                         "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
-        //                         "hrgJual1PACK":"0","hrgJual2PACK":"0","hrgJual3PACK":"0","hrgJual4PACK":"0",
-        //                         "ppnPACK": "0",
-        //                         "servicePACK": "0"
-        //                     },
-        //                     {
-        //                         "nama_toko":barang_hrg[x][2],"lokasi":barang_hrg[x][2],
-        //                         "isCheckedKARTON":false,
-        //                         "hrgBeliKARTON": "0",
-        //                         "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
-        //                         "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
-        //                         "ppnKARTON": "0",
-        //                         "serviceKARTON": "0"
-        //                     }
-        //                 ]
-        //             )
-        //         }
-        //         return {
-        //             kd_brg: props.dataEdit.kd_brg,
-        //             nm_brg: props.dataEdit.nm_brg,
-        //             kel_brg: props.dataEdit.kel_brg,
-        //             jenis:props.dataEdit.kategori,
-        //             stock_min:props.dataEdit.stock_min,
-        //             group1:props.dataEdit.group1,
-        //             group2:props.dataEdit.group2,
-        //             deskripsi:props.dataEdit.deskripsi,
-        //             gambar:"",
-        //             kategori:props.dataEdit.jenis,
-        //             kcp:props.dataEdit.kcp,
-        //             poin:props.dataEdit.poin,
-        //             online:props.dataEdit.online,
-        //             berat:props.dataEdit.berat,
-        //             barangSku:barangSku,
-        //             barangHargaEdit:barangHrg
-        //         }
-        //     })
-        // }
-    }
+
     componentWillReceiveProps(nextProps){
         console.log("componentWillReceiveProps",nextProps);
         // localStorage.setItem("isReadonlySama","false");
         // localStorage.setItem("isReadonlySamaPack","false");
         // localStorage.setItem("isReadonlySamaKarton","false");
         this.state.codeServer = nextProps.productCode;
+
         if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
             console.log("########################## EDIT ############################");
             let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
@@ -378,6 +345,130 @@ class FormProduct extends Component{
         // this.setState({barangHrg:brgHrg});
     }
     // onHandleChangeChild
+    async fetchData(data){
+        const url = HEADERS.URL + `site/cekdata`;
+        return await axios.post(url, data)
+            .then(function (response) {
+                const data = response.data;
+                console.log(data);
+               return data;
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+
+    checkData(event,i){
+        event.preventDefault();
+        let name = event.target.name;
+        let val = event.target.value;
+        // this.setState({ [event.target.name]: event.target.value});
+
+        if(event.target.id==='barcode1'){
+            const data = this.fetchData({
+                table: 'barang_sku',
+                kolom: 'barcode',
+                value: val
+            });
+            data.then(res=>{
+                console.log("IEU RES",res);
+                if(res.result===1){
+                    this.setState({
+                        error_barcode1:true,
+                        pesan_barcode1:"barcode sudah digunakan"
+                    })
+                }else{
+                    this.setState({
+                        error_barcode1:false,
+                        pesan_barcode1:""
+                    })
+                    // if(this.state.barangSku[0].barcode===this.state.barangSku[1].barcode){
+                    //     this.setState({
+                    //         error_barcode1:true,
+                    //         pesan_barcode1:"barcode 1 dan 2 tidak boleh sama"
+                    //     })
+                    // }
+                    // if(this.state.barangSku[0].barcode===this.state.barangSku[2].barcode){
+                    //     this.setState({
+                    //         error_barcode1:true,
+                    //         pesan_barcode1:"barcode 1 dan 3 tidak boleh sama"
+                    //     })
+                    // }
+                }
+            });
+
+            // console.log("")
+
+        }
+        if(event.target.id==='barcode2'){
+            const data = this.fetchData({
+                table: 'barang_sku',
+                kolom: 'barcode',
+                value: val
+            });
+            data.then(res=>{
+                console.log("IEU RES",res);
+                if(res.result===1){
+                    this.setState({
+                        error_barcode2:true,
+                        pesan_barcode2:"barcode sudah digunakan"
+                    })
+                }else{
+                    this.setState({
+                        error_barcode2:false,
+                        pesan_barcode2:""
+                    })
+                }
+            });
+            // if(this.state.barangSku[1].barcode===this.state.barangSku[0].barcode){
+            //     this.setState({
+            //         error_barcode2:true,
+            //         pesan_barcode2:"barcode 2 dan 1 tidak boleh sama"
+            //     })
+            //
+            // }
+            // if(this.state.barangSku[1].barcode===this.state.barangSku[2].barcode){
+            //     this.setState({
+            //         error_barcode2:true,
+            //         pesan_barcode2:"barcode 2 dan 3 tidak boleh sama"
+            //     })
+            // }
+        }
+        if(event.target.id==='barcode3'){
+            const data = this.fetchData({
+                table: 'barang_sku',
+                kolom: 'barcode',
+                value: val
+            });
+            data.then(res=>{
+                console.log("IEU RES",res);
+                if(res.result===1){
+                    this.setState({
+                        error_barcode3:true,
+                        pesan_barcode3:"barcode sudah digunakan"
+                    })
+                }else{
+                    this.setState({error_barcode3:false,pesan_barcode3:""})
+                }
+            });
+            // if(this.state.barangSku[2].barcode===this.state.barangSku[0].barcode){
+            //     this.setState({
+            //         error_barcode3:true,
+            //         pesan_barcode3:"barcode 3 dan 1 tidak boleh sama"
+            //     })
+            // }
+            // if(this.state.barangSku[2].barcode===this.state.barangSku[1].barcode){
+            //     this.setState({
+            //         error_barcode3:true,
+            //         pesan_barcode3:"barcode 3 dan 2 tidak boleh sama"
+            //     })
+            // }
+
+        }
+
+    }
     handleChange(event,i){
         let name = event.target.name;
         let val = event.target.value;
@@ -389,24 +480,64 @@ class FormProduct extends Component{
         //     kd_brg: event.target.value,
         //     error: event.target.validationMessage
         // });
-        this.setState({ [event.target.name]: event.target.value,error: event.target.validationMessage });
-        console.log("VALUE HRG JUAL 1 PCS",localStorage.getItem("hrgjual1PCS"));
+        this.setState({ [event.target.name]: event.target.value});
+        let err = Object.assign({}, this.state.error, {
+            [name]: ""
+        });
+        this.setState({
+            error: err
+        });
+        if(name==='kd_brg'){
+            this.props.dispatch(FetchCheck({
+                table: 'barang',
+                kolom: 'kd_brg',
+                value: val
+            }));
+        }
         if(i!==null){
+            console.log("ID",event.target.id);
             let barangSku = [...this.state.barangSku];
             barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
             this.setState({ barangSku });
+            if(event.target.id==='barcode1'){
+                if(barangSku[0].barcode===barangSku[1].barcode){
+                    this.setState({
+                        error_barcode1:true,
+                        pesan_barcode1:"barcode 1 dan 2 tidak boleh sama"
+                    })
+                }else{
+                    this.setState({
+                        error_barcode1:false,
+                        pesan_barcode1:""
+                    })
+                }
+            }
+            if(event.target.id==='barcode2'){
+                if(barangSku[1].barcode===barangSku[0].barcode){
+                    this.setState({
+                        error_barcode2:true,
+                        pesan_barcode2:"barcode 2 dan 1 tidak boleh sama"
+                    })
+                }else{
+                    this.setState({
+                        error_barcode2:false,
+                        pesan_barcode2:""
+                    })
+                }
+            }
         }
+
         if(event.target.name === 'jenis'){
             if(event.target.value === '0'){
-                localStorage.setItem("colBrgSku","3");
                 let brgSku = [];
                 for(let i=0;i<3;i++){
                     brgSku.push({"barcode":"0","qty":"0","konversi":"0","satuan_jual":"0"})
                 }
                 this.setState({barangSku: brgSku});
                 // this.state.barangSku.push({[event.target.name]:event.target.value});
-            }else{
-                localStorage.setItem("colBrgSku","1");
+            }
+            else{
+                // localStorage.setItem("colBrgSku","1");
                 let brgSku = [];
                 for(let i=0;i<1;i++){
                     brgSku.push({"barcode":"0","qty":"0","konversi":"0","satuan_jual":"0"})
@@ -524,15 +655,88 @@ class FormProduct extends Component{
             }
         }
         //input margin = hrg_beli + hrg_beli*(10/100)
-
     }
-
     handleSelect = (index) => {
+        let err = this.state.error;
+        // if(this.state.kd_brg===''||this.state.kd_brg===undefined){
+        //     err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.nm_brg===''||this.state.nm_brg===undefined){
+        //     err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.kel_brg===''||this.state.kel_brg===undefined){
+        //     err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.stock_min===''||this.state.stock_min===undefined){
+        //     err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.group1===''||this.state.group1===undefined){
+        //     err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.group2===''||this.state.group2===undefined){
+        //     err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.deskripsi===''||this.state.deskripsi===undefined){
+        //     err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.jenis===''||this.state.jenis===undefined){
+        //     err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.kcp===''||this.state.kcp===undefined){
+        //     err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.poin===''||this.state.poin===undefined){
+        //     err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.online===''||this.state.online===undefined){
+        //     err = Object.assign({}, err, {online:"online tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.berat===''||this.state.berat===undefined){
+        //     err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        for(let i=0;i<this.state.barangSku.length;i++){
+            console.log("ISI BARCODE",this.state.barangSku[i].barcode);
+            if(this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
+                alert(`form barcode index ke ${i+1} tidak boleh kosong`);
+                return;
+            }
+            if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
+                alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
+                return;
+            }
+
+        }
+        if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
+            return;
+        }
+
+
 
         this.setState({selectedIndex: index}, () => {});
-
-
-        console.log(localStorage.getItem("form_product"))
 
     };
 
@@ -999,7 +1203,8 @@ class FormProduct extends Component{
                     "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
                     "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
                 });
-            }else{
+            }
+            else{
                 barangHrg.push({
                     "lokasi":this.state.barangHarga[i][0].lokasi,
                     "harga":this.state.barangHarga[i][0].hrgJual1PCS,
@@ -1067,12 +1272,10 @@ class FormProduct extends Component{
 
 
     render(){
-        const { isCustomizeVisible } = this.state;
-        const dynamicVar = 'test';
+
         const {data} = this.props.data;
         const dataSupplier = this.props.dataSupplier.data;
         const dataSubDep = this.props.dataSubDept.data;
-        console.log("BARANG SKU STATE",this.state.barangSku);
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
@@ -1082,12 +1285,11 @@ class FormProduct extends Component{
 
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
-                        <Tabs>
-
+                        <Tabs onSelect={this.handleSelect} selectedIndex={this.state.selectedIndex}>
                             <TabList>
-                                <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Form 1</Tab>
-                                <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Form 2</Tab>
-                                <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Form 3</Tab>
+                                <Tab label="Core Courses">Form 1</Tab>
+                                <Tab label="Core Courses">Form 2</Tab>
+                                <Tab label="Core Courses">Form 3</Tab>
                             </TabList>
                             <hr/>
                             <TabPanel>
@@ -1097,100 +1299,150 @@ class FormProduct extends Component{
                                         <div className="form-group">
                                             <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.generateCode} onChange={this.generateCode}/> Kode Barang</label>
                                             <input type="text" className="form-control" name="kd_brg" value={this.state.kd_brg} onChange={(e)=>this.handleChange(e,null)} required/>
-                                            <div className="invalid-feedback d-block">{this.state.error}</div>
+                                            <div className="invalid-feedback" style={this.state.error.kd_brg || this.props.checkKodeBarang===true !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {
+                                                    this.state.kd_brg===''||this.state.kd_brg===undefined?this.state.error.kd_brg:(this.props.checkKodeBarang===true?"kode barang sudah digunakan":"")
+                                                }
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Name</label>
                                             <input type="text" className="form-control" name="nm_brg" value={this.state.nm_brg} onChange={(e)=>this.handleChange(e,null)} required/>
-                                            <div className="invalid-feedback d-block">{this.state.error}</div>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.nm_brg !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.nm_brg}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Group</label>
                                             <select className="form-control form-control-lg" name="kel_brg" value={this.state.kel_brg} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="0">Pilih</option>
+                                                <option value="">Pilih</option>
                                                 {
                                                     typeof data === 'object' ? data.map((v,i)=>{return (<option key={i} value={v.kel_brg} >{v.nm_kel_brg}</option>)}) : (<option value="" >no data</option>)
                                                 }
                                             </select>
-                                            <div className="invalid-feedback d-block">{this.state.error}</div>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.kel_brg !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.kel_brg}
+                                            </div>
                                         </div>
-                                        <div className="form-group">
-                                            <label>Stock</label>
-                                            <input type="text" className="form-control" name="stock" value={this.state.stock} onChange={(e)=>this.handleChange(e,null)} required/>
-                                            <div className="invalid-feedback d-block">{this.state.error}</div>
-                                        </div>
+
                                         <div className="form-group">
                                             <label>Product Category</label>
                                             <select name="kategori" className="form-control form-control-lg" value={this.state.kategori} onChange={(e)=>this.handleChange(e,null)}>
                                                 <option value="1">selling items</option>
                                                 <option value="0">Not selling items</option>
                                             </select>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.kategori !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.kategori}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="col-md-4">
                                         <div className="form-group">
                                             <label>Stock Min</label>
                                             <input type="number" className="form-control" name="stock_min" value={this.state.stock_min} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.stock_min !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.stock_min}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Supplier</label>
                                             <select name="group1" className="form-control form-control-lg" value={this.state.group1} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="0">Pilih</option>
+                                                <option value="">Pilih</option>
                                                 {
                                                     typeof dataSupplier === 'object' ? dataSupplier.map((v,i)=>{return (<option key={i} value={v.kode} >{v.nama}</option>)}) : (<option value="" >no data</option>)
                                                 }
                                             </select>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.group1 !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.group1}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Sub Dept</label>
                                             <select name="group2" className="form-control form-control-lg" value={this.state.group2} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="0">Pilih</option>
+                                                <option value="">Pilih</option>
                                                 {
                                                     typeof dataSubDep === 'object' ? dataSubDep.map((v,i)=>{return (<option key={i} value={v.kode} >{v.nama}</option>)}) : (<option value="" >no data</option>)
                                                 }
                                             </select>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.group2 !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.group2}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Description</label>
                                             <input type="text" className="form-control" name="deskripsi" value={this.state.deskripsi} onChange={(e)=>this.handleChange(e,null)}  required/>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.deskripsi !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.deskripsi}
+                                            </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Image</label>
+                                            <label>Gambar</label>
                                             <input type="file" className="form-control" name="gambar" value={this.state.gambar} onChange={(e)=>this.handleChange(e,null)}  required/>
                                         </div>
                                     </div>
                                     <div className="col-md-4">
                                         <div className="form-group">
-                                            <label>Product Type</label>
+                                            <label>Jenis Barang</label>
                                             <select name="jenis" id="jenis" className="form-control form-control-lg" value={this.state.jenis} onChange={(e)=>this.handleChange(e,null)}>
+                                                <option value="">Pilih Jenis</option>
                                                 <option value="1">Satuan</option>
                                                 <option value="2">Paket</option>
                                                 <option value="3">Servis</option>
                                                 <option value="0">Karton</option>
                                             </select>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.jenis !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.jenis}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>KCP</label>
                                             <select name="kcp" id="kcp" className="form-control form-control-lg" value={this.state.kcp} onChange={(e)=>this.handleChange(e,null)}>
+                                                <option value="">Pilih Kcp</option>
+                                                <option value="-">-</option>
                                                 <option value="0">Kitchen 1</option>
                                                 <option value="1">Kitchen 2</option>
                                                 <option value="2">Kitchen 3</option>
                                             </select>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.kcp !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.kcp}
+                                            </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Point</label>
+                                            <label>Poin</label>
                                             <input type="text" className="form-control" name="poin" value={this.state.poin} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.poin !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.poin}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Product Status</label>
                                             <select name="online" className="form-control form-control-lg" value={this.state.online} onChange={(e)=>this.handleChange(e,null)}>
+                                                <option value="">Pilih Status</option>
                                                 <option value="0">Offline</option>
                                                 <option value="1">Online</option>
                                             </select>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.online !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.online}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label>Weight</label>
                                             <input type="text" className="form-control" name="berat" value={this.state.berat} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <div className="invalid-feedback"
+                                                 style={this.state.error.berat !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.berat}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1202,32 +1454,54 @@ class FormProduct extends Component{
                                             <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Barcode</th>
+                                                <th>{!this.props.isLoadingCheck?'Barcoe':'cek data.......'}</th>
                                                 <th>Satuan</th>
                                                 <th>Konversi Qty</th>
-                                                <th>Satuan Jual</th>
+                                                <th>Tampilkan di POS ?</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             {(()=>{
                                                 let container =[];
                                                 for(let x=0; x<this.state.barangSku.length; x++){
+                                                    let satuan=(x===0)?"Pcs":(x===1?"Pack":"Karton");
                                                     container.push(
                                                         <tr key={x}>
                                                             <td>
                                                                 {x+1}
                                                             </td>
                                                             <td>
-                                                                <input type="text" className="form-control" name="barcode" value={this.state.barangSku[x].barcode} onChange={(e)=>this.handleChange(e,x)} required/>
+                                                                <input type="text" className="form-control" name="barcode" id={`${x===0?'barcode1':(x===1?'barcode2':'barcode3')}`} value={this.state.barangSku[x].barcode} onChange={(e)=>this.handleChange(e,x)} onBlur={(e)=>this.checkData(e,x)} required/>
+                                                                {
+                                                                    x===0?this.state.error_barcode1===true?(
+                                                                        <small style={{color:"red",fontWeight:"bold"}}>{this.state.pesan_barcode1}</small>
+                                                                    ):"":""
+                                                                }
+                                                                {
+                                                                    x===1?this.state.error_barcode2===true?(
+                                                                        <small style={{color:"red",fontWeight:"bold"}}>{this.state.pesan_barcode2}</small>
+                                                                    ):"":""
+                                                                }
+                                                                {
+                                                                    x===2?this.state.error_barcode3===true?(
+                                                                        <small style={{color:"red",fontWeight:"bold"}}>{this.state.pesan_barcode3}</small>
+                                                                    ):"":""
+                                                                }
+
+                                                                {/*<small>{this.props.checkBarcode1 === true ? "barcode 1 sudah digunakan" : (this.props.checkBarcode2 === true ? "barcode 2 sudah digunakan" : this.props.checkBarcode3 === true ? "barcode 3 sudah digunakan" : "")}</small>*/}
                                                             </td>
                                                             <td>
-                                                                <input type="text" className="form-control" name="qty" value={this.state.barangSku[x].qty} onChange={(e)=>this.handleChange(e,x)} required/>
+                                                                <input readOnly={true} type="text" className="form-control" name="qty" value={satuan} onChange={(e)=>this.handleChange(e,x)} required/>
                                                             </td>
                                                             <td>
-                                                                <input type="text" className="form-control" name="konversi" value={this.state.barangSku[x].konversi} onChange={(e)=>this.handleChange(e,x)} required/>
+                                                                <input readOnly={x===0?true:false} type="text" className="form-control" name="konversi" value={this.state.barangSku[x].konversi} onChange={(e)=>this.handleChange(e,x)} required/>
                                                             </td>
                                                             <td>
-                                                                <input type="text" className="form-control" name="satuan_jual" value={this.state.barangSku[x].satuan_jual} onChange={(e)=>this.handleChange(e,x)} required/>
+                                                                <select name="satuan_jual" id="satuan_jual" className="form-control" value={this.state.barangSku[x].satuan_jual} defaultValue={this.state.barangSku[x].satuan_jual} onChange={(e)=>this.handleChange(e,x)}>
+                                                                    <option value="">Pilih Opsi</option>
+                                                                    <option value="0">Tampilkan</option>
+                                                                    <option value="1">Sembunyikan</option>
+                                                                </select>
                                                             </td>
                                                         </tr>
                                                     )
@@ -1579,7 +1853,10 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
-        location:state.locationReducer.data
+        location:state.locationReducer.data,
+        checkKodeBarang: state.siteReducer.check,
+        checkBarcode1: state.siteReducer.check,
+        isLoadingCheck: state.siteReducer.isLoading,
         // group:state.groupProductReducer.data
     }
 }

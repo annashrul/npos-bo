@@ -124,7 +124,7 @@ class SideMenu extends Component {
                     }>
                         <a href="#" onClick={(e) => this.changeMenu('setting')}><i className="zmdi zmdi-apps" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
-                            <li className={path==='/company'?"active":''}><Link to="/company"> <i className="zmdi zmdi-apps" />Perusahaan</Link></li>
+                            <li className={path==='/company'?"active":''}><Link to="/company"> <i className="zmdi zmdi-apps" />Company</Link></li>
                             <li className={path==='/user'?"active":''} ><Link to="/user"> <i className="zmdi zmdi-apps" />User</Link></li>
                             <li className={path==='/location'?"active":''} ><Link to="/location"> <i className="zmdi zmdi-apps" />Lokasi</Link></li>
                         </ul>

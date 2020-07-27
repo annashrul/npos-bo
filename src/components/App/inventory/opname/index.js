@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
-import {FetchCodeAdjustment, storeAdjusment} from "../../../../redux/actions/adjustment/adjustment.action";
 import {storeOpname} from "../../../../redux/actions/inventory/opname.action";
 const Toast = Swal.mixin({
     toast: true,
@@ -61,7 +60,6 @@ class TrxOpname extends Component{
         }
         if (localStorage.lk!==undefined&&localStorage.lk!=='') {
             this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty));
-            this.props.dispatch(FetchCodeAdjustment(localStorage.lk));
         }
     }
     componentWillReceiveProps = (nextProps) => {
@@ -101,7 +99,6 @@ class TrxOpname extends Component{
             error: err
         })
         localStorage.setItem('lk', lk.value);
-        this.props.dispatch(FetchCodeAdjustment(lk.value));
         this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
         destroy(table);
         this.getData()
@@ -129,10 +126,7 @@ class TrxOpname extends Component{
                 'error'
             )
         }else{
-            // alert("bus "+this.state.searchby);
 
-            // let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
-            //
             if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
                 this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
             }
@@ -633,8 +627,7 @@ class TrxOpname extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
-    loadingbrg: state.productReducer.isLoadingBrg,
-    nota:state.adjustmentReducer.get_code
+    loadingbrg: state.productReducer.isLoadingBrg
 });
 
 export default connect(mapStateToPropsCreateItem)(TrxOpname);

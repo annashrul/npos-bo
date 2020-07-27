@@ -40,8 +40,8 @@ class ListPosting extends Component{
             dataPosting:[],
             location_data:[],
             location:"",
-            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
-            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
+            startDate:localStorage.getItem("startDateProduct")===null?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
+            endDate:localStorage.getItem("endDateProduct")===null?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
 
         }
         this.handleOne=this.handleOne.bind(this);
@@ -85,13 +85,8 @@ class ListPosting extends Component{
     }
     componentWillUnmount(){
         localStorage.removeItem("lk");
-        console.log("REMOVE STORAGE")
     }
     componentWillMount(){
-        console.log("componentWillMount",this.props.data.data);
-        console.log("STORAGE LOCATION",localStorage.lk);
-        console.log("STORAGE START DATE",localStorage.startDateProduct);
-        console.log("STORAGE END DATE",localStorage.endDateProduct);
         let where='';
         if(localStorage.lk!==undefined){
             if(where!==''){where+='&'}
