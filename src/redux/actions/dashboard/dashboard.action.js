@@ -76,3 +76,23 @@ export const FetchNewest = () => {
 
     }
 }
+
+export const FetchStock = () => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = '';
+        url = `site/get_out_stock`;
+        console.log("url stock db",`${url}`);
+        
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                console.log("res stock db",response)
+                const data = response.data;
+                console.log(data);
+                dispatch(setDashboard(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
