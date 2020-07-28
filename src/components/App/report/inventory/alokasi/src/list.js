@@ -37,16 +37,18 @@ class ListAlokasiReport extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.state={
             location:"",
             location_data:[],
+            activePage:1,
             status: [
                 {id: 1, value: "0",label:'Packing'},
                 {id: 2, value: "1", label:'Packed'},
                 {id: 3, value: "2", label:'Received'},
             ],
-            startDate:localStorage.getItem("startDateAlokasiReport")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateAlokasiReport"),
-            endDate:localStorage.getItem("endDateAlokasiReport")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateAlokasiReport"),
+            startDate:localStorage.getItem("startDateAlokasiReport")===null?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateAlokasiReport"),
+            endDate:localStorage.getItem("endDateAlokasiReport")===null?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateAlokasiReport"),
             token:'',
             detail:{}
         }
@@ -54,6 +56,21 @@ class ListAlokasiReport extends Component{
     componentWillMount(){
         console.log("TOKEN LIST",this.props.token);
        this.setState({token:this.props.token});
+    }
+    HandleCommonInputChange(e,errs=true,st=0){
+        const column = e.target.name;
+        const val = e.target.value;
+        this.setState({
+            [column]: val
+        });
+        if(errs){
+            let err = Object.assign({}, this.state.error, {
+                [column]: ""
+            });
+            this.setState({
+                error: err
+            });
+        }
     }
     handlePageChange(pageNumber){
         this.setState({activePage: pageNumber});
@@ -91,11 +108,19 @@ class ListAlokasiReport extends Component{
         // console.log(picker.startDate._d.toISOString());
         // console.log(picker.endDate._d.toISOString());
     };
+    handleSubmit(e){
+        e.preventDefault();
+        this.props.dispatch(FetchAlokasi(this.state.activePage,this.state.search,this.state.startDate,this.state.endDate,this.state.location))
+    }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
           let lk = []
           let loc = nextProps.auth.user.lokasi;
           if(loc!==undefined){
+                lk.push({
+                    value: '-',
+                    label: 'Pilih Lokasi'
+                });
               loc.map((i) => {
                 lk.push({
                   value: i.kode,
@@ -104,21 +129,16 @@ class ListAlokasiReport extends Component{
               })
               this.setState({
                 location_data: lk,
-                userid: nextProps.auth.user.id
               })
           }
+          console.log("log lok",nextProps.auth.user.lokasi);
         }
       }
       HandleChangeLokasi(lk) {
-        let err = Object.assign({}, this.state.error, {
-            location: ""
-        });
-        console.log(err);
         this.setState({
-            location: lk.value,
-            error: err
+            location: lk.value
         })
-        localStorage.setItem('lk_alokasi_report', lk.value);
+        // localStorage.setItem('lk_alokasi_report', lk.value);
     }
 
     render(){
@@ -133,6 +153,13 @@ class ListAlokasiReport extends Component{
         // let total_stock_out_per=0;
         // console.log("############ TOTAL DATA ##############",this.props.total);
         console.log("############ LOKASI ##############",this.state.location_data);
+        const customStylesSelect = {
+            control: base => ({
+              ...base,
+              height: 35,
+              minHeight: 35
+            })
+          };
         return (
 
             <div>
@@ -141,11 +168,12 @@ class ListAlokasiReport extends Component{
                         <div className="form-group">
                             <label htmlFor=""> Periode </label>
                             <DateRangePicker
+                                style={{display:'unset'}}
                                 ranges={range}
                                 alwaysShowCalendars={true}
                                 onEvent={this.handleEvent}
                             >
-                                <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
                                 {/*<input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>*/}
                             </DateRangePicker>
                         </div>
@@ -153,35 +181,25 @@ class ListAlokasiReport extends Component{
 
                     <div className="col-6 col-xs-6 col-md-2">
                         <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect1">Destination</label>
-                            <div className="input-group">
-                                <select className="form-control form-control-lg" id="sort_name" name="sort_name">
-                                    {
-                                        this.state.location_data.map((v,i)=>{
-                                            return (<option key={i} value={v.value} selected={localStorage.getItem('location')===v.value?true:false}>{v.label}</option>)
+                            <label htmlFor="">Destination</label>
+                                <Select
+                                    options={this.state.location_data}
+                                    onChange={this.HandleChangeLokasi}
+                                    placeholder="Pilih Lokasi"
+                                    value = {
+                                        this.state.location_data.find(op => {
+                                        return op.value === this.state.location
                                         })
                                     }
-                                </select>
-                                {/* <Select 
-                                                    options={this.state.location_data} 
-                                                    placeholder = "Pilih Lokasi"
-                                                    defaultValue={{ label: "Select Location", value: "-" }}
-                                                    onChange={this.HandleChangeLokasi}
-                                                    value = {
-                                                        this.state.location_data.find(op => {
-                                                        return op.value === this.state.location
-                                                        })
-                                                    }
-                                                    /> */}
-                            </div>
+                                    />
                         </div>
                     </div>
 
-                    <div className="col-6 col-xs-6 col-md-2">
+                    {/* <div className="col-6 col-xs-6 col-md-2">
                         <div className="form-group">
                             <label htmlFor="exampleFormControlSelect1">Status</label>
                             <div className="input-group">
-                                <select className="form-control form-control-lg" id="status_alokasi_report" name="status_alokasi_report">
+                                <select className="form-control form-control-lg" id="status_alokasi_report" name="status_alokasi_report" style={{padding: '11px',width: '185px',fontWeight:'bolder'}}>
                                     {
                                         this.state.status.map((v,i)=>{
                                             return (<option key={i} value={v.value} selected={localStorage.getItem('status_alokasi_report')===v.value?true:false}>{v.label}</option>)
@@ -190,18 +208,18 @@ class ListAlokasiReport extends Component{
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="col-6 col-xs-6 col-md-2">
                     <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <div className="form-group">
-                            <input className={"form-control"} type={"text"}></input>
+                            <input className={"form-control"} type={"text"} style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="search" value={this.state.search} onChange={(e) => this.HandleCommonInputChange(e, false)}></input>
                             {/* <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button> */}
                         </div>
                     </div>
                     <div className="col-6 col-xs-6 col-md-4">
                         <div className="form-group">
-                            <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
-                            <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-excel"> Export Excel</i></button>
+                            <button onClick={(e=>this.handleSubmit(e))} style={{marginTop:"29px",marginRight:"2px", padding:"8px"}} type="submit" className="btn btn-primary" ><i className="fa fa-search"></i></button>
+                            <button style={{marginTop:"29px",marginRight:"2px", padding:"8px"}} type="submit" className="btn btn-primary" ><i className="fa fa-excel"> Export Excel</i></button>
                             {/* <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
                             <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={this.exportPDF} className="btn btn-primary"><i className="fa fa-file-pdf-o"></i></button>
                             <ReactHTMLTableToExcel
@@ -295,7 +313,7 @@ class ListAlokasiReport extends Component{
 const mapStateToProps = (state) => {
     console.log("mapStateToProps",state);
     return {
-        // detail:this.state.detail,
+        auth:state.auth,
         isLoading: state.alokasiReducer.isLoading,
         alokasiDetail:state.alokasiReducer.alokasi_data,
         isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,

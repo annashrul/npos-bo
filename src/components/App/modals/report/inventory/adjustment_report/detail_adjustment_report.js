@@ -22,47 +22,24 @@ class DetailAdjustmentReport extends Component{
 
     render(){
         const {data} = this.props.detail;
-        let totAdjustmentIn=0;
-        let totAdjustmentOut=0;
-        let totQty=0;
+        // let totAdjustmentIn=0;
+        // let totAdjustmentOut=0;
+        // let totQty=0;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAdjustment"} size="lg">
                 <ModalHeader toggle={this.toggle}>Detail Adjustment Report </ModalHeader>
                 <ModalBody>
-                    <table className="table">
-                        <tbody>
-                        <tr>
-                            <td className="text-black">Location</td>
-                            <td className="text-black">: {localStorage.getItem("locationDetailTrx")}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Code</td>
-                            <td className="text-black">: {localStorage.getItem("codeDetailTrx")}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Barcode</td>
-                            <td className="text-black">: {localStorage.getItem("barcodeDetailTrx")}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Product name</td>
-                            <td className="text-black">: {localStorage.getItem("nameDetailTrx")}</td>
-                        </tr>
-                        </tbody>
-                    </table>
                     <div className="table-responsive" style={{overflowX: "auto"}}>
                         <table className="table table-hover table-bordered">
                             <thead className="bg-light">
                             <tr>
-                                <th className="text-black" style={columnStyle} rowSpan="2">TRX NO</th>
-                                <th className="text-black" style={columnStyle} rowSpan="2">DATE</th>
-                                <th className="text-black" style={columnStyle} colSpan="2">STOCK</th>
-                                <th className="text-black" style={columnStyle} rowSpan="2">QTY</th>
-                                <th className="text-black" style={columnStyle} rowSpan="2">NOTE</th>
-                            </tr>
-                            <tr>
-                                <td className="text-black" style={columnStyle}>IN</td>
-                                <td className="text-black" style={columnStyle}>OUT</td>
+                                <th className="text-black" style={columnStyle}>Code</th>
+                                <th className="text-black" style={columnStyle}>Barcode</th>
+                                <th className="text-black" style={columnStyle}>Status</th>
+                                <th className="text-black" style={columnStyle}>QTY Adjust</th>
+                                <th className="text-black" style={columnStyle}>Saldo Stock</th>
+                                <th className="text-black" style={columnStyle}>Last Stock</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -70,30 +47,27 @@ class DetailAdjustmentReport extends Component{
                                 (
                                     typeof data === 'object' ? data.length > 0 ?
                                         data.map((v,i)=>{
-                                            totAdjustmentIn=totAdjustmentIn+parseInt(v.adjustment_in);
-                                            totAdjustmentOut=totAdjustmentOut+parseInt(v.adjustment_out);
-                                            totQty=totQty+parseInt(v.qty);
 
                                             return (
                                                 <tr key={i}>
                                                     <td style={columnStyle}>{v.kd_trx}</td>
-                                                    <td style={columnStyle}>{ moment(v.tgl).format('yyyy-MM-DD')}</td>
-                                                    <td style={{textAlign:"right"}}>{v.adjustment_in}</td>
-                                                    <td style={{textAlign:"right"}}>{v.adjustment_out}</td>
-                                                    <td style={{textAlign:"right"}}>{v.qty}</td>
-                                                    <td style={columnStyle}>{v.keterangan}</td>
+                                                    <td style={{textAlign:"right"}}>{v.brcd_brg}</td>
+                                                    <td style={{textAlign:"right"}}>{v.status}</td>
+                                                    <td style={{textAlign:"right"}}>{v.qty_adjust}</td>
+                                                    <td style={columnStyle}>{v.saldo_stock}</td>
+                                                    <td style={columnStyle}>{v.stock_terakhir}</td>
                                                 </tr>
                                             )
-                                        }) : <tr><td colSpan="6">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
+                                        }) : <tr><td>Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
                             }
                             </tbody>
                             <tfoot>
                             <tr style={{backgroundColor:"#EEEEEE"}}>
-                                <td colSpan="2">TOTAL</td>
+                                {/* <td colSpan="2">TOTAL</td>
                                 <td colSpan="1" style={{textAlign:"right"}}>{totAdjustmentIn}</td>
                                 <td colSpan="1" style={{textAlign:"right"}}>{totAdjustmentOut}</td>
                                 <td colSpan="1" style={{textAlign:"right"}}>{totQty}</td>
-                                <td colSpan="1"></td>
+                                <td colSpan="1"></td> */}
                             </tr>
                             </tfoot>
                         </table>

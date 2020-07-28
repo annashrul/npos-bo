@@ -25,7 +25,7 @@ export function setStockReportFailed(data=[]){
 
 //FILTER STOCK REPORT//
 // perpage=10,page=1,searchby=kd_brg,dateFrom=2020-01-01,dateTo=2020-07-01,lokasi=LK%2F0001
-export const FetchStockReport = (page=1,dateFrom='',dateTo='',location='',q='')=>{
+export const FetchStockReport = (page=1,q='',dateFrom='',dateTo='',location='',filter='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
@@ -43,14 +43,28 @@ export const FetchStockReport = (page=1,dateFrom='',dateTo='',location='',q='')=
         //     que = `report/stock?page=${page}&lokasi=${location}`;
         // }
         // console.log(`${que}`);
-        let url = '';
-        if(q===''){
-            url = `report/stock?page=${page}`;
-        }else{
-            url = `report/stock?page=${page}&q=${q}`;
+        // let url = '';
+        // if(q===''){
+        //     url = `report/stock?page=${page}`;
+        // }else{
+        //     url = `report/stock?page=${page}&q=${q}`;
+        // }
+        let url = 'report/stock';
+        let str = '';
+        if(q!==''){
+            str += `&q=${q}`;
         }
-        console.log("url stock",`${url}`);
-        axios.get(HEADERS.URL+`${url}`)
+        if(dateFrom!=='' || dateTo!==''){
+            str += `&datefrom=${dateFrom}&dateto=${dateTo}`;
+        }
+        if(location!==''){
+            str += `&lokasi=${location}`;
+        }
+        if(filter!==''){
+            str += `&filter_stock=${filter}`;
+        }
+        console.log("url stock",`${url}?page=${page+str}`);
+        axios.get(HEADERS.URL+`${url}?page=${page+str}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
