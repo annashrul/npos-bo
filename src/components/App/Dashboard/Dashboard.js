@@ -13,30 +13,8 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 
 import socketIOClient from "socket.io-client";
 import {HEADERS} from 'redux/actions/_constants'
+import {rangeDate} from "../../../helper";
 
-const range = {
-    Today: [moment(), moment()],
-    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-    "Last 7 Days": [moment().subtract(6, "days"), moment()],
-    "Last 30 Days": [moment().subtract(29, "days"), moment()],
-    "This Month": [moment().startOf("month"), moment().endOf("month")],
-    "Last Month": [
-        moment()
-            .subtract(1, "month")
-            .startOf("month"),
-        moment()
-            .subtract(1, "month")
-            .endOf("month")
-    ],
-    "Last Year": [
-        moment()
-            .subtract(1, "year")
-            .startOf("year"),
-        moment()
-            .subtract(1, "year")
-            .endOf("year")
-    ]
-};
 const socket = socketIOClient(HEADERS.URL);
 
 class Dashboard extends Component {
@@ -455,7 +433,7 @@ class Dashboard extends Component {
                     <div className="col-2">
                             <div className="form-group">
                                 <DateRangePicker
-                                    ranges={range}
+                                    ranges={rangeDate}
                                     alwaysShowCalendars={true}
                                     onEvent={this.handleEvent}
                                 >

@@ -74,6 +74,7 @@ class FormUserList extends Component{
         }
     }
     componentWillMount(){
+        console.log(this.props.userListEdit.user_lvl);
         if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
             let lokasiUser = typeof this.props.userListEdit.lokasi === 'object' ? this.props.userListEdit.lokasi : [];
             let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
@@ -96,7 +97,7 @@ class FormUserList extends Component{
                 nohp: this.props.userListEdit.nohp,
                 selectedOption:loc,
                 opt:val,
-                user_lvl: this.props.userListEdit.lvl,
+                user_lvl: this.props.userListEdit.user_lvl,
                 status: this.props.userListEdit.status,
             });
         }
@@ -112,27 +113,27 @@ class FormUserList extends Component{
             lok.push({"kode":this.state.selectedOption[i].value});
         }
         parseData['username']=this.state.username;
-        parseData['password']=this.state.password;
-        parseData['password_confirmation']=this.state.password_confirmation;
         parseData['user_lvl']=this.state.user_lvl;
         parseData['lokasi']=lok;
         parseData['status']=this.state.status;
-        parseData['password_otorisasi']=this.state.password_otorisasi;
         parseData['nama']=this.state.nama;
         parseData['alamat']=this.state.alamat;
         parseData['email']=this.state.email;
         parseData['nohp']=this.state.nohp;
         parseData['tgl_lahir']=this.state.tgl_lahir;
-        parseData['foto']=this.state.foto.base64;
+        parseData['password']= parseInt(this.state.password.length) > 0 ? this.state.password : '-';
+        parseData['password_confirmation']= parseInt(this.state.password_confirmation.length) > 0 ? this.state.password_confirmation : '-';
+        parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length) > 0 ? this.state.password_otorisasi : '-';
+        if(this.state.foto.base64!==undefined){
+            parseData['foto']=this.state.foto.base64;
+        }
         if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
             this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData));
-            // this.props.dispatch(ModalToggle(false));
         }else{
             this.props.dispatch(sendUserList(parseData));
-            // this.props.dispatch(ModalToggle(false));
         }
 
-        // console.log(parseData)
+        console.log(parseData);
     }
     getFiles(files) {
         this.setState({
@@ -203,15 +204,15 @@ class FormUserList extends Component{
                                     <input type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Password</label>
+                                    <label>Password <small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Password Confirmation</label>
+                                    <label>Password Confirmation<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'(  kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control"  name="password_confirmation" value={this.state.password_confirmation} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Password Otoritation</label>
+                                    <label>Password Otoritation<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">

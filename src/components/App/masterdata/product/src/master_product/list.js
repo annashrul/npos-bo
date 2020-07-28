@@ -274,12 +274,7 @@ class ListProduct extends Component{
         const loc_delete = this.handleDelete;
         const loc_edit = this.handleEdit;
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        console.log("TANGGAL",this.state.startDate);
-        console.log("TANGGAL",this.state.endDate);
-
-
-
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <div>
 

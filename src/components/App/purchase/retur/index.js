@@ -522,8 +522,7 @@ class ReturTanpaNota extends Component{
                 })
             })
         }
-
-        console.log("BARANG STATE",this.state.brgval);
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Retur Tanpa Nota">
                 <div className="card">
@@ -621,7 +620,7 @@ class ReturTanpaNota extends Component{
                                                                                 stock:i.stock,
                                                                                 ppn:i.ppn,
                                                                                 harga_beli:i.harga_beli,
-                                                                                ket:'',
+                                                                                ket:'-',
                                                                                 qty_retur:1,
                                                                                 tambahan:i.tambahan
                                                                             })}>
@@ -742,20 +741,20 @@ class ReturTanpaNota extends Component{
                                         </form>
                                     </div>
                                     <div className="card-body">
-                                        <div className="table-responsive" style={{overflowX: 'hidden'}}>
+                                        <div className="table-responsive" style={{overflowX: 'auto'}}>
                                             <table className="table table-hover table-bordered">
                                                 <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Nama barang</th>
-                                                    <th>barcode</th>
-                                                    <th>satuan</th>
-                                                    <th>harga beli</th>
-                                                    <th>Kondisi</th>
-                                                    <th>Ket</th>
-                                                    <th>Stock</th>
-                                                    <th>Qty Retur</th>
-                                                    <th>Nilai Retur</th>
+                                                    <th style={columnStyle}>#</th>
+                                                    <th style={columnStyle}>Nama barang</th>
+                                                    <th style={columnStyle}>barcode</th>
+                                                    <th style={columnStyle}>satuan</th>
+                                                    <th style={columnStyle}>harga beli</th>
+                                                    <th style={columnStyle}>Kondisi</th>
+                                                    <th style={columnStyle}>Ket</th>
+                                                    <th style={columnStyle}>Stock</th>
+                                                    <th style={columnStyle}>Qty Retur</th>
+                                                    <th style={columnStyle}>Nilai Retur</th>
                                                 </tr>
                                                 </thead>
 
@@ -769,15 +768,15 @@ class ReturTanpaNota extends Component{
                                                         total_stock = total_stock+parseInt(item.stock);
                                                         return (
                                                             <tr key={index}>
-                                                                <td>
+                                                                <td style={columnStyle}>
                                                                     <a href="#" className='btn btn-danger btn-sm'
                                                                        onClick={(e) => this.HandleRemove(e, item.id)}><i
                                                                         className='fa fa-trash'/></a>
                                                                 </td>
-                                                                <td>{item.nm_brg}</td>
-                                                                <td>{item.barcode}</td>
+                                                                <td style={columnStyle}>{item.nm_brg}</td>
+                                                                <td style={columnStyle}>{item.barcode}</td>
                                                                 <td>
-                                                                    <select name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)}>
+                                                                    <select className="form-control" style={{width:"100px"}} name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)}>
                                                                         {
                                                                             item.tambahan.map(i=>{
                                                                                 return(
@@ -787,9 +786,9 @@ class ReturTanpaNota extends Component{
                                                                         }
                                                                     </select>
                                                                 </td>
-                                                                <td><input type='text' style={{width:'100%',textAlign:'center'}} name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
-                                                                <td>
-                                                                    <select name='kondisi' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].kondisi} defaultValue={this.state.brgval[index].kondisi}>
+                                                                <td style={columnStyle}><input className="form-control" style={{width:"100px",textAlign:"right"}} type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
+                                                                <td style={columnStyle}>
+                                                                    <select className="form-control" style={{width:"140px"}} name='kondisi' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].kondisi} defaultValue={this.state.brgval[index].kondisi}>
                                                                         <option value="">Pilih Kondisi</option>
                                                                         <option value="bad_stock">Bad Stock</option>
                                                                         <option value="good_stock">Good Stock</option>
@@ -799,10 +798,10 @@ class ReturTanpaNota extends Component{
                                                                         <option value="slow_moving">Slow Moving</option>
                                                                     </select>
                                                                 </td>
-                                                                <td><input type='text' style={{width:'100%',textAlign:'center'}} name='ket' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ket}/></td>
-                                                                <td>{item.stock}</td>
-                                                                <td><input type='text' style={{width:'100%',textAlign:'center'}} name='qty_retur' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].qty_retur}/></td>
-                                                                <td><input readOnly={true} type='text' style={{width:'100%',textAlign:'center'}} value={total_retur}/></td>
+                                                                <td style={columnStyle}><input className="form-control" style={{width:"100px"}} type='text' name='ket' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ket}/></td>
+                                                                <td style={columnStyle}>{item.stock}</td>
+                                                                <td style={columnStyle}><input className="form-control" style={{width:"100px",textAlign:"right"}} type='text' name='qty_retur' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].qty_retur}/></td>
+                                                                <td style={columnStyle}><input className="form-control" style={{width:"100px",textAlign:"right"}} readOnly={true} type='text' value={toRp(total_retur)}/></td>
 
                                                             </tr>
                                                         )
@@ -810,78 +809,48 @@ class ReturTanpaNota extends Component{
 
                                                 }
                                                 </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                    <td colSpan={7}>TOTAL</td>
-                                                    <td>{total_stock}</td>
-                                                    <td style={{textAlign:"right"}}>{qty_retur}</td>
-                                                    <td style={{textAlign:"right"}}>{grand_total}</td>
-                                                </tr>
-                                                </tfoot>
+
                                             </table>
-                                            <div className='row'>
-                                                <div className="col-md-7">
-                                                    <div className="dashboard-btn-group d-flex align-items-center">
-                                                        <a href="#" onClick={(e) => this.HandleSubmit(e)}
-                                                           className="btn btn-primary ml-1">Simpan</a>
-                                                        <a href="#" onClick={(e) => this.HandleReset(e)}
-                                                           className="btn btn-danger ml-1">Reset</a>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-5" style={{zoom: '70%'}}>
-                                                    <div className="pull-right">
-                                                        {/*<form className="form_head">*/}
-                                                        {/*<div className="row" style={{marginBottom: '3px'}}>*/}
-                                                        {/*<label className="col-sm-4">Sub Total</label>*/}
-                                                        {/*<div className="col-sm-8">*/}
-                                                        {/*<input type="text" id="sub_total"*/}
-                                                        {/*name="sub_total"*/}
-                                                        {/*className="form-control text-right"*/}
-                                                        {/*value={subtotal} readOnly/>*/}
-                                                        {/*</div>*/}
-                                                        {/*</div>*/}
-                                                        {/*<div className="row" style={{marginBottom: '3px'}}>*/}
-                                                        {/*<label className="col-sm-4">Discount</label>*/}
-                                                        {/*<div className="col-sm-3">*/}
-                                                        {/*<input type="number"*/}
-                                                        {/*onChange={(e) => this.HandleCommonInputChange(e, false, subtotal)}*/}
-                                                        {/*name="discount_persen" min="0" max="100"*/}
-                                                        {/*className="form-control" placeholder="%"*/}
-                                                        {/*value={this.state.discount_persen}/>*/}
-                                                        {/*</div>*/}
-                                                        {/*<div className="col-sm-5">*/}
-                                                        {/*<input type="text"*/}
-                                                        {/*onChange={(e) => this.HandleCommonInputChange(e, false, subtotal)}*/}
-                                                        {/*name="discount_harga"*/}
-                                                        {/*className="form-control text-right"*/}
-                                                        {/*placeholder="Rp"*/}
-                                                        {/*value={this.state.discount_harga}/>*/}
-                                                        {/*</div>*/}
-                                                        {/*</div>*/}
-                                                        {/*<div className="row" style={{marginBottom: '3px'}}>*/}
-                                                        {/*<label className="col-sm-4">Pajak %</label>*/}
-                                                        {/*<div className="col-sm-3">*/}
-                                                        {/*<input type="number"*/}
-                                                        {/*onChange={(e) => this.HandleCommonInputChange(e)}*/}
-                                                        {/*name="pajak" min="0" max="100"*/}
-                                                        {/*className="form-control" placeholder="%"*/}
-                                                        {/*value={this.state.pajak}/>*/}
-                                                        {/*</div>*/}
-                                                        {/*</div>*/}
-                                                        {/*<div className="row" style={{marginBottom: '3px'}}>*/}
-                                                        {/*<label className="col-sm-4">Grand Total</label>*/}
-                                                        {/*<div className="col-sm-8">*/}
 
-                                                        {/*<input type="text" name="grand_total"*/}
-                                                        {/*className="form-control text-right"*/}
-                                                        {/*readOnly*/}
-                                                        {/*value={(subtotal - (subtotal * (parseFloat(this.state.discount_persen) / 100))) + (subtotal * (parseFloat(this.state.pajak) / 100))}/>*/}
-                                                        {/*</div>*/}
-                                                        {/*</div>*/}
-                                                        {/*</form>*/}
-                                                    </div>
-                                                </div>
 
+                                        </div>
+                                        <hr/>
+                                        <div className='row'>
+                                            <div className="col-md-7">
+                                                <div className="dashboard-btn-group d-flex align-items-center">
+                                                    <a href="#" onClick={(e) => this.HandleSubmit(e)}
+                                                       className="btn btn-primary ml-1">Simpan</a>
+                                                    <a href="#" onClick={(e) => this.HandleReset(e)}
+                                                       className="btn btn-danger ml-1">Reset</a>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-5">
+                                                <div className="pull-right">
+                                                    <table className="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>TOTAL STOCK</th>
+                                                            <th>{total_stock}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>TOTAL QTY</th>
+                                                            <th>{qty_retur}</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>GRAND TOTAL</th>
+                                                            <th>{toRp(grand_total)}</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
+                                                    {/*<tfoot>*/}
+                                                    {/*<tr>*/}
+                                                        {/*<td colSpan={7}>TOTAL</td>*/}
+                                                        {/*<td></td>*/}
+                                                        {/*<td style={{textAlign:"right"}}>{qty_retur}</td>*/}
+                                                        {/*<td style={{textAlign:"right"}}>{grand_total}</td>*/}
+                                                    {/*</tr>*/}
+                                                    {/*</tfoot>*/}
+                                                </div>
                                             </div>
 
                                         </div>

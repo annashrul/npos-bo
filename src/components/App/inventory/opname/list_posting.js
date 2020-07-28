@@ -9,29 +9,7 @@ import {storeOpnamePosting} from "redux/actions/inventory/opname.action";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
-const range = {
-    Today: [moment(), moment()],
-    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-    "Last 7 Days": [moment().subtract(6, "days"), moment()],
-    "Last 30 Days": [moment().subtract(29, "days"), moment()],
-    "This Month": [moment().startOf("month"), moment().endOf("month")],
-    "Last Month": [
-        moment()
-            .subtract(1, "month")
-            .startOf("month"),
-        moment()
-            .subtract(1, "month")
-            .endOf("month")
-    ],
-    "Last Year": [
-        moment()
-            .subtract(1, "year")
-            .startOf("year"),
-        moment()
-            .subtract(1, "year")
-            .endOf("year")
-    ]
-};
+import {rangeDate} from "../../../../helper";
 
 class ListPosting extends Component{
     constructor(props) {
@@ -180,7 +158,7 @@ class ListPosting extends Component{
         console.log(parsedata);
     }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {per_page,current_page,from,to,data,total} = this.props.data;
         this.state.dataPosting = this.props.data.data;
         const {total_fisik,total_akhir,total_hpp} = this.props.total!==undefined?this.props.total:[];
@@ -202,7 +180,7 @@ class ListPosting extends Component{
                                         <div className="form-group">
                                             <label htmlFor=""> Periode </label>
                                             <DateRangePicker
-                                                ranges={range}
+                                                ranges={rangeDate}
                                                 alwaysShowCalendars={true}
                                                 onEvent={this.handleEvent}
                                             >
@@ -272,15 +250,17 @@ class ListPosting extends Component{
                                                                 <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
                                                                 <td style={columnStyle}>{v.kd_kasir}</td>
                                                                 <td style={columnStyle}>{v.lokasi}</td>
-                                                                <td style={{textAlign:"right"}}>{v.nm_brg}</td>
+                                                                <td style={columnStyle}>{v.nm_brg}</td>
                                                                 <td style={{textAlign:"right"}}>{v.stock_terakhir}</td>
                                                                 <td style={{textAlign:"right"}}>{v.qty_fisik}</td>
                                                                 <td style={{textAlign:"right"}}>{Math.abs(parseInt(v.qty_fisik)-parseInt(v.stock_terakhir))}</td>
                                                                 <td style={{textAlign:"right"}}>{toRp(v.hrg_beli)}</td>
                                                                 <td style={{textAlign:"right"}}>{toRp((Math.abs(parseInt(v.qty_fisik)-parseInt(v.stock_terakhir))) * v.hrg_beli)}</td>
                                                                 <td style={{textAlign:"right"}}>{statusQ("danger","POSTING")}</td>
-                                                                <td>
-                                                                    <button className="btn btn-primary btn-sm" onClick={(e)=>this.handleOne(e,v.kd_trx)}>POSTING</button>
+                                                                <td style={columnStyle}>
+                                                                    <button className="btn btn-primary btn-sm" onClick={(e)=>this.handleOne(e,v.kd_trx)} style={{fontSize:'8px'}}>
+                                                                        <i className="fa fa-send"></i>
+                                                                    </button>
                                                                 </td>
                                                             </tr>
                                                         )

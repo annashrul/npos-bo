@@ -179,7 +179,7 @@ class ReceiveReport extends Component{
     }
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center"};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
         return (
             <Layout page="Laporan Pembelian">

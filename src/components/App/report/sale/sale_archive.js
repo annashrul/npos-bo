@@ -201,7 +201,7 @@ class SaleArchive extends Component{
         // console.log("MOMENT 1",moment(new Date()).format("yyyy-MM-DD"));
         // console.log("MOMENT 2",moment(new Date()).format("yyyy-MM-DD"));
         // console.log("LAPORAN EXCEL", this.props.saleReportExcel);
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
         const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
         // const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;

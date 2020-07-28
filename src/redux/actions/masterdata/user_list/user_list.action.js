@@ -1,6 +1,7 @@
 import {USER_LIST,HEADERS} from "../../_constants";
 import axios from "axios"
 import Swal from "sweetalert2";
+import {ModalToggle} from "../../modal.action";
 
 
 export function setLoading(load) {
@@ -119,15 +120,6 @@ export const updateUserList = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `user/${id}`;
-        // const headers = {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `${token}`,
-        //         'username': `${HEADERS.USERNAME}`,
-        //         'password': `${HEADERS.PASSWORD}`,
-        //         'crossDomain': true
-        //     }
-        // }
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
@@ -144,8 +136,9 @@ export const updateUserList = (id,data) => {
                         text: data.msg,
                     });
                 }
+                dispatch(ModalToggle(false));
                 dispatch(setLoading(false));
-                dispatch(FetchUserList());
+                dispatch(FetchUserList(1,''));
             })
             .catch(function (error) {
                 // handle error
