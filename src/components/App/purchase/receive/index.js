@@ -1166,7 +1166,8 @@ class Receive extends Component{
                                             </td>
                                             <td>{item.nm_brg}</td>
                                             <td>{item.barcode}</td>
-                                            <td><select name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)}>
+                                            <td>
+                                                <select name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)}>
                                                 {
                                                   item.tambahan.map(i=>{
                                                     return(
@@ -1174,7 +1175,8 @@ class Receive extends Component{
                                                     )
                                                   })
                                                 }
-                                              </select></td>
+                                              </select>
+                                            </td>
                                             <td><input type='text' style={{width:'100%',textAlign:'center'}} name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
                                             <td><input type='text' name='diskon' style={{width:'100%',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
                                             <td><input type='text' name='ppn' style={{width:'100%',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>

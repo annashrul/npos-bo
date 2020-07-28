@@ -33,6 +33,29 @@
     -->
   <title>Dashboard App</title>
   <style>
+    .customDatePickerWidth,
+    .customDatePickerWidth > div.react-datepicker-wrapper,
+    .customDatePickerWidth > div > div.react-datepicker__input-container
+    .customDatePickerWidth > div > div.react-datepicker__input-container input {
+      width: 100%;
+      height: 100%;
+    }
+    .react-datepicker__input-container  {
+      width: inherit;
+      height: inherit;
+    }
+    .react-datepicker__input-container input {
+      width: inherit;
+      height: 100%;
+    }
+    #date{
+      width: 183px!important;
+
+    }
+
+    .react-datepicker-wrapper {
+      width: 100%;
+    }
     .react-datepicker-wrapper,
     .react-datepicker__input-container,
     .react-datepicker__input-container input {

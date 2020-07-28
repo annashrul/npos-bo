@@ -171,11 +171,12 @@ class SideMenu extends Component {
                             <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname"> <i className="zmdi zmdi-apps" />Approval Opname </Link></li>
                         </ul>
                     </li>
-                    <li className={this.state.isReceive===true  || path==='/purchase_order' || path === '/receive' ?"treeview active menu-open" : "treeview"}>
+                    <li className={this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?"treeview active menu-open" : "treeview"}>
                         <a href="#" onClick={(e) => this.changeMenu('receive')}><i className="zmdi zmdi-apps" /> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
                             <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order"> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
                             <li className={path==='/receive'?"active":''}><Link to="/receive"> <i className="zmdi zmdi-apps" />Receive Pembelian</Link></li>
+                            <li className={path==='/retur_tanpa_nota'?"active":''}><Link to="/retur_tanpa_nota"> <i className="zmdi zmdi-apps" />Retur Tanpa Nota</Link></li>
                         </ul>
                     </li>
                     <li className={this.state.isSale===true  || path==='/sale'?"treeview active menu-open" : "treeview"}>

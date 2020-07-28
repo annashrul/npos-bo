@@ -47,18 +47,21 @@ export const addFooters = doc => {
     doc.setFontSize(8);
     return doc;
 }
+var date = new Date();
+date.setDate(date.getDate());
 export const rangeDate = {
-    'Hari Ini': [moment(), moment()],
-    'KemarIn': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-    '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
-    '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
-    'Minggu Ini': [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
-    'Minggu Lalu': [moment().subtract(1, 'weeks').startOf('isoWeek'), moment().subtract(1, 'weeks').endOf('isoWeek')],
-    'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
-    'Bulan Lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-    'Tahun Ini': [moment().startOf('year'), moment().endOf('year')],
-    'Tahun Lalu': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+    'Hari Ini'          : [date.setDate(date.getDate()+1), moment()],
+    'KemarIn'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate())],
+    '7 Hari Terakhir'   : [moment().subtract(6, 'days'), moment()],
+    '30 Hari Terakhir'  : [moment().subtract(29, 'days'), moment()],
+    'Minggu Ini'        : [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
+    'Minggu Lalu'       : [moment().subtract(1, 'weeks').startOf('isoWeek'), moment().subtract(1, 'weeks').endOf('isoWeek')],
+    'Bulan Ini'         : [moment().startOf('month'), moment().endOf('month')],
+    'Bulan Lalu'        : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+    'Tahun Ini'         : [moment().startOf('year'), moment().endOf('year')],
+    'Tahun Lalu'        : [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
 };
+
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),
