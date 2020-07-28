@@ -3,7 +3,6 @@ import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import FormProduct from "components/App/modals/masterdata/product/form_product";
 import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
-// import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import "jspdf-autotable";
 import {to_pdf, toRp} from "helper";
@@ -27,29 +26,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from "moment";
 import imgY from 'assets/status-Y.png';
 import imgT from 'assets/status-T.png';
-const range = {
-    Today: [moment(), moment()],
-    Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-    "Last 7 Days": [moment().subtract(6, "days"), moment()],
-    "Last 30 Days": [moment().subtract(29, "days"), moment()],
-    "This Month": [moment().startOf("month"), moment().endOf("month")],
-    "Last Month": [
-        moment()
-            .subtract(1, "month")
-            .startOf("month"),
-        moment()
-            .subtract(1, "month")
-            .endOf("month")
-    ],
-    "Last Year": [
-        moment()
-            .subtract(1, "year")
-            .startOf("year"),
-        moment()
-            .subtract(1, "year")
-            .endOf("year")
-    ]
-};
+import {rangeDate} from "helper";
 class ListProduct extends Component{
     constructor(props){
         super(props);
@@ -57,6 +34,7 @@ class ListProduct extends Component{
         this.toggleModal = this.toggleModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearchBy = this.handleSearchBy.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
         console.log("CONSTURTOR DATE FROM",localStorage.getItem("startDateProduct")===''?'string kosong':localStorage.getItem("startDateProduct"));
         this.state = {
             isExcel : false,
@@ -73,46 +51,52 @@ class ListProduct extends Component{
                 {id: 3, value: "supplier", label:'Supplier'},
                 {id: 3, value: "subdept", label:'Sub Dept'},
             ],
-            searchJenis: [
-                {id: 0, value: "1",label:'Dijual'},
-                {id: 1, value: "0", label:'Tidak Dijual'},
-            ],
-            searchKategori: [
-                {id: 0, value: "0",label:'Karton'},
-                {id: 1, value: "1", label:'Satuan'},
-                {id: 2, value: "2", label:'Paket'},
-                {id: 3, value: "3", label:'Servis'},
-            ],
-            searchKelompok: [
-                {id: 0, value: "MAKANAN",label:'Makanan'},
-                {id: 1, value: "MINUMAN", label:'Minuman'},
-            ],
             semuaPeriode:false,
-            detail:{}
+            detail:{},
+            any_kode_barang:"",
+            any_nama_barang:"",
+            any_kelompok_barang:"",
+            any_supplier_barang:"",
+            any_subdept_barang:"",
+            any_kategori_barang:"",
         }
     }
-    // componentWillUnmount(){
-    //     localStorage.removeItem("startDateProduct");
-    //     localStorage.removeItem("endDateProduct");
-    //     localStorage.removeItem("semuaPeriode");
-    //     localStorage.removeItem('any_product');
-    //     localStorage.removeItem('by_product');
-    //     localStorage.removeItem('kategori_barang');
-    //     console.log("################################## REMOVE STORAGE #########################");
-    // }
-    // componentWillMount(){
-    //     this.props.dispatch(FetchProduct(1,''));
-    //
-    // }
+    componentDidMount(){
+        if(localStorage.any_master_kode_barang!==undefined&&localStorage.any_master_kode_barang!==null&&localStorage.any_master_kode_barang!==''){
+            this.setState({any_kode_barang:localStorage.any_master_kode_barang});
+        }
+        if(localStorage.any_master_nama_barang!==undefined&&localStorage.any_master_nama_barang!==null&&localStorage.any_master_nama_barang!==''){
+            this.setState({any_nama_barang:localStorage.any_master_nama_barang});
+        }
+        if(localStorage.any_master_kelompok_barang!==undefined&&localStorage.any_master_kelompok_barang!==null&&localStorage.any_master_kelompok_barang!==''){
+            this.setState({any_kelompok_barang:localStorage.any_master_kelompok_barang});
+        }
+        if(localStorage.any_master_supplier_barang!==undefined&&localStorage.any_master_supplier_barang!==null&&localStorage.any_master_supplier_barang!==''){
+            this.setState({any_supplier_barang:localStorage.any_master_supplier_barang});
+        }
+        if(localStorage.any_master_subdept_barang!==undefined&&localStorage.any_master_subdept_barang!==null&&localStorage.any_master_subdept_barang!==''){
+            this.setState({any_subdept_barang:localStorage.any_master_subdept_barang});
+        }
+        if(localStorage.any_master_kategori_barang!==undefined&&localStorage.any_master_kategori_barang!==null&&localStorage.any_master_kategori_barang!==''){
+            this.setState({any_kategori_barang:localStorage.any_master_kategori_barang});
+        }
+        // this.props.dispatch(FetchProduct(1,where));
+    }
+
     handleChange(event){
-        event.target.checked===true?localStorage.setItem("semuaPeriode","true"):localStorage.setItem("semuaPeriode","false")
-        this.setState({
-            [event.target.name]: event.target.value,
-            semuaPeriode:!this.state.semuaPeriode
-        });
-        console.log("LOCAL STORAGE",localStorage.getItem("semuaPeriode"));
-        console.log("STATE",this.state.semuaPeriode);
-        console.log("EVENT",event.target.checked);
+        let name=event.target.name;
+        if(name==='any_kode_barang'||name==='any_nama_barang'||name==='any_kelompok_barang'||name==='any_subdept_barang'||name==='any_supplier_barang'||name==='any_kategori_barang'){
+            this.setState({
+                [event.target.name]: event.target.value,
+            });
+        }else{
+            event.target.checked===true?localStorage.setItem("semuaPeriode","true"):localStorage.setItem("semuaPeriode","false")
+            this.setState({
+                semuaPeriode:!this.state.semuaPeriode
+            })
+        }
+
+
     }
     handlePageChange(pageNumber){
         this.props.dispatch(FetchProduct(pageNumber));
@@ -176,17 +160,12 @@ class ListProduct extends Component{
         event.preventDefault();
         const form = event.target;
         const data = new FormData(form);
-        console.log("DATA FORM",data);
         let any = data.get('field_any');
         let sortName = data.get('sort_name');
-        let kategori = data.get("kategori_barang");
-        let jenis = data.get("jenis_barang");
         let dateFrom=this.state.startDate;
         let dateTo=this.state.endDate;
         localStorage.setItem('any_product',`${any}`);
         localStorage.setItem('by_product',`${sortName}`);
-        localStorage.setItem('jenis_barang',`${jenis}`);
-        localStorage.setItem('kategori_barang',`${kategori}`);
         localStorage.setItem("startDateProduct",`${dateFrom}`);
         localStorage.setItem("endDateProduct",`${dateTo}`);
         let where='';
@@ -196,19 +175,61 @@ class ListProduct extends Component{
                 where+=`datefrom=${dateFrom}&dateto=${dateTo}`;
             }
         }
-        // if(kategori!==''){
-        //     if(where!==''){where+='&';}
-        //     where+=`kategori=${kategori}`;
-        // }
-        // if(jenis!==''){
-        //     if(where!==''){where+='&';}
-        //     where+=`jenis=${jenis}`;
-        // }
-
         this.props.dispatch(FetchProduct(1,where));
-        console.log(where);
     }
+    handleEnter(column){
+        let where='';
+        let que = 'any_master';
+        let kode=this.state.any_kode_barang;
+        let nama=this.state.any_nama_barang;
+        let kelompok=this.state.any_kelompok_barang;
+        let supplier=this.state.any_supplier_barang;
+        let subdept=this.state.any_subdept_barang;
+        let kategori=this.state.any_kategori_barang;
+        if(kode!==''||nama!==''||kelompok!==''||supplier!==''||subdept!==''||kategori!==''){
+            if(column==='any_kode_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=kd_brg&q=${kode}`;
+                localStorage.setItem(`${que}_kode_barang`,kode);
+            }
+            if(column==='any_nama_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=nm_brg&q=${nama}`;
+                localStorage.setItem(`${que}_nama_barang`,nama);
+            }
+            if(column==='any_kelompok_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=kel_brg&q=${kelompok}`;
+                localStorage.setItem(`${que}_kelompok_barang`,kelompok);
+            }
+            if(column==='any_supplier_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=supplier&q=${supplier}`;
+                localStorage.setItem(`${que}_supplier_barang`,supplier);
+            }
+            if(column==='any_subdept_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=subdept&q=${subdept}`;
+                localStorage.setItem(`${que}_subdept_barang`,subdept);
+            }
+            if(column==='any_kategori_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=kategori&q=${kategori}`;
+                localStorage.setItem(`${que}_kategori_barang`,kategori);
+            }
+            this.props.dispatch(FetchProduct(1,where));
+        }else{
+            localStorage.removeItem(`${que}_kode_barang`);
+            localStorage.removeItem(`${que}_nama_barang`);
+            localStorage.removeItem(`${que}_kelompok_barang`);
+            localStorage.removeItem(`${que}_supplier_barang`);
+            localStorage.removeItem(`${que}_subdept_barang`);
+            localStorage.removeItem(`${que}_kategori_barang`);
+            this.props.dispatch(FetchProduct(1,''));
+        }
 
+
+    }
     loc_detail(e,kode) {
         e.preventDefault();
         const bool = !this.props.isOpen;
@@ -274,7 +295,7 @@ class ListProduct extends Component{
         const loc_delete = this.handleDelete;
         const loc_edit = this.handleEdit;
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const columnStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
         return (
             <div>
 
@@ -310,7 +331,7 @@ class ListProduct extends Component{
                             <div className="form-group">
                                 <label htmlFor=""> Periode </label>
                                 <DateRangePicker
-                                    ranges={range}
+                                    ranges={rangeDate}
                                     alwaysShowCalendars={true}
                                     onEvent={this.handleEvent}
                                 >
@@ -338,153 +359,127 @@ class ListProduct extends Component{
                     </div>
 
                 </form>
-                    <div className="table-responsive" style={{overflowX: "auto"}}>
-                        {/*DATA EXCEL*/}
-                        <table className="table table-hover"  id="emp" style={{display:"none"}}>
-                            <thead className="bg-light">
-                            <tr>
-                                <th className="text-black" style={columnStyle}>Code</th>
-                                <th className="text-black" style={columnStyle}>Name</th>
-                                <th className="text-black" style={columnStyle}>Group</th>
-                                <th className="text-black" style={columnStyle}>Supplier</th>
-                                <th className="text-black" style={columnStyle}>Sub Dept</th>
-                                <th className="text-black" style={columnStyle}>Purchase Price</th>
-                                <th className="text-black" style={columnStyle}>Category</th>
-                                <th className="text-black" style={columnStyle}>Stock Min</th>
-                                <th className="text-black" style={columnStyle}>Product Type</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                <div className="table-responsive" style={{overflowX: "auto"}}>
+                    {/*DATA EXCEL*/}
+                    <table className="table table-hover"  id="emp" style={{display:"none"}}>
+                        <thead className="bg-light">
+                        <tr>
+                            <th className="text-black" style={columnStyle}>Code</th>
+                            <th className="text-black" style={columnStyle}>Name</th>
+                            <th className="text-black" style={columnStyle}>Group</th>
+                            <th className="text-black" style={columnStyle}>Supplier</th>
+                            <th className="text-black" style={columnStyle}>Sub Dept</th>
+                            <th className="text-black" style={columnStyle}>Purchase Price</th>
+                            <th className="text-black" style={columnStyle}>Category</th>
+                            <th className="text-black" style={columnStyle}>Stock Min</th>
+                            <th className="text-black" style={columnStyle}>Product Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                            {
-                                (
-                                    typeof data === 'object' ?
-                                        data.map((v,i)=>{
-                                            return(
-                                                <tr key={i}>
-                                                    <td style={columnStyle}>{v.kd_brg}</td>
-                                                    <td style={columnStyle}>{v.nm_brg}</td>
-                                                    <td style={columnStyle}>{v.kel_brg}</td>
-                                                    <td style={columnStyle}>{v.subdept}</td>
-                                                    <td style={columnStyle}>{v.supplier}</td>
-                                                    <td style={columnStyle}>{v.kategori}</td>
-                                                    <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
-                                                    <td style={columnStyle}>{v.stock_min}</td>
-                                                </tr>
-                                            )
-                                        })
-                                        : "No data."
-                                )
-                            }
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td colSpan="7"></td>
-                                <td>0</td>
-                                <td></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                        {/*END DATA EXCEL*/}
-                        <table className="table table-hover table-bordered">
-                            <thead className="bg-light">
-                            <tr>
-                                <th className="text-black" style={columnStyle}>#</th>
-                                <th className="text-black" style={columnStyle}>Code</th>
-                                <th className="text-black" style={columnStyle}>Nama</th>
-                                <th className="text-black" style={columnStyle}>Kelompok</th>
-                                <th className="text-black" style={columnStyle}>Supplier</th>
-                                <th className="text-black" style={columnStyle}>Sub Dept</th>
-                                <th className="text-black" style={columnStyle}>Kategori</th>
-                                <th className="text-black" style={columnStyle}>Jenis</th>
-                                <th className="text-black" style={columnStyle}>Stock Min</th>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td><input type="text" className="form-control" placeholder="Kode Barang"/></td>
-                                <td><input type="text" className="form-control" placeholder="Nama Barang"/></td>
-                                <td>
-                                    <select className="form-control form-control-lg" id="kelompok_barang" name="kelompok_barang" onChange={this.handleSearchBy}>
-                                        <option value="">Pilih Kelompok</option>
-                                        {
-                                            this.state.searchKelompok.map((v,i)=>{
-                                                return (<option key={i} value={v.value} selected={localStorage.getItem('kelompok_barang')===v.value?true:false}>{v.label}</option>)
-                                            })
-                                        }
-                                    </select>
-                                </td>
-                                <td><input type="text" className="form-control" placeholder="Supplier"/></td>
-                                <td><input type="text" className="form-control" placeholder="Sub Dept"/></td>
-                                <td>
-                                    <select className="form-control form-control-lg" id="kategori_barang" name="kategori_barang" onChange={this.handleSearchBy}>
-                                        <option value="">Pilih Kategori</option>
-                                        {
-                                            this.state.searchKategori.map((v,i)=>{
-                                                return (<option key={i} value={v.value} selected={localStorage.getItem('kategori_barang')===v.value?true:false}>{v.label}</option>)
-                                            })
-                                        }
-                                    </select>
-                                </td>
-                                <td>
-                                    <select className="form-control form-control-lg" id="jenis_barang" name="jenis_barang" onChange={this.handleSearchBy}>
-                                        <option value="">Pilih Jenis</option>
-                                        {
-                                            this.state.searchJenis.map((v,i)=>{
-                                                return (<option key={i} value={v.value} selected={localStorage.getItem('jenis_barang')===v.value?true:false}>{v.label}</option>)
-                                            })
-                                        }
-                                    </select>
-                                </td>
-                                <td></td>
-                            </tr>
-                            </thead>
-                            <tbody>
+                        {
+                            (
+                                typeof data === 'object' ?
+                                    data.map((v,i)=>{
+                                        return(
+                                            <tr key={i}>
+                                                <td style={columnStyle}>{v.kd_brg}</td>
+                                                <td style={columnStyle}>{v.nm_brg}</td>
+                                                <td style={columnStyle}>{v.kel_brg}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
+                                                <td style={columnStyle}>{v.supplier}</td>
+                                                <td style={columnStyle}>{v.kategori}</td>
+                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
+                                                <td style={columnStyle}>{v.stock_min}</td>
+                                            </tr>
+                                        )
+                                    })
+                                    : "No data."
+                            )
+                        }
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colSpan="7"></td>
+                            <td>0</td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    {/*END DATA EXCEL*/}
+                    <table className="table table-hover table-bordered">
+                        <thead className="bg-light">
+                        <tr>
+                            <th className="text-black" style={columnStyle}>#</th>
+                            <th className="text-black" style={columnStyle}>Kode Barang</th>
+                            <th className="text-black" style={columnStyle}>Nama Barang</th>
+                            <th className="text-black" style={columnStyle}>Kelompok</th>
+                            <th className="text-black" style={columnStyle}>Supplier</th>
+                            <th className="text-black" style={columnStyle}>Sub Dept</th>
+                            <th className="text-black" style={columnStyle}>Kategori</th>
+                            <th className="text-black" style={columnStyle}>Jenis</th>
+                            <th className="text-black" style={columnStyle}>Stock Min</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kode_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
+                            <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
+                            <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kelompok"/></td>
+                            <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Supplier"/></td>
+                            <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
+                            <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kategori"/></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                            {
-                                (
-                                    typeof data === 'object' ? data.length > 0 ?
-                                        data.map((v,i)=>{
-                                            return(
-                                                <tr key={i}>
-                                                    <td style={columnStyle}>
-                                                        <div className="btn-group">
-                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                Action
-                                                            </button>
-                                                            <div className="dropdown-menu">
-                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>
-                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>
-                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
-                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
-                                                            </div>
+                        {
+                            (
+                                typeof data === 'object' ? data.length > 0 ?
+                                    data.map((v,i)=>{
+                                        return(
+                                            <tr key={i}>
+                                                <td style={columnStyle}>
+                                                    <div className="btn-group">
+                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Action
+                                                        </button>
+                                                        <div className="dropdown-menu">
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
                                                         </div>
-                                                    </td>
-                                                    <td style={columnStyle}>{v.kd_brg}</td>
-                                                    <td style={columnStyle}>{v.nm_brg}</td>
-                                                    <td style={columnStyle}>{v.kel_brg}</td>
-                                                    <td style={columnStyle}>{v.subdept}</td>
-                                                    <td style={columnStyle}>{v.supplier}</td>
+                                                    </div>
+                                                </td>
+                                                <td style={columnStyle}>{v.kd_brg}</td>
+                                                <td style={columnStyle}>{v.nm_brg}</td>
+                                                <td style={columnStyle}>{v.kel_brg}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
+                                                <td style={columnStyle}>{v.supplier}</td>
 
-                                                    <td style={columnStyle}>{v.kategori}</td>
-                                                    <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
-                                                    <td style={columnStyle}>{v.stock_min}</td>
-                                                </tr>
-                                            )
-                                        })
-                                        : "No data." : "No data."
-                                )
-                            }
-                            </tbody>
-                        </table>
-                        <div style={{"marginTop":"20px","float":"right"}}>
-                            <Paginationq
-                                current_page={current_page}
-                                per_page={per_page}
-                                total={total}
-                                callback={this.handlePageChange.bind(this)}
-                            />
-                        </div>
-                    </div>
+                                                <td style={columnStyle}>{v.kategori}</td>
+                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
+                                                <td style={columnStyle}>{v.stock_min}</td>
+                                            </tr>
+                                        )
+                                    })
+                                    : "No data." : "No data."
+                            )
+                        }
+                        </tbody>
+                    </table>
+
+                </div>
+                <div style={{"marginTop":"20px","float":"right"}}>
+                    <Paginationq
+                        current_page={current_page}
+                        per_page={per_page}
+                        total={total}
+                        callback={this.handlePageChange.bind(this)}
+                    />
+                </div>
                 <FormProduct
                     data={this.props.group}
                     dataLocation={this.props.location}
