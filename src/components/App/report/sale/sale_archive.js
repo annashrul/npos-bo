@@ -218,9 +218,6 @@ class SaleArchive extends Component{
         let change_per = 0;
         let voucher_per = 0;
         let rounding_per = 0;
-        var nowDate = new Date();
-        var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
-        var maxLimitDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()+360, 0, 0, 0, 0);
 
         return (
             <Layout page="Laporan Arsip Penjualan">
@@ -279,7 +276,6 @@ class SaleArchive extends Component{
                                                 return op.value === this.state.type
                                             })
                                         }
-
                                     />
                                 </div>
                             </div>
@@ -313,7 +309,7 @@ class SaleArchive extends Component{
                                         <th className="text-black" colSpan={23}>{this.state.startDate} - {this.state.startDate}</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-black" colSpan={23}>{this.state.location}</th>
+                                        <th className="text-black" colSpan={23}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
                                     </tr>
 
                                     <tr>

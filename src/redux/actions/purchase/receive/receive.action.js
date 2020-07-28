@@ -13,6 +13,12 @@ export function setLoading(load) {
         load
     }
 }
+export function setLoadingReportDetail(load) {
+    return {
+        type: RECEIVE.LOADING_REPORT_DETAIL,
+        load
+    }
+}
 export function setPO(data = []) {
     return {
         type: RECEIVE.SUCCESS,
@@ -51,12 +57,11 @@ export function setPOFailed(data = []) {
     }
 }
 export function setReportDetail(data=[]){
-    return {type:RECEIVE.DETAIL,data}
+    return {type:RECEIVE.RECEIVE_REPORT_DETAIL,data}
 }
 export const FetchNota = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-       
         axios.get(HEADERS.URL + `receive/getcode?lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
@@ -121,25 +126,15 @@ export const storeReceive= (data) => {
     }
 }
 
-export const FetchReport = (page = 1, perpage = 10,q='',dateFrom='',dateTo='',location='') => {
+export const FetchReport = (page = 1,where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-        let que = '';
-        if(dateFrom===''&&dateTo===''&&location===''){
-            que = `receive/report?page=${page}`;
+        let url=`receive/report?page=${page}`;
+        if(where!==''){
+            url+=`&${where}`
         }
-        if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `receive/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `receive/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        }
-        if(location!==''){
-            que = `receive/report?page=${page}&lokasi=${location}`;
-        }
-        console.log(`${que}`);
-        axios.get(HEADERS.URL+`${que}`)
+        console.log(`${url}`);
+        axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
@@ -168,17 +163,38 @@ export const FetchReceiveData = (nota) => {
 
     }
 }
-export const FetchReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchReportDetail = (page=1,code)=>{
     return (dispatch) => {
-        dispatch(setLoading(true));
+        dispatch(setLoadingReportDetail(true));
         axios.get(HEADERS.URL+`receive/report/${code}?page=${page}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
                 dispatch(setReportDetail(data));
+                dispatch(setLoadingReportDetail(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchReportExcel = (where='') => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`receive/report?page=1&perpage=10000`;
+        if(where!==''){
+            url+=`&${where}`
+        }
+        console.log(`${url}`);
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPO(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
         })
+
     }
 }
