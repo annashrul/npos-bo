@@ -5,6 +5,7 @@ import {deleteSubDepartment, FetchSubDepartment} from "redux/actions/masterdata/
 import FormSubDepartment from "components/App/modals/masterdata/department/form_sub_department";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
+import {FetchAllDepartment} from "../../../../redux/actions/masterdata/department/department.action";
 
 class ListSubDepartment extends Component{
     constructor(props){
@@ -36,11 +37,12 @@ class ListSubDepartment extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formSubDepartment"));
+        this.props.dispatch(FetchAllDepartment());
         if(i === null){
             this.setState({detail:undefined});
         }else{
             this.setState({
-                detail: {"id":this.props.data.data[i].id,"kode":this.props.data.data[i].kode,"nama":this.props.data.data[i].nama}
+                detail: {"kode":this.props.data.data[i].kode,"kode_dept":this.props.data.data[i].kode_dept,"nama":this.props.data.data[i].nama}
             })
         }
     }
@@ -132,11 +134,16 @@ class ListSubDepartment extends Component{
                         />
                     </div>
                 </div>
-                <FormSubDepartment token={this.props.token} detail={this.state.detail}/>
+                <FormSubDepartment dataDepartment={this.props.dataDepartment} token={this.props.token} detail={this.state.detail}/>
             </div>
 
         );
     }
 }
 
-export default connect()(ListSubDepartment)
+const mapStateToProps = (state) => {
+    return {
+        dataDepartment:state.departmentReducer.allData,
+    }
+}
+export default connect(mapStateToProps)(ListSubDepartment)

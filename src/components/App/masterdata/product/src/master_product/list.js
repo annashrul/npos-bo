@@ -407,10 +407,10 @@ class ListProduct extends Component{
                         </tfoot>
                     </table>
                     {/*END DATA EXCEL*/}
-                    <table className="table table-hover table-bordered">
+                    <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle}>#</th>
+                            <th className="text-black" style={columnStyle}></th>
                             <th className="text-black" style={columnStyle}>Kode Barang</th>
                             <th className="text-black" style={columnStyle}>Nama Barang</th>
                             <th className="text-black" style={columnStyle}>Kelompok</th>
