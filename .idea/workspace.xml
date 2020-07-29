@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/cash/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/cash/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -33,18 +35,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1162">
-              <caret line="424" column="78" selection-start-line="424" selection-start-column="78" selection-end-line="424" selection-end-column="78" />
+            <state relative-caret-position="161">
+              <caret line="112" column="66" lean-forward="true" selection-start-line="112" selection-start-column="66" selection-end-line="112" selection-end-column="66" />
               <folding>
-                <element signature="n#!!block;n#componentWillMount#0;n#ReceiveReport#0" />
-                <element signature="n#!!block;n#componentDidMount#0;n#ReceiveReport#0" />
                 <element signature="e#2976#3902#0" />
-                <element signature="n#!!block;n#checkingParameter#0;n#ReceiveReport#0" />
                 <element signature="n#!!block;n#handleChange#0;n#ReceiveReport#0" />
                 <element signature="n#!!block;n#HandleChangeType#0;n#ReceiveReport#0" />
                 <element signature="n#!!block;n#HandleChangeLokasi#0;n#ReceiveReport#0" />
                 <element signature="e#5617#5992#0" />
-                <element signature="n#!!block;n#handlePageChange#0;n#ReceiveReport#0" />
                 <element signature="n#!!block;n#handleSearch#0;n#ReceiveReport#0" />
                 <element signature="e#7492#8597#0" />
                 <element signature="e#8630#9648#0" />
@@ -58,13 +56,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="74" column="34" lean-forward="true" selection-start-line="74" selection-start-column="34" selection-end-line="74" selection-end-column="34" />
+            <state relative-caret-position="189">
+              <caret line="184" column="92" selection-start-line="184" selection-start-column="87" selection-end-line="184" selection-end-column="92" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
+                <element signature="n#!!block;n#componentWillReceiveProps#0;n#FormReturReceive#0" />
                 <element signature="n#!!block;n#toggle#0;n#DetailReceiveReport#0" />
               </folding>
             </state>
@@ -83,7 +82,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/App/report/cash/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="138">
@@ -209,10 +208,10 @@
         <option value="$PROJECT_DIR$/src/components/App/masterdata/department/list_department.js" />
         <option value="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" />
-        <option value="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/cash/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/cash/index.js" />
+        <option value="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" />
+        <option value="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" />
       </list>
     </option>
   </component>
@@ -411,15 +410,16 @@
       <workItem from="1595824521578" duration="29000000" />
       <workItem from="1595914190942" duration="21368000" />
       <workItem from="1595941669062" duration="5746000" />
-      <workItem from="1596001089090" duration="9689000" />
+      <workItem from="1596001089090" duration="12707000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="331966000" />
+    <option name="totallyTimeSpent" value="334984000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.7693452" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -822,47 +822,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1162">
-          <caret line="424" column="78" selection-start-line="424" selection-start-column="78" selection-end-line="424" selection-end-column="78" />
-          <folding>
-            <element signature="n#!!block;n#componentWillMount#0;n#ReceiveReport#0" />
-            <element signature="n#!!block;n#componentDidMount#0;n#ReceiveReport#0" />
-            <element signature="e#2976#3902#0" />
-            <element signature="n#!!block;n#checkingParameter#0;n#ReceiveReport#0" />
-            <element signature="n#!!block;n#handleChange#0;n#ReceiveReport#0" />
-            <element signature="n#!!block;n#HandleChangeType#0;n#ReceiveReport#0" />
-            <element signature="n#!!block;n#HandleChangeLokasi#0;n#ReceiveReport#0" />
-            <element signature="e#5617#5992#0" />
-            <element signature="n#!!block;n#handlePageChange#0;n#ReceiveReport#0" />
-            <element signature="n#!!block;n#handleSearch#0;n#ReceiveReport#0" />
-            <element signature="e#7492#8597#0" />
-            <element signature="e#8630#9648#0" />
-            <element signature="e#9681#10701#0" />
-            <element signature="e#10734#11181#0" />
-            <element signature="e#11214#12267#0" />
-            <element signature="e#12428#17491#0" />
-            <element signature="e#17613#19374#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret line="23" column="32" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="74" column="34" lean-forward="true" selection-start-line="74" selection-start-column="34" selection-end-line="74" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="n#!!block;n#toggle#0;n#DetailReceiveReport#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -890,6 +853,40 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="85" column="25" lean-forward="true" selection-start-line="85" selection-start-column="25" selection-end-line="85" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="112" column="66" lean-forward="true" selection-start-line="112" selection-start-column="66" selection-end-line="112" selection-end-column="66" />
+          <folding>
+            <element signature="e#2976#3902#0" />
+            <element signature="n#!!block;n#handleChange#0;n#ReceiveReport#0" />
+            <element signature="n#!!block;n#HandleChangeType#0;n#ReceiveReport#0" />
+            <element signature="n#!!block;n#HandleChangeLokasi#0;n#ReceiveReport#0" />
+            <element signature="e#5617#5992#0" />
+            <element signature="n#!!block;n#handleSearch#0;n#ReceiveReport#0" />
+            <element signature="e#7492#8597#0" />
+            <element signature="e#8630#9648#0" />
+            <element signature="e#9681#10701#0" />
+            <element signature="e#10734#11181#0" />
+            <element signature="e#11214#12267#0" />
+            <element signature="e#12428#17491#0" />
+            <element signature="e#17613#19374#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="184" column="92" selection-start-line="184" selection-start-column="87" selection-end-line="184" selection-end-column="92" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#componentWillReceiveProps#0;n#FormReturReceive#0" />
+            <element signature="n#!!block;n#toggle#0;n#DetailReceiveReport#0" />
+          </folding>
         </state>
       </provider>
     </entry>

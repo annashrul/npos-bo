@@ -68,8 +68,8 @@ class ReceiveReport extends Component{
                 endDate: localStorage.date_to_receive_report
             })
         }
-        let page=localStorage.getItem("pageNumber_receive_report");
-        this.checkingParameter(page!==undefined&&page!==null?page:1);
+        // let page=localStorage.getItem("pageNumber_receive_report");
+        // this.checkingParameter(page!==undefined&&page!==null?page:1);
     }
     componentWillReceiveProps = (nextProps) => {
         let type = [

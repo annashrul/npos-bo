@@ -16,6 +16,9 @@ class FormReturReceive extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state={
             data_retur:[],
+            lokasi:"",
+            no_faktur_beli:"",
+            disabelButton:false,
             userid:0,
 
         }
@@ -26,6 +29,12 @@ class FormReturReceive extends Component{
         if(nextprops.dataRetur!==undefined&&nextprops.dataRetur!==[]){
             let dataRetur=[];
             typeof nextprops.dataRetur.detail === 'object'? nextprops.dataRetur.detail.map((v,i)=>{
+                this.setState({
+                    data_retur:dataRetur,
+                    userid: nextprops.auth.user.id,
+                    lokasi:nextprops.dataRetur.master.lokasi,
+                    no_faktur_beli:nextprops.dataRetur.master.no_faktur_beli,
+                })
                 dataRetur.push({
                     "kode_barang":v.kode_barang,
                     "harga":v.harga,
@@ -38,10 +47,7 @@ class FormReturReceive extends Component{
                     "qty_retur":0
                 })
             }) : [];
-            this.setState({
-                data_retur:dataRetur,
-                userid: nextprops.auth.user.id
-            })
+
         }
     }
 
@@ -58,6 +64,15 @@ class FormReturReceive extends Component{
         let data_retur = [...this.state.data_retur];
         data_retur[i] = {...data_retur[i], [column]: val};
         this.setState({ data_retur });
+        if(column === 'qty_retur'){
+            if(parseInt(data_retur[i].qty_retur) > parseInt(data_retur[i].stock) || parseInt(data_retur[i].qty_retur) < 0 || parseInt(data_retur[i].qty_retur) > parseInt(data_retur[i].qty)){
+                this.setState({disabelButton:true})
+            }else{
+                this.setState({disabelButton:false})
+            }
+
+
+        }
     }
     handleSubmit(e){
         e.preventDefault();
@@ -66,29 +81,33 @@ class FormReturReceive extends Component{
         let subtotal=0;
         this.state.data_retur.map((v,i)=>{
            if(parseInt(v.qty_retur) > parseInt(v.stock)){
+               alert('gagal');
                return;
+           }else{
+               subtotal+=parseInt(v.qty_retur)*parseInt(v.harga_beli);
+               detail.push({
+                   "kd_brg":v.kode_barang,
+                   "barcode":v.barcode,
+                   "satuan":v.satuan,
+                   "qty":v.qty_retur,
+                   "harga_beli":v.harga_beli,
+                   "keterangan":"-",
+                   "kondisi":"Good Stock"
+               })
+               data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
+               data['supplier'] = this.props.dataRetur.master.kode_supplier;
+               data['keterangan'] = '-';
+               data['subtotal'] = subtotal;
+               data['lokasi'] = this.props.dataRetur.master.lokasi;
+               data['userid'] = this.state.userid;
+               data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
+               data['detail'] = detail;
+               this.props.dispatch(storeReturTanpaNota(data));
+               console.log("SUBMITTED",data);
            }
-            subtotal+=parseInt(v.qty_retur)*parseInt(v.harga_beli);
-            detail.push({
-                "kd_brg":v.kode_barang,
-                "barcode":v.barcode,
-                "satuan":v.satuan,
-                "qty":v.qty_retur,
-                "harga_beli":v.harga_beli,
-                "keterangan":"-",
-                "kondisi":"Good Stock"
-            })
+
         });
-        data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
-        data['supplier'] = this.props.dataRetur.master.kode_supplier;
-        data['keterangan'] = '-';
-        data['subtotal'] = subtotal;
-        data['lokasi'] = this.props.dataRetur.master.lokasi;
-        data['userid'] = this.state.userid;
-        data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
-        data['detail'] = detail;
-        this.props.dispatch(storeReturTanpaNota(data));
-        console.log("SUBMITTED",data);
+
     }
     render(){
         // const {total,last_page,per_page,current_page,from,to,data} = this.props.receiveReportDetail;
@@ -105,13 +124,13 @@ class FormReturReceive extends Component{
                             <td className="text-black">Tanggal Retur</td>
                             <td>: {moment(new Date()).format("yyyy-MM-DD")}</td>
                             <td className="text-black">Lokasi</td>
-                            <td>: </td>
+                            <td>: {this.state.lokasi}</td>
                         </tr>
                         <tr>
                             <td className="text-black">No. Pembelian</td>
-                            <td>: </td>
+                            <td>:  {this.state.no_faktur_beli}</td>
                             <td className="text-black">Keterangan</td>
-                            <td>: </td>
+                            <td>: -</td>
                         </tr>
                         </thead>
                     </table>
@@ -153,9 +172,15 @@ class FormReturReceive extends Component{
                                             <td style={columnStyle}>0</td>
                                             <td style={columnStyle}>{toRp(parseInt(v.qty)*parseInt(v.harga_beli))}</td>
                                             <td style={columnStyle}>
-                                                <input type="text" name="qty_retur" className="form-control" value={v.qty_retur}  onChange={(e)=>this.HandleChangeInputValue(e,i)}/>
+                                                <input type="number" name="qty_retur" className="form-control" value={v.qty_retur}  onChange={(e)=>this.HandleChangeInputValue(e,i)}/>
                                                 {
                                                     parseInt(v.qty_retur) > parseInt(v.stock) ? (<small style={{fontWeight:"bold",color:"red"}}>stock tidak tersedia</small>) : ""
+                                                }
+                                                {
+                                                    parseInt(v.qty_retur) > parseInt(v.qty) ? (<small style={{fontWeight:"bold",color:"red"}}>stock melebihi pembelian</small>) : ""
+                                                }
+                                                {
+                                                    parseInt(v.qty_retur) < 0 ? (<small style={{fontWeight:"bold",color:"red"}}>qty harus lebih dari 0</small>) : ""
                                                 }
                                             </td>
                                             <td style={columnStyle}>
@@ -171,7 +196,7 @@ class FormReturReceive extends Component{
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn-primary" onClick={this.handleSubmit}>Simpan</button>
+                    <button className="btn btn-primary" onClick={this.handleSubmit} disabled={this.state.disabelButton}>Simpan</button>
                 </ModalFooter>
             </WrapperModal>
         );
