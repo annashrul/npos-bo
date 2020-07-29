@@ -39,7 +39,7 @@ class ReceiveReport extends Component{
     }
     componentWillMount(){
         let page=localStorage.getItem("pageNumber_receive_report");
-        this.checkingParameter(page===undefined&&page===null?1:page);
+        this.checkingParameter(page!==undefined&&page!==null?page:1);
     }
     componentDidMount(){
         if (localStorage.location_receive_report !== undefined && localStorage.location_receive_report !== '') {
@@ -68,6 +68,8 @@ class ReceiveReport extends Component{
                 endDate: localStorage.date_to_receive_report
             })
         }
+        let page=localStorage.getItem("pageNumber_receive_report");
+        this.checkingParameter(page!==undefined&&page!==null?page:1);
     }
     componentWillReceiveProps = (nextProps) => {
         let type = [
