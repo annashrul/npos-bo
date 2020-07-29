@@ -12,25 +12,28 @@ import {FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
 import Paginationq from "helper";
 import DetailReceiveReport from "../../../modals/report/purchase/receive/detail_receive_report";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {FetchReportExcel} from "../../../../../redux/actions/purchase/receive/receive.action";
+import {FetchReceiveData, FetchReportExcel} from "../../../../../redux/actions/purchase/receive/receive.action";
+import {toRp} from "../../../../../helper";
+import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
 
 class ReceiveReport extends Component{
     constructor(props){
         super(props);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.handleEvent = this.handleEvent.bind(this);
+        this.handleSearch       = this.handleSearch.bind(this);
+        this.toggleModal        = this.toggleModal.bind(this);
+        this.handleEvent        = this.handleEvent.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-        this.HandleChangeType = this.HandleChangeType.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.HandleChangeType   = this.HandleChangeType.bind(this);
+        this.handleChange       = this.handleChange.bind(this);
+        this.handleRetur        = this.handleRetur.bind(this);
         this.state={
-            detail:{},
-            startDate:moment(new Date()).format("yyyy-MM-DD"),
-            endDate:moment(new Date()).format("yyyy-MM-DD"),
-            location_data:[],
-            location:"",
-            type_data:[],
-            type:"",
+            detail          :{},
+            startDate       :moment(new Date()).format("yyyy-MM-DD"),
+            endDate         :moment(new Date()).format("yyyy-MM-DD"),
+            location_data   :[],
+            location        :"",
+            type_data       :[],
+            type            :"",
             any_receive_report:''
         }
     }
@@ -157,7 +160,6 @@ class ReceiveReport extends Component{
         localStorage.setItem("pageNumber_receive_report",pageNumber);
         this.checkingParameter(pageNumber);
     }
-
     handleSearch(e){
         e.preventDefault();
         localStorage.setItem("any_receive_report",this.state.any_receive_report);
@@ -177,7 +179,13 @@ class ReceiveReport extends Component{
         localStorage.setItem(`operator_${que}`,operator);
         this.props.dispatch(FetchReportDetail(1,kdTrx));
     }
-
+    handleRetur(e,kode){
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formReturReceive"));
+        this.props.dispatch(FetchReceiveData(kode))
+    }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
@@ -327,7 +335,7 @@ class ReceiveReport extends Component{
                                     }
 
                                 </table>
-                                <table className="table table-hover table-bordered">
+                                <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle}>#</th>
@@ -371,6 +379,9 @@ class ReceiveReport extends Component{
                                                                                     v.pelunasan,
                                                                                     v.operator
                                                                                 )}>Detail</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleRetur(
+                                                                                    e,v.no_faktur_beli
+                                                                                )}>Retur</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -388,7 +399,7 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{v.kontabon}</td>
                                                                     <td style={columnStyle}>{v.jumlah_kontrabon}</td>
                                                                     <td style={columnStyle}>{v.qty_beli}</td>
-                                                                    <td style={columnStyle}>{v.total_beli}</td>
+                                                                    <td style={columnStyle}>{toRp(parseInt(v.total_beli))}</td>
                                                                 </tr>
                                                             )
                                                         })
@@ -411,6 +422,7 @@ class ReceiveReport extends Component{
                                 />
                             </div>
                             <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail}/>
+                            <FormReturReceive dataRetur={this.props.dataRetur}/>
                         </div>
                     </div>
                 </div>
@@ -425,6 +437,7 @@ const mapStateToProps = (state) => {
         isLoading: state.receiveReducer.isLoading,
         // isLoadingReportDetail: state.receiveReducer.isLoadingReportDetail,
         receiveReportDetail:state.receiveReducer.dataReceiveReportDetail,
+        dataRetur:state.receiveReducer.receive_data,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
         auth: state.auth

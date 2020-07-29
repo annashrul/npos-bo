@@ -69,13 +69,13 @@ class ListDepartment extends Component{
                <div className="col-md-12">
                    <form onSubmit={this.handlesearch} noValidate>
                        <div className="row">
-                           <div className="col-8 col-xs-8 col-md-8">
+                           <div className="col-8 col-xs-8 col-md-9">
                                <div className="form-group">
                                    <label>Search Department</label>
                                    <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_department')}/>
                                </div>
                            </div>
-                           <div className="col-4 col-xs-4 col-md-4">
+                           <div className="col-4 col-xs-4 col-md-3">
                                <div className="form-group">
                                    <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
                                    <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={(e)=>this.toggleModal(e,null)} className="btn btn-primary"><i className="fa fa-plus"></i></button>

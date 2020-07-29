@@ -35,20 +35,20 @@ class Cash extends Component{
     componentWillMount(){
         let type = this.state.type;
         let any = this.state.any;
-        this.props.dispatch(FetchCash(1,type===undefined?'masuk':type,any===undefined?'':any));
+        this.props.dispatch(FetchCash(1,type===undefined&&type===null?'masuk':type,any===undefined?'':any));
     }
 
     handlePagin(param){
         let type = this.state.type;
         let any = this.state.any;
-        this.props.dispatch(FetchCash(param,type===undefined?'masuk':type,any===undefined?'':any))
+        this.props.dispatch(FetchCash(param,type===undefined&&type===null?'masuk':type,any===undefined?'':any))
     }
 
     handleDelete(id){
         this.props.dispatch(deleteCash(id));
         let type = this.state.type;
         let any = this.state.any;
-        this.props.dispatch(FetchCash(1,type===undefined?'masuk':type,any===undefined?'':any))
+        this.props.dispatch(FetchCash(1,type===undefined&&type===null?'masuk':type,any===undefined?'':any))
     }
 
     render(){

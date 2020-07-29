@@ -3,11 +3,16 @@ import {DEPT} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,
-    status:"",msg:"",data:[]
+    status:"",msg:"",data:[],allData:[]
 };
 
 export const departmentReducer = (state=initialState,action) => {
     switch (action.type) {
+        case DEPT.ALL:
+            console.log("LIST DEPARTMENT ALL REDUCER",action.data.result)
+            return Object.assign({}, state,{
+                allData:action.data.result
+            });
         case DEPT.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,

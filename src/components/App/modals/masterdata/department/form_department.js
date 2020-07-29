@@ -48,8 +48,8 @@ class FormDepartment extends Component{
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
         console.log(parseData);
-        let err = this.state.error;
         parseData['nama'] = this.state.nama;
+        let err = this.state.error;
         if(this.state.nama===''||this.state.nama===undefined){
             err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
             this.setState({error: err});

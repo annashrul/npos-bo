@@ -915,7 +915,7 @@ class Receive extends Component{
                   </div>
                 </div>
               </div>
-              <div className="col-lg-7 col-md-8 col-xl-9 box-margin">
+              <div className="col-lg-7 col-md-8 col-xl-9 box-margin" style={{zoom:"80%"}}>
                 <div className="card" style={{height: "auto"}}>
                   <div className="container" style={{ marginTop: "20px" }}>
                     {/* HEADER FORM */}

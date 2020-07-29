@@ -10,6 +10,9 @@ export function setLoading(load){
 export function setDepartment(data=[]){
     return {type:DEPT.SUCCESS,data}
 }
+export function setAllDepartment(data=[]){
+    return {type:DEPT.ALL,data}
+}
 export function setDepartmentFailed(data=[]){
     return {type:DEPT.FAILED,data}
 }
@@ -36,8 +39,6 @@ export const FetchDepartment = (page=1,q='')=>{
         })
     }
 }
-
-
 
 export const createDepartment = (data) => {
     return (dispatch) => {
@@ -80,7 +81,6 @@ export const createDepartment = (data) => {
             })
     }
 }
-
 
 export const updateDepartment = (id,data) => {
     return (dispatch) => {
@@ -164,5 +164,20 @@ export const deleteDepartment = (id,token) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+export const FetchAllDepartment = ()=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL+`departement?page=1&perpage=10000`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setAllDepartment(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }
