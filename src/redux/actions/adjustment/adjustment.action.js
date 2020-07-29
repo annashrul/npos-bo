@@ -33,11 +33,9 @@ export const FetchAdjustment = (page=1,q='')=>{
         }else{
             url = `adjustment/report?page=${page}&q=${q}`;
         }
-        console.log(url)
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
                 dispatch(setAdjustment(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
@@ -52,7 +50,6 @@ export const FetchAdjustmentAll = ()=>{
         axios.get(HEADERS.URL+`adjustment/report?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
                 dispatch(setAdjustmentAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
@@ -86,6 +83,7 @@ export const storeAdjusment = (data) => {
                         }
                     }
                     destroy('adjusment');
+                    localStorage.removeItem("lk");
                     window.location.reload(false);
                 })
                 dispatch(setLoading(false));
@@ -188,7 +186,6 @@ export const FetchAdjustmentDetail = (page=1,code)=>{
         axios.get(HEADERS.URL+`adjustment/report/${code}/?page=${page}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
                 dispatch(setAdjustmentDetail(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
@@ -211,7 +208,6 @@ export const FetchCodeAdjustment = (lokasi)=>{
         axios.get(HEADERS.URL+`adjustment/getcode?lokasi=${lokasi}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
                 dispatch(setCodeAdjusment(data));
             }).catch(function(error){
             console.log(error)
