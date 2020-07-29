@@ -85,7 +85,7 @@ class ReportCash extends Component{
 
     componentWillMount(){
         let page=localStorage.getItem("pageNumber_cash_report");
-        this.checkingParameter(page===undefined&&page===null?1:page);
+        this.checkingParameter(page!==undefined&&page!==null?page:1);
     }
     componentDidMount(){
         if (localStorage.location_cash_report !== undefined && localStorage.location_cash_report !== '') {
