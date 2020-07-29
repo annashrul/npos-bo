@@ -154,16 +154,16 @@ class ReportCash extends Component{
         let tipe=localStorage.getItem("type_cash_report");
         let lokasi=localStorage.getItem("location_cash_report");
         let kassa=localStorage.getItem("kassa_cash_report");
-        if(dateFrom!==''||dateTo!==''){
+        if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }
-        if(tipe!==''){
+        if(tipe!==undefined&&tipe!==null){
             if(where!==''){where+='&'}where+=`type_kas=${tipe}`
         }
-        if(lokasi!==''){
+        if(lokasi!==undefined&&lokasi!==null){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         }
-        if(kassa!==''){
+        if(kassa!==undefined&&kassa!==null){
             if(where!==''){where+='&'}where+=`kassa=${kassa}`
         }
         this.props.dispatch(FetchCashReport(pageNumber,where));
