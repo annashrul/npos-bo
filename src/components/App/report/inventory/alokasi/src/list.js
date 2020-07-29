@@ -4,11 +4,10 @@ import {FetchAlokasi, FetchAlokasiDetail} from "redux/actions/inventory/alokasi.
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
-import Preloader from "Preloader";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
-import {HEADERS} from 'redux/actions/_constants'
+
 const range = {
     Today: [moment(), moment()],
     Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
