@@ -4,6 +4,7 @@ import {
 
 const initialState = {
     isLoading: false,
+    isLoadingReportDetail: false,
     data: [],
     dataReceiveReportDetail: [],
     receiveReport: [],
@@ -52,6 +53,10 @@ export const receiveReducer = (state = initialState, action) => {
         case RECEIVE.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
+            });
+        case RECEIVE.LOADING_REPORT_DETAIL:
+            return Object.assign({}, state, {
+                isLoadingReportDetail: action.load
             });
         default:
             return state

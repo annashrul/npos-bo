@@ -441,6 +441,7 @@ class TrxAdjustment extends Component{
         });
     }
     render() {
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         console.log("DATA BARANG TI STATE",this.state.brgval);
         return (
             <Layout page="Adjusment">
@@ -633,20 +634,20 @@ class TrxAdjustment extends Component{
                                             </div>
 
                                         </div>
-                                        <div className="table-responsive">
+                                        <div className="table-responsive" style={{overflowX: "auto"}}>
                                             <table className="table table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Kode</th>
-                                                    <th>barcode</th>
-                                                    <th>Nama</th>
-                                                    <th>Satuan</th>
-                                                    <th>Harga Beli</th>
-                                                    <th>Stock Sistem</th>
-                                                    <th>Jenis</th>
-                                                    <th>Stock Adjust</th>
-                                                    <th>Saldo Stock</th>
+                                                    <th style={columnStyle}>#</th>
+                                                    <th style={columnStyle}>Kode</th>
+                                                    <th style={columnStyle}>barcode</th>
+                                                    <th style={columnStyle}>Nama</th>
+                                                    <th style={columnStyle}>Satuan</th>
+                                                    <th style={columnStyle}>Harga Beli</th>
+                                                    <th style={columnStyle}>Stock Sistem</th>
+                                                    <th style={columnStyle}>Jenis</th>
+                                                    <th style={columnStyle}>Stock Adjust</th>
+                                                    <th style={columnStyle}>Saldo Stock</th>
                                                 </tr>
                                                 </thead>
 
@@ -664,25 +665,25 @@ class TrxAdjustment extends Component{
                                                         }
                                                         return (
                                                             <tr key={index}>
-                                                                <td>
+                                                                <td style={columnStyle}>
                                                                     <a href="#" className='btn btn-danger btn-sm'
                                                                        onClick={(e) => this.HandleRemove(e, item.id)}><i
                                                                         className='fa fa-trash'/></a>
                                                                 </td>
-                                                                <td>{item.kd_brg}</td>
-                                                                <td>{item.barcode}</td>
-                                                                <td>{item.nm_brg}</td>
-                                                                <td>{item.satuan}</td>
+                                                                <td style={columnStyle}>{item.kd_brg}</td>
+                                                                <td style={columnStyle}>{item.barcode}</td>
+                                                                <td style={columnStyle}>{item.nm_brg}</td>
+                                                                <td style={columnStyle}>{item.satuan}</td>
 
-                                                                <td><input readOnly={true} type='text' name='harga_beli' value={item.harga_beli} style={{width: '35px', textAlign: 'center'}}/></td>
-                                                                <td><input readOnly={true} type='text' name='stock' value={item.stock} style={{width: '50px', textAlign: 'center'}}/></td>
-                                                                <td>
-                                                                    <select name='status' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].status} defaultValue={this.state.brgval[index].status}>
+                                                                <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={item.harga_beli} className="form-control"/></td>
+                                                                <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
+                                                                <td style={columnStyle}>
+                                                                    <select style={{width:"120px"}} name='status' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].status} defaultValue={this.state.brgval[index].status} className="form-control">
                                                                         <option value="tambah">Tambah</option>
                                                                         <option value="kurang">Kurang</option>
                                                                     </select>
                                                                 </td>
-                                                                <td><input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust} style={{width: '50px', textAlign: 'center'}}/></td>
+                                                                <td style={columnStyle}><input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/></td>
                                                                 <td style={{textAlign:"right"}}>{saldo_stock}</td>
                                                             </tr>
                                                         )

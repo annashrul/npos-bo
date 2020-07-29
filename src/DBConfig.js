@@ -2,7 +2,6 @@ export const DBConfig = {
     name: 'npos',
     version: 1,
     objectStoresMeta: [
-
         {
             store: 'sess',
             storeConfig: { keyPath: 'id', autoIncrement: true },
@@ -168,6 +167,24 @@ export const DBConfig = {
                 { name: 'group2', keypath: 'group2', options: { unique: false } },
                 { name: 'stock', keypath: 'stock', options: { unique: false } },
                 { name: 'qty_fisik', keypath: 'qty_fisik', options: { unique: false } },
+            ]
+        },
+        {
+            store: 'retur_tanpa_nota',
+            storeConfig: { keyPath: 'id', autoIncrement: true },
+            storeSchema: [
+                { name: 'kd_brg', keypath: 'kd_brg', options: { unique: false } },
+                { name: 'nm_brg', keypath: 'nm_brg', options: { unique: false } },
+                { name: 'barcode', keypath: 'barcode', options: { unique: false } },
+                { name: 'satuan', keypath: 'satuan', options: { unique: false } },
+                { name: 'deskripsi', keypath: 'deskripsi', options: { unique: false } },
+                { name: 'kondisi', keypath: 'kondisi', options: { unique: false } },
+                { name: 'stock', keypath: 'stock', options: { unique: false } },
+                { name: 'ppn', keypath: 'ppn', options: { unique: false } },
+                { name: 'harga_beli', keypath: 'harga_beli', options: { unique: false } },
+                { name: 'ket', keypath: 'ket', options: { unique: false } },
+                { name: 'qty_retur', keypath: 'qty_retur', options: { unique: false } },
+                { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
             ]
         },
 

@@ -35,7 +35,8 @@ class ListUserList extends Component{
 
     handlePageChange(pageNumber) {
         let any = localStorage.getItem("any_user_list");
-        this.props.pagin(pageNumber,any===null||any===''||any===undefined?'':any);
+        // this.props.pagin(pageNumber,any===null||any===''||any===undefined?'':any);
+        this.props.dispatch(FetchUserList(pageNumber,any===undefined&&any===null&&any===''?1:any))
     }
 
     toggleModal(e) {

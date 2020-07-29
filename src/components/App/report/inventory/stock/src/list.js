@@ -143,7 +143,7 @@ class ListStockReport extends Component{
     }
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {per_page,current_page,from,to,data} = this.props.data;
         const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total;
 

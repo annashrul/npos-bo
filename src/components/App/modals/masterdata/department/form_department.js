@@ -13,7 +13,10 @@ class FormDepartment extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             nama:'',
-            id:''
+            id:'',
+            error:{
+                nama:"",
+            },
         };
     }
     handleChange = (event) => {
@@ -45,16 +48,23 @@ class FormDepartment extends Component{
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
         console.log(parseData);
+        let err = this.state.error;
         parseData['nama'] = this.state.nama;
-        // console.log(this.props.token);
-        if(this.props.detail===undefined){
-            this.props.dispatch(createDepartment(parseData));
-            this.props.dispatch(ModalToggle(false));
+        if(this.state.nama===''||this.state.nama===undefined){
+            err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
+            this.setState({error: err});
+            return;
         }else{
-            console.log(this.state.id);
-            this.props.dispatch(updateDepartment(this.state.id,parseData));
-            this.props.dispatch(ModalToggle(false));
+            if(this.props.detail===undefined){
+                this.props.dispatch(createDepartment(parseData));
+                this.props.dispatch(ModalToggle(false));
+            }else{
+                console.log(this.state.id);
+                this.props.dispatch(updateDepartment(this.state.id,parseData));
+                this.props.dispatch(ModalToggle(false));
+            }
         }
+
 
 
     }
@@ -69,8 +79,13 @@ class FormDepartment extends Component{
                     <ModalBody>
                         <div className="form-group">
                             <label>Name</label>
-                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} required/>
+                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}/>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.nama}
+                            </div>
                         </div>
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="form-group" style={{textAlign:"right"}}>

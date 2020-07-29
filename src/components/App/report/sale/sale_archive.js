@@ -98,12 +98,12 @@ class SaleArchive extends Component{
                 any: localStorage.any_sale_report
             })
         }
-        if (localStorage.date_from_sale_report !== undefined && localStorage.date_from_sale_report !== null) {
+        if (localStorage.date_from_sale_report !== undefined || localStorage.date_from_sale_report !== null) {
             this.setState({
                 startDate: localStorage.date_from_sale_report
             })
         }
-        if (localStorage.date_to_sale_report !== undefined && localStorage.date_to_sale_report !== null) {
+        if (localStorage.date_to_sale_report !== undefined || localStorage.date_to_sale_report !== null) {
             this.setState({
                 endDate: localStorage.date_to_sale_report
             })
@@ -125,6 +125,8 @@ class SaleArchive extends Component{
         localStorage.setItem('location_sale_report', lk.value);
     }
     handleEvent = (event, picker) => {
+        // console.log(picker.startDate._d.substring(0,10));
+        // console.log(picker.endDate._d.substring(0,10));
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
         localStorage.setItem("date_from_sale_report",`${awal}`);
@@ -138,7 +140,7 @@ class SaleArchive extends Component{
         e.preventDefault();
         localStorage.setItem("any_sale_report",this.state.any_sale_report);
         let page=localStorage.getItem("pageNumber_sale_report");
-        this.checkingParameter(page===undefined&&page===null?1:page);
+        this.checkingParameter(1);
     }
     checkingParameter(pageNumber){
         let where='';
@@ -196,8 +198,10 @@ class SaleArchive extends Component{
     }
 
     render(){
-        console.log("LAPORAN EXCEL", this.props.saleReportExcel);
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        // console.log("MOMENT 1",moment(new Date()).format("yyyy-MM-DD"));
+        // console.log("MOMENT 2",moment(new Date()).format("yyyy-MM-DD"));
+        // console.log("LAPORAN EXCEL", this.props.saleReportExcel);
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
         const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
         // const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
@@ -214,6 +218,7 @@ class SaleArchive extends Component{
         let change_per = 0;
         let voucher_per = 0;
         let rounding_per = 0;
+
         return (
             <Layout page="Laporan Arsip Penjualan">
                 <div className="card">
@@ -225,13 +230,18 @@ class SaleArchive extends Component{
                             <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label htmlFor=""> Periode </label>
-                                    <DateRangePicker
-                                        ranges={rangeDate}
-                                        alwaysShowCalendars={true}
-                                        onEvent={this.handleEvent}
-                                    >
-                                        <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
-                                    </DateRangePicker>
+                                    <div className="customDatePickerWidth">
+                                        <DateRangePicker
+                                            ranges={rangeDate}
+                                            alwaysShowCalendars={true}
+                                            onEvent={this.handleEvent}
+                                            showDropdowns={true}
+                                            autoUpdateInput={true}
+                                        >
+                                            <input type="text" id="date" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                        </DateRangePicker>
+                                    </div>
+
                                 </div>
                             </div>
                             <div className="col-6 col-xs-6 col-md-2">
@@ -266,7 +276,6 @@ class SaleArchive extends Component{
                                                 return op.value === this.state.type
                                             })
                                         }
-
                                     />
                                 </div>
                             </div>
@@ -300,7 +309,7 @@ class SaleArchive extends Component{
                                         <th className="text-black" colSpan={23}>{this.state.startDate} - {this.state.startDate}</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-black" colSpan={23}>{this.state.location}</th>
+                                        <th className="text-black" colSpan={23}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
                                     </tr>
 
                                     <tr>

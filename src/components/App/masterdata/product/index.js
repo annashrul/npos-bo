@@ -39,16 +39,50 @@ class Product extends Component{
         }
     }
     componentWillMount(){
-        let by = this.state.by;
-        let any = this.state.any;
         let anyGroupProduct = localStorage.getItem("any_group_product");
         let anyPriceProduct = localStorage.getItem("any_price_product");
         let pageGroupProduct = localStorage.getItem("page_group_product");
         let pagePriceProduct = localStorage.getItem("page_price_product");
         // this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
-        this.props.dispatch(FetchProduct(1, ''));
+        this.checkingProduct();
         this.props.dispatch(FetchPriceProduct(pagePriceProduct?pagePriceProduct:1,anyPriceProduct?anyPriceProduct:''));
         this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
+    }
+    checkingProduct(){
+        console.log("COMPONENT WILL MOUNT");
+        let where='';
+        let que = 'any_master';
+        let kode=localStorage.getItem(`${que}_kode_barang`);
+        let nama=localStorage.getItem(`${que}_nama_barang`);
+        let kelompok=localStorage.getItem(`${que}_kelompok_barang`);
+        let supplier=localStorage.getItem(`${que}_supplier_barang`);
+        let subdept=localStorage.getItem(`${que}_subdept_barang`);
+        let kategori=localStorage.getItem(`${que}_kategori_barang`);
+        if(kode!==undefined&&kode!==null&&kode!==''){
+            if(where!==''){where+='&';}
+            where+=`searchby=kd_brg&q=${kode}`;
+        }
+        if(nama!==undefined&&nama!==null&&nama!==''){
+            if(where!==''){where+='&';}
+            where+=`searchby=nm_brg&q=${nama}`;
+        }
+        if(kelompok!==undefined&&kelompok!==null&&kelompok!==''){
+            if(where!==''){where+='&';}
+            where+=`searchby=kel_brg&q=${kelompok}`;
+        }
+        if(supplier!==undefined&&supplier!==null&&supplier!==''){
+            if(where!==''){where+='&';}
+            where+=`searchby=supplier&q=${supplier}`;
+        }
+        if(subdept!==undefined&&subdept!==null&&subdept!==''){
+            if(where!==''){where+='&';}
+            where+=`searchby=subdept&q=${subdept}`;
+        }
+        if(kategori!==undefined&&kategori!==null&&kategori!==''){
+            if(where!==''){where+='&';}
+            where+=`searchby=kategori&q=${kategori}`;
+        }
+        this.props.dispatch(FetchProduct(1,where));
     }
     //Use arrow functions to avoid binding
     handleSelect = (index) => {
