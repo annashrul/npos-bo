@@ -79,6 +79,7 @@ export const logoutUser = () => dispatch =>{
     // localStorage.removeItem('jwtToken');
     destroy('sess')
     dispatch(setLoggedin(false));
+    localStorage.clear()
 
     // remove auth header for future request
     setAuthToken(false);
