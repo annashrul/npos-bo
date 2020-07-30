@@ -15,13 +15,20 @@ class Layout extends Component {
         // if (!this.props.authenticated) {
         //     return <Redirect to = '/auth' /> ;
         // }
+        const style = {
+            overflowY: 'auto',
+            '::-webkit-scrollbar': {
+                width: '0px',
+                background: 'transparent'
+            }
+          };
         return (
             <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-deactive menu-collasped-active":"ecaps-page-wrapper sidemenu-hover-deactive"}>
                 {/* Side Menu */}
-                <div className="ecaps-sidemenu-area">
+                <div style={style} className="ecaps-sidemenu-area">
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/"><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{paddingTop:'9px'}} /> <img className="small-logo" src={Logo} alt="Mobile Logo" /></Link>
+                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{paddingTop:'9px'}} /> <img className="small-logo" src={Logo} alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="ecaps-sidenav" id="ecapsSideNav">
