@@ -125,8 +125,6 @@ class SaleArchive extends Component{
         localStorage.setItem('location_sale_report', lk.value);
     }
     handleEvent = (event, picker) => {
-        // console.log(picker.startDate._d.substring(0,10));
-        // console.log(picker.endDate._d.substring(0,10));
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
         localStorage.setItem("date_from_sale_report",`${awal}`);
@@ -139,7 +137,6 @@ class SaleArchive extends Component{
     handleSearch(e){
         e.preventDefault();
         localStorage.setItem("any_sale_report",this.state.any_sale_report);
-        let page=localStorage.getItem("pageNumber_sale_report");
         this.checkingParameter(1);
     }
     checkingParameter(pageNumber){

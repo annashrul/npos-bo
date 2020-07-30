@@ -82,8 +82,27 @@ class TrxOpname extends Component{
         if(nextProps.barang.length>0){
             this.getData();
         }
-
-
+    }
+    componentWillMount(){
+        if (this.props.auth.user) {
+            let lk = [];
+            let loc = this.props.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: this.props.auth.user.id
+                })
+            }
+        }
+        if(this.props.barang.length>0){
+            this.getData();
+        }
     }
     setTglOrder(date) {
         this.setState({
@@ -164,7 +183,7 @@ class TrxOpname extends Component{
             group1:item.group1,
             group2:item.group2,
             stock:item.stock,
-            qty_fisik:item.qty_fisik,
+            qty_fisik:parseInt(item.qty_fisik)+1,
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
@@ -191,7 +210,7 @@ class TrxOpname extends Component{
                     group1:res.group1,
                     group2:res.group2,
                     stock:res.stock,
-                    qty_fisik:res.qty_fisik,
+                    qty_fisik:parseInt(res.qty_fisik)+1,
                 })
             }
             this.getData()

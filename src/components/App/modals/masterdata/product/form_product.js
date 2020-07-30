@@ -161,7 +161,6 @@ class FormProduct extends Component{
     generateCode(e){
         this.setState({generateCode: e.target.checked,});
         if(e.target.checked === true){
-            console.log(this.state.codeServer);
             this.state.kd_brg = this.state.codeServer;
             this.props.dispatch(FetchCheck({
                 table: 'barang',
@@ -174,7 +173,6 @@ class FormProduct extends Component{
         }else{
             this.state.kd_brg = "";
         }
-        console.log(e.target.checked);
     }
     toggle = (e) => {
         e.preventDefault();
@@ -188,14 +186,8 @@ class FormProduct extends Component{
     };
 
     componentWillReceiveProps(nextProps){
-        console.log("componentWillReceiveProps",nextProps);
-        // localStorage.setItem("isReadonlySama","false");
-        // localStorage.setItem("isReadonlySamaPack","false");
-        // localStorage.setItem("isReadonlySamaKarton","false");
         this.state.codeServer = nextProps.productCode;
-
         if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
-            console.log("########################## EDIT ############################");
             let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
             let barang_hrg = typeof nextProps.dataEdit.barang_hrg === 'object' ? nextProps.dataEdit.barang_hrg : this.state.barangHarga;
             let barangSku=[];let barangHrg=[];let konversi=[];
@@ -289,10 +281,7 @@ class FormProduct extends Component{
                 barangHarga:barangHrg
             })
         }else{
-            console.log("########################## ADD ############################");
-
             const {data} = nextProps.dataLocation;
-            console.log("DATA",data);
             this.state.check = nextProps.dataLocation;
             let brgHrg=[];
             if(typeof data === 'object'){
@@ -335,22 +324,17 @@ class FormProduct extends Component{
                         ]
                     )
                 });
-                console.log("ABRANG PUSH",brgHrg);
                 this.setState({
                     barangHarga:brgHrg
                 });
             }
         }
-
-        // this.setState({barangHrg:brgHrg});
     }
-    // onHandleChangeChild
     async fetchData(data){
         const url = HEADERS.URL + `site/cekdata`;
         return await axios.post(url, data)
             .then(function (response) {
                 const data = response.data;
-                console.log(data);
                return data;
             })
             .catch(function (error) {
@@ -364,8 +348,6 @@ class FormProduct extends Component{
         event.preventDefault();
         let name = event.target.name;
         let val = event.target.value;
-        // this.setState({ [event.target.name]: event.target.value});
-
         if(event.target.id==='barcode1'){
             const data = this.fetchData({
                 table: 'barang_sku',
@@ -373,7 +355,6 @@ class FormProduct extends Component{
                 value: val
             });
             data.then(res=>{
-                console.log("IEU RES",res);
                 if(res.result===1){
                     this.setState({
                         error_barcode1:true,
@@ -384,23 +365,8 @@ class FormProduct extends Component{
                         error_barcode1:false,
                         pesan_barcode1:""
                     })
-                    // if(this.state.barangSku[0].barcode===this.state.barangSku[1].barcode){
-                    //     this.setState({
-                    //         error_barcode1:true,
-                    //         pesan_barcode1:"barcode 1 dan 2 tidak boleh sama"
-                    //     })
-                    // }
-                    // if(this.state.barangSku[0].barcode===this.state.barangSku[2].barcode){
-                    //     this.setState({
-                    //         error_barcode1:true,
-                    //         pesan_barcode1:"barcode 1 dan 3 tidak boleh sama"
-                    //     })
-                    // }
                 }
             });
-
-            // console.log("")
-
         }
         if(event.target.id==='barcode2'){
             const data = this.fetchData({
@@ -409,7 +375,6 @@ class FormProduct extends Component{
                 value: val
             });
             data.then(res=>{
-                console.log("IEU RES",res);
                 if(res.result===1){
                     this.setState({
                         error_barcode2:true,
@@ -422,19 +387,6 @@ class FormProduct extends Component{
                     })
                 }
             });
-            // if(this.state.barangSku[1].barcode===this.state.barangSku[0].barcode){
-            //     this.setState({
-            //         error_barcode2:true,
-            //         pesan_barcode2:"barcode 2 dan 1 tidak boleh sama"
-            //     })
-            //
-            // }
-            // if(this.state.barangSku[1].barcode===this.state.barangSku[2].barcode){
-            //     this.setState({
-            //         error_barcode2:true,
-            //         pesan_barcode2:"barcode 2 dan 3 tidak boleh sama"
-            //     })
-            // }
         }
         if(event.target.id==='barcode3'){
             const data = this.fetchData({
@@ -443,7 +395,6 @@ class FormProduct extends Component{
                 value: val
             });
             data.then(res=>{
-                console.log("IEU RES",res);
                 if(res.result===1){
                     this.setState({
                         error_barcode3:true,
@@ -453,21 +404,7 @@ class FormProduct extends Component{
                     this.setState({error_barcode3:false,pesan_barcode3:""})
                 }
             });
-            // if(this.state.barangSku[2].barcode===this.state.barangSku[0].barcode){
-            //     this.setState({
-            //         error_barcode3:true,
-            //         pesan_barcode3:"barcode 3 dan 1 tidak boleh sama"
-            //     })
-            // }
-            // if(this.state.barangSku[2].barcode===this.state.barangSku[1].barcode){
-            //     this.setState({
-            //         error_barcode3:true,
-            //         pesan_barcode3:"barcode 3 dan 2 tidak boleh sama"
-            //     })
-            // }
-
         }
-
     }
     handleChange(event,i){
         let name = event.target.name;
@@ -476,10 +413,6 @@ class FormProduct extends Component{
         let hrg_jual_2_pcs = 0;let margin2_pcs=0;
         let hrg_jual_3_pcs = 0;let margin3_pcs=0;
         let hrg_jual_4_pcs = 0;let margin4_pcs=0;
-        // this.setState({
-        //     kd_brg: event.target.value,
-        //     error: event.target.validationMessage
-        // });
         this.setState({ [event.target.name]: event.target.value});
         let err = Object.assign({}, this.state.error, {
             [name]: ""
@@ -487,6 +420,9 @@ class FormProduct extends Component{
         this.setState({
             error: err
         });
+        if(name==='nm_brg'){
+            this.setState({deskripsi:val})
+        }
         if(name==='kd_brg'){
             this.props.dispatch(FetchCheck({
                 table: 'barang',
@@ -495,7 +431,6 @@ class FormProduct extends Component{
             }));
         }
         if(i!==null){
-            console.log("ID",event.target.id);
             let barangSku = [...this.state.barangSku];
             barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
             this.setState({ barangSku });
@@ -719,7 +654,6 @@ class FormProduct extends Component{
             return;
         }
         for(let i=0;i<this.state.barangSku.length;i++){
-            console.log("ISI BARCODE",this.state.barangSku[i].barcode);
             if(this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
                 alert(`form barcode index ke ${i+1} tidak boleh kosong`);
                 return;
@@ -749,7 +683,6 @@ class FormProduct extends Component{
             qty_konversi.push(this.state.barangSku[i].konversi);
         }
         let barangHarga = [...this.state.barangHarga];
-        console.log(event.target.name);
         if(event.target.name==="hrgBeliPCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
             if(this.state.barangSku.length > 1){
@@ -925,10 +858,8 @@ class FormProduct extends Component{
 
     }
     handleAllChecked = (event) => {
-        console.log(event.target.checked);
         let cik=[];
         event.target.checked===true?localStorage.setItem("isReadonly","true"):localStorage.setItem("isReadonly","false");
-        console.log(this.state.barangHarga);
         for(let i=0;i<this.state.barangHarga.length;i++){
             this.state.barangHarga[i][0].isCheckedPCS = event.target.checked;
         }
@@ -938,14 +869,11 @@ class FormProduct extends Component{
         }else{
             localStorage.setItem("samarata","false");
         }
-        console.log("DATA CIK",cik);
         this.setState({
             isChecked:event.target.checked,
         });
     };
     handleAllCheckedSku(event,i,lbl){
-        console.log(event.target.checked);
-        console.log(event.target.name);
         if(lbl === 'PACK'){
             event.target.checked===true?localStorage.setItem("isReadonlySamaPack","true"):localStorage.setItem("isReadonlySamaPack","false");
             event.target.checked===true?localStorage.setItem("isReadonlyPack","true"):localStorage.setItem("isReadonlyPack","false");
@@ -1257,8 +1185,6 @@ class FormProduct extends Component{
         parseData["berat"]=this.state.berat;
         parseData["barang_sku"] = barangSku;
         parseData["barang_harga"] = barangHrg;
-        console.log("FORM DATA",parseData);
-        // console.log();
         if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{

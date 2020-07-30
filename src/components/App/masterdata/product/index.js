@@ -26,7 +26,6 @@ class Product extends Component{
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
             let access = nextProps.auth.user.access;
-            console.log(access);
             if(access!==undefined&&access!==null){
                 if(nextProps.auth.user.access[10]['label']==="0"){
                     alert("bukan halaman kamu");
@@ -49,7 +48,6 @@ class Product extends Component{
         this.props.dispatch(FetchGroupProduct(pageGroupProduct?pageGroupProduct:1,anyGroupProduct?anyGroupProduct:''));
     }
     checkingProduct(){
-        console.log("COMPONENT WILL MOUNT");
         let where='';
         let que = 'any_master';
         let kode=localStorage.getItem(`${que}_kode_barang`);
@@ -58,6 +56,8 @@ class Product extends Component{
         let supplier=localStorage.getItem(`${que}_supplier_barang`);
         let subdept=localStorage.getItem(`${que}_subdept_barang`);
         let kategori=localStorage.getItem(`${que}_kategori_barang`);
+        let dateFrom=localStorage.getItem(`date_from_master_barang`);
+        let dateTo=localStorage.getItem(`date_to_master_barang`);
         if(kode!==undefined&&kode!==null&&kode!==''){
             if(where!==''){where+='&';}
             where+=`searchby=kd_brg&q=${kode}`;
@@ -82,12 +82,18 @@ class Product extends Component{
             if(where!==''){where+='&';}
             where+=`searchby=kategori&q=${kategori}`;
         }
+        if(localStorage.semuaPeriode==='false'){
+            if(dateFrom!==undefined&&dateFrom!==null&&dateFrom!==''){
+                if(where!==''){where+='&';}
+                where+=`dateFrom=${dateFrom}&dateTo=${dateTo}`;
+            }
+        }
+
         this.props.dispatch(FetchProduct(1,where));
     }
     //Use arrow functions to avoid binding
     handleSelect = (index) => {
         this.setState({selectedIndex: index}, () => {
-            console.log('Selected tab: ' + this.state.selectedIndex);
         });
     };
 

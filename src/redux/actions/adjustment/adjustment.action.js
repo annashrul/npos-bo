@@ -23,16 +23,15 @@ export function setCodeAdjusment(data=[]){
     return {type:ADJUSTMENT.GET_CODE,data}
 }
 
-export const FetchAdjustment = (page=1,q='')=>{
+export const FetchAdjustment = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
 
-        let url = '';
-        if(q===''){
-            url = `adjustment/report?page=${page}`;
-        }else{
-            url = `adjustment/report?page=${page}&q=${q}`;
+        let url =  `adjustment/report?page=${page}`;
+        if(where!==''){
+            url+=where;
         }
+        console.log("URL ADJUSMENT REPORT",url)
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;

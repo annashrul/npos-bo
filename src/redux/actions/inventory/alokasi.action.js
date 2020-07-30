@@ -159,24 +159,13 @@ export const storeAlokasi = (data) => {
             })
     }
 }
-export const FetchAlokasi = (page=1,q='',dateFrom='',dateTo='',location='')=>{
+export const FetchAlokasi = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url = '';
-        // if(dateFrom===''&&dateTo===''&&location===''){
-        //     url = `alokasi/report?page=${page}`;
-        // }
-        // if(dateFrom!==''&&dateTo!==''&&location===''){
-        //     url = `alokasi/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        // }
-        // if(dateFrom!==''&&dateTo!==''&&location!==''){
-        //     url = `alokasi/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        // }
-        // if(location!==''){
-        //     url = `alokasi/report?page=${page}&lokasi=${location}`;
-        // }
-        url = `alokasi/report?page=${page}`;
-        console.log("url alokasi",`${url}`);
+        let url = `alokasi/report?page=${page}`;
+        if(where!==''){
+            url+=where
+        }
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;

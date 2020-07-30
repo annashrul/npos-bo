@@ -35,13 +35,12 @@ class ListProduct extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleSearchBy = this.handleSearchBy.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
-        console.log("CONSTURTOR DATE FROM",localStorage.getItem("startDateProduct")===''?'string kosong':localStorage.getItem("startDateProduct"));
         this.state = {
             isExcel : false,
             array1: [],
             byValue : '',
-            startDate:localStorage.getItem("startDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("startDateProduct"),
-            endDate:localStorage.getItem("endDateProduct")===''?moment(new Date()).format("yyyy-MM-DD"):localStorage.getItem("endDateProduct"),
+            startDate:moment(new Date()).format("yyyy-MM-DD"),
+            endDate:moment(new Date()).format("yyyy-MM-DD"),
             sortBy: [
                 {id: 1, value: "kd_brg",label:'Kode Barang'},
                 {id: 2, value: "barcode", label:'Barcode'},
@@ -80,7 +79,12 @@ class ListProduct extends Component{
         if(localStorage.any_master_kategori_barang!==undefined&&localStorage.any_master_kategori_barang!==null&&localStorage.any_master_kategori_barang!==''){
             this.setState({any_kategori_barang:localStorage.any_master_kategori_barang});
         }
-        // this.props.dispatch(FetchProduct(1,where));
+        if(localStorage.date_from_master_product!==undefined&&localStorage.date_from_master_product!==null){
+            this.setState({startDate:localStorage.date_from_master_product})
+        }
+        if(localStorage.date_to_master_product!==undefined&&localStorage.date_to_master_product!==null){
+            this.setState({endDate:localStorage.date_to_master_product})
+        }
     }
 
     handleChange(event){
@@ -137,11 +141,9 @@ class ListProduct extends Component{
         if(column==='kategori_barang'){
             localStorage.removeItem("jenis_barang");
             localStorage.removeItem("kelompok_barang");
-            let kategori = localStorage.setItem("kategori_barang",val);
-
+            localStorage.setItem("kategori_barang",val);
         }
         if(column==='jenis_barang'){
-
             localStorage.removeItem("kelompok_barang");
             localStorage.removeItem("kategori_barang");
             let jenis = localStorage.setItem("jenis_barang",val);
@@ -151,7 +153,7 @@ class ListProduct extends Component{
         if(column==='kelompok_barang'){
             localStorage.removeItem("kategori_barang");
             localStorage.removeItem("jenis_barang");
-            let kelompok = localStorage.setItem("kelompok_barang",val);
+            localStorage.setItem("kelompok_barang",val);
         }
         this.props.dispatch(FetchProduct(1,where));
 
@@ -277,19 +279,14 @@ class ListProduct extends Component{
         );
     }
     handleEvent = (event, picker) => {
-        console.log("start: ", picker.startDate);
-        console.log("end: ", picker.endDate._d.toISOString());
-        // end:  2020-07-02T16:59:59.999Z
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("startDateProduct",`${awal}`);
-        localStorage.setItem("endDateProduct",`${akhir}`);
+        localStorage.setItem("date_from_master_product",`${awal}`);
+        localStorage.setItem("date_to_master_product",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
         });
-        // console.log(picker.startDate._d.toISOString());
-        // console.log(picker.endDate._d.toISOString());
     };
     render(){
         const loc_delete = this.handleDelete;
@@ -330,13 +327,8 @@ class ListProduct extends Component{
                         <div className="col-6 col-xs6 col-md-2">
                             <div className="form-group">
                                 <label htmlFor=""> Periode </label>
-                                <DateRangePicker
-                                    ranges={rangeDate}
-                                    alwaysShowCalendars={true}
-                                    onEvent={this.handleEvent}
-                                >
+                                <DateRangePicker ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
                                     <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
-                                    {/*<input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>*/}
                                 </DateRangePicker>
                             </div>
                         </div>

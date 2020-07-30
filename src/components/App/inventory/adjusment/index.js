@@ -84,8 +84,27 @@ class TrxAdjustment extends Component{
         if(nextProps.barang.length>0){
             this.getData();
         }
-
-
+    }
+    componentWillMount(){
+        if (this.props.auth.user) {
+            let lk = [];
+            let loc = this.props.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: this.props.auth.user.id
+                })
+            }
+        }
+        if(this.props.barang.length>0){
+            this.getData();
+        }
     }
     setTglOrder(date) {
         this.setState({

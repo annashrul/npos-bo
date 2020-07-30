@@ -202,7 +202,7 @@ class SideMenu extends Component {
                             <li className={this.state.isReportInventory===true || path==='/inventory_report'|| path==='/adjustment_report'|| path==='/alokasi_report'?"treeview active menu-open" : "treeview"}>
                                 <a href="#" onClick={(e) => this.changeMenu('report_inventory')}>Inventory <i className="fa fa-angle-right"></i></a>
                                 <ul className="treeview-menu">
-                                    <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report"> <i className="zmdi zmdi-apps" />Inventory</Link></li>
+                                    <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report"> <i className="zmdi zmdi-apps" />Stock</Link></li>
                                     <li className={path==='/adjustment_report'?"active":''}><Link to="/adjustment_report"> <i className="zmdi zmdi-apps" />Adjustment</Link></li>
                                     <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report"> <i className="zmdi zmdi-apps" />Alokasi</Link></li>
                                 </ul>
