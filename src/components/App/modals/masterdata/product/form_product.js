@@ -184,12 +184,11 @@ class FormProduct extends Component{
 
         })
     };
-
-    componentWillReceiveProps(nextProps){
-        this.state.codeServer = nextProps.productCode;
-        if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
-            let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
-            let barang_hrg = typeof nextProps.dataEdit.barang_hrg === 'object' ? nextProps.dataEdit.barang_hrg : this.state.barangHarga;
+    getProps(param){
+        this.state.codeServer = param.productCode;
+        if(param.dataEdit !== undefined && param.dataEdit !== []){
+            let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
+            let barang_hrg = typeof param.dataEdit.barang_hrg === 'object' ? param.dataEdit.barang_hrg : this.state.barangHarga;
             let barangSku=[];let barangHrg=[];let konversi=[];
             for(let i=0;i<barang_sku.length;i++){
                 barangSku.push({
@@ -201,88 +200,89 @@ class FormProduct extends Component{
                 konversi.push(barang_sku[i].konversi);
             }
             for(let x=0; x<barang_hrg.length;x++){
-               if(barang_sku.length == 3){
-                   barangHrg.push(
-                       [
-                           {
-                               "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
-                               "isCheckedPCS":true,
-                               "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                               "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
-                               "ppnPCS": barang_hrg[x][0].ppn,
-                               "servicePCS": barang_hrg[x][0].service
-                           },
-                           {
-                               "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
-                               "isCheckedPACK":false,
-                               "hrgBeliPACK": barang_hrg[x][1].harga_beli,
-                               "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
-                               "ppnPACK":barang_hrg[x][1].ppn,
-                               "servicePACK":barang_hrg[x][1].service
-                           },
-                           {
-                               "nama_toko":barang_hrg[x][2].nama_toko,"lokasi":barang_hrg[x][2].lokasi,
-                               "isCheckedKARTON":false,
-                               "hrgBeliKARTON": barang_hrg[x][2].harga_beli,
-                               "margin1KARTON":((parseInt(barang_hrg[x][2].harga)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "margin2KARTON":((parseInt(barang_hrg[x][2].harga2)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "margin3KARTON":((parseInt(barang_hrg[x][2].harga3)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "margin4KARTON":((parseInt(barang_hrg[x][2].harga4)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "hrgJual1KARTON": barang_hrg[x][2].harga,"hrgJual2KARTON": barang_hrg[x][2].harga2,"hrgJual3KARTON": barang_hrg[x][2].harga3,"hrgJual4KARTON": barang_hrg[x][2].harga4,
-                               "ppnKARTON": barang_hrg[x][2].ppn,
-                               "serviceKARTON": barang_hrg[x][2].service
-                           }
-                       ]
-                   )
-               }else{
-                   barangHrg.push(
-                       [
-                           {
-                               "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
-                               "isCheckedPCS":true,
-                               "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                               "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
-                               "ppnPCS": barang_hrg[x][0].ppn,
-                               "servicePCS": barang_hrg[x][0].service
-                           }
-                       ]
-                   )
-               }
+                if(barang_sku.length == 3){
+                    barangHrg.push(
+                        [
+                            {
+                                "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
+                                "isCheckedPCS":true,
+                                "hrgBeliPCS": barang_hrg[x][0].harga_beli,
+                                "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
+                                "ppnPCS": barang_hrg[x][0].ppn,
+                                "servicePCS": barang_hrg[x][0].service
+                            },
+                            {
+                                "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
+                                "isCheckedPACK":false,
+                                "hrgBeliPACK": barang_hrg[x][1].harga_beli,
+                                "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
+                                "ppnPACK":barang_hrg[x][1].ppn,
+                                "servicePACK":barang_hrg[x][1].service
+                            },
+                            {
+                                "nama_toko":barang_hrg[x][2].nama_toko,"lokasi":barang_hrg[x][2].lokasi,
+                                "isCheckedKARTON":false,
+                                "hrgBeliKARTON": barang_hrg[x][2].harga_beli,
+                                "margin1KARTON":((parseInt(barang_hrg[x][2].harga)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin2KARTON":((parseInt(barang_hrg[x][2].harga2)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin3KARTON":((parseInt(barang_hrg[x][2].harga3)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin4KARTON":((parseInt(barang_hrg[x][2].harga4)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "hrgJual1KARTON": barang_hrg[x][2].harga,"hrgJual2KARTON": barang_hrg[x][2].harga2,"hrgJual3KARTON": barang_hrg[x][2].harga3,"hrgJual4KARTON": barang_hrg[x][2].harga4,
+                                "ppnKARTON": barang_hrg[x][2].ppn,
+                                "serviceKARTON": barang_hrg[x][2].service
+                            }
+                        ]
+                    )
+                }else{
+                    barangHrg.push(
+                        [
+                            {
+                                "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
+                                "isCheckedPCS":true,
+                                "hrgBeliPCS": barang_hrg[x][0].harga_beli,
+                                "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
+                                "ppnPCS": barang_hrg[x][0].ppn,
+                                "servicePCS": barang_hrg[x][0].service
+                            }
+                        ]
+                    )
+                }
 
             }
             this.setState({
-                kd_brg: nextProps.dataEdit.kd_brg,
-                nm_brg: nextProps.dataEdit.nm_brg,
-                kel_brg: nextProps.dataEdit.kel_brg,
-                jenis:nextProps.dataEdit.kategori,
-                stock_min:nextProps.dataEdit.stock_min,
-                group1:nextProps.dataEdit.group1,
-                group2:nextProps.dataEdit.group2,
-                deskripsi:nextProps.dataEdit.deskripsi,
+                kd_brg: param.dataEdit.kd_brg,
+                nm_brg: param.dataEdit.nm_brg,
+                kel_brg: param.dataEdit.kel_brg,
+                jenis:param.dataEdit.kategori,
+                stock_min:param.dataEdit.stock_min,
+                group1:param.dataEdit.group1,
+                group2:param.dataEdit.group2,
+                deskripsi:param.dataEdit.deskripsi,
                 gambar:"",
-                kategori:nextProps.dataEdit.jenis,
-                kcp:nextProps.dataEdit.kcp,
-                poin:nextProps.dataEdit.poin,
-                online:nextProps.dataEdit.online,
-                berat:nextProps.dataEdit.berat,
+                kategori:param.dataEdit.jenis,
+                kcp:param.dataEdit.kcp,
+                poin:param.dataEdit.poin,
+                online:param.dataEdit.online,
+                berat:param.dataEdit.berat,
                 barangSku:barangSku,
                 barangHarga:barangHrg
             })
-        }else{
-            const {data} = nextProps.dataLocation;
-            this.state.check = nextProps.dataLocation;
+        }
+        else{
+            const {data} = param.dataLocation;
+            this.state.check = param.dataLocation;
             let brgHrg=[];
             if(typeof data === 'object'){
                 data.map((v,i)=>{
@@ -330,6 +330,14 @@ class FormProduct extends Component{
             }
         }
     }
+    componentWillReceiveProps(nextProps){
+        this.getProps(nextProps);
+    }
+    componentWillMount(){
+        this.getProps(this.props);
+    }
+
+
     async fetchData(data){
         const url = HEADERS.URL + `site/cekdata`;
         return await axios.post(url, data)

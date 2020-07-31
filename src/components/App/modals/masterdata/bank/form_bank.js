@@ -6,6 +6,7 @@ import connect from "react-redux/es/connect/connect";
 import FileBase64 from "react-file-base64";
 import {stringifyFormData} from "helper";
 import {createBank} from "redux/actions/masterdata/bank/bank.action";
+import {updateBank} from "../../../../../redux/actions/masterdata/bank/bank.action";
 
 class FormBank extends Component{
     constructor(props){
@@ -22,6 +23,36 @@ class FormBank extends Component{
             foto:"",
             token:''
         };
+    }
+    componentWillMount(){
+        this.getProps(this.props);
+    }
+    componentWillReceiveProps(nextProps){
+        this.getProps(nextProps);
+    }
+
+    getProps(param){
+        if(param.detail!==undefined&&param.detail!==[]){
+            this.setState({
+                akun:param.detail.akun,
+                nama:param.detail.nama,
+                edc:param.detail.edc,
+                status:param.detail.status,
+                charge_debit:param.detail.charge_debit,
+                charge_kredit:param.detail.charge_kredit,
+                foto:"",
+            })
+        }else{
+            this.setState({
+                akun:'',
+                nama:'',
+                edc: '1',
+                status: '1',
+                charge_debit:'0',
+                charge_kredit:'0',
+                foto:"",
+            })
+        }
     }
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -43,10 +74,17 @@ class FormBank extends Component{
         parseData['status'] = this.state.status;
         parseData['charge_debit'] = this.state.charge_debit;
         parseData['charge_kredit'] = this.state.charge_kredit;
-        parseData['foto'] = this.state.foto.base64;
-        // console.log(parseData);
-        // console.log(this.props.token);
-        this.props.dispatch(createBank(parseData,this.props.token));
+        if(this.state.foto!==undefined){
+            parseData['foto'] = this.state.foto.base64;
+        }else{
+            parseData['foto'] = '-';
+        }
+        if(this.props.detail!==undefined&&this.props.detail!==null){
+            this.props.dispatch(updateBank(this.props.detail.id,parseData));
+        }else{
+            this.props.dispatch(createBank(parseData));
+        }
+
         this.props.dispatch(ModalToggle(false));
     }
     getFiles(files) {

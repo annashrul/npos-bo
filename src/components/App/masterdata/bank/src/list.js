@@ -11,6 +11,10 @@ class ListBank extends Component{
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.state={
+            detail:{}
+        }
     }
     handlePageChange(pageNumber){
         console.log(`active page is ${pageNumber}`);
@@ -35,6 +39,24 @@ class ListBank extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formBank"));
+    }
+    handleEdit(e,id,akun,debit,kredit,edc,foto,status,nama) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formBank"));
+        this.setState({
+            detail:{
+                "id":id,
+                "akun":akun,
+                "charge_debit":debit,
+                "charge_kredit":kredit,
+                "edc":edc,
+                "foto":foto,
+                "status":status,
+                "nama":nama,
+            }
+        });
     }
 
     handleDelete(e,id){
@@ -103,7 +125,9 @@ class ListBank extends Component{
                                                                         <button style={{marginTop:"-7px"}} className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
                                                                         <div className="dropdown-menu dropdown-menu-right"
                                                                              aria-labelledby="dashboardDropdown50">
-                                                                            <a className="dropdown-item" href="javascript:void(0)"><i className="ti-pencil-alt"></i> Edit</a>
+                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                                                e,v.id,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama
+                                                                            )}><i className="ti-pencil-alt"></i> Edit</a>
                                                                             <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</a>
                                                                         </div>
                                                                     </div>
@@ -158,7 +182,7 @@ class ListBank extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
-                 <FormBank token={this.props.token}/>
+                 <FormBank token={this.props.token} detail={this.state.detail}/>
             </div>
         );
     }

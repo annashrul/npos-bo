@@ -45,19 +45,9 @@ export const createBank = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `bank`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
-        console.log(data);
-        axios.post(url, data, headers)
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("DATA",data);
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -76,7 +66,43 @@ export const createBank = (data) => {
 
             })
             .catch(function (error) {
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
 
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
+export const updateBank = (id,data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `bank/${id}`;
+        axios.put(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchBank(1,null));
+
+            })
+            .catch(function (error) {
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
@@ -94,20 +120,9 @@ export const deleteBank = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `bank/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        console.log("=============== DELETE ====================");
-
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -126,7 +141,6 @@ export const deleteBank = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',

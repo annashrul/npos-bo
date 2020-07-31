@@ -12,6 +12,7 @@ class SideMenu extends Component {
             isInventory: false,
             isReport: false,
             isReceive: false,
+            isHutang:false,
             isSale:false,
             isReportInventory:false,
             pageMenu : '',
@@ -50,6 +51,11 @@ class SideMenu extends Component {
         if(param === 'inventory'){
             this.setState({
                 isInventory : !this.state.isInventory,
+            });
+        }
+        if(param === 'hutang'){
+            this.setState({
+                isHutang : !this.state.isHutang,
             });
         }
         if(param === 'report'){
@@ -193,6 +199,8 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
+                    <li  className={path==='/bayar_hutang'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Hutang </Link></li>
+
                     <li className={this.state.isReport===true || path==='/report_cash'|| path==='/sale_archive'?"treeview active menu-open" : "treeview"}>
                         <a href="#" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
