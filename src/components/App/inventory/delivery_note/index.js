@@ -107,6 +107,63 @@ class DeliveryNote extends Component{
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
     }
 
+    getProps(param){
+        if (param.auth.user) {
+            let lk = []
+            let loc = param.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: param.auth.user.id
+                })
+            }
+        }
+        if(param.barang.length>0){
+            this.getData()
+        }
+
+        if (param.receive_data){
+            if (param.receive_data.master!==undefined){
+                if(this.props.receive_data===undefined){
+                    this.props.dispatch(FetchNota(param.receive_data.master.lokasi))
+                    this.setState({
+                        location: param.receive_data.master.lokasi,
+                        catatan: param.receive_data.master.catatan,
+                        no_faktur_beli: param.receive_data.master.no_faktur_beli
+                    })
+                    localStorage.setItem('lk', param.receive_data.master.lokasi)
+                    localStorage.setItem('catatan', param.receive_data.master.catatan)
+
+                    param.receive_data.detail.map(item=>{
+                        const datas = {
+                            kd_brg: item.kode_barang,
+                            nm_brg: item.nm_brg,
+                            barcode: item.barcode,
+                            satuan: item.satuan,
+                            harga_beli: item.harga_beli,
+                            hrg_jual: item.harga,
+                            stock: item.stock,
+                            qty: item.qty,
+                            tambahan: item.tambahan
+                        };
+                        store(table, datas)
+                        this.getData();
+
+                    })
+                }
+
+            }
+        }
+    }
+    componentWillMount(){
+        this.getProps(this.props);
+    }
     componentDidMount() {
       this.getData()
       if (localStorage.catatan !== undefined && localStorage.catatan !== '') {
@@ -150,60 +207,7 @@ class DeliveryNote extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-      if (nextProps.auth.user) {
-        let lk = []
-        let loc = nextProps.auth.user.lokasi;
-        if(loc!==undefined){
-            loc.map((i) => {
-              lk.push({
-                value: i.kode,
-                label: i.nama
-              });
-            })
-            this.setState({
-              location_data: lk,
-              userid: nextProps.auth.user.id
-            })
-        }
-      }
-      if(nextProps.barang.length>0){
-        this.getData()
-      }
-      
-      if (nextProps.receive_data){
-        if (nextProps.receive_data.master!==undefined){
-          if(this.props.receive_data===undefined){
-            this.props.dispatch(FetchNota(nextProps.receive_data.master.lokasi))
-            this.setState({
-              location: nextProps.receive_data.master.lokasi,
-              catatan: nextProps.receive_data.master.catatan,
-              no_faktur_beli: nextProps.receive_data.master.no_faktur_beli
-            })
-            localStorage.setItem('lk', nextProps.receive_data.master.lokasi)
-            localStorage.setItem('catatan', nextProps.receive_data.master.catatan)
-
-            nextProps.receive_data.detail.map(item=>{
-                const datas = {
-                  kd_brg: item.kode_barang,
-                  nm_brg: item.nm_brg,
-                  barcode: item.barcode,
-                  satuan: item.satuan,
-                  harga_beli: item.harga_beli,
-                  hrg_jual: item.harga,
-                  stock: item.stock,
-                  qty: item.qty,
-                  tambahan: item.tambahan
-                };
-                store(table, datas)
-                this.getData();
-
-            })
-          }
-
-        }
-      }
-
-    
+        this.getProps(nextProps);
     }
 
     componentWillUnmount() {
