@@ -11,10 +11,18 @@ class Layout extends Component {
     componentWillMount() {
         document.title = this.props.page;
     }
+
+    getFaviconEl() {
+        return document.getElementById("favicon");
+    }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            const favicon = this.getFaviconEl(); // Accessing favicon element
+            favicon.href = nextProps.auth.user.fav_icon;
+        }
+    }
+
     render() {
-        // if (!this.props.authenticated) {
-        //     return <Redirect to = '/auth' /> ;
-        // }
         const style = {
             overflowY: 'auto',
             '::-webkit-scrollbar': {
@@ -28,7 +36,7 @@ class Layout extends Component {
                 <div style={style} className="ecaps-sidemenu-area">
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{paddingTop:'9px'}} /> <img className="small-logo" src={Logo} alt="Mobile Logo" /></Link>
+                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo} alt="Desktop Logo" style={{paddingTop:'9px'}} /> <img className="small-logo" src={this.props.auth.user.logo} alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="ecaps-sidenav" id="ecapsSideNav">

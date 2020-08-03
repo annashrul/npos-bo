@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import BgAuth from "../../../../assets/images/logo2.png"
 import './login.css'
-import {loginUser} from '../../../../redux/actions/authActions';
+import {loginUser} from 'redux/actions/authActions';
 import Swal from 'sweetalert2'
-
+import {HEADERS} from 'redux/actions/_constants'
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -13,13 +13,38 @@ class Login extends Component {
             email: '',
             password: '',
             errors:{
-            }
+            },
+            logo: BgAuth,
+            width:'100px'
          };
     }
-    componentDidMount = ()=>{
+    getFaviconEl() {
+        return document.getElementById("favicon");
+    }
+
+    componentDidMount (){
         if(this.props.auth.isAuthenticated){
             this.props.history.push('/')
         }
+        fetch(HEADERS.URL + `site/logo`)
+        .then(res => res.json())
+        .then(
+            (data) => {
+                this.setState({
+                    logo: data.result.logo,
+                    width:data.result.width
+                })
+                const favicon = this.getFaviconEl(); // Accessing favicon element
+                favicon.href = data.result.fav_icon;
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                });
+            }
+        )
+
     }
     componentWillReceiveProps = (nextProps)=>{
         if(nextProps.auth.isAuthenticated){
@@ -68,7 +93,7 @@ class Login extends Component {
                     <form class="login100-form validate-form" action="#">
 
                         <span class="login100-form-title p-b-43 mb-5">
-                        <img src={BgAuth} className='img-responsive' width='100px' style={{textAlign:'center',marginLeft:'auto',marginRight:'auto',display:'block'}}/>
+                        <img src={this.state.logo} className='img-responsive' width={this.state.width} style={{textAlign:'center',marginLeft:'auto',marginRight:'auto',display:'block'}}/>
                         {/* Account Login */}
                         </span>
                         <div class="wrap-input100 rs1 validate-input" data-validate="Username is required">

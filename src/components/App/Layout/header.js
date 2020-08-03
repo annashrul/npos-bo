@@ -15,7 +15,6 @@ class Header extends Component {
 
   handleEcaps=()=>{
       const bool = !this.props.triggerEcaps;
-      console.log(bool);
       this.props.setEcaps(bool);
   }
   render() {
@@ -62,11 +61,10 @@ class Header extends Component {
                                   </div>
                                   {/* <!-- Profile Text --> */}
                                   <div className="profile-text">
-                                      <h6>User</h6>
-                                      <span>Administrator</span>
+                                      <h6>{this.props.auth.user.username}</h6>
+                                      <span>{this.props.auth.user.lvl}</span>
                                   </div>
                               </div>
-                              <a href="#" className="dropdown-item"><i className="zmdi zmdi-account profile-icon bg-primary" aria-hidden="true"></i> My profile</a>
                               <a onClick={this.handleLogout} className="dropdown-item"><i className="ti-unlink profile-icon bg-warning" aria-hidden="true"></i> Sign-out</a>
                           </div>
                       {/* </div> */}

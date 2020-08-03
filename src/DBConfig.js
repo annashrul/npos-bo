@@ -15,7 +15,9 @@ export const DBConfig = {
                 { name: 'nama',keypath:'nama',options:{unique:false}},
                 { name: 'alamat',keypath:'alamat',options:{unique:false}},
                 { name: 'foto',keypath:'foto',options:{unique:false}},
-                { name: 'token',keypath:'token',options:{unique:false}}
+                { name: 'token',keypath:'token',options:{unique:false}},
+                { name: 'logo',keypath:'logo',options:{unique:false}},
+                { name: 'fav_icon',keypath:'fav_icon',options:{unique:false}},
             ]
         },
         {

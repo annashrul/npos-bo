@@ -33,10 +33,7 @@ class SideMenu extends Component {
     }
 
     subChangeMenu(e){
-        console.log(e);
         this.setState({isMasterdata : true});
-        console.log(this.state.isMasterdata);
-        console.log(this.state.isMasterdata===true?"treeview active menu-open" : "treeview")
     }
 
     changeMenu(param){

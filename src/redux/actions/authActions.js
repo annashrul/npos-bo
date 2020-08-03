@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import {store,destroy} from "components/model/app.model";
 import setAuthToken from '../../utils/setAuthToken';
 import {HEADERS} from "./_constants";
+import { isObject } from 'lodash';
 
 // user register
 
@@ -38,7 +39,9 @@ export const loginUser = (userData) =>
                     nama: res.data.result.nama,
                     alamat: res.data.result.alamat,
                     foto: res.data.result.foto,
-                    token:token
+                    token:token,
+                    logo:res.data.result.logo,
+                    fav_icon:res.data.result.fav_icon
                 })
             
                 // Set token to Auth Header 
@@ -49,13 +52,24 @@ export const loginUser = (userData) =>
             },800)
 
         }).catch(err =>{
+            // console.log();
             Swal.close() 
-            Swal.fire(
-                'Something wrong.',
-                err.response.data.msg,
-                'error'
-            )
-        dispatch({type: AUTH.GET_ERRORS, payload: err.response.data.msg})
+            if (!err.status) {
+                 Swal.fire(
+                     'Something wrong.',
+                     'No connection to server.',
+                     'error'
+                 )
+            }else{
+                Swal.fire(
+                    'Something wrong.',
+                    err.response.data.msg,
+                    'error'
+                )
+                dispatch({type: AUTH.GET_ERRORS, payload: err.response.data.msg})
+
+            }
+            
         });
     }
 // set user data
