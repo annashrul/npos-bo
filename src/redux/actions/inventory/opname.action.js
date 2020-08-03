@@ -46,24 +46,14 @@ export const storeOpname = (data) => {
             .then(function (response) {
                 const data = (response.data)
                 Swal.fire({
-                    title: 'Transaksi berhasil.',
-                    text: `Terimakasih Telah Melakukan Transaksi Di Toko Kami`,
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#ff9800',
-                    cancelButtonColor: '#2196F3',
-                    confirmButtonText: 'Print Nota?',
-                    cancelButtonText: 'Oke!'
-                }).then((result) => {
-                    if (result.value) {
-                        const win = window.open('http://google.com', '_blank');
-                        if (win != null) {
-                            win.focus();
-                        }
-                    }
+                    title: 'Success',
+                    type: 'success',
+                    text:"Transaksi Berhasil",
+                }).then((result)=>{
                     destroy('opname');
+                    localStorage.removeItem("location_opname");
                     window.location.reload(false);
-                })
+                });
                 dispatch(setLoading(false));
 
             })
@@ -95,17 +85,13 @@ export const storeOpnamePosting = (data,param) => {
             .then(function (response) {
                 const data = (response.data)
                 Swal.fire({
-                    title: 'Transaksi berhasil.',
-                    text: `Terimakasih Telah Melakukan Transaksi Di Toko Kami`,
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#ff9800',
-                    cancelButtonColor: '#2196F3',
-                    confirmButtonText: 'Print Nota?',
-                    cancelButtonText: 'Oke!'
-                }).then((result) => {
+                    title: 'Success',
+                    type: 'success',
+                    text:"Transaksi Berhasil",
+                }).then((result)=>{
                     dispatch(FetchPostingOpname(1))
-                })
+                });
+
                 dispatch(setLoading(false));
 
             })
