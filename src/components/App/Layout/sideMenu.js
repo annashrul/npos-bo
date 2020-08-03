@@ -199,7 +199,7 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale"> <i className="zmdi zmdi-apps" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
-                    <li  className={path==='/bayar_hutang'?"active":''}><Link to="/"> <i className="zmdi zmdi-apps" />Hutang </Link></li>
+                    <li  className={path==='/bayar_hutang'?"active":''}><Link to="/bayar_hutang"> <i className="zmdi zmdi-apps" />Hutang </Link></li>
 
                     <li className={this.state.isReport===true || path==='/report_cash'|| path==='/sale_archive'?"treeview active menu-open" : "treeview"}>
                         <a href="#" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>

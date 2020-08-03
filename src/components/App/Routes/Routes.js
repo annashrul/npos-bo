@@ -35,6 +35,7 @@ import axios from 'axios';
 import {HEADERS} from "../../../redux/actions/_constants";
 import ReportCash from "../report/cash";
 import ReturTanpaNota from "../purchase/retur";
+import BayarHutang from "../hutang/bayar_hutang";
 
 axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1NTAxNDA2LCJleHAiOjE1OTgwOTM0MDZ9.kMJwmttCOcfNhj_3SWs89i421jgIC4-O-ec3zG2-KWQ`;
 axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
@@ -74,6 +75,7 @@ const Routes = (
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
+            <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
         </Switch>
     </div>
 )

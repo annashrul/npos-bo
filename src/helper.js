@@ -62,6 +62,10 @@ export const rangeDate = {
     'Tahun Lalu'        : [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
 };
 
+export const toMoney = (angka) => {
+    return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+}
+
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),

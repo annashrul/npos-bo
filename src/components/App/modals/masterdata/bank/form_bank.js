@@ -7,14 +7,17 @@ import FileBase64 from "react-file-base64";
 import {stringifyFormData} from "helper";
 import {createBank} from "redux/actions/masterdata/bank/bank.action";
 import {updateBank} from "../../../../../redux/actions/masterdata/bank/bank.action";
+import {toMoney} from "../../../../../helper";
 
 class FormBank extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toCurrency = this.toCurrency.bind(this);
+        this.handleChange = this.handleChange  .bind(this);
         this.state = {
-            akun:'',
+            akun:0,
             nama:'',
             edc: '1',
             status: '1',
@@ -54,8 +57,11 @@ class FormBank extends Component{
             })
         }
     }
+
     handleChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
+        let column=event.target.name;
+        let value=event.target.value;
+        this.setState({ [column]: value});
     }
     toggle = (e) => {
         e.preventDefault();
@@ -92,6 +98,14 @@ class FormBank extends Component{
             foto: files
         })
     };
+    toCurrency(number) {
+        const formatter = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR"
+        });
+
+        return formatter.format(number);
+    }
     render(){
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formBank"} size="md">
@@ -100,7 +114,7 @@ class FormBank extends Component{
                     <ModalBody>
                         <div className="form-group">
                             <label>Account Name</label>
-                            <input type="text" className="form-control" name="akun" value={this.state.akun} onChange={this.handleChange} required/>
+                            <input type="text" className="form-control" name="akun" value={this.toCurrency(this.state.akun)} onChange={this.handleChange} required/>
                         </div>
                         <div className="form-group">
                             <label>Bank Name</label>

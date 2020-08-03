@@ -442,30 +442,40 @@ class FormProduct extends Component{
             let barangSku = [...this.state.barangSku];
             barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
             this.setState({ barangSku });
+
             if(event.target.id==='barcode1'){
-                if(barangSku[0].barcode===barangSku[1].barcode){
-                    this.setState({
-                        error_barcode1:true,
-                        pesan_barcode1:"barcode 1 dan 2 tidak boleh sama"
-                    })
-                }else{
-                    this.setState({
-                        error_barcode1:false,
-                        pesan_barcode1:""
-                    })
+                console.log(barangSku);
+                if(barangSku.length>1){
+                    if(barangSku[0].barcode===barangSku[1].barcode){
+                        this.setState({
+                            error_barcode1:true,
+                            pesan_barcode1:"barcode 1 dan 2 tidak boleh sama"
+                        })
+                    }
+                    else{
+                        this.setState({
+                            error_barcode1:false,
+                            pesan_barcode1:""
+                        })
+                    }
                 }
+
+
             }
             if(event.target.id==='barcode2'){
-                if(barangSku[1].barcode===barangSku[0].barcode){
-                    this.setState({
-                        error_barcode2:true,
-                        pesan_barcode2:"barcode 2 dan 1 tidak boleh sama"
-                    })
-                }else{
-                    this.setState({
-                        error_barcode2:false,
-                        pesan_barcode2:""
-                    })
+                if(barangSku.length>1){
+                    if(barangSku[1].barcode===barangSku[0].barcode){
+                        this.setState({
+                            error_barcode2:true,
+                            pesan_barcode2:"barcode 2 dan 1 tidak boleh sama"
+                        })
+                    }
+                    else{
+                        this.setState({
+                            error_barcode2:false,
+                            pesan_barcode2:""
+                        })
+                    }
                 }
             }
         }
@@ -1197,8 +1207,9 @@ class FormProduct extends Component{
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{
             this.props.dispatch(createProduct(parseData));
-
         }
+        this.props.dispatch(ModalToggle(false));
+
 
 
     }
@@ -1210,11 +1221,10 @@ class FormProduct extends Component{
         const {data} = this.props.data;
         const dataSupplier = this.props.dataSupplier.data;
         const dataSubDep = this.props.dataSubDept.data;
-
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
                 <ModalHeader toggle={this.toggle}>
-                    {this.props.detail===undefined?"Add Product":"Update Product"}
+                    {this.props.dataEdit===undefined?"Add Product":"Update Product"}
                 </ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>

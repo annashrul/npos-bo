@@ -30,6 +30,7 @@ import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {closingReducer} from "./report/closing/closing.reducer";
 import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
+import {hutangReducer} from "./hutang/hutang.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -61,6 +62,7 @@ export default combineReducers({
     saleReducer,
     mutationReducer,
     closingReducer,
+    hutangReducer,
     opnameReducer,
     auth: authReducer,
     errors : errorsReducer
