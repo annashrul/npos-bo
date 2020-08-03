@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/alokasi.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/alokasi.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,11 +28,37 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/alokasi.action.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="185">
               <caret line="130" column="39" lean-forward="true" selection-start-line="130" selection-start-column="39" selection-end-line="130" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="82" column="21" lean-forward="true" selection-start-line="82" selection-start-column="21" selection-end-line="82" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="117">
+              <caret line="344" column="33" lean-forward="true" selection-start-line="344" selection-start-column="33" selection-end-line="344" selection-end-column="33" />
+              <folding>
+                <element signature="n#!!block;n#componentDidMount#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleAddBrg#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleRemove#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleReset#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleChangeInputValue#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleChangeInput#0;n#TrxAdjustment#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -119,14 +146,12 @@
         <option value="$PROJECT_DIR$/src/components/App/report/cash/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" />
-        <option value="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/opname/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/stock/src/list.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/report/inventory/stock_report.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/src/list.js" />
-        <option value="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/src/list.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" />
@@ -147,6 +172,8 @@
         <option value="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/inventory/dn.action.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/inventory/alokasi.action.js" />
+        <option value="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" />
+        <option value="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" />
       </list>
     </option>
   </component>
@@ -216,22 +243,52 @@
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="redux" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="redux" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
               <item name="inventory" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="adjusment" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="adjustment" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
@@ -309,12 +366,12 @@
       <workItem from="1596001089090" duration="21684000" />
       <workItem from="1596085852180" duration="2412000" />
       <workItem from="1596195734298" duration="6308000" />
-      <workItem from="1596439037326" duration="12185000" />
+      <workItem from="1596439037326" duration="12627000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="364866000" />
+    <option name="totallyTimeSpent" value="365308000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -334,7 +391,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.15771812" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.17114094" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -486,13 +543,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="86" selection-start-line="86" selection-end-line="86" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/stock/src/list.js" />
     <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -512,13 +562,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="139" selection-start-line="139" selection-end-line="139" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
         </state>
       </provider>
     </entry>
@@ -851,6 +894,28 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
           <caret line="130" column="39" lean-forward="true" selection-start-line="130" selection-start-column="39" selection-end-line="130" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="82" column="21" lean-forward="true" selection-start-line="82" selection-start-column="21" selection-end-line="82" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="344" column="33" lean-forward="true" selection-start-line="344" selection-start-column="33" selection-end-line="344" selection-end-column="33" />
+          <folding>
+            <element signature="n#!!block;n#componentDidMount#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleAddBrg#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleRemove#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleReset#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleChangeInputValue#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleChangeInput#0;n#TrxAdjustment#0" />
+          </folding>
         </state>
       </provider>
     </entry>

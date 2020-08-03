@@ -52,6 +52,27 @@ class TrxAdjustment extends Component{
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
 
     }
+    getProps(param){
+        if (param.auth.user) {
+            let lk = [];
+            let loc = param.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: param.auth.user.id
+                })
+            }
+        }
+        if(param.barang.length>0){
+            this.getData();
+        }
+    }
     componentDidMount(){
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.setState({
@@ -65,46 +86,11 @@ class TrxAdjustment extends Component{
         }
     }
     componentWillReceiveProps = (nextProps) => {
-        if (nextProps.auth.user) {
-            let lk = [];
-            let loc = nextProps.auth.user.lokasi;
-            if(loc!==undefined){
-                loc.map((i) => {
-                    lk.push({
-                        value: i.kode,
-                        label: i.nama
-                    });
-                })
-                this.setState({
-                    location_data: lk,
-                    userid: nextProps.auth.user.id
-                })
-            }
-        }
-        if(nextProps.barang.length>0){
-            this.getData();
-        }
+       this.getProps(nextProps);
     }
+
     componentWillMount(){
-        if (this.props.auth.user) {
-            let lk = [];
-            let loc = this.props.auth.user.lokasi;
-            if(loc!==undefined){
-                loc.map((i) => {
-                    lk.push({
-                        value: i.kode,
-                        label: i.nama
-                    });
-                })
-                this.setState({
-                    location_data: lk,
-                    userid: this.props.auth.user.id
-                })
-            }
-        }
-        if(this.props.barang.length>0){
-            this.getData();
-        }
+       this.getProps(this.props);
     }
     setTglOrder(date) {
         this.setState({

@@ -76,7 +76,7 @@ export const storeAdjusment = (data) => {
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     if (result.value) {
-                        const win = window.open('http://google.com', '_blank');
+                        const win = window.open(data.result.nota,'_blank');
                         if (win != null) {
                             win.focus();
                         }
