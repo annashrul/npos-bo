@@ -91,7 +91,7 @@ export const statusQ = (lbl,txt) => {
     }else if(lbl==='danger'){
         return <button className="btn btn-danger btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>
     }else if(lbl==='warning'){
-        return <button className="btn btn-warning btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>
+        return <button className="btn btn-warning btn-sm btn-status" style={{fontSize:'8px',color:'white'}}>{txt}</button>
     }else if(lbl==='info'){
         return <button className="btn btn-info btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>
     }

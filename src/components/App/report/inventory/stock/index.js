@@ -11,6 +11,7 @@ import {rangeDate} from "helper";
 import Select from "react-select";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import Preloader from "../../../../../Preloader";
+import {HEADERS} from "../../../../../redux/actions/_constants";
 
 class InventoryReport extends Component{
     constructor(props){
@@ -299,7 +300,7 @@ class InventoryReport extends Component{
                                                                                 Action
                                                                             </button>
                                                                             <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a>
+                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Export</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.kd_brg,v.barcode,v.nm_brg)}>Detail</a>
                                                                             </div>
                                                                         </div>

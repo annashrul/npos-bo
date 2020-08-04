@@ -13,6 +13,9 @@ export function setAdjustment(data=[]){
 export function setAdjustmentAll(data=[]){
     return {type:ADJUSTMENT.ALL,data}
 }
+export function setAdjustmentExcel(data=[]){
+    return {type:ADJUSTMENT.EXCEL,data}
+}
 export function setAdjustmentFailed(data=[]){
     return {type:ADJUSTMENT.FAILED,data}
 }
@@ -42,6 +45,25 @@ export const FetchAdjustment = (page=1,where='')=>{
         })
     }
 }
+export const FetchAdjustmentExcel = (where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url =  `adjustment/report?page=1&perpage=10000`;
+        if(where!==''){
+            url+=where;
+        }
+        console.log("URL ADJUSMENT REPORT",url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                dispatch(setAdjustmentExcel(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
 export const FetchAdjustmentAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));

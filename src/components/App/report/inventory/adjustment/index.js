@@ -12,6 +12,8 @@ import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import {rangeDate} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import {HEADERS} from "../../../../../redux/actions/_constants";
+import {FetchAdjustmentExcel} from "../../../../../redux/actions/adjustment/adjustment.action";
 
 
 class AdjustmentReport extends Component{
@@ -60,10 +62,10 @@ class AdjustmentReport extends Component{
         if (localStorage.any_adjust_report !== undefined && localStorage.any_adjust_report !== '') {
             this.setState({any: localStorage.any_adjust_report})
         }
-        if (localStorage.date_from_adjust_report !== undefined || localStorage.date_from_adjust_report !== null) {
+        if (localStorage.date_from_adjust_report !== undefined && localStorage.date_from_adjust_report !== null) {
             this.setState({startDate: localStorage.date_from_adjust_report})
         }
-        if (localStorage.date_to_adjust_report !== undefined || localStorage.date_to_adjust_report !== null) {
+        if (localStorage.date_to_adjust_report !== undefined && localStorage.date_to_adjust_report !== null) {
             this.setState({endDate: localStorage.date_to_adjust_report})
         }
     }
@@ -82,6 +84,7 @@ class AdjustmentReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`;
         }
+        this.props.dispatch(FetchAdjustmentExcel(where));
         this.props.dispatch(FetchAdjustment(pageNumber,where))
     }
     handleChange(event){
@@ -153,20 +156,61 @@ class AdjustmentReport extends Component{
                                 <div className="col-6 col-xs-6 col-md-4">
                                     <div className="form-group">
                                         <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"></i></button>
-                                        <ReactHTMLTableToExcel className="btn btn-primary btnBrg" table="emp" filename="laporan_adjusment" sheet="laporan adjusment" buttonText="export excel"/>
+                                        <ReactHTMLTableToExcel className="btn btn-primary btnBrg" table="report_adjusment" filename="laporan adjusment" sheet="laporan adjusment" buttonText="export excel"/>
                                     </div>
                                 </div>
                             </div>
                             <div className="table-responsive" style={{overflowX: "auto"}}>
+                                {/*EXPORT EXCEL*/}
+                                <table className="table table-hover table-bordered"  id="report_adjusment" style={{display:"none"}}>
+                                    <thead className="bg-light">
+                                    <tr>
+                                        <th className="text-black" colSpan={6}>{this.state.startDate} - {this.state.startDate}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" colSpan={6}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
+                                    </tr>
+
+                                    <tr>
+                                        <th className="text-black" style={columnStyle}>No</th>
+                                        <th className="text-black" style={columnStyle}>Tanggal</th>
+                                        <th className="text-black" style={columnStyle}>No. Adjusment</th>
+                                        <th className="text-black" style={columnStyle}>Operator</th>
+                                        <th className="text-black" style={columnStyle}>Lokasi</th>
+                                        <th className="text-black" style={columnStyle}>Keterangan</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        (
+                                            typeof this.props.adjustmentReportExcel.data === 'object' ?
+                                                this.props.adjustmentReportExcel.data.map((v,i)=>{
+                                                    return(
+                                                        <tr key={i}>
+                                                            <td style={columnStyle}>{i+1}</td>
+                                                            <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
+                                                            <td style={columnStyle}>{v.kd_trx}</td>
+                                                            <td style={columnStyle}>{v.username}</td>
+                                                            <td style={columnStyle}>{v.lokasi}</td>
+                                                            <td style={columnStyle}>{v.keterangan}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                                : "No data."
+                                        )
+                                    }
+                                    </tbody>
+                                </table>
+                                {/*END REPORT EXCEL*/}
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle}>#</th>
-                                        <th className="text-black" style={columnStyle}>Code</th>
-                                        <th className="text-black" style={columnStyle}>Date</th>
-                                        <th className="text-black" style={columnStyle}>Name</th>
-                                        <th className="text-black" style={columnStyle}>Location</th>
-                                        <th className="text-black" style={columnStyle}>Note</th>
+                                        <th className="text-black" style={columnStyle}>No. Adjusment</th>
+                                        <th className="text-black" style={columnStyle}>Tanggal</th>
+                                        <th className="text-black" style={columnStyle}>Operator</th>
+                                        <th className="text-black" style={columnStyle}>Lokasi</th>
+                                        <th className="text-black" style={columnStyle}>Keterangan</th>
                                     </tr>
                                     </thead>
                                     {
@@ -186,6 +230,7 @@ class AdjustmentReport extends Component{
                                                                             <div className="dropdown-menu">
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.kd_trx)}>Detail</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.kd_trx)}>Delete</a>
+                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/adjusment/${v.kd_trx}.pdf`} target="_blank">Nota</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -226,6 +271,7 @@ class AdjustmentReport extends Component{
 const mapStateToProps = (state) => {
     return {
         adjustmentReport:state.adjustmentReducer.data,
+        adjustmentReportExcel:state.adjustmentReducer.dataExcel,
         total:state.adjustmentReducer.total,
         isLoadingDetailSatuan: state.adjustmentReducer.isLoadingDetailSatuan,
         auth:state.auth,

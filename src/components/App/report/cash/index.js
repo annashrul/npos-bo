@@ -8,6 +8,8 @@ import Select from "react-select";
 import Paginationq from "helper";
 import Preloader from "../../../../Preloader";
 import {rangeDate, toRp} from "../../../../helper";
+import {FetchCashReportExcel} from "../../../../redux/actions/masterdata/cash/cash.action";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 class ReportCash extends Component{
     constructor(props){
@@ -85,7 +87,13 @@ class ReportCash extends Component{
 
     componentWillMount(){
         let page=localStorage.getItem("pageNumber_cash_report");
-        this.checkingParameter(page!==undefined&&page!==null?page:1);
+        if(page!==undefined&&page!==null){
+            this.checkingParameter(page);
+        }else{
+            this.checkingParameter(1);
+        }
+
+
     }
     componentDidMount(){
         if (localStorage.location_cash_report !== undefined && localStorage.location_cash_report !== '') {
@@ -145,7 +153,11 @@ class ReportCash extends Component{
     handleSearch(e){
         e.preventDefault();
         let page=localStorage.getItem("pageNumber_cash_report");
-        this.checkingParameter(page===undefined&&page===null?1:page);
+        if(page!==undefined&&page!==null){
+            this.checkingParameter(page);
+        }else{
+            this.checkingParameter(1);
+        }
     }
     checkingParameter(pageNumber){
         let where='';
@@ -157,16 +169,18 @@ class ReportCash extends Component{
         if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }
-        if(tipe!==undefined&&tipe!==null){
+        if(tipe!==undefined&&tipe!==null&&tipe!==''){
             if(where!==''){where+='&'}where+=`type_kas=${tipe}`
         }
-        if(lokasi!==undefined&&lokasi!==null){
+        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         }
-        if(kassa!==undefined&&kassa!==null){
+        if(kassa!==undefined&&kassa!==null&&kassa!==''){
             if(where!==''){where+='&'}where+=`kassa=${kassa}`
         }
+
         this.props.dispatch(FetchCashReport(pageNumber,where));
+        this.props.dispatch(FetchCashReportExcel(where));
     }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_cash_report",pageNumber);
@@ -175,7 +189,7 @@ class ReportCash extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.cashReport;
-
+        let subtotal=0;
         console.log("RENDER LAPORAN KAS",this.props.cashReport);
         return (
             <Layout page="Laporan Kas">
@@ -193,7 +207,7 @@ class ReportCash extends Component{
                                         alwaysShowCalendars={true}
                                         onEvent={this.handleEvent}
                                     >
-                                        <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                        <input type="text" id="date" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
                                     </DateRangePicker>
                                 </div>
                             </div>
@@ -251,16 +265,84 @@ class ReportCash extends Component{
                                     />
                                 </div>
                             </div>
-                            <div className="col-6 col-xs-6 col-md-1">
+                            <div className="col-6 col-xs-6 col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12"></label>
-                                    <button style={{marginTop:"28px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"></i>
                                     </button>
+                                    <ReactHTMLTableToExcel
+                                        className="btn btn-primary btnBrg"
+                                        table={`laporan_kas`}
+                                        filename={`laporan_kas`}
+                                        sheet="kas"
+                                        buttonText="export excel">
+                                    </ReactHTMLTableToExcel>
                                 </div>
+
                             </div>
                             <div className="col-md-12">
-                                <div className="table-responsive" style={{overflowX: "auto"}}>
+                                <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
+                                    <table className="table table-hover table-bordered"  id="laporan_kas" style={{display:"none"}}>
+                                        <thead className="bg-light">
+                                        <tr>
+                                            <th className="text-black" colSpan={10}>TIPE : {this.state.type===''?'SEMUA':this.state.type.toUpperCase()}</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="text-black" colSpan={10}>PERIODE: {this.state.startDate} - {this.state.startDate}</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="text-black" colSpan={10}>LOKASI: {this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="text-black" colSpan={10}>KASSA : {this.state.kassa===''?'SEMUA KASSA':this.state.kassa}</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="text-black" style={columnStyle}>No</th>
+                                            <th className="text-black" style={columnStyle}>Tgl</th>
+                                            <th className="text-black" style={columnStyle}>Kd Trx</th>
+                                            <th className="text-black" style={columnStyle}>Keterangan</th>
+                                            <th className="text-black" style={columnStyle}>Lokasi</th>
+                                            <th className="text-black" style={columnStyle}>Kassa</th>
+                                            <th className="text-black" style={columnStyle}>Kasir</th>
+                                            <th className="text-black" style={columnStyle}>Tipe</th>
+                                            <th className="text-black" style={columnStyle}>Jenis</th>
+                                            <th className="text-black" style={columnStyle}>Jumlah</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {
+                                            (
+                                                typeof this.props.cashReportExcel.data === 'object' ? this.props.cashReportExcel.data.length > 0 ?
+                                                    this.props.cashReportExcel.data.map((v,i)=>{
+                                                        subtotal = subtotal+parseInt(v.jumlah);
+                                                        return(
+                                                            <tr key={i}>
+                                                                <td style={columnStyle}>{i+1}</td>
+                                                                <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
+                                                                <td style={columnStyle}>{v.kd_trx}</td>
+                                                                <td style={columnStyle}>{v.keterangan}</td>
+                                                                <td style={columnStyle}>{v.lokasi}</td>
+                                                                <td style={columnStyle}>{v.kassa}</td>
+                                                                <td style={columnStyle}>{v.kasir}</td>
+                                                                <td style={columnStyle}>{v.type}</td>
+                                                                <td style={columnStyle}>{v.jenis}</td>
+                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.jumlah))}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                    : "No data." : "No data."
+                                            )
+                                        }
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colSpan={9}>TOTAL</td>
+                                            <td style={{textAlign:"right"}}>{toRp(subtotal)}</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>
@@ -328,6 +410,7 @@ class ReportCash extends Component{
 const mapStateToProps = (state) => {
     return {
         cashReport:state.cashReducer.dataReport,
+        cashReportExcel:state.cashReducer.dataExcel,
         isLoadingReport: state.cashReducer.isLoadingReport,
         auth: state.auth
     }

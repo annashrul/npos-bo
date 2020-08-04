@@ -31,9 +31,8 @@ export const poReducer = (state = initialState, action) => {
                 po_data: action.data.result
             });
         case PO.PO_REPORT_DETAIL:
+            console.log("REDUCER",action.data.result);
             return Object.assign({}, state,{
-                status:action.data.status,
-                msg:action.data.msg,
                 dataReportDetail:action.data.result
             });
         case PO.SUCCESS_CODE:

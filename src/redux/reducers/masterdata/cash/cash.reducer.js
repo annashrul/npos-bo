@@ -4,6 +4,7 @@ import {CASH} from "../../../actions/_constants";
 const initialState = {
     isLoading:true,
     status:"",msg:"",data:[], currentPage:0,
+    dataExcel:[],
     per_page:0,
     total:0,
     dataReport:[],
@@ -12,6 +13,10 @@ const initialState = {
 
 export const cashReducer = (state=initialState,action) => {
     switch (action.type) {
+        case CASH.EXCEL_REPORT:
+            return Object.assign({}, state,{
+                dataExcel:action.data.result
+            });
         case CASH.SUCCESS_REPORT:
             return Object.assign({}, state,{
                 status:action.data.status,
