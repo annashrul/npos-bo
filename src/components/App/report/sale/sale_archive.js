@@ -98,12 +98,12 @@ class SaleArchive extends Component{
                 any: localStorage.any_sale_report
             })
         }
-        if (localStorage.date_from_sale_report !== undefined || localStorage.date_from_sale_report !== null) {
+        if (localStorage.date_from_sale_report !== undefined && localStorage.date_from_sale_report !== null) {
             this.setState({
                 startDate: localStorage.date_from_sale_report
             })
         }
-        if (localStorage.date_to_sale_report !== undefined || localStorage.date_to_sale_report !== null) {
+        if (localStorage.date_to_sale_report !== undefined && localStorage.date_to_sale_report !== null) {
             this.setState({
                 endDate: localStorage.date_to_sale_report
             })
@@ -146,15 +146,15 @@ class SaleArchive extends Component{
         let tipe=localStorage.getItem("type_sale_report");
         let lokasi=localStorage.getItem("location_sale_report");
         let any=localStorage.getItem("any_sale_report");
-        if(dateFrom!==null&&dateTo!==null){
+        if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }else{
             if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
         }
-        if(tipe!==''){
+        if(tipe!==undefined&&tipe!==null&&tipe!==''){
             if(where!==''){where+='&'}where+=`tipe=${tipe}`
         }
-        if(lokasi!==''){
+        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         }
         if(any !== undefined&&any!==''){

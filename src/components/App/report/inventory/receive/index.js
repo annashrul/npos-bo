@@ -58,12 +58,12 @@ class ReceiveReport extends Component{
                 any: localStorage.any_receive_report
             })
         }
-        if (localStorage.date_from_receive_report !== undefined || localStorage.date_from_receive_report !== null) {
+        if (localStorage.date_from_receive_report !== undefined && localStorage.date_from_receive_report !== null) {
             this.setState({
                 startDate: localStorage.date_from_receive_report
             })
         }
-        if (localStorage.date_to_receive_report !== undefined || localStorage.date_to_receive_report !== null) {
+        if (localStorage.date_to_receive_report !== undefined && localStorage.date_to_receive_report !== null) {
             this.setState({
                 endDate: localStorage.date_to_receive_report
             })
