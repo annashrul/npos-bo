@@ -8,13 +8,18 @@ import {rangeDate} from "helper";
 import Select from "react-select";
 import moment from "moment";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
-import {FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
 import Paginationq from "helper";
 import DetailReceiveReport from "../../../modals/report/purchase/receive/detail_receive_report";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {FetchReceiveData, FetchReportExcel} from "../../../../../redux/actions/purchase/receive/receive.action";
-import {toRp} from "../../../../../helper";
+import {
+    deleteReceiveReport,
+    FetchReceiveData,
+    FetchReportExcel,
+    FetchReportDetail
+} from "redux/actions/purchase/receive/receive.action";
+import {toRp} from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
+import Swal from "sweetalert2";
 
 class ReceiveReport extends Component{
     constructor(props){
@@ -26,6 +31,7 @@ class ReceiveReport extends Component{
         this.HandleChangeType   = this.HandleChangeType.bind(this);
         this.handleChange       = this.handleChange.bind(this);
         this.handleRetur        = this.handleRetur.bind(this);
+        this.handleDelete        = this.handleDelete.bind(this);
         this.state={
             detail          :{},
             startDate       :moment(new Date()).format("yyyy-MM-DD"),
@@ -188,6 +194,22 @@ class ReceiveReport extends Component{
         this.props.dispatch(ModalType("formReturReceive"));
         this.props.dispatch(FetchReceiveData(kode))
     }
+    handleDelete(e,kode){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.dispatch(deleteReceiveReport(kode));
+            }
+        })
+    }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
@@ -275,6 +297,7 @@ class ReceiveReport extends Component{
 
                             </div>
                             <div className="table-responsive" style={{overflowX: "auto"}}>
+                                {/*EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered" id="report_receive_to_excel" style={{display:"none"}}>
                                     <thead className="bg-light">
                                     <tr>
@@ -337,6 +360,7 @@ class ReceiveReport extends Component{
                                     }
 
                                 </table>
+                                {/*END EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                                     <thead className="bg-light">
                                     <tr>
@@ -384,6 +408,9 @@ class ReceiveReport extends Component{
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleRetur(
                                                                                     e,v.no_faktur_beli
                                                                                 )}>Retur</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(
+                                                                                    e,v.no_faktur_beli
+                                                                                )}>Delete</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>

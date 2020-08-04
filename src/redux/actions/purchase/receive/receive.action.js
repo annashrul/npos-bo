@@ -5,6 +5,7 @@ import {
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {destroy} from "components/model/app.model";
+import {FetchBank} from "../../masterdata/bank/bank.action";
 
 
 export function setLoading(load) {
@@ -76,7 +77,6 @@ export const FetchNota = (lokasi) => {
 
     }
 }
-
 export const storeReceive= (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -125,7 +125,6 @@ export const storeReceive= (data) => {
             })
     }
 }
-
 export const FetchReport = (page = 1,where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -146,7 +145,6 @@ export const FetchReport = (page = 1,where='') => {
 
     }
 }
-
 export const FetchReceiveData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -177,7 +175,6 @@ export const FetchReportDetail = (page=1,code)=>{
         })
     }
 }
-
 export const FetchReportExcel = (where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -196,5 +193,41 @@ export const FetchReportExcel = (where='') => {
             console.log(error)
         })
 
+    }
+}
+export const deleteReceiveReport = (id) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `receive/${id}`;
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchReport(1,''));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
     }
 }

@@ -51,7 +51,7 @@ var date = new Date();
 date.setDate(date.getDate());
 export const rangeDate = {
     'Hari Ini'          : [date.setDate(date.getDate()+1), moment()],
-    'KemarIn'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate())],
+    'Kemarin'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate()-1)],
     '7 Hari Terakhir'   : [moment().subtract(6, 'days'), moment()],
     '30 Hari Terakhir'  : [moment().subtract(29, 'days'), moment()],
     'Minggu Ini'        : [moment().startOf('isoWeek'), moment().endOf('isoWeek')],

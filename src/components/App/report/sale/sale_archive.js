@@ -227,17 +227,10 @@ class SaleArchive extends Component{
                             <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label htmlFor=""> Periode </label>
-                                    <div className="customDatePickerWidth">
-                                        <DateRangePicker
-                                            ranges={rangeDate}
-                                            alwaysShowCalendars={true}
-                                            onEvent={this.handleEvent}
-                                            showDropdowns={true}
-                                            autoUpdateInput={true}
-                                        >
-                                            <input type="text" id="date" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
-                                        </DateRangePicker>
-                                    </div>
+                                    <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                                        <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
+                                    </DateRangePicker>
+
 
                                 </div>
                             </div>
