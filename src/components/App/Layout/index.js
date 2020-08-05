@@ -36,7 +36,7 @@ class Layout extends Component {
                 <div style={style} className="ecaps-sidemenu-area">
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo} alt="Desktop Logo" style={{paddingTop:'9px'}} /> <img className="small-logo" src={this.props.auth.user.logo} alt="Mobile Logo" /></Link>
+                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo} alt="Desktop Logo" style={{paddingTop:'9px',height:"100px"}} /> <img className="small-logo" src={this.props.auth.user.logo} alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="ecaps-sidenav" id="ecapsSideNav">
