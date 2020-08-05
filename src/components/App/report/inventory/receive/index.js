@@ -21,6 +21,7 @@ import {toRp} from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
 import Swal from "sweetalert2";
 import Receive from "../../../purchase/receive";
+import {HEADERS} from "../../../../../redux/actions/_constants";
 
 class ReceiveReport extends Component{
     constructor(props){
@@ -214,7 +215,8 @@ class ReceiveReport extends Component{
     }
     handleChangePage(e,kode){
         e.preventDefault();
-        this.props.history.push(`/receive/${kode}`);
+        // this.props.history.push(`/receive/${kode}`);
+        window.location.href = `/receive/${kode}`;
         this.props.dispatch(FetchReceiveData(kode));
     }
     render(){

@@ -125,6 +125,59 @@ export const storeReceive= (data) => {
             })
     }
 }
+export const updateReceive= (data,kode) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `receive/${kode}`;
+        axios.put(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Transaksi berhasil.',
+                    text: `Disimpan dengan nota: ${data.result.insertId}`,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9800',
+                    cancelButtonColor: '#2196F3',
+                    confirmButtonText: 'Print Nota?',
+                    cancelButtonText: 'Oke!'
+                }).then((result) => {
+                    if (result.value) {
+                        const win = window.open(data.result.nota,'_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
+                    }
+                    destroy('receive');
+                    localStorage.removeItem('sp');
+                    localStorage.removeItem('lk');
+                    localStorage.removeItem('ambil_data');
+                    localStorage.removeItem('nota');
+                    localStorage.removeItem('catatan');
+                    localStorage.removeItem('data_master_receive');
+                    localStorage.removeItem('data_detail_receive');
+
+                    window.location.href = `/receive_report`;
+
+                })
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
+
 export const FetchReport = (page = 1,where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -177,6 +230,8 @@ export const FetchReceiveData = (nota) => {
                 let detail =  data.result.detail;
                 localStorage.setItem("data_master_receive",JSON.stringify(master));
                 localStorage.setItem("data_detail_receive",JSON.stringify(detail));
+                // console.log("GET STORAGE IN ACTION",localStorage.data_master_receive);
+                // console.log("GET STORAGE IN ACTION",localStorage.data_detail_receive);
             })
             .catch(function (error) {
                 // handle error
