@@ -127,6 +127,17 @@ export const BANK = {
 }
 
 /****************
+ PROMO
+ *****************/
+export const PROMO = {
+    LOADING: 'SET_PROMO_LOADING',
+    SUCCESS: 'SUCCESS_PROMO',
+    SUCCESS_KATEGORI: 'SUCCESS_PROMO_KATEGORI',
+    FAILED: 'FAILED_PROMO',
+    DETAIL: 'DETAIL_PROMO'
+}
+
+/****************
  PRODUCT
  *****************/
 export const PRODUCT = {

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Login from '../Auth/Login/Login';
 import Dashboard from '../Dashboard/Dashboard';
 import Bank from '../masterdata/bank';
+import Promo from '../masterdata/promo';
 import Cash from '../masterdata/cash';
 import User from '../masterdata/user';
 import Location from '../masterdata/location';
@@ -49,6 +50,7 @@ const Routes = (
             <PrivateRoute path="/" exact strict component={Dashboard} />
             <PrivateRoute path="/company" exact strict component={Company} />
             <PrivateRoute path="/bank" exact strict component={Bank} />
+            <PrivateRoute path="/promo" exact strict component={Promo} />
             <PrivateRoute path="/cash" exact strict component={Cash} />
             <PrivateRoute path="/customer" exact strict component={Customer} />
             <PrivateRoute path="/supplier" exact strict component={Supplier} />
