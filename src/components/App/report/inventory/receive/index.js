@@ -20,6 +20,7 @@ import {
 import {toRp} from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
 import Swal from "sweetalert2";
+import Receive from "../../../purchase/receive";
 
 class ReceiveReport extends Component{
     constructor(props){
@@ -32,6 +33,7 @@ class ReceiveReport extends Component{
         this.handleChange       = this.handleChange.bind(this);
         this.handleRetur        = this.handleRetur.bind(this);
         this.handleDelete        = this.handleDelete.bind(this);
+        this.handleChangePage        = this.handleChangePage.bind(this);
         this.state={
             detail          :{},
             startDate       :moment(new Date()).format("yyyy-MM-DD"),
@@ -209,6 +211,11 @@ class ReceiveReport extends Component{
                 this.props.dispatch(deleteReceiveReport(kode));
             }
         })
+    }
+    handleChangePage(e,kode){
+        e.preventDefault();
+        this.props.history.push(`/receive/${kode}`);
+        this.props.dispatch(FetchReceiveData(kode));
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -411,6 +418,7 @@ class ReceiveReport extends Component{
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(
                                                                                     e,v.no_faktur_beli
                                                                                 )}>Delete</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleChangePage(e,v.no_faktur_beli)}>Edit</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -455,6 +463,7 @@ class ReceiveReport extends Component{
                         </div>
                     </div>
                 </div>
+
             </Layout>
         );
     }
@@ -469,7 +478,9 @@ const mapStateToProps = (state) => {
         dataRetur:state.receiveReducer.receive_data,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
-        auth: state.auth
+        auth: state.auth,
+        receive_data:state.receiveReducer.receive_data
+
     }
 }
 

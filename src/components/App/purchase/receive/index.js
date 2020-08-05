@@ -14,6 +14,7 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
+import {FetchReceiveData} from "../../../../redux/actions/purchase/receive/receive.action";
 
 const table='receive'
 const Toast = Swal.mixin({
@@ -35,6 +36,7 @@ class Receive extends Component{
 
         this.state = {
           addingItemName: "",
+            no_faktur_beli:"-",
           databrg: [],
           brgval:[],
           tanggal: new Date(),
@@ -83,6 +85,67 @@ class Receive extends Component{
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
     }
 
+    componentWillMount(){
+        console.log(this.props.match.params.slug);
+        if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
+            let get_master = localStorage.getItem('data_master_receive');
+            let get_detail = localStorage.getItem('data_detail_receive');
+            let master = JSON.parse(get_master);
+            let detail = JSON.parse(get_detail);
+            let data_final = {};
+            for(let i=0;i<detail.length;i++){
+                data_final['kd_brg'] = detail[i].kd_brg;
+                data_final['barcode'] = detail[i].barcode;
+                data_final['satuan'] = detail[i].satuan;
+                data_final['diskon'] = detail[i].diskon;
+                data_final['harga_beli'] = detail[i].harga_beli;
+                data_final['stock'] = detail[i].stock;
+                data_final['diskon2'] = 0;
+                data_final['diskon3'] =0;
+                data_final['diskon4'] = 0;
+                data_final['ppn'] = detail[i].ppn;
+                data_final['qty'] = detail[i].qty;
+                data_final['qty_bonus'] = detail[i].qty_bonus;
+                data_final['nm_brg'] = detail[i].nm_brg;
+                data_final['tambahan'] = detail[i].tambahan;
+                const cek = cekData('barcode',detail[i].barcode,table);
+                cek.then(res => {
+                    if(res==undefined){
+                        store(table, data_final);
+                    }
+                    else{
+                        update(table,{
+                            id:res.id,
+                            qty:parseFloat(res.qty)+1,
+                            kd_brg: res.kd_brg,
+                            barcode: res.barcode,
+                            satuan: res.satuan,
+                            diskon: res.diskon,
+                            diskon2: res.diskon2,
+                            diskon3: 0,
+                            diskon4: 0,
+                            ppn: res.ppn,
+                            stock: res.stock,
+                            harga_beli: res.harga_beli,
+                            nm_brg:res.nm_brg,
+                            qty_bonus:detail[i].qty_bonus,
+                            tambahan: res.tambahan
+                        })
+                    }
+                    this.getData();
+                })
+            }
+
+            // this.getData();
+            this.setState({
+                location:master.lokasi,
+                catatan:master.catatan,
+                supplier:master.kode_supplier,
+                no_faktur_beli:master.no_faktur_beli
+            })
+        }
+    }
+
     componentDidMount() {
       this.props.dispatch(FetchSupplierAll())
       this.getData()
@@ -127,8 +190,8 @@ class Receive extends Component{
       }
     }
 
-
     componentWillReceiveProps = (nextProps) => {
+        console.log(nextProps);
       if (nextProps.auth.user) {
         let lk = []
         let loc = nextProps.auth.user.lokasi;
@@ -198,7 +261,7 @@ class Receive extends Component{
                   nm_brg: item.nm_brg,
                   tambahan: item.tambahan
                 };
-                store(table, datas)
+                store(table, datas);
                 this.getData();
 
             })
@@ -473,7 +536,8 @@ class Receive extends Component{
            cek.then(res => {
                if(res==undefined){
                     store(table, finaldt)
-               }else{
+               }
+               else{
                    update(table,{
                         id:res.id,
                         qty:parseFloat(res.qty)+1,
@@ -492,10 +556,8 @@ class Receive extends Component{
                         tambahan: res.tambahan
                    })
                }
-               
-
                this.getData()
-           })
+       })
     }
 
     HandleReset(e){
@@ -706,7 +768,9 @@ class Receive extends Component{
             qty_bonus: i.qty_bonus,
             satuan: i.satuan
           });
-        })
+        });
+        console.log("databrg",res);
+        console.log("brgval",brg);
         this.setState({
           databrg: res,
           brgval: brg
@@ -715,7 +779,7 @@ class Receive extends Component{
     }
 
     render() {
-      
+
       // if(this.props.isLoading){
       //   return <Preloader/>
       // }
@@ -738,7 +802,7 @@ class Receive extends Component{
               <div className="row align-items-center">
                 <div className="col-6">
                     <div className="dashboard-header-title mb-3">
-                    <h5 className="mb-0 font-weight-bold">Receive Pembelian</h5>
+                    <h5 className="mb-0 font-weight-bold">Receive Pembelian   </h5>
                     {/* <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p> */}
                     </div>
                 </div>
@@ -928,8 +992,8 @@ class Receive extends Component{
                               readOnly
                               className="form-control-plaintext form-control-sm"
                               id="nota"
-                              style={{fontWeight:'bolder'}}
-                              value={this.props.nota}
+                              style={{fontWeight:'bolder'}}git
+                              value={this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null?this.state.no_faktur_beli:this.props.nota}
                             />
                           </div>
                           <div className="row">
@@ -1256,7 +1320,7 @@ const mapStateToPropsCreateItem = (state) => ({
   auth:state.auth,
   po_report: state.poReducer.report_data,
   po_data: state.poReducer.po_data,
-  checkNotaPem: state.siteReducer.check
+  checkNotaPem: state.siteReducer.check,
 });
 
 export default connect(mapStateToPropsCreateItem)(Receive);

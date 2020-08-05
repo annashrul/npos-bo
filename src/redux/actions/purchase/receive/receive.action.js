@@ -150,9 +150,33 @@ export const FetchReceiveData = (nota) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
             .then(function (response) {
-                const data = response.data
-                dispatch(setPoData(data))
-                dispatch(setLoading(false));
+                const data = response.data;
+                // console.log("AMBIL DATA",data.result.master.type);
+                let master={
+                    "tgl_beli": data.result.master.tgl_beli,
+                    "no_faktur_beli": data.result.master.no_faktur_beli,
+                    "type": data.result.master.type,
+                    "nilai_pembelian": data.result.master.nilai_pembelian,
+                    "kode_supplier": data.result.master.kode_supplier,
+                    "tgl_jatuh_tempo": data.result.master.tgl_jatuh_tempo,
+                    "ppn": data.result.master.ppn,
+                    "dp": data.result.master.dp,
+                    "total_pembelian": data.result.master.total_pembelian,
+                    "pelunasan": data.result.master.pelunasan,
+                    "terbayar": data.result.master.terbayar,
+                    "operator": data.result.master.operator,
+                    "lokasi": data.result.master.lokasi,
+                    "bulat": data.result.master.bulat,
+                    "nonota": data.result.master.nonota,
+                    "no_po": data.result.master.no_po,
+                    "catatan": data.result.master.catatan,
+                    "disc": data.result.master.disc,
+                    "nama_penerima": data.result.master.nama_penerima,
+                    "no_pre_receive": data.result.master.no_pre_receive
+                };
+                let detail =  data.result.detail;
+                localStorage.setItem("data_master_receive",JSON.stringify(master));
+                localStorage.setItem("data_detail_receive",JSON.stringify(detail));
             })
             .catch(function (error) {
                 // handle error
