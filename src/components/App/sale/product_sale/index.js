@@ -253,43 +253,43 @@ class Sale extends Component{
 
         const cek = cekData('barcode', barcode, table);
         if(column === 'satuan'){
-           cek.then(res => {
-               if (res == undefined) {
-                   Toast.fire({
-                       icon: 'error',
-                       title: `not found.`
-                   })
-               } else {
-                   let newbrg=[];
-                   datas.map(i=>{
-                       if(i.satuan===val){
-                           newbrg=i;
-                       }
-                   })
+            cek.then(res => {
+                if (res == undefined) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: `not found.`
+                    })
+                } else {
+                    let newbrg=[];
+                    datas.map(i=>{
+                        if(i.satuan===val){
+                            newbrg=i;
+                        }
+                    })
 
-                   let final= {
-                       id: res.id,
-                       qty: 0,
-                       kd_brg: res.kd_brg,
-                       nm_brg: res.nm_brg,
-                       barcode: res.barcode,
-                       satuan: res.satuan,
-                       harga: res.harga,
-                       stock: res.stock,
-                       diskon_persen: res.diskon_persen,
-                       diskon_nominal: res.diskon_nominal,
-                       ppn: res.ppn,
-                       tambahan: res.tambahan
-                   }
-                   update(table, final)
-                   Toast.fire({
-                       icon: 'success',
-                       title: `${column} has been changed.`
-                   })
-               }
-               this.getData();
-           })
-       }
+                    let final= {
+                        id: res.id,
+                        qty: 0,
+                        kd_brg: res.kd_brg,
+                        nm_brg: res.nm_brg,
+                        barcode: res.barcode,
+                        satuan: res.satuan,
+                        harga: res.harga,
+                        stock: res.stock,
+                        diskon_persen: res.diskon_persen,
+                        diskon_nominal: res.diskon_nominal,
+                        ppn: res.ppn,
+                        tambahan: res.tambahan
+                    }
+                    update(table, final)
+                    Toast.fire({
+                        icon: 'success',
+                        title: `${column} has been changed.`
+                    })
+                }
+                this.getData();
+            })
+        }
 
     }
 
@@ -525,6 +525,7 @@ class Sale extends Component{
                 }
             })
         }
+
     }
 
     autoSetQty(kode,data){
@@ -638,6 +639,8 @@ class Sale extends Component{
             })
         }
         let totalsub=0;
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+
         return (
             <Layout page="Penjualan Barang">
                 <div className="row align-items-center">
@@ -651,7 +654,393 @@ class Sale extends Component{
 
                 </div>
 
-                searchby
+                <div style={{ height: "100vh"}}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}>
+                            <div className="card">
+                                <div className="card-body">
+                                    <div className="chat-area">
+                                        <div className="chat-header-text d-flex border-none mb-10">
+                                            <div className="chat-about">
+                                                <div className="chat-with font-18">Pilih Barang</div>
+                                            </div>
+                                        </div>
+                                        <div className="chat-search">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <select name='searchby'
+                                                                    className="form-control form-control-sm"
+                                                                    onChange={(e) => this.HandleCommonInputChange(e, false)}>
+                                                                <option value={1}>Kode Barang</option>
+                                                                <option value={2}>Barcode</option>
+                                                                <option value={3}>Deskripsi</option>
+                                                            </select>
+                                                        </div>
+                                                        <small
+                                                            id="passwordHelpBlock"
+                                                            className="form-text text-muted"
+                                                        >
+                                                            Cari
+                                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <input
+                                                                autoFocus
+                                                                type="text"
+                                                                id="chat-search"
+                                                                name="search"
+                                                                className="form-control form-control-sm"
+                                                                placeholder="Search"
+                                                                value={this.state.search}
+                                                                onChange={(e) => this.HandleCommonInputChange(e, false)}
+                                                                onKeyPress={
+                                                                    event => {
+                                                                        if (event.key === 'Enter') {
+                                                                            this.HandleSearch();
+                                                                        }
+                                                                    }
+                                                                }
+                                                            />
+                                                            <span className="input-group-append">
+                                  <button
+                                      type="button"
+                                      className="btn btn-primary"
+                                      onClick={
+                                          event => {
+                                              event.preventDefault();
+                                              this.HandleSearch();
+                                          }
+                                      }
+                                  >
+                                    <i className="fa fa-search"/>
+                                  </button>
+                                </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/*end chat-search*/}
+                                        <div className="people-list">
+                                            <div id="chat_user_2">
+                                                <ul className="chat-list list-unstyled">
+                                                    {
+                                                        this.props.barang.length !== 0 ?
+                                                            this.props.barang.map((i, inx) => {
+                                                                return (
+                                                                    <li className="clearfix" key={inx}
+                                                                        onClick={(e) => this.HandleAddBrg(e, {
+                                                                            kd_brg: i.kd_brg,
+                                                                            nm_brg: i.nm_brg,
+                                                                            barcode: i.barcode,
+                                                                            satuan: i.satuan,
+                                                                            harga_old:i.harga,
+                                                                            harga: i.harga,
+                                                                            harga2: i.harga2,
+                                                                            harga3: i.harga3,
+                                                                            harga4: i.harga4,
+                                                                            stock: i.stock,
+                                                                            diskon_persen: i.diskon_persen,
+                                                                            diskon_nominal: i.diskon_nominal,
+                                                                            ppn: i.ppn,
+                                                                            qty: 1,
+                                                                            hrg_beli:i.hrg_beli,
+                                                                            kategori:i.kategori,
+                                                                            services:i.service,
+                                                                            tambahan: []
+                                                                        })}>
+                                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar"/>
+                                                                        <div className="about">
+                                                                            <div className="name">{i.nm_brg.toLowerCase()}</div>
+                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{toRp(i.harga)}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                )
+                                                            }) : (
+                                                                <div style={{
+                                                                    textAlign: 'center',
+                                                                    fontSize: "11px",
+                                                                    fontStyle: "italic"
+                                                                }}>Barang tidak ditemukan.</div>
+                                                            )
+
+                                                    }
+
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </StickyBox>
+                        <div style={{ height: "auto",width:"80%"}}>
+                            <div className="card">
+                                <div className="container" style={{marginTop: "20px"}}>
+                                    <form className=''>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <input
+                                                        type="text"
+                                                        readOnly
+                                                        className="form-control-plaintext form-control-sm"
+                                                        id="nota"
+                                                        style={{fontWeight: 'bolder'}}
+                                                        value={this.props.nota}
+                                                    />
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Tanggal Order
+                                                            </label>
+                                                            <div className="input-group">
+
+                                                                <DatePicker
+                                                                    className="form-control rounded-right"
+                                                                    selected={this.state.tgl_order}
+                                                                    onChange={this.setTglOrder}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Lokasi
+                                                            </label>
+                                                            <Select
+                                                                options={this.state.location_data}
+                                                                placeholder="Pilih Lokasi"
+                                                                onChange={this.HandleChangeLokasi}
+                                                                value={
+                                                                    this.state.location_data.find(op => {
+                                                                        return op.value === this.state.location
+                                                                    })
+                                                                }
+
+                                                            />
+                                                            <div className="invalid-feedback"
+                                                                 style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                                {this.state.error.location}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Customer
+                                                            </label>
+                                                            <Select
+                                                                options={opCustomer}
+                                                                placeholder="Pilih Customer"
+                                                                onChange={this.HandleChangeCustomer}
+                                                                // onChange={this.HandleChangeSupplier}
+                                                                value={
+                                                                    opCustomer.find(op => {
+                                                                        return op.value === this.state.customer
+                                                                    })
+                                                                }
+                                                            />
+                                                            <div className="invalid-feedback"
+                                                                 style={this.state.error.customer !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                                {this.state.error.customer}
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Catatan
+                                                            </label>
+                                                            <textarea
+                                                                style={{height: "84px"}}
+                                                                className="form-control"
+                                                                id="exampleTextarea1"
+                                                                rows={3}
+                                                                defaultValue={this.state.catatan}
+                                                                onChange={(e => this.HandleCommonInputChange(e))}
+                                                                name="catatan"
+                                                            />
+                                                            <div className="invalid-feedback"
+                                                                 style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                                {this.state.error.catatan}
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div className="card-body">
+                                    <div className="table-responsive">
+                                        <table className="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th style={columnStyle}>#</th>
+                                                <th style={columnStyle}>barang</th>
+                                                <th style={columnStyle}>barcode</th>
+                                                <th style={columnStyle}>satuan</th>
+                                                <th style={columnStyle}>harga</th>
+                                                <th style={columnStyle}>disc 1 (%)</th>
+                                                <th style={columnStyle}>disc 2 (%)</th>
+                                                <th style={columnStyle}>ppn</th>
+                                                <th style={columnStyle}>qty</th>
+                                                <th style={columnStyle}>Subtotal</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            {
+                                                this.state.databrg.map((item, index) => {
+                                                    let disc1 = 0;
+                                                    let disc2 = 0;
+                                                    let ppn = 0;
+                                                    let hrg=parseInt(item.harga);
+                                                    let ppnInt=parseInt(item.ppn);
+                                                    let disc_rp=parseInt(item.diskon_nominal);
+                                                    let disc_per=parseInt(item.diskon_persen);
+                                                    // 2000-(2000*(10/100)) = 1800 // diskon 1 (%)
+                                                    // 1800-(1800*(10/100)) = 1620 // diskon 2 (%)
+                                                    // 2000+(2000*(10/100)) = 2200 // ppn
+                                                    if(disc_per!==0){
+                                                        disc1 = hrg-(hrg*(disc_per/100));
+                                                        disc2 = disc1;
+                                                        if(disc_rp!==0){
+                                                            disc2 = disc1-(disc1*(disc_rp/100))
+                                                        }
+                                                    }else if(disc_rp!==0){
+                                                        disc1 = hrg-(hrg*(disc_rp/100));
+                                                        disc2 = disc1;
+                                                        if(disc_per!==0){
+                                                            disc2 = disc1-(disc1*(disc_per/100))
+                                                        }
+                                                    }
+
+                                                    if(ppnInt!==0){
+                                                        ppn = hrg*(ppnInt/100);
+                                                    }
+
+                                                    totalsub+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td style={columnStyle}>
+                                                                <a href="#" className='btn btn-danger btn-sm' onClick={(e) => this.HandleRemove(e, item.id)}><i className='fa fa-trash'/></a>
+                                                            </td>
+                                                            <td style={columnStyle}>{item.nm_brg}</td>
+                                                            <td style={columnStyle}>{item.barcode}</td>
+                                                            <td style={columnStyle}>{item.satuan}</td>
+                                                            <td><input type='text' className="form-control" name='harga'
+                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                       value={this.state.brgval[index].harga}/>
+                                                            </td>
+                                                            <td><input type='text' name='diskon_persen'  className="form-control"
+                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                       value={this.state.brgval[index].diskon_persen}/>
+                                                            </td>
+                                                            <td><input type='text' name='diskon_nominal'
+                                                                       className="form-control"
+                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                       value={this.state.brgval[index].diskon_nominal}/>
+                                                            </td>
+                                                            <td><input type='text' name='ppn'  className="form-control"
+                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                       value={this.state.brgval[index].ppn}/>
+                                                            </td>
+                                                            <td><input type='text' name='qty'
+                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                       className="form-control"
+                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                       value={this.state.brgval[index].qty}/>
+                                                            </td>
+                                                            <td style={{textAlign:"right"}}>{toRp((disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty))}</td>
+
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                            </tbody>
+                                            <tfoot>
+                                            <tr style={{background: '#eee'}}>
+                                                <td colSpan='9' style={{textAlign: 'right !important'}}>Total
+                                                </td>
+                                                <td colSpan='1' style={{textAlign:"right"}}>{toRp(totalsub)}</td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                                <div className="card-header">
+                                    <div className='row'>
+                                        <div className="col-md-7">
+                                            <div className="dashboard-btn-group d-flex align-items-center">
+                                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-5">
+                                            <div className="pull-right">
+                                                <form className="form_head">
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Sub Total</label>
+                                                        <div className="col-sm-8">
+                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={totalsub} readOnly />
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Discount</label>
+                                                        <div className="col-sm-3">
+                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,totalsub)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
+                                                        </div>
+                                                        <div className="col-sm-5">
+                                                            <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,totalsub)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Pajak %</label>
+                                                        <div className="col-sm-3">
+                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Grand Total</label>
+                                                        <div className="col-sm-8">
+
+                                                            <input type="text" name="grand_total" className="form-control text-right" readOnly value={(totalsub - (totalsub * (parseFloat(this.state.discount_persen) / 100))) + (totalsub * (parseFloat(this.state.pajak) / 100))} />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <FormSale master={this.state.master} detail={this.state.detail} subtotal={totalsub}/>
             </Layout>
         );

@@ -59,57 +59,6 @@ export function setClosingDetail(data=[]){
     return {type:CLOSING.DETAIL,data}
 }
 
-export const FetchDnReport = (page = 1, perpage = 10) => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/report/closing?page=${page}&perpage=${perpage}&status=0`)
-            .then(function (response) {
-                const data = response.data
-                dispatch(setReport(data))
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-
-    }
-}
-
-export const FetchDnData = (nota) => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
-            .then(function (response) {
-                const data = response.data
-                dispatch(setCLOSINGData(data))
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-
-    }
-}
-
-export const FetchNota = (lokasi, prefix) => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-
-        axios.get(HEADERS.URL + `getcode?lokasi=${lokasi}&prefix=${prefix}`)
-            .then(function (response) {
-                const data = response.data
-                dispatch(setCode(data))
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-
-    }
-}
 
 export const storeClosing = (data) => {
     return (dispatch) => {
@@ -159,15 +108,14 @@ export const storeClosing = (data) => {
             })
     }
 }
-
 export const reClosing = (data) => {
     console.log("DATA TI CLOSING",data)
     return (dispatch) => {
-        dispatch(setLoading(true));
         const url = HEADERS.URL + `pos/reclosing`;
         axios.post(url,data)
             .then(function (response) {
                 const data = (response.data);
+                dispatch(FetchClosing(1,''));
                 console.log("DATA",data);
                 if (data.status === 'success') {
                     Swal.fire({
@@ -175,6 +123,7 @@ export const reClosing = (data) => {
                         type: 'success',
                         text: data.msg,
                     });
+
                 } else {
                     Swal.fire({
                         title: 'failed',
@@ -182,13 +131,11 @@ export const reClosing = (data) => {
                         text: data.msg,
                     });
                 }
-                dispatch(setLoading(false));
-                // dispatch(FetchProduct(1,'',''));
+
+
             })
             .catch(function (error) {
-                // handle error
-                dispatch(setLoading(false));
-                console.log(error);
+
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
@@ -200,20 +147,15 @@ export const reClosing = (data) => {
             })
     }
 };
-export const FetchClosing = (page=1,dateFrom='',lokasi='')=>{
+export const FetchClosing = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-        let url = '';
-        url = `report/closing?page=${page}`;
-        // if(q===''){
-        //     url = `report/closing?page=${page}`;
-        // }else{
-        //     url = `report/closing?page=${page}&q=${q}`;
-        // }
-        console.log("url closing",`${url}`);
-        
-        axios.get(HEADERS.URL+`${url}`+`&datefrom=`+moment(dateFrom).format("yyyy-MM-DD")+`&lokasi=`+lokasi)
+        let url = `report/closing?page=${page}`;
+        if(where !==''){
+            url+=`${where}`
+        }
+        console.log(url);
+        axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
                 console.log(data);

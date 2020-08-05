@@ -59,6 +59,7 @@ class SideMenu extends Component {
             this.setState({isReport : !this.state.isReport});
             if(param === 'report_inevntory'){
                 this.setState({
+
                     isReportInventory : !this.state.isReportInventory
                 });
             }
@@ -93,7 +94,6 @@ class SideMenu extends Component {
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
             let loc =nextProps.auth.user.access;
-            console.log(loc!==null?"aya":"kosong");
             if(loc!==undefined&&loc!==null){
                 this.setState({
                     product:nextProps.auth.user.access[10]['label']!==null?nextProps.auth.user.access[10]['label']:"0",
@@ -199,7 +199,7 @@ class SideMenu extends Component {
                     </li>
                     <li  className={path==='/bayar_hutang'?"active":''}><Link to="/bayar_hutang"> <i className="zmdi zmdi-apps" />Hutang </Link></li>
 
-                    <li className={this.state.isReport===true || path==='/report_cash'|| path==='/sale_archive'?"treeview active menu-open" : "treeview"}>
+                    <li className={this.state.isReport===true || path==='/closing' || path==='/report_cash'|| path==='/sale_archive'?"treeview active menu-open" : "treeview"}>
                         <a href="#" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className="treeview-menu">
                             <li className={path==='/closing'?"active":''}><Link to="/closing"> <i className="zmdi zmdi-apps" />Closing</Link></li>

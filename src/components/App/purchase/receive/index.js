@@ -14,6 +14,7 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
+import {FetchReceiveData, updateReceive} from "../../../../redux/actions/purchase/receive/receive.action";
 
 const table='receive'
 const Toast = Swal.mixin({
@@ -35,6 +36,7 @@ class Receive extends Component{
 
         this.state = {
           addingItemName: "",
+            no_faktur_beli:"-",
           databrg: [],
           brgval:[],
           tanggal: new Date(),
@@ -83,6 +85,79 @@ class Receive extends Component{
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
     }
 
+
+    componentWillMount(){
+
+        if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
+            // window.location.reload();
+            let get_master = localStorage.getItem('data_master_receive');
+            let get_detail = localStorage.getItem('data_detail_receive');
+            let master = JSON.parse(get_master);
+            let detail = JSON.parse(get_detail);
+            console.log(master);
+            let data_final = {};
+            for(let i=0;i<detail.length;i++){
+                console.log("KODE BARANG",detail[i].tambahan[0].kd_brg);
+                data_final['kd_brg'] = detail[i].tambahan[0].kd_brg;
+                data_final['barcode'] = detail[i].barcode;
+                data_final['satuan'] = detail[i].satuan;
+                data_final['diskon'] = detail[i].diskon;
+                data_final['harga_beli'] = detail[i].harga_beli;
+                data_final['stock'] = detail[i].stock;
+                data_final['diskon2'] = 0;
+                data_final['diskon3'] =0;
+                data_final['diskon4'] = 0;
+                data_final['ppn'] = detail[i].ppn;
+                data_final['qty'] = detail[i].jumlah_beli;
+                data_final['qty_bonus'] = detail[i].jumlah_bonus;
+                data_final['nm_brg'] = detail[i].nm_brg;
+                data_final['tambahan'] = detail[i].tambahan;
+                store(table, data_final);
+                this.getData();
+
+                // const cek = cekData('kd_brg',detail[i].tambahan[0].kd_brg,table);
+                // cek.then(res => {
+                //     console.log("RESPON LOCAL",res);
+                //     if(res==undefined){
+                //         store(table, data_final);
+                //     }
+                //     else{
+                //         update(table,{
+                //             id:res.id,
+                //             qty:parseFloat(res.qty)+1,
+                //             kd_brg: res.kd_brg,
+                //             barcode: res.barcode,
+                //             satuan: res.satuan,
+                //             diskon: res.diskon,
+                //             diskon2: res.diskon2,
+                //             diskon3: 0,
+                //             diskon4: 0,
+                //             ppn: res.ppn,
+                //             stock: res.stock,
+                //             harga_beli: res.harga_beli,
+                //             nm_brg:res.nm_brg,
+                //             qty_bonus:detail[i].qty_bonus,
+                //             tambahan: res.tambahan
+                //         })
+                //     }
+                //     this.getData();
+                // })
+            }
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
+
+            // this.getData();
+            this.setState({
+                location:master.lokasi,
+                catatan:master.catatan,
+                supplier:master.kode_supplier,
+                no_faktur_beli:this.props.match.params.slug,
+                penerima:master.nama_penerima,
+                notasupplier:master.nonota,
+                jenis_trx:master.type
+            })
+        }
+    }
+
     componentDidMount() {
       this.props.dispatch(FetchSupplierAll())
       this.getData()
@@ -127,8 +202,8 @@ class Receive extends Component{
       }
     }
 
-
     componentWillReceiveProps = (nextProps) => {
+        console.log(nextProps);
       if (nextProps.auth.user) {
         let lk = []
         let loc = nextProps.auth.user.lokasi;
@@ -198,7 +273,7 @@ class Receive extends Component{
                   nm_brg: item.nm_brg,
                   tambahan: item.tambahan
                 };
-                store(table, datas)
+                store(table, datas);
                 this.getData();
 
             })
@@ -224,6 +299,15 @@ class Receive extends Component{
       localStorage.removeItem('ambil_data');
       localStorage.removeItem('nota');
       localStorage.removeItem('catatan');
+        localStorage.removeItem('data_master_receive');
+        localStorage.removeItem('data_detail_receive');
+        destroy('receive');
+        if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
+            localStorage.removeItem('data_master_receive');
+            localStorage.removeItem('data_detail_receive');
+            destroy('receive');
+            console.log("DESTROY DATA PEMBELIAN");
+        }
 
     }
 
@@ -473,7 +557,8 @@ class Receive extends Component{
            cek.then(res => {
                if(res==undefined){
                     store(table, finaldt)
-               }else{
+               }
+               else{
                    update(table,{
                         id:res.id,
                         qty:parseFloat(res.qty)+1,
@@ -492,10 +577,8 @@ class Receive extends Component{
                         tambahan: res.tambahan
                    })
                }
-               
-
                this.getData()
-           })
+       })
     }
 
     HandleReset(e){
@@ -612,7 +695,7 @@ class Receive extends Component{
                   let data_final = {
                     tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
                     type: this.state.jenis_trx,
-                    tgl_jatuh_tempo: this.state.tanggal,
+                    tgl_jatuh_tempo: moment(this.state.tanggal).format("YYYY-MM-DD"),
                     no_po: this.state.no_po,
                     pre_receive: this.state.pre_receive,
                     sub_total: subtotal,
@@ -625,7 +708,14 @@ class Receive extends Component{
                     userid: this.state.userid,
                     detail: detail
                   };
-                  this.props.dispatch(storeReceive(data_final));
+                  console.log("SUBMITTED",data_final);
+                    if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
+                        this.props.dispatch(updateReceive(data_final,this.props.match.params.slug));
+                        console.log("###################### UPDATE ######################");
+                    }else{
+                        this.props.dispatch(storeReceive(data_final));
+                    }
+
                 }
               })
             }
@@ -706,7 +796,9 @@ class Receive extends Component{
             qty_bonus: i.qty_bonus,
             satuan: i.satuan
           });
-        })
+        });
+        console.log("databrg",res);
+        console.log("brgval",brg);
         this.setState({
           databrg: res,
           brgval: brg
@@ -715,7 +807,7 @@ class Receive extends Component{
     }
 
     render() {
-      
+
       // if(this.props.isLoading){
       //   return <Preloader/>
       // }
@@ -738,7 +830,7 @@ class Receive extends Component{
               <div className="row align-items-center">
                 <div className="col-6">
                     <div className="dashboard-header-title mb-3">
-                    <h5 className="mb-0 font-weight-bold">Receive Pembelian</h5>
+                    <h5 className="mb-0 font-weight-bold">Receive Pembelian   </h5>
                     {/* <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p> */}
                     </div>
                 </div>
@@ -929,7 +1021,7 @@ class Receive extends Component{
                               className="form-control-plaintext form-control-sm"
                               id="nota"
                               style={{fontWeight:'bolder'}}
-                              value={this.props.nota}
+                              value={this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null?this.state.no_faktur_beli:this.props.nota}
                             />
                           </div>
                           <div className="row">
@@ -962,6 +1054,7 @@ class Receive extends Component{
                                   name="penerima"
                                   className="form-control"
                                    onChange={(e)=>this.HandleCommonInputChange(e,true)}
+                                  value={this.state.penerima}
                                 />
                                 <div class="invalid-feedback" style={this.state.error.penerima!==""?{display:'block'}:{display:'none'}}>
                                       {this.state.error.penerima}
@@ -1087,6 +1180,7 @@ class Receive extends Component{
                                   name="notasupplier"
                                   className="form-control"
                                    onChange={(e)=>this.HandleCommonInputChange(e)}
+                                  value={this.state.notasupplier}
                                 />
                                 <div class="invalid-feedback" style={this.state.error.notasupplier!==""?{display:'block'}:{display:'none'}}>
                                       {this.state.error.notasupplier}
@@ -1256,7 +1350,7 @@ const mapStateToPropsCreateItem = (state) => ({
   auth:state.auth,
   po_report: state.poReducer.report_data,
   po_data: state.poReducer.po_data,
-  checkNotaPem: state.siteReducer.check
+  checkNotaPem: state.siteReducer.check,
 });
 
 export default connect(mapStateToPropsCreateItem)(Receive);

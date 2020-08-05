@@ -328,6 +328,7 @@ class TrxAdjustment extends Component{
                         cancelButtonText: 'Tidak!'
                     }).then((result) => {
                         if (result.value) {
+
                             let subtotal = 0;
                             let detail = [];
                             let data={};
@@ -336,6 +337,7 @@ class TrxAdjustment extends Component{
                             data['lokasi'] = this.state.location;
                             data['keterangan'] = this.state.catatan;
                             res.map(item => {
+                                console.log(item);
                                 let saldo_stock=item.saldo_stock;
                                 if(item.status === 'kurang'){
                                     saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
@@ -351,6 +353,7 @@ class TrxAdjustment extends Component{
                                     "hrg_beli": item.harga_beli
                                 })
                             });
+                            console.log(detail);
                             data['detail'] = detail;
                             this.props.dispatch(storeAdjusment(data));
                         }

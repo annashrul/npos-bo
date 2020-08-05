@@ -36,10 +36,10 @@ class AlokasiReport extends Component{
         if (localStorage.any_alokasi_report !== undefined && localStorage.any_alokasi_report !== '') {
             this.setState({any: localStorage.any_alokasi_report})
         }
-        if (localStorage.date_from_alokasi_report !== undefined || localStorage.date_from_alokasi_report !== null) {
+        if (localStorage.date_from_alokasi_report !== undefined && localStorage.date_from_alokasi_report !== null) {
             this.setState({startDate: localStorage.date_from_alokasi_report})
         }
-        if (localStorage.date_to_alokasi_report !== undefined || localStorage.date_to_alokasi_report !== null) {
+        if (localStorage.date_to_alokasi_report !== undefined && localStorage.date_to_alokasi_report !== null) {
             this.setState({endDate: localStorage.date_to_alokasi_report})
         }
     }
@@ -192,7 +192,7 @@ class AlokasiReport extends Component{
                                             <tbody>
                                             {
                                                 (
-                                                    typeof data === 'object' ?
+                                                    typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
                                                             // total_dn_per = total_dn_per+parseInt(v.delivery_note);
                                                             // total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
@@ -212,14 +212,6 @@ class AlokasiReport extends Component{
                                                                             </div>
                                                                         </div>
                                                                     </td>
-                                                                    {/* "tgl_mutasi": "2020-07-21T11:06:25.000Z",
-                                                "no_faktur_mutasi": "MC-2007210001-3",
-                                                "kd_lokasi_1": "LK/0001",
-                                                "kd_lokasi_2": "LK/0002",
-                                                "kd_kasir": "1",
-                                                "status": "0",
-                                                "no_faktur_beli": "DN-2007200001-4",
-                                                "keterangan": "-" */}
                                                                     <td style={columnStyle}>{v.no_faktur_mutasi}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
                                                                     <td style={columnStyle}>{v.kd_lokasi_1}</td>
@@ -231,7 +223,7 @@ class AlokasiReport extends Component{
                                                                 </tr>
                                                             )
                                                         })
-                                                        : "No data."
+                                                        : "No data." : "No data."
                                                 )
                                             }
                                             </tbody>

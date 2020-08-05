@@ -51,7 +51,7 @@ var date = new Date();
 date.setDate(date.getDate());
 export const rangeDate = {
     'Hari Ini'          : [date.setDate(date.getDate()+1), moment()],
-    'KemarIn'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate())],
+    'Kemarin'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate()-1)],
     '7 Hari Terakhir'   : [moment().subtract(6, 'days'), moment()],
     '30 Hari Terakhir'  : [moment().subtract(29, 'days'), moment()],
     'Minggu Ini'        : [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
@@ -91,7 +91,7 @@ export const statusQ = (lbl,txt) => {
     }else if(lbl==='danger'){
         return <button className="btn btn-danger btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>
     }else if(lbl==='warning'){
-        return <button className="btn btn-warning btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>
+        return <button className="btn btn-warning btn-sm btn-status" style={{fontSize:'8px',color:'white'}}>{txt}</button>
     }else if(lbl==='info'){
         return <button className="btn btn-info btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>
     }

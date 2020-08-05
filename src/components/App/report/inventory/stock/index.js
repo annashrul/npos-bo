@@ -11,6 +11,7 @@ import {rangeDate} from "helper";
 import Select from "react-select";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import Preloader from "../../../../../Preloader";
+import {HEADERS} from "../../../../../redux/actions/_constants";
 
 class InventoryReport extends Component{
     constructor(props){
@@ -262,18 +263,21 @@ class InventoryReport extends Component{
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Code</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">kode</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Unit</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Name</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Satuan</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Supplier</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Sub Dept</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Group</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Kelompok</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Delivery Note</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">First Stock</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Stock In</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Stock Out</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Last Stock</th>
+                                        <th className="text-black" style={columnStyle} colSpan="4">Stok</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Awal</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Masuk</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Keluar</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Akhir</th>
                                     </tr>
                                     </thead>
                                     {
@@ -296,7 +300,7 @@ class InventoryReport extends Component{
                                                                                 Action
                                                                             </button>
                                                                             <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a>
+                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Export</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.kd_brg,v.barcode,v.nm_brg)}>Detail</a>
                                                                             </div>
                                                                         </div>

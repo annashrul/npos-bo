@@ -78,6 +78,7 @@ const Routes = (
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
+            <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
         </Switch>
     </div>
 )

@@ -5,6 +5,7 @@ import {
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {destroy} from "components/model/app.model";
+import {FetchBank} from "../../masterdata/bank/bank.action";
 
 
 export function setLoading(load) {
@@ -76,7 +77,6 @@ export const FetchNota = (lokasi) => {
 
     }
 }
-
 export const storeReceive= (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -125,6 +125,58 @@ export const storeReceive= (data) => {
             })
     }
 }
+export const updateReceive= (data,kode) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `receive/${kode}`;
+        axios.put(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Transaksi berhasil.',
+                    text: `Disimpan dengan nota: ${data.result.insertId}`,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9800',
+                    cancelButtonColor: '#2196F3',
+                    confirmButtonText: 'Print Nota?',
+                    cancelButtonText: 'Oke!'
+                }).then((result) => {
+                    if (result.value) {
+                        const win = window.open(data.result.nota,'_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
+                    }
+                    destroy('receive');
+                    localStorage.removeItem('sp');
+                    localStorage.removeItem('lk');
+                    localStorage.removeItem('ambil_data');
+                    localStorage.removeItem('nota');
+                    localStorage.removeItem('catatan');
+                    localStorage.removeItem('data_master_receive');
+                    localStorage.removeItem('data_detail_receive');
+
+                    window.location.href = `/receive_report`;
+
+                })
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
 
 export const FetchReport = (page = 1,where='') => {
     return (dispatch) => {
@@ -146,15 +198,40 @@ export const FetchReport = (page = 1,where='') => {
 
     }
 }
-
 export const FetchReceiveData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
             .then(function (response) {
-                const data = response.data
-                dispatch(setPoData(data))
-                dispatch(setLoading(false));
+                const data = response.data;
+                // console.log("AMBIL DATA",data.result.master.type);
+                let master={
+                    "tgl_beli": data.result.master.tgl_beli,
+                    "no_faktur_beli": data.result.master.no_faktur_beli,
+                    "type": data.result.master.type,
+                    "nilai_pembelian": data.result.master.nilai_pembelian,
+                    "kode_supplier": data.result.master.kode_supplier,
+                    "tgl_jatuh_tempo": data.result.master.tgl_jatuh_tempo,
+                    "ppn": data.result.master.ppn,
+                    "dp": data.result.master.dp,
+                    "total_pembelian": data.result.master.total_pembelian,
+                    "pelunasan": data.result.master.pelunasan,
+                    "terbayar": data.result.master.terbayar,
+                    "operator": data.result.master.operator,
+                    "lokasi": data.result.master.lokasi,
+                    "bulat": data.result.master.bulat,
+                    "nonota": data.result.master.nonota,
+                    "no_po": data.result.master.no_po,
+                    "catatan": data.result.master.catatan,
+                    "disc": data.result.master.disc,
+                    "nama_penerima": data.result.master.nama_penerima,
+                    "no_pre_receive": data.result.master.no_pre_receive
+                };
+                let detail =  data.result.detail;
+                localStorage.setItem("data_master_receive",JSON.stringify(master));
+                localStorage.setItem("data_detail_receive",JSON.stringify(detail));
+                // console.log("GET STORAGE IN ACTION",localStorage.data_master_receive);
+                // console.log("GET STORAGE IN ACTION",localStorage.data_detail_receive);
             })
             .catch(function (error) {
                 // handle error
@@ -177,7 +254,6 @@ export const FetchReportDetail = (page=1,code)=>{
         })
     }
 }
-
 export const FetchReportExcel = (where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -196,5 +272,41 @@ export const FetchReportExcel = (where='') => {
             console.log(error)
         })
 
+    }
+}
+export const deleteReceiveReport = (id) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `receive/${id}`;
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchReport(1,''));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
     }
 }
