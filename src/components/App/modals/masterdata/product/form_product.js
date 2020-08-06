@@ -600,9 +600,17 @@ class FormProduct extends Component{
     }
     handleSelect = (index) => {
         let err = this.state.error;
+        console.log(this.props.checkKodeBarang);
+        if(this.props.checkKodeBarang!==false){
+            this.setState({
+                kd_brg:"0"
+            });
+            return;
+        }
         if(this.state.kd_brg===''||this.state.kd_brg===undefined){
             err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
             this.setState({error: err});
+            console.log(this.props.checkKodeBarang);
             return;
         }
         if(this.state.nm_brg===''||this.state.nm_brg===undefined){

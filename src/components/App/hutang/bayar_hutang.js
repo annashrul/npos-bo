@@ -304,17 +304,17 @@ class BayarHutang extends Component{
                             this.props.isLoadingPost?<Preloader/>:  <div className="row">
                                 <div className="col-md-3">
                                     <div className="form-group">
-                                        <label className="control-label font-12">Hutang</label>
+                                        <label className="control-label font-12">Jumlah Hutang</label>
                                         <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian)):"0"}/>
                                     </div>
                                     <div className="form-group">
-                                        <label className="control-label font-12">Bayar</label>
+                                        <label className="control-label font-12">Jumlah Yang Telah Dibayar</label>
                                         <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.jumlah_bayar!==undefined?this.props.getHutang.jumlah_bayar:"0"}/>
                                     </div>
                                 </div>
                                 <div className="col-md-3">
                                     <div className="form-group">
-                                        <label className="control-label font-12">Jumlah Hutang</label>
+                                        <label className="control-label font-12">Sisa Hutang</label>
                                         <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar)):"0"}/>
                                     </div>
                                     <div className="form-group">
@@ -329,10 +329,13 @@ class BayarHutang extends Component{
                                         }
                                     </div>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-6">
                                     <div className="form-group">
-                                        <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar))?true:false}>Simpan</button>
-                                        <button className="btn btn-primary btn-sm" style={{marginTop:"29px",marginLeft:"5px"}} onClick={this.handleCancel}>Batal</button>
+                                        <div className="pull-right" style={{alignSelf: "flex-end"}}>
+                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar))?true:false}>Simpan</button>
+                                            <button className="btn btn-danger btn-sm" style={{marginTop:"29px",marginLeft:"5px"}} onClick={this.handleCancel}>Batal</button>
+                                        </div>
+
                                     </div>
                                 </div>
 
