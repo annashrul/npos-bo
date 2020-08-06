@@ -207,33 +207,7 @@ export const FetchReceiveData = (nota,param='') => {
                 dispatch(setLoading(false));
                 console.log("ABUS ACTION");
                 if(param!==''){
-                    let master={
-                        "tgl_beli": data.result.master.tgl_beli,
-                        "no_faktur_beli": data.result.master.no_faktur_beli,
-                        "type": data.result.master.type,
-                        "nilai_pembelian": data.result.master.nilai_pembelian,
-                        "kode_supplier": data.result.master.kode_supplier,
-                        "tgl_jatuh_tempo": data.result.master.tgl_jatuh_tempo,
-                        "ppn": data.result.master.ppn,
-                        "dp": data.result.master.dp,
-                        "total_pembelian": data.result.master.total_pembelian,
-                        "pelunasan": data.result.master.pelunasan,
-                        "terbayar": data.result.master.terbayar,
-                        "operator": data.result.master.operator,
-                        "lokasi": data.result.master.lokasi,
-                        "bulat": data.result.master.bulat,
-                        "nonota": data.result.master.nonota,
-                        "no_po": data.result.master.no_po,
-                        "catatan": data.result.master.catatan,
-                        "disc": data.result.master.disc,
-                        "nama_penerima": data.result.master.nama_penerima,
-                        "no_pre_receive": data.result.master.no_pre_receive
-                    };
-                    let detail =  data.result.detail;
-                    // localStorage.setItem("data_master_receive",JSON.stringify(master));
-                    // localStorage.setItem("data_detail_receive",JSON.stringify(detail));
-                    // console.log(detail);
-
+                    console.log("CEKKKKKKKKKKKKKKKKKK",data.result.detail);
                     data.result.detail.map((v,i)=>{
                         const data_final={
                             "kd_brg" : v.kode_barang,
