@@ -6,10 +6,9 @@ import {
 } from "redux/actions/masterdata/group_product/group_product.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
-import {deleteLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
 import {FetchSubDepartmentAll} from "redux/actions/masterdata/department/sub_department.action";
 import FormGroupProduct from "components/App/modals/masterdata/group_product/form_group_product";
-import {statusQ} from "../../../../../../helper";
+import {statusQ} from "helper";
 import Paginationq from 'helper';
 
 class ListGroupProduct extends Component{
@@ -55,7 +54,6 @@ class ListGroupProduct extends Component{
         if(i===null){
             this.setState({detail:undefined});
         }else{
-            console.log(this.props.data.data[i].kel_brg);
             this.setState({detail:{
                 "kel_brg":this.props.data.data[i].kel_brg,
                 "nm_kel_brg":this.props.data.data[i].nm_kel_brg,
@@ -87,7 +85,6 @@ class ListGroupProduct extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
-        console.log(this.props.data);
         return (
            <div>
                <form onSubmit={this.handlesearch} noValidate>

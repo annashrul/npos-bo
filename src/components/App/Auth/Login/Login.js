@@ -93,7 +93,7 @@ class Login extends Component {
                     <form class="login100-form validate-form" action="#">
 
                         <span class="login100-form-title p-b-43 mb-5">
-                        <img src={this.state.logo} className='img-responsive' width={this.state.width} style={{textAlign:'center',marginLeft:'auto',marginRight:'auto',display:'block'}}/>
+                        <img alt="logos" src={this.state.logo} className='img-responsive' width={this.state.width} style={{textAlign:'center',marginLeft:'auto',marginRight:'auto',display:'block'}}/>
                         {/* Account Login */}
                         </span>
                         <div class="wrap-input100 rs1 validate-input" data-validate="Username is required">
