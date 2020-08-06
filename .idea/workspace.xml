@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/App/hutang/bayar_hutang.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/hutang/bayar_hutang.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducers/report/inventory/stock_report.reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/report/inventory/stock_report.reducer.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,17 +18,58 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/App/hutang/bayar_hutang.js">
+        <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="333" column="96" selection-start-line="333" selection-start-column="96" selection-end-line="333" selection-end-column="96" />
+            <state relative-caret-position="309">
+              <caret line="388" column="91" selection-start-line="388" selection-start-column="91" selection-end-line="388" selection-end-column="91" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+                <element signature="n#!!block;n#componentWillMount#0;n#InventoryReport#0" />
+                <element signature="n#!!block;n#handlePageChange#0;n#InventoryReport#0" />
+                <element signature="n#!!block;n#toggle#0;n#InventoryReport#0" />
+                <element signature="n#!!block;n#handleChange#0;n#InventoryReport#0" />
+                <element signature="e#3774#4145#0" />
+                <element signature="e#4851#6190#0" />
+                <element signature="n#!!block;n#HandleChangeLokasi#0;n#InventoryReport#0" />
+                <element signature="n#!!block;n#HandleChangeLokasi#1;n#InventoryReport#0" />
+                <element signature="n#!!block;n#HandleChangeStock#0;n#InventoryReport#0" />
+                <element signature="e#6212#6284#0" />
+                <element signature="e#6330#6381#0" />
+                <element signature="e#6440#6497#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/reducers/report/inventory/stock_report.reducer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="11" column="42" lean-forward="true" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="69">
+              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="166">
+              <caret line="417" column="209" selection-start-line="417" selection-start-column="126" selection-end-line="417" selection-end-column="209" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
-                <element signature="n#!!block;n#getProps#0;n#BayarHutang#0" />
-                <element signature="n#!!block;n#componentWillMount#0;n#BayarHutang#0" />
-                <element signature="n#!!block;n#handleChange#0;n#BayarHutang#0" />
-                <element signature="n#!!block;n#HandleChangeJenisTrx#0;n#BayarHutang#0" />
-                <element signature="n#!!block;n#handleSearch#0;n#BayarHutang#0" />
+                <element signature="n#!!block;n#handlePageChange#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#loc_detail#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#handlePriceCustomer#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#toggleModal#0;n#ListProduct#0" />
               </folding>
             </state>
           </provider>
@@ -44,7 +86,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>FetchBrg</find>
       <find>HandleChangeNota</find>
       <find>databrg</find>
       <find>this.props.nota</find>
@@ -74,6 +115,7 @@
       <find>error_barcode1</find>
       <find>hrgBeliPACK</find>
       <find>hrg_beli_pack</find>
+      <find>onKe</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -82,7 +124,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/src/list.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/bank/src/list.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/bank/bank.action.js" />
@@ -105,7 +146,6 @@
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/closing/src/list.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/closing/index.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/report/closing/closing.action.js" />
-        <option value="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/po/src/list.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/purchase/purchase_order/po.action.js" />
@@ -123,7 +163,6 @@
         <option value="$PROJECT_DIR$/src/helper.js" />
         <option value="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" />
         <option value="$PROJECT_DIR$/src/components/App/Routes/Routes.js" />
-        <option value="$PROJECT_DIR$/public/js/config.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/purchase/receive/receive.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" />
@@ -133,6 +172,9 @@
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
         <option value="$PROJECT_DIR$/src/components/App/hutang/bayar_hutang.js" />
+        <option value="$PROJECT_DIR$/src/redux/reducers/report/inventory/stock_report.reducer.js" />
+        <option value="$PROJECT_DIR$/public/js/config.js" />
+        <option value="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" />
       </list>
     </option>
   </component>
@@ -196,6 +238,17 @@
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -210,6 +263,97 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="master_product" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="report" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="dashboard" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+              <item name="report" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+              <item name="report" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -282,12 +426,12 @@
       <workItem from="1596195734298" duration="6308000" />
       <workItem from="1596439037326" duration="16710000" />
       <workItem from="1596521185654" duration="23380000" />
-      <workItem from="1596605591598" duration="16588000" />
+      <workItem from="1596605591598" duration="20686000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="409359000" />
+    <option name="totallyTimeSpent" value="413457000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -307,7 +451,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.30536914" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.30536914" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -353,27 +497,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/alokasi.action.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="130" column="39" lean-forward="true" selection-start-line="130" selection-start-column="39" selection-end-line="130" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/opname/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="61" column="87" selection-start-line="61" selection-start-column="87" selection-end-line="61" selection-end-column="87" />
-          <folding>
-            <element signature="n#!!block;n#getProps#0;n#TrxOpname#0" />
-            <element signature="e#2313#2888#0" />
-            <element signature="n#!!block;n#HandleChangeLokasi#0;n#TrxOpname#0" />
-            <element signature="n#!!block;n#HandleCommonInputChange#0;n#TrxOpname#0" />
-            <element signature="n#!!block;n#HandleAddBrg#0;n#TrxOpname#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/redux/actions/hutang/hutang.action.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
@@ -436,22 +559,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="206">
           <caret line="524" column="39" selection-start-line="524" selection-end-line="525" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="172" column="61" selection-start-line="172" selection-start-column="61" selection-end-line="172" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="n#!!block;n#handlePageChange#0;n#ListProduct#0" />
-            <element signature="n#!!block;n#loc_detail#0;n#ListProduct#0" />
-            <element signature="n#!!block;n#handlePriceCustomer#0;n#ListProduct#0" />
-            <element signature="n#!!block;n#toggleModal#0;n#ListProduct#0" />
-            <element signature="e#12008#12743#0" />
-            <element signature="e#12781#13156#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -528,6 +635,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
           <caret line="89" column="31" selection-start-line="89" selection-end-line="90" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#componentWillReceiveProps#0;n#FormApprovalMutation#0" />
+            <element signature="n#!!block;n#handleChange#0;n#FormApprovalMutation#0" />
+            <element signature="n#!!block;n#handleOnEnter#0;n#FormApprovalMutation#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -543,13 +656,6 @@
             <element signature="e#2623#4182#0" />
             <element signature="e#4231#4865#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2245">
-          <caret line="264" column="86" selection-start-line="264" selection-start-column="43" selection-end-line="264" selection-end-column="86" />
         </state>
       </provider>
     </entry>
@@ -685,6 +791,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="484">
           <caret line="76" column="10" lean-forward="true" selection-start-line="63" selection-start-column="8" selection-end-line="76" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#handlesearch#0;n#ListBank#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -705,13 +815,6 @@
           <folding>
             <element signature="e#0#58#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
@@ -907,8 +1010,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/hutang/bayar_hutang.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="333" column="96" selection-start-line="333" selection-start-column="96" selection-end-line="333" selection-end-column="96" />
+        <state relative-caret-position="196">
+          <caret line="332" column="64" lean-forward="true" selection-start-line="332" selection-start-column="64" selection-end-line="332" selection-end-column="64" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="n#!!block;n#getProps#0;n#BayarHutang#0" />
@@ -916,6 +1019,65 @@
             <element signature="n#!!block;n#handleChange#0;n#BayarHutang#0" />
             <element signature="n#!!block;n#HandleChangeJenisTrx#0;n#BayarHutang#0" />
             <element signature="n#!!block;n#handleSearch#0;n#BayarHutang#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/reducers/report/inventory/stock_report.reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="11" column="42" lean-forward="true" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="417" column="209" selection-start-line="417" selection-start-column="126" selection-end-line="417" selection-end-column="209" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#handlePageChange#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#loc_detail#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#handlePriceCustomer#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#toggleModal#0;n#ListProduct#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="388" column="91" selection-start-line="388" selection-start-column="91" selection-end-line="388" selection-end-column="91" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <element signature="n#!!block;n#componentWillMount#0;n#InventoryReport#0" />
+            <element signature="n#!!block;n#handlePageChange#0;n#InventoryReport#0" />
+            <element signature="n#!!block;n#toggle#0;n#InventoryReport#0" />
+            <element signature="n#!!block;n#handleChange#0;n#InventoryReport#0" />
+            <element signature="e#3774#4145#0" />
+            <element signature="e#4851#6190#0" />
+            <element signature="n#!!block;n#HandleChangeLokasi#0;n#InventoryReport#0" />
+            <element signature="n#!!block;n#HandleChangeLokasi#1;n#InventoryReport#0" />
+            <element signature="n#!!block;n#HandleChangeStock#0;n#InventoryReport#0" />
+            <element signature="e#6212#6284#0" />
+            <element signature="e#6330#6381#0" />
+            <element signature="e#6440#6497#0" />
           </folding>
         </state>
       </provider>

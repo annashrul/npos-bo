@@ -10,8 +10,9 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import {rangeDate} from "helper";
 import Select from "react-select";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import Preloader from "../../../../../Preloader";
-import {HEADERS} from "../../../../../redux/actions/_constants";
+import Preloader from "Preloader";
+import {HEADERS} from "redux/actions/_constants";
+import Paginationq from "helper";
 
 class InventoryReport extends Component{
     constructor(props){
@@ -21,7 +22,9 @@ class InventoryReport extends Component{
         this.HandleChangeStock = this.HandleChangeStock.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
+        this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
         this.state={
+            isSelected:false,
             location:"",
             location_data:[],
             status_data: [],
@@ -29,6 +32,8 @@ class InventoryReport extends Component{
             any:"",
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
+            search_by:"",
+            search_by_data:[],
         }
     }
     componentDidMount(){
@@ -41,6 +46,11 @@ class InventoryReport extends Component{
         if (localStorage.st_stock_report !== undefined && localStorage.st_stock_report !== null) {
             this.setState({
                 status: localStorage.st_stock_report
+            })
+        }
+        if (localStorage.search_by_stock_report !== undefined && localStorage.search_by_stock_report !== null) {
+            this.setState({
+                search_by: localStorage.search_by_stock_report
             })
         }
         if (localStorage.any_stock_report !== undefined && localStorage.any_stock_report !== null) {
@@ -99,11 +109,22 @@ class InventoryReport extends Component{
     };
     handleSearch(e){
         e.preventDefault();
-        localStorage.setItem("any_sale_report",this.state.any_sale_report);
+        localStorage.setItem("any_stock_report",this.state.any);
         this.handleParameter(1);
-        // this.props.dispatch(FetchStockReport(this.state.activePage,this.state.search,this.state.startDate,this.state.endDate,this.state.location,this.state.filter_stock_report))
     }
     componentWillReceiveProps = (nextProps) => {
+        let sb=[];
+        let searchBy=[
+            {value: "kd_brg", label:'Kode Barang'},
+            {value: "nm_brg", label:'Nama Barang'},
+            {value: "group1", label:'Supplier'},
+        ];
+        searchBy.map((i) => {
+            sb.push({
+                value: i.value,
+                label: i.label
+            });
+        })
         let status= [
             {value: "",label:'Semua Stock'},
             {value: "<",label:'Stock -'},
@@ -119,6 +140,7 @@ class InventoryReport extends Component{
         })
         this.setState({
             status_data: st,
+            search_by_data:sb
         })
         if (nextProps.auth.user) {
             let lk = [];
@@ -146,6 +168,13 @@ class InventoryReport extends Component{
         })
         localStorage.setItem('lk_stock_report', lk.value);
     }
+    HandleChangeSearchBy(sb) {
+        console.log(sb.value);
+        this.setState({
+            search_by: sb.value
+        })
+        localStorage.setItem('search_by_stock_report', sb.value);
+    }
     HandleChangeStock(lk) {
         this.setState({
             status: lk.value
@@ -158,6 +187,7 @@ class InventoryReport extends Component{
         let lokasi=localStorage.lk_stock_report;
         let status=localStorage.st_stock_report;
         let any=localStorage.any_stock_report;
+        let search_by=localStorage.search_by_stock_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&dateFrom=${dateFrom}&dateTo=${dateTo}`;
@@ -168,9 +198,12 @@ class InventoryReport extends Component{
         if(status!==undefined&&status!==null&&status!==''){
             where+=`&filter_stock=${status}`;
         }
-        if(any!==undefined&&any!==null){
-            where+=`&q=${any}`;
+
+        if(any!==undefined&&any!==null&&any!==''){
+            console.log(any);
+            where+=`&searchby=${search_by}&q=${any}`;
         }
+        console.log(where);
         this.props.dispatch(FetchStockReport(pageNumber,where));
 
     }
@@ -178,8 +211,8 @@ class InventoryReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {per_page,current_page,from,to,data} = this.props.stockReport;
-        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total;
+        const {per_page,current_page,from,to,data,total} = this.props.stockReport;
+        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total_stock;
 
         let total_dn_per=0;
         let total_first_stock_per=0;
@@ -239,15 +272,32 @@ class InventoryReport extends Component{
                                     </div>
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-2">
-                                    <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                     <div className="form-group">
-                                        <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                        <label htmlFor="exampleFormControlSelect1">Search By</label>
+                                        <Select
+                                            options={this.state.search_by_data}
+                                            onChange={this.HandleChangeSearchBy}
+                                            placeholder="Pilih Kolom"
+                                            value = {
+                                                this.state.search_by_data.find(op => {
+                                                    return op.value === this.state.search_by
+                                                })
+                                            }
+                                        />
+
                                     </div>
                                 </div>
-
-                                <div className="col-6 col-xs-6 col-md-4">
+                                <div className="col-6 col-xs-6 col-md-2" style={{paddingLeft:"0px"}}>
+                                    <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                     <div className="form-group">
-                                        <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px", padding:"8px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"></i></button>
+                                        <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)} onKeyPress={event=>{if(event.key==='Enter'){ this.handleChange(event)}}}/>
+                                    </div>
+
+                                </div>
+
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"/></button>
                                         <ReactHTMLTableToExcel
                                             className="btn btn-primary btnBrg"
                                             table="report_sale_to_excel"
@@ -263,7 +313,7 @@ class InventoryReport extends Component{
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">kode</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">kode Barang</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Satuan</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
@@ -289,7 +339,7 @@ class InventoryReport extends Component{
                                                         data.map((v,i)=>{
                                                             total_dn_per = total_dn_per+parseInt(v.delivery_note);
                                                             total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
-                                                            total_last_stock_per = total_last_stock_per+parseInt(v.stock_akhir);
+                                                            total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
                                                             total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
                                                             total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
                                                             return(
@@ -316,7 +366,7 @@ class InventoryReport extends Component{
                                                                     <td style={{textAlign:"right"}}>{v.stock_awal}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
-                                                                    <td style={{textAlign:"right"}}>{v.stock_akhir}</td>
+                                                                    <td style={{textAlign:"right"}}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td>
 
                                                                 </tr>
                                                             )
@@ -328,7 +378,7 @@ class InventoryReport extends Component{
                                         ):<Preloader/>
                                     }
                                     <tfoot>
-                                    <tr style={{fontWeight:"bold"}}>
+                                    <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
                                         <th colSpan="8">TOTAL PERPAGE</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_dn_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
@@ -336,7 +386,7 @@ class InventoryReport extends Component{
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_last_stock_per}</th>
                                     </tr>
-                                    <tr style={{fontWeight:"bold"}}>
+                                    <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
                                         <th colSpan="8">TOTAL</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_dn!==undefined?total_dn:'0'}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
@@ -348,7 +398,14 @@ class InventoryReport extends Component{
                                 </table>
 
                             </div>
-
+                            <div style={{"marginTop":"20px","float":"right"}}>
+                                <Paginationq
+                                    current_page={parseInt(current_page)}
+                                    per_page={parseInt(per_page)}
+                                    total={parseInt(total)}
+                                    callback={this.handlePageChange.bind(this)}
+                                />
+                            </div>
                             <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan}/>
                             
                         </div>
@@ -364,7 +421,7 @@ class InventoryReport extends Component{
 const mapStateToProps = (state) => {
     return {
         stockReport:state.stockReportReducer.data,
-        total:state.stockReportReducer.total,
+        total_stock:state.stockReportReducer.total_stock,
         auth:state.auth,
         isLoading: state.stockReportReducer.isLoading,
         stockReportDetailSatuan:state.stockReportReducer.dataDetailSatuan,
