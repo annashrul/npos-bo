@@ -4,7 +4,7 @@ import {
 } from "../../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {destroy} from "components/model/app.model";
+import {destroy,store} from "components/model/app.model";
 import {FetchBank} from "../../masterdata/bank/bank.action";
 
 
@@ -204,7 +204,8 @@ export const FetchReceiveData = (nota,param='') => {
         axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
             .then(function (response) {
                 const data = response.data;
-                // console.log("AMBIL DATA",data.result.master.type);
+                dispatch(setLoading(false));
+                console.log("ABUS ACTION");
                 if(param!==''){
                     let master={
                         "tgl_beli": data.result.master.tgl_beli,
@@ -229,16 +230,38 @@ export const FetchReceiveData = (nota,param='') => {
                         "no_pre_receive": data.result.master.no_pre_receive
                     };
                     let detail =  data.result.detail;
-                    localStorage.setItem("data_master_receive",JSON.stringify(master));
-                    localStorage.setItem("data_detail_receive",JSON.stringify(detail));
-                }else{
+                    // localStorage.setItem("data_master_receive",JSON.stringify(master));
+                    // localStorage.setItem("data_detail_receive",JSON.stringify(detail));
+                    // console.log(detail);
+
+                    data.result.detail.map((v,i)=>{
+                        const data_final={
+                            "kd_brg" : v.kode_barang,
+                            "barcode" : v.barcode,
+                            "satuan" : v.satuan,
+                            "diskon" : v.diskon,
+                            "harga_beli" : v.harga_beli,
+                            "stock" : v.stock,
+                            "diskon2" : 0,
+                            "diskon3" :0,
+                            "diskon4" : 0,
+                            "ppn" : v.ppn,
+                            "qty" : v.jumlah_beli,
+                            "qty_bonus" : v.jumlah_bonus,
+                            "nm_brg" : v.nm_brg,
+                            "tambahan" : v.tambahan,
+                        };
+                        store('receive', data_final);
+                    })
+
+                    // store('receive', data_final);
+
+                }
+                else{
                     dispatch(setPoData(data));
                     dispatch(setLoading(false));
 
                 }
-
-                // console.log("GET STORAGE IN ACTION",localStorage.data_master_receive);
-                // console.log("GET STORAGE IN ACTION",localStorage.data_detail_receive);
             })
             .catch(function (error) {
                 // handle error

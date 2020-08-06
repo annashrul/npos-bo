@@ -88,73 +88,20 @@ class Receive extends Component{
 
         if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
             // window.location.reload();
+            this.getData();
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
             let get_master = localStorage.getItem('data_master_receive');
-            let get_detail = localStorage.getItem('data_detail_receive');
             let master = JSON.parse(get_master);
-            let detail = JSON.parse(get_detail);
-            console.log(master);
-            let data_final = {};
-            if(detail!==null){
-                for(let i=0;i<detail.length;i++){
-                    console.log("KODE BARANG",detail[i].tambahan[0].kd_brg);
-                    data_final['kd_brg'] = detail[i].tambahan[0].kd_brg;
-                    data_final['barcode'] = detail[i].barcode;
-                    data_final['satuan'] = detail[i].satuan;
-                    data_final['diskon'] = detail[i].diskon;
-                    data_final['harga_beli'] = detail[i].harga_beli;
-                    data_final['stock'] = detail[i].stock;
-                    data_final['diskon2'] = 0;
-                    data_final['diskon3'] =0;
-                    data_final['diskon4'] = 0;
-                    data_final['ppn'] = detail[i].ppn;
-                    data_final['qty'] = detail[i].jumlah_beli;
-                    data_final['qty_bonus'] = detail[i].jumlah_bonus;
-                    data_final['nm_brg'] = detail[i].nm_brg;
-                    data_final['tambahan'] = detail[i].tambahan;
-                    store(table, data_final);
-                    this.getData();
+            this.setState({
+                location:master.lokasi,
+                catatan:master.catatan,
+                supplier:master.kode_supplier,
+                no_faktur_beli:this.props.match.params.slug,
+                penerima:master.nama_penerima,
+                notasupplier:master.nonota,
+                jenis_trx:master.type
+            })
 
-                    // const cek = cekData('kd_brg',detail[i].tambahan[0].kd_brg,table);
-                    // cek.then(res => {
-                    //     console.log("RESPON LOCAL",res);
-                    //     if(res==undefined){
-                    //         store(table, data_final);
-                    //     }
-                    //     else{
-                    //         update(table,{
-                    //             id:res.id,
-                    //             qty:parseFloat(res.qty)+1,
-                    //             kd_brg: res.kd_brg,
-                    //             barcode: res.barcode,
-                    //             satuan: res.satuan,
-                    //             diskon: res.diskon,
-                    //             diskon2: res.diskon2,
-                    //             diskon3: 0,
-                    //             diskon4: 0,
-                    //             ppn: res.ppn,
-                    //             stock: res.stock,
-                    //             harga_beli: res.harga_beli,
-                    //             nm_brg:res.nm_brg,
-                    //             qty_bonus:detail[i].qty_bonus,
-                    //             tambahan: res.tambahan
-                    //         })
-                    //     }
-                    //     this.getData();
-                    // })
-                }
-                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
-
-                // this.getData();
-                this.setState({
-                    location:master.lokasi,
-                    catatan:master.catatan,
-                    supplier:master.kode_supplier,
-                    no_faktur_beli:this.props.match.params.slug,
-                    penerima:master.nama_penerima,
-                    notasupplier:master.nonota,
-                    jenis_trx:master.type
-                })
-            }
 
         }
     }
@@ -204,7 +151,7 @@ class Receive extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-        console.log(nextProps);
+        console.log("DATA EDIT",nextProps.dataEdit);
         if (nextProps.auth.user) {
             let lk = []
             let loc = nextProps.auth.user.lokasi;
@@ -808,12 +755,7 @@ class Receive extends Component{
     }
 
     render() {
-
-        // if(this.props.isLoading){
-        //   return <Preloader/>
-        // }
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-
         let opSupplier=[];
         if(this.props.supplier!=[]){
             this.props.supplier.map(i=>{
@@ -1352,6 +1294,8 @@ const mapStateToPropsCreateItem = (state) => ({
     po_report: state.poReducer.report_data,
     po_data: state.poReducer.po_data,
     checkNotaPem: state.siteReducer.check,
+    dataEdit:state.receiveReducer.receive_data,
+
 });
 
 export default connect(mapStateToPropsCreateItem)(Receive);
