@@ -86,10 +86,8 @@ class Receive extends Component{
     }
     async fetchDataEdit(){
         const url = HEADERS.URL + `receive/ambil_data/${this.props.match.params.slug}`;
-
         return await axios.get(url)
             .then(function (response) {
-                console.log("FETCH DATA EDIT",response);
                 return response.data.result;
             })
             .catch(function (error) {
@@ -100,7 +98,9 @@ class Receive extends Component{
     }
 
     componentWillMount(){
+
         if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
+            destroy(table);
             const data = this.fetchDataEdit();
             data.then(res=>{
                 console.log("REPONS",res);
@@ -132,7 +132,10 @@ class Receive extends Component{
                     no_faktur_beli:this.props.match.params.slug,
                     penerima:res.master.nama_penerima,
                     notasupplier:res.master.nonota,
-                    jenis_trx:res.master.type
+                    jenis_trx:res.master.type,
+                    discount_persen:(res.master.disc/res.master.total_pembelian)*100,
+                    discount_harga:res.master.disc,
+                    pajak:res.master.ppn
                 })
             });
 
