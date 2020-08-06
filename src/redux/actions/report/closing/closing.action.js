@@ -109,14 +109,12 @@ export const storeClosing = (data) => {
     }
 }
 export const reClosing = (data) => {
-    console.log("DATA TI CLOSING",data)
     return (dispatch) => {
         const url = HEADERS.URL + `pos/reclosing`;
         axios.post(url,data)
             .then(function (response) {
                 const data = (response.data);
                 dispatch(FetchClosing(1,''));
-                console.log("DATA",data);
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -154,11 +152,9 @@ export const FetchClosing = (page=1,where='')=>{
         if(where !==''){
             url+=`${where}`
         }
-        console.log(url);
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
                 dispatch(setCLOSING(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
@@ -182,11 +178,9 @@ export const FetchClosingDetail = (page=1,code,dateFrom='',dateTo='',location=''
         if(location!==''){
             que = `report/${code}?page=${page}&lokasi=${location}`;
         }
-        console.log("url alokasi",`${que}`);
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
                 dispatch(setCLOSINGData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){

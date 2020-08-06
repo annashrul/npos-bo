@@ -337,11 +337,14 @@ class InventoryReport extends Component{
                                                 (
                                                     typeof data === 'object' ?
                                                         data.map((v,i)=>{
+                                                            const stok_akhir = (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - parseFloat(v.stock_keluar));
                                                             total_dn_per = total_dn_per+parseInt(v.delivery_note);
                                                             total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
                                                             total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
+                                                            total_last_stock_per = total_last_stock_per + stok_akhir;
                                                             total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
                                                             total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
+                                                            
                                                             return(
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
@@ -367,6 +370,7 @@ class InventoryReport extends Component{
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
                                                                     <td style={{textAlign:"right"}}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td>
+                                                                    <td style={{textAlign:"right"}}>{stok_akhir}</td>
 
                                                                 </tr>
                                                             )

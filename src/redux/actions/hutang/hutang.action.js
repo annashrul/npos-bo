@@ -89,7 +89,7 @@ export const storeHutang = (data) => {
         const url = HEADERS.URL + `hutang/bayar`;
         axios.post(url, data)
             .then(function (response) {
-                const data = (response.data);
+                // const data = (response.data);
 
                 dispatch(setLoadingPost(false));
                 Swal.fire({
