@@ -195,7 +195,7 @@ class ReceiveReport extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formReturReceive"));
-        this.props.dispatch(FetchReceiveData(kode))
+        this.props.dispatch(FetchReceiveData(kode,''))
     }
     handleDelete(e,kode){
         e.preventDefault();
@@ -217,7 +217,7 @@ class ReceiveReport extends Component{
         e.preventDefault();
         // this.props.history.push(`/receive/${kode}`);
         window.location.href = `/receive/${kode}`;
-        this.props.dispatch(FetchReceiveData(kode));
+        this.props.dispatch(FetchReceiveData(kode,'edit'));
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -481,8 +481,6 @@ const mapStateToProps = (state) => {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
         auth: state.auth,
-        receive_data:state.receiveReducer.receive_data
-
     }
 }
 

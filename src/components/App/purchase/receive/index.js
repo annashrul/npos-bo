@@ -94,7 +94,7 @@ class Receive extends Component{
             let detail = JSON.parse(get_detail);
             console.log(master);
             let data_final = {};
-            if(typeof detail === 'object'){
+            if(detail!==null){
                 for(let i=0;i<detail.length;i++){
                     console.log("KODE BARANG",detail[i].tambahan[0].kd_brg);
                     data_final['kd_brg'] = detail[i].tambahan[0].kd_brg;

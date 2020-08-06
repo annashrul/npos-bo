@@ -329,8 +329,8 @@ class SaleArchive extends Component{
                                     </tr>
                                     <tr>
                                         <th className="text-black" style={columnStyle}>Item</th>
-                                        <th className="text-black" style={columnStyle}>(rp)</th>
-                                        <th className="text-black" style={columnStyle}>(%)</th>
+                                        <th className="text-black" style={columnStyle}>Total ( rp )</th>
+                                        <th className="text-black" style={columnStyle}>Total ( % )</th>
                                     </tr>
                                     </thead>
                                     {
@@ -394,7 +394,7 @@ class SaleArchive extends Component{
                                     </tfoot>
                                 </table>
                                 {/*END DATA EXCEL*/}
-                                <div className="table-responsive" style={{overflowX: "auto"}}>
+                                <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
 
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
@@ -427,8 +427,8 @@ class SaleArchive extends Component{
                                         </tr>
                                         <tr>
                                             <th className="text-black" style={columnStyle}>Item</th>
-                                            <th className="text-black" style={columnStyle}>(rp)</th>
-                                            <th className="text-black" style={columnStyle}>(%)</th>
+                                            <th className="text-black" style={columnStyle}>Total ( rp )</th>
+                                            <th className="text-black" style={columnStyle}>Total ( % )</th>
                                         </tr>
                                         </thead>
                                         {
@@ -501,7 +501,7 @@ class SaleArchive extends Component{
                                             ):<Preloader/>
                                         }
                                         <tfoot>
-                                        <tr>
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="6">TOTAL PERPAGE</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset_per)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
@@ -518,7 +518,7 @@ class SaleArchive extends Component{
                                             <td style={{textAlign:"right"}}>{toRp(charge_per)}</td>
                                             <td colSpan="4"></td>
                                         </tr>
-                                        <tr>
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="6">TOTAL</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_item)}</td>
