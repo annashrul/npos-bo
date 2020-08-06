@@ -90,16 +90,17 @@ class Receive extends Component{
             // window.location.reload();
             this.getData();
             this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
-            let get_master = localStorage.getItem('data_master_receive');
-            let master = JSON.parse(get_master);
+            // let get_master = localStorage.getItem('data_master_receive');
+            // let master = JSON.parse(get_master);
+
             this.setState({
-                location:master.lokasi,
-                catatan:master.catatan,
-                supplier:master.kode_supplier,
+                location:localStorage.lokasi_edit,
+                catatan:localStorage.catatan_edit,
+                supplier:localStorage.kode_supplier_edit,
                 no_faktur_beli:this.props.match.params.slug,
-                penerima:master.nama_penerima,
-                notasupplier:master.nonota,
-                jenis_trx:master.type
+                penerima:localStorage.nama_penerima_edit,
+                notasupplier:localStorage.nonota_edit,
+                jenis_trx:localStorage.type_edit
             })
 
 

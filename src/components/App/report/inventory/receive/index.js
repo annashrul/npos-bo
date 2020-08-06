@@ -213,10 +213,17 @@ class ReceiveReport extends Component{
             }
         })
     }
-    handleChangePage(e,kode){
+    handleChangePage(e,kode,lokasi,catatan,kode_supplier,penerima,nonota,type){
         e.preventDefault();
-        // this.props.history.push(`/receive/${kode}`);
+        localStorage.setItem("kode_edit",kode);
+        localStorage.setItem("lokasi_edit",lokasi);
+        localStorage.setItem("catatan_edit",catatan);
+        localStorage.setItem("kode_supplier_edit",kode_supplier);
+        localStorage.setItem("nama_penerima_edit",penerima);
+        localStorage.setItem("nonota_edit",nonota);
+        localStorage.setItem("type_edit",type);
         window.location.href = `/receive/${kode}`;
+        // this.props.history.push(`/receive/${kode}`);
         this.props.dispatch(FetchReceiveData(kode,'edit'));
     }
     render(){
@@ -420,7 +427,16 @@ class ReceiveReport extends Component{
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(
                                                                                     e,v.no_faktur_beli
                                                                                 )}>Delete</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleChangePage(e,v.no_faktur_beli)}>Edit</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleChangePage(
+                                                                                    e,
+                                                                                    v.no_faktur_beli,
+                                                                                    v.kd_lokasi,
+                                                                                    "-",
+                                                                                    v.kode_supplier,
+                                                                                    v.nama_penerima,
+                                                                                    v.nonota,
+                                                                                    v.type
+                                                                                )}>Edit</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
