@@ -17,52 +17,12 @@ class FormLocationPrompt extends Component{
     }
 
     componentWillMount(){
-        // console.log(this.props.dataLocationEdit);
-        // const {nextprops} = this.props.dataLocationEdit;
-        // console.log(moment(this.props.dataLocationEdit.tgl_ultah).format('DD/MM/yyyy'));
         this.setState({
             password:''
         })
     }
     componentWillReceiveProps(nextProps) {
-        // console.log('componentWillReceiveProps', nextProps.dataLocationEdit);
-        // if (nextProps.dataLocationEdit !== [] && nextProps.dataLocationEdit !== undefined) {
-        //     this.setState({
-        //         kd_cust:nextProps.dataLocationEdit.kd_cust,
-        //         nama:nextProps.dataLocationEdit.nama,
-        //         alamat:nextProps.dataLocationEdit.alamat,
-        //         status:nextProps.dataLocationEdit.status,
-        //         tgl_ultah:nextProps.dataLocationEdit.tgl_ultah,
-        //         tlp:nextProps.dataLocationEdit.tlp,
-        //         cust_type:nextProps.dataLocationEdit.cust_type,
-        //         password:nextProps.dataLocationEdit.password,
-        //         register:nextProps.dataLocationEdit.register,
-        //         foto:nextProps.dataLocationEdit.foto,
-        //         email:nextProps.dataLocationEdit.email,
-        //         biografi:nextProps.dataLocationEdit.biografi,
-        //         special_price:nextProps.dataLocationEdit.special_price,
-        //         jenis_kelamin:nextProps.dataLocationEdit.jenis_kelamin,
-        //         discount:nextProps.dataLocationEdit.discount,
-        //     })
-        // }else{
-        //     this.setState({
-        //         kd_cust:'',
-        //         nama:'',
-        //         alamat:'',
-        //         status:'1',
-        //         tgl_ultah:'-',
-        //         tlp:'0',
-        //         cust_type:'-',
-        //         password:'',
-        //         register:'-',
-        //         foto:'-',
-        //         jenis_kelamin:'1',
-        //         email:'',
-        //         biografi:'',
-        //         special_price:'1',
-        //         discount:'0'
-        //     })
-        // }
+       
     }
 
     handleChange = (event) => {
@@ -84,19 +44,14 @@ class FormLocationPrompt extends Component{
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
         parseData['password'] = this.state.password;
-        // console.log("===============", parseData['password']);
-        // console.log("===============", LOC_VERIF.password);
         if(parseData['password']==LOC_VERIF.password){
-            // this.props.dispatch(ModalToggle(false));
             this.props.dispatch(ModalType("formLocation"));
         } else {
             Swal.fire({
-                title: 'Failed!',
-                text: "We could not verify you!",
-                type: 'warning',
-                // showCancelButton: true,
+                title: 'Gagal!',
+                text: "Untuk info lebih lanjut, silahkan hubungi cs.",
+                icon: 'info',
                 confirmButtonColor: '#3085d6',
-                // cancelButtonColor: '#d33',
                 confirmButtonText: 'Ok!'
             }).then((result) => {
                 this.props.dispatch(ModalToggle(false));
@@ -106,22 +61,22 @@ class FormLocationPrompt extends Component{
     render(){
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formLocationPrompt"} size="sm">
-                <ModalHeader toggle={this.toggle}>{"Authentication"}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>Verifikasi.</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <div className="row">
                             <div className="col-12">
                                 <div className="form-group">
-                                    <label>Password</label>
-                                    <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange}  />
+                                    {/* <label>Kode Verifikasi</label> */}
+                                    <input type="password" className="form-control" name="password" placeholder="Kode Verifikasi" value={this.state.password} onChange={this.handleChange}  />
                                 </div>
                             </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="form-group" style={{textAlign:"right"}}>
-                            <button type="button" className="btn btn-warning mr-2"><i className="ti-close" /> Cancel</button>
-                            <button type="submit" className="btn btn-primary" ><i className="ti-save" /> Verify</button>
+                            <button type="button" className="btn btn-sm btn-warning mr-2" onClick={e=>this.toggle(e)}><i className="ti-close" /> Cancel</button>
+                            <button type="submit" className="btn btn-sm btn-primary" ><i className="fa fa-check-circle-o" /> Check</button>
                         </div>
                     </ModalFooter>
                 </form>

@@ -148,7 +148,6 @@ class TrxOpname extends Component{
         }
     }
     HandleAddBrg(e,item) {
-        console.log("handle add",item)
         e.preventDefault();
         const finaldt = {
             barcode:item.barcode,
@@ -351,10 +350,8 @@ class TrxOpname extends Component{
     }
     autoSetQty(kode,data){
         const cek = cekData('kd_brg', kode, table);
-        console.log("CEKING DATA",cek);
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
                 store(table, {
                     barcode:data[0].barcode,
                     harga_beli:data[0].harga_beli,
@@ -403,6 +400,7 @@ class TrxOpname extends Component{
             return true
         })
     }
+    
     getData() {
         const data = get(table);
         console.log("LOG FUNCTION getData()",data);
@@ -419,8 +417,8 @@ class TrxOpname extends Component{
             })
         });
     }
+
     render() {
-        console.log("DATA BARANG TI STATE",this.state.brgval);
         return (
             <Layout page="Opname">
                 <div className="card">

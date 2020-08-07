@@ -82,7 +82,7 @@ export const storeCompany = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    console.log(error)
                 }
             })
     }

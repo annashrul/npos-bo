@@ -47,10 +47,7 @@ class Location extends Component{
     }
 
     handleSelect = (e,index) => {
-        // console.log(e.target.value);
-        this.setState({selectedIndex: index}, () => {
-            // console.log('Selected tab: ' + this.state.selectedIndex);
-        });
+        this.setState({selectedIndex: index});
     };
 
     render(){

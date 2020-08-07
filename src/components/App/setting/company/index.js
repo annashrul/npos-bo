@@ -57,11 +57,9 @@ class Company extends Component{
     };
     componentWillMount(){
         this.props.dispatch(FetchCompany());
-        console.log("component will mount",this.props.company);
         this.state.title=this.props.company.title;
     }
     componentWillReceiveProps(nextprops){
-        console.log("component will receive props",nextprops);
         this.state.title=nextprops.company.title;
         this.state.meta_key=nextprops.company.meta_key!==null?nextprops.company.meta_key:'-';
         this.state.meta_deskripsi=nextprops.company.meta_descr;
@@ -74,8 +72,6 @@ class Company extends Component{
         this.state.nm_hrg2=nextprops.company.nm_hrg2;
         this.state.nm_hrg3=nextprops.company.nm_hrg3;
         this.state.nm_hrg4=nextprops.company.nm_hrg4;
-
-
     }
     handleSubmit(e){
         e.preventDefault();
@@ -95,7 +91,6 @@ class Company extends Component{
         parseData['nm_hrg3'] = this.state.nm_hrg3;
         parseData['nm_hrg4'] = this.state.nm_hrg4;
         this.props.dispatch(storeCompany(parseData));
-        console.log("SUBMITTED",parseData);
     }
     handleSelect = (e,index) => {
         // console.log(e.target.value);

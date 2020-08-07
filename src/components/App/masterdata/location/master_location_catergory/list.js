@@ -19,7 +19,6 @@ class ListLocationCategory extends Component{
     }
 
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         localStorage.setItem("pageLocationCategory",pageNumber);
         let any = localStorage.getItem('any_location_category');
         this.props.dispatch(FetchLocationCategory(pageNumber,any?any:''));

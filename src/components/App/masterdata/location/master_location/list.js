@@ -58,7 +58,6 @@ class ListLocation extends Component{
     };
 
     handleDelete(e, id) {
-        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',

@@ -112,7 +112,6 @@ class ListPosting extends Component{
     };
     handleOne(e,kd_trx){
         e.preventDefault();
-        console.log(kd_trx);
         let data={};
         data['kd_trx'] = kd_trx;
         Swal.fire({
@@ -155,7 +154,6 @@ class ListPosting extends Component{
                 this.props.dispatch(storeOpnamePosting(parsedata,'all'))
             }
         });
-        console.log(parsedata);
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -239,9 +237,9 @@ class ListPosting extends Component{
                                             (
                                                 typeof data === 'object' ? data.length>0?
                                                     data.map((v,i)=>{
-                                                        total_fisik_per = total_fisik_per+parseInt(v.qty_fisik);
-                                                        total_akhir_per = total_akhir_per+parseInt(v.stock_terakhir);
-                                                        total_hpp_per = total_hpp_per+(Math.abs(parseInt(v.qty_fisik)-parseInt(v.stock_terakhir))) * v.hrg_beli;
+                                                        total_fisik_per +=parseFloat(v.qty_fisik);
+                                                        total_akhir_per +=parseFloat(v.stock_terakhir);
+                                                        total_hpp_per +=(Math.abs(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))) * parseInt(v.hrg_beli);
                                                         return(
                                                             <tr key={i}>
                                                                 <td style={columnStyle}>{v.kd_trx}</td>
@@ -253,9 +251,9 @@ class ListPosting extends Component{
                                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                                 <td style={{textAlign:"right"}}>{v.stock_terakhir}</td>
                                                                 <td style={{textAlign:"right"}}>{v.qty_fisik}</td>
-                                                                <td style={{textAlign:"right"}}>{Math.abs(parseInt(v.qty_fisik)-parseInt(v.stock_terakhir))}</td>
+                                                                <td style={{textAlign:"right"}}>{(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))}</td>
                                                                 <td style={{textAlign:"right"}}>{toRp(v.hrg_beli)}</td>
-                                                                <td style={{textAlign:"right"}}>{toRp((Math.abs(parseInt(v.qty_fisik)-parseInt(v.stock_terakhir))) * v.hrg_beli)}</td>
+                                                                <td style={{textAlign:"right"}}>{toRp((Math.abs(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))) * v.hrg_beli)}</td>
                                                                 <td style={{textAlign:"right"}}>{statusQ("danger","POSTING")}</td>
                                                                 <td style={columnStyle}>
                                                                     <button className="btn btn-primary btn-sm" onClick={(e)=>this.handleOne(e,v.kd_trx)} style={{fontSize:'8px'}}>

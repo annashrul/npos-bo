@@ -6163,6 +6163,8 @@ image.amcharts-zoom-out-image {
     height: 50px;
     left: 50%;
     margin-left: -25px;
+    transform: translateZ(0);
+    backface-visibility: hidden;
     -webkit-transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     font-size: 19px;
@@ -7332,7 +7334,6 @@ Main Components
 }
 
 .chat-header-thumb {
-  display: inline-block;
   float: left;
   margin-right: 15px;
 }
@@ -7739,7 +7740,6 @@ Main Components
 }
 
 .wizard.vertical>.steps {
-  display: inline;
   float: left;
   width: 30%;
 }
@@ -7757,7 +7757,6 @@ Main Components
 }
 
 .wizard.vertical>.content {
-  display: inline;
   float: left;
   margin: 0 2.5% 0.5em 2.5%;
   width: 65%;
@@ -7770,7 +7769,6 @@ Main Components
 }
 
 .wizard.vertical>.actions {
-  display: inline;
   float: right;
   margin: 0 2.5%;
   width: 95%;
@@ -8161,9 +8159,6 @@ select,
   box-sizing: border-box;
 }
 
-.contact-form-area {
-  /* Style inputs with type="text", select elements and textareas */
-}
 
 .contact-form-area input[type=text],
 .contact-form-area select,
@@ -8176,13 +8171,6 @@ select,
   margin-top: 6px;
   margin-bottom: 16px;
   resize: vertical;
-}
-
-.new-checkbox {
-  /* The switch - the box around the slider */
-  /* Hide default HTML checkbox */
-  /* The slider */
-  /* Rounded sliders */
 }
 
 .new-checkbox .switch {
@@ -8244,9 +8232,6 @@ select,
   border-radius: 50%;
 }
 
-.animated-search-box {
-  /* When the input field gets focus, change its width to 100% */
-}
 
 .animated-search-box input[type=text] {
   width: 130px;
@@ -8261,13 +8246,7 @@ select,
   width: 100%;
 }
 
-.fullscreen-search-box {
-  /* The overlay effect with black background */
-  /* The content */
-  /* Close button */
-  /* Style the search field */
-  /* Style the submit button */
-}
+
 
 .fullscreen-search-box .overlay {
   height: 100%;
@@ -8692,14 +8671,6 @@ select,
   text-decoration: line-through;
 }
 
-.todo--list-area {
-  /* Basic Style */
-  /* Heading */
-  /* New Task */
-  /* Task list */
-  /* Completed */
-  /* Edit Task */
-}
 
 .todo--list-area body {
   background: #fff;
@@ -11908,7 +11879,6 @@ a.mytooltip {
 
 .profile-friend-thumb {
   width: 60px;
-  display: inline-block;
   float: left;
   padding: 10px 5px;
 }
@@ -12615,11 +12585,6 @@ a.mytooltip {
   }
 }
 
-/* :: Alert CSS */
-.animated-alert {
-  /* The close button */
-  /* When moving the mouse over the close button */
-}
 
 .animated-alert .alert {
   padding: 20px;
