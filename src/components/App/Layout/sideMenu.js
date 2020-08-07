@@ -2,7 +2,6 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
-import animate from 'animate.css'
 
 class SideMenu extends Component {
     constructor(props){
@@ -241,12 +240,10 @@ class SideMenu extends Component {
                 isReport:true
             })
             if(path==='/inventory_report'|| path==='/adjustment_report'|| path==='/alokasi_report'){
-                console.log("didmount",path)
                 this.setState({
                     isReportInventory:true
                 })
             } else if(path==='/po_report'|| path==='/receive_report'){
-                console.log("didmount",path)
                 this.setState({
                     isReportPembelian:true
                 })
@@ -301,7 +298,6 @@ class SideMenu extends Component {
         return (
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
-<<<<<<< HEAD
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-view-dashboard" />Dashboard </Link></li>
                     <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="zmdi zmdi-view-dashboard" />Cetak Barcode </Link></li>
                     <li className={"treeview" +(this.state.isSetting===true || path==='/user' || path==='/location' || path==='/company' ?" active menu-open" : "")}>
