@@ -222,9 +222,9 @@ class ReceiveReport extends Component{
         localStorage.setItem("nama_penerima_edit",penerima);
         localStorage.setItem("nonota_edit",nonota);
         localStorage.setItem("type_edit",type);
-        window.location.href = `/receive/${kode}`;
-        // this.props.history.push(`/receive/${kode}`);
-        this.props.dispatch(FetchReceiveData(kode,'edit'));
+        // window.location.href = `/receive/${kode}`;
+        this.props.history.push(`/receive/${kode}`);
+        // this.props.dispatch(FetchReceiveData(kode,'edit'));
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};

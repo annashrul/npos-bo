@@ -41,11 +41,14 @@ class SaleArchive extends Component{
         this.handleDetail = this.handleDetail.bind(this);
 
     }
+
     componentWillReceiveProps = (nextProps) => {
         let type = [
             {kode:"",value: "Semua Tipe"},
             {kode:"0",value: "Tunai"},
             {kode:"1",value: "Non Tunai"},
+            {kode:"2",value: "Gabungan"},
+            {kode:"3",value: "Void"},
         ];
         let data_type=[];
         type.map((i) => {
@@ -152,7 +155,7 @@ class SaleArchive extends Component{
             if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
         }
         if(tipe!==undefined&&tipe!==null&&tipe!==''){
-            if(where!==''){where+='&'}where+=`tipe=${tipe}`
+            if(where!==''){where+='&'}where+=`type=${tipe}`
         }
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
@@ -168,7 +171,6 @@ class SaleArchive extends Component{
         this.checkingParameter(pageNumber);
     }
     handleDelete(e,id){
-        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -187,7 +189,7 @@ class SaleArchive extends Component{
     }
     handleDetail(e,kode){
         e.preventDefault();
-        console.log(kode);
+
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailSaleReport"));
@@ -195,13 +197,9 @@ class SaleArchive extends Component{
     }
 
     render(){
-        // console.log("MOMENT 1",moment(new Date()).format("yyyy-MM-DD"));
-        // console.log("MOMENT 2",moment(new Date()).format("yyyy-MM-DD"));
-        // console.log("LAPORAN EXCEL", this.props.saleReportExcel);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
         const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
-        // const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
         let omset_per = 0;
         let dis_item_per = 0;
         let sub_total_per = 0;
@@ -228,7 +226,7 @@ class SaleArchive extends Component{
                                 <div className="form-group">
                                     <label htmlFor=""> Periode </label>
                                     <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                        <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
+                                        <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
                                     </DateRangePicker>
 
 
@@ -277,9 +275,8 @@ class SaleArchive extends Component{
                             </div>
                             <div className="col-6 col-xs-6 col-md-3">
                                 <div className="form-group">
-                                    <label className="control-label font-12"></label>
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                        <i className="fa fa-search"></i>
+                                        <i className="fa fa-search"/>
                                     </button>
                                     <ReactHTMLTableToExcel
                                         className="btn btn-primary btnBrg"
@@ -349,7 +346,7 @@ class SaleArchive extends Component{
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                             <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
                                                             <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
@@ -361,14 +358,12 @@ class SaleArchive extends Component{
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
-                                                            <td>{v.kartu}</td>
-                                                            <td>{v.status}</td>
-                                                            <td>{v.lokasi}</td>
-                                                            <td>{v.jenis_trx}</td>
+                                                            <td style={columnStyle}>{v.kartu}</td>
+                                                            <td style={columnStyle}>{v.status}</td>
+                                                            <td style={columnStyle}>{v.lokasi}</td>
+                                                            <td style={columnStyle}>{v.jenis_trx}</td>
                                                         </tr>
                                                     );
-
-
                                                 }) : "No data." : "No data."
                                         }
                                         </tbody>
@@ -380,16 +375,16 @@ class SaleArchive extends Component{
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_item)}</td>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_rp)}</td>
                                         <td style={{textAlign:"right"}}>{this.props.totalPenjualanExcel.dis_persen}</td>
-                                        <td colSpan="4"></td>
+                                        <td colSpan="4"/>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.kas_lain)}</td>
-                                        <td colSpan="1"></td>
+                                        <td colSpan="1"/>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.gt)}</td>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.rounding)}</td>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.bayar)}</td>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.change)}</td>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.jml_kartu)}</td>
                                         <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.charge)}</td>
-                                        <td colSpan="4"></td>
+                                        <td colSpan="4"/>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -475,7 +470,7 @@ class SaleArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                                     <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
                                                                     <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
@@ -487,10 +482,10 @@ class SaleArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
-                                                                    <td>{v.kartu}</td>
-                                                                    <td>{v.status}</td>
-                                                                    <td>{v.lokasi}</td>
-                                                                    <td>{v.jenis_trx}</td>
+                                                                    <td style={columnStyle}>{v.kartu}</td>
+                                                                    <td style={columnStyle}>{v.status}</td>
+                                                                    <td style={columnStyle}>{v.lokasi}</td>
+                                                                    <td style={columnStyle}>{v.jenis_trx}</td>
                                                                 </tr>
                                                             );
 
