@@ -2,6 +2,7 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
+import animate from 'animate.css'
 
 class SideMenu extends Component {
     constructor(props){
@@ -39,32 +40,45 @@ class SideMenu extends Component {
     }
 
     changeMenu(param){
-        if(this.state.isReportInventory === true){
-            console.log("param A")
+        if(this.state.isReport === true){
             this.setState({
                 isSetting:false,
                 isMasterdata: false,
                 isInventory: false,
-                // isReport: false,
+                isReport: true,
                 isReceive: false,
                 isSale:false,
-                isReportInventory:false,
-                isReportPembelian:false
+                // isReportInventory:false,
+                // isReportPembelian:false
             })
-        } else if(this.state.isReportPembelian === true) {
-            console.log("param B")
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: false,
-                // isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportInventory:false,
-                isReportPembelian:false
-            })
+            console.log("isReport", true)
+            if(this.state.isReportInventory === true){
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:!this.state.isReportInventory,
+                    isReportPembelian:false
+                })
+                console.log("isReportInventory",true);
+            }
+            if(this.state.isReportPembelian === true) {
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:false,
+                    isReportPembelian:!this.state.isReportPembelian
+                })
+                console.log("isReportPembelian",true)
+            }
         } else {
-            console.log("param C")
             this.setState({
                 isSetting:false,
                 isMasterdata: false,
@@ -76,6 +90,43 @@ class SideMenu extends Component {
                 isReportPembelian:false
             })
         }
+        // if(this.state.isReportInventory === true){
+        //     console.log("param A")
+        //     this.setState({
+        //         isSetting:false,
+        //         isMasterdata: false,
+        //         isInventory: false,
+        //         // isReport: false,
+        //         isReceive: false,
+        //         isSale:false,
+        //         isReportInventory:false,
+        //         isReportPembelian:false
+        //     })
+        // } else if(this.state.isReportPembelian === true) {
+        //     console.log("param B")
+        //     this.setState({
+        //         isSetting:false,
+        //         isMasterdata: false,
+        //         isInventory: false,
+        //         // isReport: false,
+        //         isReceive: false,
+        //         isSale:false,
+        //         isReportInventory:false,
+        //         isReportPembelian:false
+        //     })
+        // } else {
+        //     console.log("param C")
+        //     this.setState({
+        //         isSetting:false,
+        //         isMasterdata: false,
+        //         isInventory: false,
+        //         isReport: false,
+        //         isReceive: false,
+        //         isSale:false,
+        //         isReportInventory:false,
+        //         isReportPembelian:false
+        //     })
+        // }
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({isSetting : !this.state.isSetting});
@@ -227,6 +278,12 @@ class SideMenu extends Component {
         }
         console.log("testttttt",this.state.activeMenu);
     }
+
+     getSortByClass(){
+        setTimeout(() => {
+            return 'none';
+          }, 500);
+      }
     render() {
         // masterdata: [
         //     {id: 10, value: "0", isChecked: false,label:'product'},
@@ -244,6 +301,7 @@ class SideMenu extends Component {
         return (
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
+<<<<<<< HEAD
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-view-dashboard" />Dashboard </Link></li>
                     <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="zmdi zmdi-view-dashboard" />Cetak Barcode </Link></li>
                     <li className={"treeview" +(this.state.isSetting===true || path==='/user' || path==='/location' || path==='/company' ?" active menu-open" : "")}>
@@ -252,6 +310,7 @@ class SideMenu extends Component {
                             <li className={path==='/company'?"active":''}><Link to="/company"> <i className="zmdi zmdi-apps" />Company</Link></li>
                             <li className={path==='/user'?"active":''} ><Link to="/user"> <i className="zmdi zmdi-apps" />User</Link></li>
                             <li className={path==='/location'?"active":''} ><Link to="/location"> <i className="zmdi zmdi-apps" />Lokasi</Link></li>
+
                         </ul>
                     </li>
                     <li className={"treeview" + (this.state.isMasterdata===true||path==='/department'||path==='/supplier'||path==='/sales'||path==='/cash'||path==='/customer'||path==='/product'||path==='/bank'?" active menu-open":"")}>

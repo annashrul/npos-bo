@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/reactstrap": "^8.5.0",
+    "animate.css": "^4.1.0",
     "apexcharts": "^3.19.3",
     "axios": "^0.18.0",
     "bootstrap": "^4.5.0",
