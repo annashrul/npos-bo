@@ -1,14 +1,15 @@
 import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
-import Layout from "../../Layout";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
-import moment from "moment";
-import {storeOpname} from "../../../../redux/actions/inventory/opname.action";
+import {FetchCodeAdjustment, storeAdjusment} from "redux/actions/adjustment/adjustment.action";
+import {FetchBrgSame} from "redux/actions/masterdata/product/product.action";
+import Layout from "../Layout";
+import {storeCetakBarcode} from "../../../redux/actions/site.action";
+import ModalCetakBarcode from "../modals/modal_cetak_barcode";
+import {ModalToggle, ModalType} from "../../../redux/actions/modal.action";
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -21,8 +22,8 @@ const Toast = Swal.mixin({
     }
 })
 
-const table='opname';
-class TrxOpname extends Component{
+const table='cetak_barcode';
+class CetakBarcode extends Component{
     constructor(props) {
         super(props);
         this.state={
@@ -30,17 +31,13 @@ class TrxOpname extends Component{
             brgval:[],
             location_data:[],
             location:"",
-            catatan:'-',
-            tgl_order: new Date(),
             searchby:"",
             search:"",
             userid:0,
             error:{
                 location:"",
-                catatan:""
             },
         }
-        this.setTglOrder=this.setTglOrder.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleCommonInputChange=this.HandleCommonInputChange.bind(this);
         this.HandleSearch=this.HandleSearch.bind(this);
@@ -50,17 +47,6 @@ class TrxOpname extends Component{
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
 
-    }
-    componentDidMount(){
-        if(localStorage.location_opname!==undefined&&localStorage.location_opname!==''){
-            this.setState({
-                location:localStorage.location_opname
-            })
-
-        }
-        if (localStorage.location_opname!==undefined&&localStorage.location_opname!=='') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_opname, null, this.autoSetQty));
-        }
     }
     getProps(param){
         if (param.auth.user) {
@@ -83,6 +69,16 @@ class TrxOpname extends Component{
             this.getData();
         }
     }
+    componentDidMount(){
+        if(localStorage.lk!==undefined&&localStorage.lk!==''){
+            this.setState({
+                location:localStorage.lk
+            })
+        }
+        if (localStorage.lk!==undefined&&localStorage.lk!=='') {
+            this.props.dispatch(FetchBrgSame(1, 'barcode', '', localStorage.lk, null, this.autoSetQty));
+        }
+    }
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
     }
@@ -90,11 +86,7 @@ class TrxOpname extends Component{
     componentWillMount(){
         this.getProps(this.props);
     }
-    setTglOrder(date) {
-        this.setState({
-            tgl_order: date
-        });
-    };
+
     HandleChangeLokasi(lk){
         let err = Object.assign({}, this.state.error, {
             location: ""
@@ -103,8 +95,8 @@ class TrxOpname extends Component{
             location: lk.value,
             error: err
         })
-        localStorage.setItem('location_opname', lk.value);
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
+        localStorage.setItem('lk', lk.value);
+        this.props.dispatch(FetchBrgSame(1, 'barcode', '', lk.value, null, this.autoSetQty));
         destroy(table);
         this.getData()
     }
@@ -131,16 +123,15 @@ class TrxOpname extends Component{
                 'error'
             )
         }else{
-
             if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
-                this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrgSame(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
             }
             if(parseInt(this.state.searchby)===2){
-                this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrgSame(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
             if(parseInt(this.state.searchby)===3){
-                this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrgSame(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
             this.setState({search: ''});
@@ -149,28 +140,14 @@ class TrxOpname extends Component{
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
+        console.log(item);
         const finaldt = {
             barcode:item.barcode,
-            harga_beli:item.harga_beli,
-            satuan:item.satuan,
-            hrg_jual:item.hrg_jual,
-            kd_brg:item.kd_brg,
-            nm_brg:item.nm_brg,
-            kel_brg:item.kel_brg,
-            kategori:item.kategori,
-            stock_min:item.stock_min,
-            supplier:item.supplier,
-            subdept:item.subdept,
-            deskripsi:item.deskripsi,
-            jenis:item.jenis,
-            kcp:item.kcp,
-            poin:item.poin,
-            group1:item.group1,
-            group2:item.group2,
-            stock:item.stock,
-            qty_fisik:parseInt(item.qty_fisik)+1,
+            title:item.title,
+            harga_jual:item.harga_jual,
+            qty:parseInt(item.qty)+1,
         };
-        const cek = cekData('kd_brg',item.kd_brg,table);
+        const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
             if(res==undefined){
                 store(table, finaldt)
@@ -178,24 +155,9 @@ class TrxOpname extends Component{
                 update(table,{
                     id:res.id,
                     barcode:res.barcode,
-                    harga_beli:res.harga_beli,
-                    satuan:res.satuan,
-                    hrg_jual:res.hrg_jual,
-                    kd_brg:res.kd_brg,
-                    nm_brg:res.nm_brg,
-                    kel_brg:res.kel_brg,
-                    kategori:res.kategori,
-                    stock_min:res.stock_min,
-                    supplier:res.supplier,
-                    subdept:res.subdept,
-                    deskripsi:res.deskripsi,
-                    jenis:res.jenis,
-                    kcp:res.kcp,
-                    poin:res.poin,
-                    group1:res.group1,
-                    group2:res.group2,
-                    stock:res.stock,
-                    qty_fisik:parseInt(res.qty_fisik)+1,
+                    title:res.title,
+                    harga_jual:res.harga_jual,
+                    qty:parseInt(res.qty)+1,
                 })
             }
             this.getData()
@@ -214,8 +176,7 @@ class TrxOpname extends Component{
         }).then((result) => {
             if (result.value) {
                 del(table,id);
-                this.getData();
-
+                this.getData()
                 Swal.fire(
                     'Deleted!',
                     'Your data has been deleted.',
@@ -237,7 +198,7 @@ class TrxOpname extends Component{
         }).then((result) => {
             if (result.value) {
                 destroy(table);
-                localStorage.removeItem("location_opname");
+                localStorage.removeItem('lk');
                 window.location.reload(false);
             }
         })
@@ -245,13 +206,9 @@ class TrxOpname extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-        console.log("",barcode);
-
-
     }
     HandleChangeInput(e,id){
         const column = e.target.name;
@@ -306,12 +263,12 @@ class TrxOpname extends Component{
                 if (res.length==0){
                     Swal.fire(
                         'Error!',
-                        'Pilih barang untuk melanjutkan Opname.',
+                        'Pilih barang untuk melanjutkan Adjusment.',
                         'error'
                     )
                 }else{
                     Swal.fire({
-                        title: 'Simpan Opname?',
+                        title: 'Simpan Adjusment?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
                         showCancelButton: true,
@@ -321,24 +278,21 @@ class TrxOpname extends Component{
                         cancelButtonText: 'Tidak!'
                     }).then((result) => {
                         if (result.value) {
-                            let subtotal = 0;
                             let detail = [];
                             let data={};
-                            data['kd_kasir'] = this.state.userid;
-                            data['tgl'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
-                            data['lokasi'] = this.state.location;
                             res.map(item => {
                                 detail.push({
-                                    "kd_brg": item.kd_brg,
-                                    "qty_fisik": item.qty_fisik,
-                                    "stock_terakhir": item.stock,
-                                    "hrg_beli": item.harga_beli,
-                                    "barcode": item.barcode
+                                    "barcode": item.barcode,
+                                    "title": item.title,
+                                    "harga_jual": item.harga_jual,
+                                    "qty": item.qty,
                                 })
                             });
-                            data['detail'] = detail;
-                            console.log("SUBMITTED",data);
-                            this.props.dispatch(storeOpname(data));
+                            // data['data'] = detail;
+                            // console.log(detail);
+                            this.props.dispatch(storeCetakBarcode(detail));
+                            this.props.dispatch(ModalToggle(true));
+                            this.props.dispatch(ModalType("modal_cetak_barcode"));
                         }
                     })
 
@@ -349,66 +303,34 @@ class TrxOpname extends Component{
 
     }
     autoSetQty(kode,data){
-        const cek = cekData('kd_brg', kode, table);
+        const cek = cekData('barcode', kode, table);
         return cek.then(res => {
             if (res == undefined) {
                 store(table, {
                     barcode:data[0].barcode,
-                    harga_beli:data[0].harga_beli,
-                    satuan:data[0].satuan,
-                    hrg_jual:data[0].hrg_jual,
-                    kd_brg:data[0].kd_brg,
-                    nm_brg:data[0].nm_brg,
-                    kel_brg:data[0].kel_brg,
-                    kategori:data[0].kategori,
-                    stock_min:data[0].stock_min,
-                    supplier:data[0].supplier,
-                    subdept:data[0].subdept,
-                    deskripsi:data[0].deskripsi,
-                    jenis:data[0].jenis,
-                    kcp:data[0].kcp,
-                    poin:data[0].poin,
-                    group1:data[0].group1,
-                    group2:data[0].group1,
-                    stock:data[0].stock,
-                    qty_fisik:data[0].qty_fisik,
+                    title:data[0].title,
+                    harga_jual:data[0].harga_jual,
+                    qty:data[0].qty,
                 })
             } else {
                 update(table, {
                     id: res.id,
                     barcode:res.barcode,
-                    harga_beli:res.harga_beli,
-                    satuan:res.satuan,
-                    hrg_jual:res.hrg_jual,
-                    kd_brg:res.kd_brg,
-                    nm_brg:res.nm_brg,
-                    kel_brg:res.kel_brg,
-                    kategori:res.kategori,
-                    stock_min:res.stock_min,
-                    supplier:res.supplier,
-                    subdept:res.subdept,
-                    deskripsi:res.deskripsi,
-                    jenis:res.jenis,
-                    kcp:res.kcp,
-                    poin:res.poin,
-                    group1:res.group1,
-                    group2:res.group1,
-                    stock:res.stock,
-                    qty_fisik:parseFloat(res.qty_fisik) + 1,
+                    title:data[0].title,
+                    harga_jual:data[0].harga_jual,
+                    qty:parseFloat(res.qty) + 1,
                 })
             }
             return true
         })
     }
-    
     getData() {
         const data = get(table);
-        console.log("LOG FUNCTION getData()",data);
         data.then(res => {
             let brg = [];
             res.map((i) => {
                 brg.push({
-                    qty_fisik: i.qty_fisik,
+                    qty: i.qty,
                 });
             })
             this.setState({
@@ -417,13 +339,13 @@ class TrxOpname extends Component{
             })
         });
     }
-
     render() {
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
-            <Layout page="Opname">
+            <Layout page="Cetak Barcode">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Opname</h4>
+                        <h4>Cetak Barcode</h4>
                     </div>
                     <div className="row">
                         <div className="col-md-3">
@@ -488,29 +410,14 @@ class TrxOpname extends Component{
                                                                 return(
                                                                     <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                         barcode:i.barcode,
-                                                                        harga_beli:i.harga_beli,
-                                                                        satuan:i.satuan,
-                                                                        hrg_jual:i.hrg_jual,
-                                                                        kd_brg:i.kd_brg,
-                                                                        nm_brg:i.nm_brg,
-                                                                        kel_brg:i.kel_brg,
-                                                                        kategori:i.kategori,
-                                                                        stock_min:i.stock_min,
-                                                                        supplier:i.supplier,
-                                                                        subdept:i.subdept,
-                                                                        deskripsi:i.deskripsi,
-                                                                        jenis:i.jenis,
-                                                                        kcp:i.kcp,
-                                                                        poin:i.poin,
-                                                                        group1:i.group1,
-                                                                        group2:i.group2,
-                                                                        stock:i.stock,
-                                                                        qty_fisik:0,
+                                                                        title:i.nm_brg,
+                                                                        harga_jual:i.harga,
+                                                                        qty:0,
                                                                     })}>
                                                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar" />
                                                                         <div className="about">
                                                                             <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.nm_brg}</small></div>
-                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.nm_brg}</small></div>
+                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.barcode}</small></div>
                                                                         </div>
                                                                     </li>
                                                                 )
@@ -535,23 +442,6 @@ class TrxOpname extends Component{
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
-                                                    Tanggal Order
-                                                </label>
-                                                <div className="input-group">
-                                                    <DatePicker
-                                                        className="form-control rounded-right"
-                                                        selected={this.state.tgl_order}
-                                                        onChange={this.setTglOrder}
-                                                    />
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                        <div className="col-md-6">
-
-                                            <div className="form-group">
-                                                <label className="control-label font-12">
                                                     Lokasi
                                                 </label>
                                                 <Select
@@ -570,19 +460,17 @@ class TrxOpname extends Component{
                                                     {this.state.error.location}
                                                 </div>
                                             </div>
-
                                         </div>
-                                        <div className="table-responsive">
+
+                                        <div className="table-responsive" style={{overflowX: "auto",zoom:"80%"}}>
                                             <table className="table table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Kode</th>
-                                                    <th>barcode</th>
-                                                    <th>Nama</th>
-                                                    <th>Satuan</th>
-                                                    <th>Stock Sistem</th>
-                                                    <th>Stock Fisik</th>
+                                                    <th style={columnStyle}>#</th>
+                                                    <th style={columnStyle}>barcode</th>
+                                                    <th style={columnStyle}>Title</th>
+                                                    <th style={columnStyle}>Harga Jual</th>
+                                                    <th style={columnStyle}>Qty</th>
                                                 </tr>
                                                 </thead>
 
@@ -591,17 +479,17 @@ class TrxOpname extends Component{
                                                     this.state.databrg.map((item, index) => {
                                                         return (
                                                             <tr key={index}>
-                                                                <td>
+                                                                <td style={columnStyle}>
                                                                     <a href="#" className='btn btn-danger btn-sm'
                                                                        onClick={(e) => this.HandleRemove(e, item.id)}><i
                                                                         className='fa fa-trash'/></a>
                                                                 </td>
-                                                                <td>{item.kd_brg}</td>
-                                                                <td>{item.barcode}</td>
-                                                                <td>{item.nm_brg}</td>
-                                                                <td>{item.satuan}</td>
-                                                                <td><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
-                                                                <td><input type='text' name='qty_fisik' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_fisik} className="form-control"/></td>
+                                                                <td style={columnStyle}>{item.barcode}</td>
+                                                                <td style={columnStyle}>{item.title}</td>
+                                                                <td style={columnStyle}>{item.harga_jual}</td>
+                                                                <td style={columnStyle}>
+                                                                    <input type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty}  className="form-control"/>
+                                                                </td>
                                                             </tr>
                                                         )
                                                     })
@@ -622,6 +510,7 @@ class TrxOpname extends Component{
                         </div>
                     </div>
                 </div>
+                <ModalCetakBarcode/>
             </Layout>
         );
     }
@@ -631,7 +520,8 @@ class TrxOpname extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
-    loadingbrg: state.productReducer.isLoadingBrg
+    loadingbrg: state.productReducer.isLoadingBrg,
+    nota:state.adjustmentReducer.get_code
 });
 
-export default connect(mapStateToPropsCreateItem)(TrxOpname);
+export default connect(mapStateToPropsCreateItem)(CetakBarcode);

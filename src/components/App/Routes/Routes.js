@@ -37,6 +37,7 @@ import {HEADERS} from "../../../redux/actions/_constants";
 import ReportCash from "../report/cash";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
+import CetakBarcode from "../cetak_barcode";
 
 axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1NTAxNDA2LCJleHAiOjE1OTgwOTM0MDZ9.kMJwmttCOcfNhj_3SWs89i421jgIC4-O-ec3zG2-KWQ`;
 axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
@@ -48,6 +49,7 @@ const Routes = (
         <Route path="/login" exact strict component={Login} />
         <Switch>
             <PrivateRoute path="/" exact strict component={Dashboard} />
+            <PrivateRoute path="/cetak_barcode" exact strict component={CetakBarcode} />
             <PrivateRoute path="/company" exact strict component={Company} />
             <PrivateRoute path="/bank" exact strict component={Bank} />
             <PrivateRoute path="/promo" exact strict component={Promo} />

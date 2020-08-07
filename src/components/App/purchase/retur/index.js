@@ -67,10 +67,6 @@ class ReturTanpaNota extends Component{
                 catatan: localStorage.catatan
             })
         }
-
-
-
-
         if (localStorage.lk !== undefined && localStorage.lk !== '') {
             this.setState({
                 location: localStorage.lk
@@ -694,6 +690,9 @@ class ReturTanpaNota extends Component{
                                                             {this.state.error.location}
                                                         </div>
                                                     </div>
+                                                    
+                                                </div>
+                                                <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">
                                                             Supplier
@@ -713,9 +712,6 @@ class ReturTanpaNota extends Component{
                                                             {this.state.error.supplier}
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-md-6">
-
 
                                                     <div className="form-group">
                                                         <label className="control-label font-12">
@@ -724,11 +720,10 @@ class ReturTanpaNota extends Component{
                                                         <textarea
                                                             className="form-control"
                                                             id="exampleTextarea1"
-                                                            rows={3}
+                                                            rows={1}
                                                             onChange={(e => this.HandleCommonInputChange(e))}
                                                             name="catatan"
                                                             value={this.state.catatan}
-                                                            style={{height:"191px"}}
                                                         />
                                                         <div className="invalid-feedback"
                                                              style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>

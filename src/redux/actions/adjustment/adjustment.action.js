@@ -163,10 +163,10 @@ export const updateAdjustment = (id,data,token) => {
             })
     }
 }
-export const deleteAdjustment = (id,token) => {
+export const deleteAdjustment = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `adjustment/report/${id}`;
+        const url = HEADERS.URL + `adjustment/${id}`;
 
         axios.delete(url)
             .then(function (response) {
@@ -185,7 +185,7 @@ export const deleteAdjustment = (id,token) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchAdjustment(localStorage.getItem("page_adjustment")?localStorage.getItem("page_adjustment"):1,''));
+                dispatch(FetchAdjustment(1,''));
             })
             .catch(function (error) {
                 dispatch(setLoading(false));

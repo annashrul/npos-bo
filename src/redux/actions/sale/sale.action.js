@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import {destroy} from "components/model/app.model";
 import {FetchBank} from "../masterdata/bank/bank.action";
 import {setReportDetail} from "../purchase/receive/receive.action";
+import moment from "moment";
 
 
 export function setLoading(load) {
@@ -223,28 +224,15 @@ export const deleteReportSale = (kd_trx) => {
                     });
                 }
                 dispatch(setLoadingReport(false));
-                let where='';
                 let dateFrom=localStorage.getItem("date_from_sale_report");
                 let dateTo=localStorage.getItem("date_to_sale_report");
-                let tipe=localStorage.getItem("type_sale_report");
-                let lokasi=localStorage.getItem("location_sale_report");
-                let any=localStorage.getItem("any_sale_report");
-                if(dateFrom!==null&&dateTo!==null){
+                let where='';
+                if(dateFrom!==undefined&&dateFrom!==null){
                     if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
                 }else{
-                    if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
+                    if(where!==''){where+='&'}where+=`datefrom=${moment(new Date()).format("yyyy-MM-DD")}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`
                 }
-                if(tipe!==''){
-                    if(where!==''){where+='&'}where+=`tipe=${tipe}`
-                }
-                if(lokasi!==''){
-                    if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
-                }
-                if(any !== undefined&&any!==''){
-                    if(where!==''){where+='&'}where+=`q=${any}`
-                }
-                let page=localStorage.getItem("pageNumber_sale_report");
-                dispatch(FetchReportSale(page===undefined&&page===null?1:page,where));
+                dispatch(FetchReportSale(1,where));
             })
             .catch(function (error) {
                 dispatch(setLoadingReport(false));

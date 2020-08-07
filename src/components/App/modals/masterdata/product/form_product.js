@@ -1528,11 +1528,14 @@ class FormProduct extends Component{
                                                     <div className="col-md-6">
                                                         <div className="row">
                                                             <div className="col-md-4">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
+                                                                <div className="form-group">
+                                                                    <label style={{fontSize:"8px"}}>harga beli pcs</label>
+                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
+                                                                </div>
                                                                 {/*<NumberFormat className="form-control" thousandSeparator={true} name="hrg_beli" value={parseInt(this.state.hrg_beli)} onKeyUp={this.handleAll.bind(this)}/>*/}
 
                                                             </div>
-                                                            <div className="col-md-4 text-center">
+                                                            <div className="col-md-4">
                                                                 {
                                                                     (()=>{
                                                                         let container =[];
@@ -1541,7 +1544,11 @@ class FormProduct extends Component{
                                                                             let place=`nm_harga${i+1}`;
                                                                             let nama=`margin${i+1}`;
                                                                             container.push(
-                                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`margin ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+                                                                                <div className="form-group">
+                                                                                    <label style={{fontSize:"8px"}}>margin {i+1} pcs</label>
+                                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`margin ${i+1} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+
+                                                                                </div>
                                                                             )
                                                                         }
                                                                         return container;
@@ -1552,7 +1559,7 @@ class FormProduct extends Component{
                                                                 {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>*/}
                                                                 {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>*/}
                                                             </div>
-                                                            <div className="col-md-4 text-center">
+                                                            <div className="col-md-4">
                                                                 {
                                                                     (()=>{
                                                                         let container =[];
@@ -1561,7 +1568,11 @@ class FormProduct extends Component{
                                                                             let place=`nm_harga${i+1}`;
                                                                             let nama=`hrgjual${i+1}`;
                                                                             container.push(
-                                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+                                                                                <div className="form-group">
+                                                                                    <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
+                                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+
+                                                                                </div>
                                                                             )
                                                                         }
                                                                         return container;
@@ -1577,10 +1588,16 @@ class FormProduct extends Component{
                                                     <div className="col-md-6">
                                                         <div className="row">
                                                             <div className="col-md-3">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
+                                                                <div className="form-group">
+                                                                    <label style={{fontSize:"8px"}}>service pcs</label>
+                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
+                                                                </div>
                                                             </div>
-                                                            <div className="col-md-3 text-center">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
+                                                            <div className="col-md-3">
+                                                                <div className="form-group">
+                                                                    <label style={{fontSize:"8px"}}>PPN pcs</label>
+                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1608,7 +1625,17 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-4">
-                                                                                    {i%2===0?(<input type="number" placeholder="hrg beli pack" className="form-control" name="hrg_beli_pack" value={this.state.hrg_beli_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg beli karton" className="form-control" name="hrg_beli_karton" value={this.state.hrg_beli_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(
+                                                                                        <div className="form-group">
+                                                                                            <label style={{fontSize:"8px"}}>harga beli pack</label>
+                                                                                            <input type="number" placeholder="hrg beli pack" className="form-control" name="hrg_beli_pack" value={this.state.hrg_beli_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="form-group">
+                                                                                            <label style={{fontSize:"8px"}}>harga beli karton</label>
+                                                                                            <input type="number" placeholder="hrg beli karton" className="form-control" name="hrg_beli_karton" value={this.state.hrg_beli_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                    )}
                                                                                 </div>
                                                                                 <div className="col-md-4">
                                                                                     {
@@ -1618,7 +1645,10 @@ class FormProduct extends Component{
                                                                                                 let place=`nm_harga${z+1}`;
                                                                                                 let nama= i%2===0? `margin${z+1}_pack` : `margin${z+1}_karton`;
                                                                                                 containers.push(
-                                                                                                    <input type="number" placeholder={`margin ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                    <div className="form-group">
+                                                                                                        <label style={{fontSize:"8px"}}>margin {z+1} {i%2===0?'pack':'karton'}</label>
+                                                                                                        <input type="number" placeholder={`margin ${z+1} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                    </div>
                                                                                                 )
                                                                                             }
                                                                                             return containers;
@@ -1638,7 +1668,10 @@ class FormProduct extends Component{
                                                                                                 let place=`nm_harga${z+1}`;
                                                                                                 let nama= i%2===0? `hrgjual${z+1}_pack` : `hrgjual${z+1}_karton`;
                                                                                                 containers.push(
-                                                                                                    <input type="number" placeholder={`hrg jual ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                    <div className="form-group">
+                                                                                                        <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
+                                                                                                        <input type="number" placeholder={`hrg jual ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                    </div>
                                                                                                 )
 
                                                                                             }
@@ -1658,10 +1691,30 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-3">
-                                                                                    {i%2===0?(<input type="number" placeholder="service pack" className="form-control" name="service_pack" value={this.state.service_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="service karton" className="form-control" name="service_karton" value={this.state.service_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(
+                                                                                        <div className="form-group">
+                                                                                            <label style={{fontSize:"8px"}}>service pack</label>
+                                                                                            <input type="number" placeholder="service pack" className="form-control" name="service_pack" value={this.state.service_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="form-group">
+                                                                                            <label style={{fontSize:"8px"}}>service karton</label>
+                                                                                            <input type="number" placeholder="service karton" className="form-control" name="service_karton" value={this.state.service_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                    )}
                                                                                 </div>
                                                                                 <div className="col-md-3 text-center">
-                                                                                    {i%2===0?(<input type="number" placeholder="PPN pack" className="form-control" name="ppn_pack" value={this.state.ppn_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="ppn karton" className="form-control" name="ppn_karton" value={this.state.ppn_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(
+                                                                                        <div className="form-group">
+                                                                                            <label style={{fontSize:"8px"}}>PPN pack</label>
+                                                                                            <input type="number" placeholder="ppn pack" className="form-control" name="ppn_pack" value={this.state.ppn_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="form-group">
+                                                                                            <label style={{fontSize:"8px"}}>PPN karton</label>
+                                                                                            <input type="number" placeholder="ppn karton" className="form-control" name="ppn_karton" value={this.state.ppn_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        </div>
+                                                                                    )}
                                                                                 </div>
 
                                                                             </div>
@@ -1703,19 +1756,62 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPCS" value={v[0].hrgBeliPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <div className="form-group">
+                                                                                        <label style={{fontSize:"8px"}}>harga beli</label>
+                                                                                        <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPCS" value={v[0].hrgBeliPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    </div>
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PCS" value={v[0].margin1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PCS" value={v[0].margin2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PCS" value={v[0].margin3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PCS" value={v[0].margin4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    {
+                                                                                        (()=>{
+                                                                                            let container =[];
+                                                                                            let lbl = '';
+                                                                                            for(let z=0; z<this.state.set_harga; z++){
+                                                                                                let place=`nm_harga${z+1}`;
+                                                                                                let nama=`margin${z+1}PCS`;
+                                                                                                container.push(
+                                                                                                    <div className="form-group">
+                                                                                                        <label style={{fontSize:"8px"}}>margin {this.state[place]}</label>
+                                                                                                        <input readOnly={localStorage.getItem("isReadonly")==="true"?true:false} type="number" placeholder={`margin ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChild(e,i)} value={
+                                                                                                            z===0?v[0].margin1PCS:(z===1?v[0].margin2PCS:(z===2?v[0].margin3PCS:(z===3?v[0].margin4PCS:"")))
+                                                                                                        } style={{fontSize:"10px"}}/>
+                                                                                                    </div>
+                                                                                                )
+                                                                                            }
+                                                                                            return container;
+                                                                                        })()
+                                                                                    }
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PCS" value={v[0].margin1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PCS" value={v[0].margin2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PCS" value={v[0].margin3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PCS" value={v[0].margin4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PCS" value={v[0].hrgJual1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PCS" value={v[0].hrgJual2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PCS" value={v[0].hrgJual3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PCS" value={v[0].hrgJual4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    {
+                                                                                        (()=>{
+                                                                                            let container =[];
+                                                                                            let lbl = '';
+                                                                                            for(let z=0; z<this.state.set_harga; z++){
+                                                                                                let place=`nm_harga${z+1}`;
+                                                                                                let nama=`hrgJual${z+1}PCS`;
+                                                                                                container.push(
+                                                                                                    <div className="form-group">
+                                                                                                        <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
+                                                                                                        <input readOnly={localStorage.getItem("isReadonly")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChild(e,null)} value={
+                                                                                                            z===0?v[0].hrgJual1PCS:(z===1?v[0].hrgJual2PCS:(z===2?v[0].hrgJual3PCS:(z===3?v[0].hrgJual4PCS:"")))
+                                                                                                        } style={{fontSize:"10px"}}/>
+                                                                                                    </div>
+
+                                                                                                )
+                                                                                            }
+                                                                                            return container;
+                                                                                        })()
+                                                                                    }
+
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PCS" value={v[0].hrgJual1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PCS" value={v[0].hrgJual2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PCS" value={v[0].hrgJual3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PCS" value={v[0].hrgJual4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                 </div>
 
                                                                             </div>
@@ -1724,10 +1820,16 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-3">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePCS" value={v[0].servicePCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <div className="form-group">
+                                                                                        <label style={{fontSize:"8px"}}>service pcs</label>
+                                                                                        <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePCS" value={v[0].servicePCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="col-md-3 text-center">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPCS" value={v[0].ppnPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                <div className="col-md-3">
+                                                                                    <div className="form-group">
+                                                                                        <label style={{fontSize:"8px"}}>PPN pcs</label>
+                                                                                        <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPCS" value={v[0].ppnPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    </div>
                                                                                 </div>
 
                                                                             </div>
@@ -1754,19 +1856,63 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <div className="form-group">
+                                                                                                <label style={{fontSize:"8px"}}>harga beli pack</label>
+                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            </div>
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            {
+                                                                                                (()=>{
+                                                                                                    let container =[];
+                                                                                                    let lbl = '';
+                                                                                                    for(let z=0; z<this.state.set_harga; z++){
+                                                                                                        let place=`nm_harga${z+1}`;
+                                                                                                        let nama=`margin${z+1}PACK`;
+                                                                                                        container.push(
+                                                                                                            <div className="form-group">
+                                                                                                                <label style={{fontSize:"8px"}}>margin {this.state[place]}</label>
+                                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==="true"?true:false} type="number" placeholder={`margin ${z+1} pack`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildPack(e,i)} value={
+                                                                                                                    z===0?v[1].margin1PACK:(z===1?v[1].margin2PACK:(z===2?v[1].margin3PACK:(z===3?v[1].margin4PACK:"")))
+                                                                                                                } style={{fontSize:"10px"}}/>
+                                                                                                            </div>
+
+                                                                                                        )
+                                                                                                    }
+                                                                                                    return container;
+                                                                                                })()
+                                                                                            }
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            {
+                                                                                                (()=>{
+                                                                                                    let container =[];
+                                                                                                    let lbl = '';
+                                                                                                    for(let z=0; z<this.state.set_harga; z++){
+                                                                                                        let place=`nm_harga${z+1}`;
+                                                                                                        let nama=`hrgJual${z+1}PACK`;
+                                                                                                        container.push(
+                                                                                                            <div className="form-group">
+                                                                                                                <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
+                                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pack`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildPack(e,i)} value={
+                                                                                                                    z===0?v[1].hrgJual1PACK:(z===1?v[1].hrgJual2PACK:(z===2?v[1].hrgJual3PACK:(z===3?v[1].hrgJual4PACK:"")))
+                                                                                                                } style={{fontSize:"10px"}}/>
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    }
+                                                                                                    return container;
+                                                                                                })()
+                                                                                            }
+
+
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                         </div>
 
                                                                                     </div>
@@ -1775,10 +1921,16 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-3">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <div className="form-group">
+                                                                                                <label style={{fontSize:"8px"}}>service pack</label>
+                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            </div>
                                                                                         </div>
-                                                                                        <div className="col-md-3 text-center">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        <div className="col-md-3">
+                                                                                            <div className="form-group">
+                                                                                                <label style={{fontSize:"8px"}}>PPN pack</label>
+                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            </div>
                                                                                         </div>
 
                                                                                     </div>
@@ -1800,19 +1952,61 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliKARTON" value={v[2].hrgBeliKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <div className="form-group">
+                                                                                                <label style={{fontSize:"8px"}}>harga beli karton</label>
+                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliKARTON" value={v[2].hrgBeliKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            </div>
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+
+                                                                                            {
+                                                                                                (()=>{
+                                                                                                    let container =[];
+                                                                                                    for(let z=0; z<this.state.set_harga; z++){
+                                                                                                        let place=`nm_harga${z+1}`;
+                                                                                                        let nama=`margin${z+1}KARTON`;
+                                                                                                        container.push(
+                                                                                                            <div className="form-group">
+                                                                                                                <label style={{fontSize:"8px"}}>margin {this.state[place]}</label>
+                                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==="true"?true:false} type="number" placeholder={`margin ${z+1} karton`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} value={
+                                                                                                                    z===0?v[2].margin1KARTON:(z===1?v[2].margin2KARTON:(z===2?v[2].margin3KARTON:(z===3?v[2].margin4KARTON:"")))
+                                                                                                                } style={{fontSize:"10px"}}/>
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    }
+                                                                                                    return container;
+                                                                                                })()
+                                                                                            }
+
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+
+                                                                                            {
+                                                                                                (()=>{
+                                                                                                    let container =[];
+                                                                                                    for(let z=0; z<this.state.set_harga; z++){
+                                                                                                        let place=`nm_harga${z+1}`;
+                                                                                                        let nama=`hrgJual${z+1}KARTON`;
+                                                                                                        container.push(
+                                                                                                            <div className="form-group">
+                                                                                                                <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
+                                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} karton`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} value={
+                                                                                                                    z===0?v[2].hrgJual1KARTON:(z===1?v[2].hrgJual2KARTON:(z===2?v[2].hrgJual3KARTON:(z===3?v[2].hrgJual4KARTON:"")))
+                                                                                                                } style={{fontSize:"10px"}}/>
+                                                                                                            </div>
+                                                                                                        )
+                                                                                                    }
+                                                                                                    return container;
+                                                                                                })()
+                                                                                            }
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                         </div>
 
                                                                                     </div>
@@ -1821,10 +2015,16 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-3">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <div className="form-group">
+                                                                                                <label style={{fontSize:"8px"}}>service karton</label>
+                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            </div>
                                                                                         </div>
-                                                                                        <div className="col-md-3 text-center">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        <div className="col-md-3">
+                                                                                            <div className="form-group">
+                                                                                                <label style={{fontSize:"8px"}}>PPN karton</label>
+                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            </div>
                                                                                         </div>
 
                                                                                     </div>
