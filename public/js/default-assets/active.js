@@ -278,9 +278,9 @@
     }
 
     // :: Wow Active Code
-    if (ecaps_window.width() > 767) {
-        new WOW().init();
-    }
+    //if (ecaps_window.width() > 767) {
+    //    new WOW().init();
+    //}
 
     // :: Accordian Active Code
     dd.filter(":nth-child(n+3)").hide();
