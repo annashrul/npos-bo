@@ -15,6 +15,8 @@ import Swal from 'sweetalert2'
 import Preloader from 'Preloader'
 import moment from 'moment';
 import {FetchReceiveData, updateReceive} from "redux/actions/purchase/receive/receive.action";
+import axios from "axios";
+import {HEADERS} from "../../../../redux/actions/_constants";
 
 const table='receive';
 const Toast = Swal.mixin({
@@ -82,26 +84,65 @@ class Receive extends Component{
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
     }
+    async fetchDataEdit(){
+        const url = HEADERS.URL + `receive/ambil_data/${this.props.match.params.slug}`;
 
+        return await axios.get(url)
+            .then(function (response) {
+                console.log("FETCH DATA EDIT",response);
+                return response.data.result;
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
 
     componentWillMount(){
-
         if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
+            const data = this.fetchDataEdit();
+            data.then(res=>{
+                console.log("REPONS",res);
+                res.detail.map((v,i)=>{
+                    const data_final={
+                        "kd_brg" : v.kode_barang,
+                        "barcode" : v.barcode,
+                        "satuan" : v.satuan,
+                        "diskon" : v.diskon,
+                        "harga_beli" : v.harga_beli,
+                        "stock" : v.stock,
+                        "diskon2" : 0,
+                        "diskon3" :0,
+                        "diskon4" : 0,
+                        "ppn" : v.ppn,
+                        "qty" : v.jumlah_beli,
+                        "qty_bonus" : v.jumlah_bonus,
+                        "nm_brg" : v.nm_brg,
+                        "tambahan" : v.tambahan,
+                    };
+                    store('receive', data_final);
+                });
+                this.getData();
+                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
+                this.setState({
+                    location:res.master.lokasi,
+                    catatan:res.master.catatan,
+                    supplier:res.master.kode_supplier,
+                    no_faktur_beli:this.props.match.params.slug,
+                    penerima:res.master.nama_penerima,
+                    notasupplier:res.master.nonota,
+                    jenis_trx:res.master.type
+                })
+            });
+
             // window.location.reload();
-            this.getData();
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
+
+
             // let get_master = localStorage.getItem('data_master_receive');
             // let master = JSON.parse(get_master);
 
-            this.setState({
-                location:localStorage.lokasi_edit,
-                catatan:localStorage.catatan_edit,
-                supplier:localStorage.kode_supplier_edit,
-                no_faktur_beli:this.props.match.params.slug,
-                penerima:localStorage.nama_penerima_edit,
-                notasupplier:localStorage.nonota_edit,
-                jenis_trx:localStorage.type_edit
-            })
+
 
 
         }
@@ -154,7 +195,7 @@ class Receive extends Component{
     componentWillReceiveProps = (nextProps) => {
         console.log("DATA EDIT",nextProps.dataEdit);
         if (nextProps.auth.user) {
-            let lk = []
+            let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
                 loc.map((i) => {

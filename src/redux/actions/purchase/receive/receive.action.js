@@ -204,38 +204,8 @@ export const FetchReceiveData = (nota,param='') => {
         axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
             .then(function (response) {
                 const data = response.data;
-                dispatch(setLoading(false));
-                console.log("ABUS ACTION");
-                if(param!==''){
-                    console.log("CEKKKKKKKKKKKKKKKKKK",data.result.detail);
-                    data.result.detail.map((v,i)=>{
-                        const data_final={
-                            "kd_brg" : v.kode_barang,
-                            "barcode" : v.barcode,
-                            "satuan" : v.satuan,
-                            "diskon" : v.diskon,
-                            "harga_beli" : v.harga_beli,
-                            "stock" : v.stock,
-                            "diskon2" : 0,
-                            "diskon3" :0,
-                            "diskon4" : 0,
-                            "ppn" : v.ppn,
-                            "qty" : v.jumlah_beli,
-                            "qty_bonus" : v.jumlah_bonus,
-                            "nm_brg" : v.nm_brg,
-                            "tambahan" : v.tambahan,
-                        };
-                        store('receive', data_final);
-                    })
-
-                    // store('receive', data_final);
-
-                }
-                else{
                     dispatch(setPoData(data));
                     dispatch(setLoading(false));
-
-                }
             })
             .catch(function (error) {
                 // handle error
