@@ -12,10 +12,18 @@ class Layout extends Component {
     componentWillMount() {
         document.title = this.props.page;
     }
+
+    getFaviconEl() {
+        return document.getElementById("favicon");
+    }
+    componentWillReceiveProps = (nextProps) => {
+        if (nextProps.auth.user) {
+            const favicon = this.getFaviconEl(); // Accessing favicon element
+            favicon.href = nextProps.auth.user.fav_icon;
+        }
+    }
+
     render() {
-        // if (!this.props.authenticated) {
-        //     return <Redirect to = '/auth' /> ;
-        // }
         const style = {
             overflowY: 'auto',
             '::-webkit-scrollbar': {

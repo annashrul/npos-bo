@@ -4,7 +4,8 @@ import {
 } from "../../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {destroy} from "components/model/app.model";
+import {destroy,store} from "components/model/app.model";
+import {FetchBank} from "../../masterdata/bank/bank.action";
 
 
 export function setLoading(load) {
@@ -76,7 +77,6 @@ export const FetchNota = (lokasi) => {
 
     }
 }
-
 export const storeReceive= (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -95,7 +95,7 @@ export const storeReceive= (data) => {
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     if (result.value) {
-                        const win = window.open('http://google.com', '_blank');
+                        const win = window.open(data.result.nota,'_blank');
                         if (win != null) {
                             win.focus();
                         }
@@ -107,6 +107,58 @@ export const storeReceive= (data) => {
                     localStorage.removeItem('nota');
                     localStorage.removeItem('catatan');
                     window.location.reload(false);
+                })
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
+export const updateReceive= (data,kode) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `receive/${kode}`;
+        axios.put(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Transaksi berhasil.',
+                    text: `Disimpan dengan nota: ${data.result.insertId}`,
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9800',
+                    cancelButtonColor: '#2196F3',
+                    confirmButtonText: 'Print Nota?',
+                    cancelButtonText: 'Oke!'
+                }).then((result) => {
+                    if (result.value) {
+                        const win = window.open(data.result.nota,'_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
+                    }
+                    destroy('receive');
+                    localStorage.removeItem('sp');
+                    localStorage.removeItem('lk');
+                    localStorage.removeItem('ambil_data');
+                    localStorage.removeItem('nota');
+                    localStorage.removeItem('catatan');
+                    localStorage.removeItem('data_master_receive');
+                    localStorage.removeItem('data_detail_receive');
+
+                    window.location.href = `/receive_report`;
+
                 })
                 dispatch(setLoading(false));
 
@@ -146,15 +198,14 @@ export const FetchReport = (page = 1,where='') => {
 
     }
 }
-
-export const FetchReceiveData = (nota) => {
+export const FetchReceiveData = (nota,param='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL + `receive/ambil_data/${nota}`)
             .then(function (response) {
-                const data = response.data
-                dispatch(setPoData(data))
-                dispatch(setLoading(false));
+                const data = response.data;
+                    dispatch(setPoData(data));
+                    dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
@@ -177,7 +228,6 @@ export const FetchReportDetail = (page=1,code)=>{
         })
     }
 }
-
 export const FetchReportExcel = (where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -196,5 +246,41 @@ export const FetchReportExcel = (where='') => {
             console.log(error)
         })
 
+    }
+}
+export const deleteReceiveReport = (id) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `receive/${id}`;
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchReport(1,''));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
     }
 }

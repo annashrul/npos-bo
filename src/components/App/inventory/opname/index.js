@@ -52,57 +52,43 @@ class TrxOpname extends Component{
 
     }
     componentDidMount(){
-        if(localStorage.lk!==undefined&&localStorage.lk!==''){
+        if(localStorage.location_opname!==undefined&&localStorage.location_opname!==''){
             this.setState({
-                location:localStorage.lk
+                location:localStorage.location_opname
             })
 
         }
-        if (localStorage.lk!==undefined&&localStorage.lk!=='') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty));
+        if (localStorage.location_opname!==undefined&&localStorage.location_opname!=='') {
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_opname, null, this.autoSetQty));
+        }
+    }
+    getProps(param){
+        if (param.auth.user) {
+            let lk = [];
+            let loc = param.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: param.auth.user.id
+                })
+            }
+        }
+        if(param.barang.length>0){
+            this.getData();
         }
     }
     componentWillReceiveProps = (nextProps) => {
-        if (nextProps.auth.user) {
-            let lk = [];
-            let loc = nextProps.auth.user.lokasi;
-            if(loc!==undefined){
-                loc.map((i) => {
-                    lk.push({
-                        value: i.kode,
-                        label: i.nama
-                    });
-                })
-                this.setState({
-                    location_data: lk,
-                    userid: nextProps.auth.user.id
-                })
-            }
-        }
-        if(nextProps.barang.length>0){
-            this.getData();
-        }
+        this.getProps(nextProps);
     }
+
     componentWillMount(){
-        if (this.props.auth.user) {
-            let lk = [];
-            let loc = this.props.auth.user.lokasi;
-            if(loc!==undefined){
-                loc.map((i) => {
-                    lk.push({
-                        value: i.kode,
-                        label: i.nama
-                    });
-                })
-                this.setState({
-                    location_data: lk,
-                    userid: this.props.auth.user.id
-                })
-            }
-        }
-        if(this.props.barang.length>0){
-            this.getData();
-        }
+        this.getProps(this.props);
     }
     setTglOrder(date) {
         this.setState({
@@ -117,7 +103,7 @@ class TrxOpname extends Component{
             location: lk.value,
             error: err
         })
-        localStorage.setItem('lk', lk.value);
+        localStorage.setItem('location_opname', lk.value);
         this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
         destroy(table);
         this.getData()
@@ -229,7 +215,8 @@ class TrxOpname extends Component{
         }).then((result) => {
             if (result.value) {
                 del(table,id);
-                this.getData()
+                this.getData();
+
                 Swal.fire(
                     'Deleted!',
                     'Your data has been deleted.',
@@ -251,7 +238,7 @@ class TrxOpname extends Component{
         }).then((result) => {
             if (result.value) {
                 destroy(table);
-                localStorage.removeItem('lk');
+                localStorage.removeItem("location_opname");
                 window.location.reload(false);
             }
         })

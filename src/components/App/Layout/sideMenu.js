@@ -12,6 +12,7 @@ class SideMenu extends Component {
             isInventory: false,
             isReport: false,
             isReceive: false,
+            isHutang:false,
             isSale:false,
             isReportInventory:false,
             isReportPembelian:false,
@@ -34,10 +35,7 @@ class SideMenu extends Component {
     }
 
     subChangeMenu(e){
-        console.log(e);
         this.setState({isMasterdata : true});
-        console.log(this.state.isMasterdata);
-        console.log(this.state.isMasterdata===true?"treeview active menu-open" : "treeview")
     }
 
     changeMenu(param){
@@ -89,6 +87,11 @@ class SideMenu extends Component {
         if(param === 'inventory'){
             this.setState({
                 isInventory : !this.state.isInventory,
+            });
+        }
+        if(param === 'hutang'){
+            this.setState({
+                isHutang : !this.state.isHutang,
             });
         }
         if(param === 'report'){
@@ -203,7 +206,6 @@ class SideMenu extends Component {
         console.log("componentWillReceiveProps", nextProps);
         if (nextProps.auth.user) {
             let loc =nextProps.auth.user.access;
-            console.log(loc!==null?"aya":"kosong");
             if(loc!==undefined&&loc!==null){
                 this.setState({
                     product:nextProps.auth.user.access[10]['label']!==null?nextProps.auth.user.access[10]['label']:"0",
@@ -282,6 +284,7 @@ class SideMenu extends Component {
                             <li className={path==='/cash'?"active":''} style={this.state.cash==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash"> <i className="zmdi zmdi-apps" />Cash </Link></li>
                             <li className={path==='/sales'?"active":''} style={this.state.sales==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sales"> <i className="zmdi zmdi-apps" />Sales </Link></li>
                             <li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank"> <i className="zmdi zmdi-apps" />Bank </Link></li>
+                            <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo"> <i className="zmdi zmdi-apps" />Promo </Link></li>
                             {/*<li className={path==='/bank'?"active":''}><Link to="/bank"> <i className="zmdi zmdi-apps" />Bank </Link></li>*/}
                         </ul>
                     </li>

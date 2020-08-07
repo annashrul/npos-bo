@@ -1,11 +1,12 @@
 import React,{Component} from 'react';
-import {deleteBank, FetchBank} from "redux/actions/masterdata/bank/bank.action";
+import {deletePromo, FetchPromo} from "redux/actions/masterdata/promo/promo.action";
 import connect from "react-redux/es/connect/connect";
 import Paginationq, {statusQ} from "helper";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import FormBank from "components/App/modals/masterdata/bank/form_bank";
+import FormPromo from "components/App/modals/masterdata/promo/form_promo";
 import Swal from "sweetalert2";
-class ListBank extends Component{
+import moment from 'moment';
+class ListPromo extends Component{
     constructor(props){
         super(props);
         this.handlesearch = this.handlesearch.bind(this);
@@ -26,25 +27,25 @@ class ListBank extends Component{
         const form = event.target;
         const data = new FormData(form);
         let any = data.get('any');
-        localStorage.setItem('any_bank',any);
+        localStorage.setItem('any_promo',any);
 
         if(any!==''||any!==undefined||any!==null){
-            this.props.dispatch(FetchBank(1,any));
+            this.props.dispatch(FetchPromo(1,any));
         }else{
-            this.props.dispatch(FetchBank(1,''));
+            this.props.dispatch(FetchPromo(1,''));
         }
     }
     toggleModal(e) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formBank"));
+        this.props.dispatch(ModalType("formPromo"));
     }
     handleEdit(e,id,akun,debit,kredit,edc,foto,status,nama) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formBank"));
+        this.props.dispatch(ModalType("formPromo"));
         this.setState({
             detail:{
                 "id":id,
@@ -72,7 +73,7 @@ class ListBank extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.props.dispatch(deleteBank(id));
+                this.props.dispatch(deletePromo(id));
             }
         })
 
@@ -80,6 +81,7 @@ class ListBank extends Component{
     render(){
         const {current_page,data,from,last_page,per_page,to,total} = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const kategori = this.props.data_kategori;
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -87,7 +89,7 @@ class ListBank extends Component{
                         <div className="col-10 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
-                                <input type="text" className="form-control" name="any" defaultValue={localStorage.getItem('any_bank')}/>
+                                <input type="text" className="form-control" name="any" defaultValue={localStorage.getItem('any_promo')}/>
                             </div>
                         </div>
                         <div className="col-2 col-xs-2 col-md-3">
@@ -109,8 +111,8 @@ class ListBank extends Component{
                                         <div className="col-xl-3 col-md-6 height-card box-margin" key={i}>
                                             <div className="card">
                                                 <div className="social-widget">
-                                                    <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
-                                                        <img src={v.foto==='-'?'https://icoconvert.com/images/noimage2.png':v.foto} style={{height:"120px"}} alt=""/>
+                                                    <div className={'bg-success p-3 text-center text-white font-30'}>
+                                                        <img src={v.gambar==='-'?'https://icoconvert.com/images/noimage2.png':v.gambar} style={{height:"120px"}} alt=""/>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-8 text-left">
@@ -126,9 +128,9 @@ class ListBank extends Component{
                                                                         <div className="dropdown-menu dropdown-menu-right"
                                                                              aria-labelledby="dashboardDropdown50">
                                                                             <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
-                                                                                e,v.id,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama
+                                                                                e,v.id_promo,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama
                                                                             )}><i className="ti-pencil-alt"></i> Edit</a>
-                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</a>
+                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -141,20 +143,37 @@ class ListBank extends Component{
                                                                 <table className="table" style={{padding:0,border:"none"}}>
                                                                     <thead>
                                                                     <tr>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Bank Name</th>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.nama}</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Category</th>
+                                                                        {kategori.filter(cat => cat.kode===v.category).map(filteredCat => (
+                                                                            // <li>
+                                                                            // {filteredName}
+                                                                            // </li>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {filteredCat.title}</th>
+                                                                        ))}
                                                                     </tr>
                                                                     <tr>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Charge Debit</th>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.charge_debit}</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Location</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.lokasi}</th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Charge Credit</th>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.charge_kredit}</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Date start</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {moment(v.daritgl).format("yyyy-MM-DD")}</th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>EDC</th>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.edc==='1'?<i className="fa fa-check-circle" style={{color:"green"}}></i>:<i className="fa fa-close" style={{color:"red"}}></i>}</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Date end</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {moment(v.sampaitgl).format("yyyy-MM-DD")}</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Member</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.member}</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Periode</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode}</th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Note</th>
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan}</th>
                                                                     </tr>
                                                                     </thead>
                                                                 </table>
@@ -182,10 +201,10 @@ class ListBank extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
-                 <FormBank token={this.props.token} detail={this.state.detail}/>
+                 <FormPromo token={this.props.token} detail={this.state.detail} kategori={kategori}/>
             </div>
         );
     }
 }
 
-export default connect()(ListBank)
+export default connect()(ListPromo)

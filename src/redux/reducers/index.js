@@ -7,6 +7,7 @@ import {locationCategoryReducer} from "./masterdata/location_category/location_c
 import {locationReducer} from "./masterdata/location/location.reducer";
 import {cashReducer} from "./masterdata/cash/cash.reducer";
 import {bankReducer} from "./masterdata/bank/bank.reducer";
+import {promoReducer} from "./masterdata/promo/promo.reducer";
 import {productReducer} from "./masterdata/product/product.reducer";
 import {groupProductReducer} from "./masterdata/group_product/group_product.reducer";
 import {userListReducer} from "./masterdata/user_list/user_list.reducer";
@@ -30,6 +31,7 @@ import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {closingReducer} from "./report/closing/closing.reducer";
 import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
+import {hutangReducer} from "./hutang/hutang.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -42,6 +44,7 @@ export default combineReducers({
     locationReducer,
     cashReducer,
     bankReducer,
+    promoReducer,
     productReducer,
     priceProductReducer,
     groupProductReducer,
@@ -61,6 +64,7 @@ export default combineReducers({
     saleReducer,
     mutationReducer,
     closingReducer,
+    hutangReducer,
     opnameReducer,
     auth: authReducer,
     errors : errorsReducer

@@ -57,7 +57,7 @@ export function setPoReport(data=[]){
     return {type:PO.SUCCESS,data}
 }
 export function setPoReportDetail(data=[]){
-    return {type:PO.DETAIL,data}
+    return {type:PO.PO_REPORT_DETAIL,data}
 }
 
 export const FetchPoReport = (page=1, perpage=10) => {
@@ -130,7 +130,8 @@ export const storePo = (data) => {
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     if (result.value) {
-                        const win = window.open('http://google.com', '_blank');
+                        const win = window.open(data.result.nota,'_blank');
+
                         if (win != null) {
                             win.focus();
                         }
@@ -157,22 +158,13 @@ export const storePo = (data) => {
             })
     }
 }
-export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
+export const fetchPoReport = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-        let que = '';
-        if(dateFrom===''&&dateTo===''&&location===''){
-            que = `purchaseorder/report?page=${page}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `purchaseorder/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `purchaseorder/report?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        }
-        if(location!==''){
-            que = `purchaseorder/report?page=${page}&lokasi=${location}`;
+        let que = `purchaseorder/report?page=${page}`;
+        if(where!==''){
+            que+=`${where}`;
         }
         console.log(`${que}`);
         axios.get(HEADERS.URL+`${que}`)
@@ -186,7 +178,7 @@ export const fetchPoReport = (page=1,dateFrom='',dateTo='',location='')=>{
         })
     }
 }
-export const poReportDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+export const poReportDetail = (page=1,code)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL+`purchaseorder/report/${code}?page=${page}`)

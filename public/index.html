@@ -10,10 +10,9 @@
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
+  <link id='favicon' rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
-  <script src="%PUBLIC_URL%/config.js" type="text/javascript"></script>
 
   <!-- These plugins only need for the run this page -->
   <link rel="stylesheet" href="%PUBLIC_URL%/css/default-assets/notification.css">
@@ -33,6 +32,9 @@
     -->
   <title>Dashboard App</title>
   <style>
+
+
+
     .customDatePickerWidth,
     .customDatePickerWidth > div.react-datepicker-wrapper,
     .customDatePickerWidth > div > div.react-datepicker__input-container
@@ -161,6 +163,8 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
+  <input type='hidden' id="hellyeah" />
+
   <div id="root"></div>
   <!--
       This HTML file is a template.
@@ -242,6 +246,7 @@
   <!-- <script src="%PUBLIC_URL%/js/default-assets/peity.min.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/peity-demo.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/am-chart.js"></script>
+  <script src="%PUBLIC_URL%/js/config.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/gauge.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/serial.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/light.js"></script>

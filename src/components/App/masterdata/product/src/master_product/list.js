@@ -170,6 +170,7 @@ class ListProduct extends Component{
         localStorage.setItem('by_product',`${sortName}`);
         localStorage.setItem("startDateProduct",`${dateFrom}`);
         localStorage.setItem("endDateProduct",`${dateTo}`);
+        console.log(localStorage.getItem("any_kode_barang"));
         let where='';
         if(localStorage.getItem("semuaPeriode")==="false" || localStorage.getItem("semuaPeriode")===null){
             if(dateFrom!==null&&dateTo!==null){

@@ -5,11 +5,11 @@ import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import FileBase64 from "react-file-base64";
 import {stringifyFormData} from "helper";
-import {createBank} from "redux/actions/masterdata/bank/bank.action";
-import {updateBank} from "../../../../../redux/actions/masterdata/bank/bank.action";
+import {createPromo} from "redux/actions/masterdata/promo/promo.action";
+import {updatePromo} from "../../../../../redux/actions/masterdata/promo/promo.action";
 import {toMoney} from "../../../../../helper";
 
-class FormBank extends Component{
+class FormPromo extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -19,7 +19,7 @@ class FormBank extends Component{
         this.state = {
             akun:0,
             nama:'',
-            edc: '1',
+            category: '-',
             status: '1',
             charge_debit:'0',
             charge_kredit:'0',
@@ -49,7 +49,7 @@ class FormBank extends Component{
             this.setState({
                 akun:'',
                 nama:'',
-                edc: '1',
+                category: '-',
                 status: '1',
                 charge_debit:'0',
                 charge_kredit:'0',
@@ -86,9 +86,9 @@ class FormBank extends Component{
             parseData['foto'] = '-';
         }
         if(this.props.detail!==undefined&&this.props.detail!==null){
-            this.props.dispatch(updateBank(this.props.detail.id,parseData));
+            this.props.dispatch(updatePromo(this.props.detail.id,parseData));
         }else{
-            this.props.dispatch(createBank(parseData));
+            this.props.dispatch(createPromo(parseData));
         }
 
         this.props.dispatch(ModalToggle(false));
@@ -107,9 +107,12 @@ class FormBank extends Component{
         return formatter.format(number);
     }
     render(){
+
+        const kategori = this.props.kategori;
+        console.log(kategori);
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formBank"} size="md">
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Bank":"Update Bank"}</ModalHeader>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"} size="lg">
+                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Promo":"Update Promo"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <div className="form-group">
@@ -117,38 +120,20 @@ class FormBank extends Component{
                             <input type="text" className="form-control" name="akun" value={this.toCurrency(this.state.akun)} onChange={this.handleChange} required/>
                         </div>
                         <div className="form-group">
-                            <label>Bank Name</label>
-                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} required/>
-                        </div>
-                        <div className="form-group">
-                            <label>EDC</label>
-                            <select name="edc" className="form-control" id="edc" defaultValue={this.state.edc} value={this.state.edc} onChange={this.handleChange}>
-                                <option value="1">Active</option>
-                                <option value="0">In Active</option>
+                            <label>Category</label>
+                            <select name="category" className="form-control" id="category" defaultValue={this.state.category} value={this.state.category} onChange={this.handleChange}>
+                            <option value="-">Choose Category</option>
+                            {kategori.map((v,i)=>{
+                                return(
+                                    <option value={v.kode} key={i}>{v.title}</option>
+                                )
+                            })}
                             </select>
                         </div>
 
-                        <div className="form-group">
-                            <label>Charge Debit</label>
-                            <input type="text" className="form-control" name="charge_debit" value={this.state.charge_debit} onChange={this.handleChange} required/>
-                        </div>
-                        <div className="form-group">
-                            <label>Charge Credit</label>
-                            <input type="text" className="form-control" name="charge_kredit" value={this.state.charge_kredit} onChange={this.handleChange} required/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="inputState" className="col-form-label">Foto</label><br/>
-                            <FileBase64
-                                multiple={ false }
-                                className="mr-3 form-control-file"
-                                onDone={ this.getFiles.bind(this) } />
-                        </div>
-                        <div className="form-group">
-                            <label>Status</label>
-                            <select name="status" className="form-control" id="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                <option value="1">Active</option>
-                                <option value="0">In Active</option>
-                            </select>
+                        <div className="form-group" style={{display:this.state.category==='brg'?'block':'none'}}>
+                            <label>Product Code</label>
+                            <input type="text" className="form-control" name="kd_brg" value={this.toCurrency(this.state.kd_brg)} onChange={this.handleChange} required/>
                         </div>
                     </ModalBody>
                     <ModalFooter>
@@ -169,4 +154,4 @@ const mapStateToProps = (state) => {
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(FormBank);
+export default connect(mapStateToProps)(FormPromo);

@@ -74,7 +74,6 @@ class FormUserList extends Component{
         }
     }
     componentWillMount(){
-        console.log(this.props.userListEdit.user_lvl);
         if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
             let lokasiUser = typeof this.props.userListEdit.lokasi === 'object' ? this.props.userListEdit.lokasi : [];
             let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];

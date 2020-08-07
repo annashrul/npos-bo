@@ -24,6 +24,10 @@ export function setCashFailedReport(data=[]){
     return {type:CASH.FAILED_REPORT,data}
 }
 
+export function setCashReportExcel(data=[]){
+    return {type : CASH.EXCEL_REPORT,data}
+}
+
 export const FetchCash = (page=1,type='masuk',param)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -209,6 +213,23 @@ export const FetchCashReport = (page=1,where='')=>{
                 const data = response.data;
                 console.log("DATA ",data);
                 dispatch(setCashReport(data));
+                dispatch(setLoadingReport(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchCashReportExcel = (where='')=>{
+    return (dispatch) => {
+        dispatch(setLoadingReport(true));
+        let url = `pos/report?page=1&param=kas&isbo=true&perpage=10000`;
+        if(where!==''){
+            url+=`&${where}`;
+        }
+        axios.post(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                dispatch(setCashReportExcel(data));
                 dispatch(setLoadingReport(false));
             }).catch(function(error){
             console.log(error)

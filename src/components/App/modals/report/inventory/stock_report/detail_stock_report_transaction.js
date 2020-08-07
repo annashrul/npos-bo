@@ -14,9 +14,7 @@ class DetailStockReportTransaction extends Component{
 
     toggle(e){
         e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(false));
-        this.props.dispatch(ModalType("detailStockReportTransaction"));
+        this.props.dispatch(ModalType("detailStockReportSatuan"));
 
     };
 

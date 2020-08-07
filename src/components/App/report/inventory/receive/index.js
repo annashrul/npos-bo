@@ -8,13 +8,20 @@ import {rangeDate} from "helper";
 import Select from "react-select";
 import moment from "moment";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
-import {FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
 import Paginationq from "helper";
 import DetailReceiveReport from "../../../modals/report/purchase/receive/detail_receive_report";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {FetchReceiveData, FetchReportExcel} from "../../../../../redux/actions/purchase/receive/receive.action";
-import {toRp} from "../../../../../helper";
+import {
+    deleteReceiveReport,
+    FetchReceiveData,
+    FetchReportExcel,
+    FetchReportDetail
+} from "redux/actions/purchase/receive/receive.action";
+import {toRp} from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
+import Swal from "sweetalert2";
+import Receive from "../../../purchase/receive";
+import {HEADERS} from "../../../../../redux/actions/_constants";
 
 class ReceiveReport extends Component{
     constructor(props){
@@ -26,6 +33,8 @@ class ReceiveReport extends Component{
         this.HandleChangeType   = this.HandleChangeType.bind(this);
         this.handleChange       = this.handleChange.bind(this);
         this.handleRetur        = this.handleRetur.bind(this);
+        this.handleDelete        = this.handleDelete.bind(this);
+        this.handleChangePage        = this.handleChangePage.bind(this);
         this.state={
             detail          :{},
             startDate       :moment(new Date()).format("yyyy-MM-DD"),
@@ -58,12 +67,12 @@ class ReceiveReport extends Component{
                 any: localStorage.any_receive_report
             })
         }
-        if (localStorage.date_from_receive_report !== undefined || localStorage.date_from_receive_report !== null) {
+        if (localStorage.date_from_receive_report !== undefined && localStorage.date_from_receive_report !== null) {
             this.setState({
                 startDate: localStorage.date_from_receive_report
             })
         }
-        if (localStorage.date_to_receive_report !== undefined || localStorage.date_to_receive_report !== null) {
+        if (localStorage.date_to_receive_report !== undefined && localStorage.date_to_receive_report !== null) {
             this.setState({
                 endDate: localStorage.date_to_receive_report
             })
@@ -186,7 +195,36 @@ class ReceiveReport extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formReturReceive"));
-        this.props.dispatch(FetchReceiveData(kode))
+        this.props.dispatch(FetchReceiveData(kode,''))
+    }
+    handleDelete(e,kode){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.dispatch(deleteReceiveReport(kode));
+            }
+        })
+    }
+    handleChangePage(e,kode,lokasi,catatan,kode_supplier,penerima,nonota,type){
+        e.preventDefault();
+        localStorage.setItem("kode_edit",kode);
+        localStorage.setItem("lokasi_edit",lokasi);
+        localStorage.setItem("catatan_edit",catatan);
+        localStorage.setItem("kode_supplier_edit",kode_supplier);
+        localStorage.setItem("nama_penerima_edit",penerima);
+        localStorage.setItem("nonota_edit",nonota);
+        localStorage.setItem("type_edit",type);
+        window.location.href = `/receive/${kode}`;
+        // this.props.history.push(`/receive/${kode}`);
+        this.props.dispatch(FetchReceiveData(kode,'edit'));
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -275,6 +313,7 @@ class ReceiveReport extends Component{
 
                             </div>
                             <div className="table-responsive" style={{overflowX: "auto"}}>
+                                {/*EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered" id="report_receive_to_excel" style={{display:"none"}}>
                                     <thead className="bg-light">
                                     <tr>
@@ -337,6 +376,7 @@ class ReceiveReport extends Component{
                                     }
 
                                 </table>
+                                {/*END EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                                     <thead className="bg-light">
                                     <tr>
@@ -384,6 +424,19 @@ class ReceiveReport extends Component{
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleRetur(
                                                                                     e,v.no_faktur_beli
                                                                                 )}>Retur</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(
+                                                                                    e,v.no_faktur_beli
+                                                                                )}>Delete</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleChangePage(
+                                                                                    e,
+                                                                                    v.no_faktur_beli,
+                                                                                    v.kd_lokasi,
+                                                                                    "-",
+                                                                                    v.kode_supplier,
+                                                                                    v.nama_penerima,
+                                                                                    v.nonota,
+                                                                                    v.type
+                                                                                )}>Edit</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -428,6 +481,7 @@ class ReceiveReport extends Component{
                         </div>
                     </div>
                 </div>
+
             </Layout>
         );
     }
@@ -442,7 +496,7 @@ const mapStateToProps = (state) => {
         dataRetur:state.receiveReducer.receive_data,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
-        auth: state.auth
+        auth: state.auth,
     }
 }
 

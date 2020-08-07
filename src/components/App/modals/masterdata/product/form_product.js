@@ -7,7 +7,6 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import {stringifyFormData} from "helper";
 import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
 import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
-import NumberFormat from 'react-number-format';
 import {FetchCheck, setCheck, setLoading} from "redux/actions/site.action";
 import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
@@ -16,9 +15,6 @@ class FormProduct extends Component{
     constructor(props){
         super(props);
         this.state = {
-            isShowFinish: false,
-            isCustomizeVisible: true,
-            selectedOption: null,
             selectedIndex: 0,
             error_barcode1:false,
             error_barcode2:false,
@@ -125,17 +121,15 @@ class FormProduct extends Component{
             PACK: false,
             KARTON: false,
             check: [],
-            hrg_beli: '',
-            hrg_beli_pack: '',
-            hrg_beli_karton: '',
-            margin1: '', margin2: '', margin3: '', margin4: '',
-            margin1_pack: '', margin2_pack: '', margin3_pack: '', margin4_pack: '',
-            margin1_karton: '', margin2_karton: '', margin3_karton: '', margin4_karton: '',
-            hrgjual1: '', hrgjual2: '', hrgjual3: '', hrgjual4: '',
-            hrgjual1_pack: '', hrgjual2_pack: '', hrgjual3_pack: '', hrgjual4_pack: '',
-            hrgjual1_karton: '', hrgjual2_karton: '', hrgjual3_karton: '', hrgjual4_karton: '',
-            service: '', service_pack: '', service_karton: '',
-            ppn: '', ppn_pack: '', ppn_karton: '',
+            hrg_beli: '0', hrg_beli_pack: '0', hrg_beli_karton: '0',
+            margin1: '0', margin2: '0', margin3: '0', margin4: '0',
+            margin1_pack: '0', margin2_pack: '0', margin3_pack: '0', margin4_pack: '0',
+            margin1_karton: '0', margin2_karton: '0', margin3_karton: '0', margin4_karton: '0',
+            hrgjual1: '0', hrgjual2: '0', hrgjual3: '0', hrgjual4: '0',
+            hrgjual1_pack: '0', hrgjual2_pack: '0', hrgjual3_pack: '0', hrgjual4_pack: '0',
+            hrgjual1_karton: '0', hrgjual2_karton: '0', hrgjual3_karton: '0', hrgjual4_karton: '0',
+            service: '0', service_pack: '0', service_karton: '0',
+            ppn: '0', ppn_pack: '0', ppn_karton: '0',
 
             hrgBeliPACK: 0,
             margin1PACK: 0, margin2PACK: 0, margin3PACK: 0, margin4PACK: 0,
@@ -184,12 +178,11 @@ class FormProduct extends Component{
 
         })
     };
-
-    componentWillReceiveProps(nextProps){
-        this.state.codeServer = nextProps.productCode;
-        if(nextProps.dataEdit !== undefined && nextProps.dataEdit !== []){
-            let barang_sku = typeof nextProps.dataEdit.barang_sku === 'object' ? nextProps.dataEdit.barang_sku : this.state.barangSku;
-            let barang_hrg = typeof nextProps.dataEdit.barang_hrg === 'object' ? nextProps.dataEdit.barang_hrg : this.state.barangHarga;
+    getProps(param){
+        this.state.codeServer = param.productCode;
+        if(param.dataEdit !== undefined && param.dataEdit !== []){
+            let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
+            let barang_hrg = typeof param.dataEdit.barang_hrg === 'object' ? param.dataEdit.barang_hrg : this.state.barangHarga;
             let barangSku=[];let barangHrg=[];let konversi=[];
             for(let i=0;i<barang_sku.length;i++){
                 barangSku.push({
@@ -201,88 +194,89 @@ class FormProduct extends Component{
                 konversi.push(barang_sku[i].konversi);
             }
             for(let x=0; x<barang_hrg.length;x++){
-               if(barang_sku.length == 3){
-                   barangHrg.push(
-                       [
-                           {
-                               "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
-                               "isCheckedPCS":true,
-                               "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                               "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
-                               "ppnPCS": barang_hrg[x][0].ppn,
-                               "servicePCS": barang_hrg[x][0].service
-                           },
-                           {
-                               "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
-                               "isCheckedPACK":false,
-                               "hrgBeliPACK": barang_hrg[x][1].harga_beli,
-                               "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                               "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
-                               "ppnPACK":barang_hrg[x][1].ppn,
-                               "servicePACK":barang_hrg[x][1].service
-                           },
-                           {
-                               "nama_toko":barang_hrg[x][2].nama_toko,"lokasi":barang_hrg[x][2].lokasi,
-                               "isCheckedKARTON":false,
-                               "hrgBeliKARTON": barang_hrg[x][2].harga_beli,
-                               "margin1KARTON":((parseInt(barang_hrg[x][2].harga)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "margin2KARTON":((parseInt(barang_hrg[x][2].harga2)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "margin3KARTON":((parseInt(barang_hrg[x][2].harga3)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "margin4KARTON":((parseInt(barang_hrg[x][2].harga4)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                               "hrgJual1KARTON": barang_hrg[x][2].harga,"hrgJual2KARTON": barang_hrg[x][2].harga2,"hrgJual3KARTON": barang_hrg[x][2].harga3,"hrgJual4KARTON": barang_hrg[x][2].harga4,
-                               "ppnKARTON": barang_hrg[x][2].ppn,
-                               "serviceKARTON": barang_hrg[x][2].service
-                           }
-                       ]
-                   )
-               }else{
-                   barangHrg.push(
-                       [
-                           {
-                               "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
-                               "isCheckedPCS":true,
-                               "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                               "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                               "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
-                               "ppnPCS": barang_hrg[x][0].ppn,
-                               "servicePCS": barang_hrg[x][0].service
-                           }
-                       ]
-                   )
-               }
+                if(barang_sku.length == 3){
+                    barangHrg.push(
+                        [
+                            {
+                                "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
+                                "isCheckedPCS":true,
+                                "hrgBeliPCS": barang_hrg[x][0].harga_beli,
+                                "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
+                                "ppnPCS": barang_hrg[x][0].ppn,
+                                "servicePCS": barang_hrg[x][0].service
+                            },
+                            {
+                                "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
+                                "isCheckedPACK":false,
+                                "hrgBeliPACK": barang_hrg[x][1].harga_beli,
+                                "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
+                                "ppnPACK":barang_hrg[x][1].ppn,
+                                "servicePACK":barang_hrg[x][1].service
+                            },
+                            {
+                                "nama_toko":barang_hrg[x][2].nama_toko,"lokasi":barang_hrg[x][2].lokasi,
+                                "isCheckedKARTON":false,
+                                "hrgBeliKARTON": barang_hrg[x][2].harga_beli,
+                                "margin1KARTON":((parseInt(barang_hrg[x][2].harga)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin2KARTON":((parseInt(barang_hrg[x][2].harga2)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin3KARTON":((parseInt(barang_hrg[x][2].harga3)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin4KARTON":((parseInt(barang_hrg[x][2].harga4)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "hrgJual1KARTON": barang_hrg[x][2].harga,"hrgJual2KARTON": barang_hrg[x][2].harga2,"hrgJual3KARTON": barang_hrg[x][2].harga3,"hrgJual4KARTON": barang_hrg[x][2].harga4,
+                                "ppnKARTON": barang_hrg[x][2].ppn,
+                                "serviceKARTON": barang_hrg[x][2].service
+                            }
+                        ]
+                    )
+                }else{
+                    barangHrg.push(
+                        [
+                            {
+                                "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
+                                "isCheckedPCS":true,
+                                "hrgBeliPCS": barang_hrg[x][0].harga_beli,
+                                "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
+                                "ppnPCS": barang_hrg[x][0].ppn,
+                                "servicePCS": barang_hrg[x][0].service
+                            }
+                        ]
+                    )
+                }
 
             }
             this.setState({
-                kd_brg: nextProps.dataEdit.kd_brg,
-                nm_brg: nextProps.dataEdit.nm_brg,
-                kel_brg: nextProps.dataEdit.kel_brg,
-                jenis:nextProps.dataEdit.kategori,
-                stock_min:nextProps.dataEdit.stock_min,
-                group1:nextProps.dataEdit.group1,
-                group2:nextProps.dataEdit.group2,
-                deskripsi:nextProps.dataEdit.deskripsi,
+                kd_brg: param.dataEdit.kd_brg,
+                nm_brg: param.dataEdit.nm_brg,
+                kel_brg: param.dataEdit.kel_brg,
+                jenis:param.dataEdit.kategori,
+                stock_min:param.dataEdit.stock_min,
+                group1:param.dataEdit.group1,
+                group2:param.dataEdit.group2,
+                deskripsi:param.dataEdit.deskripsi,
                 gambar:"",
-                kategori:nextProps.dataEdit.jenis,
-                kcp:nextProps.dataEdit.kcp,
-                poin:nextProps.dataEdit.poin,
-                online:nextProps.dataEdit.online,
-                berat:nextProps.dataEdit.berat,
+                kategori:param.dataEdit.jenis,
+                kcp:param.dataEdit.kcp,
+                poin:param.dataEdit.poin,
+                online:param.dataEdit.online,
+                berat:param.dataEdit.berat,
                 barangSku:barangSku,
                 barangHarga:barangHrg
             })
-        }else{
-            const {data} = nextProps.dataLocation;
-            this.state.check = nextProps.dataLocation;
+        }
+        else{
+            const {data} = param.dataLocation;
+            this.state.check = param.dataLocation;
             let brgHrg=[];
             if(typeof data === 'object'){
                 data.map((v,i)=>{
@@ -330,6 +324,12 @@ class FormProduct extends Component{
             }
         }
     }
+    componentWillReceiveProps(nextProps){
+        this.getProps(nextProps);
+    }
+    componentWillMount(){
+        this.getProps(this.props);
+    }
     async fetchData(data){
         const url = HEADERS.URL + `site/cekdata`;
         return await axios.post(url, data)
@@ -343,12 +343,41 @@ class FormProduct extends Component{
                 }
             })
     }
-
     checkData(event,i){
         event.preventDefault();
         let name = event.target.name;
         let val = event.target.value;
+        let barangSku = [...this.state.barangSku];
+        barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
+        this.setState({ barangSku });
+        if(barangSku.length>1){
+            if(barangSku[1].barcode!=='0'){
+                if(barangSku[1].barcode===barangSku[0].barcode){
+                    alert('barcode 2 tidak boleh sama dengan barcode 1');
+                    barangSku[1].barcode='0';
+                }
+            }
+            if(barangSku[2].barcode!=='0'){
+                if(barangSku[2].barcode===barangSku[1].barcode){
+                    alert('barcode 3 tidak boleh sama dengan barcode 2');
+                    barangSku[2].barcode='0';
+                }
+            }
+            if(barangSku[0].barcode!=='0'){
+                if(barangSku[0].barcode===barangSku[2].barcode){
+                    alert('barcode 1 tidak boleh sama dengan barcode 3');
+                    barangSku[0].barcode='0';
+                }
+            }
+
+        }
+
         if(event.target.id==='barcode1'){
+            if(val===this.state.kd_brg){
+                alert('barcode 1 tidak boleh sama dengan kode barang');
+                barangSku[0].barcode='0';
+            }
+
             const data = this.fetchData({
                 table: 'barang_sku',
                 kolom: 'barcode',
@@ -369,6 +398,10 @@ class FormProduct extends Component{
             });
         }
         if(event.target.id==='barcode2'){
+            if(val===this.state.kd_brg){
+                alert('barcode 2 tidak boleh sama dengan kode barang');
+                barangSku[1].barcode='0';
+            }
             const data = this.fetchData({
                 table: 'barang_sku',
                 kolom: 'barcode',
@@ -389,6 +422,10 @@ class FormProduct extends Component{
             });
         }
         if(event.target.id==='barcode3'){
+            if(val===this.state.kd_brg){
+                alert('barcode 3 tidak boleh sama dengan kode barang');
+                barangSku[2].barcode='0';
+            }
             const data = this.fetchData({
                 table: 'barang_sku',
                 kolom: 'barcode',
@@ -420,9 +457,7 @@ class FormProduct extends Component{
         this.setState({
             error: err
         });
-        if(name==='nm_brg'){
-            this.setState({deskripsi:val})
-        }
+        if(name==='nm_brg'){this.setState({deskripsi:val})}
         if(name==='kd_brg'){
             this.props.dispatch(FetchCheck({
                 table: 'barang',
@@ -434,32 +469,6 @@ class FormProduct extends Component{
             let barangSku = [...this.state.barangSku];
             barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
             this.setState({ barangSku });
-            if(event.target.id==='barcode1'){
-                if(barangSku[0].barcode===barangSku[1].barcode){
-                    this.setState({
-                        error_barcode1:true,
-                        pesan_barcode1:"barcode 1 dan 2 tidak boleh sama"
-                    })
-                }else{
-                    this.setState({
-                        error_barcode1:false,
-                        pesan_barcode1:""
-                    })
-                }
-            }
-            if(event.target.id==='barcode2'){
-                if(barangSku[1].barcode===barangSku[0].barcode){
-                    this.setState({
-                        error_barcode2:true,
-                        pesan_barcode2:"barcode 2 dan 1 tidak boleh sama"
-                    })
-                }else{
-                    this.setState({
-                        error_barcode2:false,
-                        pesan_barcode2:""
-                    })
-                }
-            }
         }
 
         if(event.target.name === 'jenis'){
@@ -518,7 +527,6 @@ class FormProduct extends Component{
             });
             margin4_pcs = ((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
         }
-        //hrg beli = 5000*10/100
         if(name === "margin1"){
             this.setState({
                 hrgjual1:parseInt(this.state.hrg_beli) * (parseInt(val)/100) + parseInt(this.state.hrg_beli),
@@ -589,13 +597,20 @@ class FormProduct extends Component{
                 if(name === 'ppn'){this.state.barangHarga[i][0].ppnPCS = val;}
             }
         }
-        //input margin = hrg_beli + hrg_beli*(10/100)
     }
     handleSelect = (index) => {
         let err = this.state.error;
+        console.log(this.props.checkKodeBarang);
+        if(this.props.checkKodeBarang!==false){
+            this.setState({
+                kd_brg:"0"
+            });
+            return;
+        }
         if(this.state.kd_brg===''||this.state.kd_brg===undefined){
             err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
             this.setState({error: err});
+            console.log(this.props.checkKodeBarang);
             return;
         }
         if(this.state.nm_brg===''||this.state.nm_brg===undefined){
@@ -653,17 +668,20 @@ class FormProduct extends Component{
             this.setState({error: err});
             return;
         }
-        for(let i=0;i<this.state.barangSku.length;i++){
-            if(this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
-                alert(`form barcode index ke ${i+1} tidak boleh kosong`);
-                return;
-            }
-            if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
-                alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
-                return;
-            }
+        if(index===2){
+            for(let i=0;i<this.state.barangSku.length;i++){
+                if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
+                    alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
+                    return;
+                }
+                if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
+                    alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
+                    return;
+                }
 
+            }
         }
+
         if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
             return;
         }
@@ -1189,8 +1207,9 @@ class FormProduct extends Component{
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{
             this.props.dispatch(createProduct(parseData));
-
         }
+        this.props.dispatch(ModalToggle(false));
+
 
 
     }
@@ -1202,11 +1221,13 @@ class FormProduct extends Component{
         const {data} = this.props.data;
         const dataSupplier = this.props.dataSupplier.data;
         const dataSubDep = this.props.dataSubDept.data;
-
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+            <WrapperModal className="custom-map-modal" isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{
+                maxWidth: '1600px', width: '100%'
+
+            }}>
                 <ModalHeader toggle={this.toggle}>
-                    {this.props.detail===undefined?"Add Product":"Update Product"}
+                    {this.props.dataEdit===undefined?"Add Product":"Update Product"}
                 </ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
@@ -1380,7 +1401,7 @@ class FormProduct extends Component{
                                             <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>{!this.props.isLoadingCheck?'Barcoe':'cek data.......'}</th>
+                                                <th>{!this.props.isLoadingCheck?'Barcode':'cek data.......'}</th>
                                                 <th>Satuan</th>
                                                 <th>Konversi Qty</th>
                                                 <th>Tampilkan di POS ?</th>
@@ -1398,6 +1419,11 @@ class FormProduct extends Component{
                                                             </td>
                                                             <td>
                                                                 <input type="text" className="form-control" name="barcode" id={`${x===0?'barcode1':(x===1?'barcode2':'barcode3')}`} value={this.state.barangSku[x].barcode} onChange={(e)=>this.handleChange(e,x)} onBlur={(e)=>this.checkData(e,x)} required/>
+                                                                {/*{*/}
+                                                                    {/*this.state.barangSku[x].barcode === this.state.kd_brg?(*/}
+                                                                        {/*<small style={{color:"red",fontWeight:"bold"}}>barcode tidak boleh sama dengan kode barang</small>*/}
+                                                                    {/*):""*/}
+                                                                {/*}*/}
                                                                 {
                                                                     x===0?this.state.error_barcode1===true?(
                                                                         <small style={{color:"red",fontWeight:"bold"}}>{this.state.pesan_barcode1}</small>
@@ -1494,31 +1520,31 @@ class FormProduct extends Component{
                                                     <div className="col-md-6">
                                                         <div className="row">
                                                             <div className="col-md-4">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
                                                                 {/*<NumberFormat className="form-control" thousandSeparator={true} name="hrg_beli" value={parseInt(this.state.hrg_beli)} onKeyUp={this.handleAll.bind(this)}/>*/}
 
                                                             </div>
                                                             <div className="col-md-4 text-center">
                                                                 <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>
                                                             </div>
                                                             <div className="col-md-4 text-center">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 1 pcs" className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 2 pcs" className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 3 pcs" className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="hrg jual 4 pcs" className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 1 pcs" className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 2 pcs" className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 3 pcs" className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 4 pcs" className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
                                                         <div className="row">
                                                             <div className="col-md-3">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
                                                             </div>
                                                             <div className="col-md-3 text-center">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="text" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
+                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1546,19 +1572,19 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-4">
-                                                                                    {i%2===0?(<input type="text" placeholder="hrg beli pack" className="form-control" name="hrg_beli_pack" value={this.state.hrg_beli_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="hrg beli karton" className="form-control" name="hrg_beli_karton" value={this.state.hrg_beli_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="hrg beli pack" className="form-control" name="hrg_beli_pack" value={this.state.hrg_beli_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg beli karton" className="form-control" name="hrg_beli_karton" value={this.state.hrg_beli_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    {i%2===0?(<input type="text" placeholder="margin 1 pack" className="form-control" name="margin1_pack" value={this.state.margin1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="margin 1 karton" className="form-control" name="margin1_karton" value={this.state.margin1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="text" placeholder="margin 2 pack" className="form-control" name="margin2_pack" value={this.state.margin2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="margin 2 karton" className="form-control" name="margin2_karton" value={this.state.margin2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="text" placeholder="margin 3 pack" className="form-control" name="margin3_pack" value={this.state.margin3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="margin 3 karton" className="form-control" name="margin3_karton" value={this.state.margin3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="text" placeholder="margin 4 pack" className="form-control" name="margin4_pack" value={this.state.margin4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="margin 4 karton" className="form-control" name="margin4_karton" value={this.state.margin4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="margin 1 pack" className="form-control" name="margin1_pack" value={this.state.margin1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 1 karton" className="form-control" name="margin1_karton" value={this.state.margin1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="margin 2 pack" className="form-control" name="margin2_pack" value={this.state.margin2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 2 karton" className="form-control" name="margin2_karton" value={this.state.margin2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="margin 3 pack" className="form-control" name="margin3_pack" value={this.state.margin3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 3 karton" className="form-control" name="margin3_karton" value={this.state.margin3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="margin 4 pack" className="form-control" name="margin4_pack" value={this.state.margin4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 4 karton" className="form-control" name="margin4_karton" value={this.state.margin4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    {i%2===0?(<input type="text" placeholder="hrg jual 1 pack" className="form-control" name="hrgjual1_pack" value={this.state.hrgjual1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="hrg jual 1 karton" className="form-control" name="hrgjual1_karton" value={this.state.hrgjual1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="text" placeholder="hrg jual 2 pack" className="form-control" name="hrgjual2_pack" value={this.state.hrgjual2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="hrg jual 2 karton" className="form-control" name="hrgjual2_karton" value={this.state.hrgjual2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="text" placeholder="hrg jual 3 pack" className="form-control" name="hrgjual3_pack" value={this.state.hrgjual3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="hrg jual 3 karton" className="form-control" name="hrgjual3_karton" value={this.state.hrgjual3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="text" placeholder="hrg jual 4 pack" className="form-control" name="hrgjual4_pack" value={this.state.hrgjual4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="hrg jual 4 karton" className="form-control" name="hrgjual4_karton" value={this.state.hrgjual4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 1 pack" className="form-control" name="hrgjual1_pack" value={this.state.hrgjual1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 1 karton" className="form-control" name="hrgjual1_karton" value={this.state.hrgjual1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 2 pack" className="form-control" name="hrgjual2_pack" value={this.state.hrgjual2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 2 karton" className="form-control" name="hrgjual2_karton" value={this.state.hrgjual2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 3 pack" className="form-control" name="hrgjual3_pack" value={this.state.hrgjual3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 3 karton" className="form-control" name="hrgjual3_karton" value={this.state.hrgjual3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 4 pack" className="form-control" name="hrgjual4_pack" value={this.state.hrgjual4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 4 karton" className="form-control" name="hrgjual4_karton" value={this.state.hrgjual4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
                                                                                 </div>
 
                                                                             </div>
@@ -1567,10 +1593,10 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-3">
-                                                                                    {i%2===0?(<input type="text" placeholder="service pack" className="form-control" name="service_pack" value={this.state.service_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="service karton" className="form-control" name="service_karton" value={this.state.service_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="service pack" className="form-control" name="service_pack" value={this.state.service_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="service karton" className="form-control" name="service_karton" value={this.state.service_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
                                                                                 </div>
                                                                                 <div className="col-md-3 text-center">
-                                                                                    {i%2===0?(<input type="text" placeholder="PPN pack" className="form-control" name="ppn_pack" value={this.state.ppn_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="text" placeholder="ppn karton" className="form-control" name="ppn_karton" value={this.state.ppn_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {i%2===0?(<input type="number" placeholder="PPN pack" className="form-control" name="ppn_pack" value={this.state.ppn_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="ppn karton" className="form-control" name="ppn_karton" value={this.state.ppn_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
                                                                                 </div>
 
                                                                             </div>
@@ -1612,19 +1638,19 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliPCS" value={v[0].hrgBeliPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPCS" value={v[0].hrgBeliPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1PCS" value={v[0].margin1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2PCS" value={v[0].margin2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3PCS" value={v[0].margin3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4PCS" value={v[0].margin4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PCS" value={v[0].margin1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PCS" value={v[0].margin2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PCS" value={v[0].margin3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PCS" value={v[0].margin4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1PCS" value={v[0].hrgJual1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2PCS" value={v[0].hrgJual2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3PCS" value={v[0].hrgJual3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4PCS" value={v[0].hrgJual4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PCS" value={v[0].hrgJual1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PCS" value={v[0].hrgJual2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PCS" value={v[0].hrgJual3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PCS" value={v[0].hrgJual4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                 </div>
 
                                                                             </div>
@@ -1633,10 +1659,10 @@ class FormProduct extends Component{
                                                                         <div className="col-md-6">
                                                                             <div className="row">
                                                                                 <div className="col-md-3">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="servicePCS" value={v[0].servicePCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePCS" value={v[0].servicePCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                 </div>
                                                                                 <div className="col-md-3 text-center">
-                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnPCS" value={v[0].ppnPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPCS" value={v[0].ppnPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                 </div>
 
                                                                             </div>
@@ -1663,19 +1689,19 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
 
                                                                                     </div>
@@ -1684,10 +1710,10 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-3">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-3 text-center">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
 
                                                                                     </div>
@@ -1709,19 +1735,19 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg beli" className="form-control" name="hrgBeliKARTON" value={v[2].hrgBeliKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliKARTON" value={v[2].hrgBeliKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
 
                                                                                     </div>
@@ -1730,10 +1756,10 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-3">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-3 text-center">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="text" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
 
                                                                                     </div>

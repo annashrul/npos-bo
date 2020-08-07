@@ -98,12 +98,12 @@ class SaleArchive extends Component{
                 any: localStorage.any_sale_report
             })
         }
-        if (localStorage.date_from_sale_report !== undefined || localStorage.date_from_sale_report !== null) {
+        if (localStorage.date_from_sale_report !== undefined && localStorage.date_from_sale_report !== null) {
             this.setState({
                 startDate: localStorage.date_from_sale_report
             })
         }
-        if (localStorage.date_to_sale_report !== undefined || localStorage.date_to_sale_report !== null) {
+        if (localStorage.date_to_sale_report !== undefined && localStorage.date_to_sale_report !== null) {
             this.setState({
                 endDate: localStorage.date_to_sale_report
             })
@@ -146,15 +146,15 @@ class SaleArchive extends Component{
         let tipe=localStorage.getItem("type_sale_report");
         let lokasi=localStorage.getItem("location_sale_report");
         let any=localStorage.getItem("any_sale_report");
-        if(dateFrom!==null&&dateTo!==null){
+        if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }else{
             if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
         }
-        if(tipe!==''){
+        if(tipe!==undefined&&tipe!==null&&tipe!==''){
             if(where!==''){where+='&'}where+=`tipe=${tipe}`
         }
-        if(lokasi!==''){
+        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         }
         if(any !== undefined&&any!==''){
@@ -227,17 +227,10 @@ class SaleArchive extends Component{
                             <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label htmlFor=""> Periode </label>
-                                    <div className="customDatePickerWidth">
-                                        <DateRangePicker
-                                            ranges={rangeDate}
-                                            alwaysShowCalendars={true}
-                                            onEvent={this.handleEvent}
-                                            showDropdowns={true}
-                                            autoUpdateInput={true}
-                                        >
-                                            <input type="text" id="date" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
-                                        </DateRangePicker>
-                                    </div>
+                                    <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                                        <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
+                                    </DateRangePicker>
+
 
                                 </div>
                             </div>
@@ -336,8 +329,8 @@ class SaleArchive extends Component{
                                     </tr>
                                     <tr>
                                         <th className="text-black" style={columnStyle}>Item</th>
-                                        <th className="text-black" style={columnStyle}>(rp)</th>
-                                        <th className="text-black" style={columnStyle}>(%)</th>
+                                        <th className="text-black" style={columnStyle}>Total ( rp )</th>
+                                        <th className="text-black" style={columnStyle}>Total ( % )</th>
                                     </tr>
                                     </thead>
                                     {
@@ -401,7 +394,7 @@ class SaleArchive extends Component{
                                     </tfoot>
                                 </table>
                                 {/*END DATA EXCEL*/}
-                                <div className="table-responsive" style={{overflowX: "auto"}}>
+                                <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
 
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
@@ -434,8 +427,8 @@ class SaleArchive extends Component{
                                         </tr>
                                         <tr>
                                             <th className="text-black" style={columnStyle}>Item</th>
-                                            <th className="text-black" style={columnStyle}>(rp)</th>
-                                            <th className="text-black" style={columnStyle}>(%)</th>
+                                            <th className="text-black" style={columnStyle}>Total ( rp )</th>
+                                            <th className="text-black" style={columnStyle}>Total ( % )</th>
                                         </tr>
                                         </thead>
                                         {
@@ -508,7 +501,7 @@ class SaleArchive extends Component{
                                             ):<Preloader/>
                                         }
                                         <tfoot>
-                                        <tr>
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="6">TOTAL PERPAGE</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset_per)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
@@ -525,7 +518,7 @@ class SaleArchive extends Component{
                                             <td style={{textAlign:"right"}}>{toRp(charge_per)}</td>
                                             <td colSpan="4"></td>
                                         </tr>
-                                        <tr>
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="6">TOTAL</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_item)}</td>

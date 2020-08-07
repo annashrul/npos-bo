@@ -1,19 +1,22 @@
-import {BANK, HEADERS} from "../../_constants";
+import {PROMO, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 
 
 export function setLoading(load){
-    return {type : BANK.LOADING,load}
+    return {type : PROMO.LOADING,load}
 }
 
-export function setBank(data=[]){
-    return {type:BANK.SUCCESS,data}
+export function setPromo(data=[]){
+    return {type:PROMO.SUCCESS,data}
 }
-export function setBankFailed(data=[]){
-    return {type:BANK.FAILED,data}
+export function setPromoKategori(data=[]){
+    return {type:PROMO.SUCCESS_KATEGORI,data}
 }
-export const FetchBank = (page=1,param,perpage=10)=>{
+export function setPromoFailed(data=[]){
+    return {type:PROMO.FAILED,data}
+}
+export const FetchPromo = (page=1,param,perpage=10)=>{
     return (dispatch) => {
 
         dispatch(setLoading(true));
@@ -23,16 +26,16 @@ export const FetchBank = (page=1,param,perpage=10)=>{
         let que = '';
         if(param===null){
             console.log(param);
-            que = `bank?page=${page}&perpage=${perpage}`;
+            que = `promo?page=${page}&perpage=${perpage}`;
         }else{
             console.log(param);
-            que = `bank?page=${page}&q=${param}&perpage=${perpage}`;
+            que = `promo?page=${page}&q=${param}&perpage=${perpage}`;
         }
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setBank(data));
+                dispatch(setPromo(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
@@ -40,11 +43,32 @@ export const FetchBank = (page=1,param,perpage=10)=>{
     }
 }
 
+export const FetchPromoKategori = ()=>{
+    return (dispatch) => {
 
-export const createBank = (data) => {
+        // dispatch(setLoading(true));
+        // const headers={
+        //     headers:{'Content-Type': 'application/x-www-form-urlencoded'}
+        // };
+        let que = '';
+            que = `promo/category`;
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPromoKategori(data));
+                // dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+
+export const createPromo = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `bank`;
+        const url = HEADERS.URL + `promo`;
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -62,7 +86,7 @@ export const createBank = (data) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchBank(1,null));
+                dispatch(FetchPromo(1,null));
 
             })
             .catch(function (error) {
@@ -78,10 +102,10 @@ export const createBank = (data) => {
             })
     }
 }
-export const updateBank = (id,data) => {
+export const updatePromo = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const url = HEADERS.URL + `bank/${id}`;
+        const url = HEADERS.URL + `promo/${id}`;
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data)
@@ -99,7 +123,7 @@ export const updateBank = (id,data) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchBank(1,null));
+                dispatch(FetchPromo(1,null));
 
             })
             .catch(function (error) {
@@ -116,10 +140,10 @@ export const updateBank = (id,data) => {
     }
 }
 
-export const deleteBank = (id) => {
+export const deletePromo = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `bank/${id}`;
+        const url = HEADERS.URL + `promo/${id}`;
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
@@ -137,7 +161,7 @@ export const deleteBank = (id) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchBank(1,''));
+                dispatch(FetchPromo(1,''));
             })
             .catch(function (error) {
                 dispatch(setLoading(false));

@@ -5,93 +5,93 @@ import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {toRp} from "helper";
 import moment from "moment";
+import {FetchApprovalMutation} from "../../../../../../redux/actions/inventory/mutation.action";
 class DetailPoReport extends Component{
     constructor(props){
         super(props);
+
+        this.toggle = this.toggle.bind(this);
     }
 
+
+    toggle(e){
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+    };
     render(){
-        console.log("detail poreport", this.props);
-        // const {data} = this.props.data;
-        if(this.props.poReportDetail===''||this.props.poReportDetail===null||this.props.poReportDetail===undefined){
-            const {data} = [];
-        } else {
-            const {data} = this.props.poReportDetail;
-        }
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        // console.log(data);
+        console.log(this.props.poReportDetail);
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "poReportDetail"} size="lg">
-                <ModalHeader>Detail Purchase Order Report </ModalHeader>
+                <ModalHeader toggle={this.toggle}>Detail Laporan Purchase Order</ModalHeader>
                 <ModalBody>
-                    <table className="table">
-                        <tbody>
-                        <tr>
-                            <td className="text-black">Location</td>
-                            <td className="text-black">: {localStorage.getItem("locationDetailTrx")}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Code</td>
-                            <td className="text-black">: {localStorage.getItem("codeDetailTrx")}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Barcode</td>
-                            <td className="text-black">: {localStorage.getItem("barcodeDetailTrx")}</td>
-                        </tr>
-                        <tr>
-                            <td className="text-black">Product name</td>
-                            <td className="text-black">: {localStorage.getItem("nameDetailTrx")}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    {/* <div className="table-responsive" style={{overflowX: "auto"}}>
-                        <table className="table table-hover table-bordered">
-                            <thead className="bg-light">
-                            <tr>
-                                <th className="text-black" style={columnStyle} rowSpan="2">TRX NO</th>
-                                <th className="text-black" style={columnStyle} rowSpan="2">DATE</th>
-                                <th className="text-black" style={columnStyle} colSpan="2">STOCK</th>
-                                <th className="text-black" style={columnStyle} rowSpan="2">QTY</th>
-                                <th className="text-black" style={columnStyle} rowSpan="2">NOTE</th>
-                            </tr>
-                            <tr>
-                                <td className="text-black" style={columnStyle}>IN</td>
-                                <td className="text-black" style={columnStyle}>OUT</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                (
-                                    typeof data === 'object' ? data.length > 0 ?
-                                        data.map((v,i)=>{
-                                            totAdjustmentIn=totAdjustmentIn+parseInt(v.adjustment_in);
-                                            totAdjustmentOut=totAdjustmentOut+parseInt(v.adjustment_out);
-                                            totQty=totQty+parseInt(v.qty);
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-4"><b>No. PO</b></div>
+                                <div className="col-sm-8"><b> : </b>{this.props.master.no_po}</div>
+                                <div className="col-sm-4"><b>Tgl PO</b></div>
+                                <div className="col-sm-8"><b> : </b>{this.props.master.tgl_po}</div>
+                                <div className="col-sm-4"><b>Tgl Expired</b></div>
+                                <div className="col-sm-8"><b> : </b>{this.props.master.tgl_kirim}</div>
+                                <div className="col-sm-4"><b>Lokasi</b></div>
+                                <div className="col-sm-8"><b> : </b>{this.props.master.lokasi}</div>
+                                <div className="col-sm-4"><b>Operator</b></div>
+                                <div className="col-sm-8"><b> : </b>{this.props.master.kd_kasir}</div>
 
-                                            return (
-                                                <tr key={i}>
-                                                    <td style={columnStyle}>{v.kd_trx}</td>
-                                                    <td style={columnStyle}>{ moment(v.tgl).format('yyyy-MM-DD')}</td>
-                                                    <td style={{textAlign:"right"}}>{v.adjustment_in}</td>
-                                                    <td style={{textAlign:"right"}}>{v.adjustment_out}</td>
-                                                    <td style={{textAlign:"right"}}>{v.qty}</td>
-                                                    <td style={columnStyle}>{v.keterangan}</td>
-                                                </tr>
-                                            )
-                                        }) : <tr><td colSpan="6">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
-                            }
-                            </tbody>
-                            <tfoot>
-                            <tr style={{backgroundColor:"#EEEEEE"}}>
-                                <td colSpan="2">TOTAL</td>
-                                <td colSpan="1" style={{textAlign:"right"}}>{totAdjustmentIn}</td>
-                                <td colSpan="1" style={{textAlign:"right"}}>{totAdjustmentOut}</td>
-                                <td colSpan="1" style={{textAlign:"right"}}>{totQty}</td>
-                                <td colSpan="1"></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div> */}
+                            </div>
+                        </div>
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-5">
+                           <div className="row">
+                               <div className="col-sm-4"><b>Supplier</b></div>
+                               <div className="col-sm-8"><b> : </b>{this.props.master.nama_supplier}</div>
+                               <div className="col-sm-4"><b>Alamat</b></div>
+                               <div className="col-sm-8"><b> : </b>{this.props.master.alamat_supplier}</div>
+                               <div className="col-sm-4"><b>Telepon</b></div>
+                               <div className="col-sm-8"><b> : </b>{this.props.master.telp_supplier}</div>
+                               <div className="col-sm-4"><b>Keterangan</b></div>
+                               <div className="col-sm-8"><b> : </b>{this.props.master.catatan}</div>
+
+                           </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <table className="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Kode Barang</th>
+                                    <th className="text-black" style={columnStyle}>Barcode</th>
+                                    <th className="text-black" style={columnStyle}>Nama Barang</th>
+                                    <th className="text-black" style={columnStyle}>Artikel</th>
+                                    <th className="text-black" style={columnStyle}>Satuan</th>
+                                    <th className="text-black" style={columnStyle}>Qty</th>
+                                    <th className="text-black" style={columnStyle}>Harga Beli</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    typeof this.props.poReportDetail.data==='object'?this.props.poReportDetail.data.length>0?this.props.poReportDetail.data.map((v,i)=>{
+                                        return (
+                                            <tr key={i}>
+                                                <td style={columnStyle}>{v.kode_barang}</td>
+                                                <td style={columnStyle}>{v.barcode}</td>
+                                                <td style={columnStyle}>{v.nm_brg}</td>
+                                                <td style={columnStyle}>{v.deskripsi}</td>
+                                                <td style={columnStyle}>{v.satuan}</td>
+                                                <td style={columnStyle}>{v.jumlah_beli}</td>
+                                                <td style={columnStyle}>{toRp(v.harga_beli)}</td>
+                                            </tr>
+                                        );
+                                    }):"No data.":"No data"
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </ModalBody>
             </WrapperModal>
         );

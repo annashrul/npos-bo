@@ -1,45 +1,33 @@
-import {CASH} from "../../../actions/_constants";
-
+import {PROMO} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,
     status:"",msg:"",data:[], currentPage:0,
-    dataExcel:[],
     per_page:0,
     total:0,
-    dataReport:[],
-    isLoadingReport:false
 };
 
-export const cashReducer = (state=initialState,action) => {
+export const promoReducer = (state=initialState,action) => {
     switch (action.type) {
-        case CASH.EXCEL_REPORT:
-            return Object.assign({}, state,{
-                dataExcel:action.data.result
-            });
-        case CASH.SUCCESS_REPORT:
-            return Object.assign({}, state,{
-                status:action.data.status,
-                msg:action.data.msg,
-                dataReport:action.data.result
-            });
-        case CASH.SUCCESS:
+        case PROMO.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
             });
-        case CASH.FAILED:
+        case PROMO.SUCCESS_KATEGORI:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                data_kategori:action.data.result
+            });
+        case PROMO.FAILED:
             return Object.assign({}, state, {
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
             });
-        case CASH.LOADING_REPORT:
-            return Object.assign({}, state, {
-                isLoadingReport: action.load
-            });
-        case CASH.LOADING:
+        case PROMO.LOADING:
             return Object.assign({}, state, {
                 isLoading: action.load
             });
