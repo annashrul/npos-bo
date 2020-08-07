@@ -10,6 +10,8 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "../../../../../Preloader";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import {statusQ} from "../../../../../helper";
 class AlokasiReport extends Component{
     constructor(props){
         super(props);
@@ -79,7 +81,7 @@ class AlokasiReport extends Component{
         let any = localStorage.any_alokasi_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
-            where+=`&dateFrom=${dateFrom}&dateTo=${dateTo}`;
+            where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
         }
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             where+=`&lokasi=${lokasi}`;
@@ -167,24 +169,35 @@ class AlokasiReport extends Component{
                                         <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChane(e)}/>
                                     </div>
                                 </div>
-                                <div className="col-6 col-xs-6 col-md-2">
+                                <div className="col-6 col-xs-6 col-md-3">
                                     <div className="form-group">
-                                        <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary"><i className="fa fa-search"/></button>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                            <i className="fa fa-search"/>
+                                        </button>
+                                        <ReactHTMLTableToExcel
+                                            className="btn btn-primary btnBrg"
+                                            table="report_sale_to_excel"
+                                            filename="laporan_penjualan"
+                                            sheet="barang"
+                                            buttonText="export excel">
+                                        </ReactHTMLTableToExcel>
                                     </div>
+
                                 </div>
+
                             </div>
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Code</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Date Trx</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">From</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">To</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No Faktur Mutasi</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Asal</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Tujuan</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Factur No.</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Note</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No. Faktur Beli</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
                                     </thead>
                                     {
@@ -216,9 +229,12 @@ class AlokasiReport extends Component{
                                                                     <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
                                                                     <td style={columnStyle}>{v.kd_lokasi_1}</td>
                                                                     <td style={columnStyle}>{v.kd_lokasi_2}</td>
-                                                                    <td style={columnStyle}>{v.status}</td>
-                                                                    <td style={columnStyle}>{v.no_faktur_beli}</td>
-                                                                    <td style={columnStyle}>{v.keterangan}</td>
+                                                                    <td style={columnStyle}>{
+                                                                        v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))
+                                                                        // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
+                                                                    }</td>
+                                                                    <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
+                                                                    <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
 
                                                                 </tr>
                                                             )

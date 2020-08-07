@@ -8,6 +8,14 @@ import Logo from "../../../assets/images/logo.png"
 import FreeScrollbar from 'react-free-scrollbar';
 
 class Layout extends Component {
+    constructor(props){
+        super(props);
+        this.mouseEnterHandle = this.mouseEnterHandle.bind(this);
+        this.mouseOutHandle = this.mouseOutHandle.bind(this);
+        this.state = {
+            sideHover:'deactive'
+        }
+    }
 
     componentWillMount() {
         document.title = this.props.page;
@@ -23,6 +31,17 @@ class Layout extends Component {
         }
     }
 
+    mouseEnterHandle(){
+        this.setState({
+            sideHover:'active'
+        })
+    }
+    mouseOutHandle(){
+        this.setState({
+            sideHover:'deactive'
+        })
+    }
+
     render() {
         const style = {
             overflowY: 'auto',
@@ -32,9 +51,9 @@ class Layout extends Component {
             }
           };
         return (
-            <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-deactive menu-collasped-active":"ecaps-page-wrapper sidemenu-hover-deactive"}>
+            <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active":"ecaps-page-wrapper sidemenu-hover-deactive"}>
                 {/* Side Menu */}
-                <div className="ecaps-sidemenu-area">
+                <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
                         <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo===undefined?Logo:this.props.auth.user.logo} alt="Desktop Logo" style={{paddingTop:'9px',height:"100px"}} /> <img className="small-logo" src={this.props.auth.user.logo===undefined?Logo:this.props.auth.user.logo} alt="Mobile Logo" /></Link>

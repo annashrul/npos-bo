@@ -3,6 +3,8 @@ import {
     HEADERS
 } from "./_constants"
 import axios from "axios"
+import {destroy,store} from "components/model/app.model";
+import {ModalToggle, ModalType} from "./modal.action";
 
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));
@@ -47,3 +49,25 @@ export const FetchCheck = (data) => {
             })
     }
 }
+
+export const storeCetakBarcode = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `site/generate_barcode`;
+        axios.post(url, data)
+            .then(function (response) {
+                const data = response.data;
+                dispatch(setLoading(false));
+                localStorage.removeItem('lk');
+                destroy('cetak_barcode');
+
+            })
+            .catch(function (error) {
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
+

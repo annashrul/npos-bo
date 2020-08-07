@@ -14,6 +14,7 @@ import {rangeDate} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {HEADERS} from "../../../../../redux/actions/_constants";
 import {FetchAdjustmentExcel} from "../../../../../redux/actions/adjustment/adjustment.action";
+import {deleteReportSale} from "../../../../../redux/actions/sale/sale.action";
 
 
 class AdjustmentReport extends Component{
@@ -23,6 +24,7 @@ class AdjustmentReport extends Component{
         this.toggleModal = this.toggleModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
         this.state={
             any:"",
             location:"",
@@ -121,6 +123,23 @@ class AdjustmentReport extends Component{
     HandleChangeLokasi(lk) {
         this.setState({location: lk.value});
         localStorage.setItem('location_adjust_report', lk.value);
+    }
+    handleDelete(e,id){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.dispatch(deleteAdjustment(id));
+            }
+        })
+
     }
 
     render(){
@@ -229,8 +248,9 @@ class AdjustmentReport extends Component{
                                                                             </button>
                                                                             <div className="dropdown-menu">
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.kd_trx)}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.kd_trx)}>Delete</a>
-                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/adjusment/${v.kd_trx}.pdf`} target="_blank">Nota</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
+                                                                                {/*http://192.168.100.10:3000/reports/adjust/AA-2008070002-1.pdf*/}
+                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
