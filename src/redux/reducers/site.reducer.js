@@ -10,7 +10,8 @@ const initialState = {
     status:"",
     check:false,
     triggerEcaps:false,
-    get_link:'-'
+    get_link:'-',
+    triggerMobileEcaps:false,
 };
 
 export const siteReducer = (state = initialState, action) => {
@@ -26,6 +27,10 @@ export const siteReducer = (state = initialState, action) => {
         case SITE.TRIGGER_ECAPS:
             return Object.assign({}, state, {
                 triggerEcaps: action.data
+            });
+        case SITE.TRIGGER_MOBILE_ECAPS:
+            return Object.assign({}, state, {
+                triggerMobileEcaps: action.data
             });
         case SITE.LOADING:
             return Object.assign({}, state, {
