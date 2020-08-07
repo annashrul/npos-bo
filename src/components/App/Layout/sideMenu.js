@@ -304,7 +304,7 @@ class SideMenu extends Component {
         return (
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
-                    <li  className={path==='/'?"active":''}><Link to="/" style={{width:'fit-content'}}> <i className="zmdi zmdi-view-dashboard" />Dashboard </Link></li>
+                    <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-view-dashboard" /><span> Dashboard</span></Link></li>
                     <li className={"treeview" +(this.state.isSetting===true
                         || path==='/user'
                         || path==='/location'
