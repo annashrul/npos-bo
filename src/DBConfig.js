@@ -194,6 +194,16 @@ export const DBConfig = {
                 { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
             ]
         },
+        {
+            store: 'cetak_barcode',
+            storeConfig: { keyPath: 'id', autoIncrement: true },
+            storeSchema: [
+                { name: 'barcode', keypath: 'barcode', options: { unique: false } },
+                { name: 'title', keypath: 'title', options: { unique: false } },
+                { name: 'harga_jual', keypath: 'harga_jual', options: { unique: false } },
+                { name: 'qty', keypath: 'qty', options: { unique: false } },
+            ]
+        },
 
     ]
 };

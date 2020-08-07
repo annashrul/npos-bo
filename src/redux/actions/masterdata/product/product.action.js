@@ -201,6 +201,41 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=
     }
 }
 
+export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=>  {
+    console.log("DATA DB",db);
+    return (dispatch) => {
+        dispatch(setLoadingbrg(true));
+        let url = `barang?page=${page}`;
+        if(lokasi!==null) url+=`&lokasi=${lokasi}`;
+        if(q!=='') url+=`&q=${q}&searchby=${by}`;
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                if(data.result.data.length===1){
+                    const barang = data.result.data;
+                    const cek=db(barang[0].kd_brg,barang);
+                    cek.then(re=>{
+                        dispatch(setProductbrg(data));
+                        dispatch(setLoadingbrg(false));
+                    })
+                }else{
+                    dispatch(setProductbrg(data));
+                    dispatch(setLoadingbrg(false));
+                }
+
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoadingbrg(false));
+
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                // text: error.response.data.msg,
+            });
+        })
+    }
+}
+
 
 export const FetchProductEdit = (kode)=>{
     return (dispatch) => {
