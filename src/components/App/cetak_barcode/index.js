@@ -10,6 +10,7 @@ import Layout from "../Layout";
 import {storeCetakBarcode} from "../../../redux/actions/site.action";
 import ModalCetakBarcode from "../modals/modal_cetak_barcode";
 import {ModalToggle, ModalType} from "../../../redux/actions/modal.action";
+import moment from "moment";
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -27,6 +28,7 @@ class CetakBarcode extends Component{
     constructor(props) {
         super(props);
         this.state={
+            data_barcode:"",
             databrg: [],
             brgval:[],
             location_data:[],
@@ -46,6 +48,7 @@ class CetakBarcode extends Component{
         this.HandleReset=this.HandleReset.bind(this);
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
+        this.HandleSubmit=this.HandleSubmit.bind(this);
 
     }
     getProps(param){
@@ -279,8 +282,13 @@ class CetakBarcode extends Component{
                     }).then((result) => {
                         if (result.value) {
                             let detail = [];
-                            let data={};
+                            let parseData={};
+                            let barcode = 'barcode, title, harga_jual\n';
                             res.map(item => {
+                                for(let i=0;i<parseInt(item.qty);i++){
+                                    barcode += item.barcode + ', ' + item.title + ', '+item.harga_jual
+                                    barcode +='\n'
+                                }
                                 detail.push({
                                     "barcode": item.barcode,
                                     "title": item.title,
@@ -288,19 +296,67 @@ class CetakBarcode extends Component{
                                     "qty": item.qty,
                                 })
                             });
-                            // data['data'] = detail;
-                            // console.log(detail);
-                            this.props.dispatch(storeCetakBarcode(detail));
-                            this.props.dispatch(ModalToggle(true));
-                            this.props.dispatch(ModalType("modal_cetak_barcode"));
+                            this.setState({
+                                data_barcode:barcode
+                            })
+                            parseData['data'] = detail;
+                            this.downloadTxtFile(barcode);
+                            // this.props.dispatch(ModalToggle(true));
+                            // this.props.dispatch(ModalType("modal_cetak_barcode"));
+
+                            Swal.fire({
+                                title: 'Apakah Anda Akan Membuka Aplikasi Pencetak Barcode?',
+                                text: "buka dan import file txt, dan masukan ke aplikasi pencetak barcode ini",
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ya, Simpan!',
+                                cancelButtonText: 'Tidak!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    // window.location.reload();
+                                    localStorage.removeItem('lk');
+
+                                    destroy('cetak_barcode');
+                                    this.getData();
+                                    const win = window.open("NetindoAppBartend:",'_blank');
+                                    if (win != null) {
+                                        win.focus();
+                                    }
+                                }else{
+                                    window.location.reload();
+                                    localStorage.removeItem('lk');
+                                    destroy('cetak_barcode');
+                                }
+                            })
                         }
                     })
-
-
                 }
             })
         }
 
+    }
+    dateOnlyCode() {
+        return moment(new Date()).format("YYYYMMDD");
+    }
+    intRand(limit, char = '0123456789') {
+        let result           = '';
+        let characters = char;
+        const charactersLength = characters.length;
+        for ( var i = 0; i < limit; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+    downloadTxtFile = (data) => {
+        const element = document.createElement("a");
+        const file = new Blob([data], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = `barcode_barang_${this.dateOnlyCode()}${this.intRand(2)}.txt`;
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+        // console.log("ELEMENT CLICK",element.click());
     }
     autoSetQty(kode,data){
         const cek = cekData('barcode', kode, table);
@@ -339,6 +395,7 @@ class CetakBarcode extends Component{
             })
         });
     }
+
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
@@ -510,7 +567,7 @@ class CetakBarcode extends Component{
                         </div>
                     </div>
                 </div>
-                <ModalCetakBarcode/>
+                <ModalCetakBarcode getLink={this.props.get_link} dataBarcode={this.state.data_barcode}/>
             </Layout>
         );
     }
@@ -521,7 +578,7 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    nota:state.adjustmentReducer.get_code
+    get_link:state.siteReducer.get_link
 });
 
 export default connect(mapStateToPropsCreateItem)(CetakBarcode);

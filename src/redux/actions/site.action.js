@@ -1,6 +1,6 @@
 import {
     SITE,
-    HEADERS
+    HEADERS, ADJUSTMENT
 } from "./_constants"
 import axios from "axios"
 import {destroy,store} from "components/model/app.model";
@@ -28,7 +28,9 @@ export function setCheck(data = []) {
         data
     }
 }
-
+export function setLinkTxt(data=[]){
+    return {type:SITE.DOWNLOAD_TXT,data}
+}
 export const FetchCheck = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -60,7 +62,7 @@ export const storeCetakBarcode = (data) => {
                 dispatch(setLoading(false));
                 localStorage.removeItem('lk');
                 destroy('cetak_barcode');
-
+                dispatch(setLinkTxt(data));
             })
             .catch(function (error) {
 

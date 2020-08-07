@@ -1,4 +1,5 @@
 import {
+    ADJUSTMENT,
     SITE
 } from "../actions/_constants";
 
@@ -8,11 +9,16 @@ const initialState = {
     msg:"",
     status:"",
     check:false,
-    triggerEcaps:false
+    triggerEcaps:false,
+    get_link:'-'
 };
 
 export const siteReducer = (state = initialState, action) => {
     switch (action.type) {
+        case SITE.DOWNLOAD_TXT:
+            return Object.assign({}, state,{
+                get_link: action.data.result
+            });
         case SITE.SUCCESS_CHECK:
             return Object.assign({}, state, {
                 check:action.data.result===0?false:true
