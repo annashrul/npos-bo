@@ -51,16 +51,16 @@ class Layout extends Component {
             }
           };
         return (
-            <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active":"ecaps-page-wrapper sidemenu-hover-deactive"}>
+            <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active":"ecaps-page-wrapper " + (this.props.triggerMobileEcaps?"mobile-menu-active":"")}>
                 {/* Side Menu */}
                 <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{maxHeight:'50px'}} /> <img className="small-logo" src={Logo} alt="Mobile Logo" /></Link>
+                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{maxHeight:'50px'}} /> <img className="small-logo" src="/favicon.png" alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="slimScrollDiv" style={{position: "relative", width: "auto", height: "100%"}}>
-                            <div className="ecaps-sidenav" id="ecapsSideNav" style={{overflowY: "unset",marginRight:"-10px",width: "auto", height: "100%"}}>
+                            <div className="ecaps-sidenav" id="ecapsSideNav" style={{overflowY: "unset",width: "auto", height: "100%"}}>
                         <FreeScrollbar>
                                 {/* Side Menu Area */}
                                 <div className="side-menu-area" style={{paddingRight:'8px', marginTop:'unset'}}>
@@ -98,7 +98,8 @@ class Layout extends Component {
 const mapStateToProps = ({auth,siteReducer}) =>{
      return{
        auth: auth,
-       triggerEcaps: siteReducer.triggerEcaps
+       triggerEcaps: siteReducer.triggerEcaps,
+       triggerMobileEcaps: siteReducer.triggerMobileEcaps
      }
 }
 export default connect(mapStateToProps)(Layout);

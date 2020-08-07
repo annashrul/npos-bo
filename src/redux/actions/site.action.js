@@ -7,9 +7,18 @@ import axios from "axios"
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));
 }
+export const setMobileEcaps = (bool) => dispatch => {
+    dispatch(setMobileEcaps_(bool));
+}
 export function setEcaps_(bool) {
     return {
         type: SITE.TRIGGER_ECAPS,
+        data:bool
+    }
+}
+export function setMobileEcaps_(bool) {
+    return {
+        type: SITE.TRIGGER_MOBILE_ECAPS,
         data:bool
     }
 }

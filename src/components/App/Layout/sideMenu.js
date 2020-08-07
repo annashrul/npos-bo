@@ -129,20 +129,19 @@ class SideMenu extends Component {
         // }
         const path = this.props.location.pathname;
         if(param === 'setting'){
-            this.setState({isSetting : !this.state.isSetting});
+            this.setState({isSetting : !this.state.isSetting, isReport : false});
         }
         if(param === 'masterdata'){
-            this.setState({isMasterdata : !this.state.isMasterdata});
-            console.log("COUNTER",this.state.isMasterdata);
+            this.setState({isMasterdata : !this.state.isMasterdata, isReport : false});
         }
         if(param === 'inventory'){
             this.setState({
-                isInventory : !this.state.isInventory,
+                isInventory : !this.state.isInventory, isReport : false
             });
         }
         if(param === 'hutang'){
             this.setState({
-                isHutang : !this.state.isHutang,
+                isHutang : !this.state.isHutang, isReport : false
             });
         }
         if(param === 'report'){
@@ -161,12 +160,13 @@ class SideMenu extends Component {
             });
         }
         if(param === 'receive'){
-            this.setState({isReceive : !this.state.isReceive});
+            this.setState({isReceive : !this.state.isReceive, isReport : false});
         }
         if(param === 'sale'){
-            this.setState({isSale : !this.state.isSale});
+            this.setState({isSale : !this.state.isSale, isReport : false});
         }
         this.forceUpdate();
+        console.log("side menu state", this.state);
     }
     componentDidMount(){
         let dataUser=[];
