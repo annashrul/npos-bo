@@ -151,8 +151,9 @@
     }
 
   </style>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
-    async defer></script>
+      <script src="%PUBLIC_URL%/vendor/jquery/jquery-3.2.1.min.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
+        async defer></script>
 
 </head>
 
@@ -172,8 +173,59 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
+        <!-- Must needed plugins to the run this Template -->
+        <script src="%PUBLIC_URL%/js/jquery.min.js"></script>
+        <script src="%PUBLIC_URL%/js/popper.min.js"></script>
+        <script src="%PUBLIC_URL%/js/bootstrap.min.js"></script>
+        <script src="%PUBLIC_URL%/js/bundle.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/date-time.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/setting.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/fullscreen.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/bootstrap-growl.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/notification-active.js"></script>
+    
+        <!-- Active JS -->
+        <script src="%PUBLIC_URL%/js/default-assets/active.js"></script>
+    
+        <!-- These plugins only need for the run this page -->
+        <script src="%PUBLIC_URL%/js/d3.min.js"></script>
+        <script src="%PUBLIC_URL%/js/c3.min.js"></script>
+        <script src="%PUBLIC_URL%/js/bootstrap-colorpicker.min.js"></script>
+        <script src="%PUBLIC_URL%/js/bootstrap-datepicker.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/peity.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/peity-demo.js"></script>
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/am-chart.js"></script> -->
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/gauge.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/serial.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/light.js"></script> -->
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/ammap.min.js"></script> -->
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/worldlow.js"></script> -->
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/radar.js"></script> -->
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/c3-chart-custom.js"></script> -->
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/dashboard-2.js"></script> -->
+        <script src="%PUBLIC_URL%/js/default-assets/file-upload.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/basic-form.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/jquery.bootstrap-touchspin.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/jquery.bootstrap-touchspin.custom.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/jquery.validate.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/jquey.tagsinput.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/colorpicker-bootstrap.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/daterange-picker.js"></script>
+        <!-- <script src="%PUBLIC_URL%/js/default-assets/form-picker.js"></script> -->
+        <script src="%PUBLIC_URL%/js/default-assets/select2.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/select2-custom.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/bootstrap-growl.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/bootstrap-maxlength.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/form-validation-custom.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/sweetalert2.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/modal-classes.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/modaleffects.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/ekko-lightbox.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/lightbox.min.js"></script>
+        <script src="%PUBLIC_URL%/js/default-assets/light-box-active.js"></script>
+
   <!-- Must needed plugins to the run this Template -->
-  <script src="%PUBLIC_URL%/js/jquery.min.js"></script>
+  <!-- <script src="%PUBLIC_URL%/js/jquery.min.js"></script>
   <script src="%PUBLIC_URL%/js/popper.min.js"></script>
   <script src="%PUBLIC_URL%/js/bootstrap.min.js"></script>
   <script src="%PUBLIC_URL%/js/bundle.js"></script>
@@ -181,13 +233,13 @@
   <script src="%PUBLIC_URL%/js/default-assets/setting.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/fullscreen.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/bootstrap-growl.js"></script>
-  <script src="%PUBLIC_URL%/js/default-assets/notification-active.js"></script>
+  <script src="%PUBLIC_URL%/js/default-assets/notification-active.js"></script> -->
 
   <!-- Active JS -->
-  <script src="%PUBLIC_URL%/js/default-assets/active.js"></script>
+  <!-- <script src="%PUBLIC_URL%/js/default-assets/active.js"></script> -->
 
   <!-- These plugins only need for the run this page -->
-  <script src="%PUBLIC_URL%/js/default-assets/peity.min.js"></script>
+  <!-- <script src="%PUBLIC_URL%/js/default-assets/peity.min.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/peity-demo.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/am-chart.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/gauge.js"></script>
@@ -197,7 +249,7 @@
   <script src="%PUBLIC_URL%/js/default-assets/worldlow.js"></script>
   <script src="%PUBLIC_URL%/js/default-assets/radar.js"></script>
   <script src="%PUBLIC_URL%/js/d3.min.js"></script>
-  <script src="%PUBLIC_URL%/js/c3.min.js"></script>
+  <script src="%PUBLIC_URL%/js/c3.min.js"></script> -->
 
   <!--<script src="%PUBLIC_URL%/js/default-assets/c3-chart-custom.js"></script>-->
   <!--<script src="%PUBLIC_URL%/js/default-assets/dashboard-2.js"></script>-->
