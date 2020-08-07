@@ -41,7 +41,12 @@ export const loginUser = (userData) =>
                     foto: res.data.result.foto,
                     token:token,
                     logo:res.data.result.logo,
-                    fav_icon:res.data.result.fav_icon
+                    fav_icon:res.data.result.fav_icon,
+                    harga1:res.data.result.nama_harga.harga1,
+                    harga2:res.data.result.nama_harga.harga2,
+                    harga3:res.data.result.nama_harga.harga3,
+                    harga4:res.data.result.nama_harga.harga4,
+                    set_harga:res.data.result.set_harga,
                 })
             
                 // Set token to Auth Header 

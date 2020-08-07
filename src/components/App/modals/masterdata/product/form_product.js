@@ -15,6 +15,11 @@ class FormProduct extends Component{
     constructor(props){
         super(props);
         this.state = {
+            nm_harga1:"1",
+            nm_harga2:"2",
+            nm_harga3:"3",
+            nm_harga4:"4",
+            set_harga:1,
             selectedIndex: 0,
             error_barcode1:false,
             error_barcode2:false,
@@ -60,8 +65,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPCS":false,
                     "hrgBeliPCS": 0,
-                    "margin1PCS":0,"margin2PCS":0,"margin3PCS":0,"margin4PCS":0,
-                    "hrgJual1PCS":0,"hrgJual2PCS":0,"hrgJual3PCS":0,"hrgJual4PCS":0,
+                    "margin1PCS":"","margin2PCS":"","margin3PCS":"","margin4PCS":"",
+                    "hrgJual1PCS":"","hrgJual2PCS":"","hrgJual3PCS":"","hrgJual4PCS":"",
                     "ppnPCS": 0,
                     "servicePCS":0
                 },
@@ -69,8 +74,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPACK":false,
                     "hrgBeliPACK":0,
-                    "margin1PACK":0,"margin2PACK":0,"margin3PACK":0,"margin4PACK":0,
-                    "hrgJual1PACK":0,"hrgJual2PACK":0,"hrgJual3PACK":0,"hrgJual4PACK":0,
+                    "margin1PACK":"","margin2PACK":"","margin3PACK":"","margin4PACK":"",
+                    "hrgJual1PACK":"","hrgJual2PACK":"","hrgJual3PACK":"","hrgJual4PACK":"",
                     "ppnPACK": 0,
                     "servicePACK":0
                 },
@@ -78,8 +83,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedKARTON":false,
                     "hrgBeliKARTON":0,
-                    "margin1KARTON":0,"margin2KARTON":0,"margin3KARTON":0,"margin4KARTON":0,
-                    "hrgJual1KARTON":0,"hrgJual2KARTON":0,"hrgJual3KARTON":0,"hrgJual4KARTON":0,
+                    "margin1KARTON":"","margin2KARTON":"","margin3KARTON":"","margin4KARTON":"",
+                    "hrgJual1KARTON":"","hrgJual2KARTON":"","hrgJual3KARTON":"","hrgJual4KARTON":"",
                     "ppnKARTON":0,
                     "serviceKARTON":0
                 }
@@ -89,8 +94,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPCS":false,
                     "hrgBeliPCS": 0,
-                    "margin1PCS":0,"margin2PCS":0,"margin3PCS":0,"margin4PCS":0,
-                    "hrgJual1PCS":0,"hrgJual2PCS":0,"hrgJual3PCS":0,"hrgJual4PCS":0,
+                    "margin1PCS":"","margin2PCS":"","margin3PCS":"","margin4PCS":"",
+                    "hrgJual1PCS":"","hrgJual2PCS":"","hrgJual3PCS":"","hrgJual4PCS":"",
                     "ppnPCS": 0,
                     "servicePCS":0
                 },
@@ -98,8 +103,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPACK":false,
                     "hrgBeliPACK":0,
-                    "margin1PACK":0,"margin2PACK":0,"margin3PACK":0,"margin4PACK":0,
-                    "hrgJual1PACK":0,"hrgJual2PACK":0,"hrgJual3PACK":0,"hrgJual4PACK":0,
+                    "margin1PACK":"","margin2PACK":"","margin3PACK":"","margin4PACK":"",
+                    "hrgJual1PACK":"","hrgJual2PACK":"","hrgJual3PACK":"","hrgJual4PACK":"",
                     "ppnPACK": 0,
                     "servicePACK":0
                 },
@@ -107,8 +112,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedKARTON":false,
                     "hrgBeliKARTON":0,
-                    "margin1KARTON":0,"margin2KARTON":0,"margin3KARTON":0,"margin4KARTON":0,
-                    "hrgJual1KARTON":0,"hrgJual2KARTON":0,"hrgJual3KARTON":0,"hrgJual4KARTON":0,
+                    "margin1KARTON":"","margin2KARTON":"","margin3KARTON":"","margin4KARTON":"",
+                    "hrgJual1KARTON":"","hrgJual2KARTON":"","hrgJual3KARTON":"","hrgJual4KARTON":"",
                     "ppnKARTON":0,
                     "serviceKARTON":0
                 }
@@ -122,23 +127,23 @@ class FormProduct extends Component{
             KARTON: false,
             check: [],
             hrg_beli: '0', hrg_beli_pack: '0', hrg_beli_karton: '0',
-            margin1: '0', margin2: '0', margin3: '0', margin4: '0',
-            margin1_pack: '0', margin2_pack: '0', margin3_pack: '0', margin4_pack: '0',
-            margin1_karton: '0', margin2_karton: '0', margin3_karton: '0', margin4_karton: '0',
-            hrgjual1: '0', hrgjual2: '0', hrgjual3: '0', hrgjual4: '0',
-            hrgjual1_pack: '0', hrgjual2_pack: '0', hrgjual3_pack: '0', hrgjual4_pack: '0',
-            hrgjual1_karton: '0', hrgjual2_karton: '0', hrgjual3_karton: '0', hrgjual4_karton: '0',
+            margin1: '', margin2: '', margin3: '', margin4: '',
+            margin1_pack: '', margin2_pack: '', margin3_pack: '', margin4_pack: '',
+            margin1_karton: '', margin2_karton: '', margin3_karton: '', margin4_karton: '',
+            hrgjual1:'', hrgjual2: '', hrgjual3: '', hrgjual4: '',
+            hrgjual1_pack: '', hrgjual2_pack: '', hrgjual3_pack: '', hrgjual4_pack: '',
+            hrgjual1_karton: '', hrgjual2_karton: '', hrgjual3_karton: '', hrgjual4_karton: '',
             service: '0', service_pack: '0', service_karton: '0',
             ppn: '0', ppn_pack: '0', ppn_karton: '0',
 
             hrgBeliPACK: 0,
-            margin1PACK: 0, margin2PACK: 0, margin3PACK: 0, margin4PACK: 0,
-            hrgJual1PACK: 0, hrgJual2PACK: 0, hrgJual3PACK: 0, hrgJual4PACK: 0,
+            margin1PACK: '', margin2PACK: '', margin3PACK: '', margin4PACK: '',
+            hrgJual1PACK: '', hrgJual2PACK: '', hrgJual3PACK: '', hrgJual4PACK: '',
             servicePACK: 0, ppnPACK: 0,
 
             hrgBeliKARTON: 0,
-            margin1KARTON: 0, margin2KARTON: 0, margin3KARTON: 0, margin4KARTON: 0,
-            hrgJual1KARTON: 0, hrgJual2KARTON: 0, hrgJual3KARTON: 0, hrgJual4KARTON: 0,
+            margin1KARTON: '', margin2KARTON: '', margin3KARTON: '', margin4KARTON: '',
+            hrgJual1KARTON: '', hrgJual2KARTON: '', hrgJual3KARTON: '', hrgJual4KARTON: '',
             serviceKARTON: 0, ppnKARTON: 0,
             purchasePrice: {},
             generateCode:false,
@@ -179,6 +184,13 @@ class FormProduct extends Component{
         })
     };
     getProps(param){
+        this.setState({
+            nm_harga1:param.auth.user.harga1,
+            nm_harga2:param.auth.user.harga2,
+            nm_harga3:param.auth.user.harga3,
+            nm_harga4:param.auth.user.harga4,
+            set_harga:param.auth.user.set_harga,
+        })
         this.state.codeServer = param.productCode;
         if(param.dataEdit !== undefined && param.dataEdit !== []){
             let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
@@ -599,99 +611,98 @@ class FormProduct extends Component{
         }
     }
     handleSelect = (index) => {
-        let err = this.state.error;
-        console.log(this.props.checkKodeBarang);
-        if(this.props.checkKodeBarang!==false){
-            this.setState({
-                kd_brg:"0"
-            });
-            return;
-        }
-        if(this.state.kd_brg===''||this.state.kd_brg===undefined){
-            err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
-            this.setState({error: err});
-            console.log(this.props.checkKodeBarang);
-            return;
-        }
-        if(this.state.nm_brg===''||this.state.nm_brg===undefined){
-            err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.kel_brg===''||this.state.kel_brg===undefined){
-            err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.stock_min===''||this.state.stock_min===undefined){
-            err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.group1===''||this.state.group1===undefined){
-            err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.group2===''||this.state.group2===undefined){
-            err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.deskripsi===''||this.state.deskripsi===undefined){
-            err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.jenis===''||this.state.jenis===undefined){
-            err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.kcp===''||this.state.kcp===undefined){
-            err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.poin===''||this.state.poin===undefined){
-            err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.online===''||this.state.online===undefined){
-            err = Object.assign({}, err, {online:"online tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.berat===''||this.state.berat===undefined){
-            err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(index===2){
-            for(let i=0;i<this.state.barangSku.length;i++){
-                if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
-                    alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
-                    return;
-                }
-                if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
-                    alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
-                    return;
-                }
-
-            }
-        }
-
-        if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
-            return;
-        }
+        // let err = this.state.error;
+        // console.log(this.props.checkKodeBarang);
+        // if(this.props.checkKodeBarang!==false){
+        //     this.setState({
+        //         kd_brg:"0"
+        //     });
+        //     return;
+        // }
+        // if(this.state.kd_brg===''||this.state.kd_brg===undefined){
+        //     err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     console.log(this.props.checkKodeBarang);
+        //     return;
+        // }
+        // if(this.state.nm_brg===''||this.state.nm_brg===undefined){
+        //     err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.kel_brg===''||this.state.kel_brg===undefined){
+        //     err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.stock_min===''||this.state.stock_min===undefined){
+        //     err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.group1===''||this.state.group1===undefined){
+        //     err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.group2===''||this.state.group2===undefined){
+        //     err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.deskripsi===''||this.state.deskripsi===undefined){
+        //     err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.jenis===''||this.state.jenis===undefined){
+        //     err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.kcp===''||this.state.kcp===undefined){
+        //     err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.poin===''||this.state.poin===undefined){
+        //     err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.online===''||this.state.online===undefined){
+        //     err = Object.assign({}, err, {online:"online tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.berat===''||this.state.berat===undefined){
+        //     err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(index===2){
+        //     for(let i=0;i<this.state.barangSku.length;i++){
+        //         if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
+        //             alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
+        //             return;
+        //         }
+        //         if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
+        //             alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
+        //             return;
+        //         }
+        //
+        //     }
+        // }
+        //
+        // if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
+        //     return;
+        // }
 
 
 
         this.setState({selectedIndex: index}, () => {});
 
     };
-
     onHandleChangeChild(event,i) {
         event.preventDefault();
 
@@ -892,6 +903,7 @@ class FormProduct extends Component{
         });
     };
     handleAllCheckedSku(event,i,lbl){
+        console.log("handleAllCheckedSku",lbl);
         if(lbl === 'PACK'){
             event.target.checked===true?localStorage.setItem("isReadonlySamaPack","true"):localStorage.setItem("isReadonlySamaPack","false");
             event.target.checked===true?localStorage.setItem("isReadonlyPack","true"):localStorage.setItem("isReadonlyPack","false");
@@ -1122,7 +1134,6 @@ class FormProduct extends Component{
 
 
     }
-
     handleSubmit(e){
         e.preventDefault();
         let parseData = {};
@@ -1214,10 +1225,7 @@ class FormProduct extends Component{
 
     }
 
-
-
     render(){
-
         const {data} = this.props.data;
         const dataSupplier = this.props.dataSupplier.data;
         const dataSubDep = this.props.dataSubDept.data;
@@ -1525,16 +1533,44 @@ class FormProduct extends Component{
 
                                                             </div>
                                                             <div className="col-md-4 text-center">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>
+                                                                {
+                                                                    (()=>{
+                                                                        let container =[];
+                                                                        let lbl = '';
+                                                                        for(let i=0; i<this.state.set_harga; i++){
+                                                                            let place=`nm_harga${i+1}`;
+                                                                            let nama=`margin${i+1}`;
+                                                                            container.push(
+                                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`margin ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+                                                                            )
+                                                                        }
+                                                                        return container;
+                                                                    })()
+                                                                }
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>*/}
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>*/}
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>*/}
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>*/}
                                                             </div>
                                                             <div className="col-md-4 text-center">
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 1 pcs" className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 2 pcs" className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 3 pcs" className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>
-                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg jual 4 pcs" className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>
+                                                                {
+                                                                    (()=>{
+                                                                        let container =[];
+                                                                        let lbl = '';
+                                                                        for(let i=0; i<this.state.set_harga; i++){
+                                                                            let place=`nm_harga${i+1}`;
+                                                                            let nama=`hrgjual${i+1}`;
+                                                                            container.push(
+                                                                                <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+                                                                            )
+                                                                        }
+                                                                        return container;
+                                                                    })()
+                                                                }
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga1} pcs`} className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>*/}
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga2} pcs`} className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>*/}
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga3} pcs`} className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>*/}
+                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga4} pcs`} className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>*/}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1575,16 +1611,45 @@ class FormProduct extends Component{
                                                                                     {i%2===0?(<input type="number" placeholder="hrg beli pack" className="form-control" name="hrg_beli_pack" value={this.state.hrg_beli_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg beli karton" className="form-control" name="hrg_beli_karton" value={this.state.hrg_beli_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    {i%2===0?(<input type="number" placeholder="margin 1 pack" className="form-control" name="margin1_pack" value={this.state.margin1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 1 karton" className="form-control" name="margin1_karton" value={this.state.margin1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="number" placeholder="margin 2 pack" className="form-control" name="margin2_pack" value={this.state.margin2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 2 karton" className="form-control" name="margin2_karton" value={this.state.margin2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="number" placeholder="margin 3 pack" className="form-control" name="margin3_pack" value={this.state.margin3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 3 karton" className="form-control" name="margin3_karton" value={this.state.margin3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="number" placeholder="margin 4 pack" className="form-control" name="margin4_pack" value={this.state.margin4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 4 karton" className="form-control" name="margin4_karton" value={this.state.margin4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {
+                                                                                        (()=>{
+                                                                                            let containers =[];
+                                                                                            for(let z=0; z<this.state.set_harga; z++){
+                                                                                                let place=`nm_harga${z+1}`;
+                                                                                                let nama= i%2===0? `margin${z+1}_pack` : `margin${z+1}_karton`;
+                                                                                                containers.push(
+                                                                                                    <input type="number" placeholder={`margin ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                )
+                                                                                            }
+                                                                                            return containers;
+                                                                                        })()
+                                                                                    }
+
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 1 pack" className="form-control" name="margin1_pack" value={this.state.margin1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 1 karton" className="form-control" name="margin1_karton" value={this.state.margin1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 2 pack" className="form-control" name="margin2_pack" value={this.state.margin2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 2 karton" className="form-control" name="margin2_karton" value={this.state.margin2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 3 pack" className="form-control" name="margin3_pack" value={this.state.margin3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 3 karton" className="form-control" name="margin3_karton" value={this.state.margin3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 4 pack" className="form-control" name="margin4_pack" value={this.state.margin4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 4 karton" className="form-control" name="margin4_karton" value={this.state.margin4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
                                                                                 </div>
                                                                                 <div className="col-md-4">
-                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 1 pack" className="form-control" name="hrgjual1_pack" value={this.state.hrgjual1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 1 karton" className="form-control" name="hrgjual1_karton" value={this.state.hrgjual1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 2 pack" className="form-control" name="hrgjual2_pack" value={this.state.hrgjual2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 2 karton" className="form-control" name="hrgjual2_karton" value={this.state.hrgjual2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 3 pack" className="form-control" name="hrgjual3_pack" value={this.state.hrgjual3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 3 karton" className="form-control" name="hrgjual3_karton" value={this.state.hrgjual3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
-                                                                                    {i%2===0?(<input type="number" placeholder="hrg jual 4 pack" className="form-control" name="hrgjual4_pack" value={this.state.hrgjual4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 4 karton" className="form-control" name="hrgjual4_karton" value={this.state.hrgjual4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}
+                                                                                    {
+                                                                                        (()=>{
+                                                                                            let containers =[];
+                                                                                            for(let z=0; z<this.state.set_harga; z++){
+                                                                                                let place=`nm_harga${z+1}`;
+                                                                                                let nama= i%2===0? `hrgjual${z+1}_pack` : `hrgjual${z+1}_karton`;
+                                                                                                containers.push(
+                                                                                                    <input type="number" placeholder={`hrg jual ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                )
+
+                                                                                            }
+                                                                                            return containers;
+                                                                                        })()
+                                                                                    }
+
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 1 pack" className="form-control" name="hrgjual1_pack" value={this.state.hrgjual1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 1 karton" className="form-control" name="hrgjual1_karton" value={this.state.hrgjual1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 2 pack" className="form-control" name="hrgjual2_pack" value={this.state.hrgjual2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 2 karton" className="form-control" name="hrgjual2_karton" value={this.state.hrgjual2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 3 pack" className="form-control" name="hrgjual3_pack" value={this.state.hrgjual3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 3 karton" className="form-control" name="hrgjual3_karton" value={this.state.hrgjual3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 4 pack" className="form-control" name="hrgjual4_pack" value={this.state.hrgjual4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 4 karton" className="form-control" name="hrgjual4_karton" value={this.state.hrgjual4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
                                                                                 </div>
 
                                                                             </div>
@@ -1689,7 +1754,7 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-6">
                                                                                     <div className="row">
                                                                                         <div className="col-md-4">
-                                                                                            <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name="hrgBeliPACK" value={v[1].hrgBeliPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                         <div className="col-md-4">
                                                                                             <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
@@ -1809,6 +1874,8 @@ const mapStateToProps = (state) => {
         checkKodeBarang: state.siteReducer.check,
         checkBarcode1: state.siteReducer.check,
         isLoadingCheck: state.siteReducer.isLoading,
+        auth: state.auth
+
         // group:state.groupProductReducer.data
     }
 }

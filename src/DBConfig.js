@@ -18,6 +18,11 @@ export const DBConfig = {
                 { name: 'token',keypath:'token',options:{unique:false}},
                 { name: 'logo',keypath:'logo',options:{unique:false}},
                 { name: 'fav_icon',keypath:'fav_icon',options:{unique:false}},
+                { name: 'harga1',keypath:'harga1',options:{unique:false}},
+                { name: 'harga2',keypath:'harga2',options:{unique:false}},
+                { name: 'harga3',keypath:'harga3',options:{unique:false}},
+                { name: 'harga4',keypath:'harga4',options:{unique:false}},
+                { name: 'set_harga',keypath:'set_harga',options:{unique:false}},
             ]
         },
         {
