@@ -12,6 +12,10 @@ class Header extends Component {
     super(props);
     this.handleEcaps=this.handleEcaps.bind(this)
     this.handleMobileEcaps=this.handleMobileEcaps.bind(this)
+    this.handleToggleMobileNav=this.handleToggleMobileNav.bind(this)
+    this.state = {
+        toggleMobileNav:false
+    }
   }
   
   handleLogout = () => {
@@ -25,6 +29,11 @@ class Header extends Component {
   handleMobileEcaps=()=>{
       const bool = !this.props.triggerMobileEcaps;
       this.props.setMobileEcaps(bool);
+  }
+  handleToggleMobileNav=()=>{
+      this.setState({
+          toggleMobileNav:!this.state.toggleMobileNav
+      })
   }
   render() {
     return (
@@ -52,12 +61,12 @@ class Header extends Component {
 
           <div className="right-side-navbar d-flex align-items-center justify-content-end">
               {/* <!-- Mobile Trigger --> */}
-              <div className="right-side-trigger" id="rightSideTrigger">
+              <div className="right-side-trigger" id="rightSideTrigger" onClick={(e)=>{e.preventDefault();this.handleToggleMobileNav();}} >
                   <i className="ti-align-left"></i>
               </div>
 
               {/* <!-- Top Bar Nav --> */}
-              <ul className="right-side-content d-flex align-items-center">
+              <ul className={"right-side-content d-flex align-items-center " + (this.state.toggleMobileNav === true? "active":"")}>
                   {/* <!-- Full Screen Mode --> */}
                   <li className="full-screen-mode ml-1">
                       <a href="#" id="fullScreenMode" ><i className="zmdi zmdi-fullscreen" style={{'fontSize': 'xx-large'}}></i></a>

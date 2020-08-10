@@ -674,7 +674,7 @@ class Dashboard extends Component {
                                     <h4 className="card-title mt-3">STOCK</h4>
                                     <button type="button" onClick={(e)=>this.HandleStock(e)} className="btn btn-primary"><i className="fa fa-refresh"></i></button>
                                 </div>
-                                <div className="card-body" style={{height: '355px', overflowY: 'scroll'}}>
+                                <div className="card-body" style={{height: '355px', overflowY: 'auto'}}>
                                     {
                                         this.props.stock.length!==0?
                                         (

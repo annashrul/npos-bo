@@ -2,7 +2,6 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
-import animate from 'animate.css'
 
 class SideMenu extends Component {
     constructor(props){
