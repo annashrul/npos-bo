@@ -4,10 +4,6 @@ import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
-import {
-    createLocation,
-    updateLocation
-} from "redux/actions/masterdata/location/location.action";
 import {createCustomer, setCustomerEdit, updateCustomer} from "redux/actions/masterdata/customer/customer.action";
 import FileBase64 from "react-file-base64";
 import moment from 'moment';

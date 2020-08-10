@@ -681,7 +681,7 @@ class Dashboard extends Component {
                                                             <p className="mb-0">Stock {i.stock}</p>
                                                             </div>
                                                         </div>
-                                                        <a href="#" className={"download-link badge " + (i.stock<=0?' badge-danger ':' badge-primary ') + " badge-pill"} style={{padding:'8px'}}>{i.stock<=0?'Stock kosong':'Stock ada'}</a>
+                                                        <a href="about:blank" className={"download-link badge " + (i.stock<=0?' badge-danger ':' badge-primary ') + " badge-pill"} style={{padding:'8px'}}>{i.stock<=0?'Stock kosong':'Stock ada'}</a>
                                                     </div>
                                                 )
                                             })

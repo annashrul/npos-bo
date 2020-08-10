@@ -69,7 +69,7 @@ class Header extends Component {
               <ul className={"right-side-content d-flex align-items-center " + (this.state.toggleMobileNav === true? "active":"")}>
                   {/* <!-- Full Screen Mode --> */}
                   <li className="full-screen-mode ml-1">
-                      <a href="#" id="fullScreenMode" ><i className="zmdi zmdi-fullscreen" style={{'fontSize': 'xx-large'}}></i></a>
+                      <a href="about:blank" id="fullScreenMode" ><i className="zmdi zmdi-fullscreen" style={{'fontSize': 'xx-large'}}></i></a>
                   </li>
                   <li className="nav-item dropdown">
                       <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""></img> <span className="active-status"></span></button>
