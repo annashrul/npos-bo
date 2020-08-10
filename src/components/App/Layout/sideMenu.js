@@ -2,6 +2,7 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
+import animate from 'animate.css'
 
 class SideMenu extends Component {
     constructor(props){
@@ -89,43 +90,6 @@ class SideMenu extends Component {
                 isReportPembelian:false
             })
         }
-        // if(this.state.isReportInventory === true){
-        //     console.log("param A")
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         // isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // } else if(this.state.isReportPembelian === true) {
-        //     console.log("param B")
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         // isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // } else {
-        //     console.log("param C")
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // }
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({isSetting : !this.state.isSetting, isReport : false});
