@@ -901,7 +901,7 @@ class PurchaseOrder extends Component{
                                                 return (
                                                     <tr key={index}>
                                                         <td>
-                                                            <a href="#" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
+                                                            <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
                                                         </td>
                                                         <td>{item.nm_brg}</td>
                                                         <td>{item.barcode}</td>
@@ -936,8 +936,8 @@ class PurchaseOrder extends Component{
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                        <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                        <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                        <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                     </div>
                                 </div>
                             </div>

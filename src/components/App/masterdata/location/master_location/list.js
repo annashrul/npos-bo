@@ -92,7 +92,7 @@ class ListLocation extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>

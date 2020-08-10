@@ -5,7 +5,6 @@ import {stringifyFormData} from "../../../../helper";
 import connect from "react-redux/es/connect/connect";
 import {FetchCompany, storeCompany} from "../../../../redux/actions/setting/company/company.action";
 import Preloader from "../../../../Preloader";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 
 class Company extends Component{
     constructor(props) {
@@ -57,21 +56,27 @@ class Company extends Component{
     };
     componentWillMount(){
         this.props.dispatch(FetchCompany());
-        this.state.title=this.props.company.title;
+        this.setState({
+            title: this.props.company.title
+        })
     }
+
     componentWillReceiveProps(nextprops){
-        this.state.title=nextprops.company.title;
-        this.state.meta_key=nextprops.company.meta_key!==null?nextprops.company.meta_key:'-';
-        this.state.meta_deskripsi=nextprops.company.meta_descr;
-        this.state.web=nextprops.company.web;
-        this.state.logo=nextprops.company.logo;
-        this.state.fav_icon=nextprops.company.fav_icon;
-        this.state.splash=nextprops.company.splash;
-        this.state.set_harga=nextprops.company.set_harga;
-        this.state.nm_hrg1=nextprops.company.nm_hrg1;
-        this.state.nm_hrg2=nextprops.company.nm_hrg2;
-        this.state.nm_hrg3=nextprops.company.nm_hrg3;
-        this.state.nm_hrg4=nextprops.company.nm_hrg4;
+
+        this.setState({
+            title:nextprops.company.title,
+            meta_key:nextprops.company.meta_key!==null?nextprops.company.meta_key:'-',
+            meta_deskripsi:nextprops.company.meta_descr,
+            web:nextprops.company.web,
+            logo:nextprops.company.logo,
+            fav_icon:nextprops.company.fav_icon,
+            splash:nextprops.company.splash,
+            set_harga:nextprops.company.set_harga,
+            nm_hrg1:nextprops.company.nm_hrg1,
+            nm_hrg2:nextprops.company.nm_hrg2,
+            nm_hrg3:nextprops.company.nm_hrg3,
+            nm_hrg4:nextprops.company.nm_hrg4,
+        })
     }
     handleSubmit(e){
         e.preventDefault();
@@ -93,10 +98,7 @@ class Company extends Component{
         this.props.dispatch(storeCompany(parseData));
     }
     handleSelect = (e,index) => {
-        // console.log(e.target.value);
-        this.setState({selectedIndex: index}, () => {
-            // console.log('Selected tab: ' + this.state.selectedIndex);
-        });
+        this.setState({selectedIndex: index});
     };
 
     render(){

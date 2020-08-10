@@ -1030,7 +1030,7 @@ class Alokasi extends Component{
                                                     return (
                                                         <tr key={index} >
                                                             <td style={columnStyle}>
-                                                                <a href="#" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
+                                                                <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
                                                             </td>
                                                             <td style={columnStyle}>{item.nm_brg}</td>
                                                             <td style={columnStyle}>{item.barcode}</td>
@@ -1066,8 +1066,8 @@ class Alokasi extends Component{
                                     <div className='row'>
                                         <div className="col-md-7">
                                             <div className="dashboard-btn-group d-flex align-items-center">
-                                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                                <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                             </div>
                                         </div>
                                         <div className="col-md-5" style={{zoom:'70%'}}>

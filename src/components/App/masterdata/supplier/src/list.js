@@ -5,7 +5,6 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq, {statusQ} from "helper";
 import FormSupplier from "components/App/modals/masterdata/supplier/form_supplier";
 import Swal from "sweetalert2";
-import {deleteBank} from "redux/actions/masterdata/bank/bank.action";
 
 class ListSupplier extends Component{
     constructor(props){
@@ -17,7 +16,6 @@ class ListSupplier extends Component{
         }
     }
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         localStorage.setItem("page_customer",pageNumber);
         this.props.dispatch(FetchSupplier(pageNumber,''))
     }
@@ -57,7 +55,6 @@ class ListSupplier extends Component{
         }
     }
     handleDelete(e,id){
-        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -76,7 +73,7 @@ class ListSupplier extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -127,8 +124,8 @@ class ListSupplier extends Component{
                                                             Action
                                                         </button>
                                                         <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</a>
+                                                            <a className="dropdown-item" href="about:blank" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
+                                                            <a className="dropdown-item" href="about:blank" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>

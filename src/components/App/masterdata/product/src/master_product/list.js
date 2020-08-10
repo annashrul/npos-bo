@@ -5,7 +5,7 @@ import FormProduct from "components/App/modals/masterdata/product/form_product";
 import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import "jspdf-autotable";
-import {to_pdf, toRp} from "helper";
+import {to_pdf} from "helper";
 import {FetchLocation} from "redux/actions/masterdata/location/location.action";
 import {FetchProduct,deleteProduct} from "redux/actions/masterdata/product/product.action";
 import Paginationq from "helper";
@@ -292,7 +292,7 @@ class ListProduct extends Component{
     render(){
         const loc_delete = this.handleDelete;
         const loc_edit = this.handleEdit;
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {total,per_page,current_page,data} = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
         return (
             <div>
@@ -455,17 +455,6 @@ class ListProduct extends Component{
                                                             <button className="dropdown-item" type="button" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</button>
                                                         </div>
                                                     </div>
-                                                    {/*<div className="btn-group">*/}
-                                                    {/*<button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
-                                                    {/*Action*/}
-                                                    {/*</button>*/}
-                                                    {/*<div className="dropdown-menu">*/}
-                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>*/}
-                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>*/}
-                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>*/}
-                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>*/}
-                                                    {/*</div>*/}
-                                                    {/*</div>*/}
                                                 </td>
                                             </tr>
                                         )

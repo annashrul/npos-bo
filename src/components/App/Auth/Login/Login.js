@@ -123,7 +123,7 @@ class Login extends Component {
                             </button>
                         </div>
                         <div class="text-center w-full p-t-23">
-                            <a href="#" class="txt1">
+                            <a href="about:blank" class="txt1">
                             {/* Login ke backoffice. */}
                             </a>
                         </div>
