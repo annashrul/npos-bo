@@ -56,7 +56,7 @@ class Layout extends Component {
                 <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={Logo} alt="Desktop Logo" style={{maxHeight:'50px'}} /> <img className="small-logo" src="/favicon.png" alt="Mobile Logo" /></Link>
+                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo} alt="Desktop Logo" style={{maxHeight:'50px'}} /> <img className="small-logo" src={this.props.auth.user.fav_icon} alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="slimScrollDiv" style={{position: "relative", width: "auto", height: "100%"}}>

@@ -102,12 +102,12 @@ class Company extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
-            <Layout page="Company">
+            <Layout page="Pengaturan Umum">
                 <div className="card">
                     <form onSubmit={this.handleSubmit}>
 
                     <div className="card-header bg-transparent user-area d-flex align-items-center justify-content-between">
-                        <h4 className="card-title mt-3">PENGATURAN PERUSAHAAN</h4>
+                        <h4 className="card-title mt-3">PENGATURAN UMUM</h4>
                         <button className="btn btn-primary">SIMPAN</button>
                     </div>
                         {
