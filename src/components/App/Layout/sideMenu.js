@@ -2,7 +2,7 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
-import animate from 'animate.css'
+import animate from 'animate.css' //enable to activate animation for sidebar 
 
 class SideMenu extends Component {
     constructor(props){
