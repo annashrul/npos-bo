@@ -1453,8 +1453,8 @@ class FormProduct extends Component{
                                                             <td>
                                                                 <select name="satuan_jual" id="satuan_jual" className="form-control" value={this.state.barangSku[x].satuan_jual} defaultValue={this.state.barangSku[x].satuan_jual} onChange={(e)=>this.handleChange(e,x)}>
                                                                     <option value="">Pilih Opsi</option>
-                                                                    <option value="0">Tampilkan</option>
-                                                                    <option value="1">Sembunyikan</option>
+                                                                    <option value="1">Tampilkan</option>
+                                                                    <option value="0">Sembunyikan</option>
                                                                 </select>
                                                             </td>
                                                         </tr>

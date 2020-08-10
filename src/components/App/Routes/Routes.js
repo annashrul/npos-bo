@@ -22,6 +22,7 @@ import Alokasi from '../inventory/alokasi'
 import InventoryReport from '../report/inventory/stock'
 import AdjustmentReport from '../report/inventory/adjustment'
 import ApprovalMutasi from "../inventory/approval_mutasi";
+import ApprovalTranskasiMutasi from "../inventory/trx_mutasi/approval_mutasi_transaksi";
 import Opname from "../inventory/opname";
 import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
@@ -68,6 +69,7 @@ const Routes = (
             <PrivateRoute path="/sale" exact strict component={Sale} />
             <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
             <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
+            <PrivateRoute path="/approval_mutasi_transaksi" exact strict component={ApprovalTranskasiMutasi} />
             <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />
             <PrivateRoute path="/delivery_note" exact strict component={DeliveyNote} />
             <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
