@@ -90,7 +90,6 @@ class SideMenu extends Component {
                 isReportPembelian:false
             })
         }
-
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({isSetting : !this.state.isSetting, isReport : false});
@@ -122,7 +121,8 @@ class SideMenu extends Component {
                     isTrxMutasi:!this.state.isTrxMutasi,
                 })
             }
-        }else{
+        }
+        else{
             this.setState({
                 isSetting:false,
                 isMasterdata: false,
