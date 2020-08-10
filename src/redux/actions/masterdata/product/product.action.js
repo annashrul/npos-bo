@@ -95,13 +95,13 @@ export const createProduct = (data) => {
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
-                        type: 'success',
+                        icon: 'success',
                         text: data.msg,
                     });
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        icon: 'error',
                         text: data.msg,
                     });
                 }
@@ -114,7 +114,7 @@ export const createProduct = (data) => {
                 console.log(error);
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    icon: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

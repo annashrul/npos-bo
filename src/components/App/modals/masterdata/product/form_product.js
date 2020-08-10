@@ -65,8 +65,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPCS":false,
                     "hrgBeliPCS": 0,
-                    "margin1PCS":"","margin2PCS":"","margin3PCS":"","margin4PCS":"",
-                    "hrgJual1PCS":"","hrgJual2PCS":"","hrgJual3PCS":"","hrgJual4PCS":"",
+                    "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
+                    "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
                     "ppnPCS": 0,
                     "servicePCS":0
                 },
@@ -74,8 +74,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPACK":false,
                     "hrgBeliPACK":0,
-                    "margin1PACK":"","margin2PACK":"","margin3PACK":"","margin4PACK":"",
-                    "hrgJual1PACK":"","hrgJual2PACK":"","hrgJual3PACK":"","hrgJual4PACK":"",
+                    "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
+                    "hrgJual1PACK":"0","hrgJual2PACK":"","hrgJual3PACK":"0","hrgJual4PACK":"0",
                     "ppnPACK": 0,
                     "servicePACK":0
                 },
@@ -83,8 +83,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedKARTON":false,
                     "hrgBeliKARTON":0,
-                    "margin1KARTON":"","margin2KARTON":"","margin3KARTON":"","margin4KARTON":"",
-                    "hrgJual1KARTON":"","hrgJual2KARTON":"","hrgJual3KARTON":"","hrgJual4KARTON":"",
+                    "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
+                    "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
                     "ppnKARTON":0,
                     "serviceKARTON":0
                 }
@@ -94,8 +94,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPCS":false,
                     "hrgBeliPCS": 0,
-                    "margin1PCS":"","margin2PCS":"","margin3PCS":"","margin4PCS":"",
-                    "hrgJual1PCS":"","hrgJual2PCS":"","hrgJual3PCS":"","hrgJual4PCS":"",
+                    "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
+                    "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
                     "ppnPCS": 0,
                     "servicePCS":0
                 },
@@ -103,8 +103,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedPACK":false,
                     "hrgBeliPACK":0,
-                    "margin1PACK":"","margin2PACK":"","margin3PACK":"","margin4PACK":"",
-                    "hrgJual1PACK":"","hrgJual2PACK":"","hrgJual3PACK":"","hrgJual4PACK":"",
+                    "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
+                    "hrgJual1PACK":"0","hrgJual2PACK":"0","hrgJual3PACK":"0","hrgJual4PACK":"0",
                     "ppnPACK": 0,
                     "servicePACK":0
                 },
@@ -112,8 +112,8 @@ class FormProduct extends Component{
                     "nama_toko":"","lokasi":"",
                     "isCheckedKARTON":false,
                     "hrgBeliKARTON":0,
-                    "margin1KARTON":"","margin2KARTON":"","margin3KARTON":"","margin4KARTON":"",
-                    "hrgJual1KARTON":"","hrgJual2KARTON":"","hrgJual3KARTON":"","hrgJual4KARTON":"",
+                    "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
+                    "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
                     "ppnKARTON":0,
                     "serviceKARTON":0
                 }
@@ -127,23 +127,23 @@ class FormProduct extends Component{
             KARTON: false,
             check: [],
             hrg_beli: '0', hrg_beli_pack: '0', hrg_beli_karton: '0',
-            margin1: '', margin2: '', margin3: '', margin4: '',
-            margin1_pack: '', margin2_pack: '', margin3_pack: '', margin4_pack: '',
-            margin1_karton: '', margin2_karton: '', margin3_karton: '', margin4_karton: '',
-            hrgjual1:'', hrgjual2: '', hrgjual3: '', hrgjual4: '',
-            hrgjual1_pack: '', hrgjual2_pack: '', hrgjual3_pack: '', hrgjual4_pack: '',
-            hrgjual1_karton: '', hrgjual2_karton: '', hrgjual3_karton: '', hrgjual4_karton: '',
+            margin1: '0', margin2: '0', margin3: '0', margin4: '0',
+            margin1_pack: '0', margin2_pack: '0', margin3_pack: '0', margin4_pack: '0',
+            margin1_karton: '0', margin2_karton: '0', margin3_karton: '0', margin4_karton: '0',
+            hrgjual1:'0', hrgjual2: '0', hrgjual3: '0', hrgjual4: '0',
+            hrgjual1_pack: '0', hrgjual2_pack: '0', hrgjual3_pack: '0', hrgjual4_pack: '0',
+            hrgjual1_karton: '0', hrgjual2_karton: '0', hrgjual3_karton: '0', hrgjual4_karton: '0',
             service: '0', service_pack: '0', service_karton: '0',
             ppn: '0', ppn_pack: '0', ppn_karton: '0',
 
             hrgBeliPACK: 0,
-            margin1PACK: '', margin2PACK: '', margin3PACK: '', margin4PACK: '',
-            hrgJual1PACK: '', hrgJual2PACK: '', hrgJual3PACK: '', hrgJual4PACK: '',
+            margin1PACK: '0', margin2PACK: '0', margin3PACK: '0', margin4PACK: '0',
+            hrgJual1PACK: '0', hrgJual2PACK: '0', hrgJual3PACK: '0', hrgJual4PACK: '0',
             servicePACK: 0, ppnPACK: 0,
 
             hrgBeliKARTON: 0,
-            margin1KARTON: '', margin2KARTON: '', margin3KARTON: '', margin4KARTON: '',
-            hrgJual1KARTON: '', hrgJual2KARTON: '', hrgJual3KARTON: '', hrgJual4KARTON: '',
+            margin1KARTON: '0', margin2KARTON: '0', margin3KARTON: '0', margin4KARTON: '0',
+            hrgJual1KARTON: '0', hrgJual2KARTON: '0', hrgJual3KARTON: '0', hrgJual4KARTON: '0',
             serviceKARTON: 0, ppnKARTON: 0,
             purchasePrice: {},
             generateCode:false,
@@ -190,7 +190,7 @@ class FormProduct extends Component{
             nm_harga3:param.auth.user.harga3,
             nm_harga4:param.auth.user.harga4,
             set_harga:param.auth.user.set_harga,
-        })
+        });
         this.state.codeServer = param.productCode;
         if(param.dataEdit !== undefined && param.dataEdit !== []){
             let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
@@ -487,16 +487,15 @@ class FormProduct extends Component{
             if(event.target.value === '0'){
                 let brgSku = [];
                 for(let i=0;i<3;i++){
-                    brgSku.push({"barcode":"0","qty":"0","konversi":"0","satuan_jual":"0"})
+                    let brcd=i===0?`${this.state.kd_brg}01`:(i===1?`${this.state.kd_brg}02`:`${this.state.kd_brg}03`);
+                    brgSku.push({"barcode":brcd,"qty":"0","konversi":"0","satuan_jual":"0"})
                 }
                 this.setState({barangSku: brgSku});
-                // this.state.barangSku.push({[event.target.name]:event.target.value});
             }
             else{
-                // localStorage.setItem("colBrgSku","1");
                 let brgSku = [];
                 for(let i=0;i<1;i++){
-                    brgSku.push({"barcode":"0","qty":"0","konversi":"0","satuan_jual":"0"})
+                    brgSku.push({"barcode":`${this.state.kd_brg}01`,"qty":"0","konversi":"0","satuan_jual":"0"})
                 }
                 this.setState({barangSku: brgSku});
             }
@@ -611,8 +610,7 @@ class FormProduct extends Component{
         }
     }
     handleSelect = (index) => {
-        // let err = this.state.error;
-        // console.log(this.props.checkKodeBarang);
+        let err = this.state.error;
         // if(this.props.checkKodeBarang!==false){
         //     this.setState({
         //         kd_brg:"0"
@@ -697,8 +695,6 @@ class FormProduct extends Component{
         // if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
         //     return;
         // }
-
-
 
         this.setState({selectedIndex: index}, () => {});
 
@@ -903,7 +899,6 @@ class FormProduct extends Component{
         });
     };
     handleAllCheckedSku(event,i,lbl){
-        console.log("handleAllCheckedSku",lbl);
         if(lbl === 'PACK'){
             event.target.checked===true?localStorage.setItem("isReadonlySamaPack","true"):localStorage.setItem("isReadonlySamaPack","false");
             event.target.checked===true?localStorage.setItem("isReadonlyPack","true"):localStorage.setItem("isReadonlyPack","false");
@@ -1138,10 +1133,12 @@ class FormProduct extends Component{
         e.preventDefault();
         let parseData = {};
         let barangSku = [];let barangHrg=[];let barcode=[];
+        console.log(this.state.barangSku);
         for(let i=0;i<this.state.barangSku.length;i++){
+            let satuan=(i===0)?"Pcs":(i===1?"Pack":"Karton");
             barangSku.push({
                 "barcode":this.state.barangSku[i].barcode,
-                "satuan":this.state.barangSku[i].qty,
+                "satuan":satuan,
                 "qty_konversi":this.state.barangSku[i].konversi,
                 "satuan_jual":this.state.barangSku[i].satuan_jual,
             });
@@ -1230,10 +1227,7 @@ class FormProduct extends Component{
         const dataSupplier = this.props.dataSupplier.data;
         const dataSubDep = this.props.dataSubDept.data;
         return (
-            <WrapperModal className="custom-map-modal" isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg" style={{
-                maxWidth: '1600px', width: '100%'
-
-            }}>
+            <WrapperModal className="custom-map-modal" isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg">
                 <ModalHeader toggle={this.toggle}>
                     {this.props.dataEdit===undefined?"Add Product":"Update Product"}
                 </ModalHeader>
@@ -1459,8 +1453,8 @@ class FormProduct extends Component{
                                                             <td>
                                                                 <select name="satuan_jual" id="satuan_jual" className="form-control" value={this.state.barangSku[x].satuan_jual} defaultValue={this.state.barangSku[x].satuan_jual} onChange={(e)=>this.handleChange(e,x)}>
                                                                     <option value="">Pilih Opsi</option>
-                                                                    <option value="0">Tampilkan</option>
-                                                                    <option value="1">Sembunyikan</option>
+                                                                    <option value="1">Tampilkan</option>
+                                                                    <option value="0">Sembunyikan</option>
                                                                 </select>
                                                             </td>
                                                         </tr>

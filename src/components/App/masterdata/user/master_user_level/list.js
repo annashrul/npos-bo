@@ -48,7 +48,6 @@ class ListUserLevel extends Component{
 
     }
     handleDelete(e, id) {
-        console.log(id);
         let any = localStorage.getItem('any_user_level');
         e.preventDefault();
         Swal.fire({
@@ -108,8 +107,8 @@ class ListUserLevel extends Component{
                                                                <button style={{marginTop:"-5px"}} className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
                                                                <div className="dropdown-menu dropdown-menu-right"
                                                                     aria-labelledby="dashboardDropdown50">
-                                                                   <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,i)}><i className="ti-pencil-alt"></i> Edit</a>
-                                                                   <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</a>
+                                                                   <a className="dropdown-item" href="!#" onClick={(e)=>this.toggleModal(e,i)}><i className="ti-pencil-alt"></i> Edit</a>
+                                                                   <a className="dropdown-item" href="!#" onClick={(e)=>handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</a>
                                                                </div>
                                                            </div>
                                                        </div>

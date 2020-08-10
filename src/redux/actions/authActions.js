@@ -57,9 +57,9 @@ export const loginUser = (userData) =>
             },800)
 
         }).catch(err =>{
-            // console.log();
+            console.log(err.message);
             Swal.close() 
-            if (!err.status) {
+            if (err.message === 'Network Error') {
                  Swal.fire(
                      'Something wrong.',
                      'No connection to server.',
