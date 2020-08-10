@@ -611,91 +611,90 @@ class FormProduct extends Component{
     }
     handleSelect = (index) => {
         let err = this.state.error;
-        console.log(this.props.checkKodeBarang);
-        if(this.props.checkKodeBarang!==false){
-            this.setState({
-                kd_brg:"0"
-            });
-            return;
-        }
-        if(this.state.kd_brg===''||this.state.kd_brg===undefined){
-            err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
-            this.setState({error: err});
-            console.log(this.props.checkKodeBarang);
-            return;
-        }
-        if(this.state.nm_brg===''||this.state.nm_brg===undefined){
-            err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.kel_brg===''||this.state.kel_brg===undefined){
-            err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.stock_min===''||this.state.stock_min===undefined){
-            err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.group1===''||this.state.group1===undefined){
-            err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.group2===''||this.state.group2===undefined){
-            err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.deskripsi===''||this.state.deskripsi===undefined){
-            err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.jenis===''||this.state.jenis===undefined){
-            err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.kcp===''||this.state.kcp===undefined){
-            err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.poin===''||this.state.poin===undefined){
-            err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.online===''||this.state.online===undefined){
-            err = Object.assign({}, err, {online:"online tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(this.state.berat===''||this.state.berat===undefined){
-            err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }
-        if(index===2){
-            for(let i=0;i<this.state.barangSku.length;i++){
-                if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
-                    alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
-                    return;
-                }
-                if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
-                    alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
-                    return;
-                }
-
-            }
-        }
-
-        if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
-            return;
-        }
+        // if(this.props.checkKodeBarang!==false){
+        //     this.setState({
+        //         kd_brg:"0"
+        //     });
+        //     return;
+        // }
+        // if(this.state.kd_brg===''||this.state.kd_brg===undefined){
+        //     err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     console.log(this.props.checkKodeBarang);
+        //     return;
+        // }
+        // if(this.state.nm_brg===''||this.state.nm_brg===undefined){
+        //     err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.kel_brg===''||this.state.kel_brg===undefined){
+        //     err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.stock_min===''||this.state.stock_min===undefined){
+        //     err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.group1===''||this.state.group1===undefined){
+        //     err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.group2===''||this.state.group2===undefined){
+        //     err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.deskripsi===''||this.state.deskripsi===undefined){
+        //     err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.jenis===''||this.state.jenis===undefined){
+        //     err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.kcp===''||this.state.kcp===undefined){
+        //     err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.poin===''||this.state.poin===undefined){
+        //     err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.online===''||this.state.online===undefined){
+        //     err = Object.assign({}, err, {online:"online tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(this.state.berat===''||this.state.berat===undefined){
+        //     err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
+        //     this.setState({error: err});
+        //     return;
+        // }
+        // if(index===2){
+        //     for(let i=0;i<this.state.barangSku.length;i++){
+        //         if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
+        //             alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
+        //             return;
+        //         }
+        //         if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
+        //             alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
+        //             return;
+        //         }
+        //
+        //     }
+        // }
+        //
+        // if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
+        //     return;
+        // }
 
         this.setState({selectedIndex: index}, () => {});
 
@@ -1134,10 +1133,12 @@ class FormProduct extends Component{
         e.preventDefault();
         let parseData = {};
         let barangSku = [];let barangHrg=[];let barcode=[];
+        console.log(this.state.barangSku);
         for(let i=0;i<this.state.barangSku.length;i++){
+            let satuan=(i===0)?"Pcs":(i===1?"Pack":"Karton");
             barangSku.push({
                 "barcode":this.state.barangSku[i].barcode,
-                "satuan":this.state.barangSku[i].qty,
+                "satuan":satuan,
                 "qty_konversi":this.state.barangSku[i].konversi,
                 "satuan_jual":this.state.barangSku[i].satuan_jual,
             });

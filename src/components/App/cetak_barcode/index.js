@@ -496,7 +496,7 @@ class CetakBarcode extends Component{
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-12">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Lokasi
