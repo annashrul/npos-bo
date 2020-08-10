@@ -148,7 +148,7 @@ class CetakBarcode extends Component{
             barcode:item.barcode,
             title:item.title,
             harga_jual:item.harga_jual,
-            qty:parseInt(item.qty)+1,
+            qty:0,
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
@@ -360,13 +360,14 @@ class CetakBarcode extends Component{
     }
     autoSetQty(kode,data){
         const cek = cekData('barcode', kode, table);
+        console.log(data);
         return cek.then(res => {
             if (res == undefined) {
                 store(table, {
                     barcode:data[0].barcode,
-                    title:data[0].title,
-                    harga_jual:data[0].harga_jual,
-                    qty:data[0].qty,
+                    title:data[0].nm_brg,
+                    harga_jual:data[0].harga,
+                    qty:0,
                 })
             } else {
                 update(table, {
@@ -537,7 +538,7 @@ class CetakBarcode extends Component{
                                                         return (
                                                             <tr key={index}>
                                                                 <td style={columnStyle}>
-                                                                    <a href="#" className='btn btn-danger btn-sm'
+                                                                    <a href="about:blank" className='btn btn-danger btn-sm'
                                                                        onClick={(e) => this.HandleRemove(e, item.id)}><i
                                                                         className='fa fa-trash'/></a>
                                                                 </td>
@@ -559,8 +560,8 @@ class CetakBarcode extends Component{
                                 </div>
                                 <div className="card-header">
                                     <div className="dashboard-btn-group d-flex align-items-center">
-                                        <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                        <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                        <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                        <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                     </div>
                                 </div>
                             </div>

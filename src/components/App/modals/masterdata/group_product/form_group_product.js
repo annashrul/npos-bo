@@ -5,10 +5,6 @@ import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
 import {
-    createLocationCategory,
-    updateLocationCategory
-} from "redux/actions/masterdata/location_category/location_category.action";
-import {
     createGroupProduct,
     updateGroupProduct
 } from "redux/actions/masterdata/group_product/group_product.action";

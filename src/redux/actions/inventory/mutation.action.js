@@ -32,7 +32,7 @@ export function setApprovalMutationFailed(data = []) {
     }
 }
 
-export const FetchApprovalMutation = (page = 1,q='',lokasi='') => {
+export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
     return (dispatch) => {
         dispatch(setLoadingApprovalMutation(true));
         let url=`mutasi?page=${page}`;
@@ -44,11 +44,13 @@ export const FetchApprovalMutation = (page = 1,q='',lokasi='') => {
             if(url!==''){url+='&';}
             url+=`lokasi=${lokasi}`;
         }
-        console.log(url);
+        if(param!==''){
+            if(url!==''){url+='&';}
+            url+=`type=${param}`;
+        }
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data;
-                console.log("DATA APPROVAL MUTATION",data);
                 dispatch(setApprovalMutation(data));
                 dispatch(setLoadingApprovalMutation(false));
             })
@@ -67,7 +69,6 @@ export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data;
-                console.log("DATA APPROVAL MUTATION DETAIL",data);
                 dispatch(setApprovalMutationDetail(data));
                 dispatch(setLoadingApprovalMutation(false));
             })
@@ -86,7 +87,6 @@ export const saveApprovalMutation = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("STATUS APPROVAL",data.status);
                 if (data.status === 'success') {
                     Toast.fire({
                         icon: 'success',

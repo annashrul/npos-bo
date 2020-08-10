@@ -876,13 +876,13 @@ class Alokasi extends Component{
                                                                 onChange={(e=>this.HandleCommonInputChange(e))}
                                                                 value="Tunai"
                                                                 className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Tunai'}
+                                                                checked={this.state.jenis_trx==='Alokasi'}
                                                             />
                                                             <label
                                                                 className="custom-control-label"
                                                                 htmlFor="customRadio1"
                                                             >
-                                                                Tunai
+                                                                Alokasi
                                                             </label>
                                                         </div>
                                                     </div>
@@ -895,14 +895,14 @@ class Alokasi extends Component{
                                                                 onChange={(e=>this.HandleCommonInputChange(e))}
                                                                 value="Kredit"
                                                                 className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Kredit'}
+                                                                checked={this.state.jenis_trx==='Mutasi'}
 
                                                             />
                                                             <label
                                                                 className="custom-control-label"
                                                                 htmlFor="customRadio2"
                                                             >
-                                                                Kredit
+                                                                Mutasi
                                                             </label>
                                                         </div>
                                                     </div>
@@ -915,14 +915,14 @@ class Alokasi extends Component{
                                                                 onChange={(e=>this.HandleCommonInputChange(e))}
                                                                 value="Konsinyasi"
                                                                 className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Konsinyasi'}
+                                                                checked={this.state.jenis_trx==='Transaksi'}
 
                                                             />
                                                             <label
                                                                 className="custom-control-label"
                                                                 htmlFor="customRadio3"
                                                             >
-                                                                Konsinyasi
+                                                                Transaksi
                                                             </label>
                                                         </div>
                                                     </div>
@@ -1030,7 +1030,7 @@ class Alokasi extends Component{
                                                     return (
                                                         <tr key={index} >
                                                             <td style={columnStyle}>
-                                                                <a href="#" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
+                                                                <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
                                                             </td>
                                                             <td style={columnStyle}>{item.nm_brg}</td>
                                                             <td style={columnStyle}>{item.barcode}</td>
@@ -1066,8 +1066,8 @@ class Alokasi extends Component{
                                     <div className='row'>
                                         <div className="col-md-7">
                                             <div className="dashboard-btn-group d-flex align-items-center">
-                                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                                <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                             </div>
                                         </div>
                                         <div className="col-md-5" style={{zoom:'70%'}}>

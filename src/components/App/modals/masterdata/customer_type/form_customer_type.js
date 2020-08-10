@@ -5,10 +5,6 @@ import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
 import {
-    createLocationCategory,
-    updateLocationCategory
-} from "redux/actions/masterdata/location_category/location_category.action";
-import {
     createCustomerType,
     updateCustomerType
 } from "redux/actions/masterdata/customer_type/customer_type.action";
@@ -22,7 +18,6 @@ class FormCustomerType extends Component{
         };
     }
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== [] && nextProps.detail !== undefined) {
             this.setState({
                 kode: nextProps.detail.kode,
@@ -51,7 +46,6 @@ class FormCustomerType extends Component{
         const form = e.target;
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
-        // parseData['kode'] = this.state.kode;
         parseData['nama'] = this.state.nama;
         if (this.props.detail !== undefined) {
             this.props.dispatch(updateCustomerType(this.props.detail.kode,parseData));
@@ -60,8 +54,6 @@ class FormCustomerType extends Component{
             this.props.dispatch(createCustomerType(parseData));
             this.props.dispatch(ModalToggle(false));
         }
-        console.log(parseData)
-
     }
 
     render(){

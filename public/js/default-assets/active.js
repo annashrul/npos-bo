@@ -289,7 +289,7 @@
     });
 
     // :: PreventDefault a Click
-    $('a[href="#"]').on("click", function ($) {
+    $('a[href="about:blank"]').on("click", function ($) {
         $.preventDefault();
     });
 
