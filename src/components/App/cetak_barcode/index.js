@@ -148,7 +148,7 @@ class CetakBarcode extends Component{
             barcode:item.barcode,
             title:item.title,
             harga_jual:item.harga_jual,
-            qty:parseInt(item.qty)+1,
+            qty:0,
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
@@ -360,13 +360,14 @@ class CetakBarcode extends Component{
     }
     autoSetQty(kode,data){
         const cek = cekData('barcode', kode, table);
+        console.log(data);
         return cek.then(res => {
             if (res == undefined) {
                 store(table, {
                     barcode:data[0].barcode,
-                    title:data[0].title,
-                    harga_jual:data[0].harga_jual,
-                    qty:data[0].qty,
+                    title:data[0].nm_brg,
+                    harga_jual:data[0].harga,
+                    qty:0,
                 })
             } else {
                 update(table, {

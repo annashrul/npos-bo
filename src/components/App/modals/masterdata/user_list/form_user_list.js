@@ -1,13 +1,11 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
-// import {ModalToggle} from "../../../../actions/modal.action";
 import {
     ModalHeader,
     ModalBody,
     ModalFooter,
 } from 'reactstrap';
-// import FileBase64 from "react-file-base64";
 import Select from 'react-select';
 import {stringifyFormData} from "helper";
 import {sendUserList, setUserListEdit, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
@@ -23,24 +21,19 @@ class FormUserList extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state={
             show:false,
-            nama:"",
-            username:"",
-            password:"",
-            password_confirmation:"",
-            password_otorisasi:"",
-            email:"",
-            alamat:"",
-            tgl_lahir:"",
-            foto:"",
-            nohp:"",
-            lokasi:"",
-            user_lvl:"0",
-            status:"1",
+            nama:"", username:"", password:"", password_confirmation:"", password_otorisasi:"",
+            email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",
+            user_lvl:"0", status:"1",
             selectedOption: [],
             isChecked: true,
             opt : [],
             opt1:[],
-            token:''
+            token:'',
+            error:{
+                nama:"", username:"", password:"", password_confirmation:"", password_otorisasi:"",
+                email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",
+                user_lvl:"0", status:"1",
+            }
         }
 
     }
@@ -61,6 +54,12 @@ class FormUserList extends Component{
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
+        let err = Object.assign({}, this.state.error, {
+            [event.target.name]: ""
+        });
+        this.setState({
+            error: err
+        });
     }
 
     toggleChange = (e) => {
@@ -104,35 +103,45 @@ class FormUserList extends Component{
     }
     handleSubmit(e){
         e.preventDefault();
-        const form = e.target;
-        let data = new FormData(form);
-        let parseData = stringifyFormData(data);
-        let lok = [];
-        for(let i=0;i<this.state.selectedOption.length;i++){
-            lok.push({"kode":this.state.selectedOption[i].value});
-        }
-        parseData['username']=this.state.username;
-        parseData['user_lvl']=this.state.user_lvl;
-        parseData['lokasi']=lok;
-        parseData['status']=this.state.status;
-        parseData['nama']=this.state.nama;
-        parseData['alamat']=this.state.alamat;
-        parseData['email']=this.state.email;
-        parseData['nohp']=this.state.nohp;
-        parseData['tgl_lahir']=this.state.tgl_lahir;
-        parseData['password']= parseInt(this.state.password.length) > 0 ? this.state.password : '-';
-        parseData['password_confirmation']= parseInt(this.state.password_confirmation.length) > 0 ? this.state.password_confirmation : '-';
-        parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length) > 0 ? this.state.password_otorisasi : '-';
-        if(this.state.foto.base64!==undefined){
-            parseData['foto']=this.state.foto.base64;
-        }
-        if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
-            this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData));
+        let err = this.state.error;
+        if (this.state.nama === "" || this.state.nama === undefined) {
+            err = Object.assign({}, err, {
+                nama: "nama tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
         }else{
-            this.props.dispatch(sendUserList(parseData));
+            const form = e.target;
+            let data = new FormData(form);
+            let parseData = stringifyFormData(data);
+            let lok = [];
+            for(let i=0;i<this.state.selectedOption.length;i++){
+                lok.push({"kode":this.state.selectedOption[i].value});
+            }
+            parseData['username']=this.state.username;
+            parseData['user_lvl']=this.state.user_lvl;
+            parseData['lokasi']=lok;
+            parseData['status']=this.state.status;
+            parseData['nama']=this.state.nama;
+            parseData['alamat']=this.state.alamat;
+            parseData['email']=this.state.email;
+            parseData['nohp']=this.state.nohp;
+            parseData['tgl_lahir']=this.state.tgl_lahir;
+            parseData['password']= parseInt(this.state.password.length) > 0 ? this.state.password : '-';
+            parseData['password_confirmation']= parseInt(this.state.password_confirmation.length) > 0 ? this.state.password_confirmation : '-';
+            parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length) > 0 ? this.state.password_otorisasi : '-';
+            if(this.state.foto.base64!==undefined){
+                parseData['foto']=this.state.foto.base64;
+            }
+            if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
+                this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData));
+            }else{
+                this.props.dispatch(sendUserList(parseData));
+            }
         }
 
-        console.log(parseData);
+
     }
     getFiles(files) {
         this.setState({
@@ -197,6 +206,7 @@ class FormUserList extends Component{
                                 <div className="form-group">
                                     <label>Name</label>
                                     <input type="text" className="form-control" name="nama" value={this.state.nama}  onChange={this.handleChange} />
+                                    <div className="invalid-feedback" style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.nama}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Username</label>
