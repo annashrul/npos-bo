@@ -36,6 +36,42 @@ export const FetchPostingOpname = (page=1,where='')=>{
         })
     }
 }
+export const FetchOpname = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`opname/report?page=${page}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchOpname",data);
+                dispatch(setOpname(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+// export const FetchOpnameData = (nota) => {
+//     return (dispatch) => {
+//         dispatch(setLoading(true));
+//         axios.get(HEADERS.URL + `deliverynote/ambil_data/${nota}`)
+//             .then(function (response) {
+//                 const data = response.data
+//                 dispatch(setDnData(data))
+//                 dispatch(setLoading(false));
+//             })
+//             .catch(function (error) {
+//                 // handle error
+//                 console.log(error);
+//             })
+
+//     }
+// }
 
 
 export const storeOpname = (data) => {

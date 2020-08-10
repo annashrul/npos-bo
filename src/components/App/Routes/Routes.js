@@ -27,6 +27,8 @@ import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
+import DnReport from '../report/inventory/dn'
+import OpnameReport from '../report/inventory/opname'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import Sale from '../sale/product_sale'
@@ -75,6 +77,8 @@ const Routes = (
             <PrivateRoute path="/po_report" exact strict component={PoReport} />
             <PrivateRoute path="/receive_report" exact strict component={ReceiveReport} />
             <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
+            <PrivateRoute path="/report/dn_report" exact strict component={DnReport} />
+            <PrivateRoute path="/report/opname_report" exact strict component={OpnameReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />

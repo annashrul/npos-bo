@@ -3,11 +3,19 @@ import {OPNAME} from "../../../actions/_constants";
 const initialState = {
     isLoading:true,
     status:"",msg:"",total_opname:{total_fisik:0,total_akhir:0,total_hpp:0,},
-    data:[]
+    data:[],
+    report:[]
 };
 
 export const opnameReducer = (state=initialState,action) => {
     switch (action.type) {
+        case OPNAME.SUCCESS:
+            console.log("opnameReducer", action.data.result)
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                report:action.data.result
+            });
         case OPNAME.DATA_POSTING:
             return Object.assign({}, state,{
                 status:action.data.status,

@@ -161,6 +161,7 @@ class SideMenu extends Component {
             path==='/cash' ||
             path==='/customer' ||
             path==='/product' ||
+            path==='/promo' ||
             path==='/bank'){
             console.log("didmount",path)
             this.setState({
@@ -195,6 +196,8 @@ class SideMenu extends Component {
             path==='/inventory_report'|| 
             path==='/adjustment_report'|| 
             path==='/alokasi_report' ||
+            path==='/report/dn_report' ||
+            path==='/report/opname_report' ||
 
             path==='/po_report'||
             path==='/receive_report'
@@ -203,7 +206,12 @@ class SideMenu extends Component {
             this.setState({
                 isReport:true
             })
-            if(path==='/inventory_report'|| path==='/adjustment_report'|| path==='/alokasi_report'){
+            if(
+                path==='/inventory_report'|| 
+                path==='/adjustment_report'|| 
+                path==='/alokasi_report' || 
+                path==='/report/opname_report' || 
+                path==='/report/dn_report'){
                console.log("didmount",path)
                this.setState({
                    isReportInventory:true
@@ -292,6 +300,7 @@ class SideMenu extends Component {
                         path==='/cash' ||
                         path==='/customer' ||
                         path==='/product' ||
+                        path==='/promo' ||
                         path==='/bank'
                             ?" active menu-open" : "")
                     }>
@@ -349,13 +358,6 @@ class SideMenu extends Component {
                         path==='/report_cash'|| 
                         path==='/closing'|| 
                         path==='/sale_archive' 
-
-                        // path==='/inventory_report'|| 
-                        // path==='/adjustment_report'|| 
-                        // path==='/alokasi_report' ||
-
-                        // path==='/po_report'||
-                        // path==='/receive_report'
                         ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReport===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true
@@ -363,13 +365,19 @@ class SideMenu extends Component {
                             <li className={path==='/closing'?"active":''}><Link to="/closing" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Closing</Link></li>
                             <li className={path==='/report_cash'?"active":''}><Link to="/report_cash" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Kas</Link></li>
                             <li className={path==='/sale_archive'?"active":''}><Link to="/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Arsip Penjualan</Link></li>
-                            <li className={"treeview" + (this.state.isReportInventory===true || path==='/inventory_report'|| path==='/adjustment_report'|| path==='/alokasi_report'?" active menu-open" : "")}>
+                            <li className={"treeview" + (this.state.isReportInventory===true || 
+                                path==='/inventory_report'|| path==='/adjustment_report'|| 
+                                path==='/alokasi_report'||
+                                path==='/report/opname_report'||
+                                path==='/report/dn_report'?" active menu-open" : "")}>
                                 <a href="#" onClick={(e) => this.changeMenu('report_inventory')}>Inventory <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportInventory===true
                         ?"block" : "none"}}>
                                     <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Stock</Link></li>
                                     <li className={path==='/adjustment_report'?"active":''}><Link to="/adjustment_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Adjustment</Link></li>
                                     <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Alokasi</Link></li>
+                                    <li className={path==='/report/dn_report'?"active":''}><Link to="/report/dn_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Delivery Note</Link></li>
+                                    <li className={path==='/report/opname_report'?"active":''}><Link to="/report/opname_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Opname</Link></li>
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isReportPembelian===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
