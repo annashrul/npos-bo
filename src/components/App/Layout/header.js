@@ -3,10 +3,15 @@ import {connect} from 'react-redux'
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
 import {setEcaps} from 'redux/actions/site.action'
+import {setMobileEcaps} from 'redux/actions/site.action'
+import Logo from "../../../assets/images/logo.png"
+import { Link } from 'react-router-dom';
+import isMobile from 'react-device-detect';
 class Header extends Component {
   constructor(props) {
     super(props);
     this.handleEcaps=this.handleEcaps.bind(this)
+    this.handleMobileEcaps=this.handleMobileEcaps.bind(this)
   }
   
   handleLogout = () => {
@@ -17,17 +22,25 @@ class Header extends Component {
       const bool = !this.props.triggerEcaps;
       this.props.setEcaps(bool);
   }
+  handleMobileEcaps=()=>{
+      const bool = !this.props.triggerMobileEcaps;
+      this.props.setMobileEcaps(bool);
+  }
   render() {
     return (
       // <!-- Top Header Area -->
-      <header className="top-header-area d-flex align-items-center justify-content-between">
+      <header className="top-header-area d-flex align-items-center justify-content-between" style={{backgroundColor:(!isMobile?'':'#242939')}} >
           <div className="left-side-content-area d-flex align-items-center">
+              {/* Mobile Logo */}
+                <div class="mobile-logo mr-3 mr-sm-4">
+                    <Link to={'./'} ><img src="/favicon.png" alt="Mobile Logo"></img></Link>
+                </div>
               {/* <!-- Triggers --> */}
               <div className="ecaps-triggers mr-1 mr-sm-3">
                   <div className="menu-collasped" id="menuCollasped" onClick={(e)=>{e.preventDefault();this.handleEcaps();}}>
                       <i className="zmdi zmdi-menu"></i>
                   </div>
-                  <div className="mobile-menu-open" id="mobileMenuOpen">
+                  <div className="mobile-menu-open" id="mobileMenuOpen" onClick={(e)=>{e.preventDefault();this.handleMobileEcaps();}}>
                       <i className="zmdi zmdi-menu"></i>
                   </div>
               </div>
@@ -80,15 +93,18 @@ class Header extends Component {
 Header.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   setEcaps: PropTypes.func.isRequired,
+  setMobileEcaps: PropTypes.func.isRequired,
   auth: PropTypes.object,
   triggerEcaps: PropTypes.bool,
+  triggerMobileEcaps: PropTypes.bool,
 };
 
 const mapStateToProps = ({auth,siteReducer}) =>{
      return{
        auth: auth,
-        triggerEcaps: siteReducer.triggerEcaps
+        triggerEcaps: siteReducer.triggerEcaps,
+        triggerMobileEcaps: siteReducer.triggerMobileEcaps
 
      }
 }
-export default connect(mapStateToProps,{logoutUser,setEcaps})(Header);
+export default connect(mapStateToProps,{logoutUser,setEcaps,setMobileEcaps})(Header);

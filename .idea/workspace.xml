@@ -2,21 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DBConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/DBConfig.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/setting/company/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/setting/company/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/sale/sale.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/sale/sale.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/_constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/_constants.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/site.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/site.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducers/site.reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/site.reducer.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -32,10 +22,24 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/App/cetak_barcode/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="506" column="30" lean-forward="true" selection-start-line="506" selection-start-column="30" selection-end-line="506" selection-end-column="30" />
+            <state relative-caret-position="69">
+              <caret line="316" column="51" lean-forward="true" selection-start-line="316" selection-start-column="51" selection-end-line="316" selection-end-column="51" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
+                <element signature="n#!!block;n#getProps#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#componentDidMount#0;n#TrxAdjustment#0" />
+                <element signature="e#3000#3040#0" />
+                <element signature="n#!!block;n#componentWillMount#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleChangeLokasi#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleCommonInputChange#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleSearch#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleAddBrg#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleRemove#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleReset#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleChangeInputValue#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#HandleChangeInput#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#autoSetQty#0;n#TrxAdjustment#0" />
+                <element signature="n#!!block;n#getData#0;n#TrxAdjustment#0" />
               </folding>
             </state>
           </provider>
@@ -44,10 +48,9 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/redux/actions/site.action.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="63" column="66" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="66" />
+            <state relative-caret-position="115">
+              <caret line="5" column="19" selection-start-line="5" selection-end-line="6" />
               <folding>
-                <element signature="e#0#52#0" expanded="true" />
                 <element signature="e#509#1031#0" />
               </folding>
             </state>
@@ -55,22 +58,53 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js">
+        <entry file="file://$PROJECT_DIR$/src/redux/reducers/site.reducer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="30" column="1" lean-forward="true" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
+            <state relative-caret-position="207">
+              <caret line="9" column="14" lean-forward="true" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
               <folding>
-                <element signature="e#0#38#0" expanded="true" />
+                <element signature="e#0#49#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/bank/form_bank.js">
+        <entry file="file://$PROJECT_DIR$/src/redux/reducers/adjustment/adjustment.reducer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="13" column="15" lean-forward="true" selection-start-line="10" selection-start-column="8" selection-end-line="13" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="230">
+              <caret line="103" column="25" lean-forward="true" selection-start-line="100" selection-start-column="24" selection-end-line="103" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#50#0" expanded="true" />
+                <element signature="e#3975#5296#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/_constants.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="230">
+              <caret line="368" column="30" lean-forward="true" selection-start-line="368" selection-start-column="30" selection-end-line="368" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="345">
-              <caret line="15" column="57" lean-forward="true" selection-end-line="171" selection-end-column="50" />
+              <caret line="22" column="33" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="22" selection-end-column="33" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
               </folding>
@@ -82,7 +116,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/bank/src/list.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="277">
-              <caret line="46" column="51" lean-forward="true" selection-start-line="45" selection-start-column="8" selection-end-line="46" selection-end-column="51" />
+              <caret line="46" column="51" selection-start-line="45" selection-start-column="8" selection-end-line="46" selection-end-column="51" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
                 <element signature="n#!!block;n#handlesearch#0;n#ListBank#0" />
@@ -102,7 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>searchJenis</find>
       <find>searchKategori</find>
       <find>searchKelompok</find>
       <find>keyp</find>
@@ -131,6 +164,7 @@
       <find>FetchBrg</find>
       <find>submu</find>
       <find>kd_brg</find>
+      <find>site</find>
       <find>autoSetQty</find>
     </findStrings>
   </component>
@@ -140,7 +174,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/App/inventory/opname/index.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/inventory/opname.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/purchase/purchaseorder/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/purchase/retur/index.js" />
@@ -158,7 +191,6 @@
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/po/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/report/purchase/purchase_order/detail_po_report.js" />
         <option value="$PROJECT_DIR$/src/redux/reducers/adjustment/adjustment.reducer.js" />
-        <option value="$PROJECT_DIR$/src/redux/actions/_constants.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/cash/cash.action.js" />
         <option value="$PROJECT_DIR$/src/redux/reducers/masterdata/cash/cash.reducer.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/cash/index.js" />
@@ -183,12 +215,14 @@
         <option value="$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" />
-        <option value="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" />
         <option value="$PROJECT_DIR$/src/components/App/Routes/Routes.js" />
         <option value="$PROJECT_DIR$/src/DBConfig.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/cetak_barcode.js" />
+        <option value="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" />
+        <option value="$PROJECT_DIR$/src/redux/actions/_constants.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/site.action.js" />
+        <option value="$PROJECT_DIR$/src/redux/reducers/site.reducer.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js" />
         <option value="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" />
       </list>
@@ -288,7 +322,15 @@
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="redux" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+              <item name="adjustment" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -362,12 +404,12 @@
       <workItem from="1596439037326" duration="16710000" />
       <workItem from="1596521185654" duration="23380000" />
       <workItem from="1596605591598" duration="37493000" />
-      <workItem from="1596774347496" duration="15708000" />
+      <workItem from="1596774347496" duration="21205000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="445972000" />
+    <option name="totallyTimeSpent" value="451469000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -387,7 +429,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.31208053" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.1409396" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -439,7 +481,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/po/src/list.js" />
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -473,13 +514,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
           <caret line="82" column="90" lean-forward="true" selection-start-line="82" selection-start-column="90" selection-end-line="82" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/reducers/adjustment/adjustment.reducer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
@@ -524,6 +558,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="118" column="13" lean-forward="true" selection-start-line="118" selection-end-line="154" />
+          <folding>
+            <element signature="e#0#47#0" expanded="true" />
+            <element signature="e#2338#3448#0" />
+            <element signature="e#3484#4634#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -531,13 +570,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="598">
           <caret line="28" column="28" selection-start-line="28" selection-start-column="16" selection-end-line="28" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/_constants.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" column="11" lean-forward="true" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -692,20 +724,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="165" column="40" selection-start-line="165" selection-start-column="40" selection-end-line="165" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-            <element signature="e#2419#3923#0" />
-            <element signature="e#3975#5296#0" />
-            <element signature="e#5343#6629#0" />
-            <element signature="e#6682#7406#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2392">
@@ -803,13 +821,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="317" column="25" lean-forward="true" selection-start-line="317" selection-start-column="25" selection-end-line="317" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/Routes/Routes.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
@@ -894,7 +905,7 @@
     <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/bank/src/list.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="277">
-          <caret line="46" column="51" lean-forward="true" selection-start-line="45" selection-start-column="8" selection-end-line="46" selection-end-column="51" />
+          <caret line="46" column="51" selection-start-line="45" selection-start-column="8" selection-end-line="46" selection-end-column="51" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="n#!!block;n#handlesearch#0;n#ListBank#0" />
@@ -905,28 +916,69 @@
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/bank/form_bank.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
-          <caret line="15" column="57" lean-forward="true" selection-end-line="171" selection-end-column="50" />
+          <caret line="15" column="57" selection-end-line="171" selection-end-column="50" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="347" column="56" selection-start-line="347" selection-start-column="52" selection-end-line="347" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/_constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="368" column="30" lean-forward="true" selection-start-line="368" selection-start-column="30" selection-end-line="368" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/reducers/adjustment/adjustment.reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="13" column="15" lean-forward="true" selection-start-line="10" selection-start-column="8" selection-end-line="13" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/reducers/site.reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="14" lean-forward="true" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/redux/actions/site.action.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="63" column="66" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="66" />
+        <state relative-caret-position="115">
+          <caret line="5" column="19" selection-start-line="5" selection-end-line="6" />
           <folding>
-            <element signature="e#0#52#0" expanded="true" />
             <element signature="e#509#1031#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/adjustment/adjustment.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="103" column="25" lean-forward="true" selection-start-line="100" selection-start-column="24" selection-end-line="103" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+            <element signature="e#3975#5296#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/modal_cetak_barcode.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="30" column="1" lean-forward="true" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
+        <state relative-caret-position="345">
+          <caret line="22" column="33" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="22" selection-end-column="33" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
@@ -935,10 +987,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/cetak_barcode/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="506" column="30" lean-forward="true" selection-start-line="506" selection-start-column="30" selection-end-line="506" selection-end-column="30" />
+        <state relative-caret-position="69">
+          <caret line="316" column="51" lean-forward="true" selection-start-line="316" selection-start-column="51" selection-end-line="316" selection-end-column="51" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#getProps#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#componentDidMount#0;n#TrxAdjustment#0" />
+            <element signature="e#3000#3040#0" />
+            <element signature="n#!!block;n#componentWillMount#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleChangeLokasi#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleCommonInputChange#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleSearch#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleAddBrg#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleRemove#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleReset#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleChangeInputValue#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#HandleChangeInput#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#autoSetQty#0;n#TrxAdjustment#0" />
+            <element signature="n#!!block;n#getData#0;n#TrxAdjustment#0" />
           </folding>
         </state>
       </provider>
