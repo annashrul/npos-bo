@@ -646,6 +646,8 @@ class Alokasi extends Component{
         let subtotal = 0;
         let grandtotal = 0;
         //  let grandtotal = this.state.grandtotal;
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+
         return (
             <Layout page="Alokasi">
                 <div className="row align-items-center">
@@ -866,25 +868,64 @@ class Alokasi extends Component{
                                                         <label className="control-label font-12">
                                                             Jenis Transaksi
                                                         </label>
-                                                        <div onChange={(e)=>this.HandleCommonInputChange(e)}>
-                                                            <div className="custom-control custom-radio" style={{paddingLeft:"0px"}}>
-                                                                <input type="radio" value="Alokasi" name="jenis_trx"/>
-                                                                &nbsp;<label>Alokasi</label>
-                                                            </div>
-                                                            <div className="custom-control custom-radio" style={{paddingLeft:"0px"}}>
-                                                                <input type="radio" value="Mutasi" name="jenis_trx"/>
-                                                                &nbsp;<label>Mutasi</label>
-                                                            </div>
-                                                            <div className="custom-control custom-radio" style={{paddingLeft:"0px"}}>
-                                                                <input type="radio" value="Transaksi" name="jenis_trx"/>
-                                                                &nbsp;<label>Transaksi</label>
-                                                            </div>
-
+                                                        <div className="custom-control custom-radio">
+                                                            <input
+                                                                type="radio"
+                                                                id="customRadio1"
+                                                                name="jenis_trx"
+                                                                onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                value="Tunai"
+                                                                className="custom-control-input"
+                                                                checked={this.state.jenis_trx==='Tunai'}
+                                                            />
+                                                            <label
+                                                                className="custom-control-label"
+                                                                htmlFor="customRadio1"
+                                                            >
+                                                                Tunai
+                                                            </label>
                                                         </div>
-
-
                                                     </div>
+                                                    <div className="form-group">
+                                                        <div className="custom-control custom-radio">
+                                                            <input
+                                                                type="radio"
+                                                                id="customRadio2"
+                                                                name="jenis_trx"
+                                                                onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                value="Kredit"
+                                                                className="custom-control-input"
+                                                                checked={this.state.jenis_trx==='Kredit'}
 
+                                                            />
+                                                            <label
+                                                                className="custom-control-label"
+                                                                htmlFor="customRadio2"
+                                                            >
+                                                                Kredit
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <div className="custom-control custom-radio">
+                                                            <input
+                                                                type="radio"
+                                                                id="customRadio3"
+                                                                name="jenis_trx"
+                                                                onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                value="Konsinyasi"
+                                                                className="custom-control-input"
+                                                                checked={this.state.jenis_trx==='Konsinyasi'}
+
+                                                            />
+                                                            <label
+                                                                className="custom-control-label"
+                                                                htmlFor="customRadio3"
+                                                            >
+                                                                Konsinyasi
+                                                            </label>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -964,37 +1005,36 @@ class Alokasi extends Component{
                             </div>
                             <div className="card-body">
                                 <div id="tableContainer">
-                                    <div className="table-responsive" style={{overflowX:'hidden'}}>
+                                    <div className="table-responsive" style={{overflowX:'auto'}}>
 
-                                        <table className="table table-hover table-bordered tableBodyScroll">
+                                        <table className="table table-hover table-bordered">
                                             <thead >
                                             <tr>
-                                                <th>#</th>
-                                                <th>Nama</th>
-                                                <th>Barcode</th>
-                                                <th>Satuan</th>
-                                                <th>Harga beli</th>
-                                                <th>Harga jual1</th>
-                                                <th>Stock</th>
-                                                <th>Qty</th>
-                                                <th>Subtotal</th>
+                                                <th style={columnStyle}>#</th>
+                                                <th style={columnStyle}>Nama</th>
+                                                <th style={columnStyle}>Barcode</th>
+                                                <th style={columnStyle}>Satuan</th>
+                                                <th style={columnStyle}>Harga beli</th>
+                                                <th style={columnStyle}>Harga jual1</th>
+                                                <th style={columnStyle}>Stock</th>
+                                                <th style={columnStyle}>Qty</th>
+                                                <th style={columnStyle}>Subtotal</th>
                                             </tr>
                                             </thead>
 
                                             <tbody>
                                             {
                                                 this.state.databrg.map((item,index)=>{
-                                                    console.log(this.state.jenis_trx);
                                                     subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty);
                                                     // console.log('gt',grandtotal);
                                                     return (
                                                         <tr key={index} >
-                                                            <td>
+                                                            <td style={columnStyle}>
                                                                 <a href="#" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
                                                             </td>
-                                                            <td>{item.nm_brg}</td>
-                                                            <td>{item.barcode}</td>
-                                                            <td><select name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)}>
+                                                            <td style={columnStyle}>{item.nm_brg}</td>
+                                                            <td style={columnStyle}>{item.barcode}</td>
+                                                            <td style={columnStyle}><select className="form-control" style={{width:"100px"}} name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)}>
                                                                 {
                                                                     item.tambahan.map(i=>{
                                                                         return(
@@ -1003,16 +1043,16 @@ class Alokasi extends Component{
                                                                     })
                                                                 }
                                                             </select></td>
-                                                            <td>{item.harga_beli}</td>
-                                                            <td>{item.hrg_jual}</td>
-                                                            <td>{item.stock}</td>
-                                                            <td>
-                                                                <input type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
+                                                            <td style={columnStyle}>{item.harga_beli}</td>
+                                                            <td style={columnStyle}>{item.hrg_jual}</td>
+                                                            <td style={columnStyle}>{item.stock}</td>
+                                                            <td style={columnStyle}>
+                                                                <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
                                                                 <div class="invalid-feedback" style={parseInt(this.state.brgval[index].qty)>parseInt(item.stock)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
-                                                            <td>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty)}</td>
+                                                            <td style={columnStyle}>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty)}</td>
                                                         </tr>
                                                     )
                                                 })
@@ -1020,26 +1060,27 @@ class Alokasi extends Component{
                                             }
                                             </tbody>
                                         </table>
-                                        <div className='row'>
-                                            <div className="col-md-7">
-                                                <div className="dashboard-btn-group d-flex align-items-center">
-                                                    <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                                    <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-5" style={{zoom:'70%'}}>
-                                                <div className="pull-right">
-                                                    <form className="form_head">
-                                                        <div className="row" style={{marginBottom: '3px'}}>
-                                                            <label className="col-sm-4">Sub Total</label>
-                                                            <div className="col-sm-8">
-                                                                <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={subtotal} readOnly />
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
 
+
+                                    </div>
+                                    <div className='row'>
+                                        <div className="col-md-7">
+                                            <div className="dashboard-btn-group d-flex align-items-center">
+                                                <a href="#" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                <a href="#" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-5" style={{zoom:'70%'}}>
+                                            <div className="pull-right">
+                                                <form className="form_head">
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Sub Total</label>
+                                                        <div className="col-sm-8">
+                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={subtotal} readOnly />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
 
                                     </div>

@@ -403,7 +403,6 @@ class ListProduct extends Component{
                     <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle}></th>
                             <th className="text-black" style={columnStyle}>Kode Barang</th>
                             <th className="text-black" style={columnStyle}>Nama Barang</th>
                             <th className="text-black" style={columnStyle}>Kelompok</th>
@@ -412,17 +411,16 @@ class ListProduct extends Component{
                             <th className="text-black" style={columnStyle}>Kategori</th>
                             <th className="text-black" style={columnStyle}>Jenis</th>
                             <th className="text-black" style={columnStyle}>Stock Min</th>
+                            <th className="text-black" style={columnStyle}></th>
                         </tr>
                         <tr>
-                            <td></td>
                             <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kode_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
                             <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
                             <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kelompok"/></td>
                             <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Supplier"/></td>
                             <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
                             <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kategori"/></td>
-                            <td></td>
-                            <td></td>
+                            <td colSpan={3}/>
                         </tr>
                         </thead>
                         <tbody>
@@ -433,28 +431,42 @@ class ListProduct extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}>
-                                                    <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
+
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
                                                 <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.supplier}</td>
-
                                                 <td style={columnStyle}>{v.kategori}</td>
                                                 <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
+                                                <td style={columnStyle}>
+                                                    <div className="btn-group mb-2 mr-2">
+                                                        <button type="button"
+                                                                className="btn btn-primary dropdown-toggle"
+                                                                data-toggle="dropdown" data-display="static"
+                                                                aria-haspopup="true" aria-expanded="false">
+                                                            Aksi
+                                                        </button>
+                                                        <div className="dropdown-menu dropdown-menu-lg-right">
+                                                            <button className="dropdown-item" type="button" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</button>
+                                                            <button className="dropdown-item" type="button" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</button>
+                                                            <button className="dropdown-item" type="button" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</button>
+                                                            <button className="dropdown-item" type="button" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</button>
+                                                        </div>
+                                                    </div>
+                                                    {/*<div className="btn-group">*/}
+                                                    {/*<button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*/}
+                                                    {/*Action*/}
+                                                    {/*</button>*/}
+                                                    {/*<div className="dropdown-menu">*/}
+                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</a>*/}
+                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</a>*/}
+                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</a>*/}
+                                                    {/*<a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>*/}
+                                                    {/*</div>*/}
+                                                    {/*</div>*/}
+                                                </td>
                                             </tr>
                                         )
                                     })

@@ -2,6 +2,7 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
+// import animate from 'animate.css'
 
 class SideMenu extends Component {
     constructor(props){
@@ -16,6 +17,7 @@ class SideMenu extends Component {
             isSale:false,
             isReportInventory:false,
             isReportPembelian:false,
+            isTrxMutasi:false,
             pageMenu : '',
             dataUser:[],
             dataUser0:'',
@@ -47,8 +49,6 @@ class SideMenu extends Component {
                 isReport: true,
                 isReceive: false,
                 isSale:false,
-                // isReportInventory:false,
-                // isReportPembelian:false
             })
             if(this.state.isReportInventory === true){
                 this.setState({
@@ -74,7 +74,8 @@ class SideMenu extends Component {
                     isReportPembelian:!this.state.isReportPembelian
                 })
             }
-        } else {
+        }
+        else {
             this.setState({
                 isSetting:false,
                 isMasterdata: false,
@@ -93,9 +94,52 @@ class SideMenu extends Component {
         if(param === 'masterdata'){
             this.setState({isMasterdata : !this.state.isMasterdata, isReport : false});
         }
-        if(param === 'inventory'){
+        if(this.state.isInventory === true){
+            this.setState({
+                isSetting:false,
+                isMasterdata: false,
+                isInventory: true,
+                isReport: false,
+                isReceive: false,
+                isSale:false,
+                isReportPembelian:false,
+                isReportInventory:false,
+            });
+            if(this.state.isTrxMutasi === true){
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportPembelian:false,
+                    isReportInventory:false,
+                    isTrxMutasi:!this.state.isTrxMutasi,
+                })
+            }
+        }
+        else{
+            this.setState({
+                isSetting:false,
+                isMasterdata: false,
+                isInventory: false,
+                isReport: false,
+                isReceive: false,
+                isSale:false,
+                isTrxMutasi:false,
+                isReportInventory:false,
+                isReportPembelian:false
+            })
+        }
+        if (param === 'inventory'){
             this.setState({
                 isInventory : !this.state.isInventory, isReport : false
+            });
+        }
+        if (param === 'trx_mutasi'){
+            this.setState({
+                isTrxMutasi : !this.state.isTrxMutasi,
             });
         }
         if(param === 'hutang'){
@@ -163,16 +207,23 @@ class SideMenu extends Component {
                 isMasterdata:true
             })
         } else if(
-            path==='/delivery_note' || 
+            path==='/delivery_note' ||
             path === '/alokasi' ||
             path === '/adjustment'||
             path === '/approval_mutasi'||
             path === '/opname'||
-            path === '/approval_opname'){
+            path === '/approval_opname' ||
+            path === '/approval_mutasi_transaksi'
+        ){
             console.log("didmount",path)
             this.setState({
                 isInventory:true
-            })
+            });
+            if(path==='/approval_mutasi_transaksi'){
+                this.setState({
+                    isTrxMutasi:true
+                })
+            }
         } else if(path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota'){
             console.log("didmount",path)
             this.setState({
@@ -187,11 +238,9 @@ class SideMenu extends Component {
             path==='/report_cash'|| 
             path==='/sale_archive'|| 
             path==='/closing' ||
-            
-            path==='/inventory_report'|| 
+            path==='/inventory_report'||
             path==='/adjustment_report'|| 
             path==='/alokasi_report' ||
-
             path==='/po_report'||
             path==='/receive_report'
             ){
@@ -288,7 +337,7 @@ class SideMenu extends Component {
                         </ul>
                     </li>
                     <li className={"treeview" +
-                        (this.state.isInventory===true || 
+                        (this.state.isInventory===true || this.state.isTrxMutasi ||
                         path==='/delivery_note' || 
                         path === '/alokasi' ||
                         path === '/adjustment'||
@@ -300,15 +349,23 @@ class SideMenu extends Component {
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
                         ?"block" : "none"}}>
                             <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
-                            <li className={path==='/alokasi'?"active":''}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Alokasi </Link></li>
-                            <li className={path==='/approval_mutasi'?"active":''}><Link to="/approval_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Approval Mutasi </Link></li>
-                            <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Adjustment </Link></li>
-                            <li className={path==='/opname'?"active":''}><Link to="/opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Opname </Link></li>
-                            <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Approval Opname </Link></li>
+                            <li className={path==='/alokasi'?"active":''}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi </Link></li>
+                            <li className={path==='/approval_mutasi'?"active":''}><Link to="/approval_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Mutasi </Link></li>
+                            <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment </Link></li>
+                            <li className={path==='/opname'?"active":''}><Link to="/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname </Link></li>
+                            <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Opname </Link></li>
+                            <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
+                                <a href="#" onClick={(e) => this.changeMenu('trx_mutasi')}><i className="zmdi zmdi-apps" /> <span>Mutasi Transaksi</span> <i className="fa fa-angle-right"/></a>
+                                <ul className={"treeview-menu animate__animated" + (this.state.isTrxMutasi===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxMutasi===true
+                                        ?"block" : "none"}}>
+                                    <li className={path==='/approval_mutasi_transaksi'?"active":''}><Link to="/approval_mutasi_transaksi" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Mutasi Transaksi</Link></li>
+                                    <li className={path==='/receive_report'?"active":''}><Link to="/receive_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Receive</Link></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}>
-                        <a href="#" onClick={(e) => this.changeMenu('receive')}><i className="zmdi zmdi-apps" /> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
+                        <a href="#" onClick={(e) => this.changeMenu('receive')}><i className="fa fa-truck" /> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReceive===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReceive===true
                         ?"block" : "none"}}>
                             <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Purchase Order</Link></li>
@@ -326,14 +383,7 @@ class SideMenu extends Component {
                     <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true ||
                         path==='/report_cash'|| 
                         path==='/closing'|| 
-                        path==='/sale_archive' 
-
-                        // path==='/inventory_report'|| 
-                        // path==='/adjustment_report'|| 
-                        // path==='/alokasi_report' ||
-
-                        // path==='/po_report'||
-                        // path==='/receive_report'
+                        path==='/sale_archive'
                         ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu('report')}><i className="zmdi zmdi-apps" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReport===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true

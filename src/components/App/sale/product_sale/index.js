@@ -350,7 +350,7 @@ class Sale extends Component{
             services:item.services,
             tambahan: []
         };
-        const cek = cekData('kd_brg',item.kd_brg,table);
+        const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
             if(res==undefined){
                 store(table, finaldt)
@@ -529,7 +529,7 @@ class Sale extends Component{
     }
 
     autoSetQty(kode,data){
-        const cek = cekData('kd_brg', kode, table);
+        const cek = cekData('barcode', kode, table);
         console.log("CEKING DATA",cek);
         return cek.then(res => {
             if (res == undefined) {

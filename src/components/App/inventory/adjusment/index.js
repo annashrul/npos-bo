@@ -177,7 +177,7 @@ class TrxAdjustment extends Component{
             stock:item.stock,
             qty_adjust:parseInt(item.qty_adjust)+1,
             status:item.status,
-            saldo_stock:item.saldo_stock,
+            saldo_stock:item.stock,
             tambahan:[],
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
@@ -185,6 +185,13 @@ class TrxAdjustment extends Component{
             if(res==undefined){
                 store(table, finaldt)
             }else{
+                let saldo_stock = res.stock;
+                if(res.status === 'kurang'){
+                    saldo_stock=parseInt(res.stock)-parseInt(res.qty_adjust);
+                }
+                if(res.status === 'tambah' || res.status==='' || res.status === undefined){
+                    saldo_stock=parseInt(res.stock)+parseInt(res.qty_adjust)
+                }
                 update(table,{
                     id:res.id,
                     barcode:res.barcode,
@@ -206,6 +213,7 @@ class TrxAdjustment extends Component{
                     group2:res.group2,
                     stock:res.stock,
                     qty_adjust:parseInt(res.qty_adjust)+1,
+                    saldo_stock:saldo_stock,
                     status:res.status,
                     tambahan:[],
                 })
@@ -339,10 +347,11 @@ class TrxAdjustment extends Component{
                             res.map(item => {
                                 console.log(item);
                                 let saldo_stock=item.saldo_stock;
+
                                 if(item.status === 'kurang'){
                                     saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
                                 }
-                                if(item.status === 'tambah'){
+                                if(item.status === 'tambah' || item.status === '' || item.status === undefined){
                                     saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
                                 }
                                 detail.push({
@@ -388,11 +397,18 @@ class TrxAdjustment extends Component{
                     group1:data[0].group1,
                     group2:data[0].group1,
                     stock:data[0].stock,
-                    qty_adjust:data[0].qty_adjust,
-                    saldo_stock:data[0].saldo_stock,
+                    qty_adjust:0,
+                    saldo_stock:data[0].stock,
                     tambahan:[]
                 })
             } else {
+                let saldo_stock = res.stock;
+                if(res.status === 'kurang'){
+                    saldo_stock=parseInt(res.stock)-parseInt(res.qty_adjust);
+                }
+                if(res.status === 'tambah' || res.status==='' || res.status === undefined){
+                    saldo_stock=parseInt(res.stock)+parseInt(res.qty_adjust)
+                }
                 update(table, {
                     id: res.id,
                     barcode:res.barcode,
@@ -413,7 +429,7 @@ class TrxAdjustment extends Component{
                     group1:res.group1,
                     group2:res.group1,
                     stock:res.stock,
-                    saldo_stock:res.saldo_stock,
+                    saldo_stock:saldo_stock,
                     qty_adjust:parseFloat(res.qty_adjust) + 1,
                     tambahan: []
                 })
@@ -650,13 +666,15 @@ class TrxAdjustment extends Component{
                                                 <tbody>
                                                 {
                                                     this.state.databrg.map((item, index) => {
-                                                        let saldo_stock=item.saldo_stock;
+                                                        console.log(item.saldo_stock);
+                                                        let saldo_stock = item.saldo_stock;
                                                         if(item.status === 'kurang'){
                                                             saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
                                                         }
-                                                        if(item.status === 'tambah'){
+                                                        if(item.status === 'tambah' || item.status===''){
                                                             saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
                                                         }
+                                                        console.log(saldo_stock);
                                                         return (
                                                             <tr key={index}>
                                                                 <td style={columnStyle}>
@@ -680,7 +698,7 @@ class TrxAdjustment extends Component{
                                                                 <td style={columnStyle}>
                                                                     <input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/>
                                                                     {
-                                                                        parseInt(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
+                                                                        parseFloat(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
                                                                     }
                                                                 </td>
                                                                 <td style={{textAlign:"right"}}>{saldo_stock}</td>
