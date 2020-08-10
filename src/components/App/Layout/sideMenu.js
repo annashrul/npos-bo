@@ -113,7 +113,7 @@ class SideMenu extends Component {
                     isSetting:false,
                     isMasterdata: false,
                     isInventory: false,
-                    isReport: true,
+                    isReport: false,
                     isReceive: false,
                     isSale:false,
                     isReportPembelian:false,
@@ -365,7 +365,7 @@ class SideMenu extends Component {
                         path === '/opname'||
                         path === '/approval_opname'
                         ?" active menu-open" : "")}>
-                        <a href="#" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-apps" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
+                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-apps" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true ?"block" : "none"}}>
                             <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Delivery Note</Link></li>
                             <li className={path==='/alokasi'?"active":''}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Alokasi </Link></li>
@@ -373,12 +373,11 @@ class SideMenu extends Component {
                             <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Adjustment </Link></li>
                             <li className={path==='/opname'?"active":''}><Link to="/opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Opname </Link></li>
                             <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Approval Opname </Link></li>
-                            <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
-                                <a href="#" onClick={(e) => this.changeMenu('trx_mutasi')}><i className="zmdi zmdi-apps" /> <span>Mutasi Transaksi</span> <i className="fa fa-angle-right"/></a>
-                                <ul className={"treeview-menu animate__animated" + (this.state.isTrxMutasi===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxMutasi===true
-                                        ?"block" : "none"}}>
-                                    <li className={path==='/approval_mutasi_transaksi'?"active":''}><Link to="/approval_mutasi_transaksi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Approval Mutasi Transaksi</Link></li>
-                                    <li className={path==='/receive_report'?"active":''}><Link to="/receive_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Receive</Link></li>
+                            <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/approval_mutasi_transaksi'|| path==='/bayar_hutang_mutasi'?" active menu-open" : "")}>
+                                <a href="javascript:void(0)" onClick={(e) => this.changeMenu('trx_mutasi')}><i className="zmdi zmdi-apps" /> <span>Mutasi Jual Beli</span> <i className="fa fa-angle-right"/></a>
+                                <ul className={"treeview-menu animate__animated" + (this.state.isTrxMutasi===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxMutasi===true ?"block" : "none"}}>
+                                    <li className={path==='/approval_mutasi_transaksi'?"active":''}><Link to="/approval_mutasi_transaksi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Approval</Link></li>
+                                    <li className={path==='/bayar_hutang_mutasi'?"active":''}><Link to="/bayar_hutang_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Bayar</Link></li>
                                 </ul>
                             </li>
                         </ul>
