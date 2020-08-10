@@ -41,232 +41,232 @@ class Dashboard extends Component {
             location_data:[],
             location:"-",
 
-           lokasi_sales: {
-                   options: {
-                       chart: {
-                           id: "basic-bar"
-                       },
-                       xaxis: {
-                           categories: []
-                       }
-                   },
-                   series: [{
-                           name: "Bulan Lalu",
-                           data: []
-                       },
-                       {
-                           name: "Bulan Sekarang",
-                           data: []
-                       }
-                   ],
-            },
-           lokasi_tr: {
-                   options: {
-                       chart: {
-                           id: "basic-bar"
-                       },
-                       xaxis: {
-                           categories: []
-                       }
-                   },
-                   series: [{
-                           name: "Bulan Lalu",
-                           data: []
-                       },
-                       {
-                           name: "Bulan Sekarang",
-                           data: []
-                       }
-                   ],
-            },
-           daily: {
-                   options: {
-                       chart: {
-                           id: "basic-bar"
-                       },
-                       xaxis: {
-                           categories: ["Monday", "Thuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-                       },
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0'],
-                       dataLabels: {
-                           enabled: false
-                       },
-                       plotOptions: {
-                           bar: {
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: [0,0,0,0,0,0,0]
-                   }],
-            },
-           hourly: {
-                   options: {
-                       chart: {
-                           type: 'area'
-                       },
-                       xaxis: {
-                           categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                       stroke: {
-                           curve: 'smooth'
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                   }],
-            },
-           top_item_qty: {
-                   options: {
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
-                       xaxis: {
-                           categories: [],
-                       },
-                       plotOptions: {
-                           bar: {
-                               horizontal: true,
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: []
-                   }],
-            },
-           top_item_sale:{ options: {
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
-                       xaxis: {
-                           categories: [],
-                       },
-                       plotOptions: {
-                           bar: {
-                               horizontal: true,
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: []
-                   }],},
-           top_cat_qty:{ options: {
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
-                       xaxis: {
-                           categories: [],
-                       },
-                       plotOptions: {
-                           bar: {
-                               horizontal: true,
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: []
-                   }],},
-           top_cat_sale:{ options: {
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
-                       xaxis: {
-                           categories: [],
-                       },
-                       plotOptions: {
-                           bar: {
-                               horizontal: true,
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: []
-                   }],},
-           top_sp_qty:{ options: {
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
-                       xaxis: {
-                           categories: [],
-                       },
-                       plotOptions: {
-                           bar: {
-                               horizontal: true,
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                   },
-                   series: [{
-                       // name: "Bulan Lalu",
-                       data: []
-                   }],},
-           top_sp_sale:{ 
-               options: {
-                       colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
-                       xaxis: {
-                           categories: [],
-                       },
-                       plotOptions: {
-                           bar: {
-                               horizontal: true,
-                               columnWidth: '45%',
-                               distributed: true
-                           }
-                       },
-                       legend: {
-                           show: false
-                       },
-                       dataLabels: {
-                           enabled: false
-                       },
-                   },
-                   series: [{
-                       data: []
-                   }],
-                }
+            lokasi_sales: {
+                    options: {
+                        chart: {
+                            id: "basic-bar"
+                        },
+                        xaxis: {
+                            categories: []
+                        }
+                    },
+                    series: [{
+                            name: "Bulan Lalu",
+                            data: []
+                        },
+                        {
+                            name: "Bulan Sekarang",
+                            data: []
+                        }
+                    ],
+                },
+            lokasi_tr: {
+                    options: {
+                        chart: {
+                            id: "basic-bar"
+                        },
+                        xaxis: {
+                            categories: []
+                        }
+                    },
+                    series: [{
+                            name: "Bulan Lalu",
+                            data: []
+                        },
+                        {
+                            name: "Bulan Sekarang",
+                            data: []
+                        }
+                    ],
+                },
+            daily: {
+                    options: {
+                        chart: {
+                            id: "basic-bar"
+                        },
+                        xaxis: {
+                            categories: ["Monday", "Thuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                        },
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0'],
+                        dataLabels: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            bar: {
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: [0,0,0,0,0,0,0]
+                    }],
+                },
+            hourly: {
+                    options: {
+                        chart: {
+                            type: 'area'
+                        },
+                        xaxis: {
+                            categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'smooth'
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    }],
+                },
+            top_item_qty: {
+                    options: {
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                        xaxis: {
+                            categories: [],
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: []
+                    }],
+                },
+            top_item_sale:{ options: {
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                        xaxis: {
+                            categories: [],
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: []
+                    }],},
+            top_cat_qty:{ options: {
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                        xaxis: {
+                            categories: [],
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: []
+                    }],},
+            top_cat_sale:{ options: {
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                        xaxis: {
+                            categories: [],
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: []
+                    }],},
+            top_sp_qty:{ options: {
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                        xaxis: {
+                            categories: [],
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                    },
+                    series: [{
+                        // name: "Bulan Lalu",
+                        data: []
+                    }],},
+            top_sp_sale:{ 
+                options: {
+                        colors: ['#F44336', '#E91E63', '#9C27B0', '#F44336', '#E91E63', '#9C27B0', '#9C27B0', '#9C27B0', '#F44336'],
+                        xaxis: {
+                            categories: [],
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                columnWidth: '45%',
+                                distributed: true
+                            }
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                    },
+                    series: [{
+                        data: []
+                    }],
+                    }
         };
 
         socket.on('refresh_dashboard',(data)=>{
@@ -403,7 +403,7 @@ class Dashboard extends Component {
                     <div className="col-6">
                         <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
                             <div className="dashboard-clock">
-                                <div id="dashboardDate">Friday, 24 July</div>
+                                <div id="dashboardDate">{moment().format("dddd, Do MMM YYYY")}</div>
                                 <ul className="d-flex align-items-center justify-content-end">
                                 <li id="hours">12</li>
                                 <li>:</li>
@@ -421,7 +421,7 @@ class Dashboard extends Component {
 
                 <div className = "row  mb-3" >
                     {/* Dashboard Info Area */}
-                    <div className="col-2">
+                    <div className="col-md-2 col-sm-2 col-lg-2">
                             <div className="form-group">
                                 <DateRangePicker
                                     ranges={rangeDate}
@@ -432,7 +432,7 @@ class Dashboard extends Component {
                                 </DateRangePicker>
                             </div>
                         </div>
-                        <div className="col-2">
+                        <div className="col-md-2 col-sm-2 col-lg-2">
                             <div className="form-group">
                                 <Select 
                                     options={this.state.location_data} 

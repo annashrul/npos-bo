@@ -2,7 +2,6 @@ import React, { Component, useEffect } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
-import animate from 'animate.css'
 
 class SideMenu extends Component {
     constructor(props){
@@ -51,7 +50,6 @@ class SideMenu extends Component {
                 // isReportInventory:false,
                 // isReportPembelian:false
             })
-            console.log("isReport", true)
             if(this.state.isReportInventory === true){
                 this.setState({
                     isSetting:false,
@@ -63,7 +61,6 @@ class SideMenu extends Component {
                     isReportInventory:!this.state.isReportInventory,
                     isReportPembelian:false
                 })
-                console.log("isReportInventory",true);
             }
             if(this.state.isReportPembelian === true) {
                 this.setState({
@@ -76,7 +73,6 @@ class SideMenu extends Component {
                     isReportInventory:false,
                     isReportPembelian:!this.state.isReportPembelian
                 })
-                console.log("isReportPembelian",true)
             }
         } else {
             this.setState({
@@ -90,43 +86,6 @@ class SideMenu extends Component {
                 isReportPembelian:false
             })
         }
-        // if(this.state.isReportInventory === true){
-        //     console.log("param A")
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         // isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // } else if(this.state.isReportPembelian === true) {
-        //     console.log("param B")
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         // isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // } else {
-        //     console.log("param C")
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // }
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({isSetting : !this.state.isSetting, isReport : false});
@@ -254,7 +213,6 @@ class SideMenu extends Component {
         } 
     }
     componentWillReceiveProps = (nextProps) => {
-        console.log("componentWillReceiveProps", nextProps);
         if (nextProps.auth.user) {
             let loc =nextProps.auth.user.access;
             if(loc!==undefined&&loc!==null){
@@ -276,7 +234,6 @@ class SideMenu extends Component {
               activePath: nextProps.activePath
             })
         }
-        console.log("testttttt",this.state.activeMenu);
     }
 
      getSortByClass(){
@@ -285,27 +242,12 @@ class SideMenu extends Component {
           }, 500);
       }
     render() {
-        // masterdata: [
-        //     {id: 10, value: "0", isChecked: false,label:'product'},
-        //     {id: 11, value: "0", isChecked: false,label:'user'},
-        //     {id: 12, value: "0", isChecked: false,label:'department'},
-        //     {id: 13, value: "0", isChecked: false,label:'supplier'},
-        //     {id: 14, value: "0", isChecked: false,label:'location'},
-        //     {id: 15, value: "0", isChecked: false,label:'customer'},
-        //     {id: 16, value: "0", isChecked: false,label:'cash'},
-        //     {id: 17, value: "0", isChecked: false,label:'sales'},
-        //     {id: 18, value: "0", isChecked: false,label:'bank'},
-        //     {id: 19, value: "0", isChecked: false,label:''},
-        // ],
         const path = this.props.location.pathname;
-        
-        console.log("App Rendered!");
-        console.log("App Rendered!", this.state.isSetting);
         return (
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
-                    <li  className={path==='/'?"active":''}><Link to="/"> <i className="zmdi zmdi-view-dashboard" /><span> Dashboard</span></Link></li>
-                    <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="zmdi zmdi-view-dashboard" /><span>Cetak Barcode </span></Link></li>
+                    <li  className={path==='/'?"active":''}><Link to="/"> <i className="fa fa-dashboard" /><span> Dashboard</span></Link></li>
+                    
                     <li className={"treeview" +(this.state.isSetting===true
                         || path==='/user'
                         || path==='/location'
@@ -313,12 +255,12 @@ class SideMenu extends Component {
                         ?" active menu-open" : ""
                         )
                     }>
-                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('setting')}><i className="zmdi zmdi-apps" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu('setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>
-                            <li className={path==='/company'?"active":''}><Link to="/company" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Company</Link></li>
-                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />User</Link></li>
-                            <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Lokasi</Link></li>
+                            <li className={path==='/company'?"active":''}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>
+                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="fa fa-group" />User</Link></li>
+                            <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="fa fa-building-o" />Lokasi</Link></li>
                         </ul>
                     </li>
                     <li className={ "treeview" +
@@ -332,18 +274,17 @@ class SideMenu extends Component {
                         path==='/bank'
                             ?" active menu-open" : "")
                     }>
-                        <a href="#" onClick={(e) => this.changeMenu('masterdata')}><i className="zmdi zmdi-apps" /> <span>Masterdata</span> <i className="fa fa-angle-right" /></a>
+                        <a href="#" onClick={(e) => this.changeMenu('masterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isMasterdata===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isMasterdata===true
                         ?"block" : "none"}}>
-                            <li className={path==='/product'?"active":''} style={this.state.product==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Product</Link></li>
-                            <li className={path==='/department'?"active":''} style={this.state.department==="0"?{"display":"none"}:{"display":"block"}}><Link to="/department" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Department </Link></li>
-                            <li className={path==='/supplier'?"active":''} style={this.state.supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/supplier" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Supplier </Link></li>
-                            <li className={path==='/customer'?"active":''} style={this.state.customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/customer" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Customer </Link></li>
-                            <li className={path==='/cash'?"active":''} style={this.state.cash==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Cash </Link></li>
-                            <li className={path==='/sales'?"active":''} style={this.state.sales==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sales" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Sales </Link></li>
-                            <li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Bank </Link></li>
-                            <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Promo </Link></li>
-                            {/*<li className={path==='/bank'?"active":''}><Link to="/bank" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Bank </Link></li>*/}
+                            <li className={path==='/product'?"active":''} style={this.state.product==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product" style={{width:'fit-content'}}> <i className="fa fa-list-alt" />Barang</Link></li>
+                            <li className={path==='/department'?"active":''} style={this.state.department==="0"?{"display":"none"}:{"display":"block"}}><Link to="/department" style={{width:'fit-content'}}> <i className="zmdi zmdi-store-24" />Department</Link></li>
+                            <li className={path==='/supplier'?"active":''} style={this.state.supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/supplier" style={{width:'fit-content'}}> <i className="fa fa-truck" />Supplier </Link></li>
+                            <li className={path==='/customer'?"active":''} style={this.state.customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/customer" style={{width:'fit-content'}}> <i className="fa fa-user" />Customer </Link></li>
+                            <li className={path==='/cash'?"active":''} style={this.state.cash==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas </Link></li>
+                            <li className={path==='/sales'?"active":''} style={this.state.sales==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sales" style={{width:'fit-content'}}> <i className="fa fa-user-secret" />Sales </Link></li>
+                            <li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank" style={{width:'fit-content'}}> <i className="fa fa-bank" />Bank </Link></li>
+                            <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="fa fa-ticket" />Promo </Link></li>
                         </ul>
                     </li>
                     <li className={"treeview" +
@@ -355,10 +296,10 @@ class SideMenu extends Component {
                         path === '/opname'||
                         path === '/approval_opname'
                         ?" active menu-open" : "")}>
-                        <a href="#" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-apps" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
+                        <a href="#" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
                         ?"block" : "none"}}>
-                            <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Delivery Note</Link></li>
+                            <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
                             <li className={path==='/alokasi'?"active":''}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Alokasi </Link></li>
                             <li className={path==='/approval_mutasi'?"active":''}><Link to="/approval_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Approval Mutasi </Link></li>
                             <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="zmdi zmdi-apps" />Adjustment </Link></li>
@@ -419,6 +360,7 @@ class SideMenu extends Component {
                             </li>
                         </ul>
                     </li>
+                    <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
                 </ul>
             </nav>
             )
