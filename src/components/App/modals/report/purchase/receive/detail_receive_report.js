@@ -2,10 +2,9 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import {toRp,getMargin} from "helper";
 import Paginationq from "helper";
-import moment from "moment";
 import {FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
 class DetailReceiveReport extends Component{
     constructor(props){

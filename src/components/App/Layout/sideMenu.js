@@ -172,8 +172,6 @@ class SideMenu extends Component {
         console.log("side menu state", this.state);
     }
     componentDidMount(){
-        let dataUser=[];
-        console.log("componentwillmount",this.props.auth.user.access);
         let loc =this.props.auth.user.access;
         if(loc!==undefined&&loc!==null){
             this.setState({
@@ -285,33 +283,17 @@ class SideMenu extends Component {
         }
     }
 
-     getSortByClass(){
-        setTimeout(() => {
-            return 'none';
-          }, 500);
-      }
+    getSortByClass(){
+    setTimeout(() => {
+        return 'none';
+        }, 500);
+    }
     render() {
         const path = this.props.location.pathname;
         return (
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="fa fa-dashboard" /><span> Dashboard</span></Link></li>
-                    
-                    <li className={"treeview" +(this.state.isSetting===true
-                        || path==='/user'
-                        || path==='/location'
-                        || path==='/company'
-                        ?" active menu-open" : ""
-                        )
-                    }>
-                        <a href="!#" onClick={(e) => this.changeMenu('setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
-                        ?"block" : "none"}}>
-                            <li className={path==='/company'?"active":''}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>
-                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="fa fa-group" />User</Link></li>
-                            <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="fa fa-building-o" />Lokasi</Link></li>
-                        </ul>
-                    </li>
                     <li className={ "treeview" +
                         (this.state.isMasterdata===true ||
                         path==='/department' ||
@@ -348,10 +330,10 @@ class SideMenu extends Component {
                         <a href="#" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
                         ?"block" : "none"}}>
+                            <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment </Link></li>
                             <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
                             <li className={path==='/alokasi'?"active":''}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi </Link></li>
                             <li className={path==='/approval_mutasi'?"active":''}><Link to="/approval_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Mutasi </Link></li>
-                            <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment </Link></li>
                             <li className={path==='/opname'?"active":''}><Link to="/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname </Link></li>
                             <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Opname </Link></li>
                             <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/approval_mutasi_transaksi'|| path==='/bayar_hutang_mutasi'?" active menu-open" : "")}>
@@ -410,6 +392,22 @@ class SideMenu extends Component {
                         </ul>
                     </li>
                     <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
+                    <li className={"treeview" +(this.state.isSetting===true
+                        || path==='/user'
+                        || path==='/location'
+                        || path==='/company'
+                        ?" active menu-open" : ""
+                        )
+                    }>
+                        <a href="#" onClick={(e) => this.changeMenu('setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
+                        ?"block" : "none"}}>
+                            <li className={path==='/company'?"active":''}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>
+                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="fa fa-group" />User</Link></li>
+                            <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="fa fa-building-o" />Lokasi</Link></li>
+                        </ul>
+                    </li>
+                    
                 </ul>
             </nav>
             )

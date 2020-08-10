@@ -11,7 +11,6 @@ import {
 } from "redux/actions/masterdata/location/location.action";
 import Swal from "sweetalert2";
 import DetailLocationModal from "components/App/modals/masterdata/location/detail_location";
-// import DetailLocationModal from "components/App/modals/masterdata/cash/form_cash";
 
 import Paginationq from "helper";
 
@@ -21,9 +20,6 @@ class ListLocation extends Component{
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-        // this.handleEdit = this.handleEdit.bind(this);
-        // this.handleDelete = this.handleDelete.bind(this);
-        // this.handleDetail = this.handleDetail.bind(this);
         this.state={
             detail:{},
             isParam:'add'
