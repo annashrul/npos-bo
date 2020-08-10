@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/App/Dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Dashboard/Dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/Layout/header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/header.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -168,13 +166,15 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1635">
-              <caret line="124" column="8" selection-start-line="124" selection-start-column="8" selection-end-line="124" selection-end-column="8" />
+            <state relative-caret-position="108">
+              <caret line="375" column="149" selection-start-line="375" selection-start-column="149" selection-end-line="375" selection-end-column="149" />
               <folding>
                 <element signature="e#0#52#0" expanded="true" />
-                <element signature="e#3307#4133#0" />
-                <element signature="e#4137#4510#0" />
+                <element signature="e#1186#2599#0" />
+                <element signature="e#2605#2943#0" />
                 <element signature="e#4545#4672#0" />
+                <element signature="n#!!block;n#componentDidMount#0;n#SideMenu#0" />
+                <element signature="e#9162#10727#0" />
               </folding>
             </state>
           </provider>
@@ -323,7 +323,7 @@
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
     <option name="width" value="624" />
     <option name="height" value="735" />
@@ -488,12 +488,12 @@
       <workItem from="1596521185654" duration="23380000" />
       <workItem from="1596605591598" duration="37493000" />
       <workItem from="1596774347496" duration="21480000" />
-      <workItem from="1597034417407" duration="12895000" />
+      <workItem from="1597034417407" duration="13724000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="464639000" />
+    <option name="totallyTimeSpent" value="465468000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -513,7 +513,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.15604027" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.4261745" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -1065,13 +1065,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1635">
-          <caret line="124" column="8" selection-start-line="124" selection-start-column="8" selection-end-line="124" selection-end-column="8" />
+        <state relative-caret-position="108">
+          <caret line="375" column="149" selection-start-line="375" selection-start-column="149" selection-end-line="375" selection-end-column="149" />
           <folding>
             <element signature="e#0#52#0" expanded="true" />
-            <element signature="e#3307#4133#0" />
-            <element signature="e#4137#4510#0" />
+            <element signature="e#1186#2599#0" />
+            <element signature="e#2605#2943#0" />
             <element signature="e#4545#4672#0" />
+            <element signature="n#!!block;n#componentDidMount#0;n#SideMenu#0" />
+            <element signature="e#9162#10727#0" />
           </folding>
         </state>
       </provider>
