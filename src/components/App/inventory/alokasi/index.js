@@ -876,13 +876,13 @@ class Alokasi extends Component{
                                                                 onChange={(e=>this.HandleCommonInputChange(e))}
                                                                 value="Tunai"
                                                                 className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Tunai'}
+                                                                checked={this.state.jenis_trx==='Alokasi'}
                                                             />
                                                             <label
                                                                 className="custom-control-label"
                                                                 htmlFor="customRadio1"
                                                             >
-                                                                Tunai
+                                                                Alokasi
                                                             </label>
                                                         </div>
                                                     </div>
@@ -895,14 +895,14 @@ class Alokasi extends Component{
                                                                 onChange={(e=>this.HandleCommonInputChange(e))}
                                                                 value="Kredit"
                                                                 className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Kredit'}
+                                                                checked={this.state.jenis_trx==='Mutasi'}
 
                                                             />
                                                             <label
                                                                 className="custom-control-label"
                                                                 htmlFor="customRadio2"
                                                             >
-                                                                Kredit
+                                                                Mutasi
                                                             </label>
                                                         </div>
                                                     </div>
@@ -915,14 +915,14 @@ class Alokasi extends Component{
                                                                 onChange={(e=>this.HandleCommonInputChange(e))}
                                                                 value="Konsinyasi"
                                                                 className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Konsinyasi'}
+                                                                checked={this.state.jenis_trx==='Transaksi'}
 
                                                             />
                                                             <label
                                                                 className="custom-control-label"
                                                                 htmlFor="customRadio3"
                                                             >
-                                                                Konsinyasi
+                                                                Transaksi
                                                             </label>
                                                         </div>
                                                     </div>

@@ -22,7 +22,7 @@ import Alokasi from '../inventory/alokasi'
 import InventoryReport from '../report/inventory/stock'
 import AdjustmentReport from '../report/inventory/adjustment'
 import ApprovalMutasi from "../inventory/approval_mutasi";
-import ApprovalTranskasiMutasi from "../inventory/trx_mutasi/approval_mutasi_transaksi";
+import ApprovalTranskasiMutasi from "../inventory/mutasi_jual_beli/approval_mutasi_transaksi";
 import Opname from "../inventory/opname";
 import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'

@@ -10,7 +10,7 @@ class ApprovalMutasiTransaksi extends Component{
         return (
             <Layout page="Approval Mutasi Transaksi">
                 <div className="card">
-                    <div className="card-header"><h4>Approval Mutasi Transaksi</h4></div>
+                    <div className="card-header"><h4>Approval Mutasi Jual Beli</h4></div>
                     <div className="card-body"></div>
                 </div>
             </Layout>
