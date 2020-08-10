@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/trx_mutasi/approval_mutasi_transaksi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_transaksi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_transaksi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_jual_beli.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -18,11 +19,66 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_transaksi.js">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_jual_beli.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="12" column="78" selection-start-line="12" selection-start-column="78" selection-end-line="12" selection-end-column="78" />
+            <state relative-caret-position="70">
+              <caret line="176" column="53" selection-start-line="176" selection-start-column="38" selection-end-line="176" selection-end-column="53" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="301">
+              <caret line="82" selection-start-line="82" selection-end-line="82" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
+                <element signature="n#!!block;n#handleOnEnter#0;n#FormApprovalMutation#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="875">
+              <caret line="137" column="15" lean-forward="true" selection-start-line="137" selection-start-column="15" selection-end-line="137" selection-end-column="15" />
+              <folding>
+                <element signature="e#0#52#0" expanded="true" />
+                <element signature="e#1217#2392#0" />
+                <element signature="e#2406#2744#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="782">
+              <caret line="34" column="75" selection-start-line="34" selection-start-column="75" selection-end-line="34" selection-end-column="75" />
+              <folding>
+                <element signature="e#0#57#0" expanded="true" />
+                <element signature="e#797#1583#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="171">
+              <caret line="174" column="26" lean-forward="true" selection-start-line="174" selection-start-column="26" selection-end-line="174" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,10 +132,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/App/modals/sale/form_sale.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/report/inventory/stock_report/detail_stock_report_satuan.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/report/inventory/stock_report/detail_stock_report_transaction.js" />
-        <option value="$PROJECT_DIR$/src/components/App/report/inventory/closing/src/list.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/closing/index.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/report/closing/closing.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/po/src/list.js" />
@@ -121,12 +173,16 @@
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
         <option value="$PROJECT_DIR$/src/components/App/sale/product_sale/index.js" />
-        <option value="$PROJECT_DIR$/src/components/App/Routes/Routes.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/trx_mutasi/approval_mutasi_transaksi.js" />
         <option value="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/cetak_barcode/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_transaksi.js" />
+        <option value="$PROJECT_DIR$/src/components/App/Routes/Routes.js" />
+        <option value="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" />
+        <option value="$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_jual_beli.js" />
+        <option value="$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js" />
+        <option value="$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js" />
       </list>
     </option>
   </component>
@@ -219,6 +275,15 @@
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
               <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="approval_mutasi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
               <item name="mutasi_jual_beli" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -227,7 +292,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="sale" type="462c0819:PsiDirectoryNode" />
+              <item name="Layout" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
@@ -235,8 +300,34 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="sale" type="462c0819:PsiDirectoryNode" />
-              <item name="product_sale" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="mutation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="Routes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -312,12 +403,12 @@
       <workItem from="1596521185654" duration="23380000" />
       <workItem from="1596605591598" duration="37493000" />
       <workItem from="1596774347496" duration="21480000" />
-      <workItem from="1597034417407" duration="15219000" />
+      <workItem from="1597034417407" duration="17066000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="466963000" />
+    <option name="totallyTimeSpent" value="468810000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -337,7 +428,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.19630873" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.50503355" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -388,32 +479,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/App/report/inventory/po/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="161" column="58" lean-forward="true" selection-start-line="159" selection-start-column="39" selection-end-line="161" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/report/cash/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
-          <caret line="313" lean-forward="true" selection-start-line="313" selection-end-line="313" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/masterdata/bank/bank.action.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="118" column="13" lean-forward="true" selection-start-line="118" selection-end-line="154" />
-          <folding>
-            <element signature="e#0#47#0" expanded="true" />
-            <element signature="e#2338#3448#0" />
-            <element signature="e#3484#4634#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/redux/reducers/purchase/receive/receive.reducer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="598">
@@ -712,17 +777,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1561">
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-            <element signature="n#!!block;n#componentWillMount#0;n#ApprovalMutasi#0" />
-            <element signature="e#1752#2249#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/inventory/opname/list_posting.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1720">
@@ -855,31 +909,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-30">
-          <caret line="377" column="113" selection-start-line="377" selection-start-column="109" selection-end-line="377" selection-end-column="113" />
-          <folding>
-            <element signature="e#0#52#0" expanded="true" />
-            <element signature="e#1186#2599#0" />
-            <element signature="e#2605#2943#0" />
-            <element signature="e#4545#4672#0" />
-            <element signature="n#!!block;n#componentDidMount#0;n#SideMenu#0" />
-            <element signature="e#9162#10727#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/Routes/Routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="74" column="77" lean-forward="true" selection-start-line="74" selection-start-column="77" selection-end-line="74" selection-end-column="77" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/cetak_barcode/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="214">
@@ -893,10 +922,71 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_transaksi.js">
+    <entry file="file://$PROJECT_DIR$/src/components/App/Routes/Routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="12" column="78" selection-start-line="12" selection-start-column="78" selection-end-line="12" selection-end-column="78" />
+        <state relative-caret-position="69">
+          <caret line="24" column="91" selection-start-line="24" selection-start-column="91" selection-end-line="24" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="34" column="75" selection-start-line="34" selection-start-column="75" selection-end-line="34" selection-end-column="75" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
+            <element signature="e#797#1583#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="174" column="26" lean-forward="true" selection-start-line="174" selection-start-column="26" selection-end-line="174" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/approval_mutasi_jual_beli.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="70">
+          <caret line="176" column="53" selection-start-line="176" selection-start-column="38" selection-end-line="176" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="82" selection-start-line="82" selection-end-line="82" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#handleOnEnter#0;n#FormApprovalMutation#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/react/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="492" column="8" selection-start-line="492" selection-start-column="8" selection-end-line="492" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="875">
+          <caret line="137" column="15" lean-forward="true" selection-start-line="137" selection-start-column="15" selection-end-line="137" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#52#0" expanded="true" />
+            <element signature="e#1217#2392#0" />
+            <element signature="e#2406#2744#0" />
+          </folding>
         </state>
       </provider>
     </entry>

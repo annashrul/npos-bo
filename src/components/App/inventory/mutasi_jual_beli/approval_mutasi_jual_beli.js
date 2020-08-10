@@ -2,22 +2,21 @@ import React,{Component} from 'react'
 import Layout from "components/App/Layout"
 import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
-import {FetchApprovalMutation} from "redux/actions/inventory/mutation.action";
+import {FetchApprovalMutation,FetchApprovalMutationDetail} from "redux/actions/inventory/mutation.action";
 import moment from "moment";
-import Preloader from "../../../../Preloader";
+import Preloader from "Preloader";
 import Paginationq from "helper";
-import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import FormApprovalMutation from "../../modals/inventory/mutation/form_approval_mutation";
-import {FetchApprovalMutationDetail} from "../../../../redux/actions/inventory/mutation.action";
 
-class ApprovalMutasi extends Component{
+class ApprovalMutasiJualBeli extends Component{
     constructor(props){
         super(props);
         this.state={
             location_data:[],
             location:"",
             kd_trx:'',
-            status:""
+            status:"TR"
         }
         this.handleChange = this.handleChange.bind(this)
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this)
@@ -41,11 +40,12 @@ class ApprovalMutasi extends Component{
                 })
             }
         }
+
+
     }
     componentWillMount(){
         this.getProps(this.props);
-        this.props.dispatch(FetchApprovalMutation(1,'','',''));
-
+        this.props.dispatch(FetchApprovalMutation(1,'','','TR'));
     }
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
@@ -54,24 +54,24 @@ class ApprovalMutasi extends Component{
         this.setState({
             location:lk.value,
         })
-        this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx!==''?this.state.kd_trx:'',lk.value,''));
+        this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx!==''?this.state.kd_trx:'',lk.value,'TR'));
     }
     handlePageChange(pageNumber){
-        this.props.dispatch(FetchApprovalMutation(pageNumber,'','',''))
+        this.props.dispatch(FetchApprovalMutation(pageNumber,''))
     }
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
     }
     HandleSearch(event){
         console.log(this.state.location);
-        this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx,this.state.location!==''?this.state.location:'',''));
+        this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx,this.state.location!==''?this.state.location:''));
     }
     toggleModal(e,kd_trx) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formApprovalMutation"));
-        localStorage.setItem("kd_trx_mutasi",kd_trx)
+        localStorage.setItem("kd_trx_mutasi",kd_trx);
         this.props.dispatch(FetchApprovalMutationDetail(1,kd_trx))
     }
     render(){
@@ -188,4 +188,4 @@ const mapStateToPropsCreateItem = (state) => ({
     detailApproval:state.mutationReducer.dataApprovalDetail
 });
 
-export default connect(mapStateToPropsCreateItem)(ApprovalMutasi);
+export default connect(mapStateToPropsCreateItem)(ApprovalMutasiJualBeli);

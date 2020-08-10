@@ -80,7 +80,7 @@ class FormApprovalMutation extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(FetchApprovalMutation(1,''))
+        this.props.dispatch(FetchApprovalMutation(1,'','',this.props.parameterMutasi==='TR'?'TR':''))
     };
 
     render(){
