@@ -325,9 +325,9 @@ class SaleArchive extends Component{
                                         <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-black" style={columnStyle}>Item</th>
-                                        <th className="text-black" style={columnStyle}>Total ( rp )</th>
-                                        <th className="text-black" style={columnStyle}>Total ( % )</th>
+                                        <th className="text-black" style={columnStyle}>Peritem(%)</th>
+                                        <th className="text-black" style={columnStyle}>Total(rp)</th>
+                                        <th className="text-black" style={columnStyle}>Total(%)</th>
                                     </tr>
                                     </thead>
                                     {
