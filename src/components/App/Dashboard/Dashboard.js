@@ -270,12 +270,10 @@ class Dashboard extends Component {
         };
 
         socket.on('refresh_dashboard',(data)=>{
-            console.log("refresh_dashboard");
             this.refreshData();
         })
         
         socket.on("set_dashboard", (data) => {
-            console.log("SET_DASHBOARD", data);
             this.setState({
                 grossSales:toRp(parseInt(data.header.penjualan)),
                 netSales:toRp(parseInt(data.header.net_sales)),
@@ -347,19 +345,13 @@ class Dashboard extends Component {
     onChange = date => this.setState({ date })
 
     handleSelect = (e,index) => {
-        this.setState({selectedIndex: index}, () => {
-            // console.log('Selected tab: ' + this.state.selectedIndex);
-        });
+        this.setState({selectedIndex: index});
     };
     handleSelect2 = (e,index) => {
-        this.setState({selectedIndex: index}, () => {
-            // console.log('Selected tab: ' + this.state.selectedIndex);
-        });
+        this.setState({selectedIndex: index});
     };
     handleSelect3 = (e,index) => {
-        this.setState({selectedIndex: index}, () => {
-            // console.log('Selected tab: ' + this.state.selectedIndex);
-        });
+        this.setState({selectedIndex: index});
     };
 
     handleEvent = (event, picker) => {
@@ -399,7 +391,6 @@ class Dashboard extends Component {
 
     render() {
 
-        console.log("stock list res",this.props.stock)
         return (
             <Layout page="Dashboard">
                 <div className="row align-items-center">
