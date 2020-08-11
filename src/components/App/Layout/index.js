@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import Header from '../Layout/header'
 import SideMenu from '../Layout/sideMenu'
 import {connect} from 'react-redux'
-import Logo from "../../../assets/images/logo.png"
 import FreeScrollbar from 'react-free-scrollbar';
 
 class Layout extends Component {
