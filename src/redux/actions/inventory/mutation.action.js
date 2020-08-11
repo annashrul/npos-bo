@@ -36,6 +36,10 @@ export function setMutation(data=[]){
     return {type:MUTATION.SUCCESS,data}
 }
 
+export function setMutationExcel(data=[]){
+    return {type:MUTATION.SUCCESS_EXCEL,data}
+}
+
 export function setMutationData(data=[]){
     return {type:MUTATION.SUCCESS_DATA,data}
 }
@@ -138,6 +142,26 @@ export const FetchMutation = (page=1,where='')=>{
                 const data = response.data;
                 console.log("FetchMutasi",data);
                 dispatch(setMutation(data));
+                dispatch(setLoadingApprovalMutation(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchMutationExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoadingApprovalMutation(true));
+        let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchMutasi",data);
+                dispatch(setMutationExcel(data));
                 dispatch(setLoadingApprovalMutation(false));
             }).catch(function(error){
             console.log(error)

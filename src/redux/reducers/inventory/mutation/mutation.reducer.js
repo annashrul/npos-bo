@@ -6,6 +6,7 @@ const initialState = {
     isLoadingApproval: false,
     dataApproval: [],
     report: [],
+    report_excel: [],
     report_data: [],
     dataApprovalDetail: [],
     msgApproval:"",
@@ -23,6 +24,10 @@ export const mutationReducer = (state = initialState, action) => {
         case MUTATION.SUCCESS_DATA:
             return Object.assign({}, state, {
                 report_data: action.data.result
+            });
+        case MUTATION.SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result
             });
         case MUTATION.APPROVAL_MUTATION_DATA:
             return Object.assign({}, state, {
