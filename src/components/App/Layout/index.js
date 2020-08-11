@@ -18,7 +18,7 @@ class Layout extends Component {
     }
 
     componentWillMount() {
-        document.title = this.props.page;
+        document.title = `${atob(document.getElementById("coolyeah").value)} - ${this.props.page}`;
     }
 
     getFaviconEl() {
