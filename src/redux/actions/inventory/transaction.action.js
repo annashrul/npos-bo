@@ -36,6 +36,10 @@ export function setTransaction(data=[]){
     return {type:TRANSACTION.SUCCESS,data}
 }
 
+export function setTransactionExcel(data=[]){
+    return {type:TRANSACTION.SUCCESS_EXCEL,data}
+}
+
 export function setTransactionData(data=[]){
     return {type:TRANSACTION.SUCCESS_DATA,data}
 }
@@ -136,8 +140,28 @@ export const FetchTransaction = (page=1,where='')=>{
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchMutasi",data);
+                console.log("FetchTrx",data);
                 dispatch(setTransaction(data));
+                dispatch(setLoadingApprovalTransaction(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchTransactionExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoadingApprovalTransaction(true));
+        let url=`alokasi_trx/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchTrx",data);
+                dispatch(setTransactionExcel(data));
                 dispatch(setLoadingApprovalTransaction(false));
             }).catch(function(error){
             console.log(error)

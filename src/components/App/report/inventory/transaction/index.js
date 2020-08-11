@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchTransaction, FetchTransactionData} from "redux/actions/inventory/transaction.action";
+import {FetchTransaction, FetchTransactionExcel, FetchTransactionData} from "redux/actions/inventory/transaction.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailTransaction from "components/App/modals/report/inventory/transaction_report/detail_transaction";
@@ -90,6 +90,7 @@ class TransactionReport extends Component{
             where+=`q=${any}`
         }
         this.props.dispatch(FetchTransaction(pageNumber,where))
+        this.props.dispatch(FetchTransactionExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
@@ -176,8 +177,8 @@ class TransactionReport extends Component{
                                         </button>
                                         <ReactHTMLTableToExcel
                                             className="btn btn-primary btnBrg"
-                                            table="report_sale_to_excel"
-                                            filename="laporan_penjualan"
+                                            table="report_transaction_to_excel"
+                                            filename="laporan_alokasi_mutasi"
                                             sheet="barang"
                                             buttonText="export excel">
                                         </ReactHTMLTableToExcel>
@@ -186,6 +187,51 @@ class TransactionReport extends Component{
                                 </div>
 
                             </div>
+                            {/*DATA EXCEL*/}
+                            <table className="table table-hover"  id="report_transaction_to_excel" style={{display:"none"}}>
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" colSpan={8}>{this.state.startDate} - {this.state.startDate}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={8}>LAPORAN ALOKASI TRANSAKSI</th>
+                                </tr>
+
+                                <tr>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Faktur</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Mutasi</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status Penerimaan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status Pembayaran</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
+                                </tr>
+                                <tr></tr>
+                                </thead>
+                                {
+                                    <tbody>
+                                    {
+                                        typeof this.props.transactionReportExcel.data==='object'? this.props.transactionReportExcel.data.length>0?
+                                            this.props.transactionReportExcel.data.map((v,i)=>{
+                                                return (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
+                                                        <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
+                                                        <td style={columnStyle}>{v.lokasi_asal}</td>
+                                                        <td style={columnStyle}>{v.lokasi_tujuan}</td>
+                                                        <td style={columnStyle}>{v.no_faktur_beli}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
+                                                        <td style={columnStyle}>{String(v.status_transaksi)==='0'?statusQ('info','Belum Lunas'):(String(v.status_transaksi)==='1'?statusQ('success','Lunas'):"")}</td>
+                                                        <td style={columnStyle}>{v.keterangan}</td>
+                                                    </tr>
+                                                );
+                                            }) : "No data." : "No data."
+                                    }
+                                    </tbody>
+                                }
+                            </table>
+                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -273,6 +319,7 @@ const mapStateToProps = (state) => {
         auth:state.auth,
         isLoading: state.transactionReducer.isLoading,
         transactionDetail:state.transactionReducer.report_data,
+        transactionReportExcel:state.transactionReducer.report_excel,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

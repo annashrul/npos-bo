@@ -6,6 +6,7 @@ const initialState = {
     isLoadingApproval: false,
     dataApproval: [],
     report: [],
+    report_excel: [],
     report_data: [],
     dataApprovalDetail: [],
     msgApproval:"",
@@ -23,6 +24,10 @@ export const transactionReducer = (state = initialState, action) => {
         case TRANSACTION.SUCCESS_DATA:
             return Object.assign({}, state, {
                 report_data: action.data.result
+            });
+        case TRANSACTION.SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result
             });
         case TRANSACTION.APPROVAL_TRANSACTION_DATA:
             return Object.assign({}, state, {
