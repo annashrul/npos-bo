@@ -2,9 +2,10 @@ import {OPNAME} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,
-    status:"",msg:"",total_opname:{total_fisik:0,total_akhir:0,total_hpp:0,},
+    status:"",msg:"",
     data:[],
-    report:[]
+    report:[],
+    total_opname:{total_fisik:0,total_akhir:0,total_hpp:0,},
 };
 
 export const opnameReducer = (state=initialState,action) => {

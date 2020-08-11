@@ -190,14 +190,18 @@ class OpnameReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No DN</th>
+                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Kode Trx</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Asal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Tujuan</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">kode Barang</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Nama Barang</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Kel. Barang</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Qty Fisik</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Stok Terakhir</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">harga Beli</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No. Faktur Beli</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
                                     </thead>
                                     {
@@ -207,34 +211,33 @@ class OpnameReport extends Component{
                                                 (
                                                     typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
-                                                            // total_opname_per = total_opname_per+parseInt(v.delivery_note);
-                                                            // total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
-                                                            // total_last_stock_per = total_last_stock_per+parseInt(v.stock_akhir);
-                                                            // total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
-                                                            // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
                                                             return(
                                                                 <tr key={i}>
-                                                                    <td style={columnStyle}>{/* Example split danger button */}
-                                                                        <div className="btn-group">
+                                                                    {/* <td style={columnStyle}>Example split danger button */}
+                                                                        {/* <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                                 Action
                                                                             </button>
-                                                                            <div className="dropdown-menu">
+                                                                            <div className="dropdown-menu"> */}
                                                                                 {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_delivery_note,'','')}>Detail</a>
+                                                                                {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_delivery_note,'','')}>Detail</a>
                                                                             </div>
                                                                         </div>
-                                                                    </td>
-                                                                    <td style={columnStyle}>{v.no_delivery_note}</td>
+                                                                    </td> */}
+                                                                    <td style={columnStyle}>{v.kd_trx}</td>
                                                                     <td style={columnStyle}>{moment(v.tanggal).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.kd_lokasi_1}</td>
-                                                                    <td style={columnStyle}>{v.kd_lokasi_2}</td>
+                                                                    <td style={columnStyle}>{v.kd_brg}</td>
+                                                                    <td style={columnStyle}>{v.nm_brg}</td>
+                                                                    <td style={columnStyle}>{v.nm_kel_brg}</td>
+                                                                    <td style={columnStyle}>{v.barcode}</td>
+                                                                    <td style={columnStyle}>{v.qty_fisik}</td>
+                                                                    <td style={columnStyle}>{v.stock_terakhir}</td>
+                                                                    <td style={columnStyle}>{v.lokasi}</td>
+                                                                    <td style={columnStyle}>{v.hrg_beli}</td>
                                                                     <td style={columnStyle}>{
-                                                                        v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))
+                                                                        v.status==='0'?statusQ('danger','Belum Opname'):(v.status==='1'?statusQ('warning','Sudah Opname'):"")
                                                                         // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
                                                                     }</td>
-                                                                    <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
-                                                                    <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
 
                                                                 </tr>
                                                             )
@@ -248,15 +251,15 @@ class OpnameReport extends Component{
                                 </table>
 
                             </div>
-                            {/*<div style={{"marginTop":"20px","float":"right"}}>*/}
-                                {/*<Paginationq*/}
-                                    {/*current_page={current_page}*/}
-                                    {/*per_page={per_page}*/}
-                                    {/*total={total}*/}
-                                    {/*callback={this.handlePageChange.bind(this)}*/}
-                                {/*/>*/}
-                            {/*</div>*/}
-                            <DetailOpname opnameDetail={this.props.opnameDetail}/>
+                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                                <Paginationq
+                                    current_page={current_page}
+                                    per_page={per_page}
+                                    total={total}
+                                    callback={this.handlePageChange.bind(this)}
+                                />
+                            </div> */}
+                            {/* <DetailOpname opnameDetail={this.props.opnameDetail}/> */}
                         </div>
                     </div>
                 </div>
@@ -273,7 +276,7 @@ const mapStateToProps = (state) => {
         auth:state.auth,
         isLoading: state.opnameReducer.isLoading,
         // opnameDetail:state.opnameReducer.opname_data,
-        isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
+        // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
