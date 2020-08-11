@@ -1,49 +1,49 @@
 import {
-    MUTATION,
+    TRANSACTION,
     HEADERS
 } from "../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {setLoading} from "../masterdata/customer/customer.action";
 
-export function setLoadingApprovalMutation(load) {
+export function setLoadingApprovalTransaction(load) {
     return {
-        type: MUTATION.APPROVAL_MUTATION_LOADING,
+        type: TRANSACTION.APPROVAL_TRANSACTION_LOADING,
         load
     }
 }
-export function setApprovalMutation(data = []) {
+export function setApprovalTransaction(data = []) {
     return {
-        type: MUTATION.APPROVAL_MUTATION_DATA,
+        type: TRANSACTION.APPROVAL_TRANSACTION_DATA,
         data
     }
 }
-export function setApprovalMutationDetail(data = []) {
+export function setApprovalTransactionDetail(data = []) {
     return {
-        type: MUTATION.APPROVAL_TUTATION_DATA_DETAIL,
-        data
-    }
-}
-
-export function setApprovalMutationFailed(data = []) {
-    return {
-        type: MUTATION.APPROVAL_MUTATION_FAILED,
+        type: TRANSACTION.APPROVAL_TUTATION_DATA_DETAIL,
         data
     }
 }
 
-export function setMutation(data=[]){
-    return {type:MUTATION.SUCCESS,data}
+export function setApprovalTransactionFailed(data = []) {
+    return {
+        type: TRANSACTION.APPROVAL_TRANSACTION_FAILED,
+        data
+    }
 }
 
-export function setMutationData(data=[]){
-    return {type:MUTATION.SUCCESS_DATA,data}
+export function setTransaction(data=[]){
+    return {type:TRANSACTION.SUCCESS,data}
+}
+
+export function setTransactionData(data=[]){
+    return {type:TRANSACTION.SUCCESS_DATA,data}
 }
 
 
-export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
+export const FetchApprovalTransaction = (page = 1,q='',lokasi='',param='') => {
     return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
+        dispatch(setLoadingApprovalTransaction(true));
         let url=`mutasi?page=${page}`;
         if(q!==''){
             if(url!==''){url+='&';}
@@ -60,8 +60,8 @@ export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data;
-                dispatch(setApprovalMutation(data));
-                dispatch(setLoadingApprovalMutation(false));
+                dispatch(setApprovalTransaction(data));
+                dispatch(setLoadingApprovalTransaction(false));
             })
             .catch(function (error) {
                 // handle error
@@ -71,15 +71,15 @@ export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
     }
 }
 
-export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
+export const FetchApprovalTransactionDetail = (page = 1,kd_trx) => {
     return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
+        dispatch(setLoadingApprovalTransaction(true));
         let url=`mutasi/${kd_trx}/?page=${page}`;
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data;
-                dispatch(setApprovalMutationDetail(data));
-                dispatch(setLoadingApprovalMutation(false));
+                dispatch(setApprovalTransactionDetail(data));
+                dispatch(setLoadingApprovalTransaction(false));
             })
             .catch(function (error) {
                 // handle error
@@ -89,7 +89,7 @@ export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
     }
 }
 
-export const saveApprovalMutation = (data) => {
+export const saveApprovalTransaction = (data) => {
     return (dispatch) => {
         // dispatch(setLoading(true))
         const url = HEADERS.URL + `mutasi/approve`;
@@ -125,10 +125,10 @@ export const saveApprovalMutation = (data) => {
     }
 }
 
-export const FetchMutation = (page=1,where='')=>{
+export const FetchTransaction = (page=1,where='')=>{
     return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
-        let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
+        dispatch(setLoadingApprovalTransaction(true));
+        let url=`alokasi_trx/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
         if(where!==''){
             url+=where
         }
@@ -137,14 +137,14 @@ export const FetchMutation = (page=1,where='')=>{
             .then(function(response){
                 const data = response.data;
                 console.log("FetchMutasi",data);
-                dispatch(setMutation(data));
-                dispatch(setLoadingApprovalMutation(false));
+                dispatch(setTransaction(data));
+                dispatch(setLoadingApprovalTransaction(false));
             }).catch(function(error){
             console.log(error)
         })
     }
 }
-export const FetchMutationData = (page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchTransactionData = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let que = '';
@@ -165,7 +165,7 @@ export const FetchMutationData = (page=1,code,dateFrom='',dateTo='',location='')
             .then(function(response){
                 const data = response.data;
                 console.log(data);
-                dispatch(setMutationData(data));
+                dispatch(setTransactionData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)

@@ -1,5 +1,5 @@
 import {
-    MUTATION
+    TRANSACTION
 } from "../../../actions/_constants";
 
 const initialState = {
@@ -12,35 +12,35 @@ const initialState = {
     statusApproval:"",
 };
 
-export const mutationReducer = (state = initialState, action) => {
+export const transactionReducer = (state = initialState, action) => {
     switch (action.type) {
-        case MUTATION.SUCCESS:
+        case TRANSACTION.SUCCESS:
             return Object.assign({}, state, {
                 status: action.data.status,
                 msg: action.data.msg,
                 report: action.data.result,
             });
-        case MUTATION.SUCCESS_DATA:
+        case TRANSACTION.SUCCESS_DATA:
             return Object.assign({}, state, {
                 report_data: action.data.result
             });
-        case MUTATION.APPROVAL_MUTATION_DATA:
+        case TRANSACTION.APPROVAL_TRANSACTION_DATA:
             return Object.assign({}, state, {
                 statusApproval: action.data.status,
                 msgApproval: action.data.msg,
                 dataApproval: action.data.result,
             });
-        case MUTATION.APPROVAL_TUTATION_DATA_DETAIL:
+        case TRANSACTION.APPROVAL_TUTATION_DATA_DETAIL:
             return Object.assign({}, state, {
                 dataApprovalDetail: action.data.result,
             });
-        case MUTATION.APPROVAL_MUTATION_FAILED:
+        case TRANSACTION.APPROVAL_TRANSACTION_FAILED:
             return Object.assign({}, state, {
                 statusApproval: action.data.status,
                 msgApproval: action.data.msg,
                 dataApproval: action.data.result
             });
-        case MUTATION.APPROVAL_MUTATION_LOADING:
+        case TRANSACTION.APPROVAL_TRANSACTION_LOADING:
             return Object.assign({}, state, {
                 isLoadingApproval: action.load
             });

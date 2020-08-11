@@ -39,7 +39,7 @@ export const FetchPostingOpname = (page=1,where='')=>{
 export const FetchOpname = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url=`opname/report?page=${page}`;
+        let url=`opname/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
         if(where!==''){
             url+=where
         }

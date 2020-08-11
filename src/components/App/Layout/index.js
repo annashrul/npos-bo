@@ -42,6 +42,7 @@ class Layout extends Component {
     }
 
     render() {
+        console.log("props", this.props)
         const style = {
             overflowY: 'auto',
             '::-webkit-scrollbar': {
