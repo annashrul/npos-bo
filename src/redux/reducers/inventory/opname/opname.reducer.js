@@ -5,6 +5,7 @@ const initialState = {
     status:"",msg:"",
     data:[],
     report:[],
+    report_excel:[],
     total_opname:{total_fisik:0,total_akhir:0,total_hpp:0,},
 };
 
@@ -23,6 +24,10 @@ export const opnameReducer = (state=initialState,action) => {
                 msg:action.data.msg,
                 data:action.data.result,
                 total_opname:action.data.result.total_opname
+            });
+        case OPNAME.SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result,
             });
         case OPNAME.FAILED:
             return Object.assign({}, state, {

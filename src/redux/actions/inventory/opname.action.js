@@ -10,6 +10,9 @@ export function setLoading(load){
 export function setOpname(data=[]){
     return {type:OPNAME.SUCCESS,data}
 }
+export function setOpnameExcel(data=[]){
+    return {type:OPNAME.SUCCESS_EXCEL,data}
+}
 export function setPostingOpname(data=[]){
     return {type:OPNAME.DATA_POSTING,data}
 }
@@ -49,6 +52,25 @@ export const FetchOpname = (page=1,where='')=>{
                 const data = response.data;
                 console.log("FetchOpname",data);
                 dispatch(setOpname(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchOpnameExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`opname/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchOpnameExcel",data);
+                dispatch(setOpnameExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
