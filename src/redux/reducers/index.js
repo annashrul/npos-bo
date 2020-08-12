@@ -31,6 +31,7 @@ import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {transactionReducer} from "./inventory/transaction/transaction.reducer";
 import {closingReducer} from "./report/closing/closing.reducer";
 import {opnameReducer} from "./inventory/opname/opname.reducer";
+import {expedisiReducer} from "./inventory/expedisi/expedisi.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
 import {hutangReducer} from "./hutang/hutang.reducer";
 
@@ -68,6 +69,7 @@ export default combineReducers({
     closingReducer,
     hutangReducer,
     opnameReducer,
+    expedisiReducer,
     auth: authReducer,
     errors : errorsReducer
 });

@@ -257,6 +257,17 @@ export const OPNAME = {
     FAILED_POSING:"SET_FAILED_POSTING"
 }
 /****************
+ EXPEDISI
+ *****************/
+export const EXPEDISI = {
+    LOADING: 'SET_EXPEDISI_LOADING',
+    SUCCESS: 'SET_EXPEDISI_SUCCESS',
+    SUCCESS_EXCEL: 'SET_EXPEDISI_SUCCESS_EXCEL',
+    FAILED: 'SET_EXPEDISI_FAILED',
+    DATA_POSTING:"SET_DATA_POSTING",
+    FAILED_POSING:"SET_FAILED_POSTING"
+}
+/****************
  SALES
  *****************/
 export const SALES = {
