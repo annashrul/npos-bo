@@ -154,7 +154,8 @@ class PurchaseOrder extends Component{
         this.getData();
     }
 
-    HandleCommonInputChange(e,errs=true){
+
+    handleChange(e,errs=true){
         const column = e.target.name;
         const val = e.target.value;
         this.setState({
