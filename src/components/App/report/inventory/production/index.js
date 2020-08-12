@@ -266,7 +266,7 @@ class ProductionReport extends Component{
                                                                             </button>
                                                                             <div className="dropdown-menu">
                                                                                 {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.kd_produksi,'','')}>Detail</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
