@@ -8,6 +8,7 @@ import {stringifyFormData} from "helper";
 import {createPromo} from "redux/actions/masterdata/promo/promo.action";
 import {updatePromo} from "../../../../../redux/actions/masterdata/promo/promo.action";
 import {toMoney} from "../../../../../helper";
+import Autosuggest from 'react-autosuggest';
 
 class FormPromo extends Component{
     constructor(props){
@@ -24,7 +25,9 @@ class FormPromo extends Component{
             charge_debit:'0',
             charge_kredit:'0',
             foto:"",
-            token:''
+            token:'',
+            value: '',
+            suggestions: []
         };
     }
     componentWillMount(){
@@ -106,10 +109,121 @@ class FormPromo extends Component{
 
         return formatter.format(number);
     }
+    
+    // Filter logic
+    getSuggestions = async (value) => {
+        const inputValue = value.trim().toLowerCase();
+        let response = await fetch("http://203.190.54.4:6692/barang?page=1&lokasi=LK%2F0001&q=" + inputValue);
+        let data = await response.json()
+        return data;
+    };
+
+    // Trigger suggestions
+    getSuggestionValue = suggestion => suggestion.kd_brg;
+
+    // Render Each Option
+    renderSuggestion = suggestion => (
+        <a className="dropdown-item">
+            <span className="nm_brg">
+                {suggestion.nm_brg}
+            </span>&nbsp;|&nbsp;
+            <span className="kd_brg">
+                {suggestion.kd_brg}
+            </span>
+        </a>
+    );
+
+    // OnChange event handler
+    onChange = (event, { newValue }) => {
+        this.setState({
+            value: newValue
+        });
+    };
+
+    // Suggestion rerender when user types
+    onSuggestionsFetchRequested = ({ value }) => {
+        this.getSuggestions(value)
+            .then(data => {
+                if (data.Error) {
+                    this.setState({
+                        suggestions: []
+                    });
+                } else {
+                    this.setState({
+                        suggestions: data.result.data
+                    });
+                }
+                console.log("autosg2",data);
+            })
+        console.log("autosg", value)
+    };
+
+    // Triggered on clear
+    onSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: []
+        });
+    };
+
+    onSuggestionSelected = () => {
+        // const finaldt = {
+        //     kd_brg: item.kd_brg,
+        //     nm_brg: item.nm_brg,
+        //     barcode: item.barcode,
+        //     satuan: item.satuan,
+        //     harga_beli: item.harga_beli,
+        //     hrg_jual: item.hrg_jual,
+        //     stock: item.stock,
+        //     qty: item.qty,
+        //     tambahan: item.tambahan
+        // };
+        // const cek = cekData('kd_brg',item.kd_brg,table);
+        // cek.then(res => {
+        //     if(res==undefined){
+        //             store(table, finaldt)
+        //     }else{
+        //         update(table,{
+        //                 id:res.id,
+        //                 kd_brg: res.kd_brg,
+        //                 nm_brg: res.nm_brg,
+        //                 barcode: res.barcode,
+        //                 satuan: res.satuan,
+        //                 harga_beli: res.harga_beli,
+        //                 hrg_jual: res.hrg_jual,
+        //                 stock: res.stock,
+        //                 qty: parseFloat(res.qty)+1,
+        //                 tambahan: res.tambahan
+        //         })
+        //     }
+            
+
+        //     this.getData()
+        // })
+        this.setState({
+            suggestions: [],
+            value:''
+        });
+    }
+
+
     render(){
 
         const kategori = this.props.kategori;
         console.log(kategori);
+        const { value, suggestions } = this.state;
+        const inputProps = {
+            placeholder: "Cari Barang",
+            value,
+            onChange: this.onChange
+        };
+        const theme = {
+            container: 'autosuggest',
+            input: 'form-control',
+            suggestionsContainer: 'dropdown',
+            suggestionsList: `dropdown-menu ${suggestions.length ? 'show' : ''}`,
+            suggestion: 'dropdown-item',
+            suggestionHighlighted: 'active'
+        };
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"} size="lg">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Promo":"Update Promo"}</ModalHeader>
@@ -117,7 +231,7 @@ class FormPromo extends Component{
                     <ModalBody>
                         <div className="form-group">
                             <label>Account Name</label>
-                            <input type="text" className="form-control" name="akun" value={this.toCurrency(this.state.akun)} onChange={this.handleChange} required/>
+                            <input type="text" className="form-control" name="akun" value={this.state.akun} onChange={this.handleChange} required/>
                         </div>
                         <div className="form-group">
                             <label>Category</label>
@@ -135,6 +249,78 @@ class FormPromo extends Component{
                             <label>Product Code</label>
                             <input type="text" className="form-control" name="kd_brg" value={this.toCurrency(this.state.kd_brg)} onChange={this.handleChange} required/>
                         </div>
+                        <div className="form-group" style={{display:this.state.category==='brg'?'block':'none'}}>
+                            <label>Product Code</label>
+                            <Autosuggest
+                                suggestions={suggestions}
+                                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                                onSuggestionSelected={this.onSuggestionSelected}
+                                getSuggestionValue={this.getSuggestionValue}
+                                renderSuggestion={this.renderSuggestion}
+                                inputProps={inputProps}
+                                theme={theme}
+                                />
+                        </div>
+                        <div className="table-responsive" style={{overflowX: 'auto'}}>
+                        {/* <table className="table table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th style={columnStyle}>#</th>
+                                <th style={columnStyle}>Nama</th>
+                                <th style={columnStyle}>Barcode</th>
+                                <th style={columnStyle}>Harga jual</th>
+                                <th style={columnStyle}>Jenis</th>
+                                <th style={columnStyle}>Diskon</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {
+                                this.state.databrg.map((item, index) => {
+                                    console.log(item);
+
+                                    subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
+                                    // console.log('gt',grandtotal);
+                                    return (
+                                        <tr key={index}>
+                                            <td style={columnStyle}>
+                                                <a href="about:blank" className='btn btn-danger btn-sm'
+                                                    onClick={(e) => this.HandleRemove(e, item.id)}><i
+                                                    className='fa fa-trash'/></a>
+                                            </td>
+                                            <td style={columnStyle}>{item.nm_brg}</td>
+                                            <td style={columnStyle}>{item.barcode}</td>
+                                            <td style={columnStyle}>{item.barcode}</td>
+                                            <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                                                {
+                                                    item.tambahan.map(i => {
+                                                        return (
+                                                            <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </select></td>
+                                            <td style={columnStyle}>
+                                                <input type='text' name='qty'
+                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                        style={{width: '100%', textAlign: 'center'}}
+                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                        className="form-control"
+                                                        value={this.state.brgval[index].qty}/>
+                                                <div className="invalid-feedback"
+                                                    style={parseInt(this.state.brgval[index].qty) > parseInt(item.stock) ? {display: 'block'} : {display: 'none'}}>
+                                                    Qty Melebihi Stock.
+                                                </div>
+                                            </td>
+                                            <td style={columnStyle}>{parseInt(item.harga_beli) * parseFloat(item.qty)}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                            </tbody>
+                        </table> */}
+                    </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="form-group" style={{textAlign:"right"}}>

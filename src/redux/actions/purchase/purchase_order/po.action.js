@@ -56,6 +56,9 @@ export function setPOFailed(data = []) {
 export function setPoReport(data=[]){
     return {type:PO.SUCCESS,data}
 }
+export function setPoReportExcel(data=[]){
+    return {type:PO.SUCCESS_EXCEL,data}
+}
 export function setPoReportDetail(data=[]){
     return {type:PO.PO_REPORT_DETAIL,data}
 }
@@ -172,6 +175,27 @@ export const fetchPoReport = (page=1,where='')=>{
                 const data = response.data;
                 console.log(data);
                 dispatch(setPoReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const fetchPoReportExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = `purchaseorder/report?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            que+=`${where}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPoReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
