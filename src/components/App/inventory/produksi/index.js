@@ -3,14 +3,13 @@ import {store,get, update,destroy,cekData,del} from "components/model/app.model"
 import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.action";
+import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
-import {FetchCodeAdjustment, storeAdjusment} from "../../../../redux/actions/adjustment/adjustment.action";
-import {toRp} from "../../../../helper";
-import {FetchCodeProduksi} from "../../../../redux/actions/inventory/produksi.action";
+import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
+import {toRp} from "helper";
+import {FetchCodeProduksi, storeProduksi} from "redux/actions/inventory/produksi.action";
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -121,8 +120,8 @@ class Produksi extends Component{
     };
     HandleChangeBarangPaket(lk){
         let val = lk.value;
-        val.split("|", 0);
-        console.log(val.split("|", 0));
+        let exp = val.split("|", 2);
+        console.log(exp[0]);
         let err = Object.assign({}, this.state.error, {
             barang_paket: ""
         });
@@ -305,6 +304,7 @@ class Produksi extends Component{
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
+                console.log("data",res);
                 if (res == undefined) {
                     Toast.fire({
                         icon: 'error',
@@ -318,14 +318,33 @@ class Produksi extends Component{
                             newbrg=i;
                         }
                     });
+                    console.log("new barang",newbrg.satuan);
                     let final= {
                         id: res.id,
-                        barcode:newbrg.barcode,harga_beli: newbrg.harga_beli,satuan: res.satuan, hrg_jual: newbrg.harga,kd_brg: res.kd_brg, nm_brg: res.nm_brg,
-                        saldo_stock:newbrg.stock, stock: newbrg.stock, qty_adjust:0, tambahan: res.tambahan,
-                        kel_brg:res.kel_brg, kategori:res.kategori, stock_min:res.stock_min, supplier:res.supplier, subdept:res.subdept, deskripsi:res.deskripsi,
-                        jenis:res.jenis,kcp:res.kcp, poin:res.poin, group1:res.group1, group2:res.group2, status:res.status,
+                        barcode:newbrg.barcode,
+                        harga_beli: newbrg.harga_beli,
+                        satuan: newbrg.satuan,
+                        hrg_jual: newbrg.harga,
+                        kd_brg: res.kd_brg,
+                        nm_brg: res.nm_brg,
+                        saldo_stock:newbrg.stock,
+                        stock: newbrg.stock,
+                        qty_adjust:0,
+                        tambahan: res.tambahan,
+                        kel_brg:res.kel_brg,
+                        kategori:res.kategori,
+                        stock_min:res.stock_min,
+                        supplier:res.supplier,
+                        subdept:res.subdept,
+                        deskripsi:res.deskripsi,
+                        jenis:res.jenis,
+                        kcp:res.kcp,
+                        poin:res.poin,
+                        group1:res.group1,
+                        group2:res.group2,
+                        status:res.status,
                     }
-                    update(table, final)
+                    update(table, final);
                     Toast.fire({
                         icon: 'success',
                         title: `${column} has been changed.`
@@ -409,32 +428,28 @@ class Produksi extends Component{
                     }).then((result) => {
                         if (result.value) {
 
-                            let subtotal = 0;
                             let detail = [];
+                            let exp = this.state.barang_paket.split("|", 2);
                             let data={};
-                            data['kd_kasir'] = this.state.userid;
-                            data['tgl'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
+                            data['brcd_hasil'] = exp[1];
+                            data['kd_brrg'] = exp[0];
+                            data['userid'] = this.state.userid;
+                            data['tanggal'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
                             data['lokasi'] = this.state.location;
                             data['keterangan'] = this.state.catatan;
+                            data['qty_estimasi'] = this.state.qty_estimasi;
                             res.map(item => {
-                                let saldo_stock=item.saldo_stock;
-
-                                if(item.status === 'kurang'){
-                                    saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
-                                }
-                                if(item.status === 'tambah' || item.status === '' || item.status === undefined){
-                                    saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
-                                }
                                 detail.push({
-                                    "brcd_brg": item.barcode,
-                                    "status": item.status,
-                                    "qty_adjust": item.qty_adjust,
-                                    "stock_terakhir": saldo_stock,
-                                    "hrg_beli": item.harga_beli
+                                    "kd_brg": item.kd_brg,
+                                    "barcode": item.barcode,
+                                    "satuan": item.satuan,
+                                    "qty": item.qty_adjust,
+                                    "harga_beli": item.harga_beli
                                 })
                             });
                             data['detail'] = detail;
-                            this.props.dispatch(storeAdjusment(data));
+                            console.log(data);
+                            this.props.dispatch(storeProduksi(data));
                         }
                     })
 

@@ -79,3 +79,43 @@ export const FetchBrgProduksi = (page=1,by='barcode',q='',lokasi=null,db,type=''
         })
     }
 }
+export const storeProduksi = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `production`;
+        axios.post(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Transaksi berhasil.',
+                    // html: `Total Hpp: ${data.result.total_hpp} <br/> Qty Estimasi : ${data.result.qty_estimasi} <br/> Hpp Peritem : ${data.result.hpp_peritem}`,
+                    html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${data.result.total_hpp}</td><td>${data.result.qty_estimasi}</td><td>${data.result.hpp_peritem}</td></tr></tbody></table>`,
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9800',
+                    cancelButtonColor: '#2196F3',
+                    confirmButtonText: 'Print Nota?',
+                    cancelButtonText: 'Oke!'
+                }).then((result) => {
+                    destroy('production');
+                    localStorage.removeItem('location_produksi');
+                    localStorage.removeItem('barang_paket_produksi');
+                    window.location.reload(false);
+                })
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
