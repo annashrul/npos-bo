@@ -27,6 +27,7 @@ import BayarMutasiJualBeli from "../inventory/mutasi_jual_beli/bayar_mutasi_jual
 import Opname from "../inventory/opname";
 import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
+import Produksi from '../inventory/produksi'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import Closing from '../report/inventory/closing'
@@ -85,6 +86,7 @@ const Routes = (
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
+            <PrivateRoute path="/produksi" exact strict component={Produksi} />
         </Switch>
     </div>
 )

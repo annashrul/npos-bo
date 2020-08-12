@@ -33,6 +33,7 @@ import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
 import {hutangReducer} from "./hutang/hutang.reducer";
 import {mutasiJualBeliReducer} from "./inventory/mutasi_jual_beli/mutasi_jual_beli.reducer";
+import {produksiReducer} from "./inventory/produksi/produksi.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -68,6 +69,7 @@ export default combineReducers({
     closingReducer,
     hutangReducer,
     opnameReducer,
+    produksiReducer,
     auth: authReducer,
     errors : errorsReducer
 });

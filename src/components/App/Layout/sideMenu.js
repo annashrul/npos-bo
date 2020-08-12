@@ -344,6 +344,7 @@ class SideMenu extends Component {
                                     <li className={path==='/bayar_mutasi_jual_beli'?"active":''}><Link to="/bayar_mutasi_jual_beli" style={{width:'fit-content'}}> <i className="fa fa-money" />Bayar</Link></li>
                                 </ul>
                             </li>
+
                         </ul>
                     </li>
                     <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}>
@@ -355,6 +356,8 @@ class SideMenu extends Component {
                             <li className={path==='/retur_tanpa_nota'?"active":''}><Link to="/retur_tanpa_nota" style={{width:'fit-content'}}> <i className="fa fa-rotate-left" />Retur Tanpa Nota</Link></li>
                         </ul>
                     </li>
+                    <li  className={path==='/produksi'?"active":''}><Link to="/produksi"> <i className="fa fa-product-hunt" /><span> Produksi</span></Link></li>
+
                     <li className={"treeview" + (this.state.isSale===true  || path==='/sale'?" active menu-open" : "")}>
                         <a href="javascript:void(0)" onClick={(e) => this.changeMenu('sale')}><i className="fa fa-shopping-cart" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true
