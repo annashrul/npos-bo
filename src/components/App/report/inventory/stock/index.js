@@ -370,7 +370,6 @@ class InventoryReport extends Component{
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
                                                                     <td style={{textAlign:"right"}}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td>
-                                                                    <td style={{textAlign:"right"}}>{stok_akhir}</td>
 
                                                                 </tr>
                                                             )
