@@ -33,6 +33,7 @@ import OpnameReport from '../report/inventory/opname'
 import ExpedisiReport from '../report/inventory/expedisi'
 import MutationReport from '../report/inventory/mutation'
 import TransactionReport from '../report/inventory/transaction'
+import ProductionReport from '../report/inventory/production'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import Sale from '../sale/product_sale'
@@ -82,6 +83,7 @@ const Routes = (
             <PrivateRoute path="/report/expedisi_report" exact strict component={ExpedisiReport} />
             <PrivateRoute path="/report/mutation_report" exact strict component={MutationReport} />
             <PrivateRoute path="/report/alokasi_trx_report" exact strict component={TransactionReport} />
+            <PrivateRoute path="/report/production_report" exact strict component={ProductionReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />

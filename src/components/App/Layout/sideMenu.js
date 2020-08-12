@@ -256,6 +256,7 @@ class SideMenu extends Component {
             path==='/report/expedisi_report' ||
             path==='/report/mutation_report' ||
             path==='/report/alokasi_trx_report' ||
+            path==='/report/production_report' ||
 
             path==='/po_report'||
             path==='/receive_report'
@@ -272,6 +273,7 @@ class SideMenu extends Component {
                 path==='/report/expedisi_report' || 
                 path==='/report/mutation_report' || 
                 path==='/report/alokasi_trx_report' || 
+                path==='/report/production_report' || 
                 path==='/report/dn_report'){
                console.log("didmount",path)
                this.setState({
@@ -419,6 +421,7 @@ class SideMenu extends Component {
                                 path==='/inventory_report'|| path==='/adjustment_report'|| 
                                 path==='/alokasi_report'||
                                 path==='/report/opname_report'||
+                                path==='/report/production_report'||
                                 path==='/report/expedisi_report'||
                                 path==='/report/mutation_report'||
                                 path==='/report/alokasi_trx_report'||
@@ -433,7 +436,8 @@ class SideMenu extends Component {
                                     <li className={path==='/report/opname_report'?"active":''}><Link to="/report/opname_report" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname</Link></li>
                                     <li className={path==='/report/mutation_report'?"active":''}><Link to="/report/mutation_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-card" />Mutation</Link></li>
                                     <li className={path==='/report/alokasi_trx_report'?"active":''}><Link to="/report/alokasi_trx_report" style={{width:'fit-content'}}> <i className="fa fa-money" />Alocation Trx</Link></li>
-                                    <li className={path==='/report/expedisi_report'?"active":''}><Link to="/report/expedisi_report" style={{width:'fit-content'}}> <i className="fa fa-truck" />Ekspedisi</Link></li>
+                                    <li className={path==='/report/expedisi_report'?"active":''}><Link to="/report/expedisi_report" style={{width:'fit-content'}}> <i className="fa fa-truck" />Expedition</Link></li>
+                                    <li className={path==='/report/production_report'?"active":''}><Link to="/report/production_report" style={{width:'fit-content'}}> <i className="fa fa-truck" />Production</Link></li>
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isReportPembelian===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
