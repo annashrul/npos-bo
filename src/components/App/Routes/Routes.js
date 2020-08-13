@@ -36,12 +36,14 @@ import TransactionReport from '../report/inventory/transaction'
 import ProductionReport from '../report/inventory/production'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
+import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import Sale from '../sale/product_sale'
 import Company from "../setting/company";
 
 import axios from 'axios';
 import {HEADERS} from "../../../redux/actions/_constants";
 import ReportCash from "../report/cash";
+import ReportLabaRugi from "../report/laba_rugi";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
 import CetakBarcode from "../cetak_barcode";
@@ -86,7 +88,9 @@ const Routes = (
             <PrivateRoute path="/report/production_report" exact strict component={ProductionReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
+            <PrivateRoute path="/report/laba_rugi_report" exact strict component={ReportLabaRugi} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
+            <PrivateRoute path="/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />

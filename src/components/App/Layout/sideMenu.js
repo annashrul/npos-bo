@@ -17,6 +17,7 @@ class SideMenu extends Component {
             isSale:false,
             isReportInventory:false,
             isReportPembelian:false,
+            isReportPenjualan:false,
             isTrxMutasi:false,
             pageMenu : '',
             dataUser:[],
@@ -73,6 +74,19 @@ class SideMenu extends Component {
                     isSale:false,
                     isReportInventory:false,
                     isReportPembelian:!this.state.isReportPembelian
+                })
+            }
+            if(this.state.isReportPenjualan === true) {
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:false,
+                    isReportPembelian:false,
+                    isReportPenjualan:!this.state.isReportPenjualan
                 })
             }
         } else if(this.state.isInventory === true){
@@ -163,6 +177,12 @@ class SideMenu extends Component {
                 isInventory : false
             });
         }
+        if(param === 'report_penjualan'){
+            this.setState({
+                isReportPenjualan: !this.state.isReportPenjualan,
+                isInventory : false
+            });
+        }
         if(param === 'receive'){
             this.setState({
                 isReceive : !this.state.isReceive, 
@@ -217,7 +237,7 @@ class SideMenu extends Component {
                 isMasterdata:true
             })
         } else if(
-            path==='/delivery_note' ||
+            path === '/delivery_note' ||
             path === '/alokasi' ||
             path === '/adjustment'||
             path === '/approval_mutasi'||
@@ -246,7 +266,9 @@ class SideMenu extends Component {
             })
         } else if(
             path==='/report_cash'|| 
+            path==='/report_laba_rugi'|| 
             path==='/sale_archive'|| 
+            path==='/sale_by_cust_archive'|| 
             path==='/closing' ||
             path==='/inventory_report'||
             path==='/adjustment_report'|| 
@@ -279,10 +301,20 @@ class SideMenu extends Component {
                this.setState({
                    isReportInventory:true
                })
-           } else if(path==='/po_report'|| path==='/receive_report'){
+           } else if(
+               path==='/po_report'||
+               path==='/receive_report'){
                console.log("didmount",path)
                this.setState({
                    isReportPembelian:true
+               })
+           } else if(
+               path==='/sale_archive' ||
+               path==='/sale_by_cust_archive'
+               ){
+               console.log("didmount",path)
+               this.setState({
+                   isReportPenjualan:true
                })
            }
         } 
@@ -334,7 +366,7 @@ class SideMenu extends Component {
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>
                             <li className={path==='/company'?"active":''}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>
-                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="fa fa-group" />User</Link></li>
+                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="fa fa-group" />Pengguna</Link></li>
                             <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="zmdi zmdi-pin" />Lokasi</Link></li>
                         </ul>
                     </li>
@@ -354,9 +386,9 @@ class SideMenu extends Component {
                         <ul className={"treeview-menu animate__animated" + (this.state.isMasterdata===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isMasterdata===true
                         ?"block" : "none"}}>
                             <li className={path==='/product'?"active":''} style={this.state.product==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product" style={{width:'fit-content'}}> <i className="fa fa-list-alt" />Barang</Link></li>
-                            <li className={path==='/department'?"active":''} style={this.state.department==="0"?{"display":"none"}:{"display":"block"}}><Link to="/department" style={{width:'fit-content'}}> <i className="zmdi zmdi-store-24" />Department</Link></li>
+                            <li className={path==='/department'?"active":''} style={this.state.department==="0"?{"display":"none"}:{"display":"block"}}><Link to="/department" style={{width:'fit-content'}}> <i className="zmdi zmdi-store-24" />Departmen</Link></li>
                             <li className={path==='/supplier'?"active":''} style={this.state.supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/supplier" style={{width:'fit-content'}}> <i className="fa fa-truck" />Supplier </Link></li>
-                            <li className={path==='/customer'?"active":''} style={this.state.customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/customer" style={{width:'fit-content'}}> <i className="fa fa-user" />Customer </Link></li>
+                            <li className={path==='/customer'?"active":''} style={this.state.customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/customer" style={{width:'fit-content'}}> <i className="fa fa-user" />Kustomer </Link></li>
                             <li className={path==='/cash'?"active":''} style={this.state.cash==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas </Link></li>
                             <li className={path==='/sales'?"active":''} style={this.state.sales==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sales" style={{width:'fit-content'}}> <i className="fa fa-user-secret" />Sales </Link></li>
                             <li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank" style={{width:'fit-content'}}> <i className="fa fa-bank" />Bank </Link></li>
@@ -406,17 +438,30 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
-                    <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true ||
+                    <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true || this.state.isReportPenjualan===true ||
                         path==='/report_cash'|| 
-                        path==='/closing'|| 
-                        path==='/sale_archive' 
+                        path==='/closing'
                         ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'report')}><i className="zmdi zmdi-book" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReport===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true
                         ?"block" : "none"}}>
                             <li className={path==='/closing'?"active":''}><Link to="/closing" style={{width:'fit-content'}}> <i className="zmdi zmdi-lock" />Closing</Link></li>
                             <li className={path==='/report_cash'?"active":''}><Link to="/report_cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas</Link></li>
-                            <li className={path==='/sale_archive'?"active":''}><Link to="/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
+                            <li className={path==='/report/laba_rugi_report'?"active":''}><Link to="/report/laba_rugi_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Laba Rugi</Link></li>
+                            
+                            
+                            <li className={"treeview" + (this.state.isReportPenjualan===true || 
+                                path==='/sale_archive' ||
+                                path==='/sale_by_cust_archive'
+                                ?" active menu-open" : "")}>
+                                <a href="#" onClick={(e) => this.changeMenu(e,'report_penjualan')}><i className="fa fa-list-alt"/>Penjualan <i className="fa fa-angle-right"></i></a>
+                                <ul className={"treeview-menu animate__animated" + (this.state.isReportPenjualan===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPenjualan===true
+                        ?"block" : "none"}}>
+                                    <li className={path==='/sale_archive'?"active":''}><Link to="/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
+                                    <li className={path==='/sale_by_cust_archive'?"active":''}><Link to="/sale_by_cust_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Cust.</Link></li>
+                                </ul>
+                            </li>
+                            
                             <li className={"treeview" + (this.state.isReportInventory===true || 
                                 path==='/inventory_report'|| path==='/adjustment_report'|| 
                                 path==='/alokasi_report'||
@@ -431,13 +476,13 @@ class SideMenu extends Component {
                         ?"block" : "none"}}>
                                     <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report" style={{width:'fit-content'}}> <i className="ti-server" />Stock</Link></li>
                                     <li className={path==='/adjustment_report'?"active":''}><Link to="/adjustment_report" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment</Link></li>
-                                    <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alocation</Link></li>
+                                    <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi</Link></li>
                                     <li className={path==='/report/dn_report'?"active":''}><Link to="/report/dn_report" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
                                     <li className={path==='/report/opname_report'?"active":''}><Link to="/report/opname_report" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname</Link></li>
-                                    <li className={path==='/report/mutation_report'?"active":''}><Link to="/report/mutation_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-card" />Mutation</Link></li>
-                                    <li className={path==='/report/alokasi_trx_report'?"active":''}><Link to="/report/alokasi_trx_report" style={{width:'fit-content'}}> <i className="fa fa-money" />Alocation Trx</Link></li>
-                                    <li className={path==='/report/expedisi_report'?"active":''}><Link to="/report/expedisi_report" style={{width:'fit-content'}}> <i className="fa fa-truck" />Expedition</Link></li>
-                                    <li className={path==='/report/production_report'?"active":''}><Link to="/report/production_report" style={{width:'fit-content'}}> <i className="fa fa-truck" />Production</Link></li>
+                                    <li className={path==='/report/mutation_report'?"active":''}><Link to="/report/mutation_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-card" />Mutasi</Link></li>
+                                    <li className={path==='/report/alokasi_trx_report'?"active":''}><Link to="/report/alokasi_trx_report" style={{width:'fit-content'}}> <i className="fa fa-money" />Alokasi Trx</Link></li>
+                                    <li className={path==='/report/expedisi_report'?"active":''}><Link to="/report/expedisi_report" style={{width:'fit-content'}}> <i className="fa fa-truck" />Ekspedisi</Link></li>
+                                    <li className={path==='/report/production_report'?"active":''}><Link to="/report/production_report" style={{width:'fit-content'}}> <i className="fa fa-industry" />Produksi</Link></li>
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isReportPembelian===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>

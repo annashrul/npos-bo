@@ -20,6 +20,7 @@ import {salesReducer} from "./masterdata/sales/sales.action";
 import {departmentReducer} from "./masterdata/department/department.reducer";
 import {subDepartmentReducer} from "./masterdata/department/sub_department.reducer";
 import {stockReportReducer} from "./report/inventory/stock_report.reducer";
+import {laba_rugiReducer} from "./report/laba_rugi/laba_rugi_report.reducer";
 import {adjustmentReducer} from "./adjustment/adjustment.reducer";
 import {poReducer} from "./purchase/purchase_order/po.reducer";
 import {receiveReducer} from "./purchase/receive/receive.reducer";
@@ -27,6 +28,7 @@ import {siteReducer} from "./site.reducer";
 import {dnReducer} from "./inventory/delivery_note/dn.reducer";
 import {alokasiReducer} from './inventory/alokasi/alokasi.reducer'
 import {saleReducer} from "./sale/sale.reducer";
+import {sale_by_custReducer} from "./sale/sale_by_cust.reducer";
 import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {transactionReducer} from "./inventory/transaction/transaction.reducer";
 import {productionReducer} from "./inventory/production/production.reducer";
@@ -58,6 +60,7 @@ export default combineReducers({
     supplierReducer,
     salesReducer,
     stockReportReducer,
+    laba_rugiReducer,
     adjustmentReducer,
     poReducer,
     receiveReducer,
@@ -65,6 +68,7 @@ export default combineReducers({
     dnReducer,
     alokasiReducer,
     saleReducer,
+    sale_by_custReducer,
     mutationReducer,
     transactionReducer,
     productionReducer,

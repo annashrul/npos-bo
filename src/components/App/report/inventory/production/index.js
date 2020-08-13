@@ -83,9 +83,9 @@ class ProductionReport extends Component{
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
         }
-        // if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
-        //     where+=`&lokasi=${lokasi}`;
-        // }
+        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
+            where+=`&lokasi=${lokasi}`;
+        }
         if(any!==undefined&&any!==null&&any!==''){
             where+=`q=${any}`
         }
@@ -149,7 +149,7 @@ class ProductionReport extends Component{
                                     </div>
                                 </div>
 
-                                {/* <div className="col-6 col-xs-6 col-md-2">
+                                <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label htmlFor="">Lokasi</label>
                                         <Select
@@ -163,7 +163,7 @@ class ProductionReport extends Component{
                                             }
                                         />
                                     </div>
-                                </div> */}
+                                </div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label>Cari</label>
