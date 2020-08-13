@@ -91,72 +91,71 @@ class SideMenu extends Component {
                 isReportPembelian:false
             })
         }
-
-        if(this.state.isInventory === true){
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: true,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportPembelian:false,
-                isReportInventory:false,
-            });
-            if(this.state.isReportPenjualan === true) {
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:false,
-                    isReportPembelian:false,
-                    isReportPenjualan:!this.state.isReportPenjualan
-                })
-            }
-        } else if(this.state.isInventory === true){
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: true,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportPembelian:false,
-                isReportInventory:false,
-                isProduction:false
-            });
->>>>>>> 22f5b2a0bdf2259aa572297eb51a7c9a764a6730
-            if(this.state.isTrxMutasi === true){
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: true,
-                    isReport: false,
-                    isReceive: false,
-                    isSale:false,
-                    isReportPembelian:false,
-                    isReportInventory:false,
-                    isTrxMutasi:!this.state.isTrxMutasi,
-                })
-            }
-        }
-
-        else {
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: false,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportInventory:false,
-                isReportPembelian:false,
-                isProduction:false
-            })
-        }
+        //
+        // if(this.state.isInventory === true){
+        //     this.setState({
+        //         isSetting:false,
+        //         isMasterdata: false,
+        //         isInventory: true,
+        //         isReport: false,
+        //         isReceive: false,
+        //         isSale:false,
+        //         isReportPembelian:false,
+        //         isReportInventory:false,
+        //     });
+        //     if(this.state.isReportPenjualan === true) {
+        //         this.setState({
+        //             isSetting:false,
+        //             isMasterdata: false,
+        //             isInventory: false,
+        //             isReport: true,
+        //             isReceive: false,
+        //             isSale:false,
+        //             isReportInventory:false,
+        //             isReportPembelian:false,
+        //             isReportPenjualan:!this.state.isReportPenjualan
+        //         })
+        //     }
+        // } else if(this.state.isInventory === true){
+        //     this.setState({
+        //         isSetting:false,
+        //         isMasterdata: false,
+        //         isInventory: true,
+        //         isReport: false,
+        //         isReceive: false,
+        //         isSale:false,
+        //         isReportPembelian:false,
+        //         isReportInventory:false,
+        //         isProduction:false
+        //     });
+        //     if(this.state.isTrxMutasi === true){
+        //         this.setState({
+        //             isSetting:false,
+        //             isMasterdata: false,
+        //             isInventory: true,
+        //             isReport: false,
+        //             isReceive: false,
+        //             isSale:false,
+        //             isReportPembelian:false,
+        //             isReportInventory:false,
+        //             isTrxMutasi:!this.state.isTrxMutasi,
+        //         })
+        //     }
+        // }
+        //
+        // else {
+        //     this.setState({
+        //         isSetting:false,
+        //         isMasterdata: false,
+        //         isInventory: false,
+        //         isReport: false,
+        //         isReceive: false,
+        //         isSale:false,
+        //         isReportInventory:false,
+        //         isReportPembelian:false,
+        //         isProduction:false
+        //     })
+        // }
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({
@@ -579,26 +578,21 @@ class SideMenu extends Component {
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isReportPembelian===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
-<<<<<<< HEAD
                                 <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true ?"block" : "none"}}>
-=======
                                 <a href="#" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true
                         ?"block" : "none"}}>
->>>>>>> 22f5b2a0bdf2259aa572297eb51a7c9a764a6730
                                     <li className={path==='/po_report'?"active":''}><Link to="/po_report" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
                                     <li className={path==='/receive_report'?"active":''}><Link to="/receive_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Receive</Link></li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
-<<<<<<< HEAD
                     {/*END MODUL LAPORAN*/}
                     {/*START MODUL CETAK BARCODE*/}
                     <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
                     {/*END MODUL CETAK BARCODE*/}
-=======
 
                     <li className={"treeview" +(this.state.isSetting===true
                         || path==='/user'
@@ -617,7 +611,6 @@ class SideMenu extends Component {
                     </li>
 
                     <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
->>>>>>> 22f5b2a0bdf2259aa572297eb51a7c9a764a6730
                 </ul>
             </nav>
             )
