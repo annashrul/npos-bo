@@ -485,6 +485,20 @@ export const CLOSING = {
   REPORT_SUCCESS: 'SET_CLOSING_REPORT_SUCCESS',
   CLOSING_DATA: 'SET_CLOSING_DATA_SUCCESS'
 }
+
+
+/****************
+ PIUTANG
+ *****************/
+export const PIUTANG = {
+    LOADING: 'SET_PIUTANG_LOADING',
+    SUCCESS: 'SET_PIUTANG_SUCCESS',
+    FAILED: 'SET_PIUTANG_FAILED',
+    SUCCESS_CODE: 'SET_PIUTANG_SUCCESS_CODE',
+    LOADING_POST: 'SET_PIUTANG_LOADING_POST',
+
+}
+
 /****************
  HUTANG
  *****************/

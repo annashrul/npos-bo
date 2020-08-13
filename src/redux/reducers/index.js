@@ -37,6 +37,7 @@ import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {expedisiReducer} from "./inventory/expedisi/expedisi.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
 import {hutangReducer} from "./hutang/hutang.reducer";
+import {piutangReducer} from "./piutang/piutang.reducer";
 import {mutasiJualBeliReducer} from "./inventory/mutasi_jual_beli/mutasi_jual_beli.reducer";
 import {produksiReducer} from "./inventory/produksi/produksi.reducer";
 
@@ -75,6 +76,7 @@ export default combineReducers({
     mutasiJualBeliReducer,
     closingReducer,
     hutangReducer,
+    piutangReducer,
     opnameReducer,
     produksiReducer,
     transactionReducer,
