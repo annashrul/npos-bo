@@ -140,7 +140,7 @@ export const FetchReportSaleByCust = (page=1,where='') => {
 
     return (dispatch) => {
         dispatch(setLoadingReport(true));
-        let url=`report/arsip_penjualan?page=${page}`;
+        let url=`report/penjualan_by_cust?page=${page}`;
         if(where!==''){
             url+=`&${where}`;
         }
@@ -162,7 +162,7 @@ export const FetchReportSaleByCust = (page=1,where='') => {
 }
 export const FetchReportSaleByCustExcel = (page=1,where='',perpage=10000) => {
     return (dispatch) => {
-        let url=`report/arsip_penjualan?page=${page}&perpage=${perpage}`;
+        let url=`report/penjualan_by_cust?page=${page}&perpage=${perpage}`;
         if(where!==''){
             url+=`&${where}`;
         }
@@ -183,8 +183,8 @@ export const FetchReportSaleByCustExcel = (page=1,where='',perpage=10000) => {
 export const FetchReportDetailSaleByCust = (kd_trx) => {
     return (dispatch) => {
         dispatch(setLoadingDetail(true));
-        console.log(`report/arsip_penjualan/${kd_trx}`);
-        axios.get(HEADERS.URL + `report/arsip_penjualan/${kd_trx}`)
+        console.log(`report/penjualan_by_cust/${kd_trx}`);
+        axios.get(HEADERS.URL + `report/penjualan_by_cust/${kd_trx}`)
             .then(function (response) {
                 const data = response.data;
                 console.log(data);

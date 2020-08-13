@@ -199,20 +199,6 @@ class SaleByCustArchive extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.sale_by_custReport;
-        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
-        let omset_per = 0;
-        let dis_item_per = 0;
-        let sub_total_per = 0;
-        let dis_persen_per = 0;
-        let dis_rp_per = 0;
-        let kas_lain_per = 0;
-        let gt_per = 0;
-        let bayar_per = 0;
-        let jml_kartu_per = 0;
-        let charge_per = 0;
-        let change_per = 0;
-        let voucher_per = 0;
-        let rounding_per = 0;
 
         return (
             <Layout page="Laporan Arsip Penjualan">
@@ -250,7 +236,7 @@ class SaleByCustArchive extends Component{
                                     />
                                 </div>
                             </div>
-                            <div className="col-6 col-xs-6 col-md-2">
+                            {/* <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">
                                         Tipe Transaksi
@@ -266,11 +252,11 @@ class SaleByCustArchive extends Component{
                                         }
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label htmlFor="">Cari</label>
-                                    <input type="text" name="any_sale_by_cust_report" className="form-control" value={this.state.any_sale_by_cust_report} placeholder="Kode/Kasir/Customer" onChange={(e)=>this.handleChange(e)}/>
+                                    <input type="text" name="any_sale_by_cust_report" className="form-control" value={this.state.any_sale_by_cust_report} onChange={(e)=>this.handleChange(e)}/>
                                 </div>
                             </div>
                             <div className="col-6 col-xs-6 col-md-3">
@@ -293,41 +279,20 @@ class SaleByCustArchive extends Component{
                                 <table className="table table-hover"  id="report_sale_by_cust_to_excel" style={{display:"none"}}>
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" colSpan={23}>{this.state.startDate} - {this.state.startDate}</th>
+                                        <th className="text-black" colSpan={6}>{this.state.startDate} - {this.state.startDate}</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-black" colSpan={23}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
+                                        <th className="text-black" colSpan={6}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
                                     </tr>
 
                                     <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
-                                        <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>Peritem(%)</th>
-                                        <th className="text-black" style={columnStyle}>Total(rp)</th>
-                                        <th className="text-black" style={columnStyle}>Total(%)</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kd Cust</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Gross Sales</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Item</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Trx</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Service</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Qty</th>
                                     </tr>
                                     </thead>
                                     {
@@ -337,56 +302,19 @@ class SaleByCustArchive extends Component{
                                                 this.props.sale_by_custReportExcel.data.map((v,i)=>{
                                                     return (
                                                         <tr key={i}>
-                                                            <td style={columnStyle}>{v.kd_trx}</td>
-                                                            <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
-                                                            <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
+                                                            <td style={columnStyle}>{v.kd_cust}</td>
                                                             <td style={columnStyle}>{v.nama}</td>
-                                                            <td style={columnStyle}>{v.kd_kasir}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                            <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
-                                                            <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
-                                                            <td style={columnStyle}>{v.kas_lain}</td>
-                                                            <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
-                                                            <td style={columnStyle}>{v.kartu}</td>
-                                                            <td style={columnStyle}>{v.status}</td>
-                                                            <td style={columnStyle}>{v.lokasi}</td>
-                                                            <td style={columnStyle}>{v.jenis_trx}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(v.service)}</td>
+                                                            <td style={{textAlign:"right"}}>{v.qty}</td>
                                                         </tr>
                                                     );
                                                 }) : "No data." : "No data."
                                         }
                                         </tbody>
                                     }
-                                    <tfoot>
-                                    <tr>
-                                        <td colSpan="5">TOTAL</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.omset)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_item)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_rp)}</td>
-                                        <td style={{textAlign:"right"}}>{this.props.totalPenjualanExcel.dis_persen}</td>
-                                        <td colSpan="4"/>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.kas_lain)}</td>
-                                        <td colSpan="1"/>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.gt)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.rounding)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.bayar)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.change)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.jml_kartu)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.charge)}</td>
-                                        <td colSpan="4"/>
-                                    </tr>
-                                    </tfoot>
                                 </table>
                                 {/*END DATA EXCEL*/}
                                 <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
@@ -395,35 +323,14 @@ class SaleByCustArchive extends Component{
                                         <thead className="bg-light">
 
                                         <tr>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>#</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
-                                            <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
-                                        </tr>
-                                        <tr>
-                                            <th className="text-black" style={columnStyle}>Item</th>
-                                            <th className="text-black" style={columnStyle}>Total ( rp )</th>
-                                            <th className="text-black" style={columnStyle}>Total ( % )</th>
+                                            {/* <th className="text-black" rowSpan="2" style={columnStyle}>#</th> */}
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kd Cust</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Gross Sales</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Item</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Trx</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Service</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Qty</th>
                                         </tr>
                                         </thead>
                                         {
@@ -433,23 +340,9 @@ class SaleByCustArchive extends Component{
                                                     typeof data==='object'? data.length>0?
 
                                                         data.map((v,i)=>{
-                                                            omset_per = omset_per + parseInt(v.omset);
-                                                            dis_item_per = dis_item_per + parseInt(v.diskon_item);
-                                                            dis_persen_per = dis_persen_per + parseInt(v.dis_persen);
-                                                            dis_rp_per = dis_rp_per + parseInt(v.dis_rp);
-                                                            kas_lain_per = kas_lain_per + parseInt(v.kas_lain);
-                                                            gt_per = gt_per + parseInt(v.omset - v.diskon_item - v.dis_rp - v.kas_lain);
-                                                            bayar_per = bayar_per + parseInt(v.bayar);
-                                                            jml_kartu_per = jml_kartu_per + parseInt(v.jml_kartu);
-                                                            charge_per = charge_per + parseInt(v.charge);
-                                                            change_per = change_per + parseInt(v.change);
-                                                            voucher_per = voucher_per + parseInt(v.voucher);
-                                                            rounding_per = rounding_per + parseInt(v.rounding);
-
-
                                                             return (
                                                                 <tr key={i}>
-                                                                    <td style={columnStyle}>
+                                                                    {/* <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                                 Aksi
@@ -460,32 +353,14 @@ class SaleByCustArchive extends Component{
                                                                                 <a className="dropdown-item" href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</a>
                                                                             </div>
                                                                         </div>
-                                                                    </td>
-                                                                    <td style={columnStyle}>{v.kd_trx}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
-                                                                    <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
+                                                                    </td> */}
+                                                                    <td style={columnStyle}>{v.kd_cust}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={columnStyle}>{v.kd_kasir}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                                    <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
-                                                                    <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
-                                                                    <td style={columnStyle}>{v.kas_lain}</td>
-                                                                    <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
-                                                                    <td style={columnStyle}>{v.kartu}</td>
-                                                                    <td style={columnStyle}>{v.status}</td>
-                                                                    <td style={columnStyle}>{v.lokasi}</td>
-                                                                    <td style={columnStyle}>{v.jenis_trx}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(v.service)}</td>
+                                                                    <td style={{textAlign:"right"}}>{v.qty}</td>
                                                                 </tr>
                                                             );
 
@@ -495,42 +370,6 @@ class SaleByCustArchive extends Component{
                                                 </tbody>
                                             ):<Preloader/>
                                         }
-                                        <tfoot>
-                                        <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="6">TOTAL PERPAGE</td>
-                                            <td style={{textAlign:"right"}}>{toRp(omset_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_rp_per)}</td>
-                                            <td style={{textAlign:"right"}}>{dis_persen_per}</td>
-                                            <td colSpan="4"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(kas_lain_per)}</td>
-                                            <td colSpan="1"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(gt_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(rounding_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(bayar_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(change_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(jml_kartu_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(charge_per)}</td>
-                                            <td colSpan="4"></td>
-                                        </tr>
-                                        <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="6">TOTAL</td>
-                                            <td style={{textAlign:"right"}}>{toRp(omset)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_item)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_rp)}</td>
-                                            <td style={{textAlign:"right"}}>{dis_persen}</td>
-                                            <td colSpan="4"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>
-                                            <td colSpan="1"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(gt)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(rounding)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(bayar)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(change)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(jml_kartu)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(charge)}</td>
-                                            <td colSpan="4"></td>
-                                        </tr>
-                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -556,7 +395,7 @@ class SaleByCustArchive extends Component{
 const mapStateToProps = (state) => {
     return {
         sale_by_custReport:state.sale_by_custReducer.report,
-        totalPenjualan:state.sale_by_custReducer.total_penjualan,
+        // totalPenjualan:state.sale_by_custReducer.total_penjualan,
         sale_by_custReportExcel:state.sale_by_custReducer.report_excel,
         totalPenjualanExcel:state.sale_by_custReducer.total_penjualan_excel,
         isLoadingReport: state.sale_by_custReducer.isLoadingReport,
