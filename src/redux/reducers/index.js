@@ -37,6 +37,7 @@ import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {expedisiReducer} from "./inventory/expedisi/expedisi.reducer";
 import {companyReducer} from "./setting/company/company.reducer";
 import {hutangReducer} from "./hutang/hutang.reducer";
+import {piutangReducer} from "./piutang/piutang.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -74,6 +75,7 @@ export default combineReducers({
     productionReducer,
     closingReducer,
     hutangReducer,
+    piutangReducer,
     opnameReducer,
     expedisiReducer,
     auth: authReducer,
