@@ -10,6 +10,11 @@ import moment from "moment";
 import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
 import {toRp} from "helper";
 import {FetchCodeProduksi, storeProduksi} from "redux/actions/inventory/produksi.action";
+import {
+    FetchBrgProduksi,
+    FetchBrgProduksiBahan,
+    FetchBrgProduksiPaket
+} from "../../../../redux/actions/inventory/produksi.action";
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -58,6 +63,7 @@ class Produksi extends Component{
 
     }
     getProps(param){
+        console.log("GET PROPS",param);
         if (param.auth.user) {
             let lk = [];
             let loc = param.auth.user.lokasi;
@@ -74,10 +80,10 @@ class Produksi extends Component{
                 })
             }
         }
-        if(param.barang.length>0){
+        if(param.barangPaket.length>0){
             this.getData();
             let brg=[];
-            typeof param.barang === 'object' ? param.barang.map((v,i)=>{
+            typeof param.barangPaket === 'object' ? param.barangPaket.map((v,i)=>{
                 brg.push({
                     value:`${v.kd_brg} | ${v.barcode}`,
                     label:v.nm_brg,
@@ -102,7 +108,10 @@ class Produksi extends Component{
 
         }
         if (localStorage.location_produksi!==undefined&&localStorage.location_produksi!=='') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_produksi, null, this.autoSetQty));
+            // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_produksi, null, this.autoSetQty));
+            this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',localStorage.location_produksi,this.autoSetQty));
+            this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',localStorage.location_produksi,this.autoSetQty));
+
             this.props.dispatch(FetchCodeAdjustment(localStorage.location_produksi));
         }
     }
@@ -141,7 +150,10 @@ class Produksi extends Component{
         })
         localStorage.setItem('location_produksi', lk.value);
         this.props.dispatch(FetchCodeProduksi(lk.value));
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
+        // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
+        this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',lk.value,this.autoSetQty));
+        this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',lk.value,this.autoSetQty));
+
         destroy(table);
         this.getData()
     }
@@ -173,14 +185,22 @@ class Produksi extends Component{
             // let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
             //
             if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
-                this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
+                // this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiPaket(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
+
             }
             if(parseInt(this.state.searchby)===2){
-                this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
+                // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiBahan(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiPaket(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
 
             }
             if(parseInt(this.state.searchby)===3){
-                this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
+
+            // this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
             this.setState({search: ''});
@@ -582,8 +602,8 @@ class Produksi extends Component{
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
                                                     {
-                                                        this.props.barang.length!==0?
-                                                            this.props.barang.map((i,inx)=>{
+                                                        this.props.barangBahan.length!==0?
+                                                            this.props.barangBahan.map((i,inx)=>{
                                                                 return(
                                                                     <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                         barcode:i.barcode,
@@ -758,9 +778,11 @@ class Produksi extends Component{
 
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
-    barang: state.productReducer.result_brg,
+    // barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    nota:state.produksiReducer.code
+    nota:state.produksiReducer.code,
+    barangBahan:state.produksiReducer.dataBahan,
+    barangPaket:state.produksiReducer.dataPaket
 });
 
 export default connect(mapStateToPropsCreateItem)(Produksi);

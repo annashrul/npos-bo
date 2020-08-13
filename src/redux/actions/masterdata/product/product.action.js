@@ -243,7 +243,7 @@ export const FetchProductEdit = (kode)=>{
         axios.get(HEADERS.URL+`barang/update/${kode}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                console.log("DATA EDIT",data);
                 dispatch(setProductEdit(data));
                 dispatch(setLoading(false));
             }).catch(function(error){

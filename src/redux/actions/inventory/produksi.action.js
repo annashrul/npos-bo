@@ -37,33 +37,27 @@ export const FetchCodeProduksi = (lokasi)=>{
     }
 }
 
-export const FetchBrgProduksi = (page=1,by='barcode',q='',lokasi=null,db,type='')=>{
+export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>{
     console.log("DATA DB",db);
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
-        let url = `barang/get?page=${page}`;
+        let url = `barang/get?page=${page}&kategori=4`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        if(type!=='') url+=`&kategori=${type}`;
         console.log("FETCH BARANG URL",url);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
+                console.log("RESPONSE BARANG BAHAN",data);
                 if(data.result.data.length===1){
                     const barang = data.result.data;
                     const cek=db(barang[0].kd_brg,barang);
                     cek.then(re=>{
-                        if(type === '2'){
-                            dispatch(setProduksiPaket(data));
-                        }
-                        if(type === '4'){
-                            dispatch(setProduksiBahan(data));
-                        }
-
+                        dispatch(setProduksiBahan(data));
                         dispatch(setLoading(false));
                     })
                 }else{
-                    dispatch(setProductbrg(data));
+                    dispatch(setProduksiBahan(data));
                     dispatch(setLoading(false));
                 }
 
@@ -79,6 +73,43 @@ export const FetchBrgProduksi = (page=1,by='barcode',q='',lokasi=null,db,type=''
         })
     }
 }
+export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null,db)=>{
+    console.log("DATA DB",db);
+    return (dispatch) => {
+        dispatch(setLoadingbrg(true));
+        let url = `barang/get?page=${page}&kategori=2`;
+        if(q!=='') url+=`&q=${q}&searchby=${by}`;
+        if(lokasi!==null) url+=`&lokasi=${lokasi}`;
+        console.log("FETCH BARANG URL",url);
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log("RESPONSE BARANG PAKET",data);
+                if(data.result.data.length===1){
+                    const barang = data.result.data;
+                    const cek=db(barang[0].kd_brg,barang);
+                    cek.then(re=>{
+                        dispatch(setProduksiPaket(data));
+                        dispatch(setLoading(false));
+                    })
+                }else{
+                    dispatch(setProduksiPaket(data));
+                    dispatch(setLoading(false));
+                }
+
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoadingbrg(false));
+
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                // text: error.response.data.msg,
+            });
+        })
+    }
+}
+
 export const storeProduksi = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -88,7 +119,6 @@ export const storeProduksi = (data) => {
                 const data = (response.data)
                 Swal.fire({
                     title: 'Transaksi berhasil.',
-                    // html: `Total Hpp: ${data.result.total_hpp} <br/> Qty Estimasi : ${data.result.qty_estimasi} <br/> Hpp Peritem : ${data.result.hpp_peritem}`,
                     html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${data.result.total_hpp}</td><td>${data.result.qty_estimasi}</td><td>${data.result.hpp_peritem}</td></tr></tbody></table>`,
                     icon: 'success',
                     showCancelButton: true,

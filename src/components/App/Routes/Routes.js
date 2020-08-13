@@ -86,7 +86,7 @@ const Routes = (
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
-            <PrivateRoute path="/produksi" exact strict component={Produksi} />
+            <PrivateRoute path="/trx_produksi" exact strict component={Produksi} />
         </Switch>
     </div>
 )
