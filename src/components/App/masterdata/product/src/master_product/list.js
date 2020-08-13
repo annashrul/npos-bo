@@ -121,19 +121,7 @@ class ListProduct extends Component{
             }
         })
     };
-    handleEdit = (e,kode) => {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formProduct"));
-        this.props.dispatch(FetchGroupProduct(1,''));
-        this.props.dispatch(FetchLocation());
-        this.props.dispatch(FetchSupplierAll());
-        this.props.dispatch(FetchSubDepartmentAll());
-        this.props.dispatch(FetchProductEdit(kode));
-        this.props.dispatch(FetchProductCode());
 
-    };
     handleSearchBy(event){
         let column = event.target.name;
         let val = event.target.value;
@@ -261,7 +249,19 @@ class ListProduct extends Component{
         this.props.dispatch(setProductEdit([]));
         this.props.dispatch(FetchProductCode());
     }
+    handleEdit = (e,kode) => {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formProduct"));
+        this.props.dispatch(FetchGroupProduct(1,''));
+        this.props.dispatch(FetchLocation());
+        this.props.dispatch(FetchSupplierAll());
+        this.props.dispatch(FetchSubDepartmentAll());
+        this.props.dispatch(FetchProductEdit(kode));
+        this.props.dispatch(FetchProductCode());
 
+    };
     exportPDF = () => {
         let stringHtml = '',tprice=0;
         stringHtml+= `<h3 align="center"><center>PRODUCT REPORT</center></h3>`;

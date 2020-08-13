@@ -204,6 +204,34 @@ export const DBConfig = {
                 { name: 'qty', keypath: 'qty', options: { unique: false } },
             ]
         },
+        {
+            store: 'production',
+            storeConfig: { keyPath: 'id', autoIncrement: true },
+            storeSchema: [
+                { name: 'barcode', keypath: 'barcode', options: { unique: false } },
+                { name: 'harga_beli', keypath: 'harga_beli', options: { unique: false } },
+                { name: 'satuan', keypath: 'satuan', options: { unique: false } },
+                { name: 'hrg_jual', keypath: 'hrg_jual', options: { unique: false } },
+                { name: 'kd_brg', keypath: 'kd_brg', options: { unique: false } },
+                { name: 'nm_brg', keypath: 'nm_brg', options: { unique: false } },
+                { name: 'kel_brg', keypath: 'kel_brg', options: { unique: false } },
+                { name: 'kategori', keypath: 'kategori', options: { unique: false } },
+                { name: 'stock_min', keypath: 'stock_min', options: { unique: false } },
+                { name: 'supplier', keypath: 'supplier', options: { unique: false } },
+                { name: 'subdept', keypath: 'subdept', options: { unique: false } },
+                { name: 'deskripsi', keypath: 'deskripsi', options: { unique: false } },
+                { name: 'jenis', keypath: 'jenis', options: { unique: false } },
+                { name: 'kcp', keypath: 'kcp', options: { unique: false } },
+                { name: 'poin', keypath: 'poin', options: { unique: false } },
+                { name: 'group1', keypath: 'group1', options: { unique: false } },
+                { name: 'group2', keypath: 'group2', options: { unique: false } },
+                { name: 'stock', keypath: 'stock', options: { unique: false } },
+                { name: 'qty_adjust', keypath: 'qty_adjust', options: { unique: false } },
+                { name: 'status', keypath: 'status', options: { unique: false } },
+                { name: 'saldo_stock', keypath: 'saldo_stock', options: { unique: false } },
+                { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
+            ]
+        },
 
     ]
 };

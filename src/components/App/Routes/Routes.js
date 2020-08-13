@@ -23,9 +23,11 @@ import InventoryReport from '../report/inventory/stock'
 import AdjustmentReport from '../report/inventory/adjustment'
 import ApprovalMutasi from "../inventory/approval_mutasi";
 import ApprovalMutasiJualBeli from "../inventory/mutasi_jual_beli/approval_mutasi_jual_beli";
+import BayarMutasiJualBeli from "../inventory/mutasi_jual_beli/bayar_mutasi_jual_beli";
 import Opname from "../inventory/opname";
 import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
+import Produksi from '../inventory/produksi'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import DnReport from '../report/inventory/dn'
@@ -70,7 +72,8 @@ const Routes = (
             <PrivateRoute path="/sale" exact strict component={Sale} />
             <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
             <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
-            <PrivateRoute path="/approval_mutasi_transaksi" exact strict component={ApprovalMutasiJualBeli} />
+            <PrivateRoute path="/approval_mutasi_jual_beli" exact strict component={ApprovalMutasiJualBeli} />
+            <PrivateRoute path="/bayar_mutasi_jual_beli" exact strict component={BayarMutasiJualBeli} />
             <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />
             <PrivateRoute path="/delivery_note" exact strict component={DeliveyNote} />
             <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
@@ -93,6 +96,7 @@ const Routes = (
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
             <PrivateRoute path="/bayar_piutang" exact strict component={BayarPiutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
+            <PrivateRoute path="/trx_produksi" exact strict component={Produksi} />
         </Switch>
     </div>
 )

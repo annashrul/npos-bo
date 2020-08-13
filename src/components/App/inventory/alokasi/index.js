@@ -50,6 +50,7 @@ class Alokasi extends Component{
             ambil_data:1,
             ambil_nota:'',
             jenis_trx:'Mutasi',
+            jenis_trx_data:[],
             error:{
                 location:"",
                 location2: "",
@@ -68,6 +69,7 @@ class Alokasi extends Component{
         this.HandleSearch = this.HandleSearch.bind(this);
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
+        this.HandleChangeJenisTrx= this.HandleChangeJenisTrx.bind(this);
     }
 
     componentDidMount() {
@@ -116,6 +118,12 @@ class Alokasi extends Component{
 
 
     componentWillReceiveProps = (nextProps) => {
+        let jt=[
+            {value:"Alokasi",label:"Alokasi"},
+            {value:"Mutasi",label:"Mutasi"},
+            {value:"Transaksi",label:"Transaksi"},
+        ];
+        this.setState({jenis_trx_data:jt});
         if (nextProps.auth.user) {
             let lk = []
             let loc = nextProps.auth.user.lokasi;
@@ -253,6 +261,11 @@ class Alokasi extends Component{
             error: err
         })
         localStorage.setItem('lk2', sp.value);
+    }
+    HandleChangeJenisTrx(sp) {
+        this.setState({
+            jenis_trx: sp.value,
+        });
     }
 
     HandleCommonInputChange(e,errs=true,st=0){
@@ -832,9 +845,9 @@ class Alokasi extends Component{
                                 {/* HEADER FORM */}
                                 <form className=''>
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                             <div className="row">
-                                                <div className="col-md-8">
+                                                <div className="col-md-12">
                                                     <div className="form-group">
                                                         <input
                                                             type="text"
@@ -862,72 +875,25 @@ class Alokasi extends Component{
                                                             />
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-md-4">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">
                                                             Jenis Transaksi
                                                         </label>
-                                                        <div className="custom-control custom-radio">
-                                                            <input
-                                                                type="radio"
-                                                                id="customRadio1"
-                                                                name="jenis_trx"
-                                                                onChange={(e=>this.HandleCommonInputChange(e))}
-                                                                value="Tunai"
-                                                                className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Alokasi'}
-                                                            />
-                                                            <label
-                                                                className="custom-control-label"
-                                                                htmlFor="customRadio1"
-                                                            >
-                                                                Alokasi
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <div className="custom-control custom-radio">
-                                                            <input
-                                                                type="radio"
-                                                                id="customRadio2"
-                                                                name="jenis_trx"
-                                                                onChange={(e=>this.HandleCommonInputChange(e))}
-                                                                value="Kredit"
-                                                                className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Mutasi'}
+                                                        <Select
+                                                            options={this.state.jenis_trx_data}
+                                                            placeholder="Pilih Jenis Transaksi"
+                                                            onChange={this.HandleChangeJenisTrx}
+                                                            value={
+                                                                this.state.jenis_trx_data.find(op => {
+                                                                    return op.value === this.state.jenis_trx
+                                                                })
+                                                            }
 
-                                                            />
-                                                            <label
-                                                                className="custom-control-label"
-                                                                htmlFor="customRadio2"
-                                                            >
-                                                                Mutasi
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <div className="custom-control custom-radio">
-                                                            <input
-                                                                type="radio"
-                                                                id="customRadio3"
-                                                                name="jenis_trx"
-                                                                onChange={(e=>this.HandleCommonInputChange(e))}
-                                                                value="Konsinyasi"
-                                                                className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Transaksi'}
+                                                        />
 
-                                                            />
-                                                            <label
-                                                                className="custom-control-label"
-                                                                htmlFor="customRadio3"
-                                                            >
-                                                                Transaksi
-                                                            </label>
-                                                        </div>
                                                     </div>
-
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div className="col-md-6">
