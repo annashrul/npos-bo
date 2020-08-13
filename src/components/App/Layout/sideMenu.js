@@ -277,7 +277,7 @@ class SideMenu extends Component {
             })
         } else if(
             path==='/report_cash'|| 
-            path==='/report_laba_rugi'|| 
+            path==='/report/laba_rugi_report'|| 
             path==='/sale_archive'|| 
             path==='/sale_by_cust_archive'|| 
             path==='/closing' ||
