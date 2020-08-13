@@ -73,8 +73,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>
         })
     }
 }
-export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null,db)=>{
-    console.log("DATA DB",db);
+export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}&kategori=2`;
@@ -84,19 +83,9 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null,db)=>
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log("RESPONSE BARANG PAKET",data);
-                if(data.result.data.length===1){
-                    const barang = data.result.data;
-                    const cek=db(barang[0].kd_brg,barang);
-                    cek.then(re=>{
-                        dispatch(setProduksiPaket(data));
-                        dispatch(setLoading(false));
-                    })
-                }else{
-                    dispatch(setProduksiPaket(data));
-                    dispatch(setLoading(false));
-                }
 
+                dispatch(setProduksiPaket(data));
+                dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error);
             dispatch(setLoadingbrg(false));

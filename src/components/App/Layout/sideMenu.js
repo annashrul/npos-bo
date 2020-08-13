@@ -92,6 +92,16 @@ class SideMenu extends Component {
         }
 
         if(this.state.isInventory === true){
+            this.setState({
+                isSetting:false,
+                isMasterdata: false,
+                isInventory: true,
+                isReport: false,
+                isReceive: false,
+                isSale:false,
+                isReportPembelian:false,
+                isReportInventory:false,
+            });
             if(this.state.isReportPenjualan === true) {
                 this.setState({
                     isSetting:false,
@@ -105,17 +115,6 @@ class SideMenu extends Component {
                     isReportPenjualan:!this.state.isReportPenjualan
                 })
             }
-        } else if(this.state.isInventory === true){
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: true,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportPembelian:false,
-                isReportInventory:false,
-            });
             if(this.state.isTrxMutasi === true){
                 this.setState({
                     isSetting:false,
@@ -130,6 +129,7 @@ class SideMenu extends Component {
                 })
             }
         }
+
         else {
             this.setState({
                 isSetting:false,
@@ -385,14 +385,8 @@ class SideMenu extends Component {
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
                     <li  className={path==='/'?"active":''}><Link to="/"> <i className="fa fa-dashboard" /><span> Dashboard</span></Link></li>
-
-                    <li className={"treeview" +(this.state.isSetting===true
-                        || path==='/user'
-                        || path==='/location'
-                        || path==='/company'
-                        ?" active menu-open" : ""
-                        )
-                    }>
+                    {/*START MODUL SETTING*/}
+                    <li className={"treeview" +(this.state.isSetting===true || path==='/user' || path==='/location' || path==='/company' ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>
@@ -401,18 +395,9 @@ class SideMenu extends Component {
                             <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="zmdi zmdi-pin" />Lokasi</Link></li>
                         </ul>
                     </li>
-                    <li className={ "treeview" +
-                        (this.state.isMasterdata===true ||
-                        path==='/department' ||
-                        path==='/supplier' ||
-                        path==='/sales' ||
-                        path==='/cash' ||
-                        path==='/customer' ||
-                        path==='/product' ||
-                        path==='/promo' ||
-                        path==='/bank'
-                            ?" active menu-open" : "")
-                    }>
+                    {/*END MODUL SETTING*/}
+                    {/*START MODUL MASTERDATA*/}
+                    <li className={ "treeview" + (this.state.isMasterdata===true || path==='/department' || path==='/supplier' || path==='/sales' || path==='/cash' || path==='/customer' || path==='/product' || path==='/promo' || path==='/bank' ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'masterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isMasterdata===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isMasterdata===true
                         ?"block" : "none"}}>
@@ -426,33 +411,11 @@ class SideMenu extends Component {
                             <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="fa fa-ticket" />Promo </Link></li>
                         </ul>
                     </li>
-                    {/*<li className={ "treeview" + (this.state.isMasterdata===true || path==='/department' || path==='/supplier' || path==='/sales' || path==='/cash' || path==='/customer' || path==='/product' || path==='/bank' ?" active menu-open" : "")}>*/}
-                        {/*<a href="javascript:void(0)" onClick={(e) => this.changeMenu('masterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>*/}
-                        {/*<ul className={"treeview-menu animate__animated" + (this.state.isMasterdata===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isMasterdata===true*/}
-                        {/*?"block" : "none"}}>*/}
-                            {/*<li className={path==='/product'?"active":''} style={this.state.product==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product" style={{width:'fit-content'}}> <i className="fa fa-list-alt" />Barang</Link></li>*/}
-                            {/*<li className={path==='/department'?"active":''} style={this.state.department==="0"?{"display":"none"}:{"display":"block"}}><Link to="/department" style={{width:'fit-content'}}> <i className="zmdi zmdi-store-24" />Department</Link></li>*/}
-                            {/*<li className={path==='/supplier'?"active":''} style={this.state.supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/supplier" style={{width:'fit-content'}}> <i className="fa fa-truck" />Supplier </Link></li>*/}
-                            {/*<li className={path==='/customer'?"active":''} style={this.state.customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/customer" style={{width:'fit-content'}}> <i className="fa fa-user" />Customer </Link></li>*/}
-                            {/*<li className={path==='/cash'?"active":''} style={this.state.cash==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas </Link></li>*/}
-                            {/*<li className={path==='/sales'?"active":''} style={this.state.sales==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sales" style={{width:'fit-content'}}> <i className="fa fa-user-secret" />Sales </Link></li>*/}
-                            {/*<li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank" style={{width:'fit-content'}}> <i className="fa fa-bank" />Bank </Link></li>*/}
-                            {/*<li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="fa fa-ticket" />Promo </Link></li>*/}
-                        {/*</ul>*/}
-                    {/*</li>*/}
-                    <li className={"treeview" +
-                        (this.state.isInventory===true || this.state.isTrxMutasi ||
-                        path==='/delivery_note' || 
-                        path === '/alokasi' ||
-                        path === '/adjustment'||
-                        path === '/approval_mutasi'||
-                        path === '/opname'||
-                        path === '/approval_opname'
-                        ?" active menu-open" : "")}>
-                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
-                        <a href="#" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
-                        ?"block" : "none"}}>
+                    {/*END MODUL MASTERDATA*/}
+                    {/*START MODUL INVENTORY*/}
+                    <li className={"treeview" + (this.state.isInventory===true || this.state.isTrxMutasi || path==='/delivery_note' || path === '/alokasi' || path === '/adjustment'|| path === '/approval_mutasi'|| path === '/opname'|| path === '/approval_opname'?" active menu-open" : "")}>
+                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true ?"block" : "none"}}>
                             <li className={path==='/delivery_note'?"active":''}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
                             <li className={path==='/alokasi'?"active":''}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi </Link></li>
                             <li className={path==='/approval_mutasi'?"active":''}><Link to="/approval_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Mutasi </Link></li>
@@ -469,70 +432,53 @@ class SideMenu extends Component {
 
                         </ul>
                     </li>
+                    {/*END MODUL INVENTORY*/}
+                    {/*START MODUL PEMBELIAN*/}
                     <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}>
-                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
-                        <a href="#" onClick={(e) => this.changeMenu(e,'receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isReceive===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReceive===true
-                        ?"block" : "none"}}>
+                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isReceive===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReceive===true ?"block" : "none"}}>
                             <li className={path==='/purchase_order'?"active":''}><Link to="/purchase_order" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
                             <li className={path==='/receive'?"active":''}><Link to="/receive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Receive Pembelian</Link></li>
                             <li className={path==='/retur_tanpa_nota'?"active":''}><Link to="/retur_tanpa_nota" style={{width:'fit-content'}}> <i className="fa fa-rotate-left" />Retur Tanpa Nota</Link></li>
                         </ul>
                     </li>
-                    {/*<li  className={path==='/produksi'?"active":''}><Link to="/produksi"> <i className="fa fa-product-hunt" /><span> Produksi</span></Link></li>*/}
+                    {/*END MODUL PEMBELIAN*/}
+                    {/*START MODUL PRODUKSI*/}
                     <li className={"treeview" + (this.state.isProduction===true  || path==='/trx_produksi'|| path==='/approval_produksi'?" active menu-open" : "")}>
-                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('production')}><i className="fa fa-product-hunt" /> <span>Produksi</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isProduction===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isProduction===true
-                                ?"block" : "none"}}>
+                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'production')}><i className="fa fa-product-hunt" /> <span>Produksi</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isProduction===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isProduction===true ?"block" : "none"}}>
                             <li className={path==='/trx_produksi'?"active":''}><Link to="/trx_produksi" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Transaksi</Link></li>
                             <li className={path==='/approval_produksi'?"active":''}><Link to="/approval_produksi" style={{width:'fit-content'}}> <i className="fa fa-check" />Approval</Link></li>
                         </ul>
                     </li>
+                    {/*END MODUL PRODUKSI*/}
+                    {/*START MODUL PENJUALAN*/}
                     <li className={"treeview" + (this.state.isSale===true  || path==='/sale'?" active menu-open" : "")}>
-                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('sale')}><i className="fa fa-shopping-cart" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
-                        <a href="#" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true
-                        ?"block" : "none"}}>
+                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true ?"block" : "none"}}>
                             <li className={path==='/sale'?"active":''}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
-                    <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true || this.state.isReportPenjualan===true ||
-                        path==='/report_cash'|| 
-                        path==='/closing'
-                        ?" active menu-open" : "")}>
-
+                    {/*END MODUL PENJUALAN*/}
+                    {/*START MODUL LAPORAN*/}
+                    <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true || this.state.isReportPenjualan===true || path==='/report_cash'|| path==='/closing' ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'report')}><i className="zmdi zmdi-book" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isReport===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true
-                        ?"block" : "none"}}>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isReport===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true ?"block" : "none"}}>
                             <li className={path==='/closing'?"active":''}><Link to="/closing" style={{width:'fit-content'}}> <i className="zmdi zmdi-lock" />Closing</Link></li>
                             <li className={path==='/report_cash'?"active":''}><Link to="/report_cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas</Link></li>
                             <li className={path==='/report/laba_rugi_report'?"active":''}><Link to="/report/laba_rugi_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Laba Rugi</Link></li>
-                            
-                            
-                            <li className={"treeview" + (this.state.isReportPenjualan===true || 
-                                path==='/sale_archive' ||
-                                path==='/sale_by_cust_archive'
-                                ?" active menu-open" : "")}>
+
+                            <li className={"treeview" + (this.state.isReportPenjualan===true || path==='/sale_archive' || path==='/sale_by_cust_archive' ?" active menu-open" : "")}>
                                 <a href="#" onClick={(e) => this.changeMenu(e,'report_penjualan')}><i className="fa fa-list-alt"/>Penjualan <i className="fa fa-angle-right"></i></a>
-                                <ul className={"treeview-menu animate__animated" + (this.state.isReportPenjualan===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPenjualan===true
-                        ?"block" : "none"}}>
+                                <ul className={"treeview-menu animate__animated" + (this.state.isReportPenjualan===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPenjualan===true ?"block" : "none"}}>
                                     <li className={path==='/sale_archive'?"active":''}><Link to="/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
                                     <li className={path==='/sale_by_cust_archive'?"active":''}><Link to="/sale_by_cust_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Cust.</Link></li>
                                 </ul>
                             </li>
                             
-                            <li className={"treeview" + (this.state.isReportInventory===true ||
-                                path==='/inventory_report'|| path==='/adjustment_report'||
-                                path==='/alokasi_report'||
-                                path==='/report/opname_report'||
-                                path==='/report/production_report'||
-                                path==='/report/expedisi_report'||
-                                path==='/report/mutation_report'||
-                                path==='/report/alokasi_trx_report'||
-                                path==='/report/dn_report'?" active menu-open" : "")}>
+                            <li className={"treeview" + (this.state.isReportInventory===true || path==='/inventory_report'|| path==='/adjustment_report'|| path==='/alokasi_report'|| path==='/report/opname_report'|| path==='/report/production_report'|| path==='/report/expedisi_report'|| path==='/report/mutation_report'|| path==='/report/alokasi_trx_report'|| path==='/report/dn_report'?" active menu-open" : "")}>
                                 <a href="#" onClick={(e) => this.changeMenu(e,'report_inventory')}><i className="zmdi zmdi-widgets"/>Inventory <i className="fa fa-angle-right"></i></a>
-                                <ul className={"treeview-menu animate__animated" + (this.state.isReportInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportInventory===true
-                        ?"block" : "none"}}>
+                                <ul className={"treeview-menu animate__animated" + (this.state.isReportInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportInventory===true?"block" : "none"}}>
                                     <li className={path==='/inventory_report'?"active":''}><Link to="/inventory_report" style={{width:'fit-content'}}> <i className="ti-server" />Stock</Link></li>
                                     <li className={path==='/adjustment_report'?"active":''}><Link to="/adjustment_report" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment</Link></li>
                                     <li className={path==='/alokasi_report'?"active":''}><Link to="/alokasi_report" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi</Link></li>
@@ -545,7 +491,7 @@ class SideMenu extends Component {
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isReportPembelian===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
-                                <a href="javascript:void(0)" onClick={(e) => this.changeMenu('report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
+                                <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true ?"block" : "none"}}>
                                     <li className={path==='/po_report'?"active":''}><Link to="/po_report" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
                                     <li className={path==='/receive_report'?"active":''}><Link to="/receive_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Receive</Link></li>
@@ -553,22 +499,10 @@ class SideMenu extends Component {
                             </li>
                         </ul>
                     </li>
+                    {/*END MODUL LAPORAN*/}
+                    {/*START MODUL CETAK BARCODE*/}
                     <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
-                    <li className={"treeview" +(this.state.isSetting===true
-                        || path==='/user'
-                        || path==='/location'
-                        || path==='/company'
-                        ?" active menu-open" : ""
-                        )
-                    }>
-                        <a href="javascript:void(0)" onClick={(e) => this.changeMenu('setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
-                        ?"block" : "none"}}>
-                            <li className={path==='/company'?"active":''}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>
-                            <li className={path==='/user'?"active":''} ><Link to="/user" style={{width:'fit-content'}}> <i className="fa fa-group" />User</Link></li>
-                            <li className={path==='/location'?"active":''} ><Link to="/location" style={{width:'fit-content'}}> <i className="fa fa-building-o" />Lokasi</Link></li>
-                        </ul>
-                    </li>
+                    {/*END MODUL CETAK BARCODE*/}
                 </ul>
             </nav>
             )

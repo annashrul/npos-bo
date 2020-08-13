@@ -44,6 +44,11 @@ class Login extends Component {
                 localStorage.setItem("tanggal_tempo",moment(tgl_tempo).format("yyyy-MM-DD"));
                 localStorage.setItem("tanggal_lokal",tgl_local);
                 localStorage.setItem("tanggal_info",moment(lastWeek).format("yyyy-MM-DD"));
+                localStorage.setItem("server_price",data.result.server_price);
+                localStorage.setItem("acc_name",data.result.acc_name);
+                localStorage.setItem("acc_number",data.result.acc_number);
+
+
                 this.setState({
                     logo: data.result.logo,
                     width:data.result.width
@@ -105,7 +110,7 @@ class Login extends Component {
     }
 
     render() {
-        const {email,password, errors,disableButton,server_price,acc_name,acc_number} = this.state;
+        const {email,password, errors,disableButton} = this.state;
         console.log(this.state);
         return (
         <div class="limiter">
@@ -141,7 +146,7 @@ class Login extends Component {
                                     {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                                 </div>
                                 <div className="container-login100-form-btn">
-                                    <button disabled={disableButton} className="login100-form-btn" type="submit"
+                                    <button className="login100-form-btn" type="submit"
                                             onClick={this.submitHandelar}>
                                         Sign in
                                     </button>

@@ -110,7 +110,7 @@ class Produksi extends Component{
         if (localStorage.location_produksi!==undefined&&localStorage.location_produksi!=='') {
             // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_produksi, null, this.autoSetQty));
             this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',localStorage.location_produksi,this.autoSetQty));
-            this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',localStorage.location_produksi,this.autoSetQty));
+            this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',localStorage.location_produksi));
 
             this.props.dispatch(FetchCodeAdjustment(localStorage.location_produksi));
         }
@@ -152,7 +152,7 @@ class Produksi extends Component{
         this.props.dispatch(FetchCodeProduksi(lk.value));
         // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
         this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',lk.value,this.autoSetQty));
-        this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',lk.value,this.autoSetQty));
+        this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',lk.value));
 
         destroy(table);
         this.getData()
@@ -187,18 +187,18 @@ class Produksi extends Component{
             if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
                 // this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiPaket(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiPaket(1,'kd_brg',this.state.search,this.state.location));
 
             }
             if(parseInt(this.state.searchby)===2){
                 // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiBahan(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiPaket(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiPaket(1,'barcode',this.state.search,this.state.location));
 
             }
             if(parseInt(this.state.searchby)===3){
                 this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
+                this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location));
 
             // this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
@@ -321,58 +321,7 @@ class Produksi extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-        if(column==='satuan'){
-            const cek = cekData('barcode', barcode, table);
-            cek.then(res => {
-                console.log("data",res);
-                if (res == undefined) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: `not found.`
-                    })
-                }
-                else {
-                    let newbrg=[];
-                    datas.map(i=>{
-                        if(i.satuan===val){
-                            newbrg=i;
-                        }
-                    });
-                    console.log("new barang",newbrg.satuan);
-                    let final= {
-                        id: res.id,
-                        barcode:newbrg.barcode,
-                        harga_beli: newbrg.harga_beli,
-                        satuan: newbrg.satuan,
-                        hrg_jual: newbrg.harga,
-                        kd_brg: res.kd_brg,
-                        nm_brg: res.nm_brg,
-                        saldo_stock:newbrg.stock,
-                        stock: newbrg.stock,
-                        qty_adjust:0,
-                        tambahan: res.tambahan,
-                        kel_brg:res.kel_brg,
-                        kategori:res.kategori,
-                        stock_min:res.stock_min,
-                        supplier:res.supplier,
-                        subdept:res.subdept,
-                        deskripsi:res.deskripsi,
-                        jenis:res.jenis,
-                        kcp:res.kcp,
-                        poin:res.poin,
-                        group1:res.group1,
-                        group2:res.group2,
-                        status:res.status,
-                    }
-                    update(table, final);
-                    Toast.fire({
-                        icon: 'success',
-                        title: `${column} has been changed.`
-                    })
-                }
-                this.getData()
-            })
-        }
+
     }
     HandleChangeInput(e,id){
         const column = e.target.name;
@@ -731,16 +680,7 @@ class Produksi extends Component{
                                                                 <td style={columnStyle}>{item.kd_brg}</td>
                                                                 <td style={columnStyle}>{item.barcode}</td>
                                                                 <td style={columnStyle}>{item.nm_brg}</td>
-                                                                <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
-                                                                    {
-                                                                        item.tambahan.map(i => {
-                                                                            return (
-                                                                                <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </select></td>
-
+                                                                <td style={columnStyle}>{item.satuan}</td>
                                                                 <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli))} className="form-control"/></td>
                                                                 <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                                 <td style={columnStyle}>
