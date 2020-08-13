@@ -34,6 +34,12 @@ export function setReport(data = []) {
         data
     }
 }
+export function setReportExcel(data = []) {
+    return {
+        type: DN.REPORT_SUCCESS_EXCEL,
+        data
+    }
+}
 export function setCode(data = []) {
     return {
         type: DN.SUCCESS_CODE,
@@ -61,6 +67,44 @@ export const FetchDnReport = (page = 1, perpage = 10) => {
                 console.log(error);
             })
 
+    }
+}
+
+export const FetchDn = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `deliverynote/report?page=${page}`;
+        if(where!==''){
+            url+=where
+        }
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchDnExcel = (page=1,where='', perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `deliverynote/report?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setReportExcel(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }
 

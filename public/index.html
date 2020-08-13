@@ -14,6 +14,12 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
 
+  <!-- Animate.css -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
+  />
+
   <!-- These plugins only need for the run this page -->
   <link rel="stylesheet" href="%PUBLIC_URL%/css/default-assets/notification.css">
   <link rel="stylesheet" href="%PUBLIC_URL%/css/c3.min.css">
@@ -30,7 +36,9 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-  <title>Dashboard App</title>
+  <title>N-pos</title>
+
+
   <style>
    .custom-map-modal{
      width: 100%;
@@ -187,7 +195,7 @@
     }
 
   </style>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
         async defer></script>
 
 </head>
@@ -197,6 +205,7 @@
     You need to enable JavaScript to run this app.
   </noscript>
   <input type='hidden' id="hellyeah" />
+  <input type='hidden' id="coolyeah" />
 
   <div id="root"></div>
   <!--

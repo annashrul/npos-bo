@@ -26,6 +26,12 @@ export function setALOKASI(data = []) {
         data
     }
 }
+export function setAlokasiExcel(data = []) {
+    return {
+        type: ALOKASI.SUCCESS_EXCEL,
+        data
+    }
+}
 
 export function setALOKASIData(data = []) {
     return {
@@ -171,6 +177,24 @@ export const FetchAlokasi = (page=1,where='')=>{
                 const data = response.data;
                 console.log(data);
                 dispatch(setALOKASI(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchAlokasiExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `alokasi/report?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setAlokasiExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)

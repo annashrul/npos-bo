@@ -11,6 +11,7 @@ const initialState = {
     code:"-",
     po_data:[],
     report:[],
+    report_excel:[],
     report_data:[],
     dataReportDetail:[]
 };
@@ -29,6 +30,10 @@ export const poReducer = (state = initialState, action) => {
         case PO.PO_DATA:
             return Object.assign({}, state, {
                 po_data: action.data.result
+            });
+        case PO.SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result
             });
         case PO.PO_REPORT_DETAIL:
             console.log("REDUCER",action.data.result);

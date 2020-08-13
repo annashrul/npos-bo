@@ -30,22 +30,25 @@ import PoReport from '../report/inventory/po'
 import Produksi from '../inventory/produksi'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
+import DnReport from '../report/inventory/dn'
+import OpnameReport from '../report/inventory/opname'
+import ExpedisiReport from '../report/inventory/expedisi'
+import MutationReport from '../report/inventory/mutation'
+import TransactionReport from '../report/inventory/transaction'
+import ProductionReport from '../report/inventory/production'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
+import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import Sale from '../sale/product_sale'
 import Company from "../setting/company";
 
 import axios from 'axios';
 import {HEADERS} from "../../../redux/actions/_constants";
 import ReportCash from "../report/cash";
+import ReportLabaRugi from "../report/laba_rugi";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
 import CetakBarcode from "../cetak_barcode";
-
-axios.defaults.headers.common['Authorization'] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNTk1NTAxNDA2LCJleHAiOjE1OTgwOTM0MDZ9.kMJwmttCOcfNhj_3SWs89i421jgIC4-O-ec3zG2-KWQ`;
-axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
-axios.defaults.headers.common['password'] = `${HEADERS.PASSWORD}`;
-axios.defaults.headers.common['Content-Type'] = `application/x-www-form-urlencoded`;
 
 const Routes = (
     <div>
@@ -80,9 +83,17 @@ const Routes = (
             <PrivateRoute path="/po_report" exact strict component={PoReport} />
             <PrivateRoute path="/receive_report" exact strict component={ReceiveReport} />
             <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
+            <PrivateRoute path="/report/dn_report" exact strict component={DnReport} />
+            <PrivateRoute path="/report/opname_report" exact strict component={OpnameReport} />
+            <PrivateRoute path="/report/expedisi_report" exact strict component={ExpedisiReport} />
+            <PrivateRoute path="/report/mutation_report" exact strict component={MutationReport} />
+            <PrivateRoute path="/report/alokasi_trx_report" exact strict component={TransactionReport} />
+            <PrivateRoute path="/report/production_report" exact strict component={ProductionReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
+            <PrivateRoute path="/report/laba_rugi_report" exact strict component={ReportLabaRugi} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
+            <PrivateRoute path="/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />

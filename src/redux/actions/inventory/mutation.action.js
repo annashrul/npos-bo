@@ -32,6 +32,19 @@ export function setApprovalMutationFailed(data = []) {
     }
 }
 
+export function setMutation(data=[]){
+    return {type:MUTATION.SUCCESS,data}
+}
+
+export function setMutationExcel(data=[]){
+    return {type:MUTATION.SUCCESS_EXCEL,data}
+}
+
+export function setMutationData(data=[]){
+    return {type:MUTATION.SUCCESS_DATA,data}
+}
+
+
 export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
     return (dispatch) => {
         dispatch(setLoadingApprovalMutation(true));
@@ -113,6 +126,74 @@ export const saveApprovalMutation = (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+export const FetchMutation = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoadingApprovalMutation(true));
+        let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchMutasi",data);
+                dispatch(setMutation(data));
+                dispatch(setLoadingApprovalMutation(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchMutationExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoadingApprovalMutation(true));
+        let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchMutasi",data);
+                dispatch(setMutationExcel(data));
+                dispatch(setLoadingApprovalMutation(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchMutationData = (page=1,code,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `alokasi/report/${code}?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
+        }
+        console.log("url alokasi",`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setMutationData(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }
 

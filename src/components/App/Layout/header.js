@@ -61,16 +61,36 @@ class Header extends Component {
 
           <div className="right-side-navbar d-flex align-items-center justify-content-end">
               {/* <!-- Mobile Trigger --> */}
-              <div className="right-side-trigger" id="rightSideTrigger" onClick={(e)=>{e.preventDefault();this.handleToggleMobileNav();}} >
-                  <i className="ti-align-left"></i>
+              <div className="right-side-trigger" style={{width:'unset',height:'unset',marginRight:'unset'}} >
+                <li className="nav-item dropdown">
+                    <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""></img> <span className="active-status"></span></button>
+                    <div className="dropdown-menu dropdown-menu-right">
+                        {/* <!-- Top Notifications Area --> */}
+                        <div className="user-profile-area">
+                            <div className="user-profile-heading">
+                                {/* <!-- Thumb --> */}
+                                <div className="profile-img">
+                                    <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""></img>
+                                </div>
+                                {/* <!-- Profile Text --> */}
+                                <div className="profile-text">
+                                    <h6>{this.props.auth.user.username}</h6>
+                                    <span>{this.props.auth.user.lvl}</span>
+                                </div>
+                            </div>
+                            <a onClick={this.handleLogout} className="dropdown-item"><i className="ti-unlink profile-icon bg-warning" aria-hidden="true"></i> Sign-out</a>
+                        </div>
+                    {/* </div> */}
+                    </div>
+                </li>
               </div>
 
               {/* <!-- Top Bar Nav --> */}
               <ul className={"right-side-content d-flex align-items-center " + (this.state.toggleMobileNav === true? "active":"")}>
                   {/* <!-- Full Screen Mode --> */}
-                  <li className="full-screen-mode ml-1">
+                  {/* <li className="full-screen-mode ml-1">
                       <a href="about:blank" id="fullScreenMode" ><i className="zmdi zmdi-fullscreen" style={{'fontSize': 'xx-large'}}></i></a>
-                  </li>
+                  </li> */}
                   <li className="nav-item dropdown">
                       <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""></img> <span className="active-status"></span></button>
                       <div className="dropdown-menu dropdown-menu-right">
@@ -87,7 +107,7 @@ class Header extends Component {
                                       <span>{this.props.auth.user.lvl}</span>
                                   </div>
                               </div>
-                              <a onClick={this.handleLogout} className="dropdown-item"><i className="ti-unlink profile-icon bg-warning" aria-hidden="true"></i> Sign-out</a>
+                              <a onClick={this.handleLogout} className="dropdown-item" style={{cursor:"pointer"}}><i className="fa fa-chain-broken profile-icon bg-warning" aria-hidden="true"></i> Sign-out</a>
                           </div>
                       {/* </div> */}
                       </div>

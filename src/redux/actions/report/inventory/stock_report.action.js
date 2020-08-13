@@ -12,6 +12,10 @@ export function setLoadingDetailSatuan(load){
 export function setStockReport(data=[]){
     return {type:STOCK_REPORT.SUCCESS,data}
 }
+
+export function setStockReportExcel(data=[]){
+    return {type:STOCK_REPORT.SUCCESS_EXCEL,data}
+}
 export function setStockReportDetailSatuan(data=[]){
     return {type:STOCK_REPORT.DETAIL_SATUAN,data}
 }
@@ -38,6 +42,27 @@ export const FetchStockReport = (page=1,where='')=>{
                 const data = response.data;
                 console.log(data);
                 dispatch(setStockReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+//FILTER STOCK REPORT EXCEL//
+export const FetchStockReportExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `report/stock?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        console.log("URL STOCK REPORT",url);
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setStockReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)

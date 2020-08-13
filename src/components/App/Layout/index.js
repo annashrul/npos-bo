@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import Header from '../Layout/header'
 import SideMenu from '../Layout/sideMenu'
 import {connect} from 'react-redux'
-import Logo from "../../../assets/images/logo.png"
 import FreeScrollbar from 'react-free-scrollbar';
 
 class Layout extends Component {
@@ -18,7 +17,7 @@ class Layout extends Component {
     }
 
     componentWillMount() {
-        document.title = this.props.page;
+        document.title = `${atob(document.getElementById("coolyeah").value)} - ${this.props.page}`;
     }
 
     getFaviconEl() {
@@ -43,6 +42,7 @@ class Layout extends Component {
     }
 
     render() {
+        console.log("props", this.props)
         const style = {
             overflowY: 'auto',
             '::-webkit-scrollbar': {

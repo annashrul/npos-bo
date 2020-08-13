@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {fetchPoReport} from "redux/actions/purchase/purchase_order/po.action";
+import {fetchPoReport,fetchPoReportExcel} from "redux/actions/purchase/purchase_order/po.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {poReportDetail} from "redux/actions/purchase/purchase_order/po.action";
 import moment from "moment";
@@ -92,6 +92,7 @@ class PoReport extends Component{
             where+=`&q=${any}`;
         }
         this.props.dispatch(fetchPoReport(pageNumber,where))
+        this.props.dispatch(fetchPoReportExcel(pageNumber,where))
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
@@ -177,10 +178,55 @@ class PoReport extends Component{
                                 <div className="col-6 col-xs-6 col-md-4">
                                     <div className="form-group">
                                         <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"/></button>
-                                        <ReactHTMLTableToExcel className="btn btn-primary btnBrg" table="emp" filename="laporan_adjusment" sheet="laporan adjusment" buttonText="export excel"/>
+                                        <ReactHTMLTableToExcel className="btn btn-primary btnBrg" table="report_po_to_excel" filename="laporan_po" sheet="laporan po" buttonText="export excel"/>
                                     </div>
                                 </div>
                             </div>
+                            {/*DATA EXCEL*/}
+                            <table className="table table-hover"  id="report_po_to_excel" style={{display:"none"}}>
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" colSpan={8}>{this.state.startDate} - {this.state.startDate}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={8}>LAPORAN PO</th>
+                                </tr>
+
+                                <tr>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. PO</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Kirim</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Supplier</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jenis</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Operator</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                </tr>
+                                <tr></tr>
+                                </thead>
+                                {
+                                    <tbody>
+                                    {
+                                        typeof this.props.poReportExcel.data==='object'? this.props.poReportExcel.data.length>0?
+                                            this.props.poReportExcel.data.map((v,i)=>{
+                                                return (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{v.no_po}</td>
+                                                        <td style={columnStyle}>{moment(v.tgl_po).format("YYYY-MM-DD")}</td>
+                                                        <td style={columnStyle}>{moment(v.tglkirim).format("YYYY-MM-DD")}</td>
+                                                        <td style={columnStyle}>{v.nama_supplier}</td>
+                                                        <td style={columnStyle}>{v.lokasi}</td>
+                                                        <td style={columnStyle}>{v.jenis}</td>
+                                                        <td style={columnStyle}>{v.kd_kasir}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('warning','Processing'):statusQ('success','Ordered')}</td>
+                                                    </tr>
+                                                );
+                                            }) : "No data." : "No data."
+                                    }
+                                    </tbody>
+                                }
+                            </table>
+                            {/*END DATA EXCEL*/}
                             {
                                 !this.props.isLoading?(
                                     <div className="table-responsive" style={{overflowX: "auto"}}>
@@ -261,6 +307,7 @@ class PoReport extends Component{
 const mapStateToProps = (state) => {
     return {
         poReport:state.poReducer.data,
+        poReportExcel:state.poReducer.report_excel,
         dataReportDetail:state.poReducer.dataReportDetail,
         isLoading: state.poReducer.isLoading,
         isLoadingDetail: state.poReducer.isLoadingDetail,
