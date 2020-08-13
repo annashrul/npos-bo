@@ -208,7 +208,7 @@ class ReportLabaRugi extends Component{
                                     </DateRangePicker>
                                 </div>
                             </div>
-                            {/* <div className="col-6 col-xs-6 col-md-2">
+                            <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">
                                         Lokasi
@@ -225,8 +225,8 @@ class ReportLabaRugi extends Component{
 
                                     />
                                 </div>
-                            </div> */}
-                            <div className="col-6 col-xs-6 col-md-2">
+                            </div>
+                            {/* <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">
                                         Kassa
@@ -243,7 +243,7 @@ class ReportLabaRugi extends Component{
 
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             {/* <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">
@@ -262,22 +262,22 @@ class ReportLabaRugi extends Component{
                                     />
                                 </div>
                             </div> */}
-                            {/* <div className="col-6 col-xs-6 col-md-3">
+                            <div className="col-6 col-xs-6 col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12"></label>
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"></i>
                                     </button>
-                                    <ReactHTMLTableToExcel
+                                    {/* <ReactHTMLTableToExcel
                                         className="btn btn-primary btnBrg"
                                         table={`laporan_kas`}
                                         filename={`laporan_kas`}
                                         sheet="kas"
                                         buttonText="export excel">
-                                    </ReactHTMLTableToExcel>
+                                    </ReactHTMLTableToExcel> */}
                                 </div>
 
-                            </div> */}
+                            </div>
                             <div className="col-md-12">
                                 <div className="col-md-6 offset-3">
                                     <div className="card rounded box-margin">
@@ -314,14 +314,6 @@ class ReportLabaRugi extends Component{
                                                         </div>
                                                         <div className="col-6">
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(penjualan))}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-6">
-                                                            <p className="text-10 mb-0 text-left">Discount Pembelian</p>
-                                                        </div>
-                                                        <div className="col-6" >
-                                                            {/* <p className="text-12 mb-0 text-right">{toRp(parseInt(undefined))}</p> */}
                                                         </div>
                                                     </div>
                                                     <div className="row">
