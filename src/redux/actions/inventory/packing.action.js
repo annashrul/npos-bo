@@ -2,6 +2,7 @@ import {PACKING, HEADERS} from "../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
+import {cekData, store,update} from "../../../components/model/app.model";
 
 export function setLoading(load){
     return {type : PACKING.LOADING,load}
@@ -41,6 +42,7 @@ export const FetchBrgPacking = (kode,db)=>{
             .then(function(response){
                 const data = response.data;
                 console.log(data);
+
                 if(data.result.detail.length===1){
                     const barang = data.result.detail;
                     const cek=db(barang[0].kode_barang,barang);
@@ -67,3 +69,39 @@ export const FetchBrgPacking = (kode,db)=>{
     }
 }
 
+export const storePacking = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `packing`;
+        axios.post(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Transaksi berhasil.',
+                    text: `Disimpan dengan nota: ${data.result.insertId}`,
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9800',
+                }).then((result) => {
+                    destroy('packing');
+                    localStorage.removeItem('faktur_alokasi_packing');
+                    localStorage.removeItem('penerima_packing');
+                    window.location.reload(false);
+                })
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}

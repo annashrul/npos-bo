@@ -17,7 +17,7 @@ import {
 } from "../../../../redux/actions/inventory/produksi.action";
 import {ToastQ} from "helper";
 import {FetchAlokasi} from "../../../../redux/actions/inventory/alokasi.action";
-import {FetchBrgPacking, FetchCodePacking} from "../../../../redux/actions/inventory/packing.action";
+import {FetchBrgPacking, FetchCodePacking, storePacking} from "../../../../redux/actions/inventory/packing.action";
 
 
 const table='packing';
@@ -31,7 +31,7 @@ class TrxPacking extends Component{
             faktur_alokasi_data:[],
             faktur_alokasi:"",
             penerima:"",
-            tanggal: new Date(),
+            tanggal: moment(new Date()).format('yyyy-MM-DD'),
             searchby:"",
             search:"",
             userid:0,
@@ -42,8 +42,6 @@ class TrxPacking extends Component{
         }
         this.handleChangeFakturAlokasi=this.handleChangeFakturAlokasi.bind(this);
         this.HandleCommonInputChange=this.HandleCommonInputChange.bind(this);
-        this.HandleSearch=this.HandleSearch.bind(this);
-        this.HandleAddBrg=this.HandleAddBrg.bind(this);
         this.HandleRemove=this.HandleRemove.bind(this);
         this.HandleReset=this.HandleReset.bind(this);
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
@@ -67,7 +65,6 @@ class TrxPacking extends Component{
                 })
             }
         }
-        console.log("GET PROPS",param);
         if(param.codeAlokasi.data!==undefined){
             let no_faktur=[];
             typeof param.codeAlokasi.data === 'object' ? param.codeAlokasi.data.map((v,i)=>{
@@ -80,18 +77,24 @@ class TrxPacking extends Component{
                 faktur_alokasi_data:no_faktur
             })
         }
+        typeof param.barang.detail === 'object' ? param.barang.detail.length > 0 ? this.getData() : "" : "";
         this.setState({
             no_packing:this.props.code
         })
 
     }
     componentDidMount(){
-        this.getData()
+        this.getData();
         if (localStorage.faktur_alokasi_packing !== undefined && localStorage.faktur_alokasi_packing !== '') {
             this.setState({
                 faktur_alokasi: localStorage.faktur_alokasi_packing
             })
             this.props.dispatch(FetchBrgPacking(localStorage.faktur_alokasi_packing,this.autoSetQty));
+        }
+        if (localStorage.penerima_packing !== undefined && localStorage.penerima_packing !== '') {
+            this.setState({
+                penerima: localStorage.penerima_packing
+            })
         }
     }
     componentWillReceiveProps = (nextProps) => {
@@ -105,9 +108,6 @@ class TrxPacking extends Component{
         this.props.dispatch(FetchAlokasi(1,'&status=0&perpage=1000'));
     }
     handleChangeFakturAlokasi(lk){
-        let val = lk.value;
-        let exp = val.split("|", 2);
-        console.log(exp[0]);
         let err = Object.assign({}, this.state.error, {
             faktur_alokasi: ""
         });
@@ -116,6 +116,7 @@ class TrxPacking extends Component{
             error: err
         });
         this.props.dispatch(FetchBrgPacking(lk.value,this.autoSetQty));
+
         localStorage.setItem('faktur_alokasi_packing', lk.value);
     }
     HandleCommonInputChange(e,errs=true,st=0){
@@ -133,79 +134,7 @@ class TrxPacking extends Component{
             });
         }
     }
-    HandleSearch(){
-        if (this.state.location === "") {
-            Swal.fire(
-                'Gagal!',
-                'Pilih lokasi',
-                'error'
-            )
-        }else{
-            // alert("bus "+this.state.searchby);
 
-            // let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
-            //
-            if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
-                // this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiPaket(1,'kd_brg',this.state.search,this.state.location));
-
-            }
-            if(parseInt(this.state.searchby)===2){
-                // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiBahan(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiPaket(1,'barcode',this.state.search,this.state.location));
-
-            }
-            if(parseInt(this.state.searchby)===3){
-                this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
-                this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location));
-
-                // this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
-
-            }
-            this.setState({search: ''});
-
-        }
-    }
-    HandleAddBrg(e,item) {
-        e.preventDefault();
-        console.log(item);
-        const finaldt = {
-            qty_alokasi:item.qty_alokasi,
-            kode_barang:item.kode_barang,
-            harga_beli:item.harga_beli,
-            harga_jual:item.harga_jual,
-            barcode:item.barcode,
-            satuan:item.satuan,
-            stock:item.stock,
-            nm_brg:item.nm_brg,
-            qty_packing:item.qty_packing,
-            tambahan:item.tambahan
-        };
-        const cek = cekData('kode_barang',item.kode_barang,table);
-        cek.then(res => {
-            if(res==undefined){
-                store(table, finaldt)
-            }else{
-
-                update(table,{
-                    id:res.id,
-                    qty_alokasi:res.qty_alokasi,
-                    kode_barang:res.kode_barang,
-                    harga_beli:res.harga_beli,
-                    harga_jual:res.harga_jual,
-                    barcode:res.barcode,
-                    satuan:res.satuan,
-                    stock:res.stock,
-                    nm_brg:res.nm_brg,
-                    qty_packing:parseInt(res.qty_packing)+1,
-                    tambahan:res.tambahan
-                })
-            }
-            this.getData()
-        })
-    }
     HandleRemove(e, id){
         e.preventDefault()
         Swal.fire({
@@ -241,8 +170,7 @@ class TrxPacking extends Component{
         }).then((result) => {
             if (result.value) {
                 destroy(table);
-                localStorage.removeItem('location_produksi');
-                localStorage.removeItem('barang_paket_produksi');
+                localStorage.removeItem('faktur_alokasi_packing');
                 window.location.reload(false);
             }
         })
@@ -258,60 +186,54 @@ class TrxPacking extends Component{
     HandleChangeInput(e,id){
         const column = e.target.name;
         const val = e.target.value;
-        console.log(id);
-        const cek = cekData('barcode', id, table);
-        cek.then(res => {
-            if (res == undefined) {
-                ToastQ.fire({
-                    icon: 'error',
-                    title: `not found.`
-                })
-                // Toast.fire({
-                //     icon: 'error',
-                //     title: `not found.`
-                // })
-            } else {
+        if(id!==null){
+            const cek = cekData('barcode', id, table);
+            cek.then(res => {
+                if (res == undefined) {
+                    ToastQ.fire({
+                        icon: 'error',
+                        title: `not found.`
+                    })
+                    // Toast.fire({
+                    //     icon: 'error',
+                    //     title: `not found.`
+                    // })
+                } else {
 
-                let final= {}
-                Object.keys(res).forEach((k, i) => {
-                    if(k!==column){
-                        final[k] = res[k];
-                    }else{
-                        final[column]=val
-                    }
-                })
-                update(table, final);
-                ToastQ.fire({
-                    icon: 'success',
-                    title: `${column} has been changed.`
-                })
+                    let final= {}
+                    Object.keys(res).forEach((k, i) => {
+                        if(k!==column){
+                            final[k] = res[k];
+                        }else{
+                            final[column]=val
+                        }
+                    })
+                    update(table, final);
+                    ToastQ.fire({
+                        icon: 'success',
+                        title: `${column} has been changed.`
+                    })
+                }
+                this.getData();
+            })
+        }else{
+            if(column==='penerima'){
+                localStorage.setItem("penerima_packing",val);
             }
-            this.getData();
-        })
+        }
+
 
     }
     HandleSubmit(e){
         e.preventDefault();
         let err = this.state.error;
-        if (this.state.catatan === "" || this.state.location === "" || this.state.barang_paket === ""){
-            if(this.state.catatan===""){
-                err = Object.assign({}, err, {
-                    catatan:"Catatan tidak boleh kosong."
-                });
-            }
-            if (this.state.location === "") {
-                err = Object.assign({}, err, {
-                    location: "Lokasi tidak boleh kosong."
-                });
-            }
-            if (this.state.barang_paket === "") {
-                err = Object.assign({}, err, {
-                    barang_paket: "barang paket tidak boleh kosong."
-                });
-            }
-            this.setState({
-                error: err
-            })
+        if(this.state.faktur_alokasi === ""){
+            err = Object.assign({}, err, {faktur_alokasi:"faktur alokasi tidak boleh kosong."});
+            this.setState({error: err})
+        }
+        else if(this.state.penerima === ""){
+            err = Object.assign({}, err, {penerima:"penerima tidak boleh kosong."});
+            this.setState({error: err})
         }else{
             const data = get(table);
             data.then(res => {
@@ -335,27 +257,23 @@ class TrxPacking extends Component{
                         if (result.value) {
 
                             let detail = [];
-                            let exp = this.state.barang_paket.split("|", 2);
                             let data={};
-                            data['brcd_hasil'] = exp[1];
-                            data['kd_brrg'] = exp[0];
+                            data['kode'] = this.state.no_packing;
+                            data['tanggal'] = this.state.tanggal;
+                            data['pengirim'] = this.state.penerima;
                             data['userid'] = this.state.userid;
-                            data['tanggal'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
-                            data['lokasi'] = this.state.location;
-                            data['keterangan'] = this.state.catatan;
-                            data['qty_estimasi'] = this.state.qty_estimasi;
+                            data['no_faktur_mutasi'] = this.state.faktur_alokasi;
+                            data['jmlbox'] = 0;
                             res.map(item => {
                                 detail.push({
-                                    "kd_brg": item.kd_brg,
+                                    "kd_brg": item.kode_barang,
                                     "barcode": item.barcode,
                                     "satuan": item.satuan,
-                                    "qty": item.qty_adjust,
-                                    "harga_beli": item.harga_beli
+                                    "qty": item.qty_packing,
                                 })
                             });
                             data['detail'] = detail;
-                            console.log(data);
-                            this.props.dispatch(storeProduksi(data));
+                            this.props.dispatch(storePacking(data));
                         }
                     })
 
@@ -364,13 +282,14 @@ class TrxPacking extends Component{
             })
         }
 
+
     }
     autoSetQty(kode,data){
         const cek = cekData('kode_barang', kode, table);
         return cek.then(res => {
             if (res == undefined) {
                 store(table, {
-                    qty_alokasi:data[0].qty_alokasi,
+                    qty_alokasi:data[0].qty,
                     kode_barang:data[0].kode_barang,
                     harga_beli:data[0].harga_beli,
                     harga_jual:data[0].harga_jual,
@@ -382,7 +301,6 @@ class TrxPacking extends Component{
                     tambahan:data[0].tambahan
                 })
             } else {
-
                 update(table, {
                     id:res.id,
                     qty_alokasi:res.qty_alokasi,
@@ -406,7 +324,6 @@ class TrxPacking extends Component{
             let brg = [];
             res.map((i) => {
                 brg.push({
-                    qty_alokasi: i.qty_alokasi,
                     qty_packing: i.qty_packing,
                 });
             })
@@ -419,87 +336,14 @@ class TrxPacking extends Component{
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
-            <Layout page="Produksi">
+            <Layout page="Transaksi Packing">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Produksi</h4>
+                        <h4>Transaksi Packing</h4>
                     </div>
                     <div className="row">
-                        {/*START LEFT*/}
-                        <div className="col-md-3">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="form-group">
-                                        <label htmlFor="">Plih Barang</label>
-                                        <div className="input-group input-group-sm">
-                                            <select name='searchby' className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
-                                                <option value={1}>Kode Barang</option>
-                                                <option value={2}>Barcode</option>
-                                                <option value={3}>Deskripsi</option>
-                                            </select>
-                                        </div>
-                                        <small id="passwordHelpBlock" className="form-text text-muted">
-                                            Cari
-                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
-                                        </small>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="input-group input-group-sm">
-                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder="Search" value={this.state.search} onChange={(e) => this.HandleCommonInputChange(e, false)}
-                                                   onKeyPress={event => {if (event.key === 'Enter') {this.HandleSearch();}}}
-                                            />
-                                            <span className="input-group-append">
-                                              <button type="button" className="btn btn-primary" onClick={event => {event.preventDefault();this.HandleSearch();}}>
-                                                <i className="fa fa-search"/>
-                                              </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
-                                        <div className="people-list">
-                                            <div id="chat_user_2">
-                                                <ul className="chat-list list-unstyled">
-                                                    {
-                                                        typeof this.props.barang.detail === 'object' ?
-                                                            this.props.barang.detail.length!==0?
-                                                                this.props.barang.detail.map((i,inx)=>{
-                                                                    return(
-                                                                        <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
-                                                                            qty_alokasi:i.qty,
-                                                                            kode_barang:i.kode_barang,
-                                                                            harga_beli:i.harga_beli,
-                                                                            harga_jual:i.harga_jual,
-                                                                            barcode:i.barcode,
-                                                                            satuan:i.satuan,
-                                                                            stock:i.stock,
-                                                                            nm_brg:i.nm_brg,
-                                                                            qty_packing:0,
-                                                                            tambahan:i.tambahan
-                                                                        })}>
-                                                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar" />
-                                                                            <div className="about">
-                                                                                <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
-                                                                            </div>
-                                                                        </li>
-                                                                    )
-                                                                }):(
-                                                                    <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
-                                                                )
-                                                            :(
-                                                                <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
-                                                            )
-                                                    }
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </Scrollbars>
-                                </div>
-                            </div>
-                        </div>
-                        {/*END LEFT*/}
                         {/*START RIGHT*/}
-                        <div className="col-md-9">
+                        <div className="col-md-12">
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
@@ -530,7 +374,11 @@ class TrxPacking extends Component{
                                                 <div className="col-md-3">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Penerima</label>
-                                                        <input type="text" name="penerima" className="form-control" value={this.state.penerima} onChange={(e => this.HandleCommonInputChange(e))}/>
+                                                        <input type="text" name="penerima" className="form-control" value={this.state.penerima} onChange={(e => this.HandleCommonInputChange(e))} onBlur={(e) => this.HandleChangeInput(e, null)}/>
+                                                        <div className="invalid-feedback"
+                                                             style={this.state.error.penerima !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                            {this.state.error.penerima}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -553,6 +401,8 @@ class TrxPacking extends Component{
                                                     <tbody>
                                                     {
                                                         this.state.databrg.map((item, index) => {
+                                                            let qty_packing = parseInt(this.state.brgval[index].qty_packing)>parseInt(item.qty_alokasi)?parseInt(item.qty_alokasi):this.state.brgval[index].qty_packing;
+                                                            console.log(qty_packing);
                                                             return (
                                                                 <tr key={index}>
                                                                     <td style={columnStyle}>
@@ -576,7 +426,8 @@ class TrxPacking extends Component{
                                                                     <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                                     <td style={columnStyle}><input readOnly={true} type='text' name='qty_alokasi' value={item.qty_alokasi} className="form-control"/></td>
                                                                     <td style={columnStyle}>
-                                                                        <input type='text' name='qty_packing' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} className="form-control" value={this.state.brgval[index].qty_packing}/>
+                                                                        <input type='text' name='qty_packing' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} className="form-control" value={qty_packing}/>
+
                                                                     </td>
 
                                                                 </tr>
