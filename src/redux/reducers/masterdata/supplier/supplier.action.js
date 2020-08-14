@@ -16,7 +16,7 @@ export const supplierReducer = (state=initialState,action) => {
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
-                data:action.data.result
+                data:action.data.result,
             });
         case SUPPLIER.ALL:
             return Object.assign({}, state,{
