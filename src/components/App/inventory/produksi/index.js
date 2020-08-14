@@ -688,6 +688,9 @@ class Produksi extends Component{
                                                                     {
                                                                         parseFloat(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
                                                                     }
+                                                                    {
+                                                                        parseFloat(this.state.brgval[index].qty_adjust) > parseFloat(item.stock) ? (<small style={{fontWeight:"bold",color:"red"}}>Qty melebihi stock sistem</small>) : ""
+                                                                    }
                                                                 </td>
                                                             </tr>
                                                         )
