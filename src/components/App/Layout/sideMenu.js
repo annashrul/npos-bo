@@ -44,66 +44,29 @@ class SideMenu extends Component {
 
     changeMenu(e,param){
         e.preventDefault();
-        if(this.state.isReport === true){
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: false,
-                isReport: true,
-                isReceive: false,
-                isSale:false,
-                isProduction:false
-            })
-            if(this.state.isReportInventory === true){
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:!this.state.isReportInventory,
-                    isReportPembelian:false
-                })
-            }
-            if(this.state.isReportPembelian === true) {
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:false,
-                    isReportPembelian:!this.state.isReportPembelian
-                })
-            }
-        }
-        else {
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: false,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportInventory:false,
-                isReportPembelian:false
-            })
-        }
-
-        // if(this.state.isInventory === true){
+        // if(this.state.isReport === true){
         //     this.setState({
         //         isSetting:false,
         //         isMasterdata: false,
-        //         isInventory: true,
-        //         isReport: false,
+        //         isInventory: false,
+        //         isReport: true,
         //         isReceive: false,
         //         isSale:false,
-        //         isReportPembelian:false,
-        //         isReportInventory:false,
-        //     });
-        //     if(this.state.isReportPenjualan === true) {
+        //         isProduction:false
+        //     })
+        //     if(this.state.isReportInventory === true){
+        //         this.setState({
+        //             isSetting:false,
+        //             isMasterdata: false,
+        //             isInventory: false,
+        //             isReport: true,
+        //             isReceive: false,
+        //             isSale:false,
+        //             isReportInventory:!this.state.isReportInventory,
+        //             isReportPembelian:false
+        //         })
+        //     }
+        //     if(this.state.isReportPembelian === true) {
         //         this.setState({
         //             isSetting:false,
         //             isMasterdata: false,
@@ -112,38 +75,10 @@ class SideMenu extends Component {
         //             isReceive: false,
         //             isSale:false,
         //             isReportInventory:false,
-        //             isReportPembelian:false,
-        //             isReportPenjualan:!this.state.isReportPenjualan
-        //         })
-        //     }
-        // } else if(this.state.isInventory === true){
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: true,
-        //         isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportPembelian:false,
-        //         isReportInventory:false,
-        //         isProduction:false
-        //     });
-
-        //     if(this.state.isTrxMutasi === true){
-        //         this.setState({
-        //             isSetting:false,
-        //             isMasterdata: false,
-        //             isInventory: true,
-        //             isReport: false,
-        //             isReceive: false,
-        //             isSale:false,
-        //             isReportPembelian:false,
-        //             isReportInventory:false,
-        //             isTrxMutasi:!this.state.isTrxMutasi,
+        //             isReportPembelian:!this.state.isReportPembelian
         //         })
         //     }
         // }
-
         // else {
         //     this.setState({
         //         isSetting:false,
@@ -153,10 +88,75 @@ class SideMenu extends Component {
         //         isReceive: false,
         //         isSale:false,
         //         isReportInventory:false,
-        //         isReportPembelian:false,
-        //         isProduction:false
+        //         isReportPembelian:false
         //     })
         // }
+
+        if(this.state.isInventory === true){
+            this.setState({
+                isSetting:false,
+                isMasterdata: false,
+                isInventory: true,
+                isReport: false,
+                isReceive: false,
+                isSale:false,
+                isReportPembelian:false,
+                isReportInventory:false,
+            });
+            if(this.state.isReportPenjualan === true) {
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:false,
+                    isReportPembelian:false,
+                    isReportPenjualan:!this.state.isReportPenjualan
+                })
+            }
+        } else if(this.state.isInventory === true){
+            this.setState({
+                isSetting:false,
+                isMasterdata: false,
+                isInventory: true,
+                isReport: false,
+                isReceive: false,
+                isSale:false,
+                isReportPembelian:false,
+                isReportInventory:false,
+                isProduction:false
+            });
+
+            if(this.state.isTrxMutasi === true){
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: true,
+                    isReport: false,
+                    isReceive: false,
+                    isSale:false,
+                    isReportPembelian:false,
+                    isReportInventory:false,
+                    isTrxMutasi:!this.state.isTrxMutasi,
+                })
+            }
+        }
+
+        else {
+            this.setState({
+                isSetting:false,
+                isMasterdata: false,
+                isInventory: false,
+                isReport: false,
+                isReceive: false,
+                isSale:false,
+                isReportInventory:false,
+                isReportPembelian:false,
+                isProduction:false
+            })
+        }
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({
