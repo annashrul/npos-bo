@@ -37,8 +37,6 @@ import SaleArchive from '../report/sale/sale_archive'
 import Sale from '../sale/product_sale'
 import Company from "../setting/company";
 
-import axios from 'axios';
-import {HEADERS} from "../../../redux/actions/_constants";
 import ReportCash from "../report/cash";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
@@ -84,7 +82,7 @@ const Routes = (
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
-            <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
+            <PrivateRoute path="/hutang/bayar" exact strict component={BayarHutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
         </Switch>
     </div>

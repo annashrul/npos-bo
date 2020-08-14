@@ -402,6 +402,13 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
+                    <li className={"treeview" + (this.state.isHutang===true  || path==='/hutang/bayar'?" active menu-open" : "")}>
+                        <a href="#" onClick={(e) => this.changeMenu(e,'hutang')}><i className="zmdi zmdi-calendar-note" /> <span>Hutang</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isHutang===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isHutang===true
+                        ?"block" : "none"}}>
+                            <li className={path==='/hutang/bayar'?"active":''}><Link to="/hutang/bayar" style={{width:'fit-content'}}> <i className="fa fa-calendar" />Bayar Hutang</Link></li>
+                        </ul>
+                    </li>
                     <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true ||
                         path==='/report_cash'|| 
                         path==='/closing'|| 

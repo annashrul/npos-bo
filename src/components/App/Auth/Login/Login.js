@@ -12,6 +12,10 @@ class Login extends Component {
         this.state = { 
             email: '',
             password: '',
+            tanggal_tempo:"",
+            server_price:"",
+            acc_name:"",
+            acc_number:"",
             errors:{
             },
             logo: BgAuth,
