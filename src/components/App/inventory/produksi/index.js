@@ -400,8 +400,8 @@ class Produksi extends Component{
                             let detail = [];
                             let exp = this.state.barang_paket.split("|", 2);
                             let data={};
-                            data['brcd_hasil'] = exp[1];
-                            data['kd_brrg'] = exp[0];
+                            data['brcd_hasil'] = exp[1].trim();
+                            data['kd_brg_hasil'] = exp[0].trim();
                             data['userid'] = this.state.userid;
                             data['tanggal'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
                             data['lokasi'] = this.state.location;
