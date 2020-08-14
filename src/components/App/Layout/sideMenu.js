@@ -44,65 +44,42 @@ class SideMenu extends Component {
 
     changeMenu(e,param){
         e.preventDefault();
-        // if(this.state.isReport === true){
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         isReport: true,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isProduction:false
-        //     })
-        //     if(this.state.isReportInventory === true){
-        //         this.setState({
-        //             isSetting:false,
-        //             isMasterdata: false,
-        //             isInventory: false,
-        //             isReport: true,
-        //             isReceive: false,
-        //             isSale:false,
-        //             isReportInventory:!this.state.isReportInventory,
-        //             isReportPembelian:false
-        //         })
-        //     }
-        //     if(this.state.isReportPembelian === true) {
-        //         this.setState({
-        //             isSetting:false,
-        //             isMasterdata: false,
-        //             isInventory: false,
-        //             isReport: true,
-        //             isReceive: false,
-        //             isSale:false,
-        //             isReportInventory:false,
-        //             isReportPembelian:!this.state.isReportPembelian
-        //         })
-        //     }
-        // }
-        // else {
-        //     this.setState({
-        //         isSetting:false,
-        //         isMasterdata: false,
-        //         isInventory: false,
-        //         isReport: false,
-        //         isReceive: false,
-        //         isSale:false,
-        //         isReportInventory:false,
-        //         isReportPembelian:false
-        //     })
-        // }
-
-        if(this.state.isInventory === true){
+        if(this.state.isReport === true){
             this.setState({
                 isSetting:false,
                 isMasterdata: false,
-                isInventory: true,
-                isReport: false,
+                isInventory: false,
+                isReport: true,
                 isReceive: false,
                 isSale:false,
-                isReportPembelian:false,
-                isReportInventory:false,
-            });
+                isProduction:false
+            })
+            if(this.state.isReportInventory === true){
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:!this.state.isReportInventory,
+                    isReportPembelian:false,
+                    isReportPenjualan:false
+                })
+            }
+            if(this.state.isReportPembelian === true) {
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:false,
+                    isReportPembelian:!this.state.isReportPembelian,
+                    isReportPenjualan:false
+                })
+            }
             if(this.state.isReportPenjualan === true) {
                 this.setState({
                     isSetting:false,
@@ -116,7 +93,8 @@ class SideMenu extends Component {
                     isReportPenjualan:!this.state.isReportPenjualan
                 })
             }
-        } else if(this.state.isInventory === true){
+        }
+        else if(this.state.isInventory === true){
             this.setState({
                 isSetting:false,
                 isMasterdata: false,
@@ -126,6 +104,7 @@ class SideMenu extends Component {
                 isSale:false,
                 isReportPembelian:false,
                 isReportInventory:false,
+                isReportPenjualan:false,
                 isProduction:false
             });
 
@@ -139,6 +118,7 @@ class SideMenu extends Component {
                     isSale:false,
                     isReportPembelian:false,
                     isReportInventory:false,
+                    isReportPenjualan:false,
                     isTrxMutasi:!this.state.isTrxMutasi,
                 })
             }
@@ -154,6 +134,7 @@ class SideMenu extends Component {
                 isSale:false,
                 isReportInventory:false,
                 isReportPembelian:false,
+                isReportPenjualan:false,
                 isProduction:false
             })
         }
@@ -173,7 +154,11 @@ class SideMenu extends Component {
             });
         }
         if(param === 'production'){
-            this.setState({isProduction : !this.state.isProduction});
+            this.setState({
+                isProduction : !this.state.isProduction,
+                isInventory : false,
+                isReport : false,
+            });
         }
         if (param === 'inventory'){
             this.setState({
