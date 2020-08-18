@@ -312,7 +312,7 @@ class ReceiveReport extends Component{
 
 
                             </div>
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
+                            <div className="table-responsive">
                                 {/*EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered" id="report_receive_to_excel" style={{display:"none"}}>
                                     <thead className="bg-light">
