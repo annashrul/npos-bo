@@ -1,10 +1,11 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchProduction, FetchProductionExcel, FetchProductionData} from "redux/actions/inventory/production.action";
+import {FetchProduction, FetchProductionExcel, FetchProductionData} from "redux/actions/inventory/produksi.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailProduction from "components/App/modals/report/inventory/production_report/detail_production";
+import ApproveProduction from "components/App/modals/report/inventory/production_report/approve_production";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -16,6 +17,7 @@ class ProductionReport extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.approve = this.approve.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -58,6 +60,15 @@ class ProductionReport extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailProduction"));
         this.props.dispatch(FetchProductionData(1,code))
+    };
+    approve(e,code,hpp){
+        e.preventDefault();
+        localStorage.setItem("code_for_approve",code);
+        localStorage.setItem("hpp_for_approve",hpp);
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("approveProduction"));
+        // this.props.dispatch(FetchProductionData(1,code))
     };
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
@@ -224,7 +235,7 @@ class ProductionReport extends Component{
                                                         <td style={columnStyle}>{v.lokasi}</td>
                                                         <td style={columnStyle}>{v.nama_toko}</td>
                                                         <td style={columnStyle}>{v.qty_estimasi}</td>
-                                                        <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
+                                                        <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Aproved'):"")}</td>
                                                         <td style={columnStyle}>{v.keterangan}</td>
                                                     </tr>
                                                 );
@@ -267,6 +278,7 @@ class ProductionReport extends Component{
                                                                             <div className="dropdown-menu">
                                                                                 {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.kd_produksi,'','')}>Detail</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" style={{display:v.status===0?'block':'none'}} onClick={(e)=>this.approve(e,v.kd_produksi,v.hpp,'')}>Approve</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -277,7 +289,7 @@ class ProductionReport extends Component{
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.nama_toko}</td>
                                                                     <td style={columnStyle}>{v.qty_estimasi}</td>
-                                                                    <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
+                                                                    <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Approved'):"")}</td>
                                                                     <td style={columnStyle}>{v.keterangan}</td>
 
                                                                 </tr>
@@ -301,6 +313,7 @@ class ProductionReport extends Component{
                                 />
                             </div> */}
                             <DetailProduction productionDetail={this.props.productionDetail}/>
+                            <ApproveProduction/>
                         </div>
                     </div>
                 </div>
@@ -312,12 +325,12 @@ class ProductionReport extends Component{
 const mapStateToProps = (state) => {
     console.log("mapStateToProps production", state)
     return {
-        productionReport:state.productionReducer.report,
-        isLoadingDetail: state.productionReducer.isLoadingDetail,
+        productionReport:state.produksiReducer.report,
+        isLoadingDetail: state.produksiReducer.isLoadingDetail,
         auth:state.auth,
-        isLoading: state.productionReducer.isLoading,
-        productionDetail:state.productionReducer.report_data,
-        productionReportExcel:state.productionReducer.report_excel,
+        isLoading: state.produksiReducer.isLoading,
+        productionDetail:state.produksiReducer.report_data,
+        productionReportExcel:state.produksiReducer.report_excel,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

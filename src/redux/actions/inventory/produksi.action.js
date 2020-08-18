@@ -23,6 +23,18 @@ export function setCodeProduksi(data=[]){
     return {type:PRODUKSI.GET_CODE,data}
 }
 
+export function setProduction(data=[]){
+    return {type:PRODUKSI.SUCCESS,data}
+}
+
+export function setProductionExcel(data=[]){
+    return {type:PRODUKSI.SUCCESS_EXCEL,data}
+}
+
+export function setProductionData(data=[]){
+    return {type:PRODUKSI.SUCCESS_DATA,data}
+}
+
 
 export const FetchCodeProduksi = (lokasi)=>{
     return (dispatch) => {
@@ -136,5 +148,109 @@ export const storeProduksi = (data) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+export const storeApproval = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `production/approve`;
+        axios.post(url, data)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Berhasil Diapprove!',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#ff9800',
+                    confirmButtonText: 'Ok',
+                }).then((result) => {
+                    destroy('production');
+                    localStorage.removeItem('code_for_approval');
+                    window.location.reload(false);
+                })
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}
+
+export const FetchProduction = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`production/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchTrx",data);
+                dispatch(setProduction(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchProductionExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`production/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        console.log(url)
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                console.log("FetchTrx",data);
+                dispatch(setProductionExcel(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+export const FetchProductionData = (page=1,code,dateFrom='',dateTo='',location='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let que = '';
+        if(dateFrom===''&&dateTo===''&&location===''){
+            que = `production/report/${code}?page=${page}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location===''){
+            que = `production/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+        }
+        if(dateFrom!==''&&dateTo!==''&&location!==''){
+            que = `production/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+        }
+        if(location!==''){
+            que = `production/report/${code}?page=${page}&lokasi=${location}`;
+        }
+        console.log("url production",`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setProductionData(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }
