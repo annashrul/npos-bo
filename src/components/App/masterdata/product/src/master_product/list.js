@@ -293,7 +293,7 @@ class ListProduct extends Component{
         const loc_delete = this.handleDelete;
         const loc_edit = this.handleEdit;
         const {total,per_page,current_page,data} = this.props.data;
-        const columnStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <div>
 
@@ -409,9 +409,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={columnStyle}>Supplier</th>
                             <th className="text-black" style={columnStyle}>Sub Dept</th>
                             <th className="text-black" style={columnStyle}>Kategori</th>
-                            <th className="text-black" style={columnStyle}>Jenis</th>
-                            <th className="text-black" style={columnStyle}>Stock Min</th>
-                            <th className="text-black" style={columnStyle}></th>
+                            <th className="text-black" style={columnStyle} colSpan={3}/>
                         </tr>
                         <tr>
                             <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kode_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
@@ -420,7 +418,9 @@ class ListProduct extends Component{
                             <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Supplier"/></td>
                             <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
                             <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kategori"/></td>
-                            <td colSpan={3}/>
+                            <td className="text-black" style={columnStyle}>Jenis</td>
+                            <td className="text-black" style={columnStyle}>Stock Min</td>
+                            <td className="text-black" style={columnStyle}>#</td>
                         </tr>
                         </thead>
                         <tbody>

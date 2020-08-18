@@ -14,17 +14,26 @@ class FormBank extends Component{
         super(props);
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.toCurrency = this.toCurrency.bind(this);
         this.handleChange = this.handleChange  .bind(this);
         this.state = {
-            akun:0,
+            id:"",
+            akun:'',
             nama:'',
-            edc: '1',
-            status: '1',
-            charge_debit:'0',
-            charge_kredit:'0',
+            edc: '',
+            status: '',
+            charge_debit:'',
+            charge_kredit:'',
             foto:"",
-            token:''
+            token:'',
+            error:{
+                akun:'',
+                nama:'',
+                edc: '',
+                status: '',
+                charge_debit:'',
+                charge_kredit:'',
+                foto:"",
+            }
         };
     }
     componentWillMount(){
@@ -35,8 +44,9 @@ class FormBank extends Component{
     }
 
     getProps(param){
-        if(param.detail!==undefined&&param.detail!==[]){
+        if(Object.keys(param.detail).length > 0){
             this.setState({
+                id:param.detail.id,
                 akun:param.detail.akun,
                 nama:param.detail.nama,
                 edc:param.detail.edc,
@@ -47,27 +57,28 @@ class FormBank extends Component{
             })
         }else{
             this.setState({
+                id:'',
                 akun:'',
                 nama:'',
-                edc: '1',
-                status: '1',
-                charge_debit:'0',
-                charge_kredit:'0',
+                edc: '',
+                status: '',
+                charge_debit:'',
+                charge_kredit:'',
                 foto:"",
             })
         }
     }
 
     handleChange = (event) => {
-        let column=event.target.name;
-        let value=event.target.value;
-        this.setState({ [column]: value});
+        this.setState({ [event.target.name]: event.target.value });
+        let err = Object.assign({}, this.state.error, {[event.target.name]: ""});
+        this.setState({error: err});
     }
     toggle = (e) => {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.setState({})
+        this.setState({});
     };
     handleSubmit(e){
         e.preventDefault();
@@ -80,61 +91,112 @@ class FormBank extends Component{
         parseData['status'] = this.state.status;
         parseData['charge_debit'] = this.state.charge_debit;
         parseData['charge_kredit'] = this.state.charge_kredit;
-        if(this.state.foto!==undefined){
-            parseData['foto'] = this.state.foto.base64;
-        }else{
-            parseData['foto'] = '-';
+        let err = this.state.error;
+        if(parseData['akun']===''||parseData['akun']===undefined){
+            err = Object.assign({}, err, {akun:"nama akun tidak boleh kosong"});
+            this.setState({error: err});
         }
-        if(this.props.detail!==undefined&&this.props.detail!==null){
-            this.props.dispatch(updateBank(this.props.detail.id,parseData));
-        }else{
-            this.props.dispatch(createBank(parseData));
+        else if(parseData['nama']===''||parseData['nama']===undefined){
+            err = Object.assign({}, err, {nama:"nama bank tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else if(parseData['edc']===''||parseData['edc']===undefined){
+            err = Object.assign({}, err, {edc:"edc tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else if(parseData['charge_debit']===''||parseData['charge_debit']===undefined){
+            err = Object.assign({}, err, {charge_debit:"charge debit tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else if(parseData['charge_kredit']===''||parseData['charge_kredit']===undefined){
+            err = Object.assign({}, err, {charge_kredit:"charge kredit tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else if(parseData['status']===''||parseData['status']===undefined){
+            err = Object.assign({}, err, {status:"status tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else{
+            if(parseData['foto']!==undefined){
+                parseData['foto'] = this.state.foto.base64;
+            }else{
+                parseData['foto'] = '-';
+            }
+            console.log(parseData['foto']);
+            if(Object.keys(this.props.detail).length > 0){
+                this.props.dispatch(updateBank(this.state.id,parseData));
+            }else{
+                this.props.dispatch(createBank(parseData));
+            }
+
+            this.props.dispatch(ModalToggle(false));
         }
 
-        this.props.dispatch(ModalToggle(false));
     }
     getFiles(files) {
         this.setState({
             foto: files
         })
     };
-    toCurrency(number) {
-        const formatter = new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR"
-        });
 
-        return formatter.format(number);
-    }
     render(){
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formBank"} size="md">
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Bank":"Update Bank"}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>{Object.keys(this.props.detail).length > 0?"Ubah Bank":"Tambah Bank"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <div className="form-group">
-                            <label>Account Name</label>
-                            <input type="text" className="form-control" name="akun" value={this.toCurrency(this.state.akun)} onChange={this.handleChange} required/>
+                            <label>Nama Akun</label>
+                            <input type="text" className="form-control" name="akun" value={this.state.akun} onChange={this.handleChange}/>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.akun !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.akun}
+                            </div>
                         </div>
                         <div className="form-group">
-                            <label>Bank Name</label>
-                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} required/>
+                            <label>Nama Bank</label>
+                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}/>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.nama}
+                            </div>
                         </div>
                         <div className="form-group">
                             <label>EDC</label>
                             <select name="edc" className="form-control" id="edc" defaultValue={this.state.edc} value={this.state.edc} onChange={this.handleChange}>
-                                <option value="1">Active</option>
-                                <option value="0">In Active</option>
+                                <option value="">==== Pilih ====</option>
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
                             </select>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.edc !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.edc}
+                            </div>
                         </div>
 
                         <div className="form-group">
                             <label>Charge Debit</label>
-                            <input type="text" className="form-control" name="charge_debit" value={this.state.charge_debit} onChange={this.handleChange} required/>
+                            <input type="text" className="form-control" name="charge_debit" value={this.state.charge_debit} onChange={this.handleChange}/>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.charge_debit !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.charge_debit}
+                            </div>
                         </div>
                         <div className="form-group">
                             <label>Charge Credit</label>
-                            <input type="text" className="form-control" name="charge_kredit" value={this.state.charge_kredit} onChange={this.handleChange} required/>
+                            <input type="text" className="form-control" name="charge_kredit" value={this.state.charge_kredit} onChange={this.handleChange}/>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.charge_kredit !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.charge_kredit}
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label>Status</label>
+                            <select name="status" className="form-control" id="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                <option value="">==== Pilih ====</option>
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="inputState" className="col-form-label">Foto</label><br/>
@@ -143,13 +205,7 @@ class FormBank extends Component{
                                 className="mr-3 form-control-file"
                                 onDone={ this.getFiles.bind(this) } />
                         </div>
-                        <div className="form-group">
-                            <label>Status</label>
-                            <select name="status" className="form-control" id="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                <option value="1">Active</option>
-                                <option value="0">In Active</option>
-                            </select>
-                        </div>
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="form-group" style={{textAlign:"right"}}>

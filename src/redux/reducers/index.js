@@ -31,7 +31,6 @@ import {saleReducer} from "./sale/sale.reducer";
 import {sale_by_custReducer} from "./sale/sale_by_cust.reducer";
 import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {transactionReducer} from "./inventory/transaction/transaction.reducer";
-import {productionReducer} from "./inventory/production/production.reducer";
 import {closingReducer} from "./report/closing/closing.reducer";
 import {opnameReducer} from "./inventory/opname/opname.reducer";
 import {expedisiReducer} from "./inventory/expedisi/expedisi.reducer";
@@ -81,7 +80,6 @@ export default combineReducers({
     opnameReducer,
     produksiReducer,
     transactionReducer,
-    productionReducer,
     expedisiReducer,
     packingReducer,
     auth: authReducer,

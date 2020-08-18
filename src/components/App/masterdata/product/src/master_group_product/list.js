@@ -16,6 +16,7 @@ class ListGroupProduct extends Component{
         super(props);
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
         this.state={
             detail:{}
         }
@@ -45,25 +46,32 @@ class ListGroupProduct extends Component{
 
     }
 
-    toggleModal(e,i) {
+    toggleModal(e) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formGroupProduct"));
         this.props.dispatch(FetchSubDepartmentAll());
-        if(i===null){
-            this.setState({detail:undefined});
-        }else{
-            this.setState({detail:{
-                "kel_brg":this.props.data.data[i].kel_brg,
-                "nm_kel_brg":this.props.data.data[i].nm_kel_brg,
-                "margin":this.props.data.data[i].margin,
-                "status":this.props.data.data[i].status,
-                "group2":this.props.data.data[i].group2,
-                "dis_persen":this.props.data.data[i].dis_persen,
-                "gambar":this.props.data.data[i].gambar,
-            }});
-        }
+        this.setState({detail:undefined});
+    }
+    handleEdit(e,kel_brg,nm_kel_brg,group2,margin,dis_persen,status,gambar) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formGroupProduct"));
+        this.props.dispatch(FetchSubDepartmentAll());
+        console.log(margin)
+        this.setState({
+            detail:{
+                "kel_brg":kel_brg,
+                "nm_kel_brg":nm_kel_brg,
+                "margin":margin,
+                "status":status,
+                "group2":group2,
+                "dis_persen":dis_persen,
+                "gambar":gambar,
+            }
+        });
 
     }
     handleDelete(e,i){
@@ -97,8 +105,8 @@ class ListGroupProduct extends Component{
                        </div>
                        <div className="col-2 col-xs-2 col-md-3">
                            <div className="form-group">
-                               <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
-                               <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.toggleModal(e,null)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
+                               <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"/></button>
+                               <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"/></button>
                            </div>
                        </div>
                    </div>
@@ -109,12 +117,13 @@ class ListGroupProduct extends Component{
                        <thead className="bg-light">
                        <tr>
                            <th className="text-black" style={columnStyle}>#</th>
-                           <th className="text-black" style={columnStyle}>Code</th>
-                           <th className="text-black" style={columnStyle}>Name</th>
+                           <th className="text-black" style={columnStyle}>Kode</th>
+                           <th className="text-black" style={columnStyle}>Nama</th>
                            <th className="text-black" style={columnStyle}>Sub Dept</th>
-                           <th className="text-black" style={columnStyle}>Margin</th>
-                           <th className="text-black" style={columnStyle}>Discount (%)</th>
+                           {/*<th className="text-black" style={columnStyle}>Margin</th>*/}
+                           {/*<th className="text-black" style={columnStyle}>Diskon (%)</th>*/}
                            <th className="text-black" style={columnStyle}>Status</th>
+                           <th className="text-black" style={columnStyle}>Gambar</th>
                        </tr>
                        </thead>
                        <tbody>
@@ -127,10 +136,12 @@ class ListGroupProduct extends Component{
                                                <td style={columnStyle}>{/* Example split danger button */}
                                                    <div className="btn-group">
                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                           Action
+                                                           Aksi
                                                        </button>
                                                        <div className="dropdown-menu">
-                                                           <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
+                                                           <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                               e,v.kel_brg,v.nm_kel_brg,v.group2,v.margin,v.dis_persen,v.status,'-'
+                                                           )}>Edit</a>
                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</a>
                                                        </div>
                                                    </div>
@@ -138,9 +149,10 @@ class ListGroupProduct extends Component{
                                                <td style={columnStyle}>{v.kel_brg}</td>
                                                <td style={columnStyle}>{v.nm_kel_brg}</td>
                                                <td style={columnStyle}>{v.group2}</td>
-                                               <td style={columnStyle}>{v.margin?v.margin:'0'}</td>
-                                               <td style={columnStyle}>{v.dis_persen?v.dis_persen:'0'}</td>
-                                               <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'): statusQ('danger','In Active')}</td>
+                                               <td style={columnStyle}>{v.status==='1'?statusQ('success','Aktif'): statusQ('danger','Tidak Aktif')}</td>
+                                               <td style={columnStyle}>
+                                                   <img src={v.gambar==='-'||v.gambar===''?'https://icoconvert.com/images/noimage2.png':v.gambar} style={{height:"50px",objectFit:"scale-down"}} alt=""/>
+                                               </td>
                                            </tr>
                                        )
                                    })

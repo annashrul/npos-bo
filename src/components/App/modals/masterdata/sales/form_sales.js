@@ -11,26 +11,34 @@ class FormSales extends Component{
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            nama:'',status:'1'
+            nama:'',status:'',
+            error:{nama:'',status:''}
         };
     }
-    componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
-        if (nextProps.detail !== [] && nextProps.detail !== undefined) {
+    getProps(param){
+        if (param.detail !== [] && param.detail !== undefined) {
             this.setState({
-                nama: nextProps.detail.nama,
-                status: nextProps.detail.status,
-                kode: nextProps.detail.kode,
+                nama: param.detail.nama,
+                status: param.detail.status,
+                kode: param.detail.kode,
             })
         }else{
             this.setState({
-                nama:'',status:'1',kode:''
+                nama:'',status:'',kode:''
             })
         }
+    }
+    componentWillReceiveProps(nextProps) {
+        this.getProps(nextProps)
+    }
+    componentWillMount(){
+        this.getProps(this.props);
     }
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
+        let err = Object.assign({}, this.state.error, {[event.target.name]: ""});
+        this.setState({error: err});
     };
     toggle(e){
         e.preventDefault();
@@ -47,15 +55,27 @@ class FormSales extends Component{
         parseData['nama'] = this.state.nama;
         parseData['status'] = this.state.status;
         parseData['kode'] = this.state.kode;
+        let err = this.state.error;
 
-        if (this.props.detail !== undefined) {
-            console.log(this.state.kode);
-            this.props.dispatch(updateSales(this.state.kode,parseData));
-            this.props.dispatch(ModalToggle(false));
-        }else{
-            this.props.dispatch(createSales(parseData));
-            this.props.dispatch(ModalToggle(false));
+        if(parseData['nama']===''||parseData['nama']===undefined){
+            err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
+            this.setState({error: err});
         }
+        else if(parseData['status']===''||parseData['status']===undefined){
+            err = Object.assign({}, err, {status:"status tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else{
+            if (this.props.detail !== undefined) {
+                console.log(this.state.kode);
+                this.props.dispatch(updateSales(this.state.kode,parseData));
+                this.props.dispatch(ModalToggle(false));
+            }else{
+                this.props.dispatch(createSales(parseData));
+                this.props.dispatch(ModalToggle(false));
+            }
+        }
+
 
 
     }
@@ -63,19 +83,28 @@ class FormSales extends Component{
     render(){
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSales"} size="md">
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Sales":"Update Sales"}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Tambah Sales":"Ubah Sales"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <div className="form-group">
-                            <label>Name</label>
+                            <label>Nama</label>
                             <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
+                            <div className="invalid-feedback"
+                                 style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.nama}
+                            </div>
                         </div>
                         <div className="form-group">
                             <label>Status</label>
                             <select name="status" className="form-control" id="type" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                <option value="0">In Active</option>
-                                <option value="1">Active</option>
+                                <option value="">==== Pilih ====</option>
+                                <option value="0">Tidak Aktif</option>
+                                <option value="1">Aktif</option>
                             </select>
+                            <div className="invalid-feedback"
+                                 style={this.state.error.status !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.status}
+                            </div>
                         </div>
                     </ModalBody>
                     <ModalFooter>
