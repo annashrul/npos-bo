@@ -65,11 +65,11 @@ class Closing extends Component{
         this.props.dispatch(FetchClosing(pageNumber,''))
     }
 
-    handleEvent = date => {
-        this.setState({
-            startDate: date
-        });
-    };
+    handleEvent = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+        let err = Object.assign({}, this.state.error, {[event.target.name]: ""});
+        this.setState({error: err});
+    }
 
 
     HandleChangeLokasi(lk){
@@ -104,22 +104,14 @@ class Closing extends Component{
                             <div className="row align-items-center">
                                 <div className="col-md-3">
                                     <div className="form-group">
-                                        <label className="control-label font-12">Tanggal</label>
-                                        <div className="input-group">
-                                            <div className="input-group-prepend">
-                                                <span className="input-group-text"><i className="fa fa-calendar" /></span>
-                                            </div>
-                                            <DatePicker
-                                                className="form-control"
-                                                selected={this.state.startDate}
-                                                onChange={this.handleEvent}
-                                            />
-                                        </div>
+                                        <label>Tanggal</label>
+                                        <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleEvent} />
+
                                     </div>
                                 </div>
                                 <div className="col-md-3">
                                     <div className="form-group">
-                                        <label className="control-label font-12">Lokasi</label>
+                                        <label>Lokasi</label>
                                         <Select
                                             options={this.state.location_data}
                                             placeholder = "Pilih Lokasi"

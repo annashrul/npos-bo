@@ -47,7 +47,7 @@ const filterColors = (inputValue) => {
               
               // this.setState({
               //   data_nota: nota
-              // })
+              // })np
               return options;
               
           })
@@ -59,7 +59,6 @@ const filterColors = (inputValue) => {
 };
 
 const loadOptions = (inputValue,callback) => {
-
   const results = filterColors(inputValue);
   results.then(res=>{
     callback(res)

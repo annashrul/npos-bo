@@ -106,9 +106,9 @@ class Product extends Component{
                         <Tabs>
                             <div className="card-body">
                                 <TabList>
-                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Product List</Tab>
-                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Product Price</Tab>
-                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Product Group</Tab>
+                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Barang</Tab>
+                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Harga Barang</Tab>
+                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Kelompok Barang</Tab>
                                 </TabList>
                             </div>
                             <div className="card-header" style={{"height":"5px","backgroundColor":"#f9fafb"}}></div>

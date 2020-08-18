@@ -39,6 +39,7 @@ class ListBank extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formBank"));
+        this.setState({detail:{}})
     }
     handleEdit(e,id,akun,debit,kredit,edc,foto,status,nama) {
         e.preventDefault();

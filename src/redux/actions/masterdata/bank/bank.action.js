@@ -66,6 +66,8 @@ export const createBank = (data) => {
 
             })
             .catch(function (error) {
+                dispatch(setLoading(false));
+
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
@@ -103,6 +105,8 @@ export const updateBank = (id,data) => {
 
             })
             .catch(function (error) {
+                dispatch(setLoading(false));
+
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
