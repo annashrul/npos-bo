@@ -43,13 +43,12 @@ class ListPriceProduct extends Component{
     handleDelete = (e,kode) => {
         e.preventDefault();
     };
-    handleEdit = (e,kode) => {
+    handleEdit = (e,kd_brg,) => {
         e.preventDefault();
     };
 
     render(){
         const loc_delete = this.handleDelete;
-        const loc_edit = this.handleEdit;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
         return (
@@ -64,8 +63,7 @@ class ListPriceProduct extends Component{
                         </div>
                         <div className="col-2 col-xs-4 col-md-4">
                             <div className="form-group">
-                                <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
-                                <button style={{marginTop:"27px",marginRight:"2px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
+                                <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"/></button>
                             </div>
                         </div>
                     </div>
@@ -75,13 +73,12 @@ class ListPriceProduct extends Component{
                         <thead className="bg-light">
                         <tr>
                             <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Code</th>
+                            <th className="text-black" style={columnStyle} rowSpan="2">Kode</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Location</th>
-                            <th className="text-black" style={columnStyle} colSpan="4">Selling Price</th>
-
+                            <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
+                            <th className="text-black" style={columnStyle} colSpan="4">Harga Jual</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">PPN</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Service</th>
+                            <th className="text-black" style={columnStyle} rowSpan="2">Servis</th>
                         </tr>
                         <tr>
                             <td className="text-black" style={columnStyle}>1</td>
@@ -100,11 +97,13 @@ class ListPriceProduct extends Component{
                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
                                                         <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
+                                                            Aksi
                                                         </button>
                                                         <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_edit(e,v.kode)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kode)}>Delete</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                                e,v.kd_brg,v.harga,v.lokasi,v.ppn,v.service,v.harga2,v.harga3,v.harga4
+                                                            )}>Edit</a>
+                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
