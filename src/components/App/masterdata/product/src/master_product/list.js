@@ -494,7 +494,7 @@ const mapStateToProps = (state) => {
     return {
         isOpen:state.modalReducer,
         location:state.locationReducer.data,
-        supplier:state.supplierReducer.dataAll,
+        supplier:state.supplierReducer.dataSupllier,
         subDept:state.subDepartmentReducer.all,
         productEdit:state.productReducer.dataEdit,
         productDetail:state.productReducer.dataDetail,

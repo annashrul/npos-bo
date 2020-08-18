@@ -10,6 +10,7 @@ import {FetchProductCode} from "redux/actions/masterdata/product/product.action"
 import {FetchCheck, setCheck, setLoading} from "redux/actions/site.action";
 import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
+import Select from "react-select";
 
 class FormProduct extends Component{
     constructor(props){
@@ -46,11 +47,14 @@ class FormProduct extends Component{
             },
             kd_brg: '',
             nm_brg: '',
+            kel_brg_data:[],
             kel_brg: '',
             stock: '0',
             kategori: '',
             stock_min: '0',
+            group1_data:[],
             group1: '',
+            group2_data:[],
             group2: '',
             deskripsi: '-',
             gambar: '',
@@ -59,7 +63,7 @@ class FormProduct extends Component{
             poin: '0',
             online: '0',
             berat: '0',
-            barangSku: [{"barcode": "", "qty": "", "konversi": "", "satuan_jual": ""}],
+            barangSku: [{"barcode": "", "qty": "", "konversi": "", "satuan_jual": "1"}],
             barangHargaEdit: [[
                 {
                     "nama_toko":"","lokasi":"",
@@ -150,6 +154,9 @@ class FormProduct extends Component{
             codeServer:0,
 
         };
+        this.handleKelompokBarang = this.handleKelompokBarang.bind(this);
+        this.handleGroup1 = this.handleGroup1.bind(this);
+        this.handleGroup2 = this.handleGroup2.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onHandleChangeChild = this.onHandleChangeChild.bind(this);
         this.onHandleChangeChildPack = this.onHandleChangeChildPack.bind(this);
@@ -184,7 +191,7 @@ class FormProduct extends Component{
         })
     };
     getProps(param){
-        console.log("get props",param);
+        console.log("get props",param.dataSupplier);
         this.setState({
             nm_harga1:param.auth.user.harga1,
             nm_harga2:param.auth.user.harga2,
@@ -336,7 +343,47 @@ class FormProduct extends Component{
                 });
             }
         }
+        let kel_brg=[];
+        let group1=[];
+        let group2=[];
+        if(param.data.data!==undefined){
+            typeof param.data.data === 'object' ? param.data.data.map((v,i)=>{
+                kel_brg.push({
+                    value:v.kel_brg,
+                    label:v.nm_kel_brg,
+                })
+            }): "no data"
+            this.setState({
+                kel_brg_data:kel_brg
+            })
+        }
+        if(param.dataSupplier!==undefined){
+             param.dataSupplier.map((v,i)=>{
+                 group1.push({
+                     value:v.kode,
+                     label:v.nama,
+                 })
+            })
+            this.setState({
+                group1_data:group1
+            })
+        }
+
+        if(param.dataSubDept.data!==undefined){
+            typeof param.dataSubDept.data === 'object' ? param.dataSubDept.data.map((v,i)=>{
+                group2.push({
+                    value:v.kode,
+                    label:v.nama,
+                })
+            }): "no data"
+            this.setState({
+                group2_data:group2
+            })
+        }
+
+
     }
+
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
     }
@@ -456,6 +503,27 @@ class FormProduct extends Component{
             });
         }
     }
+    handleKelompokBarang(val) {
+        let err = Object.assign({}, this.state.error, {kel_brg: ""});
+        this.setState({
+            kel_brg: val.value,
+            error: err
+        });
+    }
+    handleGroup1(val) {
+        let err = Object.assign({}, this.state.error, {group1: ""});
+        this.setState({
+            group1: val.value,
+            error: err
+        });
+    }
+    handleGroup2(val) {
+        let err = Object.assign({}, this.state.error, {group2: ""});
+        this.setState({
+            group2: val.value,
+            error: err
+        });
+    }
     handleChange(event,i){
         let name = event.target.name;
         let val = event.target.value;
@@ -489,15 +557,14 @@ class FormProduct extends Component{
                 let brgSku = [];
                 for(let i=0;i<3;i++){
                     let brcd=i===0?`${this.state.kd_brg}01`:(i===1?`${this.state.kd_brg}02`:`${this.state.kd_brg}03`);
-                    brgSku.push({"barcode":brcd,"qty":"0","konversi":"0","satuan_jual":"0"})
+                    brgSku.push({"barcode":brcd,"qty":"0","konversi":"0","satuan_jual":"1"})
                 }
                 this.setState({barangSku: brgSku});
             }
             else{
-                console.log("abus kadie")
                 let brgSku = [];
                 for(let i=0;i<1;i++){
-                    brgSku.push({"barcode":`${this.state.kd_brg}01`,"qty":"0","konversi":"0","satuan_jual":"0"})
+                    brgSku.push({"barcode":`${this.state.kd_brg}01`,"qty":"0","konversi":"0","satuan_jual":"1"})
                 }
                 this.setState({barangSku: brgSku});
             }
@@ -613,90 +680,95 @@ class FormProduct extends Component{
     }
     handleSelect = (index) => {
         let err = this.state.error;
-        // if(this.props.checkKodeBarang!==false){
-        //     this.setState({
-        //         kd_brg:"0"
-        //     });
-        //     return;
-        // }
-        // if(this.state.kd_brg===''||this.state.kd_brg===undefined){
-        //     err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     console.log(this.props.checkKodeBarang);
-        //     return;
-        // }
-        // if(this.state.nm_brg===''||this.state.nm_brg===undefined){
-        //     err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.kel_brg===''||this.state.kel_brg===undefined){
-        //     err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.stock_min===''||this.state.stock_min===undefined){
-        //     err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.group1===''||this.state.group1===undefined){
-        //     err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.group2===''||this.state.group2===undefined){
-        //     err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.deskripsi===''||this.state.deskripsi===undefined){
-        //     err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.jenis===''||this.state.jenis===undefined){
-        //     err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.kcp===''||this.state.kcp===undefined){
-        //     err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.poin===''||this.state.poin===undefined){
-        //     err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.online===''||this.state.online===undefined){
-        //     err = Object.assign({}, err, {online:"online tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(this.state.berat===''||this.state.berat===undefined){
-        //     err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
-        //     this.setState({error: err});
-        //     return;
-        // }
-        // if(index===2){
-        //     for(let i=0;i<this.state.barangSku.length;i++){
-        //         if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
-        //             alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
-        //             return;
-        //         }
-        //         if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
-        //             alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
-        //             return;
-        //         }
-        //
-        //     }
-        // }
-        //
-        // if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
-        //     return;
-        // }
+        if(this.props.checkKodeBarang!==false){
+            this.setState({
+                kd_brg:"0"
+            });
+            return;
+        }
+        if(this.state.kd_brg===''||this.state.kd_brg===undefined){
+            err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
+            this.setState({error: err});
+            console.log(this.props.checkKodeBarang);
+            return;
+        }
+        if(this.state.nm_brg===''||this.state.nm_brg===undefined){
+            err = Object.assign({}, err, {nm_brg:"nama barang tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.kel_brg===''||this.state.kel_brg===undefined){
+            err = Object.assign({}, err, {kel_brg:"kelompok barang tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.kategori===''||this.state.kategori===undefined){
+            err = Object.assign({}, err, {kategori:"kategori barang tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.stock_min===''||this.state.stock_min===undefined){
+            err = Object.assign({}, err, {stock_min:"Stock tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.group1===''||this.state.group1===undefined){
+            err = Object.assign({}, err, {group1:"supplier tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.group2===''||this.state.group2===undefined){
+            err = Object.assign({}, err, {group2:"sub dept tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.deskripsi===''||this.state.deskripsi===undefined){
+            err = Object.assign({}, err, {deskripsi:"deskripsi tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.jenis===''||this.state.jenis===undefined){
+            err = Object.assign({}, err, {jenis:"jenis tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.kcp===''||this.state.kcp===undefined){
+            err = Object.assign({}, err, {kcp:"kcp tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.poin===''||this.state.poin===undefined){
+            err = Object.assign({}, err, {poin:"poin tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.online===''||this.state.online===undefined){
+            err = Object.assign({}, err, {online:"online tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(this.state.berat===''||this.state.berat===undefined){
+            err = Object.assign({}, err, {berat:"berat tidak boleh kosong"});
+            this.setState({error: err});
+            return;
+        }
+        if(index===2){
+            for(let i=0;i<this.state.barangSku.length;i++){
+                if(this.state.barangSku[i].barcode==="0"||this.state.barangSku[i].barcode===""||this.state.barangSku[i].barcode===undefined){
+                    alert(`barcode ${i+1} tidak boleh kosong atau tidak boleh 0`);
+                    return;
+                }
+                if(this.state.barangSku[i].satuan_jual===""||this.state.barangSku[i].satuan_jual===undefined){
+                    alert(`form tampilkan di pos index ke ${i+1} tidak boleh kosong`);
+                    return;
+                }
+
+            }
+        }
+
+        if(this.state.error_barcode1===true||this.state.error_barcode2===true||this.state.error_barcode3===true){
+            return;
+        }
 
         this.setState({selectedIndex: index}, () => {});
 
@@ -1226,13 +1298,22 @@ class FormProduct extends Component{
     }
 
     render(){
-        const {data} = this.props.data;
-        const dataSupplier = this.props.dataSupplier.data;
-        const dataSubDep = this.props.dataSubDept.data;
         return (
             <WrapperModal className="custom-map-modal" isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg">
                 <ModalHeader toggle={this.toggle}>
-                    {this.props.dataEdit===undefined?"Add Product":"Update Product"} <small>(sebelum memilih jenis barang, pastikan anda sudah membuat kode barang terlebih dahulu. tujuan ini untuk membuat barcode secara otomatis)</small>
+                    {
+                        this.props.dataEdit===undefined?"Tambah Barang":"Ubah Barang"
+                    }
+                    <br/>
+                    {
+                        this.state.selectedIndex===0?(
+                            <small> ( sebelum memilih jenis barang, pastikan anda sudah membuat kode barang terlebih dahulu. tujuan ini untuk membuat barcode secara otomatis )</small>
+                        ) : this.state.selectedIndex===1?(
+                            <small> ( barcode tidak boleh ada yang sama dengan yang lainnya )</small>
+                        ) : this.state.selectedIndex===2?(
+                            <small> ( ceklis atur semua untuk mengatur form yang lainnya )</small>
+                        ) : ""
+                    }
                 </ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
@@ -1258,7 +1339,7 @@ class FormProduct extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Name</label>
+                                            <label>Nama Barang</label>
                                             <input type="text" className="form-control" name="nm_brg" value={this.state.nm_brg} onChange={(e)=>this.handleChange(e,null)} required/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.nm_brg !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -1266,13 +1347,8 @@ class FormProduct extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Group</label>
-                                            <select className="form-control form-control-lg" name="kel_brg" value={this.state.kel_brg} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="">Pilih</option>
-                                                {
-                                                    typeof data === 'object' ? data.map((v,i)=>{return (<option key={i} value={v.kel_brg} >{v.nm_kel_brg}</option>)}) : (<option value="" >no data</option>)
-                                                }
-                                            </select>
+                                            <label>Kelompok Barang</label>
+                                            <Select options={this.state.kel_brg_data} placeholder="Pilih Kelompok Barang" onChange={this.handleKelompokBarang} value={this.state.kel_brg_data.find(op => {return op.value === this.state.kel_brg})}/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.kel_brg !== "" ? {display: 'block'} : {display: 'none'}}>
                                                 {this.state.error.kel_brg}
@@ -1280,10 +1356,11 @@ class FormProduct extends Component{
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Product Category</label>
+                                            <label>Kategori Barang</label>
                                             <select name="kategori" className="form-control form-control-lg" value={this.state.kategori} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="1">selling items</option>
-                                                <option value="0">Not selling items</option>
+                                                <option value="">Pilih Kategori Barang</option>
+                                                <option value="1">Dijual</option>
+                                                <option value="0">Tidak Dijual</option>
                                             </select>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.kategori !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -1302,12 +1379,7 @@ class FormProduct extends Component{
                                         </div>
                                         <div className="form-group">
                                             <label>Supplier</label>
-                                            <select name="group1" className="form-control form-control-lg" value={this.state.group1} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="">Pilih</option>
-                                                {
-                                                    typeof dataSupplier === 'object' ? dataSupplier.map((v,i)=>{return (<option key={i} value={v.kode} >{v.nama}</option>)}) : (<option value="" >no data</option>)
-                                                }
-                                            </select>
+                                            <Select options={this.state.group1_data} placeholder="Pilih Supplier" onChange={this.handleGroup1} value={this.state.group1_data.find(op => {return op.value === this.state.group1})}/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.group1 !== "" ? {display: 'block'} : {display: 'none'}}>
                                                 {this.state.error.group1}
@@ -1315,19 +1387,14 @@ class FormProduct extends Component{
                                         </div>
                                         <div className="form-group">
                                             <label>Sub Dept</label>
-                                            <select name="group2" className="form-control form-control-lg" value={this.state.group2} onChange={(e)=>this.handleChange(e,null)}>
-                                                <option value="">Pilih</option>
-                                                {
-                                                    typeof dataSubDep === 'object' ? dataSubDep.map((v,i)=>{return (<option key={i} value={v.kode} >{v.nama}</option>)}) : (<option value="" >no data</option>)
-                                                }
-                                            </select>
+                                            <Select options={this.state.group2_data} placeholder="Pilih Sub Dept" onChange={this.handleGroup2} value={this.state.group2_data.find(op => {return op.value === this.state.group2})}/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.group2 !== "" ? {display: 'block'} : {display: 'none'}}>
                                                 {this.state.error.group2}
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Description</label>
+                                            <label>Deskripsi</label>
                                             <input type="text" className="form-control" name="deskripsi" value={this.state.deskripsi} onChange={(e)=>this.handleChange(e,null)}  required/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.deskripsi !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -1378,7 +1445,7 @@ class FormProduct extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Product Status</label>
+                                            <label>Status Barang</label>
                                             <select name="online" className="form-control form-control-lg" value={this.state.online} onChange={(e)=>this.handleChange(e,null)}>
                                                 <option value="">Pilih Status</option>
                                                 <option value="0">Offline</option>
@@ -1390,7 +1457,7 @@ class FormProduct extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Weight</label>
+                                            <label>Berat</label>
                                             <input type="text" className="form-control" name="berat" value={this.state.berat} onChange={(e)=>this.handleChange(e,null)} required/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.berat !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -1530,7 +1597,6 @@ class FormProduct extends Component{
                                                                     <label style={{fontSize:"8px"}}>harga beli pcs</label>
                                                                     <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="hrg beli pcs" className="form-control hrg_beli" name="hrg_beli" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrg_beli} style={{fontSize:"10px"}}/>
                                                                 </div>
-                                                                {/*<NumberFormat className="form-control" thousandSeparator={true} name="hrg_beli" value={parseInt(this.state.hrg_beli)} onKeyUp={this.handleAll.bind(this)}/>*/}
 
                                                             </div>
                                                             <div className="col-md-4">
@@ -1544,7 +1610,7 @@ class FormProduct extends Component{
                                                                             container.push(
                                                                                 <div className="form-group">
                                                                                     <label style={{fontSize:"8px"}}>margin {i+1} pcs</label>
-                                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`margin ${i+1} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={this.state.jenis==='4'?true:localStorage.isReadonlySama==="true"?true:false} type="number" placeholder={`margin ${i+1} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
 
                                                                                 </div>
                                                                             )
@@ -1552,10 +1618,7 @@ class FormProduct extends Component{
                                                                         return container;
                                                                     })()
                                                                 }
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 1 pcs" className="form-control" name="margin1" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin1} style={{fontSize:"10px"}}/>*/}
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 2 pcs" className="form-control" name="margin2" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin2} style={{fontSize:"10px"}}/>*/}
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 3 pcs" className="form-control" name="margin3" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin3} style={{fontSize:"10px"}}/>*/}
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="margin 4 pcs" className="form-control" name="margin4" onChange={(e)=>this.handleChange(e,null)} value={this.state.margin4} style={{fontSize:"10px"}}/>*/}
+
                                                             </div>
                                                             <div className="col-md-4">
                                                                 {
@@ -1568,7 +1631,7 @@ class FormProduct extends Component{
                                                                             container.push(
                                                                                 <div className="form-group">
                                                                                     <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
+                                                                                    <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.handleChange(e,null)} value={this.state[nama]} style={{fontSize:"10px"}}/>
 
                                                                                 </div>
                                                                             )
@@ -1576,10 +1639,7 @@ class FormProduct extends Component{
                                                                         return container;
                                                                     })()
                                                                 }
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga1} pcs`} className="form-control" name="hrgjual1" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual1} style={{fontSize:"10px"}}/>*/}
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga2} pcs`} className="form-control" name="hrgjual2" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual2} style={{fontSize:"10px"}}/>*/}
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga3} pcs`} className="form-control" name="hrgjual3" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual3} style={{fontSize:"10px"}}/>*/}
-                                                                {/*<input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state.nm_harga4} pcs`} className="form-control" name="hrgjual4" onChange={(e)=>this.handleChange(e,null)} value={this.state.hrgjual4} style={{fontSize:"10px"}}/>*/}
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1588,13 +1648,13 @@ class FormProduct extends Component{
                                                             <div className="col-md-3">
                                                                 <div className="form-group">
                                                                     <label style={{fontSize:"8px"}}>service pcs</label>
-                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
+                                                                    <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="service pcs" className="form-control" name="service" onChange={(e)=>this.handleChange(e,null)} value={this.state.service} style={{fontSize:"10px"}}/>
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-3">
                                                                 <div className="form-group">
                                                                     <label style={{fontSize:"8px"}}>PPN pcs</label>
-                                                                    <input readOnly={localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
+                                                                    <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlySama")==="true"?true:false} type="number" placeholder="PPN pcs" className="form-control" name="ppn" onChange={(e)=>this.handleChange(e,null)} value={this.state.ppn} style={{fontSize:"10px"}}/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1645,18 +1705,13 @@ class FormProduct extends Component{
                                                                                                 containers.push(
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>margin {z+1} {i%2===0?'pack':'karton'}</label>
-                                                                                                        <input type="number" placeholder={`margin ${z+1} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`margin ${z+1} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 )
                                                                                             }
                                                                                             return containers;
                                                                                         })()
                                                                                     }
-
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 1 pack" className="form-control" name="margin1_pack" value={this.state.margin1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 1 karton" className="form-control" name="margin1_karton" value={this.state.margin1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 2 pack" className="form-control" name="margin2_pack" value={this.state.margin2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 2 karton" className="form-control" name="margin2_karton" value={this.state.margin2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 3 pack" className="form-control" name="margin3_pack" value={this.state.margin3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 3 karton" className="form-control" name="margin3_karton" value={this.state.margin3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="margin 4 pack" className="form-control" name="margin4_pack" value={this.state.margin4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="margin 4 karton" className="form-control" name="margin4_karton" value={this.state.margin4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
                                                                                 </div>
                                                                                 <div className="col-md-4">
                                                                                     {
@@ -1668,7 +1723,7 @@ class FormProduct extends Component{
                                                                                                 containers.push(
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                                        <input type="number" placeholder={`hrg jual ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`hrg jual ${this.state[place]} ${i%2===0?'pack':'karton'}`} className="form-control" name={nama} value={this.state[nama]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 )
 
@@ -1677,10 +1732,7 @@ class FormProduct extends Component{
                                                                                         })()
                                                                                     }
 
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 1 pack" className="form-control" name="hrgjual1_pack" value={this.state.hrgjual1_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 1 karton" className="form-control" name="hrgjual1_karton" value={this.state.hrgjual1_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 2 pack" className="form-control" name="hrgjual2_pack" value={this.state.hrgjual2_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 2 karton" className="form-control" name="hrgjual2_karton" value={this.state.hrgjual2_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 3 pack" className="form-control" name="hrgjual3_pack" value={this.state.hrgjual3_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 3 karton" className="form-control" name="hrgjual3_karton" value={this.state.hrgjual3_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
-                                                                                    {/*{i%2===0?(<input type="number" placeholder="hrg jual 4 pack" className="form-control" name="hrgjual4_pack" value={this.state.hrgjual4_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>) : (<input type="number" placeholder="hrg jual 4 karton" className="form-control" name="hrgjual4_karton" value={this.state.hrgjual4_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>)}*/}
+
                                                                                 </div>
 
                                                                             </div>
@@ -1692,12 +1744,12 @@ class FormProduct extends Component{
                                                                                     {i%2===0?(
                                                                                         <div className="form-group">
                                                                                             <label style={{fontSize:"8px"}}>service pack</label>
-                                                                                            <input type="number" placeholder="service pack" className="form-control" name="service_pack" value={this.state.service_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder="service pack" className="form-control" name="service_pack" value={this.state.service_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div className="form-group">
                                                                                             <label style={{fontSize:"8px"}}>service karton</label>
-                                                                                            <input type="number" placeholder="service karton" className="form-control" name="service_karton" value={this.state.service_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder="service karton" className="form-control" name="service_karton" value={this.state.service_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
@@ -1705,12 +1757,12 @@ class FormProduct extends Component{
                                                                                     {i%2===0?(
                                                                                         <div className="form-group">
                                                                                             <label style={{fontSize:"8px"}}>PPN pack</label>
-                                                                                            <input type="number" placeholder="ppn pack" className="form-control" name="ppn_pack" value={this.state.ppn_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder="ppn pack" className="form-control" name="ppn_pack" value={this.state.ppn_pack} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                     ) : (
                                                                                         <div className="form-group">
                                                                                             <label style={{fontSize:"8px"}}>PPN karton</label>
-                                                                                            <input type="number" placeholder="ppn karton" className="form-control" name="ppn_karton" value={this.state.ppn_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                            <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder="ppn karton" className="form-control" name="ppn_karton" value={this.state.ppn_karton} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
@@ -1769,8 +1821,8 @@ class FormProduct extends Component{
                                                                                                 let nama=`margin${z+1}PCS`;
                                                                                                 container.push(
                                                                                                     <div className="form-group">
-                                                                                                        <label style={{fontSize:"8px"}}>margin {this.state[place]}</label>
-                                                                                                        <input readOnly={localStorage.getItem("isReadonly")==="true"?true:false} type="number" placeholder={`margin ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChild(e,i)} value={
+                                                                                                        <label style={{fontSize:"8px"}}>margin {z+1}</label>
+                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonly")==="true"?true:false} type="number" placeholder={`margin ${z+1} pcs`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChild(e,i)} value={
                                                                                                             z===0?v[0].margin1PCS:(z===1?v[0].margin2PCS:(z===2?v[0].margin3PCS:(z===3?v[0].margin4PCS:"")))
                                                                                                         } style={{fontSize:"10px"}}/>
                                                                                                     </div>
@@ -1779,10 +1831,7 @@ class FormProduct extends Component{
                                                                                             return container;
                                                                                         })()
                                                                                     }
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PCS" value={v[0].margin1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PCS" value={v[0].margin2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PCS" value={v[0].margin3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PCS" value={v[0].margin4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+
                                                                                 </div>
                                                                                 <div className="col-md-4">
                                                                                     {
@@ -1795,7 +1844,7 @@ class FormProduct extends Component{
                                                                                                 container.push(
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                                        <input readOnly={localStorage.getItem("isReadonly")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChild(e,null)} value={
+                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonly")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pcs`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChild(e,null)} value={
                                                                                                             z===0?v[0].hrgJual1PCS:(z===1?v[0].hrgJual2PCS:(z===2?v[0].hrgJual3PCS:(z===3?v[0].hrgJual4PCS:"")))
                                                                                                         } style={{fontSize:"10px"}}/>
                                                                                                     </div>
@@ -1806,10 +1855,7 @@ class FormProduct extends Component{
                                                                                         })()
                                                                                     }
 
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PCS" value={v[0].hrgJual1PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PCS" value={v[0].hrgJual2PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PCS" value={v[0].hrgJual3PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                    {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PCS" value={v[0].hrgJual4PCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>*/}
+
                                                                                 </div>
 
                                                                             </div>
@@ -1820,13 +1866,13 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-3">
                                                                                     <div className="form-group">
                                                                                         <label style={{fontSize:"8px"}}>service pcs</label>
-                                                                                        <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePCS" value={v[0].servicePCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePCS" value={v[0].servicePCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="col-md-3">
                                                                                     <div className="form-group">
                                                                                         <label style={{fontSize:"8px"}}>PPN pcs</label>
-                                                                                        <input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPCS" value={v[0].ppnPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
+                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPCS" value={v[0].ppnPCS} onChange={(e)=>this.onHandleChangeChild(e,i)} style={{fontSize:"10px"}}/>
                                                                                     </div>
                                                                                 </div>
 
@@ -1869,8 +1915,8 @@ class FormProduct extends Component{
                                                                                                         let nama=`margin${z+1}PACK`;
                                                                                                         container.push(
                                                                                                             <div className="form-group">
-                                                                                                                <label style={{fontSize:"8px"}}>margin {this.state[place]}</label>
-                                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==="true"?true:false} type="number" placeholder={`margin ${z+1} pack`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildPack(e,i)} value={
+                                                                                                                <label style={{fontSize:"8px"}}>margin {z+1}</label>
+                                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyPack")==="true"?true:false} type="number" placeholder={`margin ${z+1} pack`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildPack(e,i)} value={
                                                                                                                     z===0?v[1].margin1PACK:(z===1?v[1].margin2PACK:(z===2?v[1].margin3PACK:(z===3?v[1].margin4PACK:"")))
                                                                                                                 } style={{fontSize:"10px"}}/>
                                                                                                             </div>
@@ -1880,10 +1926,7 @@ class FormProduct extends Component{
                                                                                                     return container;
                                                                                                 })()
                                                                                             }
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1PACK" value={v[1].margin1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2PACK" value={v[1].margin2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3PACK" value={v[1].margin3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4PACK" value={v[1].margin4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
+
                                                                                         </div>
                                                                                         <div className="col-md-4">
                                                                                             {
@@ -1896,7 +1939,7 @@ class FormProduct extends Component{
                                                                                                         container.push(
                                                                                                             <div className="form-group">
                                                                                                                 <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pack`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildPack(e,i)} value={
+                                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyPack")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} pack`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildPack(e,i)} value={
                                                                                                                     z===0?v[1].hrgJual1PACK:(z===1?v[1].hrgJual2PACK:(z===2?v[1].hrgJual3PACK:(z===3?v[1].hrgJual4PACK:"")))
                                                                                                                 } style={{fontSize:"10px"}}/>
                                                                                                             </div>
@@ -1907,10 +1950,6 @@ class FormProduct extends Component{
                                                                                             }
 
 
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1PACK" value={v[1].hrgJual1PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2PACK" value={v[1].hrgJual2PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3PACK" value={v[1].hrgJual3PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4PACK" value={v[1].hrgJual4PACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                         </div>
 
                                                                                     </div>
@@ -1921,13 +1960,13 @@ class FormProduct extends Component{
                                                                                         <div className="col-md-3">
                                                                                             <div className="form-group">
                                                                                                 <label style={{fontSize:"8px"}}>service pack</label>
-                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="service" className="form-control" name="servicePACK" value={v[1].servicePACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-md-3">
                                                                                             <div className="form-group">
                                                                                                 <label style={{fontSize:"8px"}}>PPN pack</label>
-                                                                                                <input readOnly={localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
+                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyPack")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnPACK" value={v[1].ppnPACK} onChange={(e)=>this.onHandleChangeChildPack(e,i)} style={{fontSize:"10px"}}/>
                                                                                             </div>
                                                                                         </div>
 
@@ -1965,8 +2004,8 @@ class FormProduct extends Component{
                                                                                                         let nama=`margin${z+1}KARTON`;
                                                                                                         container.push(
                                                                                                             <div className="form-group">
-                                                                                                                <label style={{fontSize:"8px"}}>margin {this.state[place]}</label>
-                                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==="true"?true:false} type="number" placeholder={`margin ${z+1} karton`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} value={
+                                                                                                                <label style={{fontSize:"8px"}}>margin {z+1}</label>
+                                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyKarton")==="true"?true:false} type="number" placeholder={`margin ${z+1} karton`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} value={
                                                                                                                     z===0?v[2].margin1KARTON:(z===1?v[2].margin2KARTON:(z===2?v[2].margin3KARTON:(z===3?v[2].margin4KARTON:"")))
                                                                                                                 } style={{fontSize:"10px"}}/>
                                                                                                             </div>
@@ -1976,10 +2015,6 @@ class FormProduct extends Component{
                                                                                                 })()
                                                                                             }
 
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 1" className="form-control" name="margin1KARTON" value={v[2].margin1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 2" className="form-control" name="margin2KARTON" value={v[2].margin2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 3" className="form-control" name="margin3KARTON" value={v[2].margin3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="margin 4" className="form-control" name="margin4KARTON" value={v[2].margin4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
                                                                                         </div>
                                                                                         <div className="col-md-4">
 
@@ -1992,7 +2027,7 @@ class FormProduct extends Component{
                                                                                                         container.push(
                                                                                                             <div className="form-group">
                                                                                                                 <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} karton`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} value={
+                                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyKarton")==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]} karton`} className="form-control" name={nama} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} value={
                                                                                                                     z===0?v[2].hrgJual1KARTON:(z===1?v[2].hrgJual2KARTON:(z===2?v[2].hrgJual3KARTON:(z===3?v[2].hrgJual4KARTON:"")))
                                                                                                                 } style={{fontSize:"10px"}}/>
                                                                                                             </div>
@@ -2001,10 +2036,7 @@ class FormProduct extends Component{
                                                                                                     return container;
                                                                                                 })()
                                                                                             }
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 1" className="form-control" name="hrgJual1KARTON" value={v[2].hrgJual1KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 2" className="form-control" name="hrgJual2KARTON" value={v[2].hrgJual2KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 3" className="form-control" name="hrgJual3KARTON" value={v[2].hrgJual3KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
-                                                                                            {/*<input readOnly={localStorage.getItem("isReadonly")==='true'?true:false} type="number" placeholder="hrg jual 4" className="form-control" name="hrgJual4KARTON" value={v[2].hrgJual4KARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>*/}
+
                                                                                         </div>
 
                                                                                     </div>
@@ -2015,13 +2047,13 @@ class FormProduct extends Component{
                                                                                         <div className="col-md-3">
                                                                                             <div className="form-group">
                                                                                                 <label style={{fontSize:"8px"}}>service karton</label>
-                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="service" className="form-control" name="serviceKARTON" value={v[2].serviceKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div className="col-md-3">
                                                                                             <div className="form-group">
                                                                                                 <label style={{fontSize:"8px"}}>PPN karton</label>
-                                                                                                <input readOnly={localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
+                                                                                                <input readOnly={this.state.jenis==='4'?true:localStorage.getItem("isReadonlyKarton")==='true'?true:false} type="number" placeholder="PPN" className="form-control" name="ppnKARTON" value={v[2].ppnKARTON} onChange={(e)=>this.onHandleChangeChildKarton(e,i)} style={{fontSize:"10px"}}/>
                                                                                             </div>
                                                                                         </div>
 
