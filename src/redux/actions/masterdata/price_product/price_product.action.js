@@ -1,6 +1,7 @@
 import {PRICE_PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
+import {FetchLocationCategory} from "../location_category/location_category.action";
 
 
 export function setLoading(load){
@@ -33,7 +34,6 @@ export const FetchPriceProduct = (page=1,q='')=>{
                 dispatch(setPriceProduct(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error);
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
@@ -41,5 +41,46 @@ export const FetchPriceProduct = (page=1,q='')=>{
                 text: error.response.data.msg,
             });
         })
+    }
+}
+
+export const updatePriceProduct = (id,data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `barangHarga/${id}`;
+
+        axios.put(url, data)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchPriceProduct(1,''));
+
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+                console.log(error);
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
     }
 }
