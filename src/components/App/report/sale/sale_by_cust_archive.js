@@ -157,9 +157,9 @@ class SaleByCustArchive extends Component{
         if(tipe!==undefined&&tipe!==null&&tipe!==''){
             if(where!==''){where+='&'}where+=`type=${tipe}`
         }
-        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
-            if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
-        }
+        // if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
+        //     if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
+        // }
         if(any !== undefined&&any!==''&&any!==null){
             if(where!==''){where+='&'}where+=`q=${any}`
         }
@@ -218,7 +218,7 @@ class SaleByCustArchive extends Component{
 
                                 </div>
                             </div>
-                            <div className="col-6 col-xs-6 col-md-2">
+                            {/* <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">
                                         Lokasi
@@ -235,7 +235,7 @@ class SaleByCustArchive extends Component{
 
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             {/* <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label className="control-label font-12">

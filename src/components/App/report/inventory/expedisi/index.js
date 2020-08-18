@@ -19,12 +19,23 @@ class ExpedisiReport extends Component{
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.HandleChangeSort = this.HandleChangeSort.bind(this);
+        this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
             any:"",
             location:"",
             location_data:[],
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
+            sort:"",
+            sort_data:[],
+            filter:"",
+            filter_data:[],
+            filter:"",
+            filter_data:[],
+            status:"",
+            status_data:[],
         }
     }
     componentWillMount(){
@@ -43,6 +54,15 @@ class ExpedisiReport extends Component{
         }
         if (localStorage.date_to_expedisi_report !== undefined && localStorage.date_to_expedisi_report !== null) {
             this.setState({endDate: localStorage.date_to_expedisi_report})
+        }
+        if (localStorage.sort_expedisi_report !== undefined && localStorage.sort_expedisi_report !== null) {
+            this.setState({sort: localStorage.sort_expedisi_report})
+        }
+        if (localStorage.filter_expedisi_report !== undefined && localStorage.filter_expedisi_report !== null) {
+            this.setState({filter: localStorage.filter_expedisi_report})
+        }
+        if (localStorage.status_expedisi_report !== undefined && localStorage.status_expedisi_report !== null) {
+            this.setState({status: localStorage.status_expedisi_report})
         }
     }
     handlePageChange(pageNumber){
@@ -79,6 +99,9 @@ class ExpedisiReport extends Component{
         let dateTo=localStorage.date_to_expedisi_report;
         let lokasi = localStorage.location_expedisi_report;
         let any = localStorage.any_expedisi_report;
+        let sort=localStorage.sort_expedisi_report;
+        let filter=localStorage.filter_expedisi_report;
+        let status=localStorage.status_expedisi_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -86,13 +109,65 @@ class ExpedisiReport extends Component{
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             where+=`&lokasi=${lokasi}`;
         }
+        if(status!==undefined&&status!==null&&status!==''){
+            where+=`&status=${status}`;
+        }
+        if(filter!==undefined&&filter!==null&&filter!==''){
+            if(sort!==undefined&&sort!==null&&sort!==''){
+                where+=`&sort=${filter}|${sort}`;
+            }
+        }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`q=${any}`
+            where+=`&search=${any}`
         }
         this.props.dispatch(FetchExpedisi(pageNumber,where))
         this.props.dispatch(FetchExpedisiExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
+        let sort = [
+            {kode:"",value: "Default"},
+            {kode:"desc",value: "DESCENDING"},
+            {kode:"asc",value: "ASCENDING"},
+        ];
+        let data_sort=[];
+        sort.map((i) => {
+            data_sort.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let filter = [
+            {kode:"",value: "Default"},
+            {kode:"kd_expedisi",value: "Kode Ekspedisi"},
+            {kode:"tgl_expedisi",value: "Tanggal"},
+            {kode:"status",value: "Status"},
+            {kode:"pengirim",value: "Pengirim"},
+        ];
+        let data_filter=[];
+        filter.map((i) => {
+            data_filter.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let status = [
+            {kode:"",value: "Default"},
+            {kode:"0",value: "0"},
+            {kode:"1",value: "1"},
+            {kode:"2",value: "2"},
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        this.setState({
+            sort_data: data_sort,
+            filter_data: data_filter,
+            status_data: data_status,
+        });
         if (nextProps.auth.user) {
             let lk = [{
                 value: '',
@@ -122,8 +197,24 @@ class ExpedisiReport extends Component{
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    
-
+    HandleChangeSort(sr) {
+        this.setState({
+            sort: sr.value,
+        });
+        localStorage.setItem('sort_expedisi_report', sr.value);
+    }
+    HandleChangeFilter(fl) {
+        this.setState({
+            filter: fl.value,
+        });
+        localStorage.setItem('filter_expedisi_report', fl.value);
+    }
+    HandleChangeStatus(st) {
+        this.setState({
+            status: st.value,
+        });
+        localStorage.setItem('status_expedisi_report', st.value);
+    }
 
 
     render(){
@@ -166,8 +257,59 @@ class ExpedisiReport extends Component{
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Status
+                                        </label>
+                                        <Select
+                                            options={this.state.status_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeStatus}
+                                            value={
+                                                this.state.status_data.find(op => {
+                                                    return op.value === this.state.status
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Filter
+                                        </label>
+                                        <Select
+                                            options={this.state.filter_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeFilter}
+                                            value={
+                                                this.state.filter_data.find(op => {
+                                                    return op.value === this.state.filter
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Sort
+                                        </label>
+                                        <Select
+                                            options={this.state.sort_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeSort}
+                                            value={
+                                                this.state.sort_data.find(op => {
+                                                    return op.value === this.state.sort
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
                                         <label>Cari</label>
-                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChane(e)}/>
+                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                     </div>
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-3">
