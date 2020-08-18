@@ -20,7 +20,13 @@ class FormDepartment extends Component{
         };
     }
     handleChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
+        this.setState({ [event.target.name]: event.target.value});
+        let err = Object.assign({}, this.state.error, {
+            [event.target.name]: ""
+        });
+        this.setState({
+            error: err
+        });
     }
     toggle = (e) => {
         e.preventDefault();

@@ -255,7 +255,7 @@ class FormLocation extends Component{
                                                 {loading && <div>Loading...</div>}
                                                 {suggestions.map(suggestion => {
                                                     const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                                                    const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' } : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                                                    const style = suggestion.active ? { backgroundColor: '#000000', cursor: 'pointer',color:'white' } : { backgroundColor: 'white', cursor: 'pointer' };
                                                     return (
                                                         <div {...getSuggestionItemProps(suggestion, {className, style,})}>
                                                             <span>{suggestion.description}</span>

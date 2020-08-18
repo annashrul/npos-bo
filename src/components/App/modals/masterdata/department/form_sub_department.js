@@ -23,7 +23,7 @@ class FormSubDepartment extends Component{
             nama:'',
             kode_dept:'',
             error:{
-                kode:"",
+                kode_dept:"",
                 nama:""
             }
         };
@@ -31,6 +31,12 @@ class FormSubDepartment extends Component{
     }
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
+        let err = Object.assign({}, this.state.error, {
+            [event.target.name]: ""
+        });
+        this.setState({
+            error: err
+        });
     }
     toggle = (e) => {
         e.preventDefault();
@@ -38,11 +44,11 @@ class FormSubDepartment extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.setState({})
     };
-    componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
-        if(nextProps.dataDepartment!==undefined&&nextProps.dataDepartment!==[]){
+    getProps(param){
+        console.log(param);
+        if(param.dataDepartment!==undefined&&param.dataDepartment!==[]){
             let dept = [];
-            let depProps = nextProps.dataDepartment.data;
+            let depProps = param.dataDepartment.data;
             if(depProps!==undefined){
                 depProps.map((i) => {
                     dept.push({
@@ -57,15 +63,16 @@ class FormSubDepartment extends Component{
         }
 
 
-        if (nextProps.detail !== [] && nextProps.detail !== undefined) {
+        if (param.detail !== [] && param.detail !== undefined) {
 
-            console.log(nextProps.detail);
+            console.log(param.detail);
             this.setState({
-                nama: nextProps.detail.nama,
-                kode:nextProps.detail.kode,
-                kode_dept:nextProps.detail.kode_dept,
+                nama: param.detail.nama,
+                kode:param.detail.kode,
+                kode_dept:param.detail.kode_dept,
             })
-        }else{
+        }
+        else{
             console.log('props kosong');
             this.setState({
                 nama: '',
@@ -74,11 +81,21 @@ class FormSubDepartment extends Component{
             })
         }
     }
+    componentWillReceiveProps(nextProps) {
+        this.getProps(nextProps);
+    }
+    componentWillMount(){
+        this.getProps(this.props);
+    }
     HandleChangeDept(dept) {
-        console.log(dept.value);
-        this.setState({
-            kode_dept: dept.value,
+        let err = Object.assign({}, this.state.error, {
+            kode_dept: ""
         });
+        this.setState({
+            kode_dept:dept.value,
+            error: err
+        })
+
     }
     handleSubmit(e){
         e.preventDefault();
@@ -90,10 +107,14 @@ class FormSubDepartment extends Component{
         // console.log(this.props.token);
         let err = this.state.error;
         if(this.state.kode_dept===''||this.state.kode_dept===undefined){
-            err = Object.assign({}, err, {kode_dept:"kode tidak boleh kosong"});
+            err = Object.assign({}, err, {kode_dept:"departemen tidak boleh kosong"});
             this.setState({error: err});
-            return;
-        }else{
+        }
+        else if(this.state.nama===''||this.state.nama===undefined){
+            err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else{
             if(this.props.detail===undefined){
                 this.props.dispatch(createSubDepartment(parseData));
                 this.props.dispatch(ModalToggle(false));
@@ -113,12 +134,12 @@ class FormSubDepartment extends Component{
         console.log("LIST DEPARTMENT",this.props.dataDepartment);
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSubDepartment"} size="md">
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Sub Department":"Update Sub Department"}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Tambah Sub Departemen":"Ubah Sub Departemen"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <div className="form-group">
                             <label className="control-label font-12">
-                                Department
+                                Departemen
                             </label>
                             <Select
                                 options={this.state.dataKode}
@@ -131,17 +152,13 @@ class FormSubDepartment extends Component{
                                 }
 
                             />
+                            <div className="invalid-feedback"
+                                 style={this.state.error.kode_dept !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.kode_dept}
+                            </div>
                         </div>
-                        {/*<div className="form-group">*/}
-                            {/*<label>Code</label>*/}
-                            {/*<input type="text" className="form-control" name="kode" value={this.state.kode} onChange={this.handleChange}/>*/}
-                            {/*<div className="invalid-feedback"*/}
-                                 {/*style={this.state.error.kode !== "" ? {display: 'block'} : {display: 'none'}}>*/}
-                                {/*{this.state.error.kode}*/}
-                            {/*</div>*/}
-                        {/*</div>*/}
                         <div className="form-group">
-                            <label>Name</label>
+                            <label>Nama</label>
                             <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}/>
                             <div className="invalid-feedback"
                                  style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>

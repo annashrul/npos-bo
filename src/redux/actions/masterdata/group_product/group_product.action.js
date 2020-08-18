@@ -38,20 +38,11 @@ export const FetchGroupProduct = (page=1,q='')=>{
 }
 
 
-export const createGroupProduct = (data,token) => {
+export const createGroupProduct = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `kelompokBrg`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        };
-        axios.post(url, data, headers)
+        axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
                 if (data.status === 'success') {
@@ -85,20 +76,12 @@ export const createGroupProduct = (data,token) => {
             })
     }
 }
-export const updateGroupProduct = (id,data,token) => {
+export const updateGroupProduct = (id,data) => {
+    console.log("data update submitted",data);
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `kelompokBrg/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-        axios.put(url, data, headers)
+        axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
@@ -121,33 +104,23 @@ export const updateGroupProduct = (id,data,token) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
-                Swal.fire({
-                    title: 'failed',
-                    type: 'danger',
-                    text: error.response.data.msg,
-                });
+                console.log(error.response);
+                // Swal.fire({
+                //     title: 'failed',
+                //     type: 'danger',
+                //     text: error.response.data.msg,
+                // });
                 if (error.response) {
                     console.log("error")
                 }
             })
     }
 }
-export const deleteGroupProduct = (id,token) => {
+export const deleteGroupProduct = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `kelompokBrg/${id}`;
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${token}`,
-                'username': `${HEADERS.USERNAME}`,
-                'password': `${HEADERS.PASSWORD}`,
-                'crossDomain': true
-            }
-        }
-
-        axios.delete(url,headers)
+        axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
