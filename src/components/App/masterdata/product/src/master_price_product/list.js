@@ -4,19 +4,18 @@ import connect from "react-redux/es/connect/connect";
 import {FetchPriceProduct} from "redux/actions/masterdata/price_product/price_product.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq from "helper";
+import FormPriceProduct from "../../../../modals/masterdata/price_product/form_price_product";
 
 class ListPriceProduct extends Component{
     constructor(props){
         super(props);
         this.handlesearch = this.handlesearch.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.state={
+            detail:{}
+        }
     }
-    toggleModal(e) {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formPriceProduct"));
-    }
+
     handlePageChange(pageNumber){
         console.log(`active page is ${pageNumber}`);
         let any = localStorage.getItem('any_price_product');
@@ -43,8 +42,22 @@ class ListPriceProduct extends Component{
     handleDelete = (e,kode) => {
         e.preventDefault();
     };
-    handleEdit = (e,kd_brg,) => {
+    handleEdit = (e,id,harga,ppn,service,harga2,harga3,harga4) => {
         e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formPriceProduct"));
+        this.setState({
+            detail:{
+                "id":id,
+                "harga":harga,
+                "ppn":ppn,
+                "service":harga,
+                "harga2":harga2,
+                "harga3":harga3,
+                "harga4":harga4,
+            }
+        })
     };
 
     render(){
@@ -75,6 +88,7 @@ class ListPriceProduct extends Component{
                             <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">Kode</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
+                            <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
                             <th className="text-black" style={columnStyle} colSpan="4">Harga Jual</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">PPN</th>
@@ -96,27 +110,24 @@ class ListPriceProduct extends Component{
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Aksi
+                                                        <button className="btn btn-primary btn-sm" type="button"  onClick={(e)=>this.handleEdit(
+                                                            e,v.id,v.harga,v.ppn,v.service,v.harga2,v.harga3,v.harga4
+                                                        )}>
+                                                            Edit
                                                         </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
-                                                                e,v.kd_brg,v.harga,v.lokasi,v.ppn,v.service,v.harga2,v.harga3,v.harga4
-                                                            )}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</a>
-                                                        </div>
+
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.barcode?v.barcode:'-'}</td>
-                                                <td style={columnStyle}>{v.lokasi?v.lokasi:'-'}</td>
+                                                <td style={columnStyle}>{v.nm_brg?v.nm_brg:'-'}</td>
+                                                <td style={columnStyle}>{v.nama_toko?v.nama_toko:'-'}</td>
                                                 <td style={columnStyle}>{toRp(v.harga)}</td>
                                                 <td style={columnStyle}>{toRp(v.harga2)}</td>
                                                 <td style={columnStyle}>{toRp(v.harga3)}</td>
                                                 <td style={columnStyle}>{toRp(v.harga4)}</td>
                                                 <td style={columnStyle}>{v.ppn}</td>
                                                 <td style={columnStyle}>{v.service}</td>
-
                                             </tr>
                                         )
                                     })
@@ -134,7 +145,7 @@ class ListPriceProduct extends Component{
                         />
                     </div>
                 </div>
-                {/*<FormPr*/}
+                <FormPriceProduct detail={this.state.detail}/>
             </div>
 
         )
