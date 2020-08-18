@@ -25,6 +25,7 @@ export const alokasiReducer = (state = initialState, action) => {
                 // total: action.data.result.total
             });
         case ALOKASI.REPORT_SUCCESS:
+            console.log("ALOKASI REDUCER",action.data.result);
             return Object.assign({}, state, {
                 report: action.data.result,
                 report_data: action.data.result.data

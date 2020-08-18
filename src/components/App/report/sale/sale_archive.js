@@ -395,6 +395,7 @@ class SaleArchive extends Component{
                                         <thead className="bg-light">
 
                                         <tr>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>No</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>#</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
@@ -446,9 +447,9 @@ class SaleArchive extends Component{
                                                             voucher_per = voucher_per + parseInt(v.voucher);
                                                             rounding_per = rounding_per + parseInt(v.rounding);
 
-
                                                             return (
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page)-1))}</td>
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

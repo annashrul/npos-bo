@@ -233,5 +233,22 @@ export const DBConfig = {
             ]
         },
 
+        {
+            store: 'packing',
+            storeConfig: { keyPath: 'id', autoIncrement: true },
+            storeSchema: [
+                { name: 'kode_barang', keypath: 'kode_barang', options: { unique: false } },
+                { name: 'harga_beli', keypath: 'harga_beli', options: { unique: false } },
+                { name: 'harga_jual', keypath: 'harga_jual', options: { unique: false } },
+                { name: 'barcode', keypath: 'barcode', options: { unique: false } },
+                { name: 'satuan', keypath: 'satuan', options: { unique: false } },
+                { name: 'stock', keypath: 'stock', options: { unique: false } },
+                { name: 'nm_brg', keypath: 'nm_brg', options: { unique: false } },
+                { name: 'qty_alokasi', keypath: 'qty_alokasi', options: { unique: false } },
+                { name: 'qty_packing', keypath: 'qty_packing', options: { unique: false } },
+                { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
+            ]
+        },
+
     ]
 };

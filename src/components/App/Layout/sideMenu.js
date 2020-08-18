@@ -138,6 +138,7 @@ class SideMenu extends Component {
                 isProduction:false
             })
         }
+
         const path = this.props.location.pathname;
         if(param === 'setting'){
             this.setState({
@@ -262,6 +263,7 @@ class SideMenu extends Component {
             path === '/approval_mutasi'||
             path === '/opname'||
             path === '/approval_opname' ||
+            path === '/packing' ||
             path === '/approval_mutasi_jual_beli' ||
             path === '/bayar_mutasi_jual_beli'
         ){
@@ -429,7 +431,8 @@ class SideMenu extends Component {
                         path === '/adjustment'||
                         path === '/approval_mutasi'||
                         path === '/opname'||
-                        path === '/approval_opname'
+                        path === '/approval_opname'||
+                        path === '/packing'
                         ?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
@@ -440,6 +443,7 @@ class SideMenu extends Component {
                             <li className={path==='/adjustment'?"active":''}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment </Link></li>
                             <li className={path==='/opname'?"active":''}><Link to="/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname </Link></li>
                             <li className={path==='/approval_opname'?"active":''}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Opname </Link></li>
+                            <li className={path==='/packing'?"active":''}><Link to="/packing" style={{width:'fit-content'}}> <i className="fa fa-codepen" />Packing </Link></li>
                             <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/approval_mutasi_jual_beli'|| path==='/bayar_mutasi_jual_beli'?" active menu-open" : "")}>
                                 <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'trx_mutasi')}><i className="zmdi zmdi-card" /> <span>Mutasi Jual Beli</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isTrxMutasi===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxMutasi===true ?"block" : "none"}}>
@@ -515,6 +519,7 @@ class SideMenu extends Component {
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isReportPembelian===true || path==='/po_report'|| path==='/receive_report'?" active menu-open" : "")}>
+
                                 <a href="#" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true
                         ?"block" : "none"}}>
@@ -524,6 +529,10 @@ class SideMenu extends Component {
                             </li>
                         </ul>
                     </li>
+                    {/*END MODUL LAPORAN*/}
+                    {/*START MODUL CETAK BARCODE*/}
+                    <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
+                    {/*END MODUL CETAK BARCODE*/}
 
                     <li className={"treeview" +(this.state.isSetting===true
                         || path==='/user'

@@ -3,6 +3,7 @@ import React,{Component} from "react";
 import Pagination from "react-js-pagination";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
+import Swal from "sweetalert2";
 
 
 export const stringifyFormData = (fd) => {
@@ -84,7 +85,18 @@ export const toRp = (angka) => {
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
     return rupiah;
 };
+export const ToastQ = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
 
+})
 export const statusQ = (lbl,txt) => {
     if(lbl === 'success'){
         return <button className="btn btn-success btn-sm btn-status" style={{fontSize:'8px'}}>{txt}</button>

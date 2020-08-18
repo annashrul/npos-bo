@@ -81,7 +81,6 @@ export const FetchDnReport = (page = 1, perpage = 10) => {
 
     }
 }
-
 export const FetchDnData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -98,7 +97,6 @@ export const FetchDnData = (nota) => {
 
     }
 }
-
 export const FetchNota = (lokasi, prefix) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -116,7 +114,6 @@ export const FetchNota = (lokasi, prefix) => {
 
     }
 }
-
 export const storeAlokasi = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -172,6 +169,7 @@ export const FetchAlokasi = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
+        console.log("URL ALOKASI",url);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
