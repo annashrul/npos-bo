@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchDn, FetchDnData} from "redux/actions/inventory/dn.action";
+import {FetchDn, FetchDnExcel, FetchDnData} from "redux/actions/inventory/dn.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailDn from "components/App/modals/report/inventory/dn_report/detail_dn";
@@ -90,6 +90,7 @@ class DnReport extends Component{
             where+=`q=${any}`
         }
         this.props.dispatch(FetchDn(pageNumber,where))
+        this.props.dispatch(FetchDnExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
@@ -176,8 +177,8 @@ class DnReport extends Component{
                                         </button>
                                         <ReactHTMLTableToExcel
                                             className="btn btn-primary btnBrg"
-                                            table="report_sale_to_excel"
-                                            filename="laporan_penjualan"
+                                            table="report_dn_to_excel"
+                                            filename="laporan_dn"
                                             sheet="barang"
                                             buttonText="export excel">
                                         </ReactHTMLTableToExcel>
@@ -186,6 +187,49 @@ class DnReport extends Component{
                                 </div>
 
                             </div>
+                            {/*DATA EXCEL*/}
+                            <table className="table table-hover"  id="report_dn_to_excel" style={{display:"none"}}>
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" colSpan={7}>{this.state.startDate} - {this.state.startDate}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={7}>LAPORAN DELIVERY NOTE</th>
+                                </tr>
+
+                                <tr>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No DN</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
+                                </tr>
+                                <tr></tr>
+                                </thead>
+                                {
+                                    <tbody>
+                                    {
+                                        typeof this.props.dnReportExcel.data==='object'? this.props.dnReportExcel.data.length>0?
+                                            this.props.dnReportExcel.data.map((v,i)=>{
+                                                return (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{v.no_delivery_note}</td>
+                                                        <td style={columnStyle}>{moment(v.tanggal).format("DD-MM-YYYY")}</td>
+                                                        <td style={columnStyle}>{v.kd_lokasi_1}</td>
+                                                        <td style={columnStyle}>{v.kd_lokasi_2}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))}</td>
+                                                        <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
+                                                        <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
+                                                    </tr>
+                                                );
+                                            }) : "No data." : "No data."
+                                    }
+                                    </tbody>
+                                }
+                            </table>
+                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -273,6 +317,7 @@ const mapStateToProps = (state) => {
         auth:state.auth,
         isLoading: state.dnReducer.isLoading,
         dnDetail:state.dnReducer.dn_data,
+        dnReportExcel:state.dnReducer.report_excel,
         isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

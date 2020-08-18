@@ -126,11 +126,11 @@ class FormSale extends Component{
                                 <select name="jenis_trx" id="jenis_trx" className="form-control" value={this.state.jenis_trx} defaultValue={this.state.jenis_trx} onChange={this.handleChange}>
                                     <option value="TUNAI">TUNAI</option>
                                     <option value="TRANSFER">TRANSFER</option>
-                                    {/*<option value="KREDIT">KREDIT</option>*/}
+                                    <option value="Kredit">KREDIT</option>
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="">Jumlah Uang</label>
+                                <label htmlFor="">{this.state.jenis_trx==='Kredit'?'Jumlah DP':'Jumlah Uang'}</label>
                                 <input type="text" name="tunai" id="tunai" className="form-control" value={this.state.tunai} onChange={this.handleChange}/>
                                 <div className="invalid-feedback"
                                      style={this.state.error.tunai !== "" || this.state.error.tunai !== "0" ? {display: 'block'} : {display: 'none'}}>
@@ -160,7 +160,7 @@ class FormSale extends Component{
                                 ):""
                             }
                             {/*END TRANSFER*/}
-                            <div className="form-group">
+                            <div className="form-group" style={{display:this.state.jenis_trx==='Kredit'?'none':'block'}}>
                                 <label htmlFor="">Kembalian</label>
                                 <input readOnly type="text" name="change" id="change" className="form-control" value={this.state.change} onChange={this.handleChange}/>
                             </div>

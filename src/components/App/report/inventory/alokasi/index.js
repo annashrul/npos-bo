@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchAlokasi, FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
+import {FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
@@ -90,6 +90,7 @@ class AlokasiReport extends Component{
             where+=`q=${any}`
         }
         this.props.dispatch(FetchAlokasi(pageNumber,where))
+        this.props.dispatch(FetchAlokasiExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
@@ -176,7 +177,7 @@ class AlokasiReport extends Component{
                                         </button>
                                         <ReactHTMLTableToExcel
                                             className="btn btn-primary btnBrg"
-                                            table="report_sale_to_excel"
+                                            table="report_alokasi_to_excel"
                                             filename="laporan_penjualan"
                                             sheet="barang"
                                             buttonText="export excel">
@@ -186,6 +187,49 @@ class AlokasiReport extends Component{
                                 </div>
 
                             </div>
+                            {/*DATA EXCEL*/}
+                            <table className="table table-hover"  id="report_alokasi_to_excel" style={{display:"none"}}>
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" colSpan={7}>{this.state.startDate} - {this.state.startDate}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={7}>LAPORAN ALOKASI</th>
+                                </tr>
+
+                                <tr>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No Faktur Mutasi</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
+                                </tr>
+                                <tr></tr>
+                                </thead>
+                                {
+                                    <tbody>
+                                    {
+                                        typeof this.props.alokasiReportExcel.data==='object'? this.props.alokasiReportExcel.data.length>0?
+                                            this.props.alokasiReportExcel.data.map((v,i)=>{
+                                                return (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
+                                                        <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
+                                                        <td style={columnStyle}>{v.kd_lokasi_1}</td>
+                                                        <td style={columnStyle}>{v.kd_lokasi_2}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))}</td>
+                                                        <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
+                                                        <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
+                                                    </tr>
+                                                );
+                                            }) : "No data." : "No data."
+                                    }
+                                    </tbody>
+                                }
+                            </table>
+                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -272,6 +316,7 @@ const mapStateToProps = (state) => {
         auth:state.auth,
         isLoading: state.alokasiReducer.isLoading,
         alokasiDetail:state.alokasiReducer.alokasi_data,
+        alokasiReportExcel:state.alokasiReducer.report_excel,
         isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

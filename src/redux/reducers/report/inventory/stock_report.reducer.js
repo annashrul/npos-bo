@@ -3,7 +3,7 @@ import {STOCK_REPORT} from "../../../actions/_constants";
 const initialState = {
     isLoading:false,isLoadingDetailSatuan:false,
     status:"",msg:"",total_stock:{total_dn:0,total_stock_awal:0,total_stock_masuk:0,total_stock_keluar:0,total_stock_akhir:0},
-    data:[],dataDetailSatuan:[],dataDetailTransaksi:[]
+    data:[],dataDetailSatuan:[],dataDetailTransaksi:[],report_excel:[]
 };
 
 export const stockReportReducer = (state=initialState,action) => {
@@ -15,6 +15,13 @@ export const stockReportReducer = (state=initialState,action) => {
                 msg:action.data.msg,
                 data:action.data.result,
                 total_stock:action.data.result.total_stock
+            });
+        case STOCK_REPORT.SUCCESS_EXCEL:
+            console.log(action.data.result);
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                report_excel:action.data.result
             });
         case STOCK_REPORT.DETAIL_SATUAN:
             return Object.assign({}, state,{

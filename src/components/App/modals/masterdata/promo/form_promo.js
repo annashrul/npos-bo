@@ -5,9 +5,11 @@ import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import FileBase64 from "react-file-base64";
 import {stringifyFormData} from "helper";
+import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import {createPromo} from "redux/actions/masterdata/promo/promo.action";
 import {updatePromo} from "../../../../../redux/actions/masterdata/promo/promo.action";
 import {toMoney} from "../../../../../helper";
+import Autosuggest from 'react-autosuggest';
 
 class FormPromo extends Component{
     constructor(props){
@@ -15,7 +17,7 @@ class FormPromo extends Component{
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.toCurrency = this.toCurrency.bind(this);
-        this.handleChange = this.handleChange  .bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             akun:0,
             nama:'',
@@ -24,7 +26,9 @@ class FormPromo extends Component{
             charge_debit:'0',
             charge_kredit:'0',
             foto:"",
-            token:''
+            token:'',
+            value: '',
+            suggestions: []
         };
     }
     componentWillMount(){
@@ -106,10 +110,115 @@ class FormPromo extends Component{
 
         return formatter.format(number);
     }
+    
+    // Filter logic
+    getSuggestions = async (value) => {
+        const inputValue = value.trim().toLowerCase();
+        let response = await fetch("http://203.190.54.4:6692/barang?page=1&lokasi=LK%2F0001&q=" + inputValue);
+        let data = await response.json()
+        return data;
+    };
+
+    // Trigger suggestions
+    getSuggestionValue = suggestion => suggestion.kd_brg;
+
+    // Render Each Option
+    renderSuggestion = suggestion => (
+        <a className="dropdown-item">
+            <span className="nm_brg">
+                {suggestion.nm_brg}
+            </span>&nbsp;|&nbsp;
+            <span className="kd_brg">
+                {suggestion.kd_brg}
+            </span>
+        </a>
+    );
+
+    // OnChange event handler
+    onChange = (event, { newValue }) => {
+        this.setState({
+            value: newValue
+        });
+    };
+
+    // Suggestion rerender when user types
+    onSuggestionsFetchRequested = ({ value }) => {
+        this.getSuggestions(value)
+            .then(data => {
+                if (data.Error) {
+                    this.setState({
+                        suggestions: []
+                    });
+                } else {
+                    this.setState({
+                        suggestions: data.result.data
+                    });
+                }
+            })
+    };
+
+    // Triggered on clear
+    onSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: []
+        });
+    };
+
+    onSuggestionSelected = () => {
+        // const finaldt = {
+        //     barcode: item.barcode,
+        //     diskon: item.diskon,
+        //     diskon2: item.diskon2,
+        //     min_trx: item.min_trx,
+        //     min_qty: item.min_qty,
+        //     open_price: item.open_price,
+        //     hrg_jual: item.hrg_jual,
+        //     bonus: item.bonus,
+        // };
+        // const cek = cekData('kd_brg',item.kd_brg,table);
+        // cek.then(res => {
+        //     if(res==undefined){
+        //             store(table, finaldt)
+        //     }else{
+        //         update(table,{
+        //                 id:res.id,
+        //                 barcode: res.barcode,
+        //                 diskon: res.diskon,
+        //                 diskon2: res.diskon2,
+        //                 min_trx: res.min_trx,
+        //                 min_qty: res.min_qty,
+        //                 open_price: res.open_price,
+        //                 hrg_jual: res.hrg_jual,
+        //                 bonus: res.bonus,
+        //         })
+        //     }
+        //     this.getData()
+        // })
+        // this.setState({
+        //     suggestions: [],
+        //     value:''
+        // });
+    }
+
+
     render(){
 
         const kategori = this.props.kategori;
         console.log(kategori);
+        const { value, suggestions } = this.state;
+        const inputProps = {
+            placeholder: "Cari Barang",
+            value,
+            onChange: this.onChange
+        };
+        const theme = {
+            container: 'autosuggest',
+            input: 'form-control',
+            suggestionsContainer: 'dropdown',
+            suggestionsList: `dropdown-menu ${suggestions.length ? 'show' : ''}`,
+            suggestion: 'dropdown-item',
+            suggestionHighlighted: 'active'
+        };
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"} size="lg">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Promo":"Update Promo"}</ModalHeader>
@@ -117,7 +226,7 @@ class FormPromo extends Component{
                     <ModalBody>
                         <div className="form-group">
                             <label>Account Name</label>
-                            <input type="text" className="form-control" name="akun" value={this.toCurrency(this.state.akun)} onChange={this.handleChange} required/>
+                            <input type="text" className="form-control" name="akun" value={this.state.akun} onChange={this.handleChange} required/>
                         </div>
                         <div className="form-group">
                             <label>Category</label>
@@ -135,6 +244,78 @@ class FormPromo extends Component{
                             <label>Product Code</label>
                             <input type="text" className="form-control" name="kd_brg" value={this.toCurrency(this.state.kd_brg)} onChange={this.handleChange} required/>
                         </div>
+                        <div className="form-group" style={{display:this.state.category==='brg'?'block':'none'}}>
+                            <label>Product Code</label>
+                            <Autosuggest
+                                suggestions={suggestions}
+                                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                                onSuggestionSelected={this.onSuggestionSelected}
+                                getSuggestionValue={this.getSuggestionValue}
+                                renderSuggestion={this.renderSuggestion}
+                                inputProps={inputProps}
+                                theme={theme}
+                                />
+                        </div>
+                        <div className="table-responsive" style={{overflowX: 'auto'}}>
+                        <table className="table table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama</th>
+                                <th>Barcode</th>
+                                <th>Harga jual</th>
+                                <th>Jenis</th>
+                                <th>Diskon</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {
+                                // this.state.databrg.map((item, index) => {
+                                //     console.log(item);
+
+                                //     subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
+                                //     // console.log('gt',grandtotal);
+                                //     return (
+                                //         <tr key={index}>
+                                //             <td style={columnStyle}>
+                                //                 <a href="about:blank" className='btn btn-danger btn-sm'
+                                //                     onClick={(e) => this.HandleRemove(e, item.id)}><i
+                                //                     className='fa fa-trash'/></a>
+                                //             </td>
+                                //             {/* <td style={columnStyle}>{item.nm_brg}</td> */}
+                                //             <td style={columnStyle}>{item.barcode}</td>
+                                //             {/* <td style={columnStyle}>{item.harga_jual}</td> */}
+                                //             {/* <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                                //                 {
+                                //                     item.tambahan.map(i => {
+                                //                         return (
+                                //                             <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                //                         )
+                                //                     })
+                                //                 }
+                                //             </select></td> */}
+                                //             {/* <td style={columnStyle}>
+                                //                 <input type='text' name='qty'
+                                //                         onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                //                         style={{width: '100%', textAlign: 'center'}}
+                                //                         onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                //                         className="form-control"
+                                //                         value={this.state.brgval[index].qty}/>
+                                //                 <div className="invalid-feedback"
+                                //                     style={parseInt(this.state.brgval[index].qty) > parseInt(item.stock) ? {display: 'block'} : {display: 'none'}}>
+                                //                     Qty Melebihi Stock.
+                                //                 </div>
+                                //             </td> */}
+                                //             <td style={columnStyle}>{parseInt(item.harga_beli) * parseFloat(item.qty)}</td>
+                                //         </tr>
+                                //     )
+                                // })
+                            }
+                            </tbody>
+                        </table>
+                    </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="form-group" style={{textAlign:"right"}}>

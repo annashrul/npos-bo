@@ -23,23 +23,29 @@ import InventoryReport from '../report/inventory/stock'
 import AdjustmentReport from '../report/inventory/adjustment'
 import ApprovalMutasi from "../inventory/approval_mutasi";
 import ApprovalMutasiJualBeli from "../inventory/mutasi_jual_beli/approval_mutasi_jual_beli";
+import BayarMutasiJualBeli from "../inventory/mutasi_jual_beli/bayar_mutasi_jual_beli";
 import Opname from "../inventory/opname";
 import ListPosting from "../inventory/opname/list_posting";
 import PoReport from '../report/inventory/po'
+import Produksi from '../inventory/produksi'
 import ReceiveReport from '../report/inventory/receive'
 import AlokasiReport from '../report/inventory/alokasi'
 import DnReport from '../report/inventory/dn'
 import OpnameReport from '../report/inventory/opname'
+import ExpedisiReport from '../report/inventory/expedisi'
 import MutationReport from '../report/inventory/mutation'
 import TransactionReport from '../report/inventory/transaction'
+import ProductionReport from '../report/inventory/production'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
+import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import Sale from '../sale/product_sale'
 import Company from "../setting/company";
-
 import ReportCash from "../report/cash";
+import ReportLabaRugi from "../report/laba_rugi";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
+import BayarPiutang from "../piutang/bayar_piutang";
 import CetakBarcode from "../cetak_barcode";
 
 const Routes = (
@@ -66,7 +72,8 @@ const Routes = (
             <PrivateRoute path="/sale" exact strict component={Sale} />
             <PrivateRoute path="/purchase_order" exact strict component={PurchaseOrder} />
             <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
-            <PrivateRoute path="/approval_mutasi_transaksi" exact strict component={ApprovalMutasiJualBeli} />
+            <PrivateRoute path="/approval_mutasi_jual_beli" exact strict component={ApprovalMutasiJualBeli} />
+            <PrivateRoute path="/bayar_mutasi_jual_beli" exact strict component={BayarMutasiJualBeli} />
             <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />
             <PrivateRoute path="/delivery_note" exact strict component={DeliveyNote} />
             <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
@@ -76,14 +83,20 @@ const Routes = (
             <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
             <PrivateRoute path="/report/dn_report" exact strict component={DnReport} />
             <PrivateRoute path="/report/opname_report" exact strict component={OpnameReport} />
+            <PrivateRoute path="/report/expedisi_report" exact strict component={ExpedisiReport} />
             <PrivateRoute path="/report/mutation_report" exact strict component={MutationReport} />
             <PrivateRoute path="/report/alokasi_trx_report" exact strict component={TransactionReport} />
+            <PrivateRoute path="/report/production_report" exact strict component={ProductionReport} />
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
+            <PrivateRoute path="/report/laba_rugi_report" exact strict component={ReportLabaRugi} />
             <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
+            <PrivateRoute path="/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/hutang/bayar" exact strict component={BayarHutang} />
+            <PrivateRoute path="/bayar_piutang" exact strict component={BayarPiutang} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
+            <PrivateRoute path="/trx_produksi" exact strict component={Produksi} />
         </Switch>
     </div>
 )

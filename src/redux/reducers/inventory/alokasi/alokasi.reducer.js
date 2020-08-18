@@ -11,6 +11,7 @@ const initialState = {
     code:"-",
     alokasi_data: [],
     report:[],
+    report_excel:[],
     report_data:[]
 };
 
@@ -27,6 +28,10 @@ export const alokasiReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 report: action.data.result,
                 report_data: action.data.result.data
+            });
+        case ALOKASI.SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result
             });
         case ALOKASI.ALOKASI_DATA:
             return Object.assign({}, state, {

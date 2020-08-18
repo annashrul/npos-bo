@@ -184,6 +184,7 @@ class FormProduct extends Component{
         })
     };
     getProps(param){
+        console.log("get props",param);
         this.setState({
             nm_harga1:param.auth.user.harga1,
             nm_harga2:param.auth.user.harga2,
@@ -206,7 +207,7 @@ class FormProduct extends Component{
                 konversi.push(barang_sku[i].konversi);
             }
             for(let x=0; x<barang_hrg.length;x++){
-                if(barang_sku.length == 3){
+                if(barang_sku.length > 1){
                     barangHrg.push(
                         [
                             {
@@ -254,10 +255,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
                                 "isCheckedPCS":true,
                                 "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                                "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin1PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
                                 "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
                                 "ppnPCS": barang_hrg[x][0].ppn,
                                 "servicePCS": barang_hrg[x][0].service
@@ -493,6 +494,7 @@ class FormProduct extends Component{
                 this.setState({barangSku: brgSku});
             }
             else{
+                console.log("abus kadie")
                 let brgSku = [];
                 for(let i=0;i<1;i++){
                     brgSku.push({"barcode":`${this.state.kd_brg}01`,"qty":"0","konversi":"0","satuan_jual":"0"})
@@ -1211,6 +1213,7 @@ class FormProduct extends Component{
         parseData["berat"]=this.state.berat;
         parseData["barang_sku"] = barangSku;
         parseData["barang_harga"] = barangHrg;
+        console.log(parseData);
         if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{
@@ -1229,7 +1232,7 @@ class FormProduct extends Component{
         return (
             <WrapperModal className="custom-map-modal" isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg">
                 <ModalHeader toggle={this.toggle}>
-                    {this.props.dataEdit===undefined?"Add Product":"Update Product"}
+                    {this.props.dataEdit===undefined?"Add Product":"Update Product"} <small>(sebelum memilih jenis barang, pastikan anda sudah membuat kode barang terlebih dahulu. tujuan ini untuk membuat barcode secara otomatis)</small>
                 </ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
@@ -1345,6 +1348,7 @@ class FormProduct extends Component{
                                                 <option value="2">Paket</option>
                                                 <option value="3">Servis</option>
                                                 <option value="0">Karton</option>
+                                                <option value="4">Bahan</option>
                                             </select>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.jenis !== "" ? {display: 'block'} : {display: 'none'}}>

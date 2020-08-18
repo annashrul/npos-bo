@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
-import {FetchStockReport} from "redux/actions/report/inventory/stock_report.action";
+import {FetchStockReport,FetchStockReportExcel} from "redux/actions/report/inventory/stock_report.action";
 import connect from "react-redux/es/connect/connect";
 import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
 import moment from "moment";
@@ -205,6 +205,7 @@ class InventoryReport extends Component{
         }
         console.log(where);
         this.props.dispatch(FetchStockReport(pageNumber,where));
+        this.props.dispatch(FetchStockReportExcel(pageNumber,where));
 
     }
 
@@ -300,7 +301,7 @@ class InventoryReport extends Component{
                                         <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"/></button>
                                         <ReactHTMLTableToExcel
                                             className="btn btn-primary btnBrg"
-                                            table="report_sale_to_excel"
+                                            table="report_stock_to_excel"
                                             filename="laporan_stock"
                                             sheet="laporan stock"
                                             buttonText="export excel">
@@ -308,12 +309,93 @@ class InventoryReport extends Component{
                                     </div>
                                 </div>
                             </div>
+                            {/*DATA EXCEL*/}
+                            <table className="table table-hover"  id="report_stock_to_excel" style={{display:"none"}}>
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" colSpan={12}>{this.state.startDate} - {this.state.startDate}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={12}>LAPORAN STOCK</th>
+                                </tr>
+
+                                <tr>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Barang</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Barcode</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Satuan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Supplier</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Sub Dept</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kelompok</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Delivery Note</th>
+                                    <th className="text-black" colSpan="4" style={columnStyle}>Stok</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" rowSpan="1" style={columnStyle}>Awal</th>
+                                    <th className="text-black" rowSpan="1" style={columnStyle}>Masuk</th>
+                                    <th className="text-black" rowSpan="1" style={columnStyle}>Keluar</th>
+                                    <th className="text-black" rowSpan="1" style={columnStyle}>Akhir</th>
+                                </tr>
+                                </thead>
+                                {
+                                    <tbody>
+                                    {
+                                        typeof this.props.stockReportExcel.data==='object'? this.props.stockReportExcel.data.length>0?
+                                            this.props.stockReportExcel.data.map((v,i)=>{
+                                                const stok_akhir = (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - parseFloat(v.stock_keluar));
+                                                total_dn_per = total_dn_per+parseInt(v.delivery_note);
+                                                total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
+                                                total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
+                                                total_last_stock_per = total_last_stock_per + stok_akhir;
+                                                total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
+                                                total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
+                                                return (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{v.kd_brg}</td>
+                                                        <td style={columnStyle}>{v.barcode}</td>
+                                                        <td style={columnStyle}>{v.satuan}</td>
+                                                        <td style={columnStyle}>{v.nm_brg}</td>
+                                                        <td style={columnStyle}>{v.supplier}</td>
+                                                        <td style={columnStyle}>{v.sub_dept}</td>
+                                                        <td style={columnStyle}>{v.nama_kel}</td>
+                                                        <td style={columnStyle}>{v.delivery_note}</td>
+                                                        <td style={columnStyle}>{v.stock_awal}</td>
+                                                        <td style={columnStyle}>{v.stock_masuk}</td>
+                                                        <td style={columnStyle}>{v.stock_keluar}</td>
+                                                        {/* <td style={columnStyle}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td> */}
+                                                        <td style={columnStyle}>{stok_akhir}</td>
+                                                    </tr>
+                                                );
+                                            }) : "No data." : "No data."
+                                    }
+                                    <tfoot>
+                                    <tr style={{fontWeight:"bold"}}>
+                                        <th colSpan="7">TOTAL PERPAGE</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_dn_per}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_last_stock_per}</th>
+                                    </tr>
+                                    <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
+                                        <th colSpan="7">TOTAL</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_dn!==undefined?total_dn:'0'}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_keluar===undefined?0:total_stock_keluar}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_akhir===undefined?0:total_stock_akhir}</th>
+                                    </tr>
+                                    </tfoot>
+                                    </tbody>
+                                }
+                            </table>
+                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">kode Barang</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Kode Barang</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Satuan</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
@@ -324,11 +406,12 @@ class InventoryReport extends Component{
                                         <th className="text-black" style={columnStyle} colSpan="4">Stok</th>
                                     </tr>
                                     <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Awal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Masuk</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Keluar</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Akhir</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Awal</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Masuk</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Keluar</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Akhir</th>
                                     </tr>
+                                    <tr></tr>
                                     </thead>
                                     {
                                         !this.props.isLoading?(
@@ -424,6 +507,7 @@ class InventoryReport extends Component{
 const mapStateToProps = (state) => {
     return {
         stockReport:state.stockReportReducer.data,
+        stockReportExcel:state.stockReportReducer.report_excel,
         total_stock:state.stockReportReducer.total_stock,
         auth:state.auth,
         isLoading: state.stockReportReducer.isLoading,
