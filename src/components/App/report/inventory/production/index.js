@@ -81,10 +81,11 @@ class ProductionReport extends Component{
         this.props.dispatch(ModalType("detailProduction"));
         this.props.dispatch(FetchProductionData(1,code))
     };
-    approve(e,code,hpp){
+    approve(e,code,hpp,qty){
         e.preventDefault();
         localStorage.setItem("code_for_approve",code);
         localStorage.setItem("hpp_for_approve",hpp);
+        localStorage.setItem("qty_for_approve",qty);
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("approveProduction"));
@@ -418,7 +419,7 @@ class ProductionReport extends Component{
                                                                             <div className="dropdown-menu">
                                                                                 {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.kd_produksi,'','')}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" style={{display:v.status===0?'block':'none'}} onClick={(e)=>this.approve(e,v.kd_produksi,v.hpp,'')}>Approve</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" style={{display:v.status===0?'block':'none'}} onClick={(e)=>this.approve(e,v.kd_produksi,v.hpp,v.qty_estimasi)}>Approve</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
