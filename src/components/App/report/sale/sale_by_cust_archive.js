@@ -23,15 +23,6 @@ import {HEADERS} from "../../../../redux/actions/_constants";
 class SaleByCustArchive extends Component{
     constructor(props){
         super(props);
-        this.state={
-            type_data:[],
-            type:"",
-            location_data:[],
-            location:"",
-            any_sale_by_cust_report:"",
-            startDate:moment(new Date()).format("yyyy-MM-DD"),
-            endDate:moment(new Date()).format("yyyy-MM-DD")
-        }
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeType = this.HandleChangeType.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
@@ -39,7 +30,26 @@ class SaleByCustArchive extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleDetail = this.handleDetail.bind(this);
-
+        this.HandleChangeSort = this.HandleChangeSort.bind(this);
+        this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.state={
+            type_data:[],
+            type:"",
+            location_data:[],
+            location:"",
+            any_sale_by_cust_report:"",
+            startDate:moment(new Date()).format("yyyy-MM-DD"),
+            endDate:moment(new Date()).format("yyyy-MM-DD"),
+            sort:"",
+            sort_data:[],
+            filter:"",
+            filter_data:[],
+            filter:"",
+            filter_data:[],
+            status:"",
+            status_data:[],
+        }
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -57,8 +67,53 @@ class SaleByCustArchive extends Component{
                 label: i.value
             });
         });
-
+        let sort = [
+            {kode:"",value: "Default"},
+            {kode:"desc",value: "DESCENDING"},
+            {kode:"asc",value: "ASCENDING"},
+        ];
+        let data_sort=[];
+        sort.map((i) => {
+            data_sort.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let filter = [
+            {kode:"",value: "Default"},
+            {kode:"kd_cust",value: "Kode Cust."},
+            {kode:"nama",value: "Nama"},
+            {kode:"qty",value: "QTY"},
+            {kode:"gross_sales",value: "Gross Sales"},
+            {kode:"diskon_item",value: "Diskon Item"},
+            {kode:"diskon_trx",value: "Diskon Trx"},
+            {kode:"tax",value: "Tax"},
+            {kode:"service",value: "Service"},
+        ];
+        let data_filter=[];
+        filter.map((i) => {
+            data_filter.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let status = [
+            {kode:"",value: "Default"},
+            {kode:"0",value: "0"},
+            {kode:"1",value: "1"},
+            {kode:"2",value: "2"},
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
         this.setState({
+            sort_data: data_sort,
+            filter_data: data_filter,
+            status_data: data_status,
             type_data: data_type,
         });
         if (nextProps.auth.user) {
@@ -111,6 +166,15 @@ class SaleByCustArchive extends Component{
                 endDate: localStorage.date_to_sale_by_cust_report
             })
         }
+        if (localStorage.sort_sale_by_cust_report !== undefined && localStorage.sort_sale_by_cust_report !== null) {
+            this.setState({sort: localStorage.sort_sale_by_cust_report})
+        }
+        if (localStorage.filter_sale_by_cust_report !== undefined && localStorage.filter_sale_by_cust_report !== null) {
+            this.setState({filter: localStorage.filter_sale_by_cust_report})
+        }
+        if (localStorage.status_sale_by_cust_report !== undefined && localStorage.status_sale_by_cust_report !== null) {
+            this.setState({status: localStorage.status_sale_by_cust_report})
+        }
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
@@ -149,6 +213,9 @@ class SaleByCustArchive extends Component{
         let tipe=localStorage.getItem("type_sale_by_cust_report");
         let lokasi=localStorage.getItem("location_sale_by_cust_report");
         let any=localStorage.getItem("any_sale_by_cust_report");
+        let sort=localStorage.sort_sale_by_cust_report;
+        let filter=localStorage.filter_sale_by_cust_report;
+        let status=localStorage.status_sale_by_cust_report;
         if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }else{
@@ -160,8 +227,16 @@ class SaleByCustArchive extends Component{
         // if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
         //     if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         // }
-        if(any !== undefined&&any!==''&&any!==null){
-            if(where!==''){where+='&'}where+=`q=${any}`
+        if(status!==undefined&&status!==null&&status!==''){
+            if(where!==''){where+='&'}where+=`status=${status}`;
+        }
+        if(filter!==undefined&&filter!==null&&filter!==''){
+            if(sort!==undefined&&sort!==null&&sort!==''){
+                if(where!==''){where+='&'}where+=`sort=${filter}|${sort}`;
+            }
+        }
+        if(any!==undefined&&any!==null&&any!==''){
+            if(where!==''){where+='&'}where+=`search=${any}`
         }
         this.props.dispatch(FetchReportSaleByCust(pageNumber===null?1:pageNumber,where));
         this.props.dispatch(FetchReportSaleByCustExcel(pageNumber===null?1:pageNumber,where));
@@ -194,6 +269,25 @@ class SaleByCustArchive extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailSaleByCustReport"));
         this.props.dispatch(FetchReportDetailSaleByCust(kode));
+    }
+
+    HandleChangeSort(sr) {
+        this.setState({
+            sort: sr.value,
+        });
+        localStorage.setItem('sort_sale_by_cust_report', sr.value);
+    }
+    HandleChangeFilter(fl) {
+        this.setState({
+            filter: fl.value,
+        });
+        localStorage.setItem('filter_sale_by_cust_report', fl.value);
+    }
+    HandleChangeStatus(st) {
+        this.setState({
+            status: st.value,
+        });
+        localStorage.setItem('status_sale_by_cust_report', st.value);
     }
 
     render(){
@@ -253,6 +347,57 @@ class SaleByCustArchive extends Component{
                                     />
                                 </div>
                             </div> */}
+                            {/* <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Status
+                                        </label>
+                                        <Select
+                                            options={this.state.status_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeStatus}
+                                            value={
+                                                this.state.status_data.find(op => {
+                                                    return op.value === this.state.status
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div> */}
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Filter
+                                        </label>
+                                        <Select
+                                            options={this.state.filter_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeFilter}
+                                            value={
+                                                this.state.filter_data.find(op => {
+                                                    return op.value === this.state.filter
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Sort
+                                        </label>
+                                        <Select
+                                            options={this.state.sort_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeSort}
+                                            value={
+                                                this.state.sort_data.find(op => {
+                                                    return op.value === this.state.sort
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
                             <div className="col-6 col-xs-6 col-md-2">
                                 <div className="form-group">
                                     <label htmlFor="">Cari</label>

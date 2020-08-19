@@ -35,6 +35,9 @@ class ReceiveReport extends Component{
         this.handleRetur        = this.handleRetur.bind(this);
         this.handleDelete        = this.handleDelete.bind(this);
         this.handleChangePage        = this.handleChangePage.bind(this);
+        this.HandleChangeSort = this.HandleChangeSort.bind(this);
+        this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
             detail          :{},
             startDate       :moment(new Date()).format("yyyy-MM-DD"),
@@ -43,7 +46,15 @@ class ReceiveReport extends Component{
             location        :"",
             type_data       :[],
             type            :"",
-            any_receive_report:''
+            any_receive_report:'',
+            sort:"",
+            sort_data:[],
+            filter:"",
+            filter_data:[],
+            filter:"",
+            filter_data:[],
+            status:"",
+            status_data:[],
         }
     }
     componentWillMount(){
@@ -77,14 +88,23 @@ class ReceiveReport extends Component{
                 endDate: localStorage.date_to_receive_report
             })
         }
+        if (localStorage.sort_receive_report !== undefined && localStorage.sort_receive_report !== null) {
+            this.setState({sort: localStorage.sort_receive_report})
+        }
+        if (localStorage.filter_receive_report !== undefined && localStorage.filter_receive_report !== null) {
+            this.setState({filter: localStorage.filter_receive_report})
+        }
+        if (localStorage.status_receive_report !== undefined && localStorage.status_receive_report !== null) {
+            this.setState({status: localStorage.status_receive_report})
+        }
         // let page=localStorage.getItem("pageNumber_receive_report");
         // this.checkingParameter(page!==undefined&&page!==null?page:1);
     }
     componentWillReceiveProps = (nextProps) => {
         let type = [
             {kode:"",value: "Semua Tipe"},
-            {kode:"0",value: "Tunai"},
-            {kode:"1",value: "Non Tunai"},
+            {kode:"Tunai",value: "Tunai"},
+            {kode:"Non Tunai",value: "Non Tunai"},
         ];
         let data_type=[];
         type.map((i) => {
@@ -93,8 +113,56 @@ class ReceiveReport extends Component{
                 label: i.value
             });
         });
-
+        let sort = [
+            {kode:"",value: "Default"},
+            {kode:"desc",value: "DESCENDING"},
+            {kode:"asc",value: "ASCENDING"},
+        ];
+        let data_sort=[];
+        sort.map((i) => {
+            data_sort.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let filter = [
+            {kode:"",value: "Default"},
+            {kode:"no_faktur_beli",value: "No. Faktur Beli"},
+            {kode:"tgl_beli",value: "Tanggal Beli"},
+            {kode:"disc",value: "Diskon"},
+            {kode:"nama_penerima",value: "Nama Penerima"},
+            {kode:"status",value: "Status"},
+            {kode:"type",value: "Tipe"},
+            {kode:"operator",value: "Operator"},
+            {kode:"lokasi",value: "Lokasi"},
+            {kode:"jumlah_kontrabon",value: "Jumlah Kontrabon"},
+            {kode:"qty_beli",value: "QTY Beli"},
+            {kode:"total_beli",value: "Total Beli"},
+        ];
+        let data_filter=[];
+        filter.map((i) => {
+            data_filter.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let status = [
+            {kode:"",value: "Default"},
+            {kode:"0",value: "0"},
+            {kode:"1",value: "1"},
+            {kode:"2",value: "2"},
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
         this.setState({
+            sort_data: data_sort,
+            filter_data: data_filter,
+            status_data: data_status,
             type_data: data_type,
         });
         if (nextProps.auth.user) {
@@ -123,6 +191,9 @@ class ReceiveReport extends Component{
         let tipe=localStorage.getItem("type_receive_report");
         let lokasi=localStorage.getItem("location_receive_report");
         let any=localStorage.getItem("any_receive_report");
+        let sort=localStorage.sort_receive_report;
+        let filter=localStorage.filter_receive_report;
+        let status=localStorage.status_receive_report;
         if(dateFrom!==null&&dateTo!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }else{
@@ -134,8 +205,16 @@ class ReceiveReport extends Component{
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
         }
-        if(any !== undefined&&any!==null&&any!==''){
-            if(where!==''){where+='&'}where+=`q=${any}`
+        if(status!==undefined&&status!==null&&status!==''){
+            if(where!==''){where+='&'}where+=`status=${status}`;
+        }
+        if(filter!==undefined&&filter!==null&&filter!==''){
+            if(sort!==undefined&&sort!==null&&sort!==''){
+                if(where!==''){where+='&'}where+=`sort=${filter}|${sort}`;
+            }
+        }
+        if(any!==undefined&&any!==null&&any!==''){
+            if(where!==''){where+='&'}where+=`search=${any}`
         }
         this.props.dispatch(FetchReport(pageNumber===null?1:pageNumber,where));
         this.props.dispatch(FetchReportExcel(where));
@@ -148,8 +227,28 @@ class ReceiveReport extends Component{
         this.setState({
             type: type.value,
         });
-        localStorage.setItem('type_sale_report', type.value);
+        localStorage.setItem('type_receive_report', type.value);
     }
+    HandleChangeSort(sr) {
+        this.setState({
+            sort: sr.value,
+        });
+        localStorage.setItem('sort_receive_report', sr.value);
+    }
+    HandleChangeFilter(fl) {
+        this.setState({
+            filter: fl.value,
+        });
+        localStorage.setItem('filter_receive_report', fl.value);
+    }
+    HandleChangeStatus(st) {
+        this.setState({
+            status: st.value,
+        });
+        localStorage.setItem('status_receive_report', st.value);
+    }
+
+
     HandleChangeLokasi(lk) {
         console.log("LOKASI",lk.value);
         this.setState({
@@ -246,7 +345,7 @@ class ReceiveReport extends Component{
                                                 showDropdowns={true}
                                                 autoUpdateInput={true}
                                             >
-                                                <input type="text" id="date" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                <input type="text" id="date" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
                                             </DateRangePicker>
                                         </div>
                                     </div>
@@ -284,6 +383,57 @@ class ReceiveReport extends Component{
                                                 })
                                             }
 
+                                        />
+                                    </div>
+                                </div>
+                                {/* <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Status
+                                        </label>
+                                        <Select
+                                            options={this.state.status_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeStatus}
+                                            value={
+                                                this.state.status_data.find(op => {
+                                                    return op.value === this.state.status
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div> */}
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Filter
+                                        </label>
+                                        <Select
+                                            options={this.state.filter_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeFilter}
+                                            value={
+                                                this.state.filter_data.find(op => {
+                                                    return op.value === this.state.filter
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Sort
+                                        </label>
+                                        <Select
+                                            options={this.state.sort_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeSort}
+                                            value={
+                                                this.state.sort_data.find(op => {
+                                                    return op.value === this.state.sort
+                                                })
+                                            }
                                         />
                                     </div>
                                 </div>
