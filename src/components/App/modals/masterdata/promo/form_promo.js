@@ -17,7 +17,6 @@ import {FetchAllLocation} from "redux/actions/masterdata/location/location.actio
 import FileBase64 from "react-file-base64";
 import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
-import Preloader from "../../../../../Preloader";
 
 class FormPromo extends Component{
     constructor(props){
