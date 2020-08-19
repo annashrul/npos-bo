@@ -292,8 +292,8 @@ class SideMenu extends Component {
         } else if(
             path==='/report_cash'|| 
             path==='/report/laba_rugi_report'|| 
-            path==='/sale_archive'|| 
-            path==='/sale_by_cust_archive'|| 
+            path==='/report/sale_archive'|| 
+            path==='/report/sale_by_cust_archive'|| 
             path==='/closing' ||
             path==='/inventory_report'||
             path==='/adjustment_report'|| 
@@ -334,8 +334,8 @@ class SideMenu extends Component {
                    isReportPembelian:true
                })
            } else if(
-               path==='/sale_archive' ||
-               path==='/sale_by_cust_archive'
+               path==='/report/sale_archive' ||
+               path==='/report/sale_by_cust_archive'
                ){
                console.log("didmount",path)
                this.setState({
@@ -481,11 +481,11 @@ class SideMenu extends Component {
                             <li className={path==='/report_cash'?"active":''}><Link to="/report_cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas</Link></li>
                             <li className={path==='/report/laba_rugi_report'?"active":''}><Link to="/report/laba_rugi_report" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Laba Rugi</Link></li>
 
-                            <li className={"treeview" + (this.state.isReportPenjualan===true || path==='/sale_archive' || path==='/sale_by_cust_archive' ?" active menu-open" : "")}>
+                            <li className={"treeview" + (this.state.isReportPenjualan===true || path==='/report/sale_archive' || path==='/report/sale_by_cust_archive' ?" active menu-open" : "")}>
                                 <a href="#" onClick={(e) => this.changeMenu(e,'report_penjualan')}><i className="fa fa-list-alt"/>Penjualan <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPenjualan===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPenjualan===true ?"block" : "none"}}>
-                                    <li className={path==='/sale_archive'?"active":''}><Link to="/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
-                                    <li className={path==='/sale_by_cust_archive'?"active":''}><Link to="/sale_by_cust_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Cust.</Link></li>
+                                    <li className={path==='/report/sale_archive'?"active":''}><Link to="/report/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
+                                    <li className={path==='/report/sale_by_cust_archive'?"active":''}><Link to="/report/sale_by_cust_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Cust.</Link></li>
                                 </ul>
                             </li>
 

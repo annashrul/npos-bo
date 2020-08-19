@@ -1,6 +1,9 @@
 import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
+import {
+    HEADERS
+} from "redux/actions/_constants"
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {toRp} from "helper";
@@ -10,6 +13,9 @@ class DetailStockReportSatuan extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.state = ({
+            data_lok:[]
+        })
     }
     toggle(e){
         e.preventDefault();
@@ -30,12 +36,27 @@ class DetailStockReportSatuan extends Component{
         this.props.dispatch(ModalType("detailStockReportTransaction"));
         this.props.dispatch(FetchStockReportDetailTransaction(1,code,'','',localStorage.getItem("locationDetailTrx")))
     };
-
+    componentDidMount(){
+        this.getLok()
+        .then(data => {
+            console.log("ttt==",data.result.data)
+            this.setState({
+                    data_lok:data.result.data
+                }
+            )
+        })
+    }
+    getLok = async () => {
+        let response = await fetch(HEADERS.URL+"lokasi?perpage=99");
+        let data = await response.json()
+        return data;
+    };
 
     render(){
         console.log("############# STATE SIITU",this.props);
         const {data} = this.props.stockReportDetailSatuan;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const lokasi = this.props.auth;
         let totPrice1=0;
         let totPrice2=0;
         let totPrice3=0;
@@ -135,7 +156,9 @@ class DetailStockReportSatuan extends Component{
                                                         <td style={columnStyle}>{/* Example split danger button */}
                                                             <a className="btn btn-sm btn-primary" href="javascript:void(0)" onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
                                                         </td>
-                                                        <td>{v.lokasi}</td>
+                                                        {this.state.data_lok.filter(cat => cat.kode===v.lokasi).map(filteredCat => (
+                                                        <td>{filteredCat.nama_toko}</td>
+                                                        ))}
                                                         <td style={{textAlign:"right"}}>{toRp(v.harga)}</td>
                                                         <td style={{textAlign:"right"}}>{toRp(v.harga2)}</td>
                                                         <td style={{textAlign:"right"}}>{toRp(v.harga3)}</td>
@@ -185,7 +208,7 @@ class DetailStockReportSatuan extends Component{
                     </ModalBody>
 
                 </WrapperModal>
-                <DetailStockReportTransaction token={this.props.token} stockReportDetailTransaction={this.props.stockReportDetailTransaction}/>
+                <DetailStockReportTransaction token={this.props.token} stockReportDetailTransaction={this.props.stockReportDetailTransaction} lok={this.state.data_lok}/>
             </div>
         );
     }
@@ -196,6 +219,7 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
+        auth:state.auth,
         stockReportDetailTransaction:state.stockReportReducer.dataDetailTransaksi,
         isLoading: state.stockReportReducer.isLoading,
     }

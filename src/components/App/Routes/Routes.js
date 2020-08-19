@@ -91,8 +91,8 @@ const Routes = (
             <PrivateRoute path="/closing" exact strict component={Closing} />
             <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
             <PrivateRoute path="/report/laba_rugi_report" exact strict component={ReportLabaRugi} />
-            <PrivateRoute path="/sale_archive" exact strict component={SaleArchive} />
-            <PrivateRoute path="/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
+            <PrivateRoute path="/report/sale_archive" exact strict component={SaleArchive} />
+            <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />
             <PrivateRoute path="/bayar_piutang" exact strict component={BayarPiutang} />
