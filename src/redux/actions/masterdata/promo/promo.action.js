@@ -16,22 +16,15 @@ export function setPromoKategori(data=[]){
 export function setPromoFailed(data=[]){
     return {type:PROMO.FAILED,data}
 }
-export const FetchPromo = (page=1,param,perpage=10)=>{
+export const FetchPromo = (page=1,where='')=>{
     return (dispatch) => {
-
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
-        let que = '';
-        if(param===null){
-            console.log(param);
-            que = `promo?page=${page}&perpage=${perpage}`;
-        }else{
-            console.log(param);
-            que = `promo?page=${page}&q=${param}&perpage=${perpage}`;
+        let url = `promo?page=${page}`;
+        if(where!==''){
+            url+=`&${where}`;
         }
-        axios.get(HEADERS.URL+`${que}`)
+
+        axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
@@ -45,19 +38,12 @@ export const FetchPromo = (page=1,param,perpage=10)=>{
 
 export const FetchPromoKategori = ()=>{
     return (dispatch) => {
-
-        // dispatch(setLoading(true));
-        // const headers={
-        //     headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        // };
-        let que = '';
-            que = `promo/category`;
+        let que = `promo/category`;
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
                 console.log(data);
                 dispatch(setPromoKategori(data));
-                // dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
         })

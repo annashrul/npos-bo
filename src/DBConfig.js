@@ -249,6 +249,37 @@ export const DBConfig = {
                 { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
             ]
         },
-
+        {
+            store: 'promo',
+            storeConfig: { keyPath: 'id', autoIncrement: true },
+            storeSchema: [
+                { name: 'barcode', keypath: 'barcode', options: { unique: false } },
+                { name: 'harga_beli', keypath: 'harga_beli', options: { unique: false } },
+                { name: 'satuan', keypath: 'satuan', options: { unique: false } },
+                { name: 'hrg_jual', keypath: 'hrg_jual', options: { unique: false } },
+                { name: 'kd_brg', keypath: 'kd_brg', options: { unique: false } },
+                { name: 'nm_brg', keypath: 'nm_brg', options: { unique: false } },
+                { name: 'kel_brg', keypath: 'kel_brg', options: { unique: false } },
+                { name: 'kategori', keypath: 'kategori', options: { unique: false } },
+                { name: 'stock_min', keypath: 'stock_min', options: { unique: false } },
+                { name: 'supplier', keypath: 'supplier', options: { unique: false } },
+                { name: 'subdept', keypath: 'subdept', options: { unique: false } },
+                { name: 'deskripsi', keypath: 'deskripsi', options: { unique: false } },
+                { name: 'jenis', keypath: 'jenis', options: { unique: false } },
+                { name: 'tgl_input', keypath: 'tgl_input', options: { unique: false } },
+                { name: 'tgl_update', keypath: 'tgl_update', options: { unique: false } },
+                { name: 'kcp', keypath: 'kcp', options: { unique: false } },
+                { name: 'poin', keypath: 'poin', options: { unique: false } },
+                { name: 'online', keypath: 'online', options: { unique: false } },
+                { name: 'fav', keypath: 'fav', options: { unique: false } },
+                { name: 'berat', keypath: 'berat', options: { unique: false } },
+                { name: 'group1', keypath: 'group1', options: { unique: false } },
+                { name: 'group2', keypath: 'group2', options: { unique: false } },
+                { name: 'stock', keypath: 'stock', options: { unique: false } },
+                { name: 'gambar', keypath: 'gambar', options: { unique: false } },
+                { name: 'qty', keypath: 'qty', options: { unique: false } },
+                { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
+            ]
+        },
     ]
 };

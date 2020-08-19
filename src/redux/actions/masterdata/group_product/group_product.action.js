@@ -13,7 +13,7 @@ export function setGroupProduct(data=[]){
 export function setGroupProductFailed(data=[]){
     return {type:GROUP_PRODUCT.FAILED,data}
 }
-export const FetchGroupProduct = (page=1,q='')=>{
+export const FetchGroupProduct = (page=1,q='',perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         const headers={
@@ -24,6 +24,9 @@ export const FetchGroupProduct = (page=1,q='')=>{
             url=`kelompokBrg?page=${page}`;
         }else{
             url=`kelompokBrg?page=${page}&q=${q}`;
+        }
+        if(perpage!==''){
+            url+=`&perpage=${perpage}`
         }
         axios.get(HEADERS.URL+url)
             .then(function(response){

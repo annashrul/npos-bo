@@ -225,8 +225,7 @@ class FormUserList extends Component{
                                     <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label">Location
-                                        <input type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
+                                    <label htmlFor="inputState" className="col-form-label">Location<input type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
                                     <Select
                                         required
                                         disabled

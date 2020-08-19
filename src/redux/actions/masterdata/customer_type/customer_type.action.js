@@ -18,7 +18,7 @@ export function setCustomerTypeFailed(data=[]){
     return {type:CUSTOMER_TYPE.FAILED,data}
 }
 
-export const FetchCustomerType = (page=1,q)=>{
+export const FetchCustomerType = (page=1,q,perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         const headers={
@@ -29,6 +29,9 @@ export const FetchCustomerType = (page=1,q)=>{
             url=`customerType?page=${page}`;
         }else{
             url=`customerType?page=${page}&q=${q}`;
+        }
+        if(perpage!==''){
+            url+=`&perpage=${perpage}`
         }
         axios.get(HEADERS.URL+url)
             .then(function(response){

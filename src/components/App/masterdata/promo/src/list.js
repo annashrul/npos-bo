@@ -1,83 +1,27 @@
 import React,{Component} from 'react';
 import {deletePromo, FetchPromo} from "redux/actions/masterdata/promo/promo.action";
 import connect from "react-redux/es/connect/connect";
-import Paginationq, {statusQ} from "helper";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import Paginationq, {statusQ} from "helper";
 import FormPromo from "components/App/modals/masterdata/promo/form_promo";
 import Swal from "sweetalert2";
 import moment from 'moment';
 class ListPromo extends Component{
     constructor(props){
         super(props);
-        this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
         this.state={
             detail:{}
         }
     }
-    handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
-        this.setState({activePage: pageNumber});
-        this.props.pagin(pageNumber);
-    }
-    handlesearch(event){
-        event.preventDefault();
-        const form = event.target;
-        const data = new FormData(form);
-        let any = data.get('any');
-        localStorage.setItem('any_promo',any);
 
-        if(any!==''||any!==undefined||any!==null){
-            this.props.dispatch(FetchPromo(1,any));
-        }else{
-            this.props.dispatch(FetchPromo(1,''));
-        }
-    }
     toggleModal(e) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formPromo"));
     }
-    handleEdit(e,id,akun,debit,kredit,edc,foto,status,nama) {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formPromo"));
-        this.setState({
-            detail:{
-                "id":id,
-                "akun":akun,
-                "charge_debit":debit,
-                "charge_kredit":kredit,
-                "edc":edc,
-                "foto":foto,
-                "status":status,
-                "nama":nama,
-            }
-        });
-    }
 
-    handleDelete(e,id){
-        console.log(id);
-        e.preventDefault();
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
-                this.props.dispatch(deletePromo(id));
-            }
-        })
-
-    }
     render(){
         const {current_page,data,from,last_page,per_page,to,total} = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
@@ -143,13 +87,13 @@ class ListPromo extends Component{
                                                                 <table className="table" style={{padding:0,border:"none"}}>
                                                                     <thead>
                                                                     <tr>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Category</th>
-                                                                        {kategori.filter(cat => cat.kode===v.category).map(filteredCat => (
-                                                                            // <li>
-                                                                            // {filteredName}
-                                                                            // </li>
-                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {filteredCat.title}</th>
-                                                                        ))}
+                                                                        <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Category sd</th>
+                                                                        {/*{kategori.filter(cat => cat.kode===v.category).map(filteredCat => (*/}
+                                                                            {/*// <li>*/}
+                                                                            {/*// {filteredName}*/}
+                                                                            {/*// </li>*/}
+                                                                            {/*<th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {filteredCat.title}</th>*/}
+                                                                        {/*))}*/}
                                                                     </tr>
                                                                     <tr>
                                                                         <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Location</th>
