@@ -20,6 +20,7 @@ class SideMenu extends Component {
             isReportPenjualan:false,
             isTrxMutasi:false,
             isProduction:false,
+            isPaid:false,
             pageMenu : '',
             dataUser:[],
             dataUser0:'',
@@ -52,7 +53,8 @@ class SideMenu extends Component {
                 isReport: true,
                 isReceive: false,
                 isSale:false,
-                isProduction:false
+                isProduction:false,
+                isPaid:false
             })
             if(this.state.isReportInventory === true){
                 this.setState({
@@ -105,7 +107,8 @@ class SideMenu extends Component {
                 isReportPembelian:false,
                 isReportInventory:false,
                 isReportPenjualan:false,
-                isProduction:false
+                isProduction:false,
+                isPaid:false
             });
 
             if(this.state.isTrxMutasi === true){
@@ -135,7 +138,8 @@ class SideMenu extends Component {
                 isReportInventory:false,
                 isReportPembelian:false,
                 isReportPenjualan:false,
-                isProduction:false
+                isProduction:false,
+                isPaid:false
             })
         }
 
@@ -212,7 +216,14 @@ class SideMenu extends Component {
         }
         if(param === 'sale'){
             this.setState({
-                isSale : !this.state.isSale, 
+                isSale : !this.state.isSale,
+                isReport : false,
+                isInventory : false
+            });
+        }
+        if(param === 'paid'){
+            this.setState({
+                isPaid : !this.state.isPaid, 
                 isReport : false,
                 isInventory : false
             });
@@ -346,6 +357,10 @@ class SideMenu extends Component {
             this.setState({
                 isProduction:true
             })
+        } else if(path==='/bayar_hutang'||path==='/bayar_piutang'){
+            this.setState({
+                isPaid:true
+            })
         }
     }
     componentWillReceiveProps = (nextProps) => {
@@ -464,6 +479,7 @@ class SideMenu extends Component {
                             <li className={path==='/retur_tanpa_nota'?"active":''}><Link to="/retur_tanpa_nota" style={{width:'fit-content'}}> <i className="fa fa-rotate-left" />Retur Tanpa Nota</Link></li>
                         </ul>
                     </li>
+
                     <li className={"treeview" + (this.state.isSale===true  || path==='/sale'?" active menu-open" : "")}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true
@@ -471,6 +487,18 @@ class SideMenu extends Component {
                             <li className={path==='/sale'?"active":''}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Penjualan Barang</Link></li>
                         </ul>
                     </li>
+
+                    {/* PEMBAYARAN SECTION START */}
+                    <li className={"treeview" + (this.state.isPaid===true  || path==='/bayar_hutang' || path==='/bayar_piutang'?" active menu-open" : "")}>
+                        <a href="#" onClick={(e) => this.changeMenu(e,'paid')}><i className="fa fa-money" /> <span>Pembayaran</span> <i className="fa fa-angle-right" /></a>
+                        <ul className={"treeview-menu animate__animated" + (this.state.isPaid===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isPaid===true
+                        ?"block" : "none"}}>
+                            <li className={path==='/bayar_hutang'?"active":''}><Link to="/bayar_hutang" style={{width:'fit-content'}}> <i className="fa fa-dollar" />Hutang</Link></li>
+                            <li className={path==='/bayar_piutang'?"active":''}><Link to="/bayar_piutang" style={{width:'fit-content'}}> <i className="fa fa-credit-card" />Piutang</Link></li>
+                        </ul>
+                    </li>
+                    {/* PEMBAYARAN SECTION END */}
+
                     <li className={"treeview" + (this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true || this.state.isReportPenjualan===true ||
                         path==='/report/cash'||
                         path==='/report/closing'
