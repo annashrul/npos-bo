@@ -75,22 +75,22 @@ const Routes = (
             <PrivateRoute path="/approval_mutasi" exact strict component={ApprovalMutasi} />
             <PrivateRoute path="/approval_mutasi_jual_beli" exact strict component={ApprovalMutasiJualBeli} />
             <PrivateRoute path="/bayar_mutasi_jual_beli" exact strict component={BayarMutasiJualBeli} />
-            <PrivateRoute path="/inventory_report" exact strict component={InventoryReport} />
+            <PrivateRoute path="/report/inventory" exact strict component={InventoryReport} />
             <PrivateRoute path="/delivery_note" exact strict component={DeliveyNote} />
             <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
-            <PrivateRoute path="/adjustment_report" exact strict component={AdjustmentReport} />
-            <PrivateRoute path="/po_report" exact strict component={PoReport} />
-            <PrivateRoute path="/receive_report" exact strict component={ReceiveReport} />
-            <PrivateRoute path="/alokasi_report" exact strict component={AlokasiReport} />
-            <PrivateRoute path="/report/dn_report" exact strict component={DnReport} />
-            <PrivateRoute path="/report/opname_report" exact strict component={OpnameReport} />
-            <PrivateRoute path="/report/expedisi_report" exact strict component={ExpedisiReport} />
-            <PrivateRoute path="/report/mutation_report" exact strict component={MutationReport} />
-            <PrivateRoute path="/report/alokasi_trx_report" exact strict component={TransactionReport} />
-            <PrivateRoute path="/report/production_report" exact strict component={ProductionReport} />
-            <PrivateRoute path="/closing" exact strict component={Closing} />
-            <PrivateRoute path="/report_cash" exact strict component={ReportCash} />
-            <PrivateRoute path="/report/laba_rugi_report" exact strict component={ReportLabaRugi} />
+            <PrivateRoute path="/report/adjustment" exact strict component={AdjustmentReport} />
+            <PrivateRoute path="/report/po" exact strict component={PoReport} />
+            <PrivateRoute path="/report/receive" exact strict component={ReceiveReport} />
+            <PrivateRoute path="/report/alokasi" exact strict component={AlokasiReport} />
+            <PrivateRoute path="/report/dn" exact strict component={DnReport} />
+            <PrivateRoute path="/report/opname" exact strict component={OpnameReport} />
+            <PrivateRoute path="/report/expedisi" exact strict component={ExpedisiReport} />
+            <PrivateRoute path="/report/mutation" exact strict component={MutationReport} />
+            <PrivateRoute path="/report/alokasi_trx" exact strict component={TransactionReport} />
+            <PrivateRoute path="/report/production" exact strict component={ProductionReport} />
+            <PrivateRoute path="/report/closing" exact strict component={Closing} />
+            <PrivateRoute path="/report/cash" exact strict component={ReportCash} />
+            <PrivateRoute path="/report/laba_rugi" exact strict component={ReportLabaRugi} />
             <PrivateRoute path="/report/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
