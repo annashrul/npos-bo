@@ -389,7 +389,8 @@ class SaleArchive extends Component{
                                     </tfoot>
                                 </table>
                                 {/*END DATA EXCEL*/}
-                                <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
+                                {/* <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}> */}
+                                <div style={{overflowX: "auto",zoom:"85%"}}>
 
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
