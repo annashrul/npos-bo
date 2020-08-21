@@ -73,9 +73,9 @@ export const createPromo = (data) => {
                 }
                 dispatch(setLoading(false));
                 dispatch(FetchPromo(1,null));
-
             })
             .catch(function (error) {
+                dispatch(setLoading(false));
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
