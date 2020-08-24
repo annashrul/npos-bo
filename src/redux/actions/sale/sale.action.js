@@ -162,9 +162,9 @@ export const FetchReportSale = (page=1,where='') => {
 
     }
 }
-export const FetchReportSaleExcel = (page=1,where='',perpage=10000) => {
+export const FetchReportSaleExcel = (where='',perpage='') => {
     return (dispatch) => {
-        let url=`report/arsip_penjualan?page=${page}&perpage=${perpage}`;
+        let url=`report/arsip_penjualan?page=1&perpage=${perpage}`;
         if(where!==''){
             url+=`&${where}`;
         }

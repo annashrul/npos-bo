@@ -1,29 +1,30 @@
 import React,{Component} from 'react'
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {FetchCashReport} from "redux/actions/masterdata/cash/cash.action";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
-import Preloader from "../../../../Preloader";
-import {rangeDate, toRp} from "../../../../helper";
+import Preloader from "Preloader";
+import {rangeDate, toRp} from "helper";
 import {FetchReportSale} from "redux/actions/sale/sale.action";
 import Swal from "sweetalert2";
 import {
     deleteReportSale,
     FetchReportDetailSale,
     FetchReportSaleExcel
-} from "../../../../redux/actions/sale/sale.action";
+} from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
-import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
+import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {HEADERS} from "../../../../redux/actions/_constants";
+import {HEADERS} from 'redux/actions/_constants'
 
 class SaleArchive extends Component{
     constructor(props){
         super(props);
         this.state={
+            where_data:"",
             type_data:[],
             type:"",
             location_data:[],
@@ -163,8 +164,11 @@ class SaleArchive extends Component{
         if(any !== undefined&&any!==''){
             if(where!==''){where+='&'}where+=`q=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchReportSale(pageNumber===null?1:pageNumber,where));
-        this.props.dispatch(FetchReportSaleExcel(pageNumber===null?1:pageNumber,where));
+        // this.props.dispatch(FetchReportSaleExcel(pageNumber===null?1:pageNumber,where));
     }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_sale_report",pageNumber);
@@ -194,6 +198,15 @@ class SaleArchive extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailSaleReport"));
         this.props.dispatch(FetchReportDetailSale(kode));
+    }
+
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formSaleExcel"));
+        this.props.dispatch(FetchReportSaleExcel(this.state.where_data,total));
     }
 
     render(){
@@ -278,13 +291,16 @@ class SaleArchive extends Component{
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"/>
                                     </button>
-                                    <ReactHTMLTableToExcel
+                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                        <i className="fa fa-print"></i> Export
+                                    </button>
+                                    {/* <ReactHTMLTableToExcel
                                         className="btn btn-primary btnBrg"
                                         table="report_sale_to_excel"
                                         filename="laporan_penjualan"
                                         sheet="barang"
                                         buttonText="export excel">
-                                    </ReactHTMLTableToExcel>
+                                    </ReactHTMLTableToExcel> */}
                                 </div>
 
                             </div>
@@ -549,6 +565,7 @@ class SaleArchive extends Component{
                     </div>
                 </div>
                 <DetailSaleReport detailSale={this.props.detailSale}/>
+                <SaleReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} totalPenjualan={this.props.totalPenjualan} totalPenjualanExcel={this.props.totalPenjualanExcel}/>
             </Layout>
         );
     }
