@@ -389,7 +389,8 @@ class SaleArchive extends Component{
                                     </tfoot>
                                 </table>
                                 {/*END DATA EXCEL*/}
-                                <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
+                                {/* <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}> */}
+                                <div style={{overflowX: "auto",zoom:"85%"}}>
 
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
@@ -498,7 +499,7 @@ class SaleArchive extends Component{
                                         }
                                         <tfoot>
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="6">TOTAL PERPAGE</td>
+                                            <td colSpan="7">TOTAL PERPAGE</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset_per)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_rp_per)}</td>
@@ -515,7 +516,7 @@ class SaleArchive extends Component{
                                             <td colSpan="4"></td>
                                         </tr>
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="6">TOTAL</td>
+                                            <td colSpan="7">TOTAL</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_item)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_rp)}</td>

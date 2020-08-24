@@ -21,6 +21,9 @@ class PoReport extends Component{
         this.handleEvent = this.handleEvent.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.HandleChangeSort = this.HandleChangeSort.bind(this);
+        this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
             master:{},
             any:"",
@@ -28,6 +31,14 @@ class PoReport extends Component{
             location_data:[],
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
+            sort:"",
+            sort_data:[],
+            filter:"",
+            filter_data:[],
+            filter:"",
+            filter_data:[],
+            status:"",
+            status_data:[],
         }
     }
     getProps(param){
@@ -51,6 +62,52 @@ class PoReport extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
+        let sort = [
+            {kode:"",value: "Default"},
+            {kode:"desc",value: "DESCENDING"},
+            {kode:"asc",value: "ASCENDING"},
+        ];
+        let data_sort=[];
+        sort.map((i) => {
+            data_sort.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let filter = [
+            {kode:"",value: "Default"},
+            {kode:"no_po",value: "No. PO"},
+            {kode:"tgl_po",value: "Tanggal PO"},
+            {kode:"tglkirim",value: "Tanggal Kirim"},
+            {kode:"nama_supplier",value: "Nama Supplier"},
+            {kode:"status",value: "Status"},
+            {kode:"kode_supplier",value: "Kode Supplier"},
+        ];
+        let data_filter=[];
+        filter.map((i) => {
+            data_filter.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let status = [
+            {kode:"",value: "Default"},
+            {kode:"0",value: "0"},
+            {kode:"1",value: "1"},
+            {kode:"2",value: "2"},
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        this.setState({
+            sort_data: data_sort,
+            filter_data: data_filter,
+            status_data: data_status,
+        });
         this.getProps(nextProps);
     }
     componentWillMount(){
@@ -75,12 +132,24 @@ class PoReport extends Component{
         if (localStorage.date_to_po_report !== undefined && localStorage.date_to_po_report !== null) {
             this.setState({endDate: localStorage.date_to_po_report})
         }
+        if (localStorage.sort_po_report !== undefined && localStorage.sort_po_report !== null) {
+            this.setState({sort: localStorage.sort_po_report})
+        }
+        if (localStorage.filter_po_report !== undefined && localStorage.filter_po_report !== null) {
+            this.setState({filter: localStorage.filter_po_report})
+        }
+        if (localStorage.status_po_report !== undefined && localStorage.status_po_report !== null) {
+            this.setState({status: localStorage.status_po_report})
+        }
     }
     handleParamter(pageNumber){
         let dateFrom=localStorage.date_from_po_report;
         let dateTo=localStorage.date_to_po_report;
         let lokasi=localStorage.location_po_report;
         let any=localStorage.any_po_report;
+        let sort=localStorage.sort_po_report;
+        let filter=localStorage.filter_po_report;
+        let status=localStorage.status_po_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&dateFrom=${dateFrom}&dateTo=${dateTo}`;
@@ -88,8 +157,16 @@ class PoReport extends Component{
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             where+=`&lokasi=${lokasi}`;
         }
+        if(status!==undefined&&status!==null&&status!==''){
+            where+=`&status=${status}`;
+        }
+        if(filter!==undefined&&filter!==null&&filter!==''){
+            if(sort!==undefined&&sort!==null&&sort!==''){
+                where+=`&sort=${filter}|${sort}`;
+            }
+        }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&q=${any}`;
+            where+=`&search=${any}`
         }
         this.props.dispatch(fetchPoReport(pageNumber,where))
         this.props.dispatch(fetchPoReportExcel(pageNumber,where))
@@ -143,6 +220,24 @@ class PoReport extends Component{
 
     }
 
+    HandleChangeSort(sr) {
+        this.setState({
+            sort: sr.value,
+        });
+        localStorage.setItem('sort_po_report', sr.value);
+    }
+    HandleChangeFilter(fl) {
+        this.setState({
+            filter: fl.value,
+        });
+        localStorage.setItem('filter_po_report', fl.value);
+    }
+    HandleChangeStatus(st) {
+        this.setState({
+            status: st.value,
+        });
+        localStorage.setItem('status_po_report', st.value);
+    }
 
 
 
@@ -167,6 +262,57 @@ class PoReport extends Component{
                                     <div className="form-group">
                                         <label htmlFor="">Lokasi</label>
                                         <Select options={this.state.location_data} onChange={this.HandleChangeLokasi} placeholder="Pilih Lokasi" value={this.state.location_data.find(op=>{return op.value===this.state.location})}/>
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Status
+                                        </label>
+                                        <Select
+                                            options={this.state.status_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeStatus}
+                                            value={
+                                                this.state.status_data.find(op => {
+                                                    return op.value === this.state.status
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Filter
+                                        </label>
+                                        <Select
+                                            options={this.state.filter_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeFilter}
+                                            value={
+                                                this.state.filter_data.find(op => {
+                                                    return op.value === this.state.filter
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Sort
+                                        </label>
+                                        <Select
+                                            options={this.state.sort_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeSort}
+                                            value={
+                                                this.state.sort_data.find(op => {
+                                                    return op.value === this.state.sort
+                                                })
+                                            }
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-2">

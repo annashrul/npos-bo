@@ -67,6 +67,7 @@ class PurchaseOrder extends Component{
         this.setTglEx=this.setTglEx.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
         this.HandleSearch = this.HandleSearch.bind(this);
+        this.HandleCommonInputChange = this.HandleCommonInputChange.bind(this);
     }
 
     componentDidMount(){
@@ -201,6 +202,22 @@ class PurchaseOrder extends Component{
             this.getData();
         })
 
+    }
+
+    HandleCommonInputChange(e,errs=true,st=0){
+        const column = e.target.name;
+        const val = e.target.value;
+        this.setState({
+            [column]: val
+        });
+        if(errs){
+            let err = Object.assign({}, this.state.error, {
+                [column]: ""
+            });
+            this.setState({
+                error: err
+            });
+        }
     }
 
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
@@ -841,7 +858,6 @@ class PurchaseOrder extends Component{
                                                         </label>
                                                         <textarea
                                                             className="form-control"
-                                                            id="exampleTextarea1"
                                                             rows={7}
                                                             defaultValue={""}
                                                             onChange={(e=>this.HandleCommonInputChange(e))}

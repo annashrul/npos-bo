@@ -19,12 +19,18 @@ class AlokasiReport extends Component{
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.HandleChangeSort = this.HandleChangeSort.bind(this);
+        this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.state={
             any:"",
             location:"",
             location_data:[],
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
+            sort:"",
+            sort_data:[],
+            filter:"",
+            filter_data:[],
         }
     }
     componentWillMount(){
@@ -43,6 +49,12 @@ class AlokasiReport extends Component{
         }
         if (localStorage.date_to_alokasi_report !== undefined && localStorage.date_to_alokasi_report !== null) {
             this.setState({endDate: localStorage.date_to_alokasi_report})
+        }
+        if (localStorage.sort_alokasi_report !== undefined && localStorage.sort_alokasi_report !== null) {
+            this.setState({sort: localStorage.sort_alokasi_report})
+        }
+        if (localStorage.filter_alokasi_report !== undefined && localStorage.filter_alokasi_report !== null) {
+            this.setState({filter: localStorage.filter_alokasi_report})
         }
     }
     handlePageChange(pageNumber){
@@ -79,6 +91,8 @@ class AlokasiReport extends Component{
         let dateTo=localStorage.date_to_alokasi_report;
         let lokasi = localStorage.location_alokasi_report;
         let any = localStorage.any_alokasi_report;
+        let sort=localStorage.sort_alokasi_report;
+        let filter=localStorage.filter_alokasi_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -86,13 +100,47 @@ class AlokasiReport extends Component{
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             where+=`&lokasi=${lokasi}`;
         }
+        if(filter!==undefined&&filter!==null&&filter!==''){
+            if(sort!==undefined&&sort!==null&&sort!==''){
+                where+=`&sort=${filter}|${sort}`;
+            }
+        }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`q=${any}`
+            where+=`&search=${any}`
         }
         this.props.dispatch(FetchAlokasi(pageNumber,where))
         this.props.dispatch(FetchAlokasiExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
+        let sort = [
+            {kode:"",value: "Default"},
+            {kode:"desc",value: "DESCENDING"},
+            {kode:"asc",value: "ASCENDING"},
+        ];
+        let data_sort=[];
+        sort.map((i) => {
+            data_sort.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let filter = [
+            {kode:"",value: "Default"},
+            {kode:"no_faktur_mutasi",value: "Faktur Mutasi"},
+            {kode:"tgl_mutasi",value: "Tanggal Mutasi"},
+            {kode:"status",value: "Status"},
+        ];
+        let data_filter=[];
+        filter.map((i) => {
+            data_filter.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        this.setState({
+            sort_data: data_sort,
+            filter_data: data_filter,
+        });
         if (nextProps.auth.user) {
             let lk = [{
                 value: '',
@@ -122,6 +170,18 @@ class AlokasiReport extends Component{
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    HandleChangeSort(sr) {
+        this.setState({
+            sort: sr.value,
+        });
+        localStorage.setItem('sort_alokasi_report', sr.value);
+    }
+    HandleChangeFilter(fl) {
+        this.setState({
+            filter: fl.value,
+        });
+        localStorage.setItem('filter_alokasi_report', fl.value);
+    }
     
 
 
@@ -166,8 +226,42 @@ class AlokasiReport extends Component{
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Filter
+                                        </label>
+                                        <Select
+                                            options={this.state.filter_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeFilter}
+                                            value={
+                                                this.state.filter_data.find(op => {
+                                                    return op.value === this.state.filter
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Sort
+                                        </label>
+                                        <Select
+                                            options={this.state.sort_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeSort}
+                                            value={
+                                                this.state.sort_data.find(op => {
+                                                    return op.value === this.state.sort
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
                                         <label>Cari</label>
-                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChane(e)}/>
+                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                     </div>
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-3">

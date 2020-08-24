@@ -31,24 +31,96 @@ class Login extends Component {
         if(this.props.auth.isAuthenticated){
             this.props.history.push('/')
         }
+        this.initFetch(false);
+
+    }
+
+    initFetch(check){
         fetch(HEADERS.URL + `site/logo`)
         .then(res => res.json())
         .then(
             (data) => {
-                console.log("respon site",data);
-                let tgl_tempo = new Date(data.result.tanggal_tempo);
+                // let tgl_tempo = new Date(data.result.tanggal_tempo);
 
-                let lastWeek = new Date(tgl_tempo.getFullYear(), tgl_tempo.getMonth(), tgl_tempo.getDate() - 7);
-                let tgl_local = moment(new Date()).format("yyyy-MM-DD");
+                // let lastWeek = new Date(tgl_tempo.getFullYear(), tgl_tempo.getMonth(), tgl_tempo.getDate() - 7);
+                // let tgl_local = moment(new Date()).format("yyyy-MM-DD");
 
-                localStorage.setItem("tanggal_tempo",moment(tgl_tempo).format("yyyy-MM-DD"));
-                localStorage.setItem("tanggal_lokal",tgl_local);
-                localStorage.setItem("tanggal_info",moment(lastWeek).format("yyyy-MM-DD"));
-                localStorage.setItem("server_price",data.result.server_price);
-                localStorage.setItem("acc_name",data.result.acc_name);
-                localStorage.setItem("acc_number",data.result.acc_number);
+                // localStorage.setItem("tanggal_tempo",moment(tgl_tempo).format("yyyy-MM-DD"));
+                // localStorage.setItem("tanggal_lokal",tgl_local);
+                // localStorage.setItem("tanggal_info",moment(lastWeek).format("yyyy-MM-DD"));
+                // localStorage.setItem("server_price",data.result.server_price);
+                // localStorage.setItem("acc_name",data.result.acc_name);
+                // localStorage.setItem("acc_number", data.result.acc_number);
+                // localStorage.setItem("days", data.result.days);
 
-
+                if (parseInt(data.result.day) <= 7) {
+                    if (check) this.checkPembayaran();
+                    else{
+                        Swal.fire({
+                            title: 'Warning!',
+                            html: `<h6>Aplikasi ${parseInt(data.result.day)===0?"telah":"mendekati"} kedaluarsa.</h6><br/>
+                                <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
+                                <b>Jumlah:</b><br/>
+                                ${data.result.server_price}<br/>
+                                <b>No. rekening:</b><br/>
+                                ${data.result.acc_number}<br/>
+                                <b>Atas nama:</b><br/>
+                                ${data.result.acc_name}<br/>`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#ff9800',
+                            cancelButtonColor: '#2196F3',
+                            confirmButtonText: 'Konfirmasi Pembayaran',
+                            cancelButtonText: 'Lain kali.'
+                        }).then((result) => {
+                            if (result.value) {
+                                // window.location.reload();
+                                if(!check){
+                                    fetch(HEADERS.URL + `site/confirm`)
+                                        .then(res => res.json())
+                                        .then(
+                                            (item) => {
+                                                if(item.status==='success'){
+                                                    let timerInterval
+                                                    Swal.fire({
+                                                        title: 'Silahkan tunggu konfirmasi dari admin!',
+                                                        html: '',
+                                                        timer: 10000,
+                                                        timerProgressBar: true,
+                                                        onBeforeOpen: () => {
+                                                            Swal.showLoading()
+                                                        },
+                                                        onClose: () => {
+                                                            clearInterval(timerInterval)
+                                                        }
+                                                    }).then((result) => {
+                                                        this.checkPembayaran();
+                                                        /* Read more about handling dismissals below */
+                                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                                            console.log('I was closed by the timer')
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        );
+                                }
+                            }
+                        })
+                    }
+                }else{
+                    if (check){
+                        Swal.fire({
+                            title: 'Pembayaran Berhasil diterima.',
+                            text: `Silahkan login untuk melanjutkan.`,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#ff9800',
+                            confirmButtonText: 'Oke',
+                        }).then((result) => {
+                            
+                        })
+                    }
+                }
                 this.setState({
                     logo: data.result.logo,
                     width:data.result.width
@@ -63,8 +135,21 @@ class Login extends Component {
                 });
             }
         )
-
     }
+
+    checkPembayaran(){
+        Swal.fire({
+            title: 'Cek pembayaran.',
+            text: `Silahkan tekan tombol cek status pembayaran untuk mengetahui status pembayaran anda.`,
+            icon: 'info',
+            showCancelButton: false,
+            confirmButtonColor: '#ff9800',
+            confirmButtonText: 'Cek Status Pembayaran.',
+        }).then((result) => {
+            this.initFetch(true);
+        })
+    }
+
     componentWillReceiveProps = (nextProps)=>{
         this.getProps(nextProps)
      }
@@ -111,7 +196,6 @@ class Login extends Component {
 
     render() {
         const {email,password, errors,disableButton} = this.state;
-        console.log(this.state);
         return (
         <div class="limiter">
             <div class="container-login100">
