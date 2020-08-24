@@ -33,7 +33,6 @@ class ReportCash extends Component{
         this.HandleChangeType = this.HandleChangeType.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
-        this.handleSwal = this.handleSwal.bind(this);
 
     }
     componentWillReceiveProps = (nextProps) => {
@@ -171,37 +170,6 @@ class ReportCash extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formCashExcel"));
         this.props.dispatch(FetchCashReportExcel(this.state.where_data,total));
-    }
-    handleSwal(e,total,perpage){
-        e.preventDefault();
-        Swal.fire({
-            title: 'Manage Export',
-            html:'<div className="row">'+
-                    '<div className="col-4">'+
-                        '<button type="button" class="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>'+
-                    '</div>'+
-                    '<div className="col-4">'+
-                        '<button type="button" class="btn btn-info btn-block" onClick={(e => this.printDocument(e))}>TO PDF</button>'+
-                    '</div>'+
-                    '<div className="col-4">'+
-                        '<ReactHTMLTableToExcel'+
-                            'className="btn btn-primary btn-block"'+
-                            'table={"laporan_kas"}'+
-                            'filename={"laporan_kas"}'+
-                            'sheet="kas"'+
-                            'buttonText="TO EXCEL">'+
-                        '</ReactHTMLTableToExcel>'+
-                    '</div>'+
-                '</div>',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#ff9800',
-            cancelButtonColor: '#2196F3',
-            confirmButtonText: 'Print Nota?',
-            cancelButtonText: 'Oke!'
-        }).then((result) => {
-            window.location.reload(false);
-        })
     }
     checkingParameter(pageNumber){
         let where='';

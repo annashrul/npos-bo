@@ -35,6 +35,28 @@ export const to_pdf = (filename,title='',header=[],body=[],footer=[])=>{
     return doc.save(filename+"report.pdf");
 
 }
+export const to_pdf_l = (filename,title='',header=[],body=[],footer=[])=>{
+    const doc = jsPDF('landscape', 'pt', 'A4');
+    const marginLeft = 10;
+    doc.setFontSize(10);
+    let content = {
+        headStyles:{backgroundColor:[0,0,0,0]},
+        footStyles:{},
+        bodyStyles:{lineWidth: 1, lineColor: [33, 33, 33], marginBottom:20},
+        theme:'grid',
+        startY: 100,
+        head: header,
+        body: body,
+        foot:footer,
+        margin: {bottom: 60, top: 40}
+    };
+    doc.fromHTML(title, marginLeft, 10, {'align':'center' });
+    // doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    addFooters(doc);
+    return doc.save(filename+"report.pdf");
+
+}
 
 export const addFooters = doc => {
     var width   = doc.internal.pageSize.getWidth();
