@@ -88,6 +88,10 @@ export const rangeDate = {
 export const toMoney = (angka) => {
     return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
+export const toPersen= (val1,val2) => {
+    let con =  (parseFloat(val1)/parseInt(val2))*100;
+    return con.toFixed(2);
+}
 
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);

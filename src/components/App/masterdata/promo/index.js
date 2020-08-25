@@ -8,18 +8,18 @@ import Paginationq, {statusQ} from "helper";
 import FormPromo from "components/App/modals/masterdata/promo/form_promo";
 import Preloader from "../../../../Preloader";
 import {HEADERS} from "../../../../redux/actions/_constants";
-import {FetchPromoDetail} from "../../../../redux/actions/masterdata/promo/promo.action";
+import {deletePromo, FetchPromoDetail} from "../../../../redux/actions/masterdata/promo/promo.action";
 import {FetchGroupProduct} from "../../../../redux/actions/masterdata/group_product/group_product.action";
 import {FetchSupplierAll} from "../../../../redux/actions/masterdata/supplier/supplier.action";
 import {FetchAllLocation} from "../../../../redux/actions/masterdata/location/location.action";
-import {FetchBrgSame} from "../../../../redux/actions/masterdata/product/product.action";
-import {FetchCustomerType} from "../../../../redux/actions/masterdata/customer_type/customer_type.action";
+import Swal from "sweetalert2";
 class Promo extends Component{
     constructor(props){
         super(props);
         this.handleAdd = this.handleAdd.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
         this.state={
             detail:{}
         }
@@ -64,10 +64,6 @@ class Promo extends Component{
         this.props.dispatch(FetchGroupProduct(1,'',100));
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchAllLocation());
-        this.props.dispatch(FetchBrgSame(1, 'barcode', '', null, null,null));
-        this.props.dispatch(FetchCustomerType(1,'',100));
-
-
     }
     handlePagin(param){
         let any = this.state.any;
@@ -76,6 +72,24 @@ class Promo extends Component{
     handleSearch(e){
         e.preventDefault();
     }
+    handleDelete(e,id){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then((result) => {
+            if (result.value) {
+               this.props.dispatch(deletePromo(id))
+            }
+        })
+
+    }
+
     render(){
         const {current_page,data,from,last_page,per_page,to,total} = this.props.promo;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
@@ -207,8 +221,7 @@ class Promo extends Component{
                     kel_barang={this.props.kel_barang}
                     supplier={this.props.supplier}
                     lokasi={this.props.lokasi}
-                    barang={this.props.barang}
-                    customerType={this.props.customerType}
+
                 />
 
             </Layout>
@@ -230,8 +243,6 @@ const mapStateToProps = (state) => {
         kel_barang:state.groupProductReducer.data,
         supplier:state.supplierReducer.dataSupllier,
         lokasi:state.locationReducer.allData,
-        barang: state.productReducer.result_brg,
-        customerType: state.customerTypeReducer.data,
     }
 }
 

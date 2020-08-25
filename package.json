@@ -9,6 +9,7 @@
     "bootstrap": "^4.5.2",
     "bootstrap-daterangepicker": "^3.1.0",
     "classnames": "^2.2.5",
+    "dom-to-image": "^2.6.0",
     "dz-daterangepicker-material": "^1.0.9",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.5.6",

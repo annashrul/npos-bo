@@ -7,7 +7,7 @@ import {stringifyFormData} from "helper";
 import {createPromo} from "redux/actions/masterdata/promo/promo.action";
 import Select from "react-select";
 import {HEADERS} from "redux/actions/_constants";
-// import {FetchBrg} from "redux/actions/masterdata/product/product.action";
+import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
 import {FetchCustomerType} from "redux/actions/masterdata/customer_type/customer_type.action";
 import {FetchBrgSame} from "redux/actions/masterdata/product/product.action";
@@ -17,6 +17,8 @@ import {FetchAllLocation} from "redux/actions/masterdata/location/location.actio
 import FileBase64 from "react-file-base64";
 import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
+import {toPersen} from "../../../../../helper";
+import {updatePromo} from "../../../../../redux/actions/masterdata/promo/promo.action";
 
 class FormPromo extends Component{
     constructor(props){
@@ -90,10 +92,10 @@ class FormPromo extends Component{
             let brg=param.barang;
             let brg1=param.barang;
             for(let i=0;i<brg.length;i++){
-                Object.assign(brg[i],{qty:0,qty2:0,checked:false,jenis:"persen"});
+                Object.assign(brg[i],{qty:0,qty2:0,checked:false,jenis:"nominal"});
             }
             for(let i=0;i<brg1.length;i++){
-                Object.assign(brg1[i],{qty_bg:0,qty2_bg:0,checked_bg:false,jenis_bg:"persen"});
+                Object.assign(brg1[i],{qty_bg:0,qty2_bg:0,checked_bg:false,jenis_bg:"nominal"});
             }
             this.setState({barang_data:brg,barang_data1:brg1});
         }
@@ -148,16 +150,13 @@ class FormPromo extends Component{
                     if(param.detail.category==='kelbrg'){
                         this.handleChangeKelBarang({value:param.detail.detail[0].kd_brg});
                     }
+                    // JIKA KATEGORI BUY GET
                     if(param.detail.category==='bg'){
                         for(let x=0;x<param.detail.detail.length;x++){
-                            // console.log("KODE BARANG",param.detail.detail[x].kd_brg);
-                            console.log("BARANG STATE",this.state.barang_data);
                             for(let i=0;i<this.state.barang_data.length;i++){
-                                // console.log("BARCODE",this.state.barang_data[i].barcode);
-
                                 if(this.state.barang_data[i].barcode === param.detail.detail[x].kd_brg){
                                     if(param.detail.detail[x].isbuy===1){
-                                        Object.assign(this.state.barang_data[i],{qty:0,qty2:0,checked:true,jenis:"persen"});
+                                        Object.assign(this.state.barang_data[i],{qty:param.detail.detail[x].min_qty,qty2:0,checked:true,jenis:"nominal"});
                                     }
 
                                 }
@@ -165,7 +164,7 @@ class FormPromo extends Component{
                             for(let i=0;i<this.state.barang_data1.length;i++){
                                 if(this.state.barang_data1[i].barcode === param.detail.detail[x].kd_brg){
                                     if(param.detail.detail[x].isbuy===0){
-                                        Object.assign(this.state.barang_data1[i],{qty_bg:0,qty2_bg:0,checked_bg:true,jenis_bg:"persen"});
+                                        Object.assign(this.state.barang_data1[i],{qty_bg:param.detail.detail[x].bonus,qty2_bg:0,checked_bg:true,jenis_bg:"persen"});
                                     }
 
                                 }
@@ -175,6 +174,38 @@ class FormPromo extends Component{
                         // console.log("PUSH BARANG DATA 1",brg);
 
 
+                    }
+
+                    //JIKA KATEGORI TEBUS MURAH
+                    if(param.detail.category==='tm'){
+                        for(let x=0;x<param.detail.detail.length;x++) {
+                            for (let i = 0; i < this.state.barang_data.length; i++) {
+                                if (this.state.barang_data[i].barcode === param.detail.detail[x].kd_brg) {
+                                    Object.assign(this.state.barang_data[i], {
+                                        qty: param.detail.detail[x].open_price,
+                                        qty2: 0,
+                                        checked: true,
+                                        jenis: "nominal"
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+                    if(param.detail.category==='brg'){
+                        for(let x=0;x<param.detail.detail.length;x++) {
+                            for (let i = 0; i < this.state.barang_data.length; i++) {
+                                if (this.state.barang_data[i].barcode === param.detail.detail[x].kd_brg) {
+                                    Object.assign(this.state.barang_data[i], {
+                                        qty: param.detail.detail[x].diskon,
+                                        qty2: param.detail.detail[x].diskon2,
+                                        checked: true,
+                                        jenis: "nominal"
+                                    });
+
+                                }
+                            }
+                        }
                     }
                     this.setState({
                         min_trx:param.detail.detail[0].min_trx
@@ -198,6 +229,7 @@ class FormPromo extends Component{
     }
     componentWillMount(){
         this.getProps(this.props);
+        this.props.dispatch(FetchBrgSame(1, 'barcode', '', null, null,null));
 
 
     }
@@ -215,6 +247,7 @@ class FormPromo extends Component{
         this.setState({error: err});
         if(column==='hanya_member'){
             if(checked){
+                this.props.dispatch(FetchCustomerType(1,'',100));
                 this.setState({hanya_member:true});
             }else{
                 this.setState({hanya_member:false});
@@ -345,8 +378,8 @@ class FormPromo extends Component{
         let parseData={};
 
         parseData['category']=this.state.category;
-        parseData['daritgl']=this.state.tgl_mulai===''?moment(new Date()).format("yyyy-MM-DD HH:mm:ss"):moment(this.state.tgl_mulai).format("yyyy-MM-DD HH:mm:ss");
-        parseData['sampaitgl']=this.state.tgl_selesai===''?moment(new Date()).format("yyyy-MM-DD HH:mm:ss"):moment(this.state.tgl_selesai).format("yyyy-MM-DD HH:mm:ss");
+        parseData['daritgl']=moment(this.state.tgl_mulai).format("yyyy-MM-DD HH:mm:ss");
+        parseData['sampaitgl']=moment(this.state.tgl_selesai).format("yyyy-MM-DD HH:mm:ss");
         parseData['lokasi']=this.state.lokasi.toString();
         parseData['gambar']=this.state.gambar==='-'?'-':this.state.gambar.base64;
         parseData['member']=this.state.hanya_member?this.state.jenis_member:0;
@@ -409,7 +442,6 @@ class FormPromo extends Component{
                 return;
             }
         }
-
         if(parseData['keterangan']===''||parseData['keterangan']===undefined){
             err = Object.assign({}, err, {keterangan:"keterangan tidak boleh kosong"});
             this.setState({error: err});
@@ -424,7 +456,15 @@ class FormPromo extends Component{
             if(this.state.category==='brg'){
                 if(v.checked === true){
                     detail.push({
-                        barcode:v.barcode, diskon:v.qty, diskon2:v.qty2, min_trx:0, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:0
+                        barcode:v.barcode,
+                        diskon:toPersen(v.qty,v.harga),
+                        diskon2:toPersen(v.qty2,v.harga),
+                        min_trx:0,
+                        min_qty:0,
+                        open_price:0,
+                        hrg_jual:v.harga,
+                        bonus:0,
+                        isbuy:0
                     })
                 }
             }
@@ -463,10 +503,19 @@ class FormPromo extends Component{
             });
         }
         parseData['detail']=detail;
-        this.props.dispatch(createPromo(parseData));
+        if(this.props.detail.length>0){
+            console.log("UPDATE")
+            this.props.dispatch(updatePromo(this.props.detail.id_promo,parseData));
+        }else{
+            console.log("CREATE")
+            this.props.dispatch(createPromo(parseData));
+        }
+
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.setState({})
+        this.setState({
+            lokasi_data:[],
+        })
         console.log("submitted",parseData);
 
 
@@ -590,24 +639,13 @@ class FormPromo extends Component{
                                         <label htmlFor="inputState" className="col-form-label">Foto</label><br/>
                                         <FileBase64 multiple={ false } className="mr-3 form-control-file" onDone={ this.getFiles.bind(this) } />
                                     </div>
-                                    <div className="form-group" style={this.state.category==='kelbrg'||this.state.category==='spr'?{display:"block"}:{display:"none"}}>
-                                        <label>Tipe Diskon</label>
-                                        <br/>
-                                        <div className="form-check form-check-inline">
-                                            <input className="form-check-input" type="radio" name="diskonPersen" checked={this.state.isCheckedDiskonPersen} value={this.state.isCheckedDiskonPersen} onChange={this.handleChange}/>
-                                            <label className="form-check-label">Persen (%)</label>
-                                        </div>
-                                        <div className="form-check form-check-inline">
-                                            <input className="form-check-input" type="radio" name="diskonNominal" checked={this.state.isCheckedDiskonNominal} value={this.state.isCheckedDiskonNominal} onChange={this.handleChange}/>
-                                            <label className="form-check-label">Nominal (rp)</label>
-                                        </div>
-                                    </div>
+
                                     <div className="form-group" style={this.state.category==='kelbrg'||this.state.category==='spr'?{display:"block"}:{display:"none"}}>
                                         <div className="row">
                                             <div className="col-md-6">
-                                                <label htmlFor="">Diskon 1 {this.state.isCheckedDiskonPersen?'Persen':'Nominal'}</label>
+                                                <label htmlFor="">Diskon 1 Persen</label>
                                                 <input className="form-control" type="number" name="diskon1" value={
-                                                    parseInt(this.state.diskon1)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1)>100?0:this.state.diskon1:this.state.diskon1)
+                                                    parseInt(this.state.diskon1)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1)>100?'':this.state.diskon1:this.state.diskon1)
                                                 } onChange={this.handleChange}/>
                                                 <small style={{fontWeight:"bold",color:"red"}}>
                                                     {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1)>100?'inputan tidak boleh lebih dari 100':'':''}
@@ -619,9 +657,9 @@ class FormPromo extends Component{
                                                 </div>
                                             </div>
                                             <div className="col-md-6">
-                                                <label htmlFor="">Diskon 2 {this.state.isCheckedDiskonPersen?'Persen':'Nominal'}</label>
+                                                <label htmlFor="">Diskon 2 Persen</label>
                                                 <input className="form-control" type="number" name="diskon2" value={
-                                                    parseInt(this.state.diskon2)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2)>100?0:this.state.diskon2:this.state.diskon2)
+                                                    parseInt(this.state.diskon2)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2)>100?'':this.state.diskon2:this.state.diskon2)
                                                 } onChange={this.handleChange}/>
                                                 <small style={{fontWeight:"bold",color:"red"}}>
                                                     {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2)>100?'inputan tidak boleh lebih dari 100':'':''}
@@ -648,7 +686,7 @@ class FormPromo extends Component{
                         <div className="col-md-8" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'?{display:"block"}:{display:"none"}}>
                             {/*TABLE BARANG KATEGORI (BARANG,TEBUS MURAH)*/}
 
-                            <div className="table-responsive" style={this.state.category==='brg'||this.state.category==='tm'? {overflowX: 'auto',height:"auto"}:{overflowX: 'auto',height:"250px"}}>
+                            <div className="table-responsive" style={this.state.category==='brg'||this.state.category==='tm'? {overflowX: 'auto',height:"auto"}:{overflowX: 'auto',height:"auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
@@ -657,7 +695,7 @@ class FormPromo extends Component{
                                         <th style={columnStyle}>Nama</th>
                                         <th style={columnStyle}>Barcode</th>
                                         <th style={columnStyle}>Harga jual</th>
-                                        {this.state.category==='tm'?<th style={columnStyle}>Harga Tebus</th>:(this.state.category==='bg'?<th style={columnStyle}>Min Beli ( Qty )</th>:<th style={columnStyle}>Jenis</th>)}
+                                        {this.state.category==='tm'?<th style={columnStyle}>Harga Tebus</th>:(this.state.category==='bg'?<th style={columnStyle}>Min Beli ( Qty )</th>:"")}
                                         {this.state.category==='tm'||this.state.category==='bg'?'':<th style={columnStyle}>Diskon 1</th>}
                                         {this.state.category==='tm'||this.state.category==='bg'?'':<th style={columnStyle}>Diskon 2</th>}
                                     </tr>
@@ -677,27 +715,27 @@ class FormPromo extends Component{
                                                     {
                                                         this.state.category==='tm' ?(
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type="number" name="qty" className="form-control" value={v.qty} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
+                                                                <input style={{textAlign:"right"}} type="text" name="qty" className="form-control" value={v.qty} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                             </td>
                                                         ):(this.state.category==='bg'?<td style={columnStyle}>
-                                                            <input style={{textAlign:"right"}} type="number" name="qty" className="form-control" value={v.qty} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
+                                                            <input style={{textAlign:"right"}} type="text" name="qty" className="form-control" value={v.qty} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                         </td>:'')
                                                     }
-                                                    {
-                                                        this.state.category==='tm'||this.state.category==='bg'?"":(
-                                                            <td style={columnStyle}>
-                                                                <select name="jenis" className="form-control" value={v.jenis} defaultValue={v.jenis} onChange={(e)=>this.handleChangeDynamic(e,i)}>
-                                                                    <option value="persen">Persen (%)</option>
-                                                                    <option value="nominal">Nominal (rp)</option>
-                                                                </select>
-                                                            </td>
-                                                        )
-                                                    }
+                                                    {/*{*/}
+                                                        {/*this.state.category==='tm'||this.state.category==='bg'?"":(*/}
+                                                            {/*<td style={columnStyle}>*/}
+                                                                {/*<select name="jenis" className="form-control" value={v.jenis} defaultValue={v.jenis} onChange={(e)=>this.handleChangeDynamic(e,i)}>*/}
+                                                                    {/*<option value="persen">Persen (%)</option>*/}
+                                                                    {/*<option value="nominal">Nominal (rp)</option>*/}
+                                                                {/*</select>*/}
+                                                            {/*</td>*/}
+                                                        {/*)*/}
+                                                    {/*}*/}
 
                                                     {
                                                         this.state.category==='tm'||this.state.category==='bg'?"":(
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type="number" name="qty" className="form-control" value={
+                                                                <input style={{textAlign:"right"}} type="text" name="qty" className="form-control" value={
                                                                     parseInt(v.qty)<0?0:(v.jenis==='persen'?parseInt(v.qty)>100?0:v.qty:v.qty)
                                                                 } onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                                 {
@@ -716,7 +754,7 @@ class FormPromo extends Component{
                                                     {
                                                         this.state.category==='tm'||this.state.category==='bg'?"":(
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type="number" name="qty2" className="form-control" value={
+                                                                <input style={{textAlign:"right"}} type="text" name="qty2" className="form-control" value={
                                                                     parseInt(v.qty2)<0?0:(v.jenis==='persen'?parseInt(v.qty2)>100?0:v.qty2:v.qty2)
                                                                 } onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                                 {
@@ -741,7 +779,7 @@ class FormPromo extends Component{
                             </div>
                             {/*TABLE BARANG KATEGORI (BUY GET)*/}
 
-                            <div className="table-responsive" style={this.state.category==='bg'? {display:"block",overflowX: 'auto',height:"250px"}:{display:"none",overflowX: 'auto',height:"auto"}}>
+                            <div className="table-responsive" style={this.state.category==='bg'? {display:"block",overflowX: 'auto',height:'auto'}:{display:"none",overflowX: 'auto',height:"auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
@@ -796,6 +834,10 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
+        barang: state.productReducer.result_brg,
+        customerType: state.customerTypeReducer.data,
+
+
 
     }
 }

@@ -167,6 +167,7 @@ class BayarPiutang extends Component{
                     data['tanggal_cair'] = moment(new Date()).format("yyyy-MM-DD");
                     data['ket'] = this.state.catatan;
                     data['userid'] = this.state.userid;
+                    data['jumlah_sudah_bayar'] = this.state.jumlah_telah_bayar;
                     this.props.dispatch(storePiutang(data));
                 }
             })
