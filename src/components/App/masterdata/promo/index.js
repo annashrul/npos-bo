@@ -6,12 +6,12 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import moment from "moment";
 import Paginationq, {statusQ} from "helper";
 import FormPromo from "components/App/modals/masterdata/promo/form_promo";
-import Preloader from "../../../../Preloader";
-import {HEADERS} from "../../../../redux/actions/_constants";
-import {deletePromo, FetchPromoDetail} from "../../../../redux/actions/masterdata/promo/promo.action";
-import {FetchGroupProduct} from "../../../../redux/actions/masterdata/group_product/group_product.action";
-import {FetchSupplierAll} from "../../../../redux/actions/masterdata/supplier/supplier.action";
-import {FetchAllLocation} from "../../../../redux/actions/masterdata/location/location.action";
+import Preloader from "Preloader";
+import {HEADERS} from "redux/actions/_constants";
+import {deletePromo, FetchPromoDetail} from "redux/actions/masterdata/promo/promo.action";
+import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
+import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
+import {FetchAllLocation} from "redux/actions/masterdata/location/location.action";
 import Swal from "sweetalert2";
 class Promo extends Component{
     constructor(props){
@@ -123,6 +123,7 @@ class Promo extends Component{
                                                 total !== '0'?
                                                     typeof data === 'object' ?
                                                         data.map((v,i)=>{
+                                                            let arrLok = v.lokasi.split(',');
                                                             return(
                                                                 <div className="col-xl-3 col-md-6 box-margin" key={i}>
                                                                     <div className="card">
@@ -162,7 +163,7 @@ class Promo extends Component{
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Lokasi</th>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.lokasi}</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {arrLok.length > 3 ? `${arrLok[0]},${arrLok[1]},${arrLok[2]} ...` : v.lokasi}</th>
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Mulai</th>
@@ -182,7 +183,7 @@ class Promo extends Component{
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Catatan</th>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan}</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan.length>20?`${v.keterangan.substring(0,20)} ...` : v.keterangan}</th>
                                                                                             </tr>
                                                                                             </thead>
                                                                                         </table>

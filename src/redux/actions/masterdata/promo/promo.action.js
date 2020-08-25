@@ -87,6 +87,7 @@ export const createPromo = (data) => {
                         type: 'success',
                         text: data.msg,
                     });
+                    window.location.reload();
                 } else {
                     Swal.fire({
                         title: 'failed',
@@ -125,6 +126,7 @@ export const updatePromo = (id,data) => {
                         type: 'success',
                         text: data.msg,
                     });
+                    window.location.reload();
                 } else {
                     Swal.fire({
                         title: 'failed',

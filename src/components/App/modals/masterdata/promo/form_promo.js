@@ -60,6 +60,7 @@ class FormPromo extends Component{
             isCheckedLokasi:false,
             isCheckedDiskonPersen:true,
             isCheckedDiskonNominal:false,
+            isArrLength:'',
             error:{
                 category:'',jenis_member:'',tgl_mulai:'', tgl_selesai:'',lokasi:'',kel_brg:'',supplier:'',
                 diskon1:'',diskon2:'',kode_buy:'',kode_get:'',min_trx:'',keterangan:'',barang1:'',barang2:''
@@ -120,6 +121,9 @@ class FormPromo extends Component{
             });
             this.setState({supplier_data:supplier});
         }
+        this.setState({
+            isArrLength:param.detail.length
+        });
         if(param.detail!==undefined){
             let str = param.detail.lokasi;
             if(str!==undefined){
@@ -130,6 +134,7 @@ class FormPromo extends Component{
                         for(let x=0;x<ar.length;x++){
                             if(param.lokasi.data[i].kode === ar[x]){
                                 loc.push({value:ar[x],label:param.lokasi.data[i].nama_toko});
+                                this.handleChangeLokasi({value:ar[x],label:param.lokasi.data[i].nama_toko})
                             }
                         }
                     }
@@ -147,8 +152,21 @@ class FormPromo extends Component{
             });
             if(param.detail.detail !== undefined){
                 if(param.detail.detail.length>0){
+                    // JIKA KATEGORI KELOMPOK BARANG
                     if(param.detail.category==='kelbrg'){
                         this.handleChangeKelBarang({value:param.detail.detail[0].kd_brg});
+                        this.setState({
+                            diskon1:param.detail.detail[0].diskon,
+                            diskon2:param.detail.detail[0].diskon2,
+                        })
+                    }
+                    // JIKA KATEGORI SUPPLIER
+                    if(param.detail.category==='spr'){
+                        this.handleChangeSupplier({value:param.detail.detail[0].kd_brg});
+                        this.setState({
+                            diskon1:param.detail.detail[0].diskon,
+                            diskon2:param.detail.detail[0].diskon2,
+                        })
                     }
                     // JIKA KATEGORI BUY GET
                     if(param.detail.category==='bg'){
@@ -320,7 +338,6 @@ class FormPromo extends Component{
         })
     }
     handleChangeLokasi(val){
-        console.log(val);
         let err = Object.assign({}, this.state.error, {
             lokasi: ""
         });
@@ -376,11 +393,15 @@ class FormPromo extends Component{
     handleSubmit(e){
         e.preventDefault();
         let parseData={};
+        let lokasi=[];
+        for(let i=0;i<this.state.selectedOption.length;i++){
+            lokasi.push(this.state.selectedOption[i].value);
+        }
 
         parseData['category']=this.state.category;
         parseData['daritgl']=moment(this.state.tgl_mulai).format("yyyy-MM-DD HH:mm:ss");
         parseData['sampaitgl']=moment(this.state.tgl_selesai).format("yyyy-MM-DD HH:mm:ss");
-        parseData['lokasi']=this.state.lokasi.toString();
+        parseData['lokasi']=this.state.isCheckedLokasi===true?this.state.lokasi.toString():lokasi.toString();
         parseData['gambar']=this.state.gambar==='-'?'-':this.state.gambar.base64;
         parseData['member']=this.state.hanya_member?this.state.jenis_member:0;
         parseData['periode']=!this.state.tanpa_periode?0:1;
@@ -478,7 +499,7 @@ class FormPromo extends Component{
         });
         if(this.state.category==='kelbrg'){
             detail.push({
-                barcode:this.state.kel_brg, diskon:this.state.diskon1, diskon2:this.state.diskon1, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
+                barcode:this.state.kel_brg, diskon:this.state.diskon1, diskon2:this.state.diskon2, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
             })
         }
         if(this.state.category==='spr'){
@@ -503,19 +524,21 @@ class FormPromo extends Component{
             });
         }
         parseData['detail']=detail;
-        if(this.props.detail.length>0){
+        if(this.state.isArrLength === undefined){
             console.log("UPDATE")
             this.props.dispatch(updatePromo(this.props.detail.id_promo,parseData));
-        }else{
+        }
+        if(this.state.isArrLength === 0){
             console.log("CREATE")
             this.props.dispatch(createPromo(parseData));
         }
 
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.setState({
-            lokasi_data:[],
-        })
+        // this.setState({
+        //     selectedOption:[],
+        //     lokasi:''
+        // })
         console.log("submitted",parseData);
 
 
@@ -532,7 +555,7 @@ class FormPromo extends Component{
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
                 <ModalHeader toggle={this.toggle}>
-                    {this.props.detail.length===0?"Add Promo":"Update Promo"}
+                    {this.props.detail.length===0?"Tambah Promo":"Ubah Promo"}
                     {
                         this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? <small style={{color:"black",fontWeight:"bold"}}> ( Ceklis Daftar Barang Apabila Akan Didaftarkan Sebagai Barang Promo )</small>:""
                     }
