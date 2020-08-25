@@ -11,6 +11,7 @@ import {FetchCheck, setCheck, setLoading} from "redux/actions/site.action";
 import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
 import Select from "react-select";
+import FileBase64 from "react-file-base64";
 
 class FormProduct extends Component{
     constructor(props){
@@ -1214,7 +1215,7 @@ class FormProduct extends Component{
         parseData["group1"]=this.state.group1;
         parseData["group2"]=this.state.group2;
         parseData["deskripsi"]=this.state.deskripsi;
-        parseData["gambar"]='-';
+        parseData['gambar']=this.state.gambar==='-'?'-':this.state.gambar.base64;
         parseData["kategori"]=this.state.jenis;
         parseData["kcp"]=this.state.kcp;
         parseData["poin"]=this.state.poin;
@@ -1339,7 +1340,11 @@ class FormProduct extends Component{
 
 
     }
-
+    getFiles(files) {
+        this.setState({
+            gambar: files
+        })
+    };
     render(){
         return (
             <WrapperModal className="custom-map-modal" isOpen={this.props.isOpen && this.props.type === "formProduct"} size="lg">
@@ -1445,8 +1450,8 @@ class FormProduct extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label>Gambar</label>
-                                            <input type="file" className="form-control" name="gambar" value={this.state.gambar} onChange={(e)=>this.handleChange(e,null)}  required/>
+                                            <label htmlFor="inputState" className="col-form-label">Gambar</label><br/>
+                                            <FileBase64 multiple={ false } className="mr-3 form-control-file" onDone={ this.getFiles.bind(this) } />
                                         </div>
                                     </div>
                                     <div className="col-md-4">
