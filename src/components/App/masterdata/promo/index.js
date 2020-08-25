@@ -8,11 +8,18 @@ import Paginationq, {statusQ} from "helper";
 import FormPromo from "components/App/modals/masterdata/promo/form_promo";
 import Preloader from "../../../../Preloader";
 import {HEADERS} from "../../../../redux/actions/_constants";
+import {FetchPromoDetail} from "../../../../redux/actions/masterdata/promo/promo.action";
+import {FetchGroupProduct} from "../../../../redux/actions/masterdata/group_product/group_product.action";
+import {FetchSupplierAll} from "../../../../redux/actions/masterdata/supplier/supplier.action";
+import {FetchAllLocation} from "../../../../redux/actions/masterdata/location/location.action";
+import {FetchBrgSame} from "../../../../redux/actions/masterdata/product/product.action";
+import {FetchCustomerType} from "../../../../redux/actions/masterdata/customer_type/customer_type.action";
 class Promo extends Component{
     constructor(props){
         super(props);
         this.handleAdd = this.handleAdd.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
         this.state={
             detail:{}
         }
@@ -42,6 +49,25 @@ class Promo extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formPromo"));
+        this.props.dispatch(FetchGroupProduct(1,'',100));
+        this.props.dispatch(FetchSupplierAll());
+        this.props.dispatch(FetchAllLocation());
+
+
+    }
+    handleEdit(e,id) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formPromo"));
+        this.props.dispatch(FetchPromoDetail(id));
+        this.props.dispatch(FetchGroupProduct(1,'',100));
+        this.props.dispatch(FetchSupplierAll());
+        this.props.dispatch(FetchAllLocation());
+        this.props.dispatch(FetchBrgSame(1, 'barcode', '', null, null,null));
+        this.props.dispatch(FetchCustomerType(1,'',100));
+
+
     }
     handlePagin(param){
         let any = this.state.any;
@@ -68,8 +94,8 @@ class Promo extends Component{
                                     </div>
                                     <div className="col-2 col-xs-2 col-md-3">
                                         <div className="form-group">
-                                            <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
-                                            <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.handleAdd(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
+                                            <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"/></button>
+                                            <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.handleAdd(e)} className="btn btn-primary"><i className="fa fa-plus"/></button>
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +110,7 @@ class Promo extends Component{
                                                     typeof data === 'object' ?
                                                         data.map((v,i)=>{
                                                             return(
-                                                                <div className="col-xl-3 col-md-6 height-card box-margin" key={i}>
+                                                                <div className="col-xl-3 col-md-6 box-margin" key={i}>
                                                                     <div className="card">
                                                                         <div className="social-widget">
                                                                             <div className={'bg-success p-3 text-center text-white font-30'}>
@@ -93,7 +119,7 @@ class Promo extends Component{
                                                                             <div className="row">
                                                                                 <div className="col-8 text-left">
                                                                                     <div className="p-2">
-                                                                                        <p style={{fontSize:"12px"}}>{v.akun}</p>
+                                                                                        <p style={{fontSize:"12px"}}>{v.id_promo}</p>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="col-4 text-center">
@@ -103,9 +129,7 @@ class Promo extends Component{
                                                                                                 <button style={{marginTop:"-7px"}} className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
                                                                                                 <div className="dropdown-menu dropdown-menu-right"
                                                                                                      aria-labelledby="dashboardDropdown50">
-                                                                                                    <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
-                                                                                                        e,v.id_promo,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama
-                                                                                                    )}><i className="ti-pencil-alt"/> Edit</a>
+                                                                                                    <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.id_promo)}><i className="ti-pencil-alt"/> Edit</a>
                                                                                                     <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</a>
                                                                                                 </div>
                                                                                             </div>
@@ -119,36 +143,31 @@ class Promo extends Component{
                                                                                         <table className="table" style={{padding:0,border:"none"}}>
                                                                                             <thead>
                                                                                             <tr>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Category sd</th>
-                                                                                                {/*{kategori.filter(cat => cat.kode===v.category).map(filteredCat => (*/}
-                                                                                                {/*// <li>*/}
-                                                                                                {/*// {filteredName}*/}
-                                                                                                {/*// </li>*/}
-                                                                                                {/*<th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {filteredCat.title}</th>*/}
-                                                                                                {/*))}*/}
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Kategori</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>{v.category}</th>
                                                                                             </tr>
                                                                                             <tr>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Location</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Lokasi</th>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.lokasi}</th>
                                                                                             </tr>
                                                                                             <tr>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Date start</th>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {moment(v.daritgl).format("yyyy-MM-DD")}</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Mulai</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.daritgl).format("yyyy-MM-DD HH:mm:ss")}</th>
                                                                                             </tr>
                                                                                             <tr>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Date end</th>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {moment(v.sampaitgl).format("yyyy-MM-DD")}</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Selesai</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.sampaitgl).format("yyyy-MM-DD HH:mm:ss")}</th>
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Member</th>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.member}</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.member==='0'?'-':v.member}</th>
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Periode</th>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode}</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==='1'?'Tanpa Periode':'-'}</th>
                                                                                             </tr>
                                                                                             <tr>
-                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Note</th>
+                                                                                                <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Catatan</th>
                                                                                                 <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan}</th>
                                                                                             </tr>
                                                                                             </thead>
@@ -182,7 +201,15 @@ class Promo extends Component{
                         </div>
                     </div>
                 </div>
-                <FormPromo detail={this.state.detail} kategori={this.props.promo_kategori}/>
+                <FormPromo
+                    detail={this.props.promo_detail}
+                    kategori={this.props.promo_kategori}
+                    kel_barang={this.props.kel_barang}
+                    supplier={this.props.supplier}
+                    lokasi={this.props.lokasi}
+                    barang={this.props.barang}
+                    customerType={this.props.customerType}
+                />
 
             </Layout>
         );
@@ -193,14 +220,18 @@ class Promo extends Component{
 
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps promo", state.promoReducer)
     return {
         authenticated: state.auth,
         promo:state.promoReducer.data,
         promo_kategori:state.promoReducer.data_kategori,
+        promo_detail:state.promoReducer.detail,
         isLoading: state.promoReducer.isLoading,
-        auth: state.auth
-
+        auth: state.auth,
+        kel_barang:state.groupProductReducer.data,
+        supplier:state.supplierReducer.dataSupllier,
+        lokasi:state.locationReducer.allData,
+        barang: state.productReducer.result_brg,
+        customerType: state.customerTypeReducer.data,
     }
 }
 

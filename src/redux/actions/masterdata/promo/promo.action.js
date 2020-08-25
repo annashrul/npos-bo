@@ -13,6 +13,9 @@ export function setPromo(data=[]){
 export function setPromoKategori(data=[]){
     return {type:PROMO.SUCCESS_KATEGORI,data}
 }
+export function setPromoDetail(data=[]){
+    return {type:PROMO.DETAIL,data}
+}
 export function setPromoFailed(data=[]){
     return {type:PROMO.FAILED,data}
 }
@@ -32,9 +35,28 @@ export const FetchPromo = (page=1,where='')=>{
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
+            dispatch(setLoading(false));
         })
     }
 }
+export const FetchPromoDetail = (id)=>{
+
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let que = `promo/${id}`;
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log("DETAIL PROMO",data);
+                dispatch(setPromoDetail(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+            dispatch(setLoading(false));
+        })
+    }
+}
+
 
 export const FetchPromoKategori = ()=>{
     return (dispatch) => {
@@ -46,6 +68,7 @@ export const FetchPromoKategori = ()=>{
                 dispatch(setPromoKategori(data));
             }).catch(function(error){
             console.log(error)
+            dispatch(setLoading(false));
         })
     }
 }
@@ -73,6 +96,7 @@ export const createPromo = (data) => {
                 }
                 dispatch(setLoading(false));
                 dispatch(FetchPromo(1,null));
+
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
