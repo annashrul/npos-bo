@@ -48,6 +48,7 @@ import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
 import BayarPiutang from "../piutang/bayar_piutang";
 import CetakBarcode from "../cetak_barcode";
+import NotFound from "../common/notfound";
 
 const Routes = (
     <div>
@@ -129,6 +130,8 @@ const Routes = (
             <PrivateRoute path="/cetak_barcode" exact strict component={CetakBarcode} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
             {/* OTHERS SECTION END */}
+            <Route component={NotFound}/>
+
         </Switch>
     </div>
 )
