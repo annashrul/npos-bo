@@ -6,7 +6,6 @@ import './login.css'
 import {loginUser} from 'redux/actions/authActions';
 import Swal from 'sweetalert2'
 import {HEADERS} from 'redux/actions/_constants'
-import moment from "moment";
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -53,12 +52,12 @@ class Login extends Component {
                 // localStorage.setItem("acc_number", data.result.acc_number);
                 // localStorage.setItem("days", data.result.days);
 
-                if (parseInt(data.result.day) <= 7) {
+                if (parseInt(data.result.day,10) <= 7) {
                     if (check) this.checkPembayaran();
                     else{
                         Swal.fire({
                             title: 'Warning!',
-                            html: `<h6>Aplikasi ${parseInt(data.result.day)===0?"telah":"mendekati"} kedaluarsa.</h6><br/>
+                            html: `<h6>Aplikasi ${parseInt(data.result.day,10)===0?"telah":"mendekati"} kedaluarsa.</h6><br/>
                                 <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
                                 <b>Jumlah:</b><br/>
                                 ${data.result.server_price}<br/>

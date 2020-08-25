@@ -3,7 +3,6 @@ import axios from 'axios';
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
-import Preloader from 'Preloader'
 import connect from "react-redux/es/connect/connect";
 import moment from 'moment';
 import AsyncSelect from 'react-select/async';
@@ -43,16 +42,10 @@ const filterColors = (inputValue) => {
                   label: i.no_faktur_beli
                 });
               })
-              console.log("OPSYEN", options);
-              
-              // this.setState({
-              //   data_nota: nota
-              // })np
               return options;
               
           })
           .catch(function (error) {
-              // handle error
               console.log(error);
               return [];
           })

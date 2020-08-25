@@ -16,8 +16,6 @@ class DetailUserList extends Component{
     }
     componentWillMount(){
         if(this.props.userListDetail!==undefined && this.props.userListDetail!==[]){
-            console.log("ComponentDidMount LOKASI MASTEER",this.props.lokasi);
-            console.log("ComponentDidMount LOKASI USER",this.props.userListDetail.lokasi);
             let lokasiMaster = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
             let lokasiUser = typeof this.props.userListDetail.lokasi === 'object' ? this.props.userListDetail.lokasi : [];
             let lokasi = '';
@@ -51,7 +49,6 @@ class DetailUserList extends Component{
 
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailUserList"} size="lg">

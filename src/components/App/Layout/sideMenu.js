@@ -424,20 +424,7 @@ class SideMenu extends Component {
                             <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="fa fa-ticket" />Promo </Link></li>
                         </ul>
                     </li>
-
-                    <li className={"treeview" +(this.state.isProduction===true
-                        || path==='/trx_produksi'
-                        || path==='/approval_produksi'
-                        ?" active menu-open" : ""
-                        )
-                    }>
-                        <a href="#" onClick={(e) => this.changeMenu(e,'production')}><i className="fa fa-product-hunt" /> <span>Produksi</span> <i className="fa fa-angle-right" /></a>
-                        <ul className={"treeview-menu animate__animated" + (this.state.isProduction===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isProduction===true
-                        ?"block" : "none"}}>
-                            <li className={path==='/trx_produksi'?"active":''}><Link to="/trx_produksi" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Transaksi</Link></li>
-                            {/* <li className={path==='/approval_produksi'?"active":''} ><Link to="/approval_produksi" style={{width:'fit-content'}}> <i className="fa fa-check" />Approval</Link></li> */}
-                        </ul>
-                    </li>
+                    <li  className={path==='/trx_produksi'?"active":''}><Link to="/trx_produksi"> <i className="fa fa-product-hunt" /><span> Produksi</span></Link></li>
 
                     <li className={"treeview" +
                         (this.state.isInventory===true || this.state.isTrxMutasi ||
