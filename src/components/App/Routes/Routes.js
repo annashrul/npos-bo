@@ -52,8 +52,8 @@ import NotFound from "../common/notfound";
 
 const Routes = (
     <div>
-        <Route path="/login" exact strict component={Login} />
         <Switch>
+            <Route path="/login" exact strict component={Login} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}

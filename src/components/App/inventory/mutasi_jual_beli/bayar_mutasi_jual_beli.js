@@ -6,7 +6,6 @@ import {
     FetchCodeBayarMutasiJualBeli,
     FetchDataBayarMutasiJualBeli, storeMutasiJualBeli
 } from "../../../../redux/actions/inventory/mutasi_jual_beli.action";
-import DatePicker from "react-datepicker";
 import Preloader from "../../../../Preloader";
 import {toRp} from "../../../../helper";
 import moment from "moment";
@@ -158,7 +157,7 @@ class BayarMutasiJUalBeli extends Component{
     handleBlur(e){
         e.preventDefault();
         let err = this.state.error;
-        if(parseInt(this.state.jumlah_bayar) > parseInt(this.state.total_hutang)){
+        if(parseInt(this.state.jumlah_bayar,10) > parseInt(this.state.total_hutang,10)){
             err = Object.assign({}, err, {jumlah_bayar:"jumlah bayar melebihi hutang"});
         }
         this.setState({
@@ -173,11 +172,6 @@ class BayarMutasiJUalBeli extends Component{
     handleSave(e,param){
         e.preventDefault();
         if(param==='simpan'){
-            // location:"",
-            // jenis_trx:"",
-            // no_faktur_mutasi:"",
-            // total_hutang:0,
-            // jumlah_bayar:0,
             let err = this.state.error;
             if(this.state.no_faktur_mutasi===''){
                 err = Object.assign({}, err, {no_faktur_mutasi:"no faktur mutasi tidak boleh kosong"});
@@ -341,8 +335,8 @@ class BayarMutasiJUalBeli extends Component{
                                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                                 <td style={columnStyle}>{v.barcode}</td>
                                                                 <td style={columnStyle}>{v.nm_brg}</td>
-                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli))}</td>
-                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
+                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10))}</td>
+                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
                                                             </tr>
                                                         );
                                                     }) : "No data." : "Noda Data."

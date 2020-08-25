@@ -2,11 +2,9 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader, ModalFooter} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {toRp,getMargin} from "helper";
-import Paginationq from "helper";
+import {ModalToggle} from "redux/actions/modal.action";
+import {toRp} from "helper";
 import moment from "moment";
-import {FetchReportDetail} from "redux/actions/purchase/receive/receive.action";
 import {storeReturTanpaNota} from "../../../../../../redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 class FormReturReceive extends Component{
     constructor(props){
@@ -25,7 +23,6 @@ class FormReturReceive extends Component{
 
     }
     componentWillReceiveProps(nextprops){
-        console.log("component will receive props",nextprops)
         if(nextprops.dataRetur!==undefined&&nextprops.dataRetur!==[]){
             let dataRetur=[];
             typeof nextprops.dataRetur.detail === 'object'? nextprops.dataRetur.detail.map((v,i)=>{
@@ -60,7 +57,6 @@ class FormReturReceive extends Component{
     HandleChangeInputValue(e,i) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let data_retur = [...this.state.data_retur];
         data_retur[i] = {...data_retur[i], [column]: val};
         this.setState({ data_retur });
@@ -103,17 +99,13 @@ class FormReturReceive extends Component{
                data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
                data['detail'] = detail;
                this.props.dispatch(storeReturTanpaNota(data));
-               console.log("SUBMITTED",data);
            }
 
         });
 
     }
     render(){
-        // const {total,last_page,per_page,current_page,from,to,data} = this.props.receiveReportDetail;
-        // let que=`detail_receive_report`;
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};
-        console.log("STATE DATA RETUR",this.state.data_retur);
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formReturReceive"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
                 <ModalHeader toggle={this.toggle}>{"Retur Pembelian"}</ModalHeader>
@@ -170,21 +162,21 @@ class FormReturReceive extends Component{
                                             <td style={columnStyle}>0</td>
                                             <td style={columnStyle}>{v.qty}</td>
                                             <td style={columnStyle}>0</td>
-                                            <td style={columnStyle}>{toRp(parseInt(v.qty)*parseInt(v.harga_beli))}</td>
+                                            <td style={columnStyle}>{toRp(parseFloat(v.qty)*parseInt(v.harga_beli,10))}</td>
                                             <td style={columnStyle}>
                                                 <input type="number" name="qty_retur" className="form-control" value={v.qty_retur}  onChange={(e)=>this.HandleChangeInputValue(e,i)}/>
                                                 {
-                                                    parseInt(v.qty_retur) > parseInt(v.stock) ? (<small style={{fontWeight:"bold",color:"red"}}>stock tidak tersedia</small>) : ""
+                                                    parseFloat(v.qty_retur,10) > parseFloat(v.stock) ? (<small style={{fontWeight:"bold",color:"red"}}>stock tidak tersedia</small>) : ""
                                                 }
                                                 {
-                                                    parseInt(v.qty_retur) > parseInt(v.qty) ? (<small style={{fontWeight:"bold",color:"red"}}>stock melebihi pembelian</small>) : ""
+                                                    parseFloat(v.qty_retur) > parseFloat(v.qty) ? (<small style={{fontWeight:"bold",color:"red"}}>stock melebihi pembelian</small>) : ""
                                                 }
                                                 {
-                                                    parseInt(v.qty_retur) < 0 ? (<small style={{fontWeight:"bold",color:"red"}}>qty harus lebih dari 0</small>) : ""
+                                                    parseFloat(v.qty_retur) < 0 ? (<small style={{fontWeight:"bold",color:"red"}}>qty harus lebih dari 0</small>) : ""
                                                 }
                                             </td>
                                             <td style={columnStyle}>
-                                                <input readOnly={true} type="text" className="form-control" value={toRp(parseInt(v.qty_retur)*parseInt(v.harga_beli))}/>
+                                                <input readOnly={true} type="text" className="form-control" value={toRp(parseFloat(v.qty_retur)*parseFloat(v.harga_beli))}/>
                                             </td>
                                         </tr>
                                     );
