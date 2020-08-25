@@ -10,11 +10,15 @@ import Preloader from "../../../../Preloader";
 import {rangeDate, toRp} from "../../../../helper";
 import {FetchCashReportExcel} from "../../../../redux/actions/masterdata/cash/cash.action";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import CashReportExcel from 'components/App/modals/report/cash/form_cash_excel'
+import Swal from 'sweetalert2'
 
 class ReportCash extends Component{
     constructor(props){
         super(props);
         this.state={
+            where_data:"",
             type_data:[],
             type:"",
             location_data:[],
@@ -159,6 +163,14 @@ class ReportCash extends Component{
             this.checkingParameter(1);
         }
     }
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formCashExcel"));
+        this.props.dispatch(FetchCashReportExcel(this.state.where_data,total));
+    }
     checkingParameter(pageNumber){
         let where='';
         let dateFrom=localStorage.getItem("date_from_cash_report");
@@ -179,8 +191,12 @@ class ReportCash extends Component{
             if(where!==''){where+='&'}where+=`kassa=${kassa}`
         }
 
+        this.setState({
+            where_data:where
+        })
+
         this.props.dispatch(FetchCashReport(pageNumber,where));
-        this.props.dispatch(FetchCashReportExcel(where));
+        // this.props.dispatch(FetchCashReportExcel(where));
     }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_cash_report",pageNumber);
@@ -271,13 +287,16 @@ class ReportCash extends Component{
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"></i>
                                     </button>
-                                    <ReactHTMLTableToExcel
+                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                        <i className="fa fa-print"></i> Export
+                                    </button>
+                                    {/* <ReactHTMLTableToExcel
                                         className="btn btn-primary btnBrg"
                                         table={`laporan_kas`}
                                         filename={`laporan_kas`}
                                         sheet="kas"
                                         buttonText="export excel">
-                                    </ReactHTMLTableToExcel>
+                                    </ReactHTMLTableToExcel> */}
                                 </div>
 
                             </div>
@@ -396,6 +415,7 @@ class ReportCash extends Component{
                                         total={parseInt(total)}
                                         callback={this.handlePageChange.bind(this)}
                                     />
+                                    <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />
                                 </div>
                             </div>
                         </div>

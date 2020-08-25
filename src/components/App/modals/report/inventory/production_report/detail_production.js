@@ -21,7 +21,11 @@ class DetailProduction extends Component{
     render(){
         console.log("############# STATE SIITU",this.props);
         const {data} = this.props.productionDetail;
+        console.log("length",this.props.productionDetail);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        let t_harga_beli = 0;
+        let r_harga_beli = 0;
+        let l_harga_beli = 0;
         return (
             <div>
                 <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduction"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
@@ -45,6 +49,7 @@ class DetailProduction extends Component{
                                     (
                                         typeof data === 'object' ? data.length > 0 ?
                                             data.map((v,i)=>{
+                                                t_harga_beli +=parseFloat(v.harga_beli);
                                                 return (
                                                     <tr key={i}>
                                                         <td style={{textAlign:"right"}}>{v.kd_produksi}</td>
@@ -59,7 +64,16 @@ class DetailProduction extends Component{
                                             }) : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
                                 }
                                 </tbody>
-                                
+                                <tfoot>
+                                    <tr>
+                                        <td colSpan="6">Total</td>
+                                        <td style={{textAlign:"right"}}>{t_harga_beli}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="6">Rata - rata</td>
+                                        <td style={{textAlign:"right"}}>{parseInt(t_harga_beli)/parseInt(typeof data === 'object' ? data.length > 0 ? data.length : 0 : 0)}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </ModalBody>

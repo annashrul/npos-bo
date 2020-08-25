@@ -20,6 +20,7 @@ class DetailStockReportTransaction extends Component{
 
     render(){
         const {data} = this.props.stockReportDetailTransaction;
+        const lok = this.props.lok;
         let totStockIn=0;
         let totStockOut=0;
         let totQty=0;
@@ -32,7 +33,9 @@ class DetailStockReportTransaction extends Component{
                         <tbody>
                         <tr>
                             <td className="text-black">Location</td>
-                            <td className="text-black">: {localStorage.getItem("locationDetailTrx")}</td>
+                            <td className="text-black">: {lok.filter(cat => cat.kode===localStorage.getItem("locationDetailTrx")).map(filteredCat => (
+                                                        (filteredCat.nama_toko)
+                                                        ))}</td>
                         </tr>
                         <tr>
                             <td className="text-black">Code</td>
