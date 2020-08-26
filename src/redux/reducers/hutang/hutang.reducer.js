@@ -6,11 +6,27 @@ const initialState = {
     status:"",
     msg:"",
     data:[],
+    data_report:[],
+    report_excel:[],
     get_code:'-'
 };
 
 export const hutangReducer = (state=initialState,action) => {
     switch (action.type) {
+        case HUTANG.SUCCESS_REPORT:
+            console.log(action.data.result);
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                data_report:action.data.result
+            });
+        case HUTANG.SUCCESS_EXCEL:
+            console.log(action.data.result);
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                report_excel:action.data.result
+            });
         case HUTANG.SUCCESS_CODE:
             return Object.assign({}, state,{
                 get_code: action.data.result
