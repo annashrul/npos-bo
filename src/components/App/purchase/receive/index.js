@@ -1204,7 +1204,7 @@ class Receive extends Component{
                                 </form>
                             </div>
                             <div className="card-body">
-                                <div className="table-responsive" style={{overflowX:'auto'}}>
+                                <div style={{overflowX:'auto'}}>
                                     <table className="table table-hover table-bordered">
                                         <thead>
                                         <tr>

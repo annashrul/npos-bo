@@ -35,7 +35,6 @@ class TrxAdjustment extends Component{
             searchby:"",
             search:"",
             userid:0,
-
             error:{
                 location:"",
                 catatan:""
@@ -88,7 +87,6 @@ class TrxAdjustment extends Component{
     componentWillReceiveProps = (nextProps) => {
        this.getProps(nextProps);
     }
-
     componentWillMount(){
        this.getProps(this.props);
     }
@@ -564,6 +562,7 @@ class TrxAdjustment extends Component{
                                             </div>
                                         </div>
                                     </Scrollbars>
+
                                 </div>
                             </div>
                         </div>

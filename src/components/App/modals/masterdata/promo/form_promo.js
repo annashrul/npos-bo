@@ -7,18 +7,16 @@ import {stringifyFormData} from "helper";
 import {createPromo} from "redux/actions/masterdata/promo/promo.action";
 import Select from "react-select";
 import {HEADERS} from "redux/actions/_constants";
-import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
 import {FetchCustomerType} from "redux/actions/masterdata/customer_type/customer_type.action";
-import {FetchBrgSame} from "redux/actions/masterdata/product/product.action";
 import {toRp} from "helper";
 import moment from "moment";
 import {FetchAllLocation} from "redux/actions/masterdata/location/location.action";
 import FileBase64 from "react-file-base64";
 import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
-import {toPersen} from "../../../../../helper";
-import {updatePromo} from "../../../../../redux/actions/masterdata/promo/promo.action";
+import Paginationq,{toPersen} from "helper";
+import {FetchBrg2,FetchBrg1, setPromoDetail, updatePromo} from "redux/actions/masterdata/promo/promo.action";
 
 class FormPromo extends Component{
     constructor(props){
@@ -32,43 +30,63 @@ class FormPromo extends Component{
         this.handleChangeSupplier = this.handleChangeSupplier.bind(this);
         this.handleChangeDynamic = this.handleChangeDynamic.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSearch1 = this.handleSearch1.bind(this);
+        this.handleSearch2 = this.handleSearch2.bind(this);
         this.state = {
-            barang_data:[],
-            barang_data1:[],
-            category: '',
-            category_data:[],
-            jenis_member: '',
-            jenis_member_data:[],
-            kel_brg: '',
-            kel_brg_data:[],
-            supplier: '',
-            supplier_data:[],
-            lokasi:"",
-            lokasi_data:[],
-            selectedOption:[],
-            hanya_member:false,
-            tanpa_periode:false,
-            tgl_mulai:moment(new Date()).format('YYYY-MM-DDTHH:mm'),
-            tgl_selesai:moment(new Date()).format('YYYY-MM-DDTHH:mm'),
-            keterangan:'',
-            min_trx:'',
-            gambar:'-',
-            diskon1:'',
-            diskon2:'',
-            kode_buy:'',
-            kode_get:'',
-            isCheckedLokasi:false,
-            isCheckedDiskonPersen:true,
-            isCheckedDiskonNominal:false,
-            isArrLength:'',
+            barang_data             : [],
+            barang_data1            : [],
+            category                : '',
+            category_data           : [],
+            jenis_member            : '',
+            jenis_member_data       : [],
+            kel_brg                 : '',
+            kel_brg_data            : [],
+            supplier                : '',
+            supplier_data           : [],
+            lokasi                  : "",
+            lokasi_data             : [],
+            selectedOption          : [],
+            hanya_member            : false,
+            tanpa_periode           : false,
+            tgl_mulai               : moment(new Date()).format('YYYY-MM-DDTHH:mm'),
+            tgl_selesai             : moment(new Date()).format('YYYY-MM-DDTHH:mm'),
+            keterangan              : '',
+            min_trx                 : '',
+            gambar                  : '-',
+            diskon1                 : '',
+            diskon2                 : '',
+            kode_buy                : '',
+            kode_get                : '',
+            isCheckedLokasi         : false,
+            isCheckedDiskonPersen   : true,
+            isCheckedDiskonNominal  : false,
+            isArrLength             : 0,
+            any_1                   : "",
+            any_2                   : "",
             error:{
-                category:'',jenis_member:'',tgl_mulai:'', tgl_selesai:'',lokasi:'',kel_brg:'',supplier:'',
-                diskon1:'',diskon2:'',kode_buy:'',kode_get:'',min_trx:'',keterangan:'',barang1:'',barang2:''
+                category        : '',
+                jenis_member    : '',
+                tgl_mulai       : '',
+                tgl_selesai     : '',
+                lokasi          : '',
+                kel_brg         : '',
+                supplier        : '',
+                diskon1         : '',
+                diskon2         : '',
+                kode_buy        : '',
+                kode_get        : '',
+                min_trx         : '',
+                keterangan      : '',
+                barang1         : '',
+                barang2         : '',
+                any_1           : '',
+                any_2           : '',
             }
         };
     }
     getProps(param){
-        console.log('get props',param)
+        this.setState({isArrLength:0});
+        console.log("get props",param);
         if(param.customerType.data!==undefined){
             let cust=[];
             param.customerType.data.map((v,i)=>{
@@ -89,18 +107,20 @@ class FormPromo extends Component{
             });
             this.setState({category_data:kategori});
         }
-        if(param.barang!==undefined){
-            let brg=param.barang;
-            let brg1=param.barang;
+        if(param.barang1.data!==undefined){
+            let brg=param.barang1.data;
             for(let i=0;i<brg.length;i++){
                 Object.assign(brg[i],{qty:0,qty2:0,checked:false,jenis:"nominal"});
             }
+            this.setState({barang_data:brg});
+        }
+        if(param.barang2.data!==undefined){
+            let brg1=param.barang2.data;
             for(let i=0;i<brg1.length;i++){
                 Object.assign(brg1[i],{qty_bg:0,qty2_bg:0,checked_bg:false,jenis_bg:"nominal"});
             }
-            this.setState({barang_data:brg,barang_data1:brg1});
+            this.setState({barang_data1:brg1});
         }
-
         if(param.kel_barang.data!==undefined){
             let kel_brg=[];
             param.kel_barang.data.map((v,i)=>{
@@ -121,10 +141,14 @@ class FormPromo extends Component{
             });
             this.setState({supplier_data:supplier});
         }
-        this.setState({
-            isArrLength:param.detail.length
-        });
         if(param.detail!==undefined){
+            this.setState({
+                isArrLength:param.detail.length,
+                category:param.detail.category,
+                keterangan:param.detail.keterangan,
+                tgl_mulai:moment(param.detail.daritgl).format('YYYY-MM-DDTHH:mm'),
+                tgl_selesai:moment(param.detail.sampaitgl).format('YYYY-MM-DDTHH:mm'),
+            });
             let str = param.detail.lokasi;
             if(str!==undefined){
                 let ar = str.split(',');
@@ -144,12 +168,7 @@ class FormPromo extends Component{
                 })
             }
 
-            this.setState({
-                category:param.detail.category,
-                keterangan:param.detail.keterangan,
-                tgl_mulai:moment(param.detail.daritgl).format('YYYY-MM-DDTHH:mm'),
-                tgl_selesai:moment(param.detail.sampaitgl).format('YYYY-MM-DDTHH:mm'),
-            });
+
             if(param.detail.detail !== undefined){
                 if(param.detail.detail.length>0){
                     // JIKA KATEGORI KELOMPOK BARANG
@@ -236,24 +255,22 @@ class FormPromo extends Component{
                 this.setState({
                     tanpa_periode:true
                 })
-            }else{
+            }
+            else{
                 this.setState({
                     tanpa_periode:false
                 })
             }
 
         }
-
     }
     componentWillMount(){
         this.getProps(this.props);
-        this.props.dispatch(FetchBrgSame(1, 'barcode', '', null, null,null));
-
-
+        this.props.dispatch(FetchBrg1(1,5));
+        this.props.dispatch(FetchBrg2(1,5));
     }
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
-
     }
 
     handleChange = (event) => {
@@ -360,9 +377,7 @@ class FormPromo extends Component{
     }
     toggle = (e) => {
         e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.setState({})
+        this.handleClearState();
     };
     handleChangeDynamic(e,i){
         let column = e.target.name;
@@ -390,6 +405,62 @@ class FormPromo extends Component{
             gambar: files
         })
     };
+    handleClearState(){
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.setState({
+            barang_data             : [],
+            barang_data1            : [],
+            category                : '',
+            category_data           : [],
+            jenis_member            : '',
+            jenis_member_data       : [],
+            kel_brg                 : '',
+            kel_brg_data            : [],
+            supplier                : '',
+            supplier_data           : [],
+            lokasi                  : "",
+            lokasi_data             : [],
+            selectedOption          : [],
+            hanya_member            : false,
+            tanpa_periode           : false,
+            tgl_mulai               : moment(new Date()).format('YYYY-MM-DDTHH:mm'),
+            tgl_selesai             : moment(new Date()).format('YYYY-MM-DDTHH:mm'),
+            keterangan              : '',
+            min_trx                 : '',
+            gambar                  : '-',
+            diskon1                 : '',
+            diskon2                 : '',
+            kode_buy                : '',
+            kode_get                : '',
+            isCheckedLokasi         : false,
+            isCheckedDiskonPersen   : true,
+            isCheckedDiskonNominal  : false,
+            isArrLength             : 0,
+            any_1                   : "",
+            any_2                   : "",
+            error:{
+                category        : '',
+                jenis_member    : '',
+                tgl_mulai       : '',
+                tgl_selesai     : '',
+                lokasi          : '',
+                kel_brg         : '',
+                supplier        : '',
+                diskon1         : '',
+                diskon2         : '',
+                kode_buy        : '',
+                kode_get        : '',
+                min_trx         : '',
+                keterangan      : '',
+                barang1         : '',
+                barang2         : '',
+                any_1           : '',
+                any_2           : '',
+            }
+        });
+        this.props.dispatch(setPromoDetail([]))
+    }
     handleSubmit(e){
         e.preventDefault();
         let parseData={};
@@ -533,20 +604,35 @@ class FormPromo extends Component{
             this.props.dispatch(createPromo(parseData));
         }
 
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        // this.setState({
-        //     selectedOption:[],
-        //     lokasi:''
-        // })
+        this.handleClearState();
         console.log("submitted",parseData);
-
-
+    }
+    handlePagin1(page){
+        this.props.dispatch(FetchBrg1(page,5));
+    }
+    handlePagin2(page){
+        this.props.dispatch(FetchBrg2(page,5));
+    }
+    handleSearch1(){
+        console.log(this.state.any_1)
+        let where='';
+        if(this.state.any_1!==''){
+            where+=`&searchby=barcode&q=${this.state.any_1}`
+        }
+        this.props.dispatch(FetchBrg1(1,5,where));
+    }
+    handleSearch2(){
+        let where='';
+        if(this.state.any_2!==''){
+            where+=`&searchby=barcode&q=${this.state.any_2}`
+        }
+        this.props.dispatch(FetchBrg2(1,5,where));
     }
     render(){
-        const {lokasi_data} = this.state;
+        const {lokasi_data,isArrLength} = this.state;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
+
         let locG = [];
         for(let i=0;i<lokasi.length;i++){
             locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
@@ -555,7 +641,7 @@ class FormPromo extends Component{
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
                 <ModalHeader toggle={this.toggle}>
-                    {this.props.detail.length===0?"Tambah Promo":"Ubah Promo"}
+                    {isArrLength===0?"Tambah Promo":"Ubah Promo"}
                     {
                         this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? <small style={{color:"black",fontWeight:"bold"}}> ( Ceklis Daftar Barang Apabila Akan Didaftarkan Sebagai Barang Promo )</small>:""
                     }
@@ -706,9 +792,35 @@ class FormPromo extends Component{
 
 
                         </div>
-                        <div className="col-md-8" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'?{display:"block"}:{display:"none"}}>
+                        <div className="col-md-8" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'?{display:"block",zoom:"80%"}:{display:"none"}}>
                             {/*TABLE BARANG KATEGORI (BARANG,TEBUS MURAH)*/}
-
+                            <div style={{"float":"left","marginBottom":"10px"}}>
+                                <div className="input-group mb-3">
+                                    <input type="text" name={"any_1"} className={"form-control"} placeholder={"cari barcode"} value={this.state.any_1} onChange={this.handleChange} onKeyPress = {
+                                        event => {
+                                            if (event.key === 'Enter') {
+                                                this.handleSearch1();
+                                            }
+                                        }
+                                    }/>
+                                    <div className="input-group-prepend">
+                                        <button className={"btn btn-primary"} onClick = {
+                                            event => {
+                                                event.preventDefault();
+                                                this.handleSearch1();
+                                            }
+                                        }><i className={"fa fa-search"}/></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{"float":"right","marginBottom":"10px"}}>
+                                <Paginationq
+                                    current_page={parseInt(this.props.barang1.current_page)}
+                                    per_page={parseInt(this.props.barang1.per_page)}
+                                    total={parseInt(this.props.barang1.total)}
+                                    callback={this.handlePagin1.bind(this)}
+                                />
+                            </div>
                             <div className="table-responsive" style={this.state.category==='brg'||this.state.category==='tm'? {overflowX: 'auto',height:"auto"}:{overflowX: 'auto',height:"auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -725,10 +837,10 @@ class FormPromo extends Component{
                                     </thead>
                                     <tbody>
                                     {
-                                        this.state.barang_data.map((v,i)=>{
+                                        this.state.barang_data.length>0?this.state.barang_data.map((v,i)=>{
                                             return (
                                                 <tr>
-                                                    <td style={columnStyle}>{i+1}</td>
+                                                    <td style={columnStyle}> {i+1 + (5 * (parseInt(this.props.barang1.current_page)-1))}</td>
                                                     <td style={columnStyle}>
                                                         <input type="checkbox" name="checked" checked={v.checked} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                     </td>
@@ -744,22 +856,11 @@ class FormPromo extends Component{
                                                             <input style={{textAlign:"right"}} type="text" name="qty" className="form-control" value={v.qty} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                         </td>:'')
                                                     }
-                                                    {/*{*/}
-                                                        {/*this.state.category==='tm'||this.state.category==='bg'?"":(*/}
-                                                            {/*<td style={columnStyle}>*/}
-                                                                {/*<select name="jenis" className="form-control" value={v.jenis} defaultValue={v.jenis} onChange={(e)=>this.handleChangeDynamic(e,i)}>*/}
-                                                                    {/*<option value="persen">Persen (%)</option>*/}
-                                                                    {/*<option value="nominal">Nominal (rp)</option>*/}
-                                                                {/*</select>*/}
-                                                            {/*</td>*/}
-                                                        {/*)*/}
-                                                    {/*}*/}
-
                                                     {
                                                         this.state.category==='tm'||this.state.category==='bg'?"":(
                                                             <td style={columnStyle}>
                                                                 <input style={{textAlign:"right"}} type="text" name="qty" className="form-control" value={
-                                                                    parseInt(v.qty)<0?0:(v.jenis==='persen'?parseInt(v.qty)>100?0:v.qty:v.qty)
+                                                                    v.checked===false?0:parseInt(v.qty)<0?0:(v.jenis==='persen'?parseInt(v.qty)>100?0:v.qty:v.qty)
                                                                 } onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                                 {
                                                                     v.jenis==='persen'?
@@ -778,7 +879,7 @@ class FormPromo extends Component{
                                                         this.state.category==='tm'||this.state.category==='bg'?"":(
                                                             <td style={columnStyle}>
                                                                 <input style={{textAlign:"right"}} type="text" name="qty2" className="form-control" value={
-                                                                    parseInt(v.qty2)<0?0:(v.jenis==='persen'?parseInt(v.qty2)>100?0:v.qty2:v.qty2)
+                                                                    v.checked===false?0:parseInt(v.qty2)<0?0:(v.jenis==='persen'?parseInt(v.qty2)>100?0:v.qty2:v.qty2)
                                                                 } onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                                 {
                                                                     v.jenis==='persen'?
@@ -795,13 +896,40 @@ class FormPromo extends Component{
                                                     }
                                                 </tr>
                                             );
-                                        })
+                                        }):"No data."
                                     }
                                     </tbody>
                                 </table>
                             </div>
+                            <hr/>
                             {/*TABLE BARANG KATEGORI (BUY GET)*/}
-
+                            <div style={this.state.category==='bg'?{display:"block","float":"left","marginBottom":"10px"}:{display:"none"}}>
+                                <div className="input-group mb-3">
+                                    <input type="text" name={"any_2"} className={"form-control"} placeholder={"cari barcode"} value={this.state.any_2} onChange={this.handleChange} onKeyPress = {
+                                        event => {
+                                            if (event.key === 'Enter') {
+                                                this.handleSearch2();
+                                            }
+                                        }
+                                    }/>
+                                    <div className="input-group-prepend">
+                                        <button className={"btn btn-primary"} onClick = {
+                                            event => {
+                                                event.preventDefault();
+                                                this.handleSearch2();
+                                            }
+                                        }><i className={"fa fa-search"}/></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={this.state.category==='bg'?{display:"block","float":"right","marginBottom":"10px"}:{display:"none"}}>
+                                <Paginationq
+                                    current_page={parseInt(this.props.barang2.current_page)}
+                                    per_page={parseInt(this.props.barang2.per_page)}
+                                    total={parseInt(this.props.barang2.total)}
+                                    callback={this.handlePagin2.bind(this)}
+                                />
+                            </div>
                             <div className="table-responsive" style={this.state.category==='bg'? {display:"block",overflowX: 'auto',height:'auto'}:{display:"none",overflowX: 'auto',height:"auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -816,10 +944,10 @@ class FormPromo extends Component{
                                     </thead>
                                     <tbody>
                                     {
-                                        this.state.barang_data1.map((v,i)=>{
+                                        this.state.barang_data1.length>0?this.state.barang_data1.map((v,i)=>{
                                             return (
                                                 <tr>
-                                                    <td style={columnStyle}>{i+1}</td>
+                                                    <td style={columnStyle}> {i+1 + (5 * (parseInt(this.props.barang2.current_page)-1))}</td>
                                                     <td style={columnStyle}>
                                                         <input type="checkbox" name="checked_bg" checked={v.checked_bg} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                     </td>
@@ -827,16 +955,17 @@ class FormPromo extends Component{
                                                     <td style={columnStyle}>{v.barcode}</td>
                                                     <td style={columnStyle}>{toRp(v.harga)}</td>
                                                     <td style={columnStyle}>
-                                                        <input style={{textAlign:"right"}} type="number" name="qty_bg" className="form-control" value={v.qty_bg} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
+                                                        <input style={{textAlign:"right"}} type="number" name="qty_bg" className="form-control" value={v.checked_bg===false?0:v.qty_bg} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                     </td>
 
                                                 </tr>
                                             );
-                                        })
+                                        }):"No Data"
                                     }
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
 
                     </div>
@@ -857,11 +986,9 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
-        barang: state.productReducer.result_brg,
+        barang1: state.promoReducer.dataBrg1,
+        barang2: state.promoReducer.dataBrg2,
         customerType: state.customerTypeReducer.data,
-
-
-
     }
 }
 export default connect(mapStateToProps)(FormPromo);

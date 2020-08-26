@@ -51,8 +51,6 @@ class ReceiveReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
-            filter:"",
-            filter_data:[],
             status:"",
             status_data:[],
         }
@@ -330,124 +328,111 @@ class ReceiveReport extends Component{
         const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
         return (
             <Layout page="Laporan Pembelian">
-                <div className="col-12 box-margin">
+                <div className="col-12 box-margin" style={{zoom:"80%"}}>
                     <div className="card">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor=""> Periode </label>
-                                        <div className="customDatePickerWidth">
-                                            <DateRangePicker
-                                                ranges={rangeDate}
-                                                alwaysShowCalendars={true}
-                                                onEvent={this.handleEvent}
-                                                showDropdowns={true}
-                                                autoUpdateInput={true}
-                                            >
-                                                <input type="text" id="date" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
-                                            </DateRangePicker>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Lokasi
-                                        </label>
-                                        <Select
-                                            options={this.state.location_data}
-                                            placeholder="Pilih Lokasi"
-                                            onChange={this.HandleChangeLokasi}
-                                            value={
-                                                this.state.location_data.find(op => {
-                                                    return op.value === this.state.location
-                                                })
-                                            }
+                               <div className="col-md-10">
+                                   <div className="row">
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label htmlFor=""> Periode </label>
+                                               <div className="customDatePickerWidth">
+                                                   <DateRangePicker
+                                                       ranges={rangeDate}
+                                                       alwaysShowCalendars={true}
+                                                       onEvent={this.handleEvent}
+                                                       showDropdowns={true}
+                                                       autoUpdateInput={true}
+                                                   >
+                                                       <input type="text" id="date" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                   </DateRangePicker>
+                                               </div>
+                                           </div>
+                                       </div>
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label className="control-label font-12">
+                                                   Lokasi
+                                               </label>
+                                               <Select
+                                                   options={this.state.location_data}
+                                                   placeholder="Pilih Lokasi"
+                                                   onChange={this.HandleChangeLokasi}
+                                                   value={
+                                                       this.state.location_data.find(op => {
+                                                           return op.value === this.state.location
+                                                       })
+                                                   }
 
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Tipe Transaksi
-                                        </label>
-                                        <Select
-                                            options={this.state.type_data}
-                                            placeholder="Pilih Tipe Transaksi"
-                                            onChange={this.HandleChangeType}
-                                            value={
-                                                this.state.type_data.find(op => {
-                                                    return op.value === this.state.type
-                                                })
-                                            }
+                                               />
+                                           </div>
+                                       </div>
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label className="control-label font-12">
+                                                   Tipe Transaksi
+                                               </label>
+                                               <Select
+                                                   options={this.state.type_data}
+                                                   placeholder="Pilih Tipe Transaksi"
+                                                   onChange={this.HandleChangeType}
+                                                   value={
+                                                       this.state.type_data.find(op => {
+                                                           return op.value === this.state.type
+                                                       })
+                                                   }
 
-                                        />
-                                    </div>
-                                </div>
-                                {/* <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Status
-                                        </label>
-                                        <Select
-                                            options={this.state.status_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeStatus}
-                                            value={
-                                                this.state.status_data.find(op => {
-                                                    return op.value === this.state.status
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div> */}
+                                               />
+                                           </div>
+                                       </div>
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label className="control-label font-12">
+                                                   Filter
+                                               </label>
+                                               <Select
+                                                   options={this.state.filter_data}
+                                                   // placeholder="Pilih Tipe Kas"
+                                                   onChange={this.HandleChangeFilter}
+                                                   value={
+                                                       this.state.filter_data.find(op => {
+                                                           return op.value === this.state.filter
+                                                       })
+                                                   }
+                                               />
+                                           </div>
+                                       </div>
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label className="control-label font-12">
+                                                   Sort
+                                               </label>
+                                               <Select
+                                                   options={this.state.sort_data}
+                                                   // placeholder="Pilih Tipe Kas"
+                                                   onChange={this.HandleChangeSort}
+                                                   value={
+                                                       this.state.sort_data.find(op => {
+                                                           return op.value === this.state.sort
+                                                       })
+                                                   }
+                                               />
+                                           </div>
+                                       </div>
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label htmlFor="">Cari</label>
+                                               <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Filter
-                                        </label>
-                                        <Select
-                                            options={this.state.filter_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeFilter}
-                                            value={
-                                                this.state.filter_data.find(op => {
-                                                    return op.value === this.state.filter
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Sort
-                                        </label>
-                                        <Select
-                                            options={this.state.sort_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeSort}
-                                            value={
-                                                this.state.sort_data.find(op => {
-                                                    return op.value === this.state.sort
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor="">Cari</label>
-                                        <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-3">
-                                    <div className="form-group">
-                                        <label className="control-label font-12"></label>
+                                        <label className="control-label font-12"/>
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                            <i className="fa fa-search"></i>
+                                            <i className="fa fa-search"/>
                                         </button>
                                         <ReactHTMLTableToExcel
                                             className="btn btn-primary btnBrg"
@@ -462,7 +447,7 @@ class ReceiveReport extends Component{
 
 
                             </div>
-                            <div className="table-responsive">
+                            <div style={{overflowX: "auto"}}>
                                 {/*EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered" id="report_receive_to_excel" style={{display:"none"}}>
                                     <thead className="bg-light">
@@ -527,7 +512,7 @@ class ReceiveReport extends Component{
 
                                 </table>
                                 {/*END EXPORT EXCEL*/}
-                                <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
+                                <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
                                         <th className="text-black" style={columnStyle}>#</th>
@@ -560,7 +545,7 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Action
+                                                                                Aksi
                                                                             </button>
                                                                             <div className="dropdown-menu">
                                                                                 <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(

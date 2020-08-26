@@ -1,14 +1,22 @@
-import {PROMO} from "../../../actions/_constants";
+import {PRODUCT, PROMO} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,
     status:"",msg:"",data:[], currentPage:0,
     per_page:0,
-    total:0,detail:[],data_kategori:[]
+    total:0,detail:[],data_kategori:[],dataBrg1:[],dataBrg2:[]
 };
 
 export const promoReducer = (state=initialState,action) => {
     switch (action.type) {
+        case PROMO.SUCCESS_BRG1:
+            return Object.assign({}, state, {
+                dataBrg1: action.data.result,
+            });
+        case PROMO.SUCCESS_BRG2:
+            return Object.assign({}, state, {
+                dataBrg2: action.data.result,
+            });
         case PROMO.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,

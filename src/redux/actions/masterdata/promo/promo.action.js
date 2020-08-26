@@ -6,9 +6,14 @@ import Swal from "sweetalert2";
 export function setLoading(load){
     return {type : PROMO.LOADING,load}
 }
-
 export function setPromo(data=[]){
     return {type:PROMO.SUCCESS,data}
+}
+export function setPromoBrg1(data=[]){
+    return {type:PROMO.SUCCESS_BRG1,data}
+}
+export function setPromoBrg2(data=[]){
+    return {type:PROMO.SUCCESS_BRG2,data}
 }
 export function setPromoKategori(data=[]){
     return {type:PROMO.SUCCESS_KATEGORI,data}
@@ -56,8 +61,6 @@ export const FetchPromoDetail = (id)=>{
         })
     }
 }
-
-
 export const FetchPromoKategori = ()=>{
     return (dispatch) => {
         let que = `promo/category`;
@@ -72,8 +75,6 @@ export const FetchPromoKategori = ()=>{
         })
     }
 }
-
-
 export const createPromo = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -87,7 +88,7 @@ export const createPromo = (data) => {
                         type: 'success',
                         text: data.msg,
                     });
-                    window.location.reload();
+                    // window.location.reload();
                 } else {
                     Swal.fire({
                         title: 'failed',
@@ -126,7 +127,7 @@ export const updatePromo = (id,data) => {
                         type: 'success',
                         text: data.msg,
                     });
-                    window.location.reload();
+                    // window.location.reload();
                 } else {
                     Swal.fire({
                         title: 'failed',
@@ -151,7 +152,6 @@ export const updatePromo = (id,data) => {
             })
     }
 }
-
 export const deletePromo = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -188,3 +188,64 @@ export const deletePromo = (id) => {
             })
     }
 }
+export const FetchBrg1 = (page=1,perpage=10,where='')=>  {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `barang?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                if(data.result.data.length===1){
+                    dispatch(setPromoBrg1(data));
+                    dispatch(setLoading(false));
+                }else{
+                    dispatch(setPromoBrg1(data));
+                    dispatch(setLoading(false));
+                }
+
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoading(false));
+
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                // text: error.response.data.msg,
+            });
+        })
+    }
+}
+export const FetchBrg2 = (page=1,perpage=10,where='')=>  {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `barang?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                if(data.result.data.length===1){
+                    dispatch(setPromoBrg2(data));
+                    dispatch(setLoading(false));
+                }else{
+                    dispatch(setPromoBrg2(data));
+                    dispatch(setLoading(false));
+                }
+
+            }).catch(function(error){
+            console.log(error);
+            dispatch(setLoading(false));
+
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                // text: error.response.data.msg,
+            });
+        })
+    }
+}
+

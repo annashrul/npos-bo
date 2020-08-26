@@ -13,6 +13,7 @@ import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_pr
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
 import {FetchAllLocation} from "redux/actions/masterdata/location/location.action";
 import Swal from "sweetalert2";
+import {setPromoDetail} from "../../../../redux/actions/masterdata/promo/promo.action";
 class Promo extends Component{
     constructor(props){
         super(props);
@@ -52,7 +53,7 @@ class Promo extends Component{
         this.props.dispatch(FetchGroupProduct(1,'',100));
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchAllLocation());
-
+        this.props.dispatch(setPromoDetail([]))
 
     }
     handleEdit(e,id) {

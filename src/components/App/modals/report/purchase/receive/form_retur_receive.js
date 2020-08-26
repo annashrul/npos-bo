@@ -44,7 +44,8 @@ class FormReturReceive extends Component{
                     "stock":v.stock,
                     "nm_brg":v.nm_brg,
                     "qty":v.qty,
-                    "qty_retur":0
+                    "qty_retur":0,
+                    "kondisi":v.kondisi
                 })
             }) : [];
 
@@ -92,7 +93,7 @@ class FormReturReceive extends Component{
                    "qty":v.qty_retur,
                    "harga_beli":v.harga_beli,
                    "keterangan":"-",
-                   "kondisi":"Good Stock"
+                   "kondisi":v.kondisi
                })
                data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
                data['supplier'] = this.props.dataRetur.master.kode_supplier;
@@ -102,11 +103,12 @@ class FormReturReceive extends Component{
                data['userid'] = this.state.userid;
                data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
                data['detail'] = detail;
-               this.props.dispatch(storeReturTanpaNota(data));
-               console.log("SUBMITTED",data);
+
            }
 
         });
+        console.log("SUBMITTED",data);
+        this.props.dispatch(storeReturTanpaNota(data));
 
     }
     render(){
@@ -147,6 +149,7 @@ class FormReturReceive extends Component{
                                 <th className="text-black" style={columnStyle} rowSpan={2}>Qty Beli</th>
                                 <th className="text-black" style={columnStyle} rowSpan={2}>PPN</th>
                                 <th className="text-black" style={columnStyle} rowSpan={2}>Subtotal</th>
+                                <th className="text-black" style={columnStyle} rowSpan={2}>Kondisi</th>
                                 <th className="text-black" style={columnStyle} rowSpan={2}>Qty Retur</th>
                                 <th className="text-black" style={columnStyle} rowSpan={2}>Nilai Retur</th>
                             </tr>
@@ -171,6 +174,17 @@ class FormReturReceive extends Component{
                                             <td style={columnStyle}>{v.qty}</td>
                                             <td style={columnStyle}>0</td>
                                             <td style={columnStyle}>{toRp(parseInt(v.qty)*parseInt(v.harga_beli))}</td>
+                                            <td style={columnStyle}>
+                                                <select className="form-control" style={{width:"140px"}} name='kondisi' onChange={(e) => this.HandleChangeInputValue(e, i)} value={v.kondisi} defaultValue={v.kondisi}>
+                                                    <option value="">Pilih Kondisi</option>
+                                                    <option value="bad_stock">Bad Stock</option>
+                                                    <option value="good_stock">Good Stock</option>
+                                                    <option value="dead_stock">Dead Stock</option>
+                                                    <option value="over_stock">Over Stock</option>
+                                                    <option value="expired_date">Expired Date</option>
+                                                    <option value="slow_moving">Slow Moving</option>
+                                                </select>
+                                            </td>
                                             <td style={columnStyle}>
                                                 <input type="number" name="qty_retur" className="form-control" value={v.qty_retur}  onChange={(e)=>this.HandleChangeInputValue(e,i)}/>
                                                 {

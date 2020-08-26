@@ -164,7 +164,7 @@ export const deleteProduct = (id) => {
     }
 }
 
-export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=>{
+export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,perpage='')=>{
     console.log("DATA DB",db);
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
@@ -172,6 +172,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
         if(supplier!==null) url+=`&supplier=${supplier}`;
+        if(perpage!=='') url+=`&perpage=${perpage}`;
         console.log("FETCH BARANG URL",url);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){

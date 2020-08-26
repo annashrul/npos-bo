@@ -16,6 +16,7 @@ import {FetchNota,storeDN} from 'redux/actions/inventory/dn.action'
 import {FetchReceiveData,setPoData} from 'redux/actions/purchase/receive/receive.action'
 import { Scrollbars } from "react-custom-scrollbars";
 import {HEADERS} from 'redux/actions/_constants'
+import {toRp} from "../../../../helper";
 
 const table='delivery_note'
 const Toast = Swal.mixin({
@@ -934,10 +935,11 @@ class DeliveryNote extends Component{
                     </form>
                   </div>
                   <div className="card-body">
-                      <div className="table-responsive" style={{overflowX: 'auto'}}>
+                      <div style={{overflowX: 'auto',zoom:'85%'}}>
                           <table className="table table-hover table-bordered">
                               <thead>
                               <tr>
+                                  <th style={columnStyle}>No</th>
                                   <th style={columnStyle}>#</th>
                                   <th style={columnStyle}>Nama</th>
                                   <th style={columnStyle}>Barcode</th>
@@ -959,6 +961,8 @@ class DeliveryNote extends Component{
                                       // console.log('gt',grandtotal);
                                       return (
                                           <tr key={index}>
+                                              <td style={columnStyle}>{index+1}</td>
+
                                               <td style={columnStyle}>
                                                   <a href="about:blank" className='btn btn-danger btn-sm'
                                                      onClick={(e) => this.HandleRemove(e, item.id)}><i
@@ -990,7 +994,7 @@ class DeliveryNote extends Component{
                                                       Qty Melebihi Stock.
                                                   </div>
                                               </td>
-                                              <td style={columnStyle}>{parseInt(item.harga_beli) * parseFloat(item.qty)}</td>
+                                              <td style={columnStyle}>{toRp(parseInt(item.harga_beli) * parseFloat(item.qty))}</td>
                                           </tr>
                                       )
                                   })
