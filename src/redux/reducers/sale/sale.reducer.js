@@ -10,6 +10,8 @@ const initialState = {
     status:"",
     code:"-",
     sale_data:[],
+    sale_retur_data:[],
+    sale_retur_export:[],
     report:[],
     report_data:[],
     total_penjualan:{
@@ -57,6 +59,18 @@ export const saleReducer = (state = initialState, action) => {
                 msg: action.data.msg,
                 data: action.data.result,
                 total: action.data.result.total
+            });
+        case SALE.SUCCESS_SALE_RETUR:
+            return Object.assign({}, state, {
+                status: action.data.status,
+                msg: action.data.msg,
+                sale_retur_data: action.data.result,
+            });
+        case SALE.SUCCESS_SALE_RETUR_EXCEL:
+            return Object.assign({}, state, {
+                status: action.data.status,
+                msg: action.data.msg,
+                sale_retur_export: action.data.result,
             });
         case SALE.REPORT_SUCCESS_EXCEL:
             return Object.assign({}, state, {

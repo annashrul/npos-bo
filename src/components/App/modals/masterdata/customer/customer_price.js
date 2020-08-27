@@ -3,8 +3,6 @@ import {ModalBody, ModalHeader, ModalFooter} from "reactstrap";
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle} from "redux/actions/modal.action";
-import {stringifyFormData} from "helper";
-import Swal from "sweetalert2";
 import {saveCustomerPrice,FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
 import Paginationq from "helper";
 
@@ -72,9 +70,7 @@ class CustomerPrice extends Component{
 
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        console.log("STATE DATA CUSTOMER",this.state.dataCustomer);
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.dataCustomerPrice;
+        const {total,per_page,current_page} = this.props.dataCustomerPrice;
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "CustomerPrice"} size="md">

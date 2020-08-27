@@ -32,8 +32,6 @@ class ListUserLevel extends Component{
     }
     toggleModal(e,id) {
         e.preventDefault();
-        // const bool = !this.props.isOpen;
-        // this.props.dispatch(ModalToggle(bool));
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formUserLevel"));
@@ -48,7 +46,6 @@ class ListUserLevel extends Component{
 
     }
     handleDelete(e, id) {
-        let any = localStorage.getItem('any_user_level');
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -60,16 +57,13 @@ class ListUserLevel extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                // console.log(this.props);
                 this.props.dispatch(deleteUserLevel(id,this.props.token));
-                // this.props.dispatch(FetchUserLevel())
             }
         })
     }
     render(){
         const handleDelete = this.handleDelete;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {total,per_page,current_page,data} = this.props.data;
         return (
            <div>
                <form onSubmit={this.handlesearch} noValidate>

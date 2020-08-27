@@ -8,7 +8,6 @@ import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
 import moment from "moment";
 import {rangeDate, toRp} from "../../../../../helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';
 import "jspdf-autotable";
 import {to_pdf} from "helper";

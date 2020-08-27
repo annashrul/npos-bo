@@ -77,6 +77,15 @@ export function setLoadingReport(load) {
         load
     }
 }
+
+export function setSaleReturReport(data=[]){
+    return {type:SALE.SUCCESS_SALE_RETUR,data}
+}
+
+export function setSaleReturReportExcel(data=[]){
+    return {type:SALE.SUCCESS_SALE_RETUR_EXCEL,data}
+}
+
 export const FetchNotaSale = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -246,5 +255,47 @@ export const deleteReportSale = (kd_trx) => {
                     console.log("error")
                 }
             })
+    }
+}
+
+export const FetchSaleReturReport = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = `report/penjualan/retur?page=${page}`;
+        if(where!==''){
+            que+=`${where}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setSaleReturReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchSaleReturReportExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            que+=`${where}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setSaleReturReportExcel(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
     }
 }

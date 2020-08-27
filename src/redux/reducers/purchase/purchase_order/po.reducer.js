@@ -10,6 +10,8 @@ const initialState = {
     status:"",
     code:"-",
     po_data:[],
+    pbs_data:[],
+    pbs_data_excel:[],
     report:[],
     report_excel:[],
     report_data:[],
@@ -26,6 +28,18 @@ export const poReducer = (state = initialState, action) => {
                 total: action.data.result.total,
                 report: action.data.result,
                 report_data: action.data.result.data
+            });
+        case PO.SUCCESS_BY_SUPPLIER:
+            return Object.assign({}, state, {
+                status: action.data.status,
+                msg: action.data.msg,
+                pbs_data: action.data.result,
+            });
+        case PO.SUCCESS_BY_SUPPLIER_EXCEL:
+            return Object.assign({}, state, {
+                status: action.data.status,
+                msg: action.data.msg,
+                pbs_data_excel: action.data.result,
             });
         case PO.PO_DATA:
             return Object.assign({}, state, {

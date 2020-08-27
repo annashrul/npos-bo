@@ -231,7 +231,7 @@ class BayarPiutang extends Component{
                             <div className="col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12">Lokasi Piutang</label>
-                                    <input readOnly={true} type="text" name="lokasi" className="form-control" value={this.props.getPiutang.nama_toko!==undefined?this.props.getPiutang.nama_toko:"-"}/>
+                                    <input readOnly={true} type="text" name="lokasi" className="form-control" value={this.props.getPiutang.lokasi!==undefined?this.props.getPiutang.lokasi:"-"}/>
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label font-12">Jenis Pembayaran</label>

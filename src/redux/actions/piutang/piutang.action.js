@@ -39,6 +39,14 @@ export function setFailed(data = []) {
     }
 }
 
+export function setPiutangReport(data=[]){
+    return {type:PIUTANG.SUCCESS_REPORT,data}
+}
+
+export function setPiutangReportExcel(data=[]){
+    return {type:PIUTANG.SUCCESS_EXCEL,data}
+}
+
 export const FetchPiutang = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -118,3 +126,86 @@ export const storePiutang = (data) => {
     }
 }
 
+
+//FILTER PIUTANG REPORT//
+// perpage=10,page=1,searchby=kd_brg,dateFrom=2020-01-01,dateTo=2020-07-01,lokasi=LK%2F0001
+export const FetchPiutangReport = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `piutang/report?page=${page}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        console.log("URL PIUTANG REPORT",url);
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPiutangReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+//FILTER PIUTANG REPORT EXCEL//
+export const FetchPiutangReportExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `piutang/report?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        console.log("URL PIUTANG REPORT",url);
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPiutangReportExcel(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+//DELETE PIUTANG REPORT EXCEL//
+export const DeletePiutangReport = (id)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `piutang/${id}`;
+
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'danger',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchPiutangReport(localStorage.getItem("page_piutang_report")?localStorage.getItem("page_piutang_report"):1,localStorage.getItem('where_piutang_report')));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                console.log(error);
+                Swal.fire({
+                    title: 'failed',
+                    type: 'danger',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    console.log("error")
+                }
+            })
+    }
+}

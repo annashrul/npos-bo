@@ -44,16 +44,20 @@ import Sale from '../sale/product_sale'
 import Company from "../setting/company";
 import ReportCash from "../report/cash";
 import ReportLabaRugi from "../report/laba_rugi";
+import HutangReport from "../report/hutang";
+import PiutangReport from "../report/piutang";
+import PurchaseBySupplierReport from "../report/purchase/purchase_by_supplier";
 import ReturTanpaNota from "../purchase/retur";
 import BayarHutang from "../hutang/bayar_hutang";
 import BayarPiutang from "../piutang/bayar_piutang";
 import CetakBarcode from "../cetak_barcode";
 import NotFound from "../common/notfound";
+import SaleReturReport from "../report/sale/sale_retur_archive";
 
 const Routes = (
     <div>
-        <Route path="/login" exact strict component={Login} />
         <Switch>
+            <Route path="/login" exact strict component={Login} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}
@@ -116,8 +120,12 @@ const Routes = (
             <PrivateRoute path="/report/closing" exact strict component={Closing} />
             <PrivateRoute path="/report/cash" exact strict component={ReportCash} />
             <PrivateRoute path="/report/laba_rugi" exact strict component={ReportLabaRugi} />
+            <PrivateRoute path="/report/hutang" exact strict component={HutangReport} />
+            <PrivateRoute path="/report/piutang" exact strict component={PiutangReport} />
             <PrivateRoute path="/report/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
+            <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
+            <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
             {/* REPORT SECTION END */}
 
             {/* SETTINGS SECTION START */}

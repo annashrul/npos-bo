@@ -59,6 +59,12 @@ export function setPoReport(data=[]){
 export function setPoReportExcel(data=[]){
     return {type:PO.SUCCESS_EXCEL,data}
 }
+export function setPBSupplierReport(data=[]){
+    return {type:PO.SUCCESS_BY_SUPPLIER,data}
+}
+export function setPBSupplierReportExcel(data=[]){
+    return {type:PO.SUCCESS_BY_SUPPLIER_EXCEL,data}
+}
 export function setPoReportDetail(data=[]){
     return {type:PO.PO_REPORT_DETAIL,data}
 }
@@ -210,6 +216,50 @@ export const poReportDetail = (page=1,code)=>{
                 const data = response.data;
                 console.log(data);
                 dispatch(setPoReportDetail(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+
+
+export const FetchPurchaseBySupplierReport = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = `report/pembelian/by_supplier?page=${page}`;
+        if(where!==''){
+            que+=`${where}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPBSupplierReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            console.log(error)
+        })
+    }
+}
+
+export const FetchPurchaseBySupplierReportExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
+        let que = `report/pembelian/by_supplier?page=${page}&perpage=${perpage}`;
+        if(where!==''){
+            que+=`${where}`;
+        }
+        console.log(`${que}`);
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                console.log(data);
+                dispatch(setPBSupplierReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             console.log(error)
