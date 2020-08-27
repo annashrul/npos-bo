@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -18,20 +16,96 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="125" column="43" lean-forward="true" selection-start-line="125" selection-start-column="43" selection-end-line="125" selection-end-column="43" />
+            <state relative-caret-position="2898">
+              <caret line="131" column="42" selection-start-line="131" selection-start-column="42" selection-end-line="131" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/produksi/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="659" column="82" selection-start-line="659" selection-start-column="82" selection-end-line="659" selection-end-column="82" />
+              <folding>
+                <element signature="n#!!block;n#getProps#0;n#Produksi#0" />
+                <element signature="e#2410#2859#0" />
+                <element signature="e#2898#3291#0" />
+                <element signature="n#!!block;n#componentDidMount#0;n#Produksi#0" />
+                <element signature="n#!!block;n#componentWillUnmount#0;n#Produksi#0" />
+                <element signature="n#!!block;n#componentWillMount#0;n#Produksi#0" />
+                <element signature="n#!!block;n#setTglOrder#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleChangeBarangPaket#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleChangeLokasi#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleCommonInputChange#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleSearch#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleAddBrg#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleRemove#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleReset#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleChangeInputValue#0;n#Produksi#0" />
+                <element signature="n#!!block;n#HandleChangeInput#0;n#Produksi#0" />
+                <element signature="e#14017#16198#0" />
+                <element signature="n#!!block;n#autoSetQty#0;n#Produksi#0" />
+                <element signature="n#!!block;n#getData#0;n#Produksi#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/produksi/index.js">
+        <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="56">
-              <caret line="515" selection-start-line="515" selection-end-line="515" />
+            <state relative-caret-position="142">
+              <caret line="420" column="42" lean-forward="true" selection-start-line="420" selection-start-column="42" selection-end-line="420" selection-end-column="42" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
+                <element signature="e#7556#7796#0" />
+                <element signature="n#!!block;n#getProps#0;n#FormProduct#0" />
+                <element signature="e#8257#15329#0" />
+                <element signature="e#15817#17520#0" />
+                <element signature="n#!!block;n#componentWillMount#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#fetchData#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleKelompokBarang#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleGroup1#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleGroup2#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleChange#0;n#FormProduct#0" />
+                <element signature="e#24241#24436#0" />
+                <element signature="n#!!block;n#onHandleChangeChild#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#onHandleChangeChildPack#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#onHandleChangeChildKarton#0;n#FormProduct#0" />
+                <element signature="e#48580#49131#0" />
+                <element signature="n#!!block;n#handleAllCheckedSku#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleCheckChieldElementKarton#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleCheckChieldElementPack#0;n#FormProduct#0" />
+                <element signature="e#51110#51343#0" />
+                <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#handleSubmit#0;n#FormProduct#0" />
+                <element signature="n#!!block;n#getFiles#0;n#FormProduct#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/site.action.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-183">
+              <caret line="50" column="40" lean-forward="true" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+              <folding>
+                <element signature="e#0#64#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="322">
+              <caret line="50" column="83" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="83" />
             </state>
           </provider>
         </entry>
@@ -130,12 +204,12 @@
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/supplier/form_supplier.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_price_product/list.js" />
         <option value="$PROJECT_DIR$/public/js/config.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/index.js" />
-        <option value="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js" />
+        <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
+        <option value="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" />
       </list>
     </option>
   </component>
@@ -220,7 +294,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
@@ -228,8 +302,31 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="inventory" type="462c0819:PsiDirectoryNode" />
-              <item name="produksi" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -317,18 +414,18 @@
       <workItem from="1598417887619" duration="624000" />
       <workItem from="1598425855247" duration="8767000" />
       <workItem from="1598504450268" duration="614000" />
-      <workItem from="1598510369709" duration="7476000" />
+      <workItem from="1598510369709" duration="10201000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="636176000" />
+    <option name="totallyTimeSpent" value="638901000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.17782739" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17782739" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -342,7 +439,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.37248322" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.10738255" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -363,7 +460,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.37248322" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.10738255" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -377,13 +474,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/customer/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="83" column="53" lean-forward="true" selection-start-line="83" selection-start-column="8" selection-end-line="83" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/user/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1427">
@@ -700,66 +790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="772" column="43" lean-forward="true" selection-start-line="772" selection-start-column="43" selection-end-line="772" selection-end-column="43" />
-          <folding>
-            <element signature="n#!!block;n#generateCode#0;n#FormProduct#0" />
-            <element signature="e#7556#7796#0" />
-            <element signature="n#!!block;n#getProps#0;n#FormProduct#0" />
-            <element signature="e#8257#15329#0" />
-            <element signature="e#15817#17520#0" />
-            <element signature="n#!!block;n#fetchData#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#checkData#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#handleKelompokBarang#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#handleGroup1#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#handleGroup2#0;n#FormProduct#0" />
-            <element signature="e#24054#24220#0" />
-            <element signature="e#24241#24436#0" />
-            <element signature="e#25271#25347#0" />
-            <element signature="e#25379#25602#0" />
-            <element signature="e#25634#25906#0" />
-            <element signature="e#25938#26210#0" />
-            <element signature="e#26242#26514#0" />
-            <element signature="e#26546#26817#0" />
-            <element signature="e#26848#27127#0" />
-            <element signature="e#27158#27436#0" />
-            <element signature="e#27467#27711#0" />
-            <element signature="e#27742#27986#0" />
-            <element signature="e#28042#30328#0" />
-            <element signature="n#!!block;n#onHandleChangeChild#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#onHandleChangeChildPack#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#onHandleChangeChildKarton#0;n#FormProduct#0" />
-            <element signature="e#47710#48261#0" />
-            <element signature="n#!!block;n#handleAllCheckedSku#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#handleCheckChieldElementKarton#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#handleCheckChieldElementPack#0;n#FormProduct#0" />
-            <element signature="e#50242#50475#0" />
-            <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" />
-            <element signature="n#!!block;n#handleSubmit#0;n#FormProduct#0" />
-            <element signature="e#65397#74195#0" />
-            <element signature="e#76320#77329#0" />
-            <element signature="e#77370#78030#0" />
-            <element signature="e#78071#78802#0" />
-            <element signature="e#78844#79831#0" />
-            <element signature="e#79978#80650#0" />
-            <element signature="e#80691#81395#0" />
-            <element signature="e#81436#82140#0" />
-            <element signature="e#82181#82852#0" />
-            <element signature="e#82893#83236#0" />
-            <element signature="e#89845#92456#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="972" column="28" lean-forward="true" selection-start-line="972" selection-start-column="28" selection-end-line="972" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/sales/form_sales.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="24">
@@ -820,17 +850,87 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/produksi/index.js">
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56">
-          <caret line="515" selection-start-line="515" selection-end-line="515" />
+        <state relative-caret-position="2898">
+          <caret line="131" column="42" selection-start-line="131" selection-start-column="42" selection-end-line="131" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js">
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="125" column="43" lean-forward="true" selection-start-line="125" selection-start-column="43" selection-end-line="125" selection-end-column="43" />
+        <state relative-caret-position="322">
+          <caret line="50" column="83" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/site.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-183">
+          <caret line="50" column="40" lean-forward="true" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="420" column="42" lean-forward="true" selection-start-line="420" selection-start-column="42" selection-end-line="420" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#7556#7796#0" />
+            <element signature="n#!!block;n#getProps#0;n#FormProduct#0" />
+            <element signature="e#8257#15329#0" />
+            <element signature="e#15817#17520#0" />
+            <element signature="n#!!block;n#componentWillMount#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#fetchData#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleKelompokBarang#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleGroup1#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleGroup2#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleChange#0;n#FormProduct#0" />
+            <element signature="e#24241#24436#0" />
+            <element signature="n#!!block;n#onHandleChangeChild#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#onHandleChangeChildPack#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#onHandleChangeChildKarton#0;n#FormProduct#0" />
+            <element signature="e#48580#49131#0" />
+            <element signature="n#!!block;n#handleAllCheckedSku#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleCheckChieldElementKarton#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleCheckChieldElementPack#0;n#FormProduct#0" />
+            <element signature="e#51110#51343#0" />
+            <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#handleSubmit#0;n#FormProduct#0" />
+            <element signature="n#!!block;n#getFiles#0;n#FormProduct#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/produksi/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="659" column="82" selection-start-line="659" selection-start-column="82" selection-end-line="659" selection-end-column="82" />
+          <folding>
+            <element signature="n#!!block;n#getProps#0;n#Produksi#0" />
+            <element signature="e#2410#2859#0" />
+            <element signature="e#2898#3291#0" />
+            <element signature="n#!!block;n#componentDidMount#0;n#Produksi#0" />
+            <element signature="n#!!block;n#componentWillUnmount#0;n#Produksi#0" />
+            <element signature="n#!!block;n#componentWillMount#0;n#Produksi#0" />
+            <element signature="n#!!block;n#setTglOrder#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleChangeBarangPaket#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleChangeLokasi#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleCommonInputChange#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleSearch#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleAddBrg#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleRemove#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleReset#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleChangeInputValue#0;n#Produksi#0" />
+            <element signature="n#!!block;n#HandleChangeInput#0;n#Produksi#0" />
+            <element signature="e#14017#16198#0" />
+            <element signature="n#!!block;n#autoSetQty#0;n#Produksi#0" />
+            <element signature="n#!!block;n#getData#0;n#Produksi#0" />
+          </folding>
         </state>
       </provider>
     </entry>

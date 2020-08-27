@@ -39,7 +39,7 @@ class Produksi extends Component{
             barang_paket_data:[],
             barang_paket:"",
             catatan:'-',
-            tgl_order: new Date(),
+            tgl_order: moment(new Date()).format('YYYY-MM-DD'),
             searchby:"",
             search:"",
             userid:0,
@@ -64,6 +64,7 @@ class Produksi extends Component{
     }
     getProps(param){
         console.log("GET PROPS",param);
+
         if (param.auth.user) {
             let lk = [];
             let loc = param.auth.user.lokasi;
@@ -111,16 +112,20 @@ class Produksi extends Component{
             // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_produksi, null, this.autoSetQty));
             this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',localStorage.location_produksi,this.autoSetQty));
             this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',localStorage.location_produksi));
-
             this.props.dispatch(FetchCodeAdjustment(localStorage.location_produksi));
         }
     }
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
     }
-
+    componentWillUnmount(){
+        destroy(table);
+        localStorage.removeItem('location_produksi');
+        localStorage.removeItem('barang_paket_produksi');
+    }
     componentWillMount(){
         this.getProps(this.props);
+
     }
     setTglOrder(date) {
         this.setState({
@@ -376,55 +381,65 @@ class Produksi extends Component{
                 error: err
             })
         }else{
-            const data = get(table);
-            data.then(res => {
-                if (res.length==0){
-                    Swal.fire(
-                        'Error!',
-                        'Pilih barang untuk melanjutkan Produksi.',
-                        'error'
-                    )
-                }else{
-                    Swal.fire({
-                        title: 'Simpan Produksi?',
-                        text: "Pastikan data yang anda masukan sudah benar!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Simpan!',
-                        cancelButtonText: 'Tidak!'
-                    }).then((result) => {
-                        if (result.value) {
+            if(this.state.qty_estimasi===0||this.state.qty_estimasi==='0'||this.state.qty_estimasi===''){
+                err = Object.assign({}, err, {
+                    qty_estimasi: "qty estimasi tidak boleh kosong"
+                });
+                this.setState({
+                    error: err
+                })
+            }else{
+                const data = get(table);
+                data.then(res => {
+                    if (res.length==0){
+                        Swal.fire(
+                            'Error!',
+                            'Pilih barang untuk melanjutkan Produksi.',
+                            'error'
+                        )
+                    }else{
+                        Swal.fire({
+                            title: 'Simpan Produksi?',
+                            text: "Pastikan data yang anda masukan sudah benar!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Simpan!',
+                            cancelButtonText: 'Tidak!'
+                        }).then((result) => {
+                            if (result.value) {
 
-                            let detail = [];
-                            let exp = this.state.barang_paket.split("|", 2);
-                            let data={};
-                            data['brcd_hasil'] = exp[1].trim();
-                            data['kd_brg_hasil'] = exp[0].trim();
-                            data['userid'] = this.state.userid;
-                            data['tanggal'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
-                            data['lokasi'] = this.state.location;
-                            data['keterangan'] = this.state.catatan;
-                            data['qty_estimasi'] = this.state.qty_estimasi;
-                            res.map(item => {
-                                detail.push({
-                                    "kd_brg": item.kd_brg,
-                                    "barcode": item.barcode,
-                                    "satuan": item.satuan,
-                                    "qty": item.qty_adjust,
-                                    "harga_beli": item.harga_beli
-                                })
-                            });
-                            data['detail'] = detail;
-                            console.log(data);
-                            this.props.dispatch(storeProduksi(data));
-                        }
-                    })
+                                let detail = [];
+                                let exp = this.state.barang_paket.split("|", 2);
+                                let data={};
+                                data['brcd_hasil'] = exp[1].trim();
+                                data['kd_brg_hasil'] = exp[0].trim();
+                                data['userid'] = this.state.userid;
+                                data['tanggal'] = moment(this.state.tgl_order).format("yyyy-MM-DD");
+                                data['lokasi'] = this.state.location;
+                                data['keterangan'] = this.state.catatan;
+                                data['qty_estimasi'] = this.state.qty_estimasi;
+                                res.map(item => {
+                                    detail.push({
+                                        "kd_brg": item.kd_brg,
+                                        "barcode": item.barcode,
+                                        "satuan": item.satuan,
+                                        "qty": item.qty_adjust,
+                                        "harga_beli": item.harga_beli
+                                    })
+                                });
+                                data['detail'] = detail;
+                                console.log(data);
+                                this.props.dispatch(storeProduksi(data));
+                            }
+                        })
 
 
-                }
-            })
+                    }
+                })
+            }
+
         }
 
     }
@@ -508,6 +523,7 @@ class Produksi extends Component{
         });
     }
     render() {
+
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Produksi">
@@ -639,6 +655,10 @@ class Produksi extends Component{
                                             <div className="form-group">
                                                 <label className="control-label font-12">Qty Estimasi</label>
                                                 <input type="text" name="qty_estimasi" className="form-control" value={this.state.qty_estimasi} onChange={(e => this.HandleCommonInputChange(e))}/>
+                                                <div className="invalid-feedback"
+                                                     style={this.state.error.qty_estimasi !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                    {this.state.error.qty_estimasi}
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="col-md-3">
@@ -656,6 +676,7 @@ class Produksi extends Component{
                                             <table className="table table-hover">
                                                 <thead>
                                                 <tr>
+                                                    <th style={columnStyle}>No</th>
                                                     <th style={columnStyle}>#</th>
                                                     <th style={columnStyle}>Kode</th>
                                                     <th style={columnStyle}>barcode</th>
@@ -672,10 +693,10 @@ class Produksi extends Component{
                                                     this.state.databrg.map((item, index) => {
                                                         return (
                                                             <tr key={index}>
+                                                                <td style={columnStyle}>{index+1}</td>
+
                                                                 <td style={columnStyle}>
-                                                                    <a href="about:blank" className='btn btn-danger btn-sm'
-                                                                       onClick={(e) => this.HandleRemove(e, item.id)}><i
-                                                                        className='fa fa-trash'/></a>
+                                                                    <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e) => this.HandleRemove(e, item.id)}><i className='fa fa-trash'/></a>
                                                                 </td>
                                                                 <td style={columnStyle}>{item.kd_brg}</td>
                                                                 <td style={columnStyle}>{item.barcode}</td>
