@@ -166,6 +166,147 @@ class FormProduct extends Component{
         this.generateCode = this.generateCode.bind(this);
         this.checkData = this.checkData.bind(this);
     }
+    clearState(){
+        this.setState({
+            nm_harga1:"1",
+            nm_harga2:"2",
+            nm_harga3:"3",
+            nm_harga4:"4",
+            set_harga:1,
+            selectedIndex: 0,
+            error_barcode1:false,
+            error_barcode2:false,
+            error_barcode3:false,
+            pesan_barcode1:"",
+            pesan_barcode2:"",
+            pesan_barcode3:"",
+            error:{
+                kd_brg:"",
+                nm_brg:"",
+                kel_brg:"",
+                stock:"",
+                kategori:"",
+                stock_min:"",
+                group1:"",
+                group2:"",
+                deskripsi:"",
+                jenis:"",
+                kcp:"",
+                poin:"",
+                online:"",
+                berat:"",
+                barang_sku_err:[]
+            },
+            kd_brg: '',
+            nm_brg: '',
+            kel_brg_data:[],
+            kel_brg: '',
+            stock: '0',
+            kategori: '',
+            stock_min: '0',
+            group1_data:[],
+            group1: '',
+            group2_data:[],
+            group2: '',
+            deskripsi: '-',
+            gambar: '',
+            jenis: '',
+            kcp: '',
+            poin: '0',
+            online: '0',
+            berat: '0',
+            barangSku: [{"barcode": "", "qty": "", "konversi": "", "satuan_jual": "1"}],
+            barangHargaEdit: [[
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedPCS":false,
+                    "hrgBeliPCS": 0,
+                    "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
+                    "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
+                    "ppnPCS": 0,
+                    "servicePCS":0
+                },
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedPACK":false,
+                    "hrgBeliPACK":0,
+                    "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
+                    "hrgJual1PACK":"0","hrgJual2PACK":"","hrgJual3PACK":"0","hrgJual4PACK":"0",
+                    "ppnPACK": 0,
+                    "servicePACK":0
+                },
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedKARTON":false,
+                    "hrgBeliKARTON":0,
+                    "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
+                    "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
+                    "ppnKARTON":0,
+                    "serviceKARTON":0
+                }
+            ]],
+            barangHarga: [[
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedPCS":false,
+                    "hrgBeliPCS": 0,
+                    "margin1PCS":"0","margin2PCS":"0","margin3PCS":"0","margin4PCS":"0",
+                    "hrgJual1PCS":"0","hrgJual2PCS":"0","hrgJual3PCS":"0","hrgJual4PCS":"0",
+                    "ppnPCS": 0,
+                    "servicePCS":0
+                },
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedPACK":false,
+                    "hrgBeliPACK":0,
+                    "margin1PACK":"0","margin2PACK":"0","margin3PACK":"0","margin4PACK":"0",
+                    "hrgJual1PACK":"0","hrgJual2PACK":"0","hrgJual3PACK":"0","hrgJual4PACK":"0",
+                    "ppnPACK": 0,
+                    "servicePACK":0
+                },
+                {
+                    "nama_toko":"","lokasi":"",
+                    "isCheckedKARTON":false,
+                    "hrgBeliKARTON":0,
+                    "margin1KARTON":"0","margin2KARTON":"0","margin3KARTON":"0","margin4KARTON":"0",
+                    "hrgJual1KARTON":"0","hrgJual2KARTON":"0","hrgJual3KARTON":"0","hrgJual4KARTON":"0",
+                    "ppnKARTON":0,
+                    "serviceKARTON":0
+                }
+            ]],
+            barcode: [],
+            qty: [],
+            konversi: [],
+            satuan_jual: [],
+            isChecked: false,
+            PACK: false,
+            KARTON: false,
+            check: [],
+            hrg_beli: '0', hrg_beli_pack: '0', hrg_beli_karton: '0',
+            margin1: '0', margin2: '0', margin3: '0', margin4: '0',
+            margin1_pack: '0', margin2_pack: '0', margin3_pack: '0', margin4_pack: '0',
+            margin1_karton: '0', margin2_karton: '0', margin3_karton: '0', margin4_karton: '0',
+            hrgjual1:'0', hrgjual2: '0', hrgjual3: '0', hrgjual4: '0',
+            hrgjual1_pack: '0', hrgjual2_pack: '0', hrgjual3_pack: '0', hrgjual4_pack: '0',
+            hrgjual1_karton: '0', hrgjual2_karton: '0', hrgjual3_karton: '0', hrgjual4_karton: '0',
+            service: '0', service_pack: '0', service_karton: '0',
+            ppn: '0', ppn_pack: '0', ppn_karton: '0',
+
+            hrgBeliPACK: 0,
+            margin1PACK: '0', margin2PACK: '0', margin3PACK: '0', margin4PACK: '0',
+            hrgJual1PACK: '0', hrgJual2PACK: '0', hrgJual3PACK: '0', hrgJual4PACK: '0',
+            servicePACK: 0, ppnPACK: 0,
+
+            hrgBeliKARTON: 0,
+            margin1KARTON: '0', margin2KARTON: '0', margin3KARTON: '0', margin4KARTON: '0',
+            hrgJual1KARTON: '0', hrgJual2KARTON: '0', hrgJual3KARTON: '0', hrgJual4KARTON: '0',
+            serviceKARTON: 0, ppnKARTON: 0,
+            purchasePrice: {},
+            generateCode:false,
+            codeServer:0,
+        })
+    }
+
     generateCode(e){
         this.setState({generateCode: e.target.checked,});
         if(e.target.checked === true){
@@ -173,7 +314,7 @@ class FormProduct extends Component{
             err = Object.assign({}, err, {kd_brg:""});
 
             this.setState({
-                kd_brg:moment(new Date()).format('YYMMDDHms'),
+                kd_brg:`${moment(new Date()).format("YYMMDD")}${Math.floor(Math.random() * (10000 - 0 + 1)) + 0}`,
                 error: err
             });
             this.props.dispatch(FetchCheck({
@@ -192,9 +333,7 @@ class FormProduct extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(setProductEdit([]));
-        this.setState({
-
-        })
+        this.clearState()
     };
     getProps(param){
         console.log("get props",param.dataSupplier);
@@ -207,6 +346,7 @@ class FormProduct extends Component{
         });
         this.state.codeServer = param.productCode;
         if(param.dataEdit !== undefined && param.dataEdit !== []){
+            console.log("JENIS DIPILIH",param.dataEdit.kategori)
             let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
             let barang_hrg = typeof param.dataEdit.barang_hrg === 'object' ? param.dataEdit.barang_hrg : this.state.barangHarga;
             let barangSku=[];let barangHrg=[];let konversi=[];
@@ -227,10 +367,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
                                 "isCheckedPCS":true,
                                 "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                                "margin1PCS":((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin2PCS":((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin3PCS":((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin4PCS":((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
                                 "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
                                 "ppnPCS": barang_hrg[x][0].ppn,
                                 "servicePCS": barang_hrg[x][0].service
@@ -268,10 +408,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
                                 "isCheckedPCS":true,
                                 "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                                "margin1PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin2PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin3PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin4PCS":this.state.jenis==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
                                 "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
                                 "ppnPCS": barang_hrg[x][0].ppn,
                                 "servicePCS": barang_hrg[x][0].service
@@ -1369,6 +1509,7 @@ class FormProduct extends Component{
             this.props.dispatch(createProduct(parseData));
         }
         this.props.dispatch(ModalToggle(false));
+        this.clearState();
 
 
 
@@ -1411,8 +1552,8 @@ class FormProduct extends Component{
                                     <div className="col-md-4">
 
                                         <div className="form-group">
-                                            <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.generateCode} onChange={this.generateCode}/> Kode Barang</label>
-                                            <input type="text" className="form-control" name="kd_brg" value={this.state.kd_brg} onChange={(e)=>this.handleChange(e,null)} required/>
+                                            <label htmlFor="inputState" className="col-form-label">{this.props.dataEdit===undefined?<input type="checkbox" checked={this.state.generateCode} onChange={this.generateCode}/>:""} Kode Barang</label>
+                                            <input readOnly={this.props.dataEdit===undefined?false:true} type="text" className="form-control" name="kd_brg" value={this.state.kd_brg} onChange={(e)=>this.handleChange(e,null)} required/>
                                             <div className="invalid-feedback" style={this.state.error.kd_brg || this.props.checkKodeBarang===true !== "" ? {display: 'block'} : {display: 'none'}}>
                                                 {
                                                     this.state.kd_brg===''||this.state.kd_brg===undefined?this.state.error.kd_brg:(this.props.checkKodeBarang===true?"kode barang sudah digunakan":"")
@@ -1573,7 +1714,7 @@ class FormProduct extends Component{
                                                                 {x+1}
                                                             </td>
                                                             <td>
-                                                                <input type="text" className="form-control" name="barcode" id={`${x===0?'barcode1':(x===1?'barcode2':'barcode3')}`} value={this.state.barangSku[x].barcode} onChange={(e)=>this.handleChange(e,x)} onBlur={(e)=>this.checkData(e,x)} required/>
+                                                                <input readOnly={this.props.dataEdit===undefined?false:true} type="text" className="form-control" name="barcode" id={`${x===0?'barcode1':(x===1?'barcode2':'barcode3')}`} value={this.state.barangSku[x].barcode} onChange={(e)=>this.handleChange(e,x)} onBlur={(e)=>this.checkData(e,x)} required/>
                                                                 {/*{*/}
                                                                     {/*this.state.barangSku[x].barcode === this.state.kd_brg?(*/}
                                                                         {/*<small style={{color:"red",fontWeight:"bold"}}>barcode tidak boleh sama dengan kode barang</small>*/}
