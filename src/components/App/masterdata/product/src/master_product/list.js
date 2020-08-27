@@ -27,11 +27,14 @@ import moment from "moment";
 import imgY from 'assets/status-Y.png';
 import imgT from 'assets/status-T.png';
 import {rangeDate} from "helper";
+import Select from "react-select";
 class ListProduct extends Component{
     constructor(props){
         super(props);
+        this.HandleChangeSortBy = this.HandleChangeSortBy.bind(this);
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleChecked = this.handleChecked.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearchBy = this.handleSearchBy.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
@@ -41,16 +44,9 @@ class ListProduct extends Component{
             byValue : '',
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
-            sortBy: [
-                {id: 1, value: "kd_brg",label:'Kode Barang'},
-                {id: 2, value: "barcode", label:'Barcode'},
-                {id: 3, value: "nm_brg", label:'Nama Barang'},
-                {id: 3, value: "deskripsi", label:'Deskripsi'},
-                {id: 3, value: "kel_brg", label:'Kelompok'},
-                {id: 3, value: "supplier", label:'Supplier'},
-                {id: 3, value: "subdept", label:'Sub Dept'},
-            ],
-            semuaPeriode:false,
+            sort_by_data: [],
+            sort_by:'',
+            semua_periode:false,
             detail:{},
             any_kode_barang:"",
             any_nama_barang:"",
@@ -60,6 +56,26 @@ class ListProduct extends Component{
             any_kategori_barang:"",
         }
     }
+
+    componentWillMount(){
+        let sort_by=[];
+
+        let sort_by_data=[
+            {value: "asc",label:'Teratas'},
+            {value: "desc", label:'Terbawah'},
+        ];
+
+        sort_by_data.map((i) => {
+            sort_by.push({
+                value: i.value,
+                label: i.label
+            });
+        });
+        this.setState({
+            sort_by_data: sort_by,
+        });
+    }
+
     componentDidMount(){
         if(localStorage.any_master_kode_barang!==undefined&&localStorage.any_master_kode_barang!==null&&localStorage.any_master_kode_barang!==''){
             this.setState({any_kode_barang:localStorage.any_master_kode_barang});
@@ -85,23 +101,41 @@ class ListProduct extends Component{
         if(localStorage.date_to_master_product!==undefined&&localStorage.date_to_master_product!==null){
             this.setState({endDate:localStorage.date_to_master_product})
         }
-    }
-
-    handleChange(event){
-        let name=event.target.name;
-        if(name==='any_kode_barang'||name==='any_nama_barang'||name==='any_kelompok_barang'||name==='any_subdept_barang'||name==='any_supplier_barang'||name==='any_kategori_barang'){
+        if(localStorage.semua_periode_barang!==undefined&&localStorage.semua_periode_barang!==null){
+            this.setState({semua_periode:localStorage.semua_periode_barang})
+        }
+        if (localStorage.sort_by_barang !== undefined && localStorage.sort_by_barang !== '') {
             this.setState({
-                [event.target.name]: event.target.value,
-            });
-        }else{
-            event.target.checked===true?localStorage.setItem("semuaPeriode","true"):localStorage.setItem("semuaPeriode","false")
-            this.setState({
-                semuaPeriode:!this.state.semuaPeriode
+                sort_by: localStorage.sort_by_barang
             })
         }
+        console.log("SEMUA PERIODE BARANG",localStorage.semua_periode_barang)
+    }
+    handleChecked(event){
+        localStorage.setItem("semua_periode_barang",event.target.checked);
+        console.log("SEMUA PERIODE BARANG",localStorage.semua_periode_barang);
+        let column=event.target.name;
+        let value=event.target.name;
+        this.setState({
+            [column]: event.target.checked,
+        });
+    }
+    handleChange(event){
+        let column=event.target.name;
+        let value=event.target.name;
+        this.setState({
+            [column]: value,
+        });
 
 
     }
+    HandleChangeSortBy(type) {
+        this.setState({
+            sort_by: type.value,
+        });
+        localStorage.setItem('sort_by_barang', type.value);
+    }
+
     handlePageChange(pageNumber){
         this.props.dispatch(FetchProduct(pageNumber));
     }
@@ -121,7 +155,6 @@ class ListProduct extends Component{
             }
         })
     };
-
     handleSearchBy(event){
         let column = event.target.name;
         let val = event.target.value;
@@ -160,7 +193,7 @@ class ListProduct extends Component{
         localStorage.setItem("endDateProduct",`${dateTo}`);
         console.log(localStorage.getItem("any_kode_barang"));
         let where='';
-        if(localStorage.getItem("semuaPeriode")==="false" || localStorage.getItem("semuaPeriode")===null){
+        if(this.state.semua_periode===false){
             if(dateFrom!==null&&dateTo!==null){
                 if(where!==''){where+='&';}
                 where+=`datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -299,22 +332,13 @@ class ListProduct extends Component{
 
                 <form onSubmit={this.handlesearch} noValidate>
                     <div className="row">
-                        <div className="col-6 col-xs-6 col-md-3">
+                        <div className="col-6 col-xs-6 col-md-2">
                             <div className="form-group">
-                                <label htmlFor="exampleFormControlSelect1">Serach By</label>
-                                <div className="input-group">
-                                    <select className="form-control form-control-lg" id="sort_name" name="sort_name">
-                                        {
-                                            this.state.sortBy.map((v,i)=>{
-                                                return (<option key={i} value={v.value} selected={localStorage.getItem('sort_name')===v.value?true:false}>{v.label}</option>)
-                                            })
-                                        }
-                                    </select>
-                                    <select className="form-control form-control-lg" id="sort_by" name="sort_by" onChange={this.handleChange}>
-                                        <option value="ASC">ASC</option>
-                                        <option value="DESC">DESC</option>
-                                    </select>
-                                </div>
+                                <label className="control-label font-12">Urutan Posisi</label>
+                                <Select
+                                    options={this.state.sort_by_data} onChange={this.HandleChangeSortBy}
+                                    value={this.state.sort_by_data.find(op => {return op.value === this.state.sort_by})}
+                                />
                             </div>
 
                         </div>
@@ -322,14 +346,14 @@ class ListProduct extends Component{
                         <div className="col-6 col-xs-6 col-md-2">
                             <div className="form-group">
                                 <label>Periode Input</label><br/>
-                                <label htmlFor="inputState" className="col-form-label"><input name="semua_periode" type="checkbox" checked={localStorage.getItem("semuaPeriode")==="true"?true:false} onChange={this.handleChange}/> semua periode</label>
+                                <label htmlFor="inputState" className="col-form-label"><input name="semua_periode" type="checkbox" checked={localStorage.semua_periode_barang==="true"?true:false} onChange={this.handleChecked}/> semua periode</label>
                             </div>
                         </div>
                         <div className="col-6 col-xs6 col-md-2">
                             <div className="form-group">
                                 <label htmlFor=""> Periode </label>
-                                <DateRangePicker ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                    <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                                    <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
                                 </DateRangePicker>
                             </div>
                         </div>
@@ -403,6 +427,7 @@ class ListProduct extends Component{
                     <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                         <thead className="bg-light">
                         <tr>
+                            <th className="text-black" style={columnStyle} colSpan={1}/>
                             <th className="text-black" style={columnStyle}>Kode Barang</th>
                             <th className="text-black" style={columnStyle}>Nama Barang</th>
                             <th className="text-black" style={columnStyle}>Kelompok</th>
@@ -412,6 +437,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={columnStyle} colSpan={3}/>
                         </tr>
                         <tr>
+                            <td className="text-black" style={columnStyle}>No</td>
                             <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kode_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
                             <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
                             <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kelompok"/></td>
@@ -431,7 +457,7 @@ class ListProduct extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-
+                                                <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page)-1))}</td>
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>

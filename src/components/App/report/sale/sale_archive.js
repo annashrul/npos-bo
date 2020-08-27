@@ -241,8 +241,6 @@ class SaleArchive extends Component{
                                     <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
                                         <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
                                     </DateRangePicker>
-
-
                                 </div>
                             </div>
                             <div className="col-6 col-xs-6 col-md-2">

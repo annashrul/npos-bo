@@ -3,17 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/masterdata/promo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/masterdata/promo/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/_constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/_constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/promo/promo.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/promo/promo.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducers/masterdata/promo/promo.reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/masterdata/promo/promo.reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,13 +19,52 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js">
+        <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="996" column="74" selection-start-line="996" selection-start-column="74" selection-end-line="996" selection-end-column="74" />
+            <state relative-caret-position="153">
+              <caret line="459" selection-start-line="459" selection-end-line="459" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
+                <element signature="n#!!block;n#HandleChangeType#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#handlePageChange#0;n#ListProduct#0" />
+                <element signature="e#5611#6098#0" />
+                <element signature="n#!!block;n#handleSearchBy#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#handleEnter#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#loc_detail#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#handlePriceCustomer#0;n#ListProduct#0" />
+                <element signature="n#!!block;n#toggleModal#0;n#ListProduct#0" />
+                <element signature="e#11555#12040#0" />
+                <element signature="e#12064#12799#0" />
+                <element signature="e#12837#13212#0" />
+                <element signature="e#17368#20024#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-552">
+              <caret line="91" column="40" selection-start-line="91" selection-start-column="28" selection-end-line="91" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="50" column="9" lean-forward="true" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="155">
+              <caret line="466" column="83" selection-start-line="466" selection-end-line="467" />
             </state>
           </provider>
         </entry>
@@ -49,9 +80,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>jenis_trx</find>
-      <find>post</find>
-      <find>about</find>
       <find>adjus</find>
       <find>penjuala</find>
       <find>adjusment</find>
@@ -79,6 +107,9 @@
       <find>enter</find>
       <find>HandleSearch</find>
       <find>handleSearch2</find>
+      <find>FetchProduct</find>
+      <find>semuaPeriode</find>
+      <find>type_sale_report</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -94,7 +125,6 @@
         <option value="$PROJECT_DIR$/src/redux/actions/inventory/packing.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/packing/trx_packing.js" />
         <option value="$PROJECT_DIR$/src/redux/reducers/masterdata/supplier/supplier.action.js" />
-        <option value="$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/department/form_department.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/department/form_sub_department.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/customer/form_customer.js" />
@@ -105,11 +135,9 @@
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/bank/bank.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/bank/form_bank.js" />
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/closing/index.js" />
-        <option value="$PROJECT_DIR$/public/js/config.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/group_product/form_group_product.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_group_product/list.js" />
-        <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" />
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/price_product/price_product.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/price_product/form_price_product.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_price_product/list.js" />
@@ -138,6 +166,9 @@
         <option value="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" />
+        <option value="$PROJECT_DIR$/public/js/config.js" />
+        <option value="$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js" />
+        <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" />
       </list>
     </option>
   </component>
@@ -190,6 +221,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -221,7 +253,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
@@ -229,14 +261,60 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="inventory" type="462c0819:PsiDirectoryNode" />
-              <item name="delivery_note" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="report" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="report" type="462c0819:PsiDirectoryNode" />
+              <item name="sale" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -317,18 +395,20 @@
       <workItem from="1597993072617" duration="16647000" />
       <workItem from="1598332016086" duration="16560000" />
       <workItem from="1598417887619" duration="624000" />
-      <workItem from="1598425855247" duration="7939000" />
+      <workItem from="1598425855247" duration="8767000" />
+      <workItem from="1598504450268" duration="614000" />
+      <workItem from="1598510369709" duration="3336000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="627258000" />
+    <option name="totallyTimeSpent" value="632036000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24107143" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17782739" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -342,14 +422,14 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.20637584" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.16946308" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24107143" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17782739" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -363,7 +443,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5029762" side_tool="true" weight="0.15771812" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" weight="0.20637584" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49702382" visible="true" weight="0.16946308" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -377,13 +457,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_group_product/list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="160" column="24" lean-forward="true" selection-start-line="160" selection-start-column="24" selection-end-line="160" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/customer_type/form_customer_type.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
@@ -544,20 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="47" column="76" selection-start-line="47" selection-end-line="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2783">
-          <caret line="295" column="56" selection-start-line="295" selection-end-line="296" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/bank/form_bank.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="438">
@@ -651,19 +710,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="373">
           <caret line="153" column="43" selection-start-line="153" selection-start-column="43" selection-end-line="153" selection-end-column="43" />
-          <folding>
-            <element signature="n#!!block;n#getProps#0;n#Produksi#0" />
-            <element signature="n#!!block;n#componentDidMount#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleCommonInputChange#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleSearch#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleAddBrg#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleRemove#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleReset#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleChangeInputValue#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleChangeInput#0;n#Produksi#0" />
-            <element signature="n#!!block;n#HandleSubmit#0;n#Produksi#0" />
-            <element signature="n#!!block;n#autoSetQty#0;n#Produksi#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -671,22 +717,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4800">
           <caret line="723" column="21" lean-forward="true" selection-start-line="723" selection-start-column="21" selection-end-line="723" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="n#!!block;n#getProps#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#componentWillMount#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#setTglOrder#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleCommonInputChange#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleSearch#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleAddBrg#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleRemove#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleReset#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleChangeInputValue#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleChangeInput#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#HandleSubmit#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#autoSetQty#0;n#TrxAdjustment#0" />
-            <element signature="n#!!block;n#getData#0;n#TrxAdjustment#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -732,13 +762,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="468" column="134" selection-start-line="468" selection-start-column="92" selection-end-line="468" selection-end-column="134" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/purchase/purchaseorder/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="447">
@@ -750,61 +773,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
           <caret line="606" column="32" lean-forward="true" selection-start-line="606" selection-start-column="32" selection-end-line="606" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-            <element signature="e#2831#3062#0" />
-            <element signature="n#!!block;n#getProps#0;n#FormPromo#0" />
-            <element signature="e#3300#3569#0" />
-            <element signature="e#3608#3877#0" />
-            <element signature="e#4401#4681#0" />
-            <element signature="e#4720#4988#0" />
-            <element signature="e#5105#10623#0" />
-            <element signature="e#5181#5893#0" />
-            <element signature="e#6258#10352#0" />
-            <element signature="e#10397#10502#0" />
-            <element signature="e#10506#10612#0" />
-            <element signature="n#!!block;n#componentWillMount#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#componentWillReceiveProps#0;n#FormPromo#0" />
-            <element signature="e#10892#12761#0" />
-            <element signature="e#11198#11438#0" />
-            <element signature="e#11475#11556#0" />
-            <element signature="e#11592#11737#0" />
-            <element signature="e#11774#11919#0" />
-            <element signature="e#11957#12755#0" />
-            <element signature="n#!!block;n#handleChangeCategory#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleChangeJenisMember#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleChangeLokasi#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleChangeKelBarang#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleChangeSupplier#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleChangeDynamic#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#getFiles#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleClearState#0;n#FormPromo#0" />
-            <element signature="e#17675#18336#0" />
-            <element signature="e#19224#19672#0" />
-            <element signature="e#19729#20015#0" />
-            <element signature="n#!!block;n#handlePagin1#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handlePagin1#1;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleSearch1#0;n#FormPromo#0" />
-            <element signature="n#!!block;n#handleSearch1#1;n#FormPromo#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="171" column="49" lean-forward="true" selection-start-line="171" selection-start-column="49" selection-end-line="171" selection-end-column="49" />
-          <folding>
-            <element signature="e#1186#2570#0" />
-            <element signature="e#2611#3920#0" />
-            <element signature="e#3960#5193#0" />
-            <element signature="e#6680#7807#0" />
-            <element signature="e#7850#8473#0" />
-            <element signature="e#8518#9790#0" />
-            <element signature="e#9835#10451#0" />
-            <element signature="e#10491#10912#0" />
-            <element signature="e#10974#12322#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -812,19 +780,65 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="246">
           <caret line="228" column="37" lean-forward="true" selection-start-line="228" selection-start-column="37" selection-end-line="228" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#48#0" expanded="true" />
-            <element signature="e#4708#5860#0" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="996" column="74" selection-start-line="996" selection-start-column="74" selection-end-line="996" selection-end-column="74" />
+        <state relative-caret-position="360">
+          <caret line="1000" selection-start-line="1000" selection-end-line="1000" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="50" column="9" lean-forward="true" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-552">
+          <caret line="91" column="40" selection-start-line="91" selection-start-column="28" selection-end-line="91" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/report/sale/sale_archive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="466" column="83" selection-start-line="466" selection-end-line="467" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="459" selection-start-line="459" selection-end-line="459" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#HandleChangeType#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#handlePageChange#0;n#ListProduct#0" />
+            <element signature="e#5611#6098#0" />
+            <element signature="n#!!block;n#handleSearchBy#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#handleEnter#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#loc_detail#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#handlePriceCustomer#0;n#ListProduct#0" />
+            <element signature="n#!!block;n#toggleModal#0;n#ListProduct#0" />
+            <element signature="e#11555#12040#0" />
+            <element signature="e#12064#12799#0" />
+            <element signature="e#12837#13212#0" />
+            <element signature="e#17368#20024#0" />
           </folding>
         </state>
       </provider>
