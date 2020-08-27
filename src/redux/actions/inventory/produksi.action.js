@@ -119,14 +119,13 @@ export const storeProduksi = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
+                console.log(data);
                 Swal.fire({
                     title: 'Transaksi berhasil.',
                     html:`<table class="table table-bordered table-hover"><tbody><tr><th>Total Hpp</th><th>${toRp(data.result.total_hpp)}</th></tr><tr><th>Qty Estimasi</th><th>${data.result.qty_estimasi}</th></tr><tr><th>Hpp Rata-Rata (Peritem)</th><th>${data.result.hpp_peritem}</th></tr></tbody></table>`,
                     icon: 'success',
                     showCancelButton: true,
-                    confirmButtonColor: '#ff9800',
                     cancelButtonColor: '#2196F3',
-                    confirmButtonText: 'Print Nota?',
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     destroy('production');

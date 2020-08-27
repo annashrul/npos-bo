@@ -409,7 +409,6 @@ class Produksi extends Component{
                             cancelButtonText: 'Tidak!'
                         }).then((result) => {
                             if (result.value) {
-
                                 let detail = [];
                                 let exp = this.state.barang_paket.split("|", 2);
                                 let data={};
@@ -428,10 +427,33 @@ class Produksi extends Component{
                                         "qty": item.qty_adjust,
                                         "harga_beli": item.harga_beli
                                     })
+                                    // if(parseFloat(item.qty_adjust) > parseFloat(item.stock)){
+                                    //     alert("qty melebihi sistem");
+                                    // }
                                 });
                                 data['detail'] = detail;
+
+                                for(let x=0;x<res.length;x++){
+                                    if(parseFloat(res[x].qty_adjust) > parseFloat(res[x].stock)){
+                                        Swal.fire({
+                                            title: `Anda yakin akan melanjutkan transaksi?`,
+                                            text: `ada qty yang melebihi stock`,
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Ya!',
+                                            cancelButtonText: 'Tidak!'
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                this.props.dispatch(storeProduksi(data));
+                                            }
+                                        })
+                                    }else{
+                                        this.props.dispatch(storeProduksi(data));
+                                    }
+                                }
                                 console.log(data);
-                                this.props.dispatch(storeProduksi(data));
                             }
                         })
 
@@ -705,7 +727,9 @@ class Produksi extends Component{
                                                                 <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli))} className="form-control"/></td>
                                                                 <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                                 <td style={columnStyle}>
-                                                                    <input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/>
+                                                                    <input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={
+                                                                        parseFloat(this.state.brgval[index].qty_adjust) <= 0 ?0:this.state.brgval[index].qty_adjust
+                                                                    }  className="form-control"/>
                                                                     {
                                                                         parseFloat(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
                                                                     }
@@ -746,7 +770,8 @@ const mapStateToPropsCreateItem = (state) => ({
     loadingbrg: state.productReducer.isLoadingBrg,
     nota:state.produksiReducer.code,
     barangBahan:state.produksiReducer.dataBahan,
-    barangPaket:state.produksiReducer.dataPaket
+    barangPaket:state.produksiReducer.dataPaket,
+    isLoading:state.produksiReducer.isLoading,
 });
 
 export default connect(mapStateToPropsCreateItem)(Produksi);
