@@ -14,7 +14,7 @@ import {rangeDate} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {HEADERS} from "../../../../../redux/actions/_constants";
 import {FetchAdjustmentExcel} from "../../../../../redux/actions/adjustment/adjustment.action";
-import {deleteReportSale} from "../../../../../redux/actions/sale/sale.action";
+import AdjustmentReportExcel from 'components/App/modals/report/inventory/adjustment_report/form_adjustment_excel'
 
 
 class AdjustmentReport extends Component{
@@ -28,6 +28,7 @@ class AdjustmentReport extends Component{
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.state={
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
@@ -132,10 +133,14 @@ class AdjustmentReport extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&q=${any}`;
+            where+=`&search=${any}`;
         }
-        this.props.dispatch(FetchAdjustmentExcel(where));
+        this.setState({
+            where_data:where
+        })
+        localStorage.setItem("where_adjust_report",where);
         this.props.dispatch(FetchAdjustment(pageNumber,where))
+        // this.props.dispatch(FetchAdjustmentExcel(where));
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
@@ -200,6 +205,14 @@ class AdjustmentReport extends Component{
         })
 
     }
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formAdjustmentExcel"));
+        this.props.dispatch(FetchAdjustmentExcel(1,this.state.where_data,total));
+    }
 
     render(){
         const {total,last_page,per_page,current_page,from,to,data} = this.props.adjustmentReport;
@@ -262,58 +275,22 @@ class AdjustmentReport extends Component{
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label>Cari</label>
-                                        <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                     </div>
                                 </div>
-                                <div className="col-6 col-xs-6 col-md-4">
+                                <div className="col-6 col-xs-6 col-md-3">
                                     <div className="form-group">
-                                        <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"></i></button>
-                                        <ReactHTMLTableToExcel className="btn btn-primary btnBrg" table="report_adjusment" filename="laporan adjusment" sheet="laporan adjusment" buttonText="export excel"/>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                            <i className="fa fa-search"/>
+                                        </button>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
+
                                 </div>
                             </div>
                             <div className="table-responsive" style={{overflowX: "auto"}}>
-                                {/*EXPORT EXCEL*/}
-                                <table className="table table-hover table-bordered"  id="report_adjusment" style={{display:"none"}}>
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={6}>{this.state.startDate} - {this.state.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={6}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                    </tr>
-
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>No</th>
-                                        <th className="text-black" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" style={columnStyle}>No. Adjusment</th>
-                                        <th className="text-black" style={columnStyle}>Operator</th>
-                                        <th className="text-black" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" style={columnStyle}>Keterangan</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {
-                                        (
-                                            typeof this.props.adjustmentReportExcel.data === 'object' ?
-                                                this.props.adjustmentReportExcel.data.map((v,i)=>{
-                                                    return(
-                                                        <tr key={i}>
-                                                            <td style={columnStyle}>{i+1}</td>
-                                                            <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
-                                                            <td style={columnStyle}>{v.kd_trx}</td>
-                                                            <td style={columnStyle}>{v.username}</td>
-                                                            <td style={columnStyle}>{v.lokasi}</td>
-                                                            <td style={columnStyle}>{v.keterangan}</td>
-                                                        </tr>
-                                                    )
-                                                })
-                                                : "No data."
-                                        )
-                                    }
-                                    </tbody>
-                                </table>
-                                {/*END REPORT EXCEL*/}
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
@@ -371,7 +348,7 @@ class AdjustmentReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-
+                            <AdjustmentReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />
                             <DetailAdjustment detail={this.props.adjustmentDetailSatuan} />
                         </div>
                     </div>

@@ -451,6 +451,7 @@ class Produksi extends Component{
                                         })
                                     }else{
                                         this.props.dispatch(storeProduksi(data));
+                                        break;
                                     }
                                 }
                                 console.log(data);
