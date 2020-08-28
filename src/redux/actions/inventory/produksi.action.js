@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
 import {setLoadingbrg, setProductbrg} from "../masterdata/product/product.action";
+import {toRp} from "../../../helper";
 
 export function setLoading(load){
     return {type : PRODUKSI.LOADING,load}
@@ -118,14 +119,13 @@ export const storeProduksi = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
+                console.log(data);
                 Swal.fire({
                     title: 'Transaksi berhasil.',
                     html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem)}</td></tr></tbody></table>`,
                     icon: 'success',
                     showCancelButton: true,
-                    confirmButtonColor: '#ff9800',
                     cancelButtonColor: '#2196F3',
-                    confirmButtonText: 'Print Nota?',
                     cancelButtonText: 'Oke!'
                 }).then((result) => {
                     destroy('production');

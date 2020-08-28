@@ -23,12 +23,15 @@ class BayarPiutang extends Component{
             tempo:"",
             catatan:"-",
             jumlah_telah_bayar:"",
+            jumlah_bayar:"",
             userid:0,
             error:{
                 location:"",
                 jenis_trx:"",
+                nota_pembelian:"",
                 catatan:"",
-                jumlah_telah_bayar: ""
+                jumlah_telah_bayar: "",
+                jumlah_bayar:"",
             }
         }
         this.handleChange = this.handleChange.bind(this);
@@ -126,22 +129,40 @@ class BayarPiutang extends Component{
             err = Object.assign({}, err, {
                 jenis_trx:"Jenis Pembayaran Tidak Boleh Kosong"
             });
+            this.setState({error: err,})
+            console.log("jenis_trx")
         }
         else if(this.state.nota_pembelian===''){
             err = Object.assign({}, err, {
                 nota_pembelian:"Nota Pembelian Tidak Boleh Kosong"
             });
+            this.setState({error: err,})
+            console.log("nota_pembelian")
         }
         else if(this.state.catatan===''){
             err = Object.assign({}, err, {
                 catatan:"Keterangan Tidak Boleh Kosong"
             });
+            this.setState({error: err,})
+            console.log("catatan")
         }
-        else if(this.state.jumlah_telah_bayar===''||this.state.jumlah_telah_bayar==='0'){
+
+        else if(this.state.jumlah_bayar===''||this.state.jumlah_bayar==='0' || parseInt(this.state.jumlah_bayar)===0){
             err = Object.assign({}, err, {
-                jumlah_telah_bayar:"Jumlah Bayar Tidak Boleh Kosong"
+                jumlah_bayar:"Jumlah Bayar Tidak Boleh Kosong"
             });
-        }else{
+            this.setState({error: err,})
+        }
+        else if(parseInt(this.state.jumlah_bayar)>(parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar))){
+            err = Object.assign({}, err, {
+                jumlah_bayar:"Jumlah Bayar Tidak Boleh Lebih Dari Jumlah Piutang"
+            });
+            this.setState({
+                error: err,
+                jumlah_bayar:0
+            })
+        }
+        else{
             Swal.fire({
                 title: 'Simpan Piutang?',
                 text: "Pastikan data yang anda masukan sudah benar!",
@@ -156,27 +177,25 @@ class BayarPiutang extends Component{
                     let data={};
                     data['nota_jual'] = this.state.nota_pembelian;;
                     data['tanggal'] = moment(this.state.tgl).format("yyyy-MM-DD");
-                    data['jumlah'] = this.state.jumlah_telah_bayar;
+                    data['jumlah'] = this.state.jumlah_bayar;
                     data['jumlah_piutang'] = parseInt(this.props.getPiutang.gt);
                     data['tgl_jatuh_tempo'] = moment(this.props.getPiutang.tempo).format("yyyy-MM-DD");
                     data['lokasi'] = this.props.getPiutang.lokasi===undefined||this.props.getPiutang.lokasi===''||this.props.getPiutang.lokasi===null?'LK/0001':this.props.getPiutang.lokasi;
                     data['cara_byr'] = this.state.jenis_trx;
-                    data['bank'] = '-'
+                    data['bank'] = '-';
                     data['pembulatan'] = 0;
                     data['nogiro'] = 0;
                     data['tanggal_cair'] = moment(new Date()).format("yyyy-MM-DD");
                     data['ket'] = this.state.catatan;
                     data['userid'] = this.state.userid;
-                    data['jumlah_sudah_bayar'] = this.state.jumlah_telah_bayar;
+                    data['jumlah_sudah_bayar'] = this.props.getPiutang.jumlah_telah_bayar;
+                    console.log("submitted",data);
                     this.props.dispatch(storePiutang(data));
                 }
             })
-
-
         }
-        this.setState({
-            error: err
-        })
+
+
     }
     handleCancel(e){
         e.preventDefault();
@@ -338,20 +357,20 @@ class BayarPiutang extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Bayar</label>
-                                        <input type="text" name="jumlah_telah_bayar" className="form-control" value={this.state.jumlah_telah_bayar} onChange={this.handleChange}/>
+                                        <input type="text" name="jumlah_bayar" className="form-control" value={this.state.jumlah_bayar} onChange={this.handleChange}/>
                                         <div className="invalid-feedback"
-                                             style={this.state.error.jumlah_telah_bayar !== "" ? {display: 'block'} : {display: 'none'}}>
-                                            {this.state.error.jumlah_telah_bayar}
+                                             style={this.state.error.jumlah_bayar !== "" ? {display: 'block'} : {display: 'none'}}>
+                                            {this.state.error.jumlah_bayar}
                                         </div>
-                                        {
-                                            this.state.jumlah_telah_bayar > (parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar)) ? <small style={{fontWeight:"bold",color:"red"}}>Jumlah Bayar Melebihi Piutang</small>:""
-                                        }
+                                        {/*{*/}
+                                            {/*parseInt(this.state.jumlah_bayar)>(parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar))?<small style={{color:"red",fontWeight:"bold"}}>jumlah bayar tidak boleh lebih dari sisa piutang</small>:""*/}
+                                        {/*}*/}
                                     </div>
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <div className="pull-right" style={{alignSelf: "flex-end"}}>
-                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_telah_bayar > (parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar))?true:false}>Simpan</button>
+                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} >Simpan</button>
                                             <button className="btn btn-danger btn-sm" style={{marginTop:"29px",marginLeft:"5px"}} onClick={this.handleCancel}>Batal</button>
                                         </div>
 

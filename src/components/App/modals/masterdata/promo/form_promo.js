@@ -569,11 +569,22 @@ class FormPromo extends Component{
             }
         });
         if(this.state.category==='kelbrg'){
+            if(this.state.diskon1===''||parseInt(this.state.diskon1)===0||this.state.diskon1==='0'){
+                err = Object.assign({}, err, {diskon1:"diskon 1 tidak boleh kosong"});
+                this.setState({error: err});
+                return;
+            }
             detail.push({
                 barcode:this.state.kel_brg, diskon:this.state.diskon1, diskon2:this.state.diskon2, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
             })
+
         }
         if(this.state.category==='spr'){
+            if(this.state.diskon1===''||parseInt(this.state.diskon1)===0||this.state.diskon1==='0'){
+                err = Object.assign({}, err, {diskon1:"diskon 1 tidak boleh kosong"});
+                this.setState({error: err});
+                return;
+            }
             detail.push({
                 barcode:this.state.supplier, diskon:this.state.diskon1, diskon2:this.state.diskon1, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
             })
@@ -594,6 +605,8 @@ class FormPromo extends Component{
                 }
             });
         }
+
+
         parseData['detail']=detail;
         if(this.state.isArrLength === undefined){
             console.log("UPDATE")
@@ -760,6 +773,7 @@ class FormPromo extends Component{
                                                     {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1)>100?'inputan tidak boleh lebih dari 100':'':''}
                                                     {parseInt(this.state.diskon1)<0?'inputan tidak boleh berisi angka negatif':''}
                                                 </small>
+
                                                 <div className="invalid-feedback"
                                                      style={this.state.error.diskon1 !== "" ? {display: 'block'} : {display: 'none'}}>
                                                     {this.state.error.diskon1}
