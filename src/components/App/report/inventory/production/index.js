@@ -432,7 +432,7 @@ class ProductionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama Toko</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Qty Estimasi</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">HPP</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Rata - rata HPP per QTY</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
@@ -481,14 +481,14 @@ class ProductionReport extends Component{
                                 </table>
 
                             </div>
-                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                            <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
                                     total={total}
                                     callback={this.handlePageChange.bind(this)}
                                 />
-                            </div> */}
+                            </div>
                             <DetailProduction productionDetail={this.props.productionDetail}/>
                             <ProductionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                             <ApproveProduction/>

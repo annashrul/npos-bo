@@ -362,8 +362,7 @@ class SideMenu extends Component {
                 path==='/report/opname' || 
                 path==='/report/expedisi' || 
                 path==='/report/mutation' || 
-                path==='/report/alokasi_trx' || 
-                path==='/report/production' || 
+                path==='/report/alokasi_trx' ||
                 path==='/report/dn'){
                console.log("didmount",path)
                this.setState({
@@ -556,6 +555,7 @@ class SideMenu extends Component {
                             <li className={path==='/report/closing'?"active":''}><Link to="/report/closing" style={{width:'fit-content'}}> <i className="zmdi zmdi-lock" />Closing</Link></li>
                             <li className={path==='/report/cash'?"active":''}><Link to="/report/cash" style={{width:'fit-content'}}> <i className="fa fa-money" />Kas</Link></li>
                             <li className={path==='/report/laba_rugi'?"active":''}><Link to="/report/laba_rugi" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Laba Rugi</Link></li>
+                            <li className={path==='/report/production'?"active":''}><Link to="/report/production" style={{width:'fit-content'}}> <i className="fa fa-product-hunt" />Produksi</Link></li>
 
                             {/* SUBLAPORAN PENJUALAN MODUL START */}
                             <li className={"treeview" + (this.state.isReportPenjualan===true || 
@@ -577,7 +577,6 @@ class SideMenu extends Component {
                                 path==='/report/inventory'|| path==='/report/adjustment'||
                                 path==='/report/alokasi'||
                                 path==='/report/opname'||
-                                path==='/report/production'||
                                 path==='/report/expedisi'||
                                 path==='/report/mutation'||
                                 path==='/report/alokasi_trx'||
@@ -592,7 +591,6 @@ class SideMenu extends Component {
                                     <li className={path==='/report/mutation'?"active":''}><Link to="/report/mutation" style={{width:'fit-content'}}> <i className="zmdi zmdi-card" />Mutasi</Link></li>
                                     <li className={path==='/report/alokasi_trx'?"active":''}><Link to="/report/alokasi_trx" style={{width:'fit-content'}}> <i className="fa fa-money" />Alokasi Trx</Link></li>
                                     <li className={path==='/report/expedisi'?"active":''}><Link to="/report/expedisi" style={{width:'fit-content'}}> <i className="fa fa-truck" />Ekspedisi</Link></li>
-                                    <li className={path==='/report/production'?"active":''}><Link to="/report/production" style={{width:'fit-content'}}> <i className="fa fa-industry" />Produksi</Link></li>
                                 </ul>
                             </li>
                             {/* SUBLAPORAN INVENTORY MODUL END */}

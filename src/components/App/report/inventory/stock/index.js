@@ -3,6 +3,7 @@ import Layout from 'components/App/Layout'
 import {FetchStockReport,FetchStockReportExcel} from "redux/actions/report/inventory/stock_report.action";
 import connect from "react-redux/es/connect/connect";
 import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
+import StockReportExcel from "components/App/modals/report/inventory/stock_report/form_stock_report_excel";
 import moment from "moment";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {FetchStockReportDetailSatuan} from "redux/actions/report/inventory/stock_report.action";
@@ -24,6 +25,7 @@ class InventoryReport extends Component{
         this.handleEvent = this.handleEvent.bind(this);
         this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
         this.state={
+            where_data:"",
             isSelected:false,
             location:"",
             location_data:[],
@@ -204,9 +206,21 @@ class InventoryReport extends Component{
             where+=`&searchby=${search_by}&q=${any}`;
         }
         console.log(where);
+        this.setState({
+            where_data:where
+        })
+        localStorage.setItem("where_stock_report",pageNumber);
         this.props.dispatch(FetchStockReport(pageNumber,where));
-        this.props.dispatch(FetchStockReportExcel(pageNumber,where));
+        // this.props.dispatch(FetchStockReportExcel(pageNumber,where));
 
+    }
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formStockExcel"));
+        this.props.dispatch(FetchStockReportExcel(1,this.state.where_data,total));
     }
 
 
@@ -298,15 +312,14 @@ class InventoryReport extends Component{
 
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
-                                        <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"/></button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_stock_to_excel"
-                                            filename="laporan_stock"
-                                            sheet="laporan stock"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                            <i className="fa fa-search"/>
+                                        </button>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
+
                                 </div>
                             </div>
                             {/*DATA EXCEL*/}
@@ -493,7 +506,7 @@ class InventoryReport extends Component{
                                 />
                             </div>
                             <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan}/>
-                            
+                            <StockReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>
 

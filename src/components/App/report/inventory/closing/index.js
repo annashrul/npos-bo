@@ -48,6 +48,7 @@ class Closing extends Component{
     }
     componentWillMount(){
         this.getProps(this.props);
+        this.handleParam();
     }
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
@@ -80,10 +81,11 @@ class Closing extends Component{
         localStorage.setItem('location_report_closing', lk.value);
     }
 
-
-
     handleSearch(e){
         e.preventDefault();
+        this.handleParam();
+    }
+    handleParam(){
         let where='';
         if(this.state.startDate!==undefined&&this.state.startDate!==null){
             where+=`&datefrom=${moment(this.state.startDate).format("yyyy-MM-DD")}`;
@@ -105,7 +107,7 @@ class Closing extends Component{
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label>Tanggal</label>
-                                        <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleEvent} />
+                                        <input type="date" name="startDate" className="form-control" value={this.state.startDate===undefined?moment(new Date()).format("yyyy-MM-DD"):moment(this.state.startDate).format("yyyy-MM-DD")} onChange={this.handleEvent} />
 
                                     </div>
                                 </div>

@@ -54,7 +54,7 @@ class ApproveProduction extends Component{
             //         txtHpp:"Hpp tidak boleh kosong."
             //     });
             // }
-            if (this.state.txtSisaApproval === "") {
+            if (this.state.txtSisaApproval === "" || localStorage.getItem('qty_for_approve') ==='') {
                 err = Object.assign({}, err, {
                     txtSisaApproval: "Sisa Approval tidak boleh kosong."
                 });
@@ -76,7 +76,7 @@ class ApproveProduction extends Component{
                 if (result.value) {
                     let data={};
                     data['hpp'] = this.state.txtHpp===''?localStorage.getItem('hpp_for_approve'):this.state.txtHpp;
-                    data['sisa_approval'] = this.state.txtSisaApproval;
+                    data['sisa_approval'] = this.state.txtSisaApproval === ''?localStorage.getItem('qty_for_approve'):this.state.txtSisaApproval;
                     data['kd_trx'] = localStorage.getItem('code_for_approve');
                     this.props.dispatch(storeApproval(data));
                 }
@@ -103,14 +103,14 @@ class ApproveProduction extends Component{
                                 <tbody>
                                     <tr>
                                         <td style={{textAlign:"center"}}>
-                                            <input type="text" className="form-control" name="txtHpp" value={this.state.txtHpp === ''?localStorage.getItem('hpp_for_approve'):this.state.txtHpp} readOnly onChange={(e => this.HandleCommonInputChange(e))}></input>
+                                            <input type="number" className="form-control" name="txtHpp" value={this.state.txtHpp === ''?localStorage.getItem('hpp_for_approve'):this.state.txtHpp} readOnly="true" onChange={(e => this.HandleCommonInputChange(e))}></input>
                                             <div className="invalid-feedback"
                                                      style={this.state.error.txtHpp !== "" ? {display: 'block'} : {display: 'none'}}>
                                                     {this.state.error.txtHpp}
                                                 </div>
                                         </td>
                                         <td style={{textAlign:"center"}}>
-                                            <input type="text" className="form-control" name="txtSisaApproval" value={this.state.txtSisaApproval === ''?localStorage.getItem('qty_for_approve'):this.state.txtSisaApproval} onChange={(e => this.HandleCommonInputChange(e))}></input>
+                                            <input type="number" className="form-control" name="txtSisaApproval" value={this.state.txtSisaApproval === ''?localStorage.getItem('qty_for_approve'):this.state.txtSisaApproval} onChange={(e => this.HandleCommonInputChange(e))}></input>
                                             <div className="invalid-feedback"
                                                      style={this.state.error.txtSisaApproval !== "" ? {display: 'block'} : {display: 'none'}}>
                                                     {this.state.error.txtSisaApproval}
