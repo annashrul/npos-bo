@@ -92,6 +92,10 @@ export const toPersen= (val1,val2) => {
     let con =  (parseFloat(val1)/parseInt(val2))*100;
     return con.toFixed(2);
 }
+export const toNominal= (val1,val2) => {
+    let con =  parseFloat(val1) * (parseFloat(val2)/100);
+    return con.toFixed(2);
+}
 
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
