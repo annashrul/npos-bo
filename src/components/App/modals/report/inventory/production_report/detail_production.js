@@ -69,10 +69,6 @@ class DetailProduction extends Component{
                                         <td colSpan="6">Total</td>
                                         <td style={{textAlign:"right"}}>{t_harga_beli}</td>
                                     </tr>
-                                    <tr>
-                                        <td colSpan="6">Rata - rata</td>
-                                        <td style={{textAlign:"right"}}>{parseInt(t_harga_beli)/parseInt(typeof data === 'object' ? data.length > 0 ? data.length : 0 : 0)}</td>
-                                    </tr>
                                 </tfoot>
                             </table>
                         </div>

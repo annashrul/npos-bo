@@ -248,12 +248,12 @@ export const FetchProductEdit = (kode)=>{
                 dispatch(setProductEdit(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error);
+            console.log("product error",error);
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
                 type: 'danger',
-                text: error.response.data.msg,
+                text: error.msg,
             });
         })
     }

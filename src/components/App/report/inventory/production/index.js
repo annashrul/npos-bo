@@ -12,7 +12,6 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {statusQ} from "helper";
 class ProductionReport extends Component{
     constructor(props){
@@ -239,8 +238,6 @@ class ProductionReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {per_page,current_page,from,to,data,total} = this.props.productionReport;
-        let t_harga_beli = 0;
-        let t_qty = 0;
         console.log("this.props.productionReportExcel.data.length",typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0)
         return (
             <Layout page="Laporan Production">
@@ -345,81 +342,11 @@ class ProductionReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
                                             <i className="fa fa-print"></i> Export
                                         </button>
-                                        {/* <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_production_to_excel"
-                                            filename="laporan_produksi"
-                                            sheet="barang"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel> */}
                                     </div>
 
                                 </div>
 
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_production_to_excel" style={{display:"none"}}>
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={10}>{this.state.startDate} - {this.state.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={10}>LAPORAN PRODUCTION</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Produksi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Barang</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Operator</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Toko</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Qty Estimasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.productionReportExcel.data==='object'? this.props.productionReportExcel.data.length>0?
-                                            this.props.productionReportExcel.data.map((v,i)=>{
-                                                t_harga_beli +=parseFloat(v.hpp);
-                                                t_qty +=parseFloat(v.qty_estimasi);
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.kd_produksi}</td>
-                                                        <td style={columnStyle}>{moment(v.tanggal).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.nm_brg}</td>
-                                                        <td style={columnStyle}>{v.operator}</td>
-                                                        <td style={columnStyle}>{v.lokasi}</td>
-                                                        <td style={columnStyle}>{v.nama_toko}</td>
-                                                        <td style={columnStyle}>{v.qty_estimasi}</td>
-                                                        <td style={columnStyle}>{parseInt(v.hpp)}</td>
-                                                        <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Aproved'):"")}</td>
-                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    <tfoot>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Total</td>
-                                            <td style={columnStyle}>{t_qty}</td>
-                                            <td style={columnStyle}>{t_harga_beli}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Rata - rata</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_qty)/parseInt(typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0))}</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_harga_beli)/parseInt(typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0))}</td>
-                                        </tr>
-                                    </tfoot>
-                                    </tbody>
-                                }
-                            </table>
-                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -432,7 +359,7 @@ class ProductionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama Toko</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Qty Estimasi</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">HPP</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Rata - rata HPP per QTY</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
@@ -481,14 +408,14 @@ class ProductionReport extends Component{
                                 </table>
 
                             </div>
-                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                            <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
                                     total={total}
                                     callback={this.handlePageChange.bind(this)}
                                 />
-                            </div> */}
+                            </div>
                             <DetailProduction productionDetail={this.props.productionDetail}/>
                             <ProductionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                             <ApproveProduction/>

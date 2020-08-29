@@ -6,17 +6,18 @@ import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
-import Preloader from "../../../../Preloader";
-import {rangeDate, toRp} from "../../../../helper";
+import Preloader from "Preloader";
+import {rangeDate, toRp} from "helper";
 import {FetchReportSaleByCust} from "redux/actions/sale/sale_by_cust.action";
 import Swal from "sweetalert2";
+import SaleByCustReportExcel from "components/App/modals/report/sale/form_sale_by_cust_excel";
 import {
     deleteReportSaleByCust,
     FetchReportDetailSaleByCust,
     FetchReportSaleByCustExcel
-} from "../../../../redux/actions/sale/sale_by_cust.action";
+} from "redux/actions/sale/sale_by_cust.action";
 import DetailSaleByCustReport from "../../modals/report/sale/detail_sale_by_cust_report";
-import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {HEADERS} from "../../../../redux/actions/_constants";
 
@@ -34,6 +35,7 @@ class SaleByCustArchive extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             type_data:[],
             type:"",
             location_data:[],
@@ -238,8 +240,12 @@ class SaleByCustArchive extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             if(where!==''){where+='&'}where+=`search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
+        localStorage.setItem("where_sale_by_cust_report",pageNumber);
         this.props.dispatch(FetchReportSaleByCust(pageNumber===null?1:pageNumber,where));
-        this.props.dispatch(FetchReportSaleByCustExcel(pageNumber===null?1:pageNumber,where));
+        // this.props.dispatch(FetchReportSaleByCustExcel(pageNumber===null?1:pageNumber,where));
     }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_sale_by_cust_report",pageNumber);
@@ -288,6 +294,14 @@ class SaleByCustArchive extends Component{
             status: st.value,
         });
         localStorage.setItem('status_sale_by_cust_report', st.value);
+    }
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formSaleByCustExcel"));
+        this.props.dispatch(FetchReportSaleByCustExcel(1,this.state.where_data,total));
     }
 
     render(){
@@ -404,64 +418,18 @@ class SaleByCustArchive extends Component{
                                     <input type="text" name="any_sale_by_cust_report" className="form-control" value={this.state.any_sale_by_cust_report} onChange={(e)=>this.handleChange(e)}/>
                                 </div>
                             </div>
-                            <div className="col-6 col-xs-6 col-md-3">
-                                <div className="form-group">
-                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                        <i className="fa fa-search"/>
-                                    </button>
-                                    <ReactHTMLTableToExcel
-                                        className="btn btn-primary btnBrg"
-                                        table="report_sale_by_cust_to_excel"
-                                        filename="laporan_penjualan"
-                                        sheet="barang"
-                                        buttonText="export excel">
-                                    </ReactHTMLTableToExcel>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                            <i className="fa fa-search"/>
+                                        </button>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
+                                    </div>
+
                                 </div>
-
-                            </div>
                             <div className="col-md-12">
-                                {/*DATA EXCEL*/}
-                                <table className="table table-hover"  id="report_sale_by_cust_to_excel" style={{display:"none"}}>
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={6}>{this.state.startDate} - {this.state.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={6}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                    </tr>
-
-                                    <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kd Cust</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Gross Sales</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Item</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Trx</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Service</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Qty</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        <tbody>
-                                        {
-                                            typeof this.props.sale_by_custReportExcel.data==='object'? this.props.sale_by_custReportExcel.data.length>0?
-                                                this.props.sale_by_custReportExcel.data.map((v,i)=>{
-                                                    return (
-                                                        <tr key={i}>
-                                                            <td style={columnStyle}>{v.kd_cust}</td>
-                                                            <td style={columnStyle}>{v.nama}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(v.service)}</td>
-                                                            <td style={{textAlign:"right"}}>{v.qty}</td>
-                                                        </tr>
-                                                    );
-                                                }) : "No data." : "No data."
-                                        }
-                                        </tbody>
-                                    }
-                                </table>
-                                {/*END DATA EXCEL*/}
                                 <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
 
                                     <table className="table table-hover table-bordered">
@@ -526,6 +494,7 @@ class SaleByCustArchive extends Component{
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                 </div>
+                                <SaleByCustReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />
                             </div>
                         </div>
                     </div>

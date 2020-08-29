@@ -122,7 +122,7 @@ export const storeProduksi = (data) => {
                 console.log(data);
                 Swal.fire({
                     title: 'Transaksi berhasil.',
-                    html:`<table class="table table-bordered table-hover"><tbody><tr><th>Total Hpp</th><th>${toRp(data.result.total_hpp)}</th></tr><tr><th>Qty Estimasi</th><th>${data.result.qty_estimasi}</th></tr><tr><th>Hpp Rata-Rata (Peritem)</th><th>${data.result.hpp_peritem}</th></tr></tbody></table>`,
+                    html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem)}</td></tr></tbody></table>`,
                     icon: 'success',
                     showCancelButton: true,
                     cancelButtonColor: '#2196F3',
