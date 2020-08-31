@@ -132,14 +132,14 @@ class TrxOpname extends Component{
             )
         }else{
 
-            if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
                 this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
             }
-            if(parseInt(this.state.searchby)===2){
+            if(parseInt(this.state.searchby,10)===2){
                 this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
-            if(parseInt(this.state.searchby)===3){
+            if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
@@ -168,7 +168,7 @@ class TrxOpname extends Component{
             group1:item.group1,
             group2:item.group2,
             stock:item.stock,
-            qty_fisik:parseInt(item.qty_fisik)+1,
+            qty_fisik:parseInt(item.qty_fisik,10)+1,
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
@@ -195,7 +195,7 @@ class TrxOpname extends Component{
                     group1:res.group1,
                     group2:res.group2,
                     stock:res.stock,
-                    qty_fisik:parseInt(res.qty_fisik)+1,
+                    qty_fisik:parseInt(res.qty_fisik,10)+1,
                 })
             }
             this.getData()
@@ -245,11 +245,9 @@ class TrxOpname extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-        console.log("",barcode);
 
 
     }
@@ -337,7 +335,6 @@ class TrxOpname extends Component{
                                 })
                             });
                             data['detail'] = detail;
-                            console.log("SUBMITTED",data);
                             this.props.dispatch(storeOpname(data));
                         }
                     })
@@ -403,7 +400,6 @@ class TrxOpname extends Component{
     
     getData() {
         const data = get(table);
-        console.log("LOG FUNCTION getData()",data);
         data.then(res => {
             let brg = [];
             res.map((i) => {
@@ -443,7 +439,7 @@ class TrxOpname extends Component{
                                             className="form-text text-muted"
                                         >
                                             Cari
-                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                            berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
                                     <div className="form-group">
