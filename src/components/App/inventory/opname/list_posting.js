@@ -78,7 +78,6 @@ class ListPosting extends Component{
         this.props.dispatch(FetchPostingOpname(1,where));
     }
     HandleChangeLokasi(lk){
-        console.log(lk.value)
         this.setState({
             location: lk.value,
         })
@@ -93,9 +92,6 @@ class ListPosting extends Component{
         this.props.dispatch(FetchPostingOpname(pageNumber));
     }
     handleEvent = (event, picker) => {
-        console.log("start: ", picker.startDate);
-        console.log("end: ", picker.endDate._d.toISOString());
-        // end:  2020-07-02T16:59:59.999Z
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
         localStorage.setItem("startDateProduct",`${awal}`);
@@ -239,7 +235,7 @@ class ListPosting extends Component{
                                                     data.map((v,i)=>{
                                                         total_fisik_per +=parseFloat(v.qty_fisik);
                                                         total_akhir_per +=parseFloat(v.stock_terakhir);
-                                                        total_hpp_per +=(Math.abs(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))) * parseInt(v.hrg_beli);
+                                                        total_hpp_per +=(Math.abs(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))) * parseInt(v.hrg_beli,10);
                                                         return(
                                                             <tr key={i}>
                                                                 <td style={columnStyle}>{v.kd_trx}</td>
@@ -252,7 +248,7 @@ class ListPosting extends Component{
                                                                 <td style={{textAlign:"right"}}>{v.stock_terakhir}</td>
                                                                 <td style={{textAlign:"right"}}>{v.qty_fisik}</td>
                                                                 <td style={{textAlign:"right"}}>{(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))}</td>
-                                                                <td style={{textAlign:"right"}}>{toRp(v.hrg_beli)}</td>
+                                                                <td style={{textAlign:"right"}}>{toRp(v.hrg_beli,10)}</td>
                                                                 <td style={{textAlign:"right"}}>{toRp((Math.abs(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))) * v.hrg_beli)}</td>
                                                                 <td style={{textAlign:"right"}}>{statusQ("danger","POSTING")}</td>
                                                                 <td style={columnStyle}>
