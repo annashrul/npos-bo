@@ -47,7 +47,6 @@ const filterColors = (inputValue) => {
               
           })
           .catch(function (error) {
-              console.log(error);
               return [];
           })
 };
@@ -258,7 +257,6 @@ class DeliveryNote extends Component{
       let err = Object.assign({}, this.state.error, {
         location2: ""
       });
-      console.log(err);
       this.setState({
         location2: sp.value,
         error: err
@@ -337,7 +335,6 @@ class DeliveryNote extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -474,7 +471,6 @@ class DeliveryNote extends Component{
       e.preventDefault();
 
       // validator head form
-      console.log(this.state.catatan);
       let err = this.state.error;
       if (this.state.catatan === "" || this.state.location === "" || this.state.location2 === "") {
         if(this.state.catatan===""){
@@ -521,7 +517,7 @@ class DeliveryNote extends Component{
                   let subtotal = 0;
                   let detail = [];
                   res.map(item => {
-                    subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
+                    subtotal += parseInt(item.harga_beli,10) * parseFloat(item.qty);
                     detail.push({
                       kd_brg:item.kd_brg,
                       barcode:item.barcode,
@@ -554,7 +550,6 @@ class DeliveryNote extends Component{
       const cek = cekData('kd_brg', kode, table);
       return cek.then(res => {
         if (res == undefined) {
-          console.log('GADA');
           store(table, {
             kd_brg: data[0].kd_brg,
             nm_brg: data[0].nm_brg,
@@ -592,7 +587,7 @@ class DeliveryNote extends Component{
           'error'
         )
       } else {
-        const searchby = parseInt(this.state.searchby) === 1 ? 'kd_brg' : (parseInt(this.state.searchby) === 2 ? 'barcode' : 'deskripsi')
+        const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
         this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
         this.setState({search: ''});
 
@@ -675,14 +670,14 @@ class DeliveryNote extends Component{
                                   id="passwordHelpBlock"
                                   class="form-text text-muted"
                                 >
-                                  {parseInt(this.state.ambil_data)==1?'Delivery note langsung.':'Ambil data DN dari Pembelian.'}
+                                  {parseInt(this.state.ambil_data,10)==1?'Delivery note langsung.':'Ambil data DN dari Pembelian.'}
                                 </small>
                             </div>
                           </div>
-                          <div className="col-md-12" style={parseInt(this.state.ambil_data)===1?{display:'none'}:{display:'block'}}>
+                          <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
                             <div className="form-group">
                               <AsyncSelect
-                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===1?'':'Pembelian')}
+                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===1?'':'Pembelian')}
                                     onChange={this.HandleChangeNota}
                                     value = {{
                                       label: this.state.ambil_nota,
@@ -694,7 +689,6 @@ class DeliveryNote extends Component{
                                     filterOptions = {
                                       (options, filter, currentValues) => {
                                         // Do no filtering, just return all options
-                                        console.log("options =", options)
                                         return options;
                                       }
                                     }
@@ -731,7 +725,7 @@ class DeliveryNote extends Component{
                                   id="passwordHelpBlock"
                                   class="form-text text-muted"
                                 >
-                                  Cari berdasarkan {parseInt(this.state.searchby)==1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
+                                  Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                 </small>
                             </div>
                           </div>
@@ -948,10 +942,8 @@ class DeliveryNote extends Component{
                               <tbody>
                               {
                                   this.state.databrg.map((item, index) => {
-                                      console.log(item);
 
-                                      subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
-                                      // console.log('gt',grandtotal);
+                                      subtotal += parseInt(item.harga_beli,10) * parseFloat(item.qty);
                                       return (
                                           <tr key={index}>
                                               <td style={columnStyle}>{index+1}</td>
@@ -983,11 +975,11 @@ class DeliveryNote extends Component{
                                                          className="form-control"
                                                          value={this.state.brgval[index].qty}/>
                                                   <div className="invalid-feedback"
-                                                       style={parseInt(this.state.brgval[index].qty) > parseInt(item.stock) ? {display: 'block'} : {display: 'none'}}>
+                                                       style={parseInt(this.state.brgval[index].qty,10) > parseInt(item.stock,10) ? {display: 'block'} : {display: 'none'}}>
                                                       Qty Melebihi Stock.
                                                   </div>
                                               </td>
-                                              <td style={columnStyle}>{toRp(parseInt(item.harga_beli) * parseFloat(item.qty))}</td>
+                                              <td style={columnStyle}>{toRp(parseInt(item.harga_beli,10) * parseFloat(item.qty))}</td>
                                           </tr>
                                       )
                                   })
