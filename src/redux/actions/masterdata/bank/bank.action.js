@@ -17,9 +17,6 @@ export const FetchBank = (page=1,param,perpage=10)=>{
     return (dispatch) => {
 
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let que = '';
         if(param===null){
             

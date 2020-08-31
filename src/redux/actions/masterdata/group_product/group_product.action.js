@@ -16,9 +16,6 @@ export function setGroupProductFailed(data=[]){
 export const FetchGroupProduct = (page=1,q='',perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let url = '';
         if(q===''){
             url=`kelompokBrg?page=${page}`;

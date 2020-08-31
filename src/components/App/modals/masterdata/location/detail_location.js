@@ -106,7 +106,7 @@ class DetailLocationModal extends Component{
                                 <td style={columnStyle}>{this.state.footer4}</td>
                                 </tbody>
                             </table>
-                            <iframe src={this.state.geo} className="google-map__contact" allowFullScreen  style={{maxWidth: '1600px', width: '100%',height:'300px'}}></iframe>
+                            <iframe src={this.state.geo} id="maps-contact" title="maps-contact" className="google-map__contact" allowFullScreen  style={{maxWidth: '1600px', width: '100%',height:'300px'}}></iframe>
                         </div>
                     </ModalBody>
             </WrapperModal>

@@ -10,7 +10,6 @@ import {FetchStockReportDetailSatuan} from "redux/actions/report/inventory/stock
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import {rangeDate} from "helper";
 import Select from "react-select";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import Preloader from "Preloader";
 import {HEADERS} from "redux/actions/_constants";
 import Paginationq from "helper";
@@ -129,6 +128,7 @@ class InventoryReport extends Component{
                 value: i.value,
                 label: i.label
             });
+            return null;
         })
         let status= [
             {value: "",label:'Semua Stock'},
@@ -142,6 +142,7 @@ class InventoryReport extends Component{
                 value: i.value,
                 label: i.label
             });
+            return null;
         })
         this.setState({
             status_data: st,
@@ -160,6 +161,7 @@ class InventoryReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -362,12 +364,12 @@ class InventoryReport extends Component{
                                         typeof this.props.stockReportExcel.data==='object'? this.props.stockReportExcel.data.length>0?
                                             this.props.stockReportExcel.data.map((v,i)=>{
                                                 const stok_akhir = (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - parseFloat(v.stock_keluar));
-                                                total_dn_per = total_dn_per+parseInt(v.delivery_note);
-                                                total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
+                                                total_dn_per = total_dn_per+parseInt(v.delivery_note,10);
+                                                total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal,10);
                                                 total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
                                                 total_last_stock_per = total_last_stock_per + stok_akhir;
-                                                total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
-                                                total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
+                                                total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
+                                                total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{v.kd_brg}</td>
@@ -440,12 +442,12 @@ class InventoryReport extends Component{
                                                     typeof data === 'object' ?
                                                         data.map((v,i)=>{
                                                             const stok_akhir = (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - parseFloat(v.stock_keluar));
-                                                            total_dn_per = total_dn_per+parseInt(v.delivery_note);
-                                                            total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
+                                                            total_dn_per = total_dn_per+parseInt(v.delivery_note,10);
+                                                            total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal,10);
                                                             total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
                                                             total_last_stock_per = total_last_stock_per + stok_akhir;
-                                                            total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
-                                                            total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
+                                                            total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
+                                                            total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
                                                             
                                                             return(
                                                                 <tr key={i}>
@@ -505,9 +507,9 @@ class InventoryReport extends Component{
                             </div>
                             <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
-                                    current_page={parseInt(current_page)}
-                                    per_page={parseInt(per_page)}
-                                    total={parseInt(total)}
+                                    current_page={parseInt(current_page,10)}
+                                    per_page={parseInt(per_page,10)}
+                                    total={parseInt(total,10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>

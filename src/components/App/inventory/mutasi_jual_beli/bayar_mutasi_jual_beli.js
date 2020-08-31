@@ -15,12 +15,12 @@ class BayarMutasiJUalBeli extends Component{
     constructor(props) {
         super(props);
         this.state={
-            no_trx:'-',
+            no_trx:"-",
             tgl_trx:new Date(),
             jenis_data:[],
             location:"",
             jenis_trx:"",
-            no_faktur_mutasi:'',
+            no_faktur_mutasi:"",
             total_hutang:0,
             jumlah_bayar:0,
             jumlah_sudah_bayar:0,
@@ -33,9 +33,9 @@ class BayarMutasiJUalBeli extends Component{
                 jenis_trx:"",
                 no_faktur_mutasi:"",
                 total_hutang:"",
-                jumlah_bayar:'',
+                jumlah_bayar:"",
             }
-        },
+        }
         // this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this)
         this.HandleChangeJenis = this.HandleChangeJenis.bind(this);
         this.HandleChangeBank = this.HandleChangeBank.bind(this);
@@ -73,6 +73,7 @@ class BayarMutasiJUalBeli extends Component{
                         value:v.nama,
                         label:v.nama
                     })
+                    return null;
                 }) : bank.push({
                     value:'-',
                     label:'-'
@@ -130,11 +131,11 @@ class BayarMutasiJUalBeli extends Component{
         });
         if(column==='jumlah_bayar'){
             let sisa = 0;let sudah=0;
-            if(parseInt(val) <= parseInt(this.state.total_hutang)){
-                sisa = parseInt(this.state.total_hutang) - parseInt(val);
+            if(parseInt(val,10) <= parseInt(this.state.total_hutang,10)){
+                sisa = parseInt(this.state.total_hutang,10) - parseInt(val,10);
                 sudah = val;
             }
-            if(parseInt(val) > parseInt(this.state.total_hutang)){
+            if(parseInt(val,10) > parseInt(this.state.total_hutang,10)){
                 sudah=this.state.total_hutang;
                 sisa = 0;
 
@@ -270,7 +271,7 @@ class BayarMutasiJUalBeli extends Component{
                                         </div>
                                         <div className="form-group">
                                             <label>Total Hutang</label>
-                                            <input type="text" name="total_hutang" className="form-control" value={toRp(parseInt(this.state.total_hutang))} onChange={(e)=>this.handleChange(e,true)} readOnly={true}/>
+                                            <input type="text" name="total_hutang" className="form-control" value={toRp(parseInt(this.state.total_hutang,10))} onChange={(e)=>this.handleChange(e,true)} readOnly={true}/>
                                         </div>
                                     </div>
 
@@ -285,13 +286,13 @@ class BayarMutasiJUalBeli extends Component{
                                         </div>
                                         <div className="form-group">
                                             <label>Sudah Dibayar</label>
-                                            <input type="text" name="jumlah_sudah_bayar" className="form-control" value={toRp(parseInt(this.state.jumlah_sudah_bayar))} onChange={(e)=>this.handleChange(e,true)} readOnly={true}/>
+                                            <input type="text" name="jumlah_sudah_bayar" className="form-control" value={toRp(parseInt(this.state.jumlah_sudah_bayar,10))} onChange={(e)=>this.handleChange(e,true)} readOnly={true}/>
                                         </div>
                                     </div>
                                     <div className="col-md-4">
                                         <div className="form-group">
                                             <label>Sisa Hutang</label>
-                                            <input type="text" name="sisa_hutang" className="form-control" value={toRp(parseInt(this.state.sisa_hutang))} onChange={(e)=>this.handleChange(e,true)} readOnly={true}/>
+                                            <input type="text" name="sisa_hutang" className="form-control" value={toRp(parseInt(this.state.sisa_hutang,10))} onChange={(e)=>this.handleChange(e,true)} readOnly={true}/>
                                         </div>
                                         {
                                             this.state.jenis_trx === 'Transfer' ? (

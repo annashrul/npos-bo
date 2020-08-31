@@ -18,9 +18,6 @@ export function setSubDepartmentFailed(data=[]){
 export const FetchSubDepartment = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let url = '';
         if(q===''){
             url = `group2?page=${page}`;
@@ -42,10 +39,6 @@ export const FetchSubDepartment = (page=1,q='')=>{
 export const FetchSubDepartmentAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
-
         axios.get(HEADERS.URL+`group2?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;

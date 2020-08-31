@@ -4,12 +4,9 @@ import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import {Scrollbars} from "react-custom-scrollbars";
-import {FetchCodeAdjustment, storeAdjusment} from "redux/actions/adjustment/adjustment.action";
 import {FetchBrgSame} from "redux/actions/masterdata/product/product.action";
 import Layout from "../Layout";
-import {storeCetakBarcode} from "../../../redux/actions/site.action";
 import ModalCetakBarcode from "../modals/modal_cetak_barcode";
-import {ModalToggle, ModalType} from "../../../redux/actions/modal.action";
 import moment from "moment";
 const Toast = Swal.mixin({
     toast: true,
@@ -61,6 +58,7 @@ class CetakBarcode extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -126,14 +124,14 @@ class CetakBarcode extends Component{
                 'error'
             )
         }else{
-            if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
                 this.props.dispatch(FetchBrgSame(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
             }
-            if(parseInt(this.state.searchby)===2){
+            if(parseInt(this.state.searchby,10)===2){
                 this.props.dispatch(FetchBrgSame(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
-            if(parseInt(this.state.searchby)===3){
+            if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrgSame(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
@@ -152,7 +150,7 @@ class CetakBarcode extends Component{
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 update(table,{
@@ -160,7 +158,7 @@ class CetakBarcode extends Component{
                     barcode:res.barcode,
                     title:res.title,
                     harga_jual:res.harga_jual,
-                    qty:parseInt(res.qty)+1,
+                    qty:parseInt(res.qty,10)+1,
                 })
             }
             this.getData()
@@ -218,7 +216,7 @@ class CetakBarcode extends Component{
         const val = e.target.value;
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -263,7 +261,7 @@ class CetakBarcode extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan Adjusment.',
@@ -285,7 +283,7 @@ class CetakBarcode extends Component{
                             let parseData={};
                             let barcode = 'barcode, title, harga_jual\n';
                             res.map(item => {
-                                for(let i=0;i<parseInt(item.qty);i++){
+                                for(let i=0;i<parseInt(item.qty,10);i++){
                                     barcode += item.barcode + ', ' + item.title + ', '+item.harga_jual
                                     barcode +='\n'
                                 }
@@ -362,7 +360,7 @@ class CetakBarcode extends Component{
         const cek = cekData('barcode', kode, table);
         
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 store(table, {
                     barcode:data[0].barcode,
                     title:data[0].nm_brg,
@@ -423,7 +421,7 @@ class CetakBarcode extends Component{
                                             className="form-text text-muted"
                                         >
                                             Cari
-                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                            berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
                                     <div className="form-group">

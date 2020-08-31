@@ -4,17 +4,8 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import {FetchBrg} from "redux/actions/masterdata/product/product.action";
-import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
-import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
 import {toRp} from "helper";
-import {FetchCodeProduksi, storeProduksi} from "redux/actions/inventory/produksi.action";
-import {
-    FetchBrgProduksi,
-    FetchBrgProduksiBahan,
-    FetchBrgProduksiPaket
-} from "../../../../redux/actions/inventory/produksi.action";
 import {ToastQ} from "helper";
 import {FetchAlokasi} from "../../../../redux/actions/inventory/alokasi.action";
 import {FetchBrgPacking, FetchCodePacking, storePacking} from "../../../../redux/actions/inventory/packing.action";
@@ -311,7 +302,7 @@ class TrxPacking extends Component{
                     satuan:res.satuan,
                     stock:res.stock,
                     nm_brg:res.nm_brg,
-                    qty_packing:parseInt(res.qty_packing)+1,
+                    qty_packing:parseInt(res.qty_packing,10)+1,
                     tambahan:res.tambahan
                 })
             }
@@ -401,7 +392,7 @@ class TrxPacking extends Component{
                                                     <tbody>
                                                     {
                                                         this.state.databrg.map((item, index) => {
-                                                            let qty_packing = parseInt(this.state.brgval[index].qty_packing)>parseInt(item.qty_alokasi)?parseInt(item.qty_alokasi):this.state.brgval[index].qty_packing;
+                                                            let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
                                                             console.log(qty_packing);
                                                             return (
                                                                 <tr key={index}>
@@ -422,7 +413,7 @@ class TrxPacking extends Component{
                                                                             })
                                                                         }
                                                                     </select></td>
-                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli))} className="form-control"/></td>
+                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli,10))} className="form-control"/></td>
                                                                     <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                                     <td style={columnStyle}><input readOnly={true} type='text' name='qty_alokasi' value={item.qty_alokasi} className="form-control"/></td>
                                                                     <td style={columnStyle}>

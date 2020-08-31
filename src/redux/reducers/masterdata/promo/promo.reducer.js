@@ -1,4 +1,4 @@
-import {PRODUCT, PROMO} from "../../../actions/_constants";
+import {PROMO} from "../../../actions/_constants";
 
 const initialState = {
     isLoading:true,

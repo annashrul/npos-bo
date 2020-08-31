@@ -4,10 +4,8 @@ import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
 import {
     createUserLevel,
-    FetchUserLevel,
     updateUserLevel
 } from "redux/actions/masterdata/user_level/user_level.action";
-import {FetchUserList, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
 import {ModalToggle} from "redux/actions/modal.action";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
@@ -111,7 +109,6 @@ class FormUserLevel extends Component{
                         if(nextProps[i].label==="1"){
                             modul.isChecked = true;
                         }
-                        let cek = modul.value;
                         this.setState({cek:nextProps[i].label})
                         modul.value = nextProps[i].label;
                     }
@@ -123,7 +120,6 @@ class FormUserLevel extends Component{
     componentWillReceiveProps(nextProps) {
         console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== undefined && nextProps.detail !== []) {
-            let akses = [];
             this.handleLoopAccess(this.state.setting.concat(this.state.masterdata),nextProps.detail.access);
             this.setState({lvl:nextProps.detail.lvl});
         }

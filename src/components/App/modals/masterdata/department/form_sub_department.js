@@ -4,7 +4,6 @@ import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
-import {createDepartment, updateDepartment} from "redux/actions/masterdata/department/department.action";
 import {
     createSubDepartment,
     updateSubDepartment
@@ -55,6 +54,7 @@ class FormSubDepartment extends Component{
                         value: i.id,
                         label: i.nama
                     });
+                    return null;
                 });
                 this.setState({
                     dataKode: dept,

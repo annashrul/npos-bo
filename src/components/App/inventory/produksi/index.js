@@ -4,14 +4,12 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
 import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
 import {toRp} from "helper";
 import {FetchCodeProduksi, storeProduksi} from "redux/actions/inventory/produksi.action";
 import {
-    FetchBrgProduksi,
     FetchBrgProduksiBahan,
     FetchBrgProduksiPaket
 } from "../../../../redux/actions/inventory/produksi.action";
@@ -189,19 +187,19 @@ class Produksi extends Component{
 
             // let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
             //
-            if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
                 // this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'kd_brg',this.state.search,this.state.location));
 
             }
-            if(parseInt(this.state.searchby)===2){
+            if(parseInt(this.state.searchby,10)===2){
                 // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiBahan(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'barcode',this.state.search,this.state.location));
 
             }
-            if(parseInt(this.state.searchby)===3){
+            if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location));
 

@@ -167,7 +167,7 @@ class ReportCash extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formCashExcel"));
         this.props.dispatch(FetchCashReportExcel(this.state.where_data,total));
@@ -205,7 +205,15 @@ class ReportCash extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.cashReport;
+        const {
+            total,
+            // last_page,
+            per_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.cashReport;
         let subtotal=0;
         
         return (
@@ -291,13 +299,6 @@ class ReportCash extends Component{
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
                                         <i className="fa fa-print"></i> Export
                                     </button>
-                                    {/* <ReactHTMLTableToExcel
-                                        className="btn btn-primary btnBrg"
-                                        table={`laporan_kas`}
-                                        filename={`laporan_kas`}
-                                        sheet="kas"
-                                        buttonText="export excel">
-                                    </ReactHTMLTableToExcel> */}
                                 </div>
 
                             </div>
@@ -336,7 +337,7 @@ class ReportCash extends Component{
                                             (
                                                 (typeof this.props.cashReportExcel.data === 'object') ? this.props.cashReportExcel.data.length > 0 ?
                                                     this.props.cashReportExcel.data.map((v,i)=>{
-                                                        subtotal = subtotal+parseInt(v.jumlah);
+                                                        subtotal = subtotal+parseInt(v.jumlah,10);
                                                         return(
                                                             <tr key={i}>
                                                                 <td style={columnStyle}>{i+1}</td>
@@ -348,7 +349,7 @@ class ReportCash extends Component{
                                                                 <td style={columnStyle}>{v.kasir}</td>
                                                                 <td style={columnStyle}>{v.type}</td>
                                                                 <td style={columnStyle}>{v.jenis}</td>
-                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.jumlah))}</td>
+                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.jumlah,10))}</td>
                                                             </tr>
                                                         )
                                                     })
@@ -411,9 +412,9 @@ class ReportCash extends Component{
                                 </div>
                                 <div style={{"marginTop":"20px","float":"right"}}>
                                     <Paginationq
-                                        current_page={parseInt(current_page)}
-                                        per_page={parseInt(per_page)}
-                                        total={parseInt(total)}
+                                        current_page={parseInt(current_page,10)}
+                                        per_page={parseInt(per_page,10)}
+                                        total={parseInt(total,10)}
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                     <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />

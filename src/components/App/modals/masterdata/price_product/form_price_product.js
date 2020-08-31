@@ -4,10 +4,6 @@ import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
-import {
-    createCustomerType,
-    updateCustomerType
-} from "redux/actions/masterdata/customer_type/customer_type.action";
 import {updatePriceProduct} from "../../../../../redux/actions/masterdata/price_product/price_product.action";
 class FormPriceProduct extends Component{
     constructor(props){
@@ -94,27 +90,27 @@ class FormPriceProduct extends Component{
             this.setState({error: err});
         }
         else{
-            if(parseInt(parseData['harga']) < 0){
+            if(parseInt(parseData['harga'],10) < 0){
                 err = Object.assign({}, err, {harga:"harga 1 tidak boleh kurang dari 0"});
                 this.setState({error: err});
             }
-            else if(parseInt(parseData['harga2']) < 0){
+            else if(parseInt(parseData['harga2'],10) < 0){
                 err = Object.assign({}, err, {harga2:"harga 2 tidak boleh kurang dari 0"});
                 this.setState({error: err});
             }
-            else if(parseInt(parseData['harga3']) < 0){
+            else if(parseInt(parseData['harga3'],10) < 0){
                 err = Object.assign({}, err, {harga3:"harga 3 tidak boleh kurang dari 0"});
                 this.setState({error: err});
             }
-            else if(parseInt(parseData['harga4']) < 0){
+            else if(parseInt(parseData['harga4'],10) < 0){
                 err = Object.assign({}, err, {harga4:"harga 4 tidak boleh kurang dari 0"});
                 this.setState({error: err});
             }
-            else if(parseInt(parseData['ppn']) < 0){
+            else if(parseInt(parseData['ppn'],10) < 0){
                 err = Object.assign({}, err, {ppn:"ppn tidak boleh kurang dari 0"});
                 this.setState({error: err});
             }
-            else if(parseInt(parseData['service']) < 0){
+            else if(parseInt(parseData['service'],10) < 0){
                 err = Object.assign({}, err, {service:"service tidak boleh kurang dari 0"});
                 this.setState({error: err});
             }

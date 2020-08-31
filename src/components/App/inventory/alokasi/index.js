@@ -132,6 +132,7 @@ class Alokasi extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -152,6 +153,7 @@ class Alokasi extends Component{
                         value: i.no_delivery_note,
                         label: i.no_delivery_note
                     });
+                    return null
                 })
                 this.setState({
                     data_nota: nota
@@ -188,7 +190,7 @@ class Alokasi extends Component{
                         };
                         store(table, datas)
                         this.getData();
-
+                        return null;
                     })
                 }
 
@@ -384,6 +386,7 @@ class Alokasi extends Component{
                     })
                 }
                 this.getData()
+                return null;
             })
         }
 
@@ -452,6 +455,7 @@ class Alokasi extends Component{
 
 
             this.getData()
+            return null;
         })
     }
 
@@ -529,7 +533,7 @@ class Alokasi extends Component{
                             let subtotal = 0;
                             let detail = [];
                             res.map(item => {
-                                subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
+                                subtotal += parseInt(item.harga_beli,10) * parseFloat(item.qty);
                                 if(item.qty>item.stock) err_stock=`Qty barang melebihi stock persediaan.`;
                                 detail.push({
                                     kd_brg:item.kd_brg,
@@ -572,6 +576,7 @@ class Alokasi extends Component{
                         }
                     })
                 }
+                return null;
             })
         }
 
@@ -619,7 +624,7 @@ class Alokasi extends Component{
                 'error'
             )
         } else {
-            const searchby = parseInt(this.state.searchby) === 1 ? 'kd_brg' : (parseInt(this.state.searchby) === 2 ? 'barcode' : 'deskripsi')
+            const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
             this.setState({search: ''});
 
@@ -647,6 +652,7 @@ class Alokasi extends Component{
                     qty: err
                 })
             })
+            return null;
         });
     }
 
@@ -656,7 +662,7 @@ class Alokasi extends Component{
         // }
 
         let subtotal = 0;
-        let grandtotal = 0;
+        // let grandtotal = 0;
         //  let grandtotal = this.state.grandtotal;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
 
@@ -703,15 +709,15 @@ class Alokasi extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        {parseInt(this.state.ambil_data)===1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
+                                                        {parseInt(this.state.ambil_data,10)===1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
                                                     </small>
                                                 </div>
                                             </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data)===1?{display:'none'}:{display:'block'}}>
+                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
                                                 <div className="form-group">
                                                     <Select
                                                         options={this.state.data_nota}
-                                                        placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'DN':'')}
+                                                        placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===2?'DN':'')}
                                                         onChange={this.HandleChangeNota}
                                                         value = {
                                                             this.state.data_nota.find(op => {
@@ -751,7 +757,7 @@ class Alokasi extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby)===1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -990,7 +996,7 @@ class Alokasi extends Component{
                                             <tbody>
                                             {
                                                 this.state.databrg.map((item,index)=>{
-                                                    subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty);
+                                                    subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty);
                                                     // console.log('gt',grandtotal);
                                                     return (
                                                         <tr key={index} >
@@ -1013,11 +1019,11 @@ class Alokasi extends Component{
                                                             <td style={columnStyle}>{item.stock}</td>
                                                             <td style={columnStyle}>
                                                                 <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
-                                                                <div className="invalid-feedback" style={parseInt(this.state.brgval[index].qty)>parseInt(item.stock)?{display:'block'}:{display:'none'}}>
+                                                                <div className="invalid-feedback" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
-                                                            <td style={columnStyle}>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli)*parseFloat(item.qty):parseInt(item.hrg_jual)*parseFloat(item.qty)}</td>
+                                                            <td style={columnStyle}>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty)}</td>
                                                         </tr>
                                                     )
                                                 })
