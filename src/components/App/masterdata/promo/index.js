@@ -31,7 +31,7 @@ class Promo extends Component{
         if (nextProps.auth.user) {
             let access = nextProps.auth.user.access;
             if(access!==undefined&&access!==null){
-                if(nextProps.auth.user.access[18]['label']==="0"){
+                if(nextProps.auth.user.access[17]['label']==="0"){
                     alert("bukan halaman kamu");
                     this.props.history.push({
                         pathname: '/',

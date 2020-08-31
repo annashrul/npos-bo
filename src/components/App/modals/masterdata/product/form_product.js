@@ -1640,30 +1640,30 @@ class FormProduct extends Component{
                     alert(`margin 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
-                    alert(`margin 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].margin3PCS) < 0){
-                    alert(`margin 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].margin4PCS) < 0){
-                    alert(`margin 4 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                    return;
-                }
+                // if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                //     alert(`margin 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].margin3PCS) < 0){
+                //     alert(`margin 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].margin4PCS) < 0){
+                //     alert(`margin 4 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
+                //     return;
+                // }
                 if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
-                    alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
-                    alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
-                    alert(`harga jual 4 ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                }
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
+                //     alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
+                //     alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
+                //     alert(`harga jual 4 ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
+                // }
                 if(parseInt(this.state.barangHarga[i][0].ppnPCS) < 0){
                     alert(`ppn satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 }
@@ -1679,30 +1679,30 @@ class FormProduct extends Component{
                     alert(`margin 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].margin2PACK) < 0){
-                    alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].margin3PACK) < 0){
-                    alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].margin4PACK) < 0){
-                    alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
+                // if(parseInt(this.state.barangHarga[i][1].margin2PACK) < 0){
+                //     alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].margin3PACK) < 0){
+                //     alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].margin4PACK) < 0){
+                //     alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
                 if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK) < 0){
-                    alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK) < 0){
-                    alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK) < 0){
-                    alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK) < 0){
+                //     alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK) < 0){
+                //     alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK) < 0){
+                //     alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
                 if(parseInt(this.state.barangHarga[i][1].ppnPACK) < 0){
                     alert(`ppn satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
@@ -1754,30 +1754,30 @@ class FormProduct extends Component{
                     alert(`margin 1 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
-                    alert(`margin 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].margin3PCS) < 0){
-                    alert(`margin 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].margin4PCS) < 0){
-                    alert(`margin 4 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
+                // if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                //     alert(`margin 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].margin3PCS) < 0){
+                //     alert(`margin 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].margin4PCS) < 0){
+                //     alert(`margin 4 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
                 if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
-                    alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
-                    alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
-                    alert(`harga jual 4 ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                }
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
+                //     alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
+                //     alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
+                //     alert(`harga jual 4 ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
                 if(parseInt(this.state.barangHarga[i][0].ppnPCS) < 0){
                     alert(`ppn satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 }
@@ -1793,30 +1793,30 @@ class FormProduct extends Component{
                     alert(`margin 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].margin2PACK) < 0){
-                    alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].margin3PACK) < 0){
-                    alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].margin4PACK) < 0){
-                    alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
+                // if(parseInt(this.state.barangHarga[i][1].margin2PACK) < 0){
+                //     alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].margin3PACK) < 0){
+                //     alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].margin4PACK) < 0){
+                //     alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
                 if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK) < 0){
-                    alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK) < 0){
-                    alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK) < 0){
-                    alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK) < 0){
+                //     alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK) < 0){
+                //     alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK) < 0){
+                //     alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
                 if(parseInt(this.state.barangHarga[i][1].ppnPACK) < 0){
                     alert(`ppn satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
@@ -1832,30 +1832,30 @@ class FormProduct extends Component{
                     alert(`margin 1 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][2].margin2KARTON) < 0){
-                    alert(`margin 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][2].margin3KARTON) < 0){
-                    alert(`margin 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][2].margin4KARTON) < 0){
-                    alert(`margin 4 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
+                // if(parseInt(this.state.barangHarga[i][2].margin2KARTON) < 0){
+                //     alert(`margin 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][2].margin3KARTON) < 0){
+                //     alert(`margin 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][2].margin4KARTON) < 0){
+                //     alert(`margin 4 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
+                //     return;
+                // }
                 if(parseInt(this.state.barangHarga[i][2].hrgJual1KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual1KARTON) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][2].hrgJual2KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual2KARTON) < 0){
-                    alert(`harga jual 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][2].hrgJual3KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual3KARTON) < 0){
-                    alert(`harga jual 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][2].hrgJual4KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual4KARTON) < 0){
-                    alert(`harga jual 4 ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                }
+                // if(parseInt(this.state.barangHarga[i][2].hrgJual2KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual2KARTON) < 0){
+                //     alert(`harga jual 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][2].hrgJual3KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual3KARTON) < 0){
+                //     alert(`harga jual 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
+                // if(parseInt(this.state.barangHarga[i][2].hrgJual4KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual4KARTON) < 0){
+                //     alert(`harga jual 4 ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
+                // }
                 if(parseInt(this.state.barangHarga[i][2].ppnKARTON) < 0){
                     alert(`ppn satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 }
@@ -1900,7 +1900,7 @@ class FormProduct extends Component{
         }
         parseData["barang_sku"]     = barangSku;
         parseData["barang_harga"]   = barangHrg;
-
+        console.log(parseData);
         if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{

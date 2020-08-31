@@ -36,7 +36,7 @@ class Alokasi extends Component{
             addingItemName: "",
             databrg: [],
             brgval:[],
-            tanggal: new Date(),
+            tanggal: moment(new Date()).format("yyyy-MM-DD"),
             qty:0,
             location_data:[],
             location:"",
@@ -70,6 +70,29 @@ class Alokasi extends Component{
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.HandleChangeJenisTrx= this.HandleChangeJenisTrx.bind(this);
+    }
+
+    getProps(param){
+        if (param.auth.user) {
+            let lk = []
+            let loc = param.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: param.auth.user.id
+                })
+            }
+        }
+    }
+
+    componentWillMount(){
+        this.getProps(this.props);
     }
 
     componentDidMount() {
@@ -116,7 +139,6 @@ class Alokasi extends Component{
         }
     }
 
-
     componentWillReceiveProps = (nextProps) => {
         let jt=[
             {value:"Alokasi",label:"Alokasi"},
@@ -124,22 +146,7 @@ class Alokasi extends Component{
             {value:"Transaksi",label:"Transaksi"},
         ];
         this.setState({jenis_trx_data:jt});
-        if (nextProps.auth.user) {
-            let lk = []
-            let loc = nextProps.auth.user.lokasi;
-            if(loc!==undefined){
-                loc.map((i) => {
-                    lk.push({
-                        value: i.kode,
-                        label: i.nama
-                    });
-                })
-                this.setState({
-                    location_data: lk,
-                    userid: nextProps.auth.user.id
-                })
-            }
-        }
+        this.getProps(nextProps);
         if(nextProps.barang.length>0){
             this.getData()
         }
@@ -849,49 +856,23 @@ class Alokasi extends Component{
                                             <div className="row">
                                                 <div className="col-md-12">
                                                     <div className="form-group">
+                                                        <label className="control-label font-12">
+                                                            No. Transkasi
+                                                        </label>
                                                         <input
                                                             type="text"
                                                             readOnly
-                                                            className="form-control-plaintext form-control-sm"
+                                                            className="form-control"
                                                             id="nota"
                                                             style={{fontWeight:'bolder'}}
                                                             value={this.props.nota}
                                                         />
                                                     </div>
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Tanggal Order
-                                                        </label>
-                                                        <div className="input-group">
-                                                            <div className="input-group-prepend">
-                                    <span className="input-group-text">
-                                      <i className="fa fa-calendar" />
-                                    </span>
-                                                            </div>
-                                                            <DatePicker
-                                                                className="form-control rounded-right"
-                                                                selected={this.state.tanggal}
-                                                                onChange={this.setTanggal}
-                                                            />
-                                                        </div>
+                                                        <label className="control-label font-12">Tanggal Order</label>
+                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))}/>
                                                     </div>
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Jenis Transaksi
-                                                        </label>
-                                                        <Select
-                                                            options={this.state.jenis_trx_data}
-                                                            placeholder="Pilih Jenis Transaksi"
-                                                            onChange={this.HandleChangeJenisTrx}
-                                                            value={
-                                                                this.state.jenis_trx_data.find(op => {
-                                                                    return op.value === this.state.jenis_trx
-                                                                })
-                                                            }
 
-                                                        />
-
-                                                    </div>
                                                 </div>
 
                                             </div>
@@ -942,26 +923,29 @@ class Alokasi extends Component{
                                                 <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">
+                                                            Jenis Transaksi
+                                                        </label>
+                                                        <Select
+                                                            options={this.state.jenis_trx_data}
+                                                            placeholder="Pilih Jenis Transaksi"
+                                                            onChange={this.HandleChangeJenisTrx}
+                                                            value={
+                                                                this.state.jenis_trx_data.find(op => {
+                                                                    return op.value === this.state.jenis_trx
+                                                                })
+                                                            }
+
+                                                        />
+
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label className="control-label font-12">
                                                             Catatan
                                                         </label>
-                                                        <textarea
-                                                            className="form-control"
-                                                            id="exampleTextarea1"
-                                                            rows={5}
-                                                            onChange={(e=>this.HandleCommonInputChange(e))}
-                                                            name="catatan"
-                                                            value={this.state.catatan}
-                                                        />
-                                                        <div class="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
+                                                        <input type="text" name={"catatan"} className={"form-control"} value={this.state.catatan} onChange={(e=>this.HandleCommonInputChange(e))}/>
+                                                        <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.catatan}
                                                         </div>
-                                                        {/* {
-                                  this.state.error.catatan!==""?(
-                                    <div class="invalid-feedback">
-                                      {this.state.error.catatan}
-                                    </div>
-                                  ):""
-                                } */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -971,7 +955,7 @@ class Alokasi extends Component{
                             </div>
                             <div className="card-body">
                                 <div id="tableContainer">
-                                    <div className="table-responsive" style={{overflowX:'auto'}}>
+                                    <div style={{overflowX:'auto',zoom:'85%'}}>
 
                                         <table className="table table-hover table-bordered">
                                             <thead >

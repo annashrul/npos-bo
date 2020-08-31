@@ -137,14 +137,14 @@ class TrxAdjustment extends Component{
 
             // let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
             //
-            if(parseInt(this.state.searchby)===1 || this.state.searchby===""){
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
                 this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
             }
-            if(parseInt(this.state.searchby)===2){
+            if(parseInt(this.state.searchby,10)===2){
                 this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
-            if(parseInt(this.state.searchby)===3){
+            if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
@@ -173,7 +173,7 @@ class TrxAdjustment extends Component{
             group1:item.group1,
             group2:item.group2,
             stock:item.stock,
-            qty_adjust:parseInt(item.qty_adjust)+1,
+            qty_adjust:parseInt(item.qty_adjust,10)+1,
             status:item.status,
             saldo_stock:item.stock,
             tambahan:[],
@@ -185,10 +185,10 @@ class TrxAdjustment extends Component{
             }else{
                 let saldo_stock = res.stock;
                 if(res.status === 'kurang'){
-                    saldo_stock=parseInt(res.stock)-parseInt(res.qty_adjust);
+                    saldo_stock=parseInt(res.stock,10)-parseInt(res.qty_adjust,10);
                 }
                 if(res.status === 'tambah' || res.status==='' || res.status === undefined){
-                    saldo_stock=parseInt(res.stock)+parseInt(res.qty_adjust)
+                    saldo_stock=parseInt(res.stock,10)+parseInt(res.qty_adjust,10)
                 }
                 update(table,{
                     id:res.id,
@@ -210,7 +210,7 @@ class TrxAdjustment extends Component{
                     group1:res.group1,
                     group2:res.group2,
                     stock:res.stock,
-                    qty_adjust:parseInt(res.qty_adjust)+1,
+                    qty_adjust:parseInt(res.qty_adjust,10)+1,
                     saldo_stock:saldo_stock,
                     status:res.status,
                     tambahan:[],
@@ -343,14 +343,13 @@ class TrxAdjustment extends Component{
                             data['lokasi'] = this.state.location;
                             data['keterangan'] = this.state.catatan;
                             res.map(item => {
-                                console.log(item);
                                 let saldo_stock=item.saldo_stock;
 
                                 if(item.status === 'kurang'){
-                                    saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
+                                    saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
                                 }
                                 if(item.status === 'tambah' || item.status === '' || item.status === undefined){
-                                    saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
+                                    saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
                                 }
                                 detail.push({
                                     "brcd_brg": item.barcode,
@@ -360,7 +359,6 @@ class TrxAdjustment extends Component{
                                     "hrg_beli": item.harga_beli
                                 })
                             });
-                            console.log(detail);
                             data['detail'] = detail;
                             this.props.dispatch(storeAdjusment(data));
                         }
@@ -402,10 +400,10 @@ class TrxAdjustment extends Component{
             } else {
                 let saldo_stock = res.stock;
                 if(res.status === 'kurang'){
-                    saldo_stock=parseInt(res.stock)-parseInt(res.qty_adjust);
+                    saldo_stock=parseInt(res.stock,10)-parseInt(res.qty_adjust,10);
                 }
                 if(res.status === 'tambah' || res.status==='' || res.status === undefined){
-                    saldo_stock=parseInt(res.stock)+parseInt(res.qty_adjust)
+                    saldo_stock=parseInt(res.stock,10)+parseInt(res.qty_adjust,10)
                 }
                 update(table, {
                     id: res.id,
@@ -477,7 +475,7 @@ class TrxAdjustment extends Component{
                                             className="form-text text-muted"
                                         >
                                             Cari
-                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                            berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
                                     <div className="form-group">
@@ -665,15 +663,13 @@ class TrxAdjustment extends Component{
                                                 <tbody>
                                                 {
                                                     this.state.databrg.map((item, index) => {
-                                                        console.log(item.saldo_stock);
                                                         let saldo_stock = item.saldo_stock;
                                                         if(item.status === 'kurang'){
-                                                            saldo_stock=parseInt(item.stock)-parseInt(item.qty_adjust);
+                                                            saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
                                                         }
                                                         if(item.status === 'tambah' || item.status===''){
-                                                            saldo_stock=parseInt(item.stock)+parseInt(item.qty_adjust)
+                                                            saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
                                                         }
-                                                        console.log(saldo_stock);
                                                         return (
                                                             <tr key={index}>
                                                                 <td style={columnStyle}>

@@ -91,20 +91,19 @@ class FormReturReceive extends Component{
                    "keterangan":"-",
                    "kondisi":v.kondisi
                })
-               data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
-               data['supplier'] = this.props.dataRetur.master.kode_supplier;
-               data['keterangan'] = '-';
-               data['subtotal'] = subtotal;
-               data['lokasi'] = this.props.dataRetur.master.lokasi;
-               data['userid'] = this.state.userid;
-               data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
-               data['detail'] = detail;
-               this.props.dispatch(storeReturTanpaNota(data));
            }
-
         });
-        console.log("SUBMITTED",data);
+        data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
+        data['supplier'] = this.props.dataRetur.master.kode_supplier;
+        data['keterangan'] = '-';
+        data['subtotal'] = subtotal;
+        data['lokasi'] = this.props.dataRetur.master.lokasi;
+        data['userid'] = this.state.userid;
+        data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
+        data['detail'] = detail;
         this.props.dispatch(storeReturTanpaNota(data));
+        console.log("SUBMITTED",data);
+        // this.props.dispatch(storeReturTanpaNota(data));
 
     }
     render(){
