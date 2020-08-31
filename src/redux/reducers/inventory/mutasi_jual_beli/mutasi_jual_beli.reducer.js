@@ -18,7 +18,7 @@ export const mutasiJualBeliReducer = (state = initialState, action) => {
                 code: action.data.result
             });
         case MUTASI_JUAL_BELI.SUCCESS_DATA_BAYAR:
-            console.log("DATA BAYAR MUTASI JUAL BELI",action.data.result.pembayaran);
+            
             return Object.assign({}, state, {
                 status: action.data.status,
                 msg: action.data.msg,

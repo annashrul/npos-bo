@@ -248,8 +248,6 @@ class TrxOpname extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-
-
     }
     HandleChangeInput(e,id){
         const column = e.target.name;
@@ -338,8 +336,6 @@ class TrxOpname extends Component{
                             this.props.dispatch(storeOpname(data));
                         }
                     })
-
-
                 }
             })
         }

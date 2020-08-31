@@ -86,7 +86,7 @@ class FormPromo extends Component{
     }
     getProps(param){
         this.setState({isArrLength:0});
-        console.log("get props",param);
+        
         if(param.customerType.data!==undefined){
             let cust=[];
             param.customerType.data.map((v,i)=>{
@@ -208,7 +208,7 @@ class FormPromo extends Component{
                             }
                         }
                         // this.setState({barang_data:brg});
-                        // console.log("PUSH BARANG DATA 1",brg);
+                        // 
 
 
                     }
@@ -329,7 +329,7 @@ class FormPromo extends Component{
         }
     }
     handleChangeCategory(val){
-        console.log("kategori",val);
+        
         let err = Object.assign({}, this.state.error, {
             category: ""
         });
@@ -363,7 +363,7 @@ class FormPromo extends Component{
         }
     }
     handleChangeKelBarang(val){
-        console.log(val.value)
+        
         let err = Object.assign({}, this.state.error, {
             kel_brg: ""
         });
@@ -609,16 +609,16 @@ class FormPromo extends Component{
 
         parseData['detail']=detail;
         if(this.state.isArrLength === undefined){
-            console.log("UPDATE")
+            
             this.props.dispatch(updatePromo(this.props.detail.id_promo,parseData));
         }
         if(this.state.isArrLength === 0){
-            console.log("CREATE")
+            
             this.props.dispatch(createPromo(parseData));
         }
 
         this.handleClearState();
-        console.log("submitted",parseData);
+        
     }
     handlePagin1(page){
         this.props.dispatch(FetchBrg1(page,5));
@@ -627,7 +627,7 @@ class FormPromo extends Component{
         this.props.dispatch(FetchBrg2(page,5));
     }
     handleSearch1(){
-        console.log(this.state.any_1)
+        
         let where='';
         if(this.state.any_1!==''){
             where+=`&searchby=barcode&q=${this.state.any_1}`

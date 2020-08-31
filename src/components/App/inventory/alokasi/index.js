@@ -11,7 +11,6 @@ import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
-import Preloader from 'Preloader'
 import moment from 'moment';
 
 const table='alokasi'
@@ -104,7 +103,7 @@ class Alokasi extends Component{
         }
 
         if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
-            if (localStorage.ambil_data == 2) {
+            if (localStorage.ambil_data === 2) {
                 this.props.dispatch(FetchDnReport(1, 1000))
             }
             this.setState({
@@ -297,7 +296,7 @@ class Alokasi extends Component{
         }
 
         if (column === 'ambil_data') {
-            if(val==2){
+            if(val===2){
                 this.props.dispatch(FetchDnReport(1, 1000))
             }
             localStorage.setItem('ambil_data',val);
@@ -321,7 +320,7 @@ class Alokasi extends Component{
 
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -358,7 +357,7 @@ class Alokasi extends Component{
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
-                if (res == undefined) {
+                if (res === undefined) {
                     Toast.fire({
                         icon: 'error',
                         title: `not found.`
@@ -439,7 +438,7 @@ class Alokasi extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 update(table,{
@@ -512,7 +511,7 @@ class Alokasi extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         `Pilih barang untuk melanjutkan ${this.state.jenis_trx}.`,
@@ -698,14 +697,14 @@ class Alokasi extends Component{
                                             <div className="col-md-12">
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
-                                                        <select name='ambil_data' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1} selected={this.state.ambil_data == 1}>Langsung</option>
-                                                            <option value={2} selected={this.state.ambil_data==2}>Delivery Note</option>
+                                                        <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                            <option value={1} selected={this.state.ambil_data === 1}>Langsung</option>
+                                                            <option value={2} selected={this.state.ambil_data===2}>Delivery Note</option>
                                                         </select>
                                                     </div>
                                                     <small
                                                         id="passwordHelpBlock"
-                                                        class="form-text text-muted"
+                                                        className="form-text text-muted"
                                                     >
                                                         {parseInt(this.state.ambil_data,10)==1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
                                                     </small>
@@ -745,7 +744,7 @@ class Alokasi extends Component{
                                             <div className="col-md-12">
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
-                                                        <select name='searchby' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                        <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
                                                             <option value={1}>Kode Barang</option>
                                                             <option value={2}>Barcode</option>
                                                             <option value={3}>Deskripsi</option>
@@ -753,7 +752,7 @@ class Alokasi extends Component{
                                                     </div>
                                                     <small
                                                         id="passwordHelpBlock"
-                                                        class="form-text text-muted"
+                                                        className="form-text text-muted"
                                                     >
                                                         Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
@@ -891,7 +890,7 @@ class Alokasi extends Component{
                                                             }
 
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location}
                                                         </div>
                                                     </div>
@@ -911,7 +910,7 @@ class Alokasi extends Component{
                                                                 })
                                                             }
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.location2!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.location2!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location2}
                                                         </div>
                                                     </div>
@@ -983,7 +982,7 @@ class Alokasi extends Component{
                                                                 {
                                                                     item.tambahan.map(i=>{
                                                                         return(
-                                                                            <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                                            <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
                                                                         )
                                                                     })
                                                                 }

@@ -117,6 +117,7 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
+
         this.setState({
             location: lk.value,
             error: err
@@ -352,7 +353,6 @@ class ReturTanpaNota extends Component{
 
     HandleSubmit(e){
         e.preventDefault();
-
         // validator head form
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "") {

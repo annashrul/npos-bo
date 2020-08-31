@@ -80,7 +80,7 @@ export const FetchPoReport = (page=1, perpage=10) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -97,7 +97,7 @@ export const FetchPoData = (nota) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -109,13 +109,13 @@ export const FetchNota = (lokasi) => {
         axios.get(HEADERS.URL + `purchaseorder/getcode?prefix=PO&lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                
                 dispatch(setCode(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -162,7 +162,7 @@ export const storePo = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -175,15 +175,15 @@ export const fetchPoReport = (page=1,where='')=>{
         if(where!==''){
             que+=`${where}`;
         }
-        console.log(`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPoReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -196,15 +196,15 @@ export const fetchPoReportExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             que+=`${where}`;
         }
-        console.log(`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPoReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -214,11 +214,11 @@ export const poReportDetail = (page=1,code)=>{
         axios.get(HEADERS.URL+`purchaseorder/report/${code}?page=${page}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPoReportDetail(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -233,15 +233,15 @@ export const FetchPurchaseBySupplierReport = (page=1,where='')=>{
         if(where!==''){
             que+=`${where}`;
         }
-        console.log(`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPBSupplierReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -254,15 +254,15 @@ export const FetchPurchaseBySupplierReportExcel = (page=1,where='',perpage=99999
         if(where!==''){
             que+=`${where}`;
         }
-        console.log(`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPBSupplierReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

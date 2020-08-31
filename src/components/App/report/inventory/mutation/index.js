@@ -447,7 +447,7 @@ class MutationReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps mutation", state)
+    
     return {
         mutationReport:state.mutationReducer.report,
         isLoadingDetail: state.mutationReducer.isLoadingDetail,

@@ -216,7 +216,7 @@ class PurchaseBySupplierReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {per_page,current_page,from,to,data,total} = this.props.purchase_by_supplierReport;
-        console.log("this.props.purchase_by_supplierReportExcel.data.length",typeof this.props.purchase_by_supplierReportExcel.data === 'object' ? this.props.purchase_by_supplierReportExcel.data.length > 0 ? this.props.purchase_by_supplierReportExcel.data.length : 0 : 0)
+        
         return (
             <Layout page="Laporan PurchaseBySupplier">
                 <div className="col-12 box-margin">
@@ -393,7 +393,7 @@ class PurchaseBySupplierReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps purchase_by_supplier", state)
+    
     return {
         purchase_by_supplierReport:state.poReducer.pbs_data,
         isLoadingDetail: state.poReducer.isLoadingDetail,

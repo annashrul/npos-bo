@@ -13,7 +13,7 @@ class DetailReceiveReport extends Component{
 
     }
     componentWillReceiveProps(nextprops){
-        console.log("component will receive props",nextprops)
+        
     }
     handlePageChange(pageNumber){
         this.props.dispatch(FetchReportDetail(pageNumber,localStorage.getItem("kd_trx_detail_receive_report")));

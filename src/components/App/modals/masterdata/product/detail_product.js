@@ -20,7 +20,7 @@ class DetailProduct extends Component{
     render(){
 
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        console.log("DETAIL PRODUCT",typeof this.props.dataDetail === 'object' ? 'object' :'lain');
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
                 <ModalHeader toggle={this.toggle}>Detail Barang</ModalHeader>

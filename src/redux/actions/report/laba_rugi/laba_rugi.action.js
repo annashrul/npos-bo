@@ -36,15 +36,15 @@ export const FetchLabaRugiReport = (page=1,where='')=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL LABA_RUGI REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setLabaRugiReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -57,15 +57,15 @@ export const FetchLabaRugiReportExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL LABA_RUGI REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setLabaRugiReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

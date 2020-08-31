@@ -19,9 +19,9 @@ class DetailProduction extends Component{
     };
 
     render(){
-        console.log("############# STATE SIITU",this.props);
+        
         const {data} = this.props.productionDetail;
-        console.log("length",this.props.productionDetail);
+        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         let t_harga_beli = 0;
         let r_harga_beli = 0;
@@ -81,7 +81,7 @@ class DetailProduction extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapState", state);
+    
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

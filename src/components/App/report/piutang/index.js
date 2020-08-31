@@ -107,7 +107,7 @@ class PiutangReport extends Component{
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.value) {
-                console.log(this.props);
+                
                 this.props.dispatch(DeletePiutangReport(kode));
             }
         })
@@ -251,7 +251,7 @@ class PiutangReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {per_page,current_page,from,to,data,total} = this.props.piutangReport;
-        console.log("this.props.piutangReportExcel.data.length",typeof this.props.piutangReportExcel.data === 'object' ? this.props.piutangReportExcel.data.length > 0 ? this.props.piutangReportExcel.data.length : 0 : 0)
+        
         return (
             <Layout page="Laporan Piutang">
                 <div className="col-12 box-margin">
@@ -450,7 +450,7 @@ class PiutangReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps piutang", state)
+    
     return {
         piutangReport:state.piutangReducer.data_report,
         isLoadingDetail: state.piutangReducer.isLoadingDetail,

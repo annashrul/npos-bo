@@ -97,7 +97,10 @@ class InventoryReport extends Component{
         this.props.dispatch(FetchStockReportDetailSatuan(1,code,'','',''))
     };
     handleChange(event){
+        console.log(event.target.name)
+        console.log(event.target.value)
         this.setState({ [event.target.name]: event.target.value });
+        console.log(this.state.any);
     }
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
@@ -200,10 +203,13 @@ class InventoryReport extends Component{
         if(status!==undefined&&status!==null&&status!==''){
             where+=`&filter_stock=${status}`;
         }
+        if(search_by!==undefined&&search_by!==null&&search_by!==''){
+            where+=`&searchby=${search_by}`;
+        }
 
         if(any!==undefined&&any!==null&&any!==''){
             console.log(any);
-            where+=`&searchby=${search_by}&q=${any}`;
+            where+=`&search=${any}`;
         }
         console.log(where);
         this.setState({
@@ -305,14 +311,14 @@ class InventoryReport extends Component{
                                 <div className="col-6 col-xs-6 col-md-2" style={{paddingLeft:"0px"}}>
                                     <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                     <div className="form-group">
-                                        <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)} onKeyPress={event=>{if(event.key==='Enter'){ this.handleChange(event)}}}/>
+                                        <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                     </div>
 
                                 </div>
 
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleSearch(e))}>
                                             <i className="fa fa-search"/>
                                         </button>
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>

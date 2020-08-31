@@ -2,16 +2,13 @@ import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
-// import { Scrollbars } from "react-custom-scrollbars";
 import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'
-
 import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
-import Preloader from 'Preloader'
 import moment from 'moment';
 
 const table='purchase_order'
@@ -26,7 +23,6 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
-let count = 0;
 
 class PurchaseOrder extends Component{
 
@@ -178,7 +174,7 @@ class PurchaseOrder extends Component{
 
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -186,7 +182,7 @@ class PurchaseOrder extends Component{
             } else {
 
                 let final= {}
-                Object.keys(res).forEach((k, i) => {
+                Object.keys(res).forEach((k) => {
                     if(k!==column){
                         final[k] = res[k];
                     }else{
@@ -204,7 +200,7 @@ class PurchaseOrder extends Component{
 
     }
 
-    HandleCommonInputChange(e,errs=true,st=0){
+    HandleCommonInputChange(e,errs=true){
         const column = e.target.name;
         const val = e.target.value;
         this.setState({
@@ -226,11 +222,10 @@ class PurchaseOrder extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
-                if (res == undefined) {
+                if (res === undefined) {
                     Toast.fire({
                         icon: 'error',
                         title: `not found.`
@@ -328,7 +323,7 @@ class PurchaseOrder extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 update(table,{
@@ -402,7 +397,7 @@ class PurchaseOrder extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan PO.',
@@ -429,7 +424,7 @@ class PurchaseOrder extends Component{
                                 if (item.diskon != 0) {
                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
-                                    if (item.diskon2 != 0) {
+                                    if (item.diskon2 !==0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
@@ -473,7 +468,8 @@ class PurchaseOrder extends Component{
     autoSetQty(kode,data){
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
+                
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     barcode: data[0].barcode,
@@ -552,7 +548,7 @@ class PurchaseOrder extends Component{
         // }
 
         let opSupplier=[];
-        if(this.props.supplier!=[]){
+        if(this.props.supplier!==[]){
             this.props.supplier.map(i=>{
                 opSupplier.push({
                     value: i.kode,
@@ -590,7 +586,7 @@ class PurchaseOrder extends Component{
                                             <div className="col-md-12">
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
-                                                        <select name='searchby' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                        <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
                                                             <option value={1}>Kode Barang</option>
                                                             <option value={2}>Barcode</option>
                                                             <option value={3}>Deskripsi</option>
@@ -598,9 +594,9 @@ class PurchaseOrder extends Component{
                                                     </div>
                                                     <small
                                                         id="passwordHelpBlock"
-                                                        class="form-text text-muted"
+                                                        className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby)===1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -824,7 +820,7 @@ class PurchaseOrder extends Component{
                                                             }
 
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location}
                                                         </div>
                                                     </div>
@@ -842,7 +838,7 @@ class PurchaseOrder extends Component{
                                                                 })
                                                             }
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.supplier}
                                                         </div>
                                                     </div>
@@ -859,12 +855,12 @@ class PurchaseOrder extends Component{
                                                             onChange={(e=>this.HandleCommonInputChange(e))}
                                                             name="catatan"
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.catatan}
                                                         </div>
                                                         {/* {
                                   this.state.error.catatan!==""?(
-                                    <div class="invalid-feedback">
+                                    <div className="invalid-feedback">
                                       {this.state.error.catatan}
                                     </div>
                                   ):""
@@ -903,7 +899,7 @@ class PurchaseOrder extends Component{
                                                 if(item.diskon!=0){
                                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                                     disc2=disc1;
-                                                    if(item.diskon2!=0){
+                                                    if(item.diskon2!==0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
@@ -922,7 +918,7 @@ class PurchaseOrder extends Component{
                                                             {
                                                                 item.tambahan.map(i=>{
                                                                     return(
-                                                                        <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                                        <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
                                                                     )
                                                                 })
                                                             }

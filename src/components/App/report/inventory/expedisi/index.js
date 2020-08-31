@@ -447,7 +447,7 @@ class ExpedisiReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps expedisi", state)
+    
     return {
         expedisiReport:state.expedisiReducer.report,
         isLoadingDetail: state.expedisiReducer.isLoadingDetail,

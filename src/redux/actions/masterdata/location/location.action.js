@@ -32,14 +32,14 @@ export const FetchLocation = (page=1,q='')=>{
         }else{
             url = `lokasi?page=${page}&q=${q}`;
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+`${url}`,headers)
             .then(function(response){
                 const data = response.data;
                 dispatch(setLocation(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -53,11 +53,11 @@ export const FetchAllLocation = (page=1)=>{
         axios.get(HEADERS.URL+`lokasi?page=${page}&perpage=50`,headers)
             .then(function(response){
                 const data = response.data;
-                console.log("SEMUA DATA LOKASI",data);
+                
                 dispatch(setAllLocation(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -73,7 +73,7 @@ export const FetchDetailLocation = (id)=>{
                 dispatch(setDetailLocation(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -89,7 +89,7 @@ export const FetchEditLocation = (id)=>{
                 dispatch(setEditLocation(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -128,7 +128,7 @@ export const createLocation = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -161,14 +161,14 @@ export const updateLocation = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -199,14 +199,14 @@ export const deleteLocation = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

@@ -238,7 +238,7 @@ class ProductionReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {per_page,current_page,from,to,data,total} = this.props.productionReport;
-        console.log("this.props.productionReportExcel.data.length",typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0)
+        
         return (
             <Layout page="Laporan Production">
                 <div className="col-12 box-margin">
@@ -428,7 +428,7 @@ class ProductionReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps production", state)
+    
     return {
         productionReport:state.produksiReducer.report,
         isLoadingDetail: state.produksiReducer.isLoadingDetail,

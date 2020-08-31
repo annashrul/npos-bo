@@ -39,7 +39,7 @@ class DetailStockReportSatuan extends Component{
     componentDidMount(){
         this.getLok()
         .then(data => {
-            console.log("ttt==",data.result.data)
+            
             this.setState({
                     data_lok:data.result.data
                 }
@@ -53,7 +53,7 @@ class DetailStockReportSatuan extends Component{
     };
 
     render(){
-        console.log("############# STATE SIITU",this.props);
+        
         const {data} = this.props.stockReportDetailSatuan;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const lokasi = this.props.auth;
@@ -215,7 +215,7 @@ class DetailStockReportSatuan extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapState", state);
+    
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

@@ -13,13 +13,13 @@ class DetailSaleReport extends Component{
 
     }
     componentDidMount(){
-        console.log("COMPONENT DID MOUNT DETAIL SALE REPORT",this.props.detailSale);
+        
     }
     componentWillMount(){
-        console.log("COMPONENT WILL MOUNT DETAIL SALE REPORT",this.props.detailSale);
+        
     }
     componentWillReceiveProps(nextprops){
-        console.log("NEXTPROPS DETAIL SALE REPORT",nextprops.detailSale);
+        
     }
     toggle(e){
         e.preventDefault();
@@ -29,7 +29,7 @@ class DetailSaleReport extends Component{
 
 
     render(){
-        console.log("RENDER LAPORAN DETAIL PENJUALAN",this.props.detailSale);
+        
         const {detail} = this.props.detailSale;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (

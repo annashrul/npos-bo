@@ -116,7 +116,7 @@ class BayarPiutang extends Component{
         }
         else{
             this.props.dispatch(FetchPiutang(this.state.nota_pembelian));
-            console.log(this.props.nota);
+            
         }
         this.setState({
             error: err
@@ -130,21 +130,21 @@ class BayarPiutang extends Component{
                 jenis_trx:"Jenis Pembayaran Tidak Boleh Kosong"
             });
             this.setState({error: err,})
-            console.log("jenis_trx")
+            
         }
         else if(this.state.nota_pembelian===''){
             err = Object.assign({}, err, {
                 nota_pembelian:"Nota Pembelian Tidak Boleh Kosong"
             });
             this.setState({error: err,})
-            console.log("nota_pembelian")
+            
         }
         else if(this.state.catatan===''){
             err = Object.assign({}, err, {
                 catatan:"Keterangan Tidak Boleh Kosong"
             });
             this.setState({error: err,})
-            console.log("catatan")
+            
         }
 
         else if(this.state.jumlah_bayar===''||this.state.jumlah_bayar==='0' || parseInt(this.state.jumlah_bayar)===0){
@@ -189,7 +189,7 @@ class BayarPiutang extends Component{
                     data['ket'] = this.state.catatan;
                     data['userid'] = this.state.userid;
                     data['jumlah_sudah_bayar'] = this.props.getPiutang.jumlah_telah_bayar;
-                    console.log("submitted",data);
+                    
                     this.props.dispatch(storePiutang(data));
                 }
             })

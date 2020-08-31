@@ -346,7 +346,7 @@ class FormProduct extends Component{
         this.clearState()
     };
     getProps(param){
-        console.log("get props",param.dataSupplier);
+        
         this.setState({
             nm_harga1:param.auth.user.harga1,
             nm_harga2:param.auth.user.harga2,
@@ -356,7 +356,7 @@ class FormProduct extends Component{
         });
         this.state.codeServer = param.productCode;
         if(param.dataEdit !== undefined && param.dataEdit !== []){
-            console.log("JENIS DIPILIH",param.dataEdit.kategori)
+            
             let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
             let barang_hrg = typeof param.dataEdit.barang_hrg === 'object' ? param.dataEdit.barang_hrg : this.state.barangHarga;
             let barangSku=[];let barangHrg=[];let konversi=[];
@@ -585,7 +585,7 @@ class FormProduct extends Component{
             })
             .catch(function (error) {
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -727,7 +727,7 @@ class FormProduct extends Component{
         if(this.state.kd_brg===''||this.state.kd_brg===undefined){
             err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
             this.setState({error: err});
-            console.log(this.props.checkKodeBarang);
+            
             return;
         }
         if(this.state.nm_brg===''||this.state.nm_brg===undefined){
@@ -887,7 +887,7 @@ class FormProduct extends Component{
         let barangHarga = [...this.state.barangHarga];
         if(column==='hrgBeliPCS'||column==='hrgBeliPACK'||column==='hrgBeliKARTON'){
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
-            console.log(barangHarga[i][x].hrgBeliPACK);
+            
             if(column==='hrgBeliPCS'){
                 this.state.hrgBeliPCS = value;
                 barangHarga[i][0].hrgBeliPCS = value;
@@ -1327,7 +1327,7 @@ class FormProduct extends Component{
                 if(column === 'margin1'){
                     this.state.barangHarga[i][0].margin1PCS = value;
                     this.state.barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
-                    console.log(this.state.barangHarga[i][0].hrgJual1PCS);
+                    
                 }
                 if(column === 'margin2'){
                     this.state.barangHarga[i][0].margin2PCS = value;
@@ -2313,7 +2313,7 @@ class FormProduct extends Component{
 
                                             {
                                                 this.state.barangHarga.map((v,i)=>{
-                                                    console.log(v);
+                                                    
                                                     return (
                                                         <div className="col-md-12" key={i}>
                                                             {

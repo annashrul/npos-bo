@@ -31,7 +31,7 @@ export const FetchLocationCategory = (page=1,q='')=>{
                 dispatch(setLocationCategory(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-                console.log(error);
+                
         })
     }
 }
@@ -70,7 +70,7 @@ export const createLocationCategory = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -103,14 +103,14 @@ export const updateLocationCategory = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -140,14 +140,14 @@ export const deleteLocationCategory = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

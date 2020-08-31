@@ -143,7 +143,7 @@ class CetakBarcode extends Component{
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
-        console.log(item);
+        
         const finaldt = {
             barcode:item.barcode,
             title:item.title,
@@ -356,11 +356,11 @@ class CetakBarcode extends Component{
         element.download = `barcode_barang_${this.dateOnlyCode()}${this.intRand(2)}.txt`;
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
-        // console.log("ELEMENT CLICK",element.click());
+        // 
     }
     autoSetQty(kode,data){
         const cek = cekData('barcode', kode, table);
-        console.log(data);
+        
         return cek.then(res => {
             if (res == undefined) {
                 store(table, {

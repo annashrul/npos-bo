@@ -31,11 +31,11 @@ export const FetchGroupProduct = (page=1,q='',perpage='')=>{
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setGroupProduct(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -74,13 +74,13 @@ export const createGroupProduct = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
 }
 export const updateGroupProduct = (id,data) => {
-    console.log("data update submitted",data);
+    
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `kelompokBrg/${id}`;
@@ -107,14 +107,14 @@ export const updateGroupProduct = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error.response);
+                
                 // Swal.fire({
                 //     title: 'failed',
                 //     type: 'danger',
                 //     text: error.response.data.msg,
                 // });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -144,14 +144,14 @@ export const deleteGroupProduct = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

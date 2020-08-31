@@ -109,11 +109,11 @@ class ListProduct extends Component{
                 sort_by: localStorage.sort_by_barang
             })
         }
-        console.log("SEMUA PERIODE BARANG",localStorage.semua_periode_barang)
+        
     }
     handleChecked(event){
         localStorage.setItem("semua_periode_barang",event.target.checked);
-        console.log("SEMUA PERIODE BARANG",localStorage.semua_periode_barang);
+        
         let column=event.target.name;
         let value=event.target.name;
         this.setState({
@@ -191,7 +191,7 @@ class ListProduct extends Component{
         localStorage.setItem('by_product',`${sortName}`);
         localStorage.setItem("startDateProduct",`${dateFrom}`);
         localStorage.setItem("endDateProduct",`${dateTo}`);
-        console.log(localStorage.getItem("any_kode_barang"));
+        
         let where='';
         if(this.state.semua_periode===false){
             if(dateFrom!==null&&dateTo!==null){

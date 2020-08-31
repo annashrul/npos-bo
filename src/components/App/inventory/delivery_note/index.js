@@ -661,14 +661,14 @@ class DeliveryNote extends Component{
                           <div className="col-md-12">
                             <div className="form-group">
                                 <div className="input-group input-group-sm">
-                                  <select name='ambil_data' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                  <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
                                     <option value={1} selected={this.state.ambil_data == 1}>Delivery Note Langsung</option>
                                     <option value={2} selected={this.state.ambil_data==2}>Pembelian</option>
                                   </select>
                                   </div>
                                 <small
                                   id="passwordHelpBlock"
-                                  class="form-text text-muted"
+                                  className="form-text text-muted"
                                 >
                                   {parseInt(this.state.ambil_data,10)==1?'Delivery note langsung.':'Ambil data DN dari Pembelian.'}
                                 </small>
@@ -715,7 +715,7 @@ class DeliveryNote extends Component{
                           <div className="col-md-12">
                             <div className="form-group">
                                 <div className="input-group input-group-sm">
-                                  <select name='searchby' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                  <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
                                     <option value={1}>Kode Barang</option>
                                     <option value={2}>Barcode</option>
                                     <option value={3}>Deskripsi</option>
@@ -723,7 +723,7 @@ class DeliveryNote extends Component{
                                   </div>
                                 <small
                                   id="passwordHelpBlock"
-                                  class="form-text text-muted"
+                                  className="form-text text-muted"
                                 >
                                   Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                 </small>
@@ -866,7 +866,7 @@ class DeliveryNote extends Component{
                                       }
 
                                     />
-                                    <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                    <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                           {this.state.error.location}
                                     </div>
                                   </div>
@@ -886,7 +886,7 @@ class DeliveryNote extends Component{
                                         })
                                       }
                                     />
-                                    <div class="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
+                                    <div className="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
                                           {this.state.error.supplier}
                                     </div>
                                   </div>
@@ -904,12 +904,12 @@ class DeliveryNote extends Component{
                                   name="catatan"
                                   value={this.state.catatan}
                                 />
-                                <div class="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
+                                <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                       {this.state.error.catatan}
                                 </div>
                                 {/* {
                                   this.state.error.catatan!==""?(
-                                    <div class="invalid-feedback">
+                                    <div className="invalid-feedback">
                                       {this.state.error.catatan}
                                     </div>
                                   ):""
@@ -942,7 +942,6 @@ class DeliveryNote extends Component{
                               <tbody>
                               {
                                   this.state.databrg.map((item, index) => {
-
                                       subtotal += parseInt(item.harga_beli,10) * parseFloat(item.qty);
                                       return (
                                           <tr key={index}>

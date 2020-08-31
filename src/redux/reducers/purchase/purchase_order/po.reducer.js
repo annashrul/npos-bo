@@ -50,7 +50,7 @@ export const poReducer = (state = initialState, action) => {
                 report_excel: action.data.result
             });
         case PO.PO_REPORT_DETAIL:
-            console.log("REDUCER",action.data.result);
+            
             return Object.assign({}, state,{
                 dataReportDetail:action.data.result
             });

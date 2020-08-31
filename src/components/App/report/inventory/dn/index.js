@@ -452,7 +452,7 @@ class DnReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps DN", state)
+    
     return {
         dnReport:state.dnReducer.report,
         isLoadingDetail: state.dnReducer.isLoadingDetail,
