@@ -167,6 +167,7 @@ class FormProduct extends Component{
         this.generateCode = this.generateCode.bind(this);
         this.checkData = this.checkData.bind(this);
     }
+
     clearState(){
         this.setState({
             nm_harga1:"1",
@@ -1540,30 +1541,10 @@ class FormProduct extends Component{
 
 
     }
-    handleSubmit(e){
-        e.preventDefault();
-        let parseData = {};
-        let barangSku = [];let barangHrg=[];let barcode=[];
-        parseData["kd_brg"]=this.state.kd_brg;
-        parseData["nm_brg"]=this.state.nm_brg;
-        parseData["kel_brg"]=this.state.kel_brg;
-        parseData["jenis"]=this.state.kategori;
-        parseData["stock_min"]=this.state.stock_min;
-        parseData["group1"]=this.state.group1;
-        parseData["group2"]=this.state.group2;
-        parseData["deskripsi"]=this.state.deskripsi;
-        parseData['gambar']=this.state.gambar;
-        parseData["kategori"]=this.state.jenis;
-        parseData["kcp"]=this.state.kcp;
-        parseData["poin"]=this.state.poin;
-        parseData["online"]=this.state.online;
-        parseData["berat"]=this.state.berat;
-
-        if(parseData['gambar']===''){
-            parseData['gambar']='-';
-        }else{
-            parseData['gambar']=this.state.gambar.base64;
-        }
+    validasiLastForm(){
+        let barangSku = [];
+        let barangHarga = [];
+        let barcode=[];
         for(let i=0;i<this.state.barangSku.length;i++){
             barangSku.push({
                 "barcode":this.state.barangSku[i].barcode,
@@ -1575,7 +1556,7 @@ class FormProduct extends Component{
         }
         for(let i=0;i<this.state.barangHarga.length;i++){
             if(this.state.barangSku.length === 1){
-                barangHrg.push({
+                barangHarga.push({
                     "lokasi":this.state.barangHarga[i][0].lokasi,
                     "harga":this.state.barangHarga[i][0].hrgJual1PCS,
                     "harga_beli":this.state.barangHarga[i][0].hrgBeliPCS,
@@ -1586,7 +1567,6 @@ class FormProduct extends Component{
                     "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
                     "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
                 });
-
                 if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                     return;
@@ -1627,10 +1607,9 @@ class FormProduct extends Component{
                         alert(`service satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
                 }
-
             }
             else if(this.state.barangSku.length === 2){
-                barangHrg.push({
+                barangHarga.push({
                     "lokasi":this.state.barangHarga[i][0].lokasi,
                     "harga":this.state.barangHarga[i][0].hrgJual1PCS,
                     "harga_beli":this.state.barangHarga[i][0].hrgBeliPCS,
@@ -1641,7 +1620,7 @@ class FormProduct extends Component{
                     "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
                     "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
                 });
-                barangHrg.push({
+                barangHarga.push({
                     "lokasi":this.state.barangHarga[i][1].lokasi,
                     "harga":this.state.barangHarga[i][1].hrgJual1PACK,
                     "harga_beli":this.state.barangHarga[i][1].hrgBeliPACK,
@@ -1733,7 +1712,7 @@ class FormProduct extends Component{
 
             }
             else{
-                barangHrg.push({
+                barangHarga.push({
                     "lokasi":this.state.barangHarga[i][0].lokasi,
                     "harga":this.state.barangHarga[i][0].hrgJual1PCS,
                     "harga_beli":this.state.barangHarga[i][0].hrgBeliPCS,
@@ -1744,7 +1723,7 @@ class FormProduct extends Component{
                     "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
                     "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
                 });
-                barangHrg.push({
+                barangHarga.push({
                     "lokasi":this.state.barangHarga[i][1].lokasi,
                     "harga":this.state.barangHarga[i][1].hrgJual1PACK,
                     "harga_beli":this.state.barangHarga[i][1].hrgBeliPACK,
@@ -1755,7 +1734,7 @@ class FormProduct extends Component{
                     "harga3":this.state.barangHarga[i][1].hrgJual3PACK,
                     "harga4":this.state.barangHarga[i][1].hrgJual4PACK,
                 });
-                barangHrg.push({
+                barangHarga.push({
                     "lokasi":this.state.barangHarga[i][2].lokasi,
                     "harga":this.state.barangHarga[i][2].hrgJual1KARTON,
                     "harga_beli":this.state.barangHarga[i][2].hrgBeliKARTON,
@@ -1884,10 +1863,43 @@ class FormProduct extends Component{
                     alert(`service satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 }
             }
-            // console.log(parseInt(this.state.barangHarga[i][0].hrgBeliPCS));
         }
-        parseData["barang_sku"] = barangSku;
-        parseData["barang_harga"] = barangHrg;
+        return [{"barangSku":barangSku,"barangHarga":barangHarga}];
+    }
+    handleSubmit(e){
+        e.preventDefault();
+        let parseData = {};
+        let barangSku = [];
+        let barangHrg = [];
+        parseData["kd_brg"]     = this.state.kd_brg;
+        parseData["nm_brg"]     = this.state.nm_brg;
+        parseData["kel_brg"]    = this.state.kel_brg;
+        parseData["jenis"]      = this.state.kategori;
+        parseData["stock_min"]  = this.state.stock_min;
+        parseData["group1"]     = this.state.group1;
+        parseData["group2"]     = this.state.group2;
+        parseData["deskripsi"]  = this.state.deskripsi;
+        parseData['gambar']     = this.state.gambar;
+        parseData["kategori"]   = this.state.jenis;
+        parseData["kcp"]        = this.state.kcp;
+        parseData["poin"]       = this.state.poin;
+        parseData["online"]     = this.state.online;
+        parseData["berat"]      = this.state.berat;
+        if(parseData['gambar']===''){parseData['gambar']='-';
+        }else{parseData['gambar']=this.state.gambar.base64;}
+        let arr=this.validasiLastForm();
+        if(arr!==undefined){
+            for(let x=0;x<arr.length;x++){
+                for(let y=0;y<arr[x].barangSku.length;y++){
+                    barangSku.push(arr[x].barangSku[y]);
+                }
+                for(let y=0;y<arr[x].barangHarga.length;y++){
+                    barangHrg.push(arr[x].barangHarga[y]);
+                }
+            }
+        }
+        parseData["barang_sku"]     = barangSku;
+        parseData["barang_harga"]   = barangHrg;
 
         if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
