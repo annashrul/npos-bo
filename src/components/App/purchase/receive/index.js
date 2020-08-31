@@ -12,11 +12,10 @@ import { Scrollbars } from "react-custom-scrollbars";
 import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
-import Preloader from 'Preloader'
 import moment from 'moment';
-import {FetchReceiveData, updateReceive} from "redux/actions/purchase/receive/receive.action";
+import {updateReceive} from "redux/actions/purchase/receive/receive.action";
 import axios from "axios";
-import {HEADERS} from "../../../../redux/actions/_constants";
+import {HEADERS} from "redux/actions/_constants";
 
 const table='receive';
 const Toast = Swal.mixin({
@@ -119,6 +118,7 @@ class Receive extends Component{
                         "tambahan" : v.tambahan,
                     };
                     store('receive', data_final);
+                    return null;
                 });
                 this.getData();
                 this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
@@ -202,6 +202,7 @@ class Receive extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -222,6 +223,7 @@ class Receive extends Component{
                         value: i.no_po,
                         label: i.no_po+" ("+i.nama_supplier+")"
                     });
+                    return null;
                 })
                 this.setState({
                     data_nota: nota
@@ -263,7 +265,7 @@ class Receive extends Component{
                         };
                         store(table, datas);
                         this.getData();
-
+                        return null;
                     })
                 }
 
@@ -458,6 +460,7 @@ class Receive extends Component{
                         if(i.satuan===val){
                             newbrg=i;
                         }
+                        return null;
                     })
 
                     let final= {
@@ -649,14 +652,22 @@ class Receive extends Component{
                                 let disc1 = 0;
                                 let disc2 = 0;
                                 let ppn = 0;
+<<<<<<< HEAD
                                 if (item.diskon != 0) {
+=======
+                                if (item.diskon !== 0) {
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
                                     if (item.diskon2 !== 0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
+<<<<<<< HEAD
                                 if (item.ppn != 0) {
+=======
+                                if (item.ppn !== 0) {
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                 }
                                 subtotal += ((parseInt(item.harga_beli,10) - disc2) + ppn) * parseFloat(item.qty);
@@ -673,6 +684,7 @@ class Receive extends Component{
                                     qty: item.qty,
                                     qty_bonus: item.qty_bonus
                                 })
+                                return null;
                             })
                             let data_final = {
                                 tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
@@ -695,7 +707,7 @@ class Receive extends Component{
                             }else{
                                 this.props.dispatch(storeReceive(data_final));
                             }
-
+                            return null;
                         }
                     })
                 }
@@ -782,6 +794,7 @@ class Receive extends Component{
                 databrg: res,
                 brgval: brg
             })
+            return null;
         });
     }
 
@@ -794,10 +807,11 @@ class Receive extends Component{
                     value: i.kode,
                     label: i.nama
                 })
+                return null;
             })
         }
         let subtotal = 0;
-        let grandtotal = 0;
+        // let grandtotal = 0;
         //  let grandtotal = this.state.grandtotal;
         return (
             <Layout page="Receive Pembelian">
@@ -843,11 +857,11 @@ class Receive extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        {parseInt(this.state.ambil_data)===1?'Pembelian langsung.':(parseInt(this.state.ambil_data)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
+                                                        {parseInt(this.state.ambil_data,10)===1?'Pembelian langsung.':(parseInt(this.state.ambil_data,10)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
                                                     </small>
                                                 </div>
                                             </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data)===1?{display:'none'}:{display:'block'}}>
+                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
                                                 <div className="form-group">
                                                     <Select
                                                         options={this.state.data_nota}
@@ -891,7 +905,11 @@ class Receive extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
+<<<<<<< HEAD
                                                         Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+=======
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                     </small>
                                                 </div>
                                             </div>
@@ -1214,19 +1232,32 @@ class Receive extends Component{
                                                 let disc1=0;
                                                 let disc2=0;
                                                 let ppn=0;
+<<<<<<< HEAD
                                                 if(item.diskon!=0){
                                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
 
+=======
+                                                if(item.diskon!==0){
+                                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                     disc2=disc1;
                                                     if(item.diskon2!==0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
+<<<<<<< HEAD
                                                 if(item.ppn!=0){
                                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                                 }
                                                 subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
 
+=======
+                                                if(item.ppn!==0){
+                                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
+                                                }
+                                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
+                                                // 
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                 return (
                                                     <tr key={index} >
                                                         <td style={columnStyle}>

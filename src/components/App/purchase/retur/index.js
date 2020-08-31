@@ -91,6 +91,7 @@ class ReturTanpaNota extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -166,7 +167,7 @@ class ReturTanpaNota extends Component{
 
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -200,7 +201,7 @@ class ReturTanpaNota extends Component{
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
-                if (res == undefined) {
+                if (res === undefined) {
                     Toast.fire({
                         icon: 'error',
                         title: `not found.`
@@ -211,6 +212,7 @@ class ReturTanpaNota extends Component{
                         if(i.satuan===val){
                             newbrg=i;
                         }
+                        return null;
                     })
 
                     let final= {
@@ -303,7 +305,7 @@ class ReturTanpaNota extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 update(table,{
@@ -378,7 +380,7 @@ class ReturTanpaNota extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan Pembelian.',
@@ -414,6 +416,7 @@ class ReturTanpaNota extends Component{
                                     "keterangan": item.keterangan,
                                     "kondisi": item.kondisi,
                                 })
+                                return null;
                             });
                             data['detail'] = detail;
                             this.props.dispatch(storeReturTanpaNota(data));
@@ -428,7 +431,12 @@ class ReturTanpaNota extends Component{
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
+<<<<<<< HEAD
             if (res == undefined) {
+=======
+            if (res === undefined) {
+                
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg:data[0].nm_brg,
@@ -491,6 +499,7 @@ class ReturTanpaNota extends Component{
                     harga_beli: i.harga_beli,
                     ket: i.ket,
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
@@ -509,6 +518,7 @@ class ReturTanpaNota extends Component{
                     value: i.kode,
                     label: i.nama
                 })
+                return null;
             })
         }
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -547,7 +557,11 @@ class ReturTanpaNota extends Component{
                                                                 className="form-text text-muted"
                                                             >
                                                                 Cari
+<<<<<<< HEAD
                                                                 berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+=======
+                                                                berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                             </small>
                                                         </div>
                                                     </div>
@@ -768,7 +782,7 @@ class ReturTanpaNota extends Component{
                                                                         {
                                                                             item.tambahan.map(i=>{
                                                                                 return(
-                                                                                    <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                                                    <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
                                                                                 )
                                                                             })
                                                                         }

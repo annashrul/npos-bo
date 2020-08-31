@@ -146,6 +146,23 @@ class Alokasi extends Component{
         ];
         this.setState({jenis_trx_data:jt});
         this.getProps(nextProps);
+        if (nextProps.auth.user) {
+            let lk = []
+            let loc = nextProps.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                    return null;
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: nextProps.auth.user.id
+                })
+            }
+        }
         if(nextProps.barang.length>0){
             this.getData()
         }
@@ -159,6 +176,7 @@ class Alokasi extends Component{
                         value: i.no_delivery_note,
                         label: i.no_delivery_note
                     });
+                    return null
                 })
                 this.setState({
                     data_nota: nota
@@ -195,7 +213,7 @@ class Alokasi extends Component{
                         };
                         store(table, datas)
                         this.getData();
-
+                        return null;
                     })
                 }
 
@@ -389,6 +407,7 @@ class Alokasi extends Component{
                     })
                 }
                 this.getData()
+                return null;
             })
         }
 
@@ -457,6 +476,7 @@ class Alokasi extends Component{
 
 
             this.getData()
+            return null;
         })
     }
 
@@ -576,6 +596,7 @@ class Alokasi extends Component{
                         }
                     })
                 }
+                return null;
             })
         }
 
@@ -650,6 +671,7 @@ class Alokasi extends Component{
                     qty: err
                 })
             })
+            return null;
         });
     }
 
@@ -659,7 +681,7 @@ class Alokasi extends Component{
         // }
 
         let subtotal = 0;
-        let grandtotal = 0;
+        // let grandtotal = 0;
         //  let grandtotal = this.state.grandtotal;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
 
@@ -710,7 +732,7 @@ class Alokasi extends Component{
                                                     </small>
                                                 </div>
                                             </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)==1?{display:'none'}:{display:'block'}}>
+                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
                                                 <div className="form-group">
                                                     <Select
                                                         options={this.state.data_nota}
@@ -992,7 +1014,7 @@ class Alokasi extends Component{
                                                             <td style={columnStyle}>{item.stock}</td>
                                                             <td style={columnStyle}>
                                                                 <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
-                                                                <div class="invalid-feedback" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
+                                                                <div className="invalid-feedback" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>

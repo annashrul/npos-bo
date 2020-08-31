@@ -4,14 +4,12 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
 import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
 import {toRp} from "helper";
 import {FetchCodeProduksi, storeProduksi} from "redux/actions/inventory/produksi.action";
 import {
-    FetchBrgProduksi,
     FetchBrgProduksiBahan,
     FetchBrgProduksiPaket
 } from "../../../../redux/actions/inventory/produksi.action";

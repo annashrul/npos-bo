@@ -96,6 +96,7 @@ class PurchaseOrder extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -236,6 +237,7 @@ class PurchaseOrder extends Component{
                         if(i.satuan===val){
                             newbrg=i;
                         }
+                        return null;
                     })
 
                     let final= {
@@ -421,14 +423,14 @@ class PurchaseOrder extends Component{
                                 let disc1 = 0;
                                 let disc2 = 0;
                                 let ppn = 0;
-                                if (item.diskon != 0) {
+                                if (item.diskon !==0) {
                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
                                     if (item.diskon2 !==0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
-                                if (item.ppn != 0) {
+                                if (item.ppn !==0) {
                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                 }
                                 subtotal += ((parseInt(item.harga_beli,10) - disc2) + ppn) * parseFloat(item.qty);
@@ -458,6 +460,7 @@ class PurchaseOrder extends Component{
                             };
                             this.props.dispatch(storePo(data_final));
                         }
+                        return null;
                     })
                 }
             })
@@ -533,6 +536,7 @@ class PurchaseOrder extends Component{
                     qty: i.qty,
                     satuan: i.satuan
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
@@ -554,6 +558,7 @@ class PurchaseOrder extends Component{
                     value: i.kode,
                     label: i.nama
                 })
+                return null;
             })
         }
         let subtotal=0;
@@ -596,7 +601,7 @@ class PurchaseOrder extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby)===1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -896,14 +901,15 @@ class PurchaseOrder extends Component{
                                                 let disc1=0;
                                                 let disc2=0;
                                                 let ppn=0;
-                                                if(item.diskon!=0){
+
+                                                if(item.diskon!==0){
                                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                                     disc2=disc1;
                                                     if(item.diskon2!==0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
-                                                if(item.ppn!=0){
+                                                if(item.ppn!==0){
                                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                                 }
                                                 subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);

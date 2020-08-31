@@ -15,12 +15,12 @@ class BayarMutasiJUalBeli extends Component{
     constructor(props) {
         super(props);
         this.state={
-            no_trx:'-',
+            no_trx:"-",
             tgl_trx:new Date(),
             jenis_data:[],
             location:"",
             jenis_trx:"",
-            no_faktur_mutasi:'',
+            no_faktur_mutasi:"",
             total_hutang:0,
             jumlah_bayar:0,
             jumlah_sudah_bayar:0,
@@ -33,9 +33,9 @@ class BayarMutasiJUalBeli extends Component{
                 jenis_trx:"",
                 no_faktur_mutasi:"",
                 total_hutang:"",
-                jumlah_bayar:'',
+                jumlah_bayar:"",
             }
-        },
+        }
         // this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this)
         this.HandleChangeJenis = this.HandleChangeJenis.bind(this);
         this.HandleChangeBank = this.HandleChangeBank.bind(this);
@@ -73,6 +73,7 @@ class BayarMutasiJUalBeli extends Component{
                         value:v.nama,
                         label:v.nama
                     })
+                    return null;
                 }) : bank.push({
                     value:'-',
                     label:'-'

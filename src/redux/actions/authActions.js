@@ -4,7 +4,6 @@ import Swal from 'sweetalert2'
 import {store,destroy} from "components/model/app.model";
 import setAuthToken from '../../utils/setAuthToken';
 import {HEADERS} from "./_constants";
-import { isObject } from 'lodash';
 
 // user register
 

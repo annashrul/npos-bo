@@ -92,7 +92,15 @@ class ListGroupProduct extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {
+            total,
+            // last_page,
+            per_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.data;
         return (
            <div>
                <form onSubmit={this.handlesearch} noValidate>
@@ -139,10 +147,10 @@ class ListGroupProduct extends Component{
                                                            Aksi
                                                        </button>
                                                        <div className="dropdown-menu">
-                                                           <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                           <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
                                                                e,v.kel_brg,v.nm_kel_brg,v.group2,v.margin,v.dis_persen,v.status,'-'
                                                            )}>Edit</a>
-                                                           <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</a>
+                                                           <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</a>
                                                        </div>
                                                    </div>
                                                </td>

@@ -17,7 +17,6 @@ import {
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {HEADERS} from 'redux/actions/_constants'
 
 class SaleArchive extends Component{
@@ -57,6 +56,7 @@ class SaleArchive extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
 
         this.setState({
@@ -74,6 +74,7 @@ class SaleArchive extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -203,7 +204,7 @@ class SaleArchive extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formSaleExcel"));
         this.props.dispatch(FetchReportSaleExcel(this.state.where_data,total));
@@ -211,11 +212,19 @@ class SaleArchive extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
+        const {
+            total,
+            // last_page,
+            per_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.saleReport;
         const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
         let omset_per = 0;
         let dis_item_per = 0;
-        let sub_total_per = 0;
+        // let sub_total_per = 0;
         let dis_persen_per = 0;
         let dis_rp_per = 0;
         let kas_lain_per = 0;
@@ -356,22 +365,22 @@ class SaleArchive extends Component{
                                                             <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
                                                             <td style={columnStyle}>{v.nama}</td>
                                                             <td style={columnStyle}>{v.kd_kasir}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                             <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
                                                             <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
                                                             <td style={columnStyle}>{v.kas_lain}</td>
                                                             <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
                                                             <td style={columnStyle}>{v.kartu}</td>
                                                             <td style={columnStyle}>{v.status}</td>
                                                             <td style={columnStyle}>{v.lokasi}</td>
@@ -449,22 +458,22 @@ class SaleArchive extends Component{
                                                     typeof data==='object'? data.length>0?
 
                                                         data.map((v,i)=>{
-                                                            omset_per = omset_per + parseInt(v.omset);
-                                                            dis_item_per = dis_item_per + parseInt(v.diskon_item);
-                                                            dis_persen_per = dis_persen_per + parseInt(v.dis_persen);
-                                                            dis_rp_per = dis_rp_per + parseInt(v.dis_rp);
-                                                            kas_lain_per = kas_lain_per + parseInt(v.kas_lain);
-                                                            gt_per = gt_per + parseInt(v.omset - v.diskon_item - v.dis_rp - v.kas_lain);
-                                                            bayar_per = bayar_per + parseInt(v.bayar);
-                                                            jml_kartu_per = jml_kartu_per + parseInt(v.jml_kartu);
-                                                            charge_per = charge_per + parseInt(v.charge);
-                                                            change_per = change_per + parseInt(v.change);
-                                                            voucher_per = voucher_per + parseInt(v.voucher);
-                                                            rounding_per = rounding_per + parseInt(v.rounding);
+                                                            omset_per = omset_per + parseInt(v.omset,10);
+                                                            dis_item_per = dis_item_per + parseInt(v.diskon_item,10);
+                                                            dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);
+                                                            dis_rp_per = dis_rp_per + parseInt(v.dis_rp,10);
+                                                            kas_lain_per = kas_lain_per + parseInt(v.kas_lain,10);
+                                                            gt_per = gt_per + parseInt(v.omset - v.diskon_item - v.dis_rp - v.kas_lain,10);
+                                                            bayar_per = bayar_per + parseInt(v.bayar,10);
+                                                            jml_kartu_per = jml_kartu_per + parseInt(v.jml_kartu,10);
+                                                            charge_per = charge_per + parseInt(v.charge,10);
+                                                            change_per = change_per + parseInt(v.change,10);
+                                                            voucher_per = voucher_per + parseInt(v.voucher,10);
+                                                            rounding_per = rounding_per + parseInt(v.rounding,10);
 
                                                             return (
                                                                 <tr key={i}>
-                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page)-1))}</td>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -482,22 +491,22 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
                                                                     <td style={columnStyle}>{v.kd_kasir}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                                     <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
                                                                     <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
                                                                     <td style={columnStyle}>{v.kas_lain}</td>
                                                                     <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
                                                                     <td style={columnStyle}>{v.kartu}</td>
                                                                     <td style={columnStyle}>{v.status}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
@@ -552,9 +561,9 @@ class SaleArchive extends Component{
                                 </div>
                                 <div style={{"marginTop":"20px","float":"right"}}>
                                     <Paginationq
-                                        current_page={parseInt(current_page)}
-                                        per_page={parseInt(per_page)}
-                                        total={parseInt(total)}
+                                        current_page={parseInt(current_page,10)}
+                                        per_page={parseInt(per_page,10)}
+                                        total={parseInt(total,10)}
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                 </div>

@@ -4,8 +4,7 @@ import {
 } from "../../_constants"
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {destroy,store} from "components/model/app.model";
-import {FetchBank} from "../../masterdata/bank/bank.action";
+import {destroy} from "components/model/app.model";
 
 
 export function setLoading(load) {

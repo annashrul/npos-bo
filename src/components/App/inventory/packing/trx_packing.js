@@ -4,17 +4,8 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import {FetchBrg} from "redux/actions/masterdata/product/product.action";
-import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
-import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
 import {toRp} from "helper";
-import {FetchCodeProduksi, storeProduksi} from "redux/actions/inventory/produksi.action";
-import {
-    FetchBrgProduksi,
-    FetchBrgProduksiBahan,
-    FetchBrgProduksiPaket
-} from "../../../../redux/actions/inventory/produksi.action";
 import {ToastQ} from "helper";
 import {FetchAlokasi} from "../../../../redux/actions/inventory/alokasi.action";
 import {FetchBrgPacking, FetchCodePacking, storePacking} from "../../../../redux/actions/inventory/packing.action";
@@ -402,6 +393,10 @@ class TrxPacking extends Component{
                                                     {
                                                         this.state.databrg.map((item, index) => {
                                                             let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
+<<<<<<< HEAD
+=======
+                                                            console.log(qty_packing);
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                             return (
                                                                 <tr key={index}>
                                                                     <td style={columnStyle}>

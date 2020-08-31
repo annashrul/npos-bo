@@ -4,10 +4,8 @@ import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
 import {
     createUserLevel,
-    FetchUserLevel,
     updateUserLevel
 } from "redux/actions/masterdata/user_level/user_level.action";
-import {FetchUserList, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
 import {ModalToggle} from "redux/actions/modal.action";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
@@ -172,10 +170,14 @@ class FormUserLevel extends Component{
     componentWillReceiveProps(nextProps) {
         console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== undefined && nextProps.detail !== []) {
+<<<<<<< HEAD
             let akses = [];
             this.handleLoopAccess(
                 this.state.setting.concat(this.state.masterdata).concat(this.state.inventory).concat(this.state.pembelian).concat(this.state.penjualan).concat(this.state.pembayaran).concat(this.state.report).concat(this.state.produksi).concat(this.state.cetak_barcode),
                 nextProps.detail.access);
+=======
+            this.handleLoopAccess(this.state.setting.concat(this.state.masterdata),nextProps.detail.access);
+>>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
             this.setState({lvl:nextProps.detail.lvl});
         }
     }

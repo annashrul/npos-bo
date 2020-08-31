@@ -140,7 +140,7 @@ export const FetchReportSaleByCust = (page=1,where='') => {
 
     return (dispatch) => {
         dispatch(setLoadingReport(true));
-        if(page === 'NaN'||page===''||page===undefined||page===NaN){
+        if(page === 'NaN'||page===''||page===undefined||!isNaN(page)){
             page = 1;
         }
         let url=`report/penjualan/by_cust?page=${page}`;
