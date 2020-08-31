@@ -311,7 +311,7 @@ class TrxPacking extends Component{
                     satuan:res.satuan,
                     stock:res.stock,
                     nm_brg:res.nm_brg,
-                    qty_packing:parseInt(res.qty_packing)+1,
+                    qty_packing:parseInt(res.qty_packing,10)+1,
                     tambahan:res.tambahan
                 })
             }
@@ -401,8 +401,7 @@ class TrxPacking extends Component{
                                                     <tbody>
                                                     {
                                                         this.state.databrg.map((item, index) => {
-                                                            let qty_packing = parseInt(this.state.brgval[index].qty_packing)>parseInt(item.qty_alokasi)?parseInt(item.qty_alokasi):this.state.brgval[index].qty_packing;
-                                                            console.log(qty_packing);
+                                                            let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
                                                             return (
                                                                 <tr key={index}>
                                                                     <td style={columnStyle}>
@@ -422,7 +421,7 @@ class TrxPacking extends Component{
                                                                             })
                                                                         }
                                                                     </select></td>
-                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli))} className="form-control"/></td>
+                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli,10))} className="form-control"/></td>
                                                                     <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                                     <td style={columnStyle}><input readOnly={true} type='text' name='qty_alokasi' value={item.qty_alokasi} className="form-control"/></td>
                                                                     <td style={columnStyle}>
