@@ -201,12 +201,8 @@ class Produksi extends Component{
             if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location));
-
-            // this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
-
             }
             this.setState({search: ''});
-
         }
     }
     HandleAddBrg(e,item) {
