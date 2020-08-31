@@ -42,7 +42,7 @@ export const FetchCodeBayarMutasiJualBeli = (lokasi) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
                 dispatch(setLoadingMutasiJualBeli(false));
             })
 
@@ -54,14 +54,14 @@ export const FetchDataBayarMutasiJualBeli = (kode) => {
         axios.get(HEADERS.URL + `alokasi_trx/hutang/${kode}`)
             .then(function (response) {
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setBayarMutasiJualBeli(data));
                 dispatch(FetchCodeBayarMutasiJualBeli(data.result.lokasi_tujuan));
                 dispatch(setLoadingMutasiJualBeli(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
                 dispatch(setLoadingMutasiJualBeli(false));
                 Swal.fire({
                     title: 'Failed',
@@ -70,7 +70,7 @@ export const FetchDataBayarMutasiJualBeli = (kode) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
 
@@ -106,7 +106,7 @@ export const storeMutasiJualBeli = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

@@ -27,15 +27,15 @@ export const FetchPostingExpedisi = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPostingExpedisi(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -46,15 +46,15 @@ export const FetchExpedisi = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchExpedisi",data);
+                
                 dispatch(setExpedisi(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -65,15 +65,15 @@ export const FetchExpedisiExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchExpedisiExcel",data);
+                
                 dispatch(setExpedisiExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -89,7 +89,7 @@ export const FetchExpedisiExcel = (page=1,where='',perpage=99999)=>{
 //             })
 //             .catch(function (error) {
 //                 // handle error
-//                 console.log(error);
+//                 
 //             })
 
 //     }
@@ -124,7 +124,7 @@ export const storeExpedisi = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -161,7 +161,7 @@ export const storeExpedisiPosting = (data,param) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

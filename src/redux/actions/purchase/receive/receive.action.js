@@ -66,13 +66,13 @@ export const FetchNota = (lokasi) => {
         axios.get(HEADERS.URL + `receive/getcode?lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                
                 dispatch(setCode(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -120,7 +120,7 @@ export const storeReceive= (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -172,7 +172,7 @@ export const updateReceive= (data,kode) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -185,15 +185,15 @@ export const FetchReport = (page = 1,where='') => {
         if(where!==''){
             url+=`&${where}`
         }
-        console.log(`${url}`);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPO(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
 
     }
@@ -209,7 +209,7 @@ export const FetchReceiveData = (nota,param='') => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -220,11 +220,11 @@ export const FetchReportDetail = (page=1,code)=>{
         axios.get(HEADERS.URL+`receive/report/${code}?page=${page}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setReportDetail(data));
                 dispatch(setLoadingReportDetail(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -235,15 +235,15 @@ export const FetchReportExcel = (where='') => {
         if(where!==''){
             url+=`&${where}`
         }
-        console.log(`${url}`);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPO(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
 
     }
@@ -279,7 +279,7 @@ export const deleteReceiveReport = (id) => {
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

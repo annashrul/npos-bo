@@ -63,7 +63,7 @@ export const storeReturTanpaNota = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

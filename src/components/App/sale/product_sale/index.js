@@ -77,8 +77,8 @@ class Sale extends Component{
     componentDidMount(){
         this.props.dispatch(FetchCustomerAll());
         this.getData();
-        console.log("LOCAL STORAGE LOKASI",localStorage.lk)
-        console.log("LOCAL STORAGE CUSTOMER",localStorage.cs)
+        
+        
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.props.dispatch(FetchNotaSale());
             this.setState({
@@ -161,7 +161,7 @@ class Sale extends Component{
     }
 
     HandleChangeCustomer(cs) {
-        console.log(cs);
+        
         let err = Object.assign({}, this.state.error, {
             customer: ""
         });
@@ -246,7 +246,7 @@ class Sale extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
+        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -329,7 +329,7 @@ class Sale extends Component{
 
     HandleAddBrg(e,item,index) {
         e.preventDefault();
-        console.log("ITEM",item);
+        
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg: item.nm_brg,
@@ -377,7 +377,7 @@ class Sale extends Component{
 
             this.getData();
         })
-        console.log("PROPS DATA BARANG INDEXED DB",this.props.barang)
+        
     }
 
     HandleReset(e){
@@ -521,7 +521,7 @@ class Sale extends Component{
                         master:master,
                         detail:detail
                     })
-                    console.log("DATA DETAIL",detail);
+                    
                 }
             })
         }
@@ -530,10 +530,10 @@ class Sale extends Component{
 
     autoSetQty(kode,data){
         const cek = cekData('barcode', kode, table);
-        console.log("CEKING DATA",cek);
+        
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
+                
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg: data[0].nm_brg,
@@ -600,7 +600,7 @@ class Sale extends Component{
             if(this.state.search!==''){
                 if(where!==''){where+='&';}where+=`q=${this.state.search}`
             }
-            console.log(where);
+            
             this.props.dispatch(FetchProductSale(1,where,'sale',this.autoSetQty));
             this.setState({search: ''});
 
@@ -608,7 +608,7 @@ class Sale extends Component{
     }
     getData() {
         const data = get(table);
-        console.log("LOG FUNCTION getData()",data);
+        
         data.then(res => {
             let brg = []
             res.map((i) => {

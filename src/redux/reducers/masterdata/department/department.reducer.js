@@ -9,7 +9,7 @@ const initialState = {
 export const departmentReducer = (state=initialState,action) => {
     switch (action.type) {
         case DEPT.ALL:
-            console.log("LIST DEPARTMENT ALL REDUCER",action.data.result)
+            
             return Object.assign({}, state,{
                 allData:action.data.result
             });

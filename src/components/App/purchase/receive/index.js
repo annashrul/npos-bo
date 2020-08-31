@@ -92,7 +92,7 @@ class Receive extends Component{
             })
             .catch(function (error) {
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -103,7 +103,7 @@ class Receive extends Component{
             destroy(table);
             const data = this.fetchDataEdit();
             data.then(res=>{
-                console.log("REPONS",res);
+                
                 res.detail.map((v,i)=>{
                     const data_final={
                         "kd_brg" : v.kode_barang,
@@ -196,7 +196,7 @@ class Receive extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-        console.log("DATA EDIT",nextProps.dataEdit);
+        
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
@@ -236,7 +236,7 @@ class Receive extends Component{
         if (nextProps.po_data){
             if (nextProps.po_data.master!==undefined){
                 if(this.props.po_data===undefined){
-                    console.log("PO HITTTTTTTT");
+                    
                     this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
                     this.setState({
                         location: nextProps.po_data.master.lokasi,
@@ -299,7 +299,7 @@ class Receive extends Component{
             localStorage.removeItem('data_master_receive');
             localStorage.removeItem('data_detail_receive');
             destroy('receive');
-            console.log("DESTROY DATA PEMBELIAN");
+            
         }
 
     }
@@ -332,7 +332,7 @@ class Receive extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        console.log(err);
+        
         this.setState({
             location: lk.value,
             error: err
@@ -351,7 +351,7 @@ class Receive extends Component{
         let err = Object.assign({}, this.state.error, {
             supplier: ""
         });
-        console.log(err);
+        
         this.setState({
             supplier: sp.value,
             error: err
@@ -448,7 +448,7 @@ class Receive extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
+        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -529,7 +529,7 @@ class Receive extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
-        console.log(item);
+        
         const finaldt = {
             kd_brg: item.kd_brg,
             barcode:item.barcode,
@@ -601,7 +601,7 @@ class Receive extends Component{
         e.preventDefault();
 
         // validator head form
-        console.log(this.state.catatan);
+        
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "" || this.props.checkNotaPem) {
             if(this.state.catatan===""){
@@ -701,10 +701,10 @@ class Receive extends Component{
                                 userid: this.state.userid,
                                 detail: detail
                             };
-                            console.log("SUBMITTED",data_final);
+                            
                             if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
                                 this.props.dispatch(updateReceive(data_final,this.props.match.params.slug));
-                                console.log("###################### UPDATE ######################");
+                                
                             }else{
                                 this.props.dispatch(storeReceive(data_final));
                             }
@@ -721,7 +721,7 @@ class Receive extends Component{
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
+                
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     barcode: data[0].barcode,
@@ -790,8 +790,8 @@ class Receive extends Component{
                     satuan: i.satuan
                 });
             });
-            console.log("databrg",res);
-            console.log("brgval",brg);
+            
+            
             this.setState({
                 databrg: res,
                 brgval: brg
@@ -1239,7 +1239,7 @@ class Receive extends Component{
                                                     ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
                                                 }
                                                 subtotal+=((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty);
-                                                // console.log('gt',grandtotal);
+                                                // 
                                                 return (
                                                     <tr key={index} >
                                                         <td style={columnStyle}>

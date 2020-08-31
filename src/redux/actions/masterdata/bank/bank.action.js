@@ -22,20 +22,20 @@ export const FetchBank = (page=1,param,perpage=10)=>{
         };
         let que = '';
         if(param===null){
-            console.log(param);
+            
             que = `bank?page=${page}&perpage=${perpage}`;
         }else{
-            console.log(param);
+            
             que = `bank?page=${page}&q=${param}&perpage=${perpage}`;
         }
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setBank(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -75,7 +75,7 @@ export const createBank = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -114,7 +114,7 @@ export const updateBank = (id,data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -151,7 +151,7 @@ export const deleteBank = (id) => {
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

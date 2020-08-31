@@ -52,17 +52,17 @@ export const FetchUserList = (page=1,q) => {
         }else{
             url = `user?page=${page}&q=${q}`;
         }
-        console.log(url);
+        
         axios.get(HEADERS.URL + `${url}&perpage=15`, headers)
             .then(function (response) {
                 const data = response.data;
-                console.log("FETCH",data);
+                
                 dispatch(setUserList(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -84,7 +84,7 @@ export const sendUserList = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -110,7 +110,7 @@ export const sendUserList = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -143,14 +143,14 @@ export const updateUserList = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -182,14 +182,14 @@ export const deleteUserList = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -207,13 +207,13 @@ export const FetchUserListEdit = (id) => {
         axios.get(HEADERS.URL + `user/${id}`, headers)
             .then(function (response) {
                 const data = response.data;
-                console.log("FETCH USER EDIT",data);
+                
                 dispatch(setUserListEdit(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -232,13 +232,13 @@ export const FetchUserListDetail = (id) => {
         axios.get(HEADERS.URL + `user/${id}`, headers)
             .then(function (response) {
                 const data = response.data;
-                console.log("FETCH USER EDIT",data);
+                
                 dispatch(setUserListDetail(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }

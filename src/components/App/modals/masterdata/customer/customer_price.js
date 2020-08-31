@@ -20,7 +20,7 @@ class CustomerPrice extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
-        console.log("componen will receive props",nextProps.dataCustomerPrice.data);
+        
         let data=[];
         typeof nextProps.dataCustomerPrice.data==='object'?
             nextProps.dataCustomerPrice.data.map((v,i)=>{
@@ -36,12 +36,12 @@ class CustomerPrice extends Component{
         this.setState({ dataCustomer });
     }
     handleOnEnter(i){
-        console.log(this.state.dataCustomer);
+        
         let data={};
         data['kd_cust'] = this.state.dataCustomer[i].kd_cust;
         data['kd_brg'] = localStorage.getItem("kd_brg_price_customer");
         data['harga'] = this.state.dataCustomer[i].harga;
-        console.log(data);
+        
         this.props.dispatch(saveCustomerPrice(data));
 
 
@@ -62,7 +62,7 @@ class CustomerPrice extends Component{
     }
     handleOnSearch(){
         let page=localStorage.getItem("page_price_customer");
-        console.log(page);
+        
         localStorage.setItem("q_price_customer",this.state.q);
         this.props.dispatch(FetchCustomerPrice(localStorage.getItem("kd_brg_price_customer"),page===null?1:page,this.state.q));
 

@@ -223,7 +223,7 @@ class PurchaseOrder extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
+        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -472,11 +472,11 @@ class PurchaseOrder extends Component{
     }
 
     autoSetQty(kode,data){
-        console.log("DATA SET QTY",data);
+        
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
+                
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     barcode: data[0].barcode,
@@ -530,7 +530,7 @@ class PurchaseOrder extends Component{
     }
     getData() {
         const data = get(table);
-        console.log(data);
+        
         data.then(res => {
             let brg = []
             res.map((i) => {

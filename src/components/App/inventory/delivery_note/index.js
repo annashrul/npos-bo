@@ -47,7 +47,7 @@ const filterColors = (inputValue) => {
               
           })
           .catch(function (error) {
-              console.log(error);
+              
               return [];
           })
 };
@@ -258,7 +258,7 @@ class DeliveryNote extends Component{
       let err = Object.assign({}, this.state.error, {
         location2: ""
       });
-      console.log(err);
+      
       this.setState({
         location2: sp.value,
         error: err
@@ -337,7 +337,7 @@ class DeliveryNote extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
+        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -474,7 +474,7 @@ class DeliveryNote extends Component{
       e.preventDefault();
 
       // validator head form
-      console.log(this.state.catatan);
+      
       let err = this.state.error;
       if (this.state.catatan === "" || this.state.location === "" || this.state.location2 === "") {
         if(this.state.catatan===""){
@@ -554,7 +554,7 @@ class DeliveryNote extends Component{
       const cek = cekData('kd_brg', kode, table);
       return cek.then(res => {
         if (res == undefined) {
-          console.log('GADA');
+          
           store(table, {
             kd_brg: data[0].kd_brg,
             nm_brg: data[0].nm_brg,
@@ -694,7 +694,7 @@ class DeliveryNote extends Component{
                                     filterOptions = {
                                       (options, filter, currentValues) => {
                                         // Do no filtering, just return all options
-                                        console.log("options =", options)
+                                        
                                         return options;
                                       }
                                     }
@@ -948,10 +948,10 @@ class DeliveryNote extends Component{
                               <tbody>
                               {
                                   this.state.databrg.map((item, index) => {
-                                      console.log(item);
+                                      
 
                                       subtotal += parseInt(item.harga_beli) * parseFloat(item.qty);
-                                      // console.log('gt',grandtotal);
+                                      // 
                                       return (
                                           <tr key={index}>
                                               <td style={columnStyle}>{index+1}</td>

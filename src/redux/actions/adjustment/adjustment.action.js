@@ -34,14 +34,14 @@ export const FetchAdjustment = (page=1,where='')=>{
         if(where!==''){
             url+=where;
         }
-        console.log("URL ADJUSMENT REPORT",url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
                 dispatch(setAdjustment(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -52,14 +52,14 @@ export const FetchAdjustmentExcel = (where='')=>{
         if(where!==''){
             url+=where;
         }
-        console.log("URL ADJUSMENT REPORT",url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
                 dispatch(setAdjustmentExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -74,7 +74,7 @@ export const FetchAdjustmentAll = ()=>{
                 dispatch(setAdjustmentAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -119,7 +119,7 @@ export const storeAdjusment = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -151,14 +151,14 @@ export const updateAdjustment = (id,data,token) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -189,14 +189,14 @@ export const deleteAdjustment = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -211,14 +211,14 @@ export const FetchAdjustmentDetail = (page=1,code)=>{
                 dispatch(setLoading(false));
             }).catch(function(error){
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
         })
     }
@@ -231,7 +231,7 @@ export const FetchCodeAdjustment = (lokasi)=>{
                 const data = response.data;
                 dispatch(setCodeAdjusment(data));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

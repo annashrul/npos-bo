@@ -463,7 +463,7 @@ class OpnameReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps opname", state)
+    
     return {
         opnameReport:state.opnameReducer.report,
         isLoadingDetail: state.opnameReducer.isLoadingDetail,

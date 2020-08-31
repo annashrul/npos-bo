@@ -117,7 +117,7 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        console.log(err);
+        
         this.setState({
             location: lk.value,
             error: err
@@ -134,7 +134,7 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             supplier: ""
         });
-        console.log(err);
+        
         this.setState({
             supplier: sp.value,
             error: err
@@ -195,7 +195,7 @@ class ReturTanpaNota extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
+        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -289,7 +289,7 @@ class ReturTanpaNota extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
-        console.log(item);
+        
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg:item.nm_brg,
@@ -358,7 +358,7 @@ class ReturTanpaNota extends Component{
         e.preventDefault();
 
         // validator head form
-        console.log(this.state.catatan);
+        
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "") {
             if(this.state.catatan===""){
@@ -422,7 +422,7 @@ class ReturTanpaNota extends Component{
                             });
                             data['detail'] = detail;
                             this.props.dispatch(storeReturTanpaNota(data));
-                            console.log("SUBMITTED",data);
+                            
                         }
                     })
                 }
@@ -435,7 +435,7 @@ class ReturTanpaNota extends Component{
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
+                
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg:data[0].nm_brg,

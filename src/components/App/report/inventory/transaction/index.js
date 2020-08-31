@@ -453,7 +453,7 @@ class TransactionReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps transaction", state)
+    
     return {
         transactionReport:state.transactionReducer.report,
         isLoadingDetail: state.transactionReducer.isLoadingDetail,

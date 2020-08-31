@@ -103,7 +103,7 @@ export const storeClosing = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -140,7 +140,7 @@ export const reClosing = (data) => {
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -158,7 +158,7 @@ export const FetchClosing = (page=1,where='')=>{
                 dispatch(setCLOSING(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -184,7 +184,7 @@ export const FetchClosingDetail = (page=1,code,dateFrom='',dateTo='',location=''
                 dispatch(setCLOSINGData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

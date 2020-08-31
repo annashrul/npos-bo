@@ -29,9 +29,9 @@ class FormSale extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        console.log("componentWillReceiveProps",nextProps);
+        
         if(nextProps.master!==undefined&&nextProps.master!==[]){
-            console.log(nextProps.master.kode_trx);
+            
             this.state.gt=nextProps.master.gt;
             this.state.kode_trx=nextProps.master.kode_trx;
         }
@@ -55,7 +55,7 @@ class FormSale extends Component{
             if(event.target.value === "TRANSFER"){
                 this.setState({isTransfer:true});
                 let bank = this.state.bank.split("-");
-                console.log("split",bank);
+                
                 Object.assign(this.props.master,{
                     tunai:this.state.tunai,
                     change:this.state.change,
@@ -79,9 +79,9 @@ class FormSale extends Component{
         e.preventDefault();
         let err = this.state.error;
         if (this.state.tunai === "" || this.state.tunai === 0){
-            console.log("if pertama");
+            
             if(this.state.tunai==="" || this.state.tunai === 0){
-                console.log("if kedua");
+                
                 err = Object.assign({}, err, {
                     tunai:"Jumlah uang tidak boleh kurang dari total pembayaran"
                 });
@@ -96,7 +96,7 @@ class FormSale extends Component{
             parsedata['join'] = [];
             parsedata['detail']=this.props.detail;
 
-            console.log("SUBMITED",parsedata);
+            
             this.props.dispatch(storeSale(parsedata));
         }
 

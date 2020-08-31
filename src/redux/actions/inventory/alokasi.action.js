@@ -76,7 +76,7 @@ export const FetchDnReport = (page = 1, perpage = 10) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -92,7 +92,7 @@ export const FetchDnData = (nota) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -109,7 +109,7 @@ export const FetchNota = (lokasi, prefix) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -157,7 +157,7 @@ export const storeAlokasi = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -169,15 +169,15 @@ export const FetchAlokasi = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log("URL ALOKASI",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setALOKASI(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -191,11 +191,11 @@ export const FetchAlokasiExcel = (page=1,where='',perpage=99999)=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setAlokasiExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -215,15 +215,15 @@ export const FetchAlokasiDetail = (page=1,code,dateFrom='',dateTo='',location=''
         if(location!==''){
             que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
         }
-        console.log("url alokasi",`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setALOKASIData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

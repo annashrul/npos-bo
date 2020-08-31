@@ -81,13 +81,13 @@ export const FetchNotaSaleByCust = () => {
         axios.get(HEADERS.URL + `pos/getcode`)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                
                 dispatch(setCode(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -130,7 +130,7 @@ export const storeSaleByCust = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -147,18 +147,18 @@ export const FetchReportSaleByCust = (page=1,where='') => {
         if(where!==''){
             url+=`&${where}`;
         }
-        console.log("URL LAPORAN PENJUALAN",url);
+        
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                
                 dispatch(setLoadingReport(false));
                 dispatch(setReport(data))
             })
             .catch(function (error) {
                 // handle error
                 dispatch(setLoadingReport(false));
-                console.log(error);
+                
             })
 
     }
@@ -172,12 +172,12 @@ export const FetchReportSaleByCustExcel = (page=1,where='',perpage=10000) => {
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                
                 dispatch(setReportExcel(data))
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -186,17 +186,17 @@ export const FetchReportSaleByCustExcel = (page=1,where='',perpage=10000) => {
 export const FetchReportDetailSaleByCust = (kd_trx) => {
     return (dispatch) => {
         dispatch(setLoadingDetail(true));
-        console.log(`report/penjualan/by_cust/${kd_trx}`);
+        
         axios.get(HEADERS.URL + `report/penjualan/by_cust/${kd_trx}`)
             .then(function (response) {
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setSaleByCustReportData(data));
                 dispatch(setLoadingDetail(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -210,7 +210,7 @@ export const deleteReportSaleByCust = (kd_trx) => {
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -237,14 +237,14 @@ export const deleteReportSaleByCust = (kd_trx) => {
             })
             .catch(function (error) {
                 dispatch(setLoadingReport(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

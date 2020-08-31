@@ -36,15 +36,15 @@ export const FetchStockReport = (page=1,where='')=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL STOCK REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setStockReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -57,15 +57,15 @@ export const FetchStockReportExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL STOCK REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setStockReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -85,15 +85,15 @@ export const FetchStockReportDetailSatuan = (page=1,code,dateFrom='',dateTo='',l
         if(location!==''){
             que = `report/stock/${code}?page=${page}&lokasi=${location}`;
         }
-        console.log(`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setStockReportDetailSatuan(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -113,15 +113,15 @@ export const FetchStockReportDetailTransaction = (page=1,code,dateFrom='',dateTo
         // if(location!==''){
         //     que = `report/stock/${code}/detail?page=${page}&lokasi=${location}`;
         // }
-        // console.log(`${que}`);
+        // 
         axios.get(HEADERS.URL+`report/stock/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setStockReportDetailTransaction(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

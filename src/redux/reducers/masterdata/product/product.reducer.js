@@ -26,7 +26,7 @@ const initialState = {
 export const productReducer = (state=initialState,action) => {
     switch (action.type) {
         case PRODUCT.CODE_PRODUCT:
-            console.log("GET CODE REDUCER",action.data);
+            
             return Object.assign({}, state,{
                 productCode:action.data.result.code,
             });

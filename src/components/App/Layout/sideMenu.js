@@ -256,11 +256,11 @@ class SideMenu extends Component {
             });
         }
         this.forceUpdate();
-        console.log("side menu state", this.state);
+        
     }
     componentDidMount(){
         let dataUser=[];
-        console.log("componentwillmount",this.props.auth.user.access);
+        
         let loc =this.props.auth.user.access;
         if(loc!==undefined&&loc!==null){
             this.setState({
@@ -277,7 +277,7 @@ class SideMenu extends Component {
         }
         const path = this.props.location.pathname;
         if(path==='/user' || path==='/location' || path==='/company'){
-            console.log("didmount",path)
+            
             this.setState({
                 isSetting:true
             })
@@ -290,7 +290,7 @@ class SideMenu extends Component {
             path==='/product' ||
             path==='/promo' ||
             path==='/bank'){
-            console.log("didmount",path)
+            
             this.setState({
                 isMasterdata:true
             })
@@ -305,7 +305,7 @@ class SideMenu extends Component {
             path === '/approval_mutasi_jual_beli' ||
             path === '/bayar_mutasi_jual_beli'
         ){
-            console.log("didmount",path)
+            
             this.setState({
                 isInventory:true
             });
@@ -318,12 +318,12 @@ class SideMenu extends Component {
                 })
             }
         } else if(path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota'){
-            console.log("didmount",path)
+            
             this.setState({
                 isReceive:true
             })
         } else if(path==='/sale'){
-            console.log("didmount",path)
+            
             this.setState({
                 isSale:true
             })
@@ -351,7 +351,7 @@ class SideMenu extends Component {
             path==='/report/hutang' ||
             path==='/report/piutang'
             ){
-            console.log("didmount",path)
+            
             this.setState({
                 isReport:true
             })
@@ -364,7 +364,7 @@ class SideMenu extends Component {
                 path==='/report/mutation' || 
                 path==='/report/alokasi_trx' ||
                 path==='/report/dn'){
-               console.log("didmount",path)
+               
                this.setState({
                    isReportInventory:true
                })
@@ -373,7 +373,7 @@ class SideMenu extends Component {
                path==='/report/receive'||
                path==='/report/purchase_by_supplier'
                ){
-               console.log("didmount",path)
+               
                this.setState({
                    isReportPembelian:true
                })
@@ -382,7 +382,7 @@ class SideMenu extends Component {
                path==='/report/sale_retur_archive' ||
                path==='/report/sale_by_cust_archive'
                ){
-               console.log("didmount",path)
+               
                this.setState({
                    isReportPenjualan:true
                })
@@ -390,7 +390,7 @@ class SideMenu extends Component {
                path==='/report/hutang' ||
                path==='/report/piutang'
                ){
-               console.log("didmount",path)
+               
                this.setState({
                    isReportPembayaran:true
                })

@@ -23,7 +23,7 @@ class FormApprovalMutation extends Component{
         }
     }
     componentWillReceiveProps(nextProps){
-        console.log("componen will receive props",nextProps);
+        
         let data=[];
         typeof nextProps.dataApproval.data==='object'?
             nextProps.dataApproval.data.map((v,i)=>{
@@ -60,14 +60,14 @@ class FormApprovalMutation extends Component{
             data['kd_trx']          = localStorage.getItem("kd_trx_mutasi");
             data['sisa_approval']   = this.state.dataApproval[i].sisa_approval;
             data['barcode']         = this.state.dataApproval[i].barcode;
-            // console.log(data);
+            // 
             let total_qty =  this.state.dataApproval[i].total_qty;
             let total_approval =  this.state.dataApproval[i].total_approval;
             let jumlah = parseInt(total_qty)-parseInt(total_approval);
             if(parseInt(this.state.dataApproval[i].sisa_approval)>0){
                 this.props.dispatch(saveApprovalMutation(data));
                 this.state.dataApproval[i].isReadonly=true;
-                console.log(this.state.dataApproval[i].isReadonly);
+                
             }
             this.setState({});
         }

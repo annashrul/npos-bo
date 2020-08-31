@@ -24,7 +24,7 @@ class FormGroupProduct extends Component{
     }
     getProps(param){
         let group2=[];
-        console.log("type of",param.detail);
+        
         if(param.group2.data!==undefined){
             typeof param.group2.data === 'object' ?
                 param.group2.data.map((v,i)=>{
@@ -121,7 +121,7 @@ class FormGroupProduct extends Component{
             }
         }
 
-        console.log("SUBMITTER",parseData)
+        
 
     }
     handleChangeImage(files) {

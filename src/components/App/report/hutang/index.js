@@ -108,7 +108,7 @@ class HutangReport extends Component{
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.value) {
-                console.log(this.props);
+                
                 this.props.dispatch(DeleteHutangReport(kode));
             }
         })
@@ -449,7 +449,7 @@ class HutangReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps hutang", state)
+    
     return {
         hutangReport:state.hutangReducer.data_report,
         isLoadingDetail: state.hutangReducer.isLoadingDetail,

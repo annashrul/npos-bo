@@ -206,7 +206,7 @@ class ReportCash extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,last_page,per_page,current_page,from,to,data} = this.props.cashReport;
         let subtotal=0;
-        console.log("RENDER LAPORAN KAS",this.props.cashReport);
+        
         return (
             <Layout page="Laporan Kas">
                 <div className="card">

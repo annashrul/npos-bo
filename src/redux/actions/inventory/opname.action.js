@@ -27,15 +27,15 @@ export const FetchPostingOpname = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPostingOpname(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -46,15 +46,15 @@ export const FetchOpname = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchOpname",data);
+                
                 dispatch(setOpname(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -65,15 +65,15 @@ export const FetchOpnameExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchOpnameExcel",data);
+                
                 dispatch(setOpnameExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -89,7 +89,7 @@ export const FetchOpnameExcel = (page=1,where='',perpage=99999)=>{
 //             })
 //             .catch(function (error) {
 //                 // handle error
-//                 console.log(error);
+//                 
 //             })
 
 //     }
@@ -124,7 +124,7 @@ export const storeOpname = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -161,7 +161,7 @@ export const storeOpnamePosting = (data,param) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

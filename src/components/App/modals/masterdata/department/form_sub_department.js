@@ -45,7 +45,7 @@ class FormSubDepartment extends Component{
         this.setState({})
     };
     getProps(param){
-        console.log(param);
+        
         if(param.dataDepartment!==undefined&&param.dataDepartment!==[]){
             let dept = [];
             let depProps = param.dataDepartment.data;
@@ -65,7 +65,7 @@ class FormSubDepartment extends Component{
 
         if (param.detail !== [] && param.detail !== undefined) {
 
-            console.log(param.detail);
+            
             this.setState({
                 nama: param.detail.nama,
                 kode:param.detail.kode,
@@ -73,7 +73,7 @@ class FormSubDepartment extends Component{
             })
         }
         else{
-            console.log('props kosong');
+            
             this.setState({
                 nama: '',
                 kode:'',
@@ -104,7 +104,7 @@ class FormSubDepartment extends Component{
         let parseData = stringifyFormData(data);
         parseData['kode_dept'] = this.state.kode_dept;
         parseData['nama'] = this.state.nama;
-        // console.log(this.props.token);
+        // 
         let err = this.state.error;
         if(this.state.kode_dept===''||this.state.kode_dept===undefined){
             err = Object.assign({}, err, {kode_dept:"departemen tidak boleh kosong"});
@@ -131,7 +131,7 @@ class FormSubDepartment extends Component{
     }
 
     render(){
-        console.log("LIST DEPARTMENT",this.props.dataDepartment);
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSubDepartment"} size="md">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Tambah Sub Departemen":"Ubah Sub Departemen"}</ModalHeader>
