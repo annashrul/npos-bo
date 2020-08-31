@@ -208,7 +208,7 @@ class ListPosting extends Component{
                                         </div>
                                     </div>
                                 </div>
-                                <div className="table-responsive">
+                                <div style={{overflowX:'auto',zoom:'85%'}}>
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>

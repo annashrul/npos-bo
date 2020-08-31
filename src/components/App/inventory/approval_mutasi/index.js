@@ -75,7 +75,7 @@ class ApprovalMutasi extends Component{
     }
     render(){
         const {total,last_page,per_page,current_page,from,to,data} = this.props.mutation;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Approval Mutasi">
                 <div className="card">
@@ -120,7 +120,7 @@ class ApprovalMutasi extends Component{
                                 </div>
                             </div>
                             <div className="col-md-12">
-                                <div className="table-responsive" style={{overflowX: "auto"}}>
+                                <div style={{overflowX: "auto"}}>
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>
