@@ -196,8 +196,8 @@ class Login extends Component {
     render() {
         const {email,password, errors,disableButton} = this.state;
         return (
-        <div class="limiter">
-            <div class="container-login100">
+        <div className="limiter">
+            <div className="container-login100">
                 <div className="row">
                     <div className={'col-md-12'}>
                         <div className="wrap-login100 p-b-160 p-t-50">

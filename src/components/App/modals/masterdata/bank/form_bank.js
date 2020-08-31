@@ -7,14 +7,13 @@ import FileBase64 from "react-file-base64";
 import {stringifyFormData} from "helper";
 import {createBank} from "redux/actions/masterdata/bank/bank.action";
 import {updateBank} from "../../../../../redux/actions/masterdata/bank/bank.action";
-import {toMoney} from "../../../../../helper";
 
 class FormBank extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange  .bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             id:"",
             akun:'',

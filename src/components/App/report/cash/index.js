@@ -9,10 +9,8 @@ import Paginationq from "helper";
 import Preloader from "../../../../Preloader";
 import {rangeDate, toRp} from "../../../../helper";
 import {FetchCashReportExcel} from "../../../../redux/actions/masterdata/cash/cash.action";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import CashReportExcel from 'components/App/modals/report/cash/form_cash_excel'
-import Swal from 'sweetalert2'
 
 class ReportCash extends Component{
     constructor(props){
@@ -47,6 +45,7 @@ class ReportCash extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let kassa = [
             {value: "Semua Kassa",kode: ""},
@@ -62,6 +61,7 @@ class ReportCash extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
 
         this.setState({
@@ -81,6 +81,7 @@ class ReportCash extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -333,7 +334,7 @@ class ReportCash extends Component{
 
                                         {
                                             (
-                                                typeof this.props.cashReportExcel.data === 'object' ? this.props.cashReportExcel.data.length > 0 ?
+                                                (typeof this.props.cashReportExcel.data === 'object') ? this.props.cashReportExcel.data.length > 0 ?
                                                     this.props.cashReportExcel.data.map((v,i)=>{
                                                         subtotal = subtotal+parseInt(v.jumlah);
                                                         return(

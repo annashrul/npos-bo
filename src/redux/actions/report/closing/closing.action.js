@@ -7,7 +7,6 @@ import Swal from 'sweetalert2'
 import {
     destroy
 } from "components/model/app.model";
-import moment from "moment";
 
 export function setLoading(load) {
     return {

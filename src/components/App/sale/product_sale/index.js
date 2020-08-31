@@ -7,7 +7,7 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import {FetchCustomerAll} from "redux/actions/masterdata/customer/customer.action";
-import {FetchBrg,setProductbrg,FetchProduct, FetchProductSale} from "redux/actions/masterdata/product/product.action";
+import {setProductbrg, FetchProductSale} from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import {toRp} from "helper";
 import FormSale from "../../modals/sale/form_sale";
@@ -26,7 +26,6 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
-let count = 0;
 
 class Sale extends Component{
 
@@ -113,6 +112,7 @@ class Sale extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return true;
                 })
                 this.setState({
                     location_data: lk,
@@ -183,7 +183,7 @@ class Sale extends Component{
         const column = e.target.name;
         const val = e.target.value;
         if (column === 'discount_persen' || column === 'pajak'){
-            if (val < 0 || val=='') this.setState({[column]: 0});
+            if (val < 0 || val==='') this.setState({[column]: 0});
             else if (val >100) this.setState({[column]: 100});
             else this.setState({[column]: val});
 
@@ -217,7 +217,7 @@ class Sale extends Component{
 
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -254,7 +254,7 @@ class Sale extends Component{
         const cek = cekData('barcode', barcode, table);
         if(column === 'satuan'){
             cek.then(res => {
-                if (res == undefined) {
+                if (res === undefined) {
                     Toast.fire({
                         icon: 'error',
                         title: `not found.`
@@ -265,6 +265,7 @@ class Sale extends Component{
                         if(i.satuan===val){
                             newbrg=i;
                         }
+                        return true;
                     })
 
                     let final= {
@@ -352,7 +353,7 @@ class Sale extends Component{
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 update(table,{
@@ -427,7 +428,7 @@ class Sale extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan PO.',
@@ -466,10 +467,10 @@ class Sale extends Component{
                             ppn = hrg*(ppnInt/100);
                         }
 
-                        subtotal+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+                        subtotal+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
                         detail.push({
                             kode_trx:this.props.nota,
-                            subtotal:(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty),
+                            subtotal:(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty),
                             price:item.harga,
                             qty:item.qty,
                             kategori:item.kategori,
@@ -532,7 +533,7 @@ class Sale extends Component{
         const cek = cekData('barcode', kode, table);
         
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 
                 store(table, {
                     kd_brg: data[0].kd_brg,
@@ -630,7 +631,7 @@ class Sale extends Component{
 
     render() {
         let opCustomer=[];
-        if(this.props.customer!=[]){
+        if(this.props.customer!==[]){
             this.props.customer.map(i=>{
                 opCustomer.push({
                     value: i.kd_cust,
@@ -683,7 +684,7 @@ class Sale extends Component{
                                                             className="form-text text-muted"
                                                         >
                                                             Cari
-                                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                            berdasarkan {parseInt(this.state.searchby) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
                                                         </small>
                                                     </div>
                                                 </div>
@@ -935,7 +936,7 @@ class Sale extends Component{
                                                         ppn = hrg*(ppnInt/100);
                                                     }
 
-                                                    totalsub+=(disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+                                                    totalsub+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
 
                                                     return (
                                                         <tr key={index}>
@@ -972,7 +973,7 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].qty}/>
                                                             </td>
-                                                            <td style={{textAlign:"right"}}>{toRp((disc2==0?hrg+ppn:disc2+ppn)*parseInt(item.qty))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty))}</td>
 
                                                         </tr>
                                                     )

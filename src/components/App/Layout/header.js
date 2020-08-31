@@ -120,7 +120,7 @@ class Header extends Component {
       <header className="top-header-area d-flex align-items-center justify-content-between" style={{backgroundColor:(!isMobile?'':'#242939')}} >
           <div className="left-side-content-area d-flex align-items-center">
               {/* Mobile Logo */}
-                <div class="mobile-logo mr-3 mr-sm-4">
+                <div className="mobile-logo mr-3 mr-sm-4">
                     <Link to={'./'} ><img src="/favicon.png" alt="Mobile Logo"></img></Link>
                 </div>
               {/* <!-- Triggers --> */}

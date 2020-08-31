@@ -161,7 +161,7 @@ class Receive extends Component{
         }
 
         if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
-            if (localStorage.ambil_data == 2) {
+            if (localStorage.ambil_data === 2) {
                 this.props.dispatch(FetchPoReport(1, 1000))
             }
             this.setState({
@@ -370,7 +370,7 @@ class Receive extends Component{
         const val = e.target.value;
 
         if (column === 'discount_persen' || column === 'pajak'){
-            if (val < 0 || val=='') this.setState({[column]: 0});
+            if (val < 0 || val==='') this.setState({[column]: 0});
             else if (val >100) this.setState({[column]: 100});
             else this.setState({[column]: val});
 
@@ -395,7 +395,7 @@ class Receive extends Component{
         }
 
         if (column === 'ambil_data') {
-            if(val==2){
+            if(val===2){
                 this.props.dispatch(FetchPoReport(1, 1000))
             }
             localStorage.setItem('ambil_data',val);
@@ -419,7 +419,7 @@ class Receive extends Component{
 
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -456,7 +456,7 @@ class Receive extends Component{
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
-                if (res == undefined) {
+                if (res === undefined) {
                     Toast.fire({
                         icon: 'error',
                         title: `not found.`
@@ -548,7 +548,7 @@ class Receive extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }
             else{
@@ -636,7 +636,7 @@ class Receive extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan Pembelian.',
@@ -660,14 +660,14 @@ class Receive extends Component{
                                 let disc1 = 0;
                                 let disc2 = 0;
                                 let ppn = 0;
-                                if (item.diskon != 0) {
+                                if (item.diskon !== 0) {
                                     disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
-                                    if (item.diskon2 != 0) {
+                                    if (item.diskon2 !== 0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
-                                if (item.ppn != 0) {
+                                if (item.ppn !== 0) {
                                     ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
                                 }
                                 subtotal += ((parseInt(item.harga_beli) - disc2) + ppn) * parseFloat(item.qty);
@@ -720,7 +720,7 @@ class Receive extends Component{
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 
                 store(table, {
                     kd_brg: data[0].kd_brg,
@@ -802,7 +802,7 @@ class Receive extends Component{
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let opSupplier=[];
-        if(this.props.supplier!=[]){
+        if(this.props.supplier!==[]){
             this.props.supplier.map(i=>{
                 opSupplier.push({
                     value: i.kode,
@@ -847,21 +847,21 @@ class Receive extends Component{
                                             <div className="col-md-12">
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
-                                                        <select name='ambil_data' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1} selected={this.state.ambil_data == 1}>Pembelian Langsung</option>
-                                                            <option value={2} selected={this.state.ambil_data==2}>Purchase Order</option>
-                                                            <option value={3} selected={this.state.ambil_data==3}>Pre-Receive</option>
+                                                        <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                            <option value={1} selected={this.state.ambil_data === 1}>Pembelian Langsung</option>
+                                                            <option value={2} selected={this.state.ambil_data===2}>Purchase Order</option>
+                                                            <option value={3} selected={this.state.ambil_data===3}>Pre-Receive</option>
                                                         </select>
                                                     </div>
                                                     <small
                                                         id="passwordHelpBlock"
-                                                        class="form-text text-muted"
+                                                        className="form-text text-muted"
                                                     >
-                                                        {parseInt(this.state.ambil_data)==1?'Pembelian langsung.':(parseInt(this.state.ambil_data)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
+                                                        {parseInt(this.state.ambil_data)===1?'Pembelian langsung.':(parseInt(this.state.ambil_data)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
                                                     </small>
                                                 </div>
                                             </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data)==1?{display:'none'}:{display:'block'}}>
+                                            <div className="col-md-12" style={parseInt(this.state.ambil_data)===1?{display:'none'}:{display:'block'}}>
                                                 <div className="form-group">
                                                     <Select
                                                         options={this.state.data_nota}
@@ -895,7 +895,7 @@ class Receive extends Component{
                                             <div className="col-md-12">
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
-                                                        <select name='searchby' class="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                        <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
                                                             <option value={1}>Kode Barang</option>
                                                             <option value={2}>Barcode</option>
                                                             <option value={3}>Deskripsi</option>
@@ -903,9 +903,9 @@ class Receive extends Component{
                                                     </div>
                                                     <small
                                                         id="passwordHelpBlock"
-                                                        class="form-text text-muted"
+                                                        className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby)==1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby)===1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -1044,7 +1044,7 @@ class Receive extends Component{
                                                             onChange={(e)=>this.HandleCommonInputChange(e,true)}
                                                             value={this.state.penerima}
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.penerima!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.penerima!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.penerima}
                                                         </div>
                                                     </div>
@@ -1133,7 +1133,7 @@ class Receive extends Component{
                                                             }
 
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location}
                                                         </div>
                                                     </div>
@@ -1151,7 +1151,7 @@ class Receive extends Component{
                                                                 })
                                                             }
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.supplier}
                                                         </div>
                                                     </div>
@@ -1170,7 +1170,7 @@ class Receive extends Component{
                                                             onChange={(e)=>this.HandleCommonInputChange(e)}
                                                             value={this.state.notasupplier}
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.notasupplier!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.notasupplier!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.notasupplier}
                                                         </div>
                                                     </div>
@@ -1186,12 +1186,12 @@ class Receive extends Component{
                                                             name="catatan"
                                                             value={this.state.catatan}
                                                         />
-                                                        <div class="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
+                                                        <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.catatan}
                                                         </div>
                                                         {/* {
                                   this.state.error.catatan!==""?(
-                                    <div class="invalid-feedback">
+                                    <div className="invalid-feedback">
                                       {this.state.error.catatan}
                                     </div>
                                   ):""
@@ -1228,14 +1228,14 @@ class Receive extends Component{
                                                 let disc1=0;
                                                 let disc2=0;
                                                 let ppn=0;
-                                                if(item.diskon!=0){
+                                                if(item.diskon!==0){
                                                     disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
                                                     disc2=disc1;
-                                                    if(item.diskon2!=0){
+                                                    if(item.diskon2!==0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
-                                                if(item.ppn!=0){
+                                                if(item.ppn!==0){
                                                     ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
                                                 }
                                                 subtotal+=((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty);
@@ -1252,7 +1252,7 @@ class Receive extends Component{
                                                                 {
                                                                     item.tambahan.map(i=>{
                                                                         return(
-                                                                            <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                                            <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
                                                                         )
                                                                     })
                                                                 }
