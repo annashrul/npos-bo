@@ -31,7 +31,6 @@ class Login extends Component {
             this.props.history.push('/')
         }
         this.initFetch(false);
-
     }
 
     initFetch(check){
@@ -39,19 +38,6 @@ class Login extends Component {
         .then(res => res.json())
         .then(
             (data) => {
-                // let tgl_tempo = new Date(data.result.tanggal_tempo);
-
-                // let lastWeek = new Date(tgl_tempo.getFullYear(), tgl_tempo.getMonth(), tgl_tempo.getDate() - 7);
-                // let tgl_local = moment(new Date()).format("yyyy-MM-DD");
-
-                // localStorage.setItem("tanggal_tempo",moment(tgl_tempo).format("yyyy-MM-DD"));
-                // localStorage.setItem("tanggal_lokal",tgl_local);
-                // localStorage.setItem("tanggal_info",moment(lastWeek).format("yyyy-MM-DD"));
-                // localStorage.setItem("server_price",data.result.server_price);
-                // localStorage.setItem("acc_name",data.result.acc_name);
-                // localStorage.setItem("acc_number", data.result.acc_number);
-                // localStorage.setItem("days", data.result.days);
-
                 if (parseInt(data.result.day,10) <= 7) {
                     if (check) this.checkPembayaran();
                     else{

@@ -393,7 +393,6 @@ class TrxPacking extends Component{
                                                     {
                                                         this.state.databrg.map((item, index) => {
                                                             let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
-                                                            console.log(qty_packing);
                                                             return (
                                                                 <tr key={index}>
                                                                     <td style={columnStyle}>

@@ -118,7 +118,7 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        
+
         this.setState({
             location: lk.value,
             error: err
@@ -135,7 +135,6 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             supplier: ""
         });
-        
         this.setState({
             supplier: sp.value,
             error: err
@@ -196,7 +195,6 @@ class ReturTanpaNota extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -291,7 +289,6 @@ class ReturTanpaNota extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
-        
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg:item.nm_brg,
@@ -358,9 +355,7 @@ class ReturTanpaNota extends Component{
 
     HandleSubmit(e){
         e.preventDefault();
-
         // validator head form
-        
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "") {
             if(this.state.catatan===""){
@@ -425,7 +420,6 @@ class ReturTanpaNota extends Component{
                             });
                             data['detail'] = detail;
                             this.props.dispatch(storeReturTanpaNota(data));
-                            
                         }
                     })
                 }
@@ -559,7 +553,7 @@ class ReturTanpaNota extends Component{
                                                                 className="form-text text-muted"
                                                             >
                                                                 Cari
-                                                                berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                                berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                                             </small>
                                                         </div>
                                                     </div>

@@ -73,24 +73,24 @@ class FormReturReceive extends Component{
     }
     handleSubmit(e){
         e.preventDefault();
-        let data={};
-        let detail=[];
-        let subtotal=0;
+        let data = {};
+        let detail = [];
+        let subtotal = 0;
         let send = false;
-        this.state.data_retur.map((v,i)=>{
-            if(parseInt(v.qty_retur) > parseInt(v.stock)){
+        this.state.data_retur.map((v, i) => {
+            if (parseInt(v.qty_retur) > parseInt(v.stock)) {
                 alert('gagal');
                 return;
-            }else{
-                subtotal+=parseInt(v.qty_retur)*parseInt(v.harga_beli);
+            } else {
+                subtotal += parseInt(v.qty_retur) * parseInt(v.harga_beli);
                 detail.push({
-                    "kd_brg":v.kode_barang,
-                    "barcode":v.barcode,
-                    "satuan":v.satuan,
-                    "qty":v.qty_retur,
-                    "harga_beli":v.harga_beli,
-                    "keterangan":"-",
-                    "kondisi":v.kondisi
+                    "kd_brg": v.kode_barang,
+                    "barcode": v.barcode,
+                    "satuan": v.satuan,
+                    "qty": v.qty_retur,
+                    "harga_beli": v.harga_beli,
+                    "keterangan": "-",
+                    "kondisi": v.kondisi
                 })
                 data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
                 data['supplier'] = this.props.dataRetur.master.kode_supplier;
@@ -103,9 +103,10 @@ class FormReturReceive extends Component{
                 send = true;
             }
         });
-        if(send === true){
+        if (send === true) {
             this.props.dispatch(storeReturTanpaNota(data));
         }
+
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};

@@ -17,7 +17,6 @@ class Layout extends Component {
     }
 
     componentWillMount() {
-        document.title = `${atob(document.getElementById("coolyeah").value)} - ${this.props.page}`;
     }
 
     getFaviconEl() {
@@ -27,6 +26,13 @@ class Layout extends Component {
         if (nextProps.auth.user) {
             const favicon = this.getFaviconEl(); // Accessing favicon element
             favicon.href = nextProps.auth.user.fav_icon;
+            console.log(nextProps.auth.user.site_title);
+            if(nextProps.auth.user.site_title!==undefined){
+            localStorage.setItem("site_title", nextProps.auth.user.site_title)
+            document.title = `${nextProps.auth.user.site_title} - ${this.props.page}`;
+            }else
+            document.title = `${localStorage.getItem("site_title")} - ${this.props.page}`;
+
         }
     }
 

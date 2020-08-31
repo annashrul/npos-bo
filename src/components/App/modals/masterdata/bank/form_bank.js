@@ -121,7 +121,6 @@ class FormBank extends Component{
             }else{
                 parseData['foto'] = '-';
             }
-            console.log(parseData['foto']);
             if(Object.keys(this.props.detail).length > 0){
                 this.props.dispatch(updateBank(this.state.id,parseData));
             }else{

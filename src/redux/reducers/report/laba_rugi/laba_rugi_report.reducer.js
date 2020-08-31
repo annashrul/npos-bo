@@ -11,14 +11,12 @@ const initialState = {
 export const laba_rugiReducer = (state=initialState,action) => {
     switch (action.type) {
         case LABA_RUGI_REPORT.SUCCESS:
-            console.log(action.data.result);
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result
             });
         case LABA_RUGI_REPORT.SUCCESS_EXCEL:
-            console.log(action.data.result);
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,

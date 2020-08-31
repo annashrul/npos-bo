@@ -18,7 +18,6 @@ class FormLocationCategory extends Component{
         };
     }
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== [] && nextProps.detail !== undefined) {
             this.setState({
                 id: nextProps.detail.id,
@@ -55,7 +54,7 @@ class FormLocationCategory extends Component{
             this.props.dispatch(createLocationCategory(parseData));
             this.props.dispatch(ModalToggle(false));
         }
-        console.log(parseData)
+        
 
     }
 

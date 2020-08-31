@@ -35,7 +35,7 @@ class Alokasi extends Component{
             addingItemName: "",
             databrg: [],
             brgval:[],
-            tanggal: new Date(),
+            tanggal: moment(new Date()).format("yyyy-MM-DD"),
             qty:0,
             location_data:[],
             location:"",
@@ -69,6 +69,29 @@ class Alokasi extends Component{
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.HandleChangeJenisTrx= this.HandleChangeJenisTrx.bind(this);
+    }
+
+    getProps(param){
+        if (param.auth.user) {
+            let lk = []
+            let loc = param.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: param.auth.user.id
+                })
+            }
+        }
+    }
+
+    componentWillMount(){
+        this.getProps(this.props);
     }
 
     componentDidMount() {
@@ -115,7 +138,6 @@ class Alokasi extends Component{
         }
     }
 
-
     componentWillReceiveProps = (nextProps) => {
         let jt=[
             {value:"Alokasi",label:"Alokasi"},
@@ -123,6 +145,7 @@ class Alokasi extends Component{
             {value:"Transaksi",label:"Transaksi"},
         ];
         this.setState({jenis_trx_data:jt});
+        this.getProps(nextProps);
         if (nextProps.auth.user) {
             let lk = []
             let loc = nextProps.auth.user.lokasi;
@@ -256,7 +279,6 @@ class Alokasi extends Component{
         let err = Object.assign({}, this.state.error, {
             location2: ""
         });
-        console.log(err);
         this.setState({
             location2: sp.value,
             error: err
@@ -346,7 +368,6 @@ class Alokasi extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -485,7 +506,6 @@ class Alokasi extends Component{
         e.preventDefault();
 
         // validator head form
-        console.log(this.state.catatan);
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.location2 === "") {
             if(this.state.catatan===""){
@@ -585,8 +605,7 @@ class Alokasi extends Component{
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-            if (res === undefined) {
-                console.log('GADA');
+            if (res == undefined) {
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg: data[0].nm_brg,
@@ -709,7 +728,7 @@ class Alokasi extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        {parseInt(this.state.ambil_data,10)===1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
+                                                        {parseInt(this.state.ambil_data,10)==1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
                                                     </small>
                                                 </div>
                                             </div>
@@ -757,7 +776,7 @@ class Alokasi extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -854,49 +873,23 @@ class Alokasi extends Component{
                                             <div className="row">
                                                 <div className="col-md-12">
                                                     <div className="form-group">
+                                                        <label className="control-label font-12">
+                                                            No. Transkasi
+                                                        </label>
                                                         <input
                                                             type="text"
                                                             readOnly
-                                                            className="form-control-plaintext form-control-sm"
+                                                            className="form-control"
                                                             id="nota"
                                                             style={{fontWeight:'bolder'}}
                                                             value={this.props.nota}
                                                         />
                                                     </div>
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Tanggal Order
-                                                        </label>
-                                                        <div className="input-group">
-                                                            <div className="input-group-prepend">
-                                    <span className="input-group-text">
-                                      <i className="fa fa-calendar" />
-                                    </span>
-                                                            </div>
-                                                            <DatePicker
-                                                                className="form-control rounded-right"
-                                                                selected={this.state.tanggal}
-                                                                onChange={this.setTanggal}
-                                                            />
-                                                        </div>
+                                                        <label className="control-label font-12">Tanggal Order</label>
+                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))}/>
                                                     </div>
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Jenis Transaksi
-                                                        </label>
-                                                        <Select
-                                                            options={this.state.jenis_trx_data}
-                                                            placeholder="Pilih Jenis Transaksi"
-                                                            onChange={this.HandleChangeJenisTrx}
-                                                            value={
-                                                                this.state.jenis_trx_data.find(op => {
-                                                                    return op.value === this.state.jenis_trx
-                                                                })
-                                                            }
 
-                                                        />
-
-                                                    </div>
                                                 </div>
 
                                             </div>
@@ -947,26 +940,29 @@ class Alokasi extends Component{
                                                 <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">
+                                                            Jenis Transaksi
+                                                        </label>
+                                                        <Select
+                                                            options={this.state.jenis_trx_data}
+                                                            placeholder="Pilih Jenis Transaksi"
+                                                            onChange={this.HandleChangeJenisTrx}
+                                                            value={
+                                                                this.state.jenis_trx_data.find(op => {
+                                                                    return op.value === this.state.jenis_trx
+                                                                })
+                                                            }
+
+                                                        />
+
+                                                    </div>
+                                                    <div className="form-group">
+                                                        <label className="control-label font-12">
                                                             Catatan
                                                         </label>
-                                                        <textarea
-                                                            className="form-control"
-                                                            id="exampleTextarea1"
-                                                            rows={5}
-                                                            onChange={(e=>this.HandleCommonInputChange(e))}
-                                                            name="catatan"
-                                                            value={this.state.catatan}
-                                                        />
+                                                        <input type="text" name={"catatan"} className={"form-control"} value={this.state.catatan} onChange={(e=>this.HandleCommonInputChange(e))}/>
                                                         <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.catatan}
                                                         </div>
-                                                        {/* {
-                                  this.state.error.catatan!==""?(
-                                    <div className="invalid-feedback">
-                                      {this.state.error.catatan}
-                                    </div>
-                                  ):""
-                                } */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -976,7 +972,7 @@ class Alokasi extends Component{
                             </div>
                             <div className="card-body">
                                 <div id="tableContainer">
-                                    <div className="table-responsive" style={{overflowX:'auto'}}>
+                                    <div style={{overflowX:'auto',zoom:'85%'}}>
 
                                         <table className="table table-hover table-bordered">
                                             <thead >
@@ -997,7 +993,6 @@ class Alokasi extends Component{
                                             {
                                                 this.state.databrg.map((item,index)=>{
                                                     subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty);
-                                                    // console.log('gt',grandtotal);
                                                     return (
                                                         <tr key={index} >
                                                             <td style={columnStyle}>

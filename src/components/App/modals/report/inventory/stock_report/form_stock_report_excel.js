@@ -49,7 +49,7 @@ class StockReportExcel extends Component{
         '<h3 align="center"><center>&nbsp;</center></h3>'+
         '<h3 style="text-align:center"><center>LAPORAN PENJUALAN BY CUST</center></h3>'+
         '</div>';
-        console.log(stringHtml)
+        
         const headers = [[
             "Kd Cust",
             "Nama",

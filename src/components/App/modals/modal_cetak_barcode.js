@@ -11,7 +11,6 @@ class ModalCetakBarcode extends Component{
         this.toggle = this.toggle.bind(this);
     }
     componentWillReceiveProps(nextProps){
-        console.log(nextProps);
     }
 
     toggle = (e) => {

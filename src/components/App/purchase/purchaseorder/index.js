@@ -220,11 +220,9 @@ class PurchaseOrder extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
@@ -471,7 +469,6 @@ class PurchaseOrder extends Component{
     }
 
     autoSetQty(kode,data){
-        
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res === undefined) {
@@ -529,7 +526,6 @@ class PurchaseOrder extends Component{
     }
     getData() {
         const data = get(table);
-        
         data.then(res => {
             let brg = []
             res.map((i) => {
@@ -905,6 +901,7 @@ class PurchaseOrder extends Component{
                                                 let disc1=0;
                                                 let disc2=0;
                                                 let ppn=0;
+
                                                 if(item.diskon!==0){
                                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                                     disc2=disc1;

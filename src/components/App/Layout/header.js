@@ -46,16 +46,6 @@ class Header extends Component {
       })
   }
   componentWillMount(){
-    //   let tgl_tempo = localStorage.getItem("tanggal_tempo");
-    //   let tgl_lokal = moment(new Date()).format("yyyy-MM-DD");
-    //   let tgl_info = localStorage.getItem("tanggal_info");
-    //   let sisa = parseInt(moment(tgl_tempo).format("DD")) - parseInt(moment(tgl_lokal).format("DD"));
-    //   if(tgl_lokal===tgl_info || sisa <= 7){
-    //       this.setState({
-    //           isShowNotif:true,
-    //           isDay:parseInt(moment(tgl_tempo).format("DD")) - parseInt(moment(tgl_lokal).format("DD"))
-    //       })
-    //   }
     fetch(HEADERS.URL + `site/logo`)
         .then(res => res.json())
         .then(
@@ -121,15 +111,15 @@ class Header extends Component {
           <div className="left-side-content-area d-flex align-items-center">
               {/* Mobile Logo */}
                 <div className="mobile-logo mr-3 mr-sm-4">
-                    <Link to={'./'} ><img src="/favicon.png" alt="Mobile Logo"></img></Link>
+                    <Link to={'./'} ><img src="/favicon.png" alt="Mobile Logo"/></Link>
                 </div>
               {/* <!-- Triggers --> */}
               <div className="ecaps-triggers mr-1 mr-sm-3">
                   <div className="menu-collasped" id="menuCollasped" onClick={(e)=>{e.preventDefault();this.handleEcaps();}}>
-                      <i className="zmdi zmdi-menu"></i>
+                      <i className="zmdi zmdi-menu"/>
                   </div>
                   <div className="mobile-menu-open" id="mobileMenuOpen" onClick={(e)=>{e.preventDefault();this.handleMobileEcaps();}}>
-                      <i className="zmdi zmdi-menu"></i>
+                      <i className="zmdi zmdi-menu"/>
                   </div>
               </div>
 
@@ -152,14 +142,14 @@ class Header extends Component {
               {/* <!-- Mobile AREAAAAAA --> */}
               <div className="right-side-trigger" style={{width:'unset',height:'unset',marginRight:'unset'}} >
                 <li className="nav-item dropdown" style={{listStyleType:'none'}}>
-                    <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""></img></button>
+                    <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""/></button>
                     <div className="dropdown-menu dropdown-menu-right">
                         {/* <!-- Top Notifications Area --> */}
                         <div className="user-profile-area">
                             <div className="user-profile-heading">
                                 {/* <!-- Thumb --> */}
                                 <div className="profile-img">
-                                    <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""></img>
+                                    <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
                                 </div>
                                 {/* <!-- Profile Text --> */}
                                 <div className="profile-text">
@@ -167,7 +157,7 @@ class Header extends Component {
                                     <span>{this.props.auth.user.lvl}</span>
                                 </div>
                             </div>
-                            <a onClick={this.handleLogout} className="dropdown-item"><i className="ti-unlink profile-icon bg-warning" aria-hidden="true"></i> Sign-out</a>
+                            <a onClick={this.handleLogout} className="dropdown-item"><i className="ti-unlink profile-icon bg-warning" aria-hidden="true"/> Sign-out</a>
                         </div>
                     {/* </div> */}
                     </div>
@@ -180,14 +170,14 @@ class Header extends Component {
                
 
                   <li className="nav-item dropdown">
-                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""></img></button>
+                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""/></button>
                       <div className="dropdown-menu dropdown-menu-right">
                           {/* <!-- Top Notifications Area --> */}
                           <div className="user-profile-area">
                               <div className="user-profile-heading">
                                   {/* <!-- Thumb --> */}
                                   <div className="profile-img">
-                                      <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""></img>
+                                      <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
                                   </div>
                                   {/* <!-- Profile Text --> */}
                                   <div className="profile-text">
@@ -195,7 +185,7 @@ class Header extends Component {
                                       <span>{this.props.auth.user.lvl}</span>
                                   </div>
                               </div>
-                              <a onClick={this.handleLogout} className="dropdown-item" style={{cursor:"pointer"}}><i className="fa fa-chain-broken profile-icon bg-warning" aria-hidden="true"></i> Sign-out</a>
+                              <a onClick={this.handleLogout} className="dropdown-item" style={{cursor:"pointer"}}><i className="fa fa-chain-broken profile-icon bg-warning" aria-hidden="true"/> Sign-out</a>
                           </div>
                       {/* </div> */}
                       </div>

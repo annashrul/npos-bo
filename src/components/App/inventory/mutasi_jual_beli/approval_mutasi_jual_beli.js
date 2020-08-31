@@ -63,7 +63,6 @@ class ApprovalMutasiJualBeli extends Component{
         this.setState({ [event.target.name]: event.target.value });
     }
     HandleSearch(event){
-        console.log(this.state.location);
         this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx,this.state.location!==''?this.state.location:''));
     }
     toggleModal(e,kd_trx) {

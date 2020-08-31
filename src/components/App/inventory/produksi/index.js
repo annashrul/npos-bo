@@ -61,8 +61,6 @@ class Produksi extends Component{
 
     }
     getProps(param){
-        
-
         if (param.auth.user) {
             let lk = [];
             let loc = param.auth.user.lokasi;
@@ -133,7 +131,6 @@ class Produksi extends Component{
     HandleChangeBarangPaket(lk){
         let val = lk.value;
         let exp = val.split("|", 2);
-        
         let err = Object.assign({}, this.state.error, {
             barang_paket: ""
         });
@@ -202,12 +199,8 @@ class Produksi extends Component{
             if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'deskripsi',this.state.search,this.state.location));
-
-            // this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
-
             }
             this.setState({search: ''});
-
         }
     }
     HandleAddBrg(e,item) {
@@ -231,7 +224,7 @@ class Produksi extends Component{
             group1:item.group1,
             group2:item.group2,
             stock:item.stock,
-            qty_adjust:parseInt(item.qty_adjust)+1,
+            qty_adjust:parseInt(item.qty_adjust,10)+1,
             status:item.status,
             saldo_stock:item.stock,
             tambahan:item.tambahan,
@@ -243,10 +236,10 @@ class Produksi extends Component{
             }else{
                 let saldo_stock = res.stock;
                 if(res.status === 'kurang'){
-                    saldo_stock=parseInt(res.stock)-parseInt(res.qty_adjust);
+                    saldo_stock=parseInt(res.stock,10)-parseInt(res.qty_adjust,10);
                 }
                 if(res.status === 'tambah' || res.status==='' || res.status === undefined){
-                    saldo_stock=parseInt(res.stock)+parseInt(res.qty_adjust)
+                    saldo_stock=parseInt(res.stock,10)+parseInt(res.qty_adjust,10)
                 }
                 update(table,{
                     id:res.id,
@@ -268,7 +261,7 @@ class Produksi extends Component{
                     group1:res.group1,
                     group2:res.group2,
                     stock:res.stock,
-                    qty_adjust:parseInt(res.qty_adjust)+1,
+                    qty_adjust:parseInt(res.qty_adjust,10)+1,
                     saldo_stock:saldo_stock,
                     status:res.status,
                     tambahan:res.tambahan,
@@ -452,7 +445,6 @@ class Produksi extends Component{
                                         break;
                                     }
                                 }
-                                
                             }
                         })
 
@@ -494,10 +486,10 @@ class Produksi extends Component{
             } else {
                 let saldo_stock = res.stock;
                 if(res.status === 'kurang'){
-                    saldo_stock=parseInt(res.stock)-parseInt(res.qty_adjust);
+                    saldo_stock=parseInt(res.stock,10)-parseInt(res.qty_adjust,10);
                 }
                 if(res.status === 'tambah' || res.status==='' || res.status === undefined){
-                    saldo_stock=parseInt(res.stock)+parseInt(res.qty_adjust)
+                    saldo_stock=parseInt(res.stock,10)+parseInt(res.qty_adjust,10)
                 }
                 update(table, {
                     id: res.id,
@@ -568,7 +560,7 @@ class Produksi extends Component{
                                         </div>
                                         <small id="passwordHelpBlock" className="form-text text-muted">
                                             Cari
-                                            berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                            berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
                                     <div className="form-group">
@@ -723,7 +715,7 @@ class Produksi extends Component{
                                                                 <td style={columnStyle}>{item.barcode}</td>
                                                                 <td style={columnStyle}>{item.nm_brg}</td>
                                                                 <td style={columnStyle}>{item.satuan}</td>
-                                                                <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli))} className="form-control"/></td>
+                                                                <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli,10))} className="form-control"/></td>
                                                                 <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                                 <td style={columnStyle}>
                                                                     <input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={

@@ -91,18 +91,15 @@ class Receive extends Component{
             })
             .catch(function (error) {
                 if (error.response) {
-                    
                 }
             })
     }
 
     componentWillMount(){
-
         if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
             destroy(table);
             const data = this.fetchDataEdit();
             data.then(res=>{
-                
                 res.detail.map((v,i)=>{
                     const data_final={
                         "kd_brg" : v.kode_barang,
@@ -196,7 +193,6 @@ class Receive extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-        
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
@@ -238,7 +234,6 @@ class Receive extends Component{
         if (nextProps.po_data){
             if (nextProps.po_data.master!==undefined){
                 if(this.props.po_data===undefined){
-                    
                     this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
                     this.setState({
                         location: nextProps.po_data.master.lokasi,
@@ -301,7 +296,6 @@ class Receive extends Component{
             localStorage.removeItem('data_master_receive');
             localStorage.removeItem('data_detail_receive');
             destroy('receive');
-            
         }
 
     }
@@ -334,7 +328,6 @@ class Receive extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        
         this.setState({
             location: lk.value,
             error: err
@@ -353,7 +346,6 @@ class Receive extends Component{
         let err = Object.assign({}, this.state.error, {
             supplier: ""
         });
-        
         this.setState({
             supplier: sp.value,
             error: err
@@ -450,7 +442,6 @@ class Receive extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -532,7 +523,6 @@ class Receive extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
-        
         const finaldt = {
             kd_brg: item.kd_brg,
             barcode:item.barcode,
@@ -604,7 +594,6 @@ class Receive extends Component{
         e.preventDefault();
 
         // validator head form
-        
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "" || this.props.checkNotaPem) {
             if(this.state.catatan===""){
@@ -705,10 +694,8 @@ class Receive extends Component{
                                 userid: this.state.userid,
                                 detail: detail
                             };
-                            
                             if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
                                 this.props.dispatch(updateReceive(data_final,this.props.match.params.slug));
-                                
                             }else{
                                 this.props.dispatch(storeReceive(data_final));
                             }
@@ -724,6 +711,7 @@ class Receive extends Component{
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
+
             if (res === undefined) {
                 
                 store(table, {
@@ -794,8 +782,6 @@ class Receive extends Component{
                     satuan: i.satuan
                 });
             });
-            
-            
             this.setState({
                 databrg: res,
                 brgval: brg
@@ -1241,6 +1227,8 @@ class Receive extends Component{
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
+                                          
+
                                                 if(item.ppn!==0){
                                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                                 }
