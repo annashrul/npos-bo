@@ -24,7 +24,6 @@ class Card extends Component {
                 let parseData = {};
                 parseData['id'] = id;
                 parseData['tgl'] = moment(tanggal).format("yyyy-MM-DD");
-                console.log(parseData);
                 this.props.dispatch(reClosing(parseData));
             }
         })
@@ -122,12 +121,21 @@ class Card extends Component {
                                         <p className="text-12 mb-0 text-right">{toRp(parseInt(item.net_omset))}</p>
                                     </div>
                                 </div>
+                                <hr style={{margin:'unset'}}></hr>
                                 <div className="row">
                                     <div className="col-6">
                                         <p className="text-10 mb-0 text-left">Cash</p>
                                     </div>
                                     <div className="col-6" >
                                         <p className="text-12 mb-0 text-right">{toRp(parseInt(item.tunai))}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <p className="text-10 mb-0 text-left">Piutang</p>
+                                    </div>
+                                    <div className="col-6" >
+                                        <p className="text-12 mb-0 text-right">{toRp(parseInt(item.piutang))}</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -171,7 +179,6 @@ class Card extends Component {
                                 </div>
                                 {
                                         item.list_kredit.map((v, i) => {
-                                            console.log(i);
                                             return(
                                                 <div className="row" key={i}>
                                                     <div className="col-6">

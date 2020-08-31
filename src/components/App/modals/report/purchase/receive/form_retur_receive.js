@@ -73,37 +73,40 @@ class FormReturReceive extends Component{
     }
     handleSubmit(e){
         e.preventDefault();
-        let data={};
-        let detail=[];
-        let subtotal=0;
+        let data = {};
+        let detail = [];
+        let subtotal = 0;
         let send = false;
-        if(parseInt(v.qty_retur) > parseInt(v.stock)){
-            alert('gagal');
-            return;
-        }else{
-            subtotal+=parseInt(v.qty_retur)*parseInt(v.harga_beli);
-            detail.push({
-                "kd_brg":v.kode_barang,
-                "barcode":v.barcode,
-                "satuan":v.satuan,
-                "qty":v.qty_retur,
-                "harga_beli":v.harga_beli,
-                "keterangan":"-",
-                "kondisi":v.kondisi
-            })
-            data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
-            data['supplier'] = this.props.dataRetur.master.kode_supplier;
-            data['keterangan'] = '-';
-            data['subtotal'] = subtotal;
-            data['lokasi'] = this.props.dataRetur.master.lokasi;
-            data['userid'] = this.state.userid;
-            data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
-            data['detail'] = detail;
-            send = true;
-        }
-        if(send === true){
+        this.state.data_retur.map((v, i) => {
+            if (parseInt(v.qty_retur) > parseInt(v.stock)) {
+                alert('gagal');
+                return;
+            } else {
+                subtotal += parseInt(v.qty_retur) * parseInt(v.harga_beli);
+                detail.push({
+                    "kd_brg": v.kode_barang,
+                    "barcode": v.barcode,
+                    "satuan": v.satuan,
+                    "qty": v.qty_retur,
+                    "harga_beli": v.harga_beli,
+                    "keterangan": "-",
+                    "kondisi": v.kondisi
+                })
+                data['tanggal'] = moment(new Date()).format("yyyy-MM-DD");
+                data['supplier'] = this.props.dataRetur.master.kode_supplier;
+                data['keterangan'] = '-';
+                data['subtotal'] = subtotal;
+                data['lokasi'] = this.props.dataRetur.master.lokasi;
+                data['userid'] = this.state.userid;
+                data['nobeli'] = this.props.dataRetur.master.no_faktur_beli;
+                data['detail'] = detail;
+                send = true;
+            }
+        });
+        if (send === true) {
             this.props.dispatch(storeReturTanpaNota(data));
         }
+
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};

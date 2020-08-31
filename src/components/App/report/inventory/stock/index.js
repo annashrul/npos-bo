@@ -85,7 +85,6 @@ class InventoryReport extends Component{
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
         // this.setState({detail:{}});
-        console.log(`${code} ${barcode} ${name}`);
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailStockReportSatuan"));
@@ -96,10 +95,7 @@ class InventoryReport extends Component{
         this.props.dispatch(FetchStockReportDetailSatuan(1,code,'','',''))
     };
     handleChange(event){
-        console.log(event.target.name)
-        console.log(event.target.value)
         this.setState({ [event.target.name]: event.target.value });
-        console.log(this.state.any);
     }
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
@@ -176,7 +172,6 @@ class InventoryReport extends Component{
         localStorage.setItem('lk_stock_report', lk.value);
     }
     HandleChangeSearchBy(sb) {
-        console.log(sb.value);
         this.setState({
             search_by: sb.value
         })
@@ -210,10 +205,8 @@ class InventoryReport extends Component{
         }
 
         if(any!==undefined&&any!==null&&any!==''){
-            console.log(any);
             where+=`&search=${any}`;
         }
-        console.log(where);
         this.setState({
             where_data:where
         })

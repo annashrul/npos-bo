@@ -101,7 +101,6 @@ class FormSupplier extends Component{
         }
         else{
             if (this.props.detail !== undefined) {
-                console.log(this.state.kode);
                 this.props.dispatch(updateSupplier(this.state.kode,parseData));
                 this.props.dispatch(ModalToggle(false));
             }else{

@@ -431,12 +431,8 @@ class ReturTanpaNota extends Component{
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-<<<<<<< HEAD
-            if (res == undefined) {
-=======
             if (res === undefined) {
                 
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg:data[0].nm_brg,
@@ -557,11 +553,7 @@ class ReturTanpaNota extends Component{
                                                                 className="form-text text-muted"
                                                             >
                                                                 Cari
-<<<<<<< HEAD
                                                                 berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
-=======
-                                                                berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                             </small>
                                                         </div>
                                                     </div>

@@ -23,6 +23,8 @@ export const DBConfig = {
                 { name: 'harga3',keypath:'harga3',options:{unique:false}},
                 { name: 'harga4',keypath:'harga4',options:{unique:false}},
                 { name: 'set_harga',keypath:'set_harga',options:{unique:false}},
+                { name: 'site_title',keypath:'site_title',options:{unique:false}},
+                
             ]
         },
         {

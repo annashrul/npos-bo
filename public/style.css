@@ -14752,3 +14752,21 @@ table.tableBodyScroll tbody tr {
   width: 100%;
   table-layout: fixed;
 }
+
+.modal .custom-map-modal {
+  width: 100%;
+  zoom:90%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+}
+
+.custom-map-modal .modal-content {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+.custom-map-modal .modal-body {
+  overflow-y: auto;
+}

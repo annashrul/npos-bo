@@ -6,8 +6,13 @@ import {
     createUserLevel,
     updateUserLevel
 } from "redux/actions/masterdata/user_level/user_level.action";
+import {
+    ModalBody,
+    ModalHeader,
+    ModalFooter
+} from "reactstrap";
+
 import {ModalToggle} from "redux/actions/modal.action";
-import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 
 class FormUserLevel extends Component{
     //MENU ACCESS MASTERDATA = 0-9
@@ -168,16 +173,11 @@ class FormUserLevel extends Component{
 
     }
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== undefined && nextProps.detail !== []) {
-<<<<<<< HEAD
             let akses = [];
             this.handleLoopAccess(
                 this.state.setting.concat(this.state.masterdata).concat(this.state.inventory).concat(this.state.pembelian).concat(this.state.penjualan).concat(this.state.pembayaran).concat(this.state.report).concat(this.state.produksi).concat(this.state.cetak_barcode),
                 nextProps.detail.access);
-=======
-            this.handleLoopAccess(this.state.setting.concat(this.state.masterdata),nextProps.detail.access);
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
             this.setState({lvl:nextProps.detail.lvl});
         }
     }
@@ -222,7 +222,6 @@ class FormUserLevel extends Component{
         });
         parseData['lvl'] = this.state.lvl;
         parseData['access'] = akses;
-        console.log(parseData);
         let err = this.state.error;
         if(parseData['lvl']===''){
             err = Object.assign({}, err, {lvl:"nama user level tidak boleh kosong"});
@@ -250,7 +249,6 @@ class FormUserLevel extends Component{
     };
     handleCheckChieldElement = (event,param) => {
         let moduls = this.state[param];
-        console.log(event.target.getAttribute("id"));
         moduls.forEach(modul => {
             if (modul.label === event.target.getAttribute("id")){
                 modul.isChecked =  event.target.checked;

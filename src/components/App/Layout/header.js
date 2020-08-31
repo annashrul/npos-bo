@@ -46,16 +46,6 @@ class Header extends Component {
       })
   }
   componentWillMount(){
-    //   let tgl_tempo = localStorage.getItem("tanggal_tempo");
-    //   let tgl_lokal = moment(new Date()).format("yyyy-MM-DD");
-    //   let tgl_info = localStorage.getItem("tanggal_info");
-    //   let sisa = parseInt(moment(tgl_tempo).format("DD")) - parseInt(moment(tgl_lokal).format("DD"));
-    //   if(tgl_lokal===tgl_info || sisa <= 7){
-    //       this.setState({
-    //           isShowNotif:true,
-    //           isDay:parseInt(moment(tgl_tempo).format("DD")) - parseInt(moment(tgl_lokal).format("DD"))
-    //       })
-    //   }
     fetch(HEADERS.URL + `site/logo`)
         .then(res => res.json())
         .then(

@@ -25,7 +25,6 @@ class FormCustomer extends Component{
     }
 
     getProps(param){
-        console.log(param);
         if(param.dataCustomerEdit!==undefined && param.dataCustomerEdit.length!==0){
             this.setState({
                 kd_cust:param.dataCustomerEdit.kd_cust,
@@ -122,7 +121,6 @@ class FormCustomer extends Component{
         const form = e.target;
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
-        console.log(this.state.foto);
         parseData['nama'] = this.state.nama;
         parseData['alamat'] = this.state.alamat;
         parseData['status'] = this.state.status;
@@ -135,7 +133,8 @@ class FormCustomer extends Component{
         parseData['jenis_kelamin'] = this.state.jenis_kelamin;
         parseData['email'] = this.state.email;
         parseData['biografi'] = '-';
-        parseData['special_price'] = this.state.special_price;
+        // parseData['special_price'] = this.state.special_price;
+        parseData['special_price'] = 0;
         let err = this.state.error;
         if( parseData['nama']===''|| parseData['nama']===undefined){
             err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
@@ -169,10 +168,10 @@ class FormCustomer extends Component{
             err = Object.assign({}, err, {status:"status tidak boleh kosong"});
             this.setState({error: err});
         }
-        else if( parseData['special_price']===''|| parseData['special_price']===undefined){
-            err = Object.assign({}, err, {special_price:"harga spesial tidak boleh kosong"});
-            this.setState({error: err});
-        }
+        // else if( parseData['special_price']===''|| parseData['special_price']===undefined){
+        //     err = Object.assign({}, err, {special_price:"harga spesial tidak boleh kosong"});
+        //     this.setState({error: err});
+        // }
         else if( parseData['alamat']===''|| parseData['alamat']===undefined){
             err = Object.assign({}, err, {alamat:"alamat tidak boleh kosong"});
             this.setState({error: err});
@@ -188,7 +187,7 @@ class FormCustomer extends Component{
                 this.props.dispatch(createCustomer(parseData));
                 this.props.dispatch(ModalToggle(false));
             }
-            console.log(parseData)
+            
         }
 
 
@@ -292,7 +291,7 @@ class FormCustomer extends Component{
                                         {this.state.error.status}
                                     </div>
                                 </div>
-                                <div className="form-group">
+                                {/* <div className="form-group">
                                     <label>Harga Spesial</label>
                                     <select className="form-control" name="special_price" defaultValue={this.state.special_price} value={this.state.special_price} onChange={this.handleChange}>
                                         <option value="">Pilih</option>
@@ -302,7 +301,7 @@ class FormCustomer extends Component{
                                     <div className="invalid-feedback" style={this.state.error.special_price!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.special_price}
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="form-group">
                                     <label>Alamat</label>
                                     <input type="text" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange}  />
@@ -311,7 +310,7 @@ class FormCustomer extends Component{
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label">Poto {this.props.dataCustomerEdit!==undefined?<small>(kosongkan bila tidak akan diubah)</small>:""}</label><br/>
+                                    <label htmlFor="inputState" className="col-form-label">Foto {this.props.dataCustomerEdit!==undefined?<small>(kosongkan bila tidak akan diubah)</small>:""}</label><br/>
                                     <FileBase64
                                         multiple={ false }
                                         className="mr-3 form-control-file"

@@ -20,7 +20,6 @@ class FormLocation extends Component{
         };
     }
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps.dataDetailLocation);
         if (nextProps.dataDetailLocation !== [] && nextProps.dataDetailLocation !== undefined) {
             this.setState({
                 kode: nextProps.dataDetailLocation.kode,
@@ -91,7 +90,6 @@ class FormLocation extends Component{
         parseData['lng'] = this.state.lng;
         parseData['alamat'] = this.state.alamat;
 
-        console.log(this.state.kode);
         if (this.props.dataDetailLocation !== undefined) {
             this.props.dispatch(updateLocation(this.state.kode,parseData,this.props.token));
             this.props.dispatch(ModalToggle(false));

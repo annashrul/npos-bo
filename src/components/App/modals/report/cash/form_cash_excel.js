@@ -65,7 +65,7 @@ class CashReportExcel extends Component{
         // stringHtml+= '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>';
         // stringHtml+= '<h3 align="center"><center>LOKASI : '+this.props.location===''?'SEMUA LOKASI':this.props.location+'</center></h3>';
         // stringHtml+= '<h3 align="center"><center>KASSA : '+this.props.kassa===''?'SEMUA KASSA':this.props.kassa+'</center></h3>';
-        console.log(stringHtml)
+        
         const headers = [["No", "Tgl","Kd Trx","Keterangan","Lokasi","Kassa","Kasir","Tipe","Jenis","Jumlah"]];
         let data = typeof this.props.cashReportExcel.data === 'object'?this.props.cashReportExcel.data.map(v=> [
            1,moment(v.tgl).format("yyyy-MM-DD"),v.kd_trx,v.keterangan,v.lokasi,v.kassa,v.kasir,v.type,v.jenis,toRp(parseInt(v.jumlah))

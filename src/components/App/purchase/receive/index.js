@@ -652,22 +652,14 @@ class Receive extends Component{
                                 let disc1 = 0;
                                 let disc2 = 0;
                                 let ppn = 0;
-<<<<<<< HEAD
-                                if (item.diskon != 0) {
-=======
                                 if (item.diskon !== 0) {
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
                                     if (item.diskon2 !== 0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
-<<<<<<< HEAD
-                                if (item.ppn != 0) {
-=======
                                 if (item.ppn !== 0) {
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                 }
                                 subtotal += ((parseInt(item.harga_beli,10) - disc2) + ppn) * parseFloat(item.qty);
@@ -905,11 +897,7 @@ class Receive extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-<<<<<<< HEAD
-                                                        Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
-=======
                                                         Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                     </small>
                                                 </div>
                                             </div>
@@ -1232,32 +1220,20 @@ class Receive extends Component{
                                                 let disc1=0;
                                                 let disc2=0;
                                                 let ppn=0;
-<<<<<<< HEAD
-                                                if(item.diskon!=0){
-                                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
-
-=======
                                                 if(item.diskon!==0){
                                                     disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                     disc2=disc1;
                                                     if(item.diskon2!==0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
-<<<<<<< HEAD
-                                                if(item.ppn!=0){
-                                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
-                                                }
-                                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
+                                          
 
-=======
                                                 if(item.ppn!==0){
                                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                                 }
                                                 subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
                                                 // 
->>>>>>> 55f0e23aa95f5d71f2f2c05cd2234ee10628b506
                                                 return (
                                                     <tr key={index} >
                                                         <td style={columnStyle}>

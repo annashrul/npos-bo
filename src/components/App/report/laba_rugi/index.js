@@ -5,7 +5,6 @@ import {FetchLabaRugiReport} from "redux/actions/report/laba_rugi/laba_rugi.acti
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
-import Paginationq from "helper";
 import {rangeDate, toRp} from "../../../../helper";
 import {FetchLabaRugiReportExcel} from "../../../../redux/actions/report/laba_rugi/laba_rugi.action";
 

@@ -49,7 +49,6 @@ class SaleReportExcel extends Component{
         stringHtml+=
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>LOKASI : '+(this.props.location===''?'SEMUA LOKASI':this.props.location)+'</center></h3>';
-        console.log(stringHtml)
         const headers = [[
             "Kd Trx",
             "Tanggal Trx",

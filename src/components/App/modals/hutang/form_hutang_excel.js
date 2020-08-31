@@ -48,7 +48,7 @@ class HutangReportExcel extends Component{
         '<h3 align="center"><center>&nbsp;</center></h3>'+
         '<h3 style="text-align:center"><center>LAPORAN HUTANG</center></h3>'+
         '</div>';
-        console.log(stringHtml)
+        
         const headers = [[
             "No Nota",
             "Faktur Beli",
