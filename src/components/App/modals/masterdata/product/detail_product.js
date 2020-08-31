@@ -100,10 +100,10 @@ class DetailProduct extends Component{
                                                     <td style={columnStyle}>{toRp(v.harga2)}</td>
                                                     <td style={columnStyle}>{toRp(v.harga3)}</td>
                                                     <td style={columnStyle}>{toRp(v.harga4)}</td>
-                                                    <td style={columnStyle}>{getMargin(v.harga,v.harga_beli)}</td>
-                                                    <td style={columnStyle}>{getMargin(v.harga2,v.harga_beli)}</td>
-                                                    <td style={columnStyle}>{getMargin(v.harga3,v.harga_beli)}</td>
-                                                    <td style={columnStyle}>{getMargin(v.harga4,v.harga_beli)}</td>
+                                                    <td style={columnStyle}>{v.harga!=='0'?getMargin(v.harga,v.harga_beli):'0'}</td>
+                                                    <td style={columnStyle}>{v.harga2!=='0'?getMargin(v.harga2,v.harga_beli):'0'}</td>
+                                                    <td style={columnStyle}>{v.harga3!=='0'?getMargin(v.harga3,v.harga_beli):'0'}</td>
+                                                    <td style={columnStyle}>{v.harga4!=='0'?getMargin(v.harga4,v.harga_beli):'0'}</td>
                                                 </tr>
 
                                             )

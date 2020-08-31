@@ -96,6 +96,7 @@ class PurchaseOrder extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -219,11 +220,9 @@ class PurchaseOrder extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
@@ -238,6 +237,7 @@ class PurchaseOrder extends Component{
                         if(i.satuan===val){
                             newbrg=i;
                         }
+                        return null;
                     })
 
                     let final= {
@@ -424,16 +424,16 @@ class PurchaseOrder extends Component{
                                 let disc2 = 0;
                                 let ppn = 0;
                                 if (item.diskon !==0) {
-                                    disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
+                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
                                     if (item.diskon2 !==0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
                                 if (item.ppn !==0) {
-                                    ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
+                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                 }
-                                subtotal += ((parseInt(item.harga_beli) - disc2) + ppn) * parseFloat(item.qty);
+                                subtotal += ((parseInt(item.harga_beli,10) - disc2) + ppn) * parseFloat(item.qty);
                                 detail.push({
                                     kd_brg: item.kd_brg,
                                     barcode: item.barcode,
@@ -460,6 +460,7 @@ class PurchaseOrder extends Component{
                             };
                             this.props.dispatch(storePo(data_final));
                         }
+                        return null;
                     })
                 }
             })
@@ -468,7 +469,6 @@ class PurchaseOrder extends Component{
     }
 
     autoSetQty(kode,data){
-        
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res === undefined) {
@@ -518,7 +518,7 @@ class PurchaseOrder extends Component{
                 'error'
             )
         }else{
-            const searchby = parseInt(this.state.searchby)===1?'kd_brg':(parseInt(this.state.searchby)===2?'barcode':'deskripsi')
+            const searchby = parseInt(this.state.searchby,10)===1?'kd_brg':(parseInt(this.state.searchby,10)===2?'barcode':'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty));
             this.setState({search: ''});
 
@@ -526,7 +526,6 @@ class PurchaseOrder extends Component{
     }
     getData() {
         const data = get(table);
-        
         data.then(res => {
             let brg = []
             res.map((i) => {
@@ -537,6 +536,7 @@ class PurchaseOrder extends Component{
                     qty: i.qty,
                     satuan: i.satuan
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
@@ -558,6 +558,7 @@ class PurchaseOrder extends Component{
                     value: i.kode,
                     label: i.nama
                 })
+                return null;
             })
         }
         let subtotal=0;
@@ -600,7 +601,7 @@ class PurchaseOrder extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby)===1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -900,17 +901,18 @@ class PurchaseOrder extends Component{
                                                 let disc1=0;
                                                 let disc2=0;
                                                 let ppn=0;
+
                                                 if(item.diskon!==0){
-                                                    disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
+                                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                                     disc2=disc1;
                                                     if(item.diskon2!==0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
                                                 if(item.ppn!==0){
-                                                    ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
+                                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                                 }
-                                                subtotal+=((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty);
+                                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
                                                 return (
                                                     <tr key={index}>
                                                         <td>
@@ -932,7 +934,7 @@ class PurchaseOrder extends Component{
                                                         <td><input type='text' name='ppn' style={{width:'35px',textAlign:'center'}} onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
                                                         <td>{item.stock}</td>
                                                         <td><input type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'35px',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
-                                                        <td>{((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty)}</td>
+                                                        <td>{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
                                                     </tr>
                                                 )
                                             })

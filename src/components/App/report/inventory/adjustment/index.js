@@ -4,16 +4,15 @@ import Preloader from "Preloader";
 import connect from "react-redux/es/connect/connect";
 import {deleteAdjustment, FetchAdjustment, FetchAdjustmentDetail} from "redux/actions/adjustment/adjustment.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import Paginationq, {statusQ} from "helper";
+import Paginationq from "helper";
 import DetailAdjustment from "components/App/modals/report/inventory/adjustment_report/detail_adjustment_report";
 import Swal from "sweetalert2";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import {rangeDate} from "helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {HEADERS} from "../../../../../redux/actions/_constants";
-import {FetchAdjustmentExcel} from "../../../../../redux/actions/adjustment/adjustment.action";
+import {HEADERS} from "redux/actions/_constants";
+import {FetchAdjustmentExcel} from "redux/actions/adjustment/adjustment.action";
 import AdjustmentReportExcel from 'components/App/modals/report/inventory/adjustment_report/form_adjustment_excel'
 
 
@@ -22,6 +21,7 @@ class AdjustmentReport extends Component{
         super(props);
         this.handleSearch = this.handleSearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+        this.toggleModalDetal = this.toggleModalDetal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -52,6 +52,7 @@ class AdjustmentReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"",value: "Default"},
@@ -65,6 +66,7 @@ class AdjustmentReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -82,6 +84,7 @@ class AdjustmentReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -154,7 +157,7 @@ class AdjustmentReport extends Component{
         localStorage.setItem('any_adjust_report',this.state.any);
         this.handleParamter(1);
     }
-    toggleModal(e, kd_trx) {
+    toggleModalDet(e, kd_trx) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
@@ -207,14 +210,22 @@ class AdjustmentReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formAdjustmentExcel"));
         this.props.dispatch(FetchAdjustmentExcel(1,this.state.where_data,total));
     }
 
     render(){
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.adjustmentReport;
+        const {
+            total,
+            // last_page,
+            per_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.adjustmentReport;
 
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};
         return (
@@ -316,10 +327,10 @@ class AdjustmentReport extends Component{
                                                                                 Action
                                                                             </button>
                                                                             <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.kd_trx)}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
+                                                                                <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModalDetodal(e,v.kd_trx)}>Detail</a>
+                                                                                <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
                                                                                 {/*http://192.168.100.10:3000/reports/adjust/AA-2008070002-1.pdf*/}
-                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</a>
+                                                                                <a tabIndex="0" className="dropdown-item" href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</a>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -341,9 +352,9 @@ class AdjustmentReport extends Component{
                             </div>
                             <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
-                                    current_page={parseInt(current_page)}
-                                    per_page={parseInt(per_page)}
-                                    total={parseInt(total)}
+                                    current_page={parseInt(current_page,10)}
+                                    per_page={parseInt(per_page,10)}
+                                    total={parseInt(total,10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>

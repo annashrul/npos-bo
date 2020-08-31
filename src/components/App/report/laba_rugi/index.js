@@ -40,6 +40,7 @@ class ReportLabaRugi extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let kassa = [
             {value: "Semua Kassa",kode: ""},
@@ -55,6 +56,7 @@ class ReportLabaRugi extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
 
         this.setState({
@@ -74,6 +76,7 @@ class ReportLabaRugi extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -184,10 +187,8 @@ class ReportLabaRugi extends Component{
         this.checkingParameter(pageNumber);
     }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        // const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {penjualan,hpp,dis_penjualan,kas_masuk,kas_keluar,total_pendapatan,total_beban,laba} = this.props.laba_rugiReport;
-        let subtotal=0;
-        
         return (
             <Layout page="Laporan Kas">
                 <div className="card">
@@ -310,7 +311,7 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-10 mb-0 text-left">Total Penjualan</p>
                                                         </div>
                                                         <div className="col-6">
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(penjualan))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(penjualan,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -318,7 +319,7 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-10 mb-0 text-left">Kas Masuk</p>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_masuk))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_masuk,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -326,7 +327,7 @@ class ReportLabaRugi extends Component{
                                                             <strong className="text-10 mb-0 text-left">Total Pendapatan</strong>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(total_pendapatan))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(total_pendapatan,10))}</p>
                                                         </div>
                                                     </div>
                                                     <hr></hr>
@@ -340,7 +341,7 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-10 mb-0 text-left">HPP</p>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(hpp))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(hpp,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -348,7 +349,7 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-10 mb-0 text-left">Diskon Penjualan</p>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(dis_penjualan))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(dis_penjualan,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -356,7 +357,7 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-10 mb-0 text-left">Kas Keluar</p>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_keluar))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_keluar,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -364,7 +365,7 @@ class ReportLabaRugi extends Component{
                                                             <strong className="text-10 mb-0 text-left">Total Beban</strong>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(total_beban))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(total_beban,10))}</p>
                                                         </div>
                                                     </div>
                                                     <hr></hr>
@@ -373,7 +374,7 @@ class ReportLabaRugi extends Component{
                                                             <strong className="text-10 mb-0 text-left">Laba</strong>
                                                         </div>
                                                         <div className="col-6" >
-                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(laba))}</p>
+                                                            <p className="text-12 mb-0 text-right">{toRp(parseInt(laba,10))}</p>
                                                         </div>
                                                     </div>
                                                 </div>

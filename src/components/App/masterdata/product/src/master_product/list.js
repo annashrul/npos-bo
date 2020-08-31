@@ -122,7 +122,7 @@ class ListProduct extends Component{
     }
     handleChange(event){
         let column=event.target.name;
-        let value=event.target.name;
+        let value=event.target.value;
         this.setState({
             [column]: value,
         });
@@ -438,7 +438,12 @@ class ListProduct extends Component{
                         </tr>
                         <tr>
                             <td className="text-black" style={columnStyle}>No</td>
-                            <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kode_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
+                            <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={
+                                event=>{
+                                    // event.preventDefault();
+                                    if(event.key==='Enter'){this.handleEnter('any_kode_barang');}
+                                }
+                            } style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
                             <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
                             <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kelompok"/></td>
                             <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Supplier"/></td>

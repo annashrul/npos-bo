@@ -139,10 +139,10 @@ class ListGroupProduct extends Component{
                                                            Aksi
                                                        </button>
                                                        <div className="dropdown-menu">
-                                                           <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                           <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
                                                                e,v.kel_brg,v.nm_kel_brg,v.group2,v.margin,v.dis_persen,v.status,'-'
                                                            )}>Edit</a>
-                                                           <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</a>
+                                                           <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</a>
                                                        </div>
                                                    </div>
                                                </td>

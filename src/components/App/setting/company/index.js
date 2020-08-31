@@ -1,10 +1,10 @@
 import React,{Component} from 'react'
 import Layout from "../../Layout";
 import FileBase64 from "react-file-base64";
-import {stringifyFormData} from "../../../../helper";
+import {stringifyFormData} from "helper";
 import connect from "react-redux/es/connect/connect";
-import {FetchCompany, storeCompany} from "../../../../redux/actions/setting/company/company.action";
-import Preloader from "../../../../Preloader";
+import {FetchCompany, storeCompany} from "redux/actions/setting/company/company.action";
+import Preloader from "Preloader";
 
 class Company extends Component{
     constructor(props) {
@@ -204,17 +204,17 @@ class Company extends Component{
                                             <tr>
                                                 <td style={columnStyle}>
                                                     {
-                                                        this.state.logo !=="-"?(<img src={this.state.logo} style={{height:"200px",width:"300px",objectFit:"scale-down"}}/>):<img src="https://satriabahana.co.id/asset/img/noimage.png" style={{height:"150px",width:"100%"}}/>
+                                                        this.state.logo !=="-"?(<img alt="netindo" src={this.state.logo} style={{height:"200px",width:"300px",objectFit:"scale-down"}}/>):<img alt="netindo" src="https://satriabahana.co.id/asset/img/noimage.png" style={{height:"150px",width:"100%"}}/>
                                                     }
                                                 </td>
                                                 <td style={columnStyle}>
                                                     {
-                                                        this.state.fav_icon !=="-"?(<img src={this.state.fav_icon} style={{height:"200px",width:"300px",objectFit:"scale-down"}}/>):<img src="https://satriabahana.co.id/asset/img/noimage.png" style={{height:"150px",width:"100%"}}/>
+                                                        this.state.fav_icon !=="-"?(<img alt="netindo" src={this.state.fav_icon} style={{height:"200px",width:"300px",objectFit:"scale-down"}}/>):<img alt="netindo" src="https://satriabahana.co.id/asset/img/noimage.png" style={{height:"150px",width:"100%"}}/>
                                                     }
                                                 </td>
                                                 <td style={columnStyle}>
                                                     {
-                                                        this.state.splash !=="-"?(<img src={this.state.splash} style={{height:"200px",width:"300px",objectFit:"scale-down"}}/>):<img src="https://satriabahana.co.id/asset/img/noimage.png" style={{height:"150px",width:"100%"}}/>
+                                                        this.state.splash !=="-"?(<img alt="netindo" src={this.state.splash} style={{height:"200px",width:"300px",objectFit:"scale-down"}}/>):<img alt="netindo" src="https://satriabahana.co.id/asset/img/noimage.png" style={{height:"150px",width:"100%"}}/>
                                                     }
                                                 </td>
                                             </tr>

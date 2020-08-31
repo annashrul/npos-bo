@@ -4,7 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {storeApproval} from "redux/actions/inventory/produksi.action";
 import Swal from 'sweetalert2';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 class ApproveProduction extends Component{
     constructor(props){
         super(props);

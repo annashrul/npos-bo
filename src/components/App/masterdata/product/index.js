@@ -4,7 +4,6 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import connect from "react-redux/es/connect/connect";
 import Preloader from "Preloader";
 import {FetchProduct} from "redux/actions/masterdata/product/product.action";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {FetchPriceProduct} from "redux/actions/masterdata/price_product/price_product.action";
 import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
 import ListGroupProduct from "./src/master_group_product/list";

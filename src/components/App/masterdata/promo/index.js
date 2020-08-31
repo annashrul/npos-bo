@@ -4,7 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import {FetchPromo, FetchPromoKategori} from "redux/actions/masterdata/promo/promo.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import moment from "moment";
-import Paginationq, {statusQ} from "helper";
+import Paginationq from "helper";
 import FormPromo from "components/App/modals/masterdata/promo/form_promo";
 import Preloader from "Preloader";
 import {HEADERS} from "redux/actions/_constants";
@@ -31,7 +31,7 @@ class Promo extends Component{
         if (nextProps.auth.user) {
             let access = nextProps.auth.user.access;
             if(access!==undefined&&access!==null){
-                if(nextProps.auth.user.access[18]['label']==="0"){
+                if(nextProps.auth.user.access[17]['label']==="0"){
                     alert("bukan halaman kamu");
                     this.props.history.push({
                         pathname: '/',
@@ -67,7 +67,7 @@ class Promo extends Component{
         this.props.dispatch(FetchAllLocation());
     }
     handlePagin(param){
-        let any = this.state.any;
+        // let any = this.state.any;
         this.props.dispatch(FetchPromo(param,''));
     }
     handleSearch(e){
@@ -92,8 +92,16 @@ class Promo extends Component{
     }
 
     render(){
-        const {current_page,data,from,last_page,per_page,to,total} = this.props.promo;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const {
+            current_page,
+            data,
+            // from,
+            // last_page,
+            per_page,
+            // to,
+            total
+        } = this.props.promo;
+        // const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <Layout page="Promo">
                 <div className="col-12 box-margin">
@@ -145,8 +153,8 @@ class Promo extends Component{
                                                                                                 <button style={{marginTop:"-7px"}} className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
                                                                                                 <div className="dropdown-menu dropdown-menu-right"
                                                                                                      aria-labelledby="dashboardDropdown50">
-                                                                                                    <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.id_promo)}><i className="ti-pencil-alt"/> Edit</a>
-                                                                                                    <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</a>
+                                                                                                    <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.id_promo)}><i className="ti-pencil-alt"/> Edit</a>
+                                                                                                    <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</a>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
