@@ -69,7 +69,7 @@ export const FetchApprovalTransaction = (page = 1,q='',lokasi='',param='') => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -87,7 +87,7 @@ export const FetchApprovalTransactionDetail = (page = 1,kd_trx) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -123,7 +123,7 @@ export const saveApprovalTransaction = (data) => {
                 // });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -136,15 +136,15 @@ export const FetchTransaction = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchTrx",data);
+                
                 dispatch(setTransaction(data));
                 dispatch(setLoadingApprovalTransaction(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -156,15 +156,15 @@ export const FetchTransactionExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchTrx",data);
+                
                 dispatch(setTransactionExcel(data));
                 dispatch(setLoadingApprovalTransaction(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -184,15 +184,15 @@ export const FetchTransactionData = (page=1,code,dateFrom='',dateTo='',location=
         if(location!==''){
             que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
         }
-        console.log("url alokasi",`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setTransactionData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

@@ -26,10 +26,10 @@ export const FetchCodePacking = ()=>{
         axios.get(HEADERS.URL+`packing/getcode`)
             .then(function(response){
                 const data = response.data;
-                console.log("IEU KODE PRODUKSI",data);
+                
                 dispatch(setCodePacking(data));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -41,7 +41,7 @@ export const FetchBrgPacking = (kode,db)=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
 
                 if(data.result.detail.length===1){
                     const barang = data.result.detail;
@@ -57,7 +57,7 @@ export const FetchBrgPacking = (kode,db)=>{
 
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoading(false));
 
             Swal.fire({
@@ -100,7 +100,7 @@ export const storePacking = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

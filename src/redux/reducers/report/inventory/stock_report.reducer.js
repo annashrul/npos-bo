@@ -9,7 +9,6 @@ const initialState = {
 export const stockReportReducer = (state=initialState,action) => {
     switch (action.type) {
         case STOCK_REPORT.SUCCESS:
-            console.log(action.data.result);
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
@@ -17,7 +16,6 @@ export const stockReportReducer = (state=initialState,action) => {
                 total_stock:action.data.result.total_stock
             });
         case STOCK_REPORT.SUCCESS_EXCEL:
-            console.log(action.data.result);
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,

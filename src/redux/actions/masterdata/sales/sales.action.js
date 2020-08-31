@@ -28,15 +28,15 @@ export const FetchSales = (page=1,q='')=>{
         }else{
             url = `sales?page=${page}&q=${q}`;
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setSales(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -49,11 +49,11 @@ export const FetchSalesAll = ()=>{
         axios.get(HEADERS.URL+`sales?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setSalesAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -93,7 +93,7 @@ export const createSales = (data,token) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -125,14 +125,14 @@ export const updateSales = (id,data,token) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -163,14 +163,14 @@ export const deleteSales = (id,token) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

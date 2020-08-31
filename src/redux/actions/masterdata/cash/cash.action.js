@@ -43,11 +43,11 @@ export const FetchCash = (page=1,type='masuk',param)=>{
         axios.get(HEADERS.URL+`kas?page=${page}&type=${type}${q}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setCash(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -60,11 +60,11 @@ export const FetchCashDetail = (id)=>{
         axios.get(HEADERS.URL+`kas/${id}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setCash(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -75,7 +75,7 @@ export const createCash = (data) => {
         axios.post(url,data)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -95,14 +95,14 @@ export const createCash = (data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
 
@@ -116,7 +116,7 @@ export const updateCash = (id,data) => {
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -136,14 +136,14 @@ export const updateCash = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -161,12 +161,12 @@ export const deleteCash = (id) => {
         //         'crossDomain': true
         //     }
         // }
-        // console.log("=============== DELETE ====================");
+        // 
 
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -185,14 +185,14 @@ export const deleteCash = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -207,15 +207,15 @@ export const FetchCashReport = (page=1,where='')=>{
         if(where!==''){
             url+=`&${where}`;
         }
-        console.log("URL LAPORAN KAS",url)
+        
         axios.post(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("DATA ",data);
+                
                 dispatch(setCashReport(data));
                 dispatch(setLoadingReport(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -232,7 +232,7 @@ export const FetchCashReportExcel = (where='',perpage='')=>{
                 dispatch(setCashReportExcel(data));
                 dispatch(setLoadingReport(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

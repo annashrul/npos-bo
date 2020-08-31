@@ -14,14 +14,14 @@ const initialState = {
 export const hutangReducer = (state=initialState,action) => {
     switch (action.type) {
         case HUTANG.SUCCESS_REPORT:
-            console.log(action.data.result);
+            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data_report:action.data.result
             });
         case HUTANG.SUCCESS_EXCEL:
-            console.log(action.data.result);
+            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
@@ -32,7 +32,7 @@ export const hutangReducer = (state=initialState,action) => {
                 get_code: action.data.result
             });
         case HUTANG.SUCCESS:
-            console.log("REDUCER",action.data.result);
+            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,

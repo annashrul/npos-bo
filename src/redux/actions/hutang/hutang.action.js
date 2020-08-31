@@ -54,14 +54,14 @@ export const FetchHutang = (nota) => {
         axios.get(HEADERS.URL + `hutang/get?nota=${nota}`)
             .then(function (response) {
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(FetchNotaHutang(data.result.lokasi));
                 dispatch(setHutang(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'Failed',
@@ -85,7 +85,7 @@ export const FetchNotaHutang = (lokasi) => {
             .catch(function (error) {
                 // handle error
 
-                console.log(error);
+                
 
             })
 
@@ -120,7 +120,7 @@ export const storeHutang = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -136,15 +136,15 @@ export const FetchHutangReport = (page=1,where='')=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL HUTANG REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setHutangReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -157,15 +157,15 @@ export const FetchHutangReportExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL HUTANG REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setHutangReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -197,14 +197,14 @@ export const DeleteHutangReport = (id)=>{
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

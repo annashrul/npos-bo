@@ -36,11 +36,11 @@ export const FetchCustomerType = (page=1,q,perpage='')=>{
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setCustomerType(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -55,11 +55,11 @@ export const FetchCustomerTypeAll = ()=>{
         axios.get(HEADERS.URL+`customerType?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setCustomerTypeAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -99,7 +99,7 @@ export const createCustomerType = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -131,14 +131,14 @@ export const updateCustomerType = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -169,14 +169,14 @@ export const deleteCustomerType = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

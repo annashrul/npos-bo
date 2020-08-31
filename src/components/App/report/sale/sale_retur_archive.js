@@ -218,7 +218,7 @@ class SaleReturReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {per_page,current_page,from,to,data,total} = this.props.sale_returReport;
-        console.log("this.props.sale_returReportExcel.data.length",typeof this.props.sale_returReportExcel.data === 'object' ? this.props.sale_returReportExcel.data.length > 0 ? this.props.sale_returReportExcel.data.length : 0 : 0)
+        
         return (
             <Layout page="Laporan SaleRetur">
                 <div className="col-12 box-margin">
@@ -403,7 +403,7 @@ class SaleReturReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps sale_retur", state)
+    
     return {
         sale_returReport:state.saleReducer.sale_retur_data,
         isLoadingDetail: state.saleReducer.isLoadingDetail,

@@ -137,9 +137,9 @@ class ListLocation extends Component{
                                                             Action
                                                         </button>
                                                         <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kode)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDetail(e,v.kode)}>Detail</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</a>
+                                                            <button className="dropdown-item" onClick={(e)=>this.handleEdit(e,v.kode)}>Edit</button>
+                                                            <button className="dropdown-item" onClick={(e)=>this.handleDetail(e,v.kode)}>Detail</button>
+                                                            <button className="dropdown-item" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</button>
                                                         </div>
                                                     </div>
                                                 </td>

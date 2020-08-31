@@ -30,11 +30,11 @@ export const FetchSubDepartment = (page=1,q='')=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setSubDepartment(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -49,11 +49,11 @@ export const FetchSubDepartmentAll = ()=>{
         axios.get(HEADERS.URL+`group2?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setSubDepartmentAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -64,11 +64,11 @@ export const createSubDepartment = (data) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `group2`;
 
-        console.log(data);
+        
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -95,7 +95,7 @@ export const createSubDepartment = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -107,12 +107,12 @@ export const updateSubDepartment = (id,data) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `group2/${id}`;
 
-        console.log("=============== PUT ====================");
-        console.log(data);
+        
+        
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -132,14 +132,14 @@ export const updateSubDepartment = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -150,12 +150,12 @@ export const deleteSubDepartment = (id,token) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `group2/${id}`;
 
-        console.log("=============== DELETE ====================");
+        
 
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -174,14 +174,14 @@ export const deleteSubDepartment = (id,token) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

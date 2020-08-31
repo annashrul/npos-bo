@@ -12,7 +12,7 @@ const initialState = {
 export const expedisiReducer = (state=initialState,action) => {
     switch (action.type) {
         case EXPEDISI.SUCCESS:
-            console.log("expedisiReducer", action.data.result)
+            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,

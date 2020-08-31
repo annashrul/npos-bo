@@ -19,7 +19,7 @@ class DetailOpname extends Component{
     };
 
     render(){
-        console.log("############# STATE SIITU",this.props);
+        
         const {data} = this.props.opnameDetail;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
@@ -83,7 +83,7 @@ class DetailOpname extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapState", state);
+    
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

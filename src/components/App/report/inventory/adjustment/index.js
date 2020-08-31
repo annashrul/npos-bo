@@ -146,7 +146,6 @@ class AdjustmentReport extends Component{
         this.setState({ [event.target.name]: event.target.value });
     }
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         localStorage.setItem("page_adjust_report",pageNumber);
         this.handleParamter(pageNumber);
     }

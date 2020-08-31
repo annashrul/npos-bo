@@ -85,7 +85,7 @@ class ApproveProduction extends Component{
     }
 
     render(){
-        console.log("############# STATE SIITU",this.props);
+        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>
@@ -134,7 +134,7 @@ class ApproveProduction extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapState", state);
+    
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

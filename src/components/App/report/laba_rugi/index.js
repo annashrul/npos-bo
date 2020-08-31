@@ -187,7 +187,7 @@ class ReportLabaRugi extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {penjualan,hpp,dis_penjualan,kas_masuk,kas_keluar,total_pendapatan,total_beban,laba} = this.props.laba_rugiReport;
         let subtotal=0;
-        console.log("RENDER LAPORAN KAS",this.props.laba_rugiReport);
+        
         return (
             <Layout page="Laporan Kas">
                 <div className="card">
@@ -402,7 +402,7 @@ class ReportLabaRugi extends Component{
 
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps laba rugi",state)
+    
     return {
         laba_rugiReport:state.laba_rugiReducer.data,
         laba_rugiReportExcel:state.laba_rugiReducer.report_excel,

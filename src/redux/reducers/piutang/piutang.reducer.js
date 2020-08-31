@@ -14,14 +14,12 @@ const initialState = {
 export const piutangReducer = (state=initialState,action) => {
     switch (action.type) {
         case PIUTANG.SUCCESS_REPORT:
-            console.log(action.data.result);
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data_report:action.data.result
             });
         case PIUTANG.SUCCESS_EXCEL:
-            console.log(action.data.result);
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,

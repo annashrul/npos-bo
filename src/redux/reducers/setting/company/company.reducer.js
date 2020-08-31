@@ -11,7 +11,7 @@ const initialState = {
 export const companyReducer = (state = initialState, action) => {
     switch (action.type) {
         case COMPANY.SUCCESS_GET:
-            console.log("REDUCER",action.data.result);
+            
             return Object.assign({}, state, {
                 statusGet: action.data.status,
                 msgGet: action.data.msg,

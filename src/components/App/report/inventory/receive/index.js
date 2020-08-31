@@ -221,7 +221,7 @@ class ReceiveReport extends Component{
         this.setState({ [event.target.name]: event.target.value });
     }
     HandleChangeType(type) {
-        console.log("TIPE",type.value);
+        
         this.setState({
             type: type.value,
         });
@@ -248,7 +248,7 @@ class ReceiveReport extends Component{
 
 
     HandleChangeLokasi(lk) {
-        console.log("LOKASI",lk.value);
+        
         this.setState({
             location: lk.value,
         });

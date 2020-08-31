@@ -47,7 +47,7 @@ export const FetchCheck = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = response.data
-                console.log(data);
+                
                 dispatch(setCheck(data))
                 dispatch(setLoading(false));
 
@@ -55,7 +55,7 @@ export const FetchCheck = (data) => {
             .catch(function (error) {
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -76,7 +76,7 @@ export const storeCetakBarcode = (data) => {
             .catch(function (error) {
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

@@ -118,7 +118,7 @@ class FormPriceProduct extends Component{
                 this.props.dispatch(updatePriceProduct(this.state.id,parseData));
                 this.props.dispatch(ModalToggle(false));
             }
-            console.log("SUBMITTED",parseData);
+            
             // if (this.props.detail !== undefined) {
             //     this.props.dispatch(updateCustomerType(this.props.detail.kd_brg,parseData));
             //     this.props.dispatch(ModalToggle(false));

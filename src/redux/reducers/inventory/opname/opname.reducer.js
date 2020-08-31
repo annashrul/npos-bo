@@ -12,7 +12,7 @@ const initialState = {
 export const opnameReducer = (state=initialState,action) => {
     switch (action.type) {
         case OPNAME.SUCCESS:
-            console.log("opnameReducer", action.data.result)
+            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,

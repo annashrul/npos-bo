@@ -27,7 +27,7 @@ class FormCash extends Component{
     }
     getProps(param){
         if (param.detail !== [] && param.detail !== undefined) {
-            console.log("object");
+            
             this.setState({
                 title: param.detail.title,
                 jenis: param.detail.jenis,
@@ -62,7 +62,7 @@ class FormCash extends Component{
         parseData['title']=this.state.title;
         parseData['jenis']=this.state.jenis;
         parseData['type']=this.state.type;
-        console.log(parseData);
+        
         let err = this.state.error;
         if(parseData['jenis']===''||parseData['jenis']===undefined){
             err = Object.assign({}, err, {jenis:"nama tidak boleh kosong"});

@@ -35,11 +35,11 @@ export const FetchPromo = (page=1,where='')=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPromo(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
             dispatch(setLoading(false));
         })
     }
@@ -52,11 +52,11 @@ export const FetchPromoDetail = (id)=>{
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log("DETAIL PROMO",data);
+                
                 dispatch(setPromoDetail(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
             dispatch(setLoading(false));
         })
     }
@@ -67,10 +67,10 @@ export const FetchPromoKategori = ()=>{
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPromoKategori(data));
             }).catch(function(error){
-            console.log(error)
+            
             dispatch(setLoading(false));
         })
     }
@@ -109,7 +109,7 @@ export const createPromo = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -147,7 +147,7 @@ export const updatePromo = (id,data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -183,7 +183,7 @@ export const deletePromo = (id) => {
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -207,7 +207,7 @@ export const FetchBrg1 = (page=1,perpage=10,where='')=>  {
                 }
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoading(false));
 
             Swal.fire({
@@ -237,7 +237,7 @@ export const FetchBrg2 = (page=1,perpage=10,where='')=>  {
                 }
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoading(false));
 
             Swal.fire({

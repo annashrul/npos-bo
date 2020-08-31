@@ -49,13 +49,13 @@ export const FetchCompany = () => {
         axios.get(HEADERS.URL + `site`)
             .then(function (response) {
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setSuccessGet(data));
                 dispatch(setLoadingGet(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -68,7 +68,7 @@ export const storeCompany = (data) => {
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("RESPONS FORM",data);
+                
                 dispatch(FetchCompany());
                 dispatch(setLoadingPost(false));
 
@@ -82,7 +82,7 @@ export const storeCompany = (data) => {
                 });
 
                 if (error.response) {
-                    console.log(error)
+                    
                 }
             })
     }

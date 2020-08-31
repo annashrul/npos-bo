@@ -121,7 +121,6 @@ class FormUserLevel extends Component{
 
     }
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps);
         if (nextProps.detail !== undefined && nextProps.detail !== []) {
             let akses = [];
             this.handleLoopAccess(this.state.setting.concat(this.state.masterdata),nextProps.detail.access);
@@ -158,7 +157,7 @@ class FormUserLevel extends Component{
         });
         parseData['lvl'] = this.state.lvl;
         parseData['access'] = akses;
-        console.log(parseData);
+        ;
         if(this.props.detail !==undefined){
             this.props.dispatch(updateUserLevel(this.props.detail.id,parseData));
             this.props.dispatch(ModalToggle(false));
@@ -178,7 +177,6 @@ class FormUserLevel extends Component{
     };
     handleCheckChieldElement = (event,param) => {
         let moduls = this.state[param];
-        console.log(event.target.getAttribute("id"));
         moduls.forEach(modul => {
             if (modul.label === event.target.getAttribute("id")){
                 modul.isChecked =  event.target.checked;

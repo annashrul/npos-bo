@@ -58,7 +58,6 @@ export const loginUser = (userData) =>
             },800)
 
         }).catch(err =>{
-            console.log(err.message);
             Swal.close() 
             if (err.message === 'Network Error') {
                  Swal.fire(

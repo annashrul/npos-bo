@@ -31,11 +31,11 @@ export const FetchDepartment = (page=1,q='')=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setDepartment(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -45,11 +45,11 @@ export const createDepartment = (data) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `departement`;
 
-        console.log(data);
+        
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -76,7 +76,7 @@ export const createDepartment = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -87,12 +87,12 @@ export const updateDepartment = (id,data) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `departement/${id}`;
 
-        console.log("=============== PUT ====================");
-        console.log(data);
+        
+        
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -112,14 +112,14 @@ export const updateDepartment = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -130,12 +130,12 @@ export const deleteDepartment = (id,token) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `departement/${id}`;
 
-        console.log("=============== DELETE ====================");
+        
 
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -154,14 +154,14 @@ export const deleteDepartment = (id,token) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -173,11 +173,11 @@ export const FetchAllDepartment = ()=>{
         axios.get(HEADERS.URL+`departement?page=1&perpage=10000`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setAllDepartment(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

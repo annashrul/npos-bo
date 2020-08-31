@@ -49,7 +49,6 @@ class Company extends Component{
         })
     };
     getSplash(files) {
-        console.log(files);
         this.setState({
             splash: files.base64
         })

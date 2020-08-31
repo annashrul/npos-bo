@@ -54,11 +54,11 @@ export const FetchProduct = (page=1,where,param='',db=null)=>{
                 url=`barang?page=${page}&${where}`;
             }
         }
-        console.log("URL ACTION PRODUCT",HEADERS.URL+`${url}`);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 if(db!==null){
                     const barang = data.result.data;
                     const cek=db(barang[0].kd_brg,barang);
@@ -72,7 +72,7 @@ export const FetchProduct = (page=1,where,param='',db=null)=>{
                 }
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
@@ -84,14 +84,14 @@ export const FetchProduct = (page=1,where,param='',db=null)=>{
 }
 
 export const createProduct = (data) => {
-    console.log("DATA TI FORM",data)
+    
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `barang`;
         axios.post(url,data)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -111,14 +111,14 @@ export const createProduct = (data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     icon: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
 
@@ -132,7 +132,7 @@ export const deleteProduct = (id) => {
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -151,21 +151,21 @@ export const deleteProduct = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
 }
 
 export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,perpage='')=>{
-    console.log("DATA DB",db);
+    
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}`;
@@ -173,7 +173,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
         if(supplier!==null) url+=`&supplier=${supplier}`;
         if(perpage!=='') url+=`&perpage=${perpage}`;
-        console.log("FETCH BARANG URL",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
@@ -190,7 +190,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
                 }
                
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoadingbrg(false));
 
             Swal.fire({
@@ -203,7 +203,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
 }
 
 export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,db)=>  {
-    console.log("DATA DB",db);
+    
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang?page=${page}`;
@@ -225,7 +225,7 @@ export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,
                 }
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoadingbrg(false));
 
             Swal.fire({
@@ -244,11 +244,11 @@ export const FetchProductEdit = (kode)=>{
         axios.get(HEADERS.URL+`barang/update/${kode}`)
             .then(function(response){
                 const data = response.data;
-                console.log("DATA EDIT",data);
+                
                 dispatch(setProductEdit(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log("product error",error);
+            
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
@@ -268,7 +268,7 @@ export const updateProduct = (id,data) => {
         axios.put(url, data)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -288,14 +288,14 @@ export const updateProduct = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -308,11 +308,11 @@ export const FetchProductDetail = (kode)=>{
         axios.get(HEADERS.URL+`barang/${kode}?isbo=true`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setProductDetail(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
@@ -334,7 +334,7 @@ export const FetchProductCode = ()=>{
                 dispatch(setProductCode(data));
                 // dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoading(false));
 
         })
@@ -352,14 +352,14 @@ export const FetchProductSale = (page=1,where,param='',db)=>{
                 url=`barang?page=${page}`;
             }
         }
-        console.log("URL ACTION PRODUCT SALE",HEADERS.URL+`${url}`);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
                 if(data.result.data.length===1) {
                     const barang = data.result.data;
                     const cek = db(barang[0].kd_brg, barang);
-                    console.log("LOG ACTION INSERT TO INDEXED DB PENJUALAN", cek);
+                    
                     cek.then(re => {
                         dispatch(setProductbrgSale(data));
                         dispatch(setLoadingBrgSale(false));
@@ -370,7 +370,7 @@ export const FetchProductSale = (page=1,where,param='',db)=>{
                 }
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoadingBrgSale(false));
             Swal.fire({
                 title: 'failed',

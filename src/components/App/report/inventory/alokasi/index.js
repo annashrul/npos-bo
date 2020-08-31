@@ -113,7 +113,6 @@ class AlokasiReport extends Component{
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -125,7 +124,6 @@ class AlokasiReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"no_faktur_mutasi",value: "Faktur Mutasi"},
             {kode:"tgl_mutasi",value: "Tanggal Mutasi"},
             {kode:"status",value: "Status"},
@@ -139,8 +137,14 @@ class AlokasiReport extends Component{
         });
         this.setState({
             sort_data: data_sort,
+            // sort:sort[0].kode,
             filter_data: data_filter,
+            // filter:filter[0].kode,
         });
+        localStorage.setItem('sort_alokasi_report',localStorage.sort_alokasi_report===''||localStorage.sort_alokasi_report===undefined?sort[0].kode:localStorage.sort_alokasi_report)
+        // 
+        localStorage.setItem('filter_alokasi_report',localStorage.filter_alokasi_report===''||localStorage.filter_alokasi_report===undefined?filter[0].kode:localStorage.filter_alokasi_report)
+        // 
         if (nextProps.auth.user) {
             let lk = [{
                 value: '',
@@ -365,8 +369,8 @@ class AlokasiReport extends Component{
                                                                     </td>
                                                                     <td style={columnStyle}>{v.no_faktur_mutasi}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.kd_lokasi_1}</td>
-                                                                    <td style={columnStyle}>{v.kd_lokasi_2}</td>
+                                                                    <td style={columnStyle}>{v.lokasi_asal}</td>
+                                                                    <td style={columnStyle}>{v.lokasi_tujuan}</td>
                                                                     <td style={columnStyle}>{
                                                                         v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))
                                                                         // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""

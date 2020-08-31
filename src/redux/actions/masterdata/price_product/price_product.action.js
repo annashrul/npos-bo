@@ -26,11 +26,11 @@ export const FetchPriceProduct = (page=1,q='')=>{
         }else{
             url = `barangHarga?page=${page}&q=${q}`
         }
-        console.log(url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPriceProduct(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
@@ -72,14 +72,14 @@ export const updatePriceProduct = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

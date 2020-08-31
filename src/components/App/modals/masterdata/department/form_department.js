@@ -36,7 +36,6 @@ class FormDepartment extends Component{
     };
     componentWillReceiveProps(nextProps) {
         if (nextProps.detail !== [] && nextProps.detail !== undefined) {
-            console.log(nextProps.detail);
             this.setState({
                 nama: nextProps.detail.nama,
                 id:nextProps.detail.id
@@ -53,7 +52,7 @@ class FormDepartment extends Component{
         const form = e.target;
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
-        console.log(parseData);
+        ;
         parseData['nama'] = this.state.nama;
         let err = this.state.error;
         if(this.state.nama===''||this.state.nama===undefined){
@@ -65,7 +64,6 @@ class FormDepartment extends Component{
                 this.props.dispatch(createDepartment(parseData));
                 this.props.dispatch(ModalToggle(false));
             }else{
-                console.log(this.state.id);
                 this.props.dispatch(updateDepartment(this.state.id,parseData));
                 this.props.dispatch(ModalToggle(false));
             }
@@ -76,8 +74,6 @@ class FormDepartment extends Component{
     }
 
     render(){
-        // console.log(this.props.detail);
-
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formDepartment"} size="md">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Department":"Update Department"}</ModalHeader>

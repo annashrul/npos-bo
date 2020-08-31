@@ -25,7 +25,6 @@ class FormCustomer extends Component{
     }
 
     getProps(param){
-        console.log(param);
         if(param.dataCustomerEdit!==undefined && param.dataCustomerEdit.length!==0){
             this.setState({
                 kd_cust:param.dataCustomerEdit.kd_cust,
@@ -122,7 +121,6 @@ class FormCustomer extends Component{
         const form = e.target;
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
-        console.log(this.state.foto);
         parseData['nama'] = this.state.nama;
         parseData['alamat'] = this.state.alamat;
         parseData['status'] = this.state.status;
@@ -189,7 +187,7 @@ class FormCustomer extends Component{
                 this.props.dispatch(createCustomer(parseData));
                 this.props.dispatch(ModalToggle(false));
             }
-            console.log(parseData)
+            
         }
 
 

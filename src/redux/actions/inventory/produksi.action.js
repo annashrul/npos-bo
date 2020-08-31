@@ -42,26 +42,26 @@ export const FetchCodeProduksi = (lokasi)=>{
         axios.get(HEADERS.URL+`production/getcode?lokasi=${lokasi}`)
             .then(function(response){
                 const data = response.data;
-                console.log("IEU KODE PRODUKSI",data);
+                
                 dispatch(setCodeProduksi(data));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
 
 export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>{
-    console.log("DATA DB",db);
+    
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}&kategori=4`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        console.log("FETCH BARANG URL",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log("RESPONSE BARANG BAHAN",data);
+                
                 if(data.result.data.length===1){
                     const barang = data.result.data;
                     const cek=db(barang[0].kd_brg,barang);
@@ -75,7 +75,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>
                 }
 
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoadingbrg(false));
 
             Swal.fire({
@@ -92,7 +92,7 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
         let url = `barang/get?page=${page}&kategori=2`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        console.log("FETCH BARANG URL",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
@@ -100,7 +100,7 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
                 dispatch(setProduksiPaket(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error);
+            
             dispatch(setLoadingbrg(false));
 
             Swal.fire({
@@ -119,7 +119,7 @@ export const storeProduksi = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log(data);
+                
                 Swal.fire({
                     title: 'Transaksi berhasil.',
                     html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem)}</td></tr></tbody></table>`,
@@ -145,7 +145,7 @@ export const storeProduksi = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -181,7 +181,7 @@ export const storeApproval = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -194,15 +194,15 @@ export const FetchProduction = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchTrx",data);
+                
                 dispatch(setProduction(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -214,15 +214,15 @@ export const FetchProductionExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchTrx",data);
+                
                 dispatch(setProductionExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -242,15 +242,15 @@ export const FetchProductionData = (page=1,code,dateFrom='',dateTo='',location='
         if(location!==''){
             que = `production/report/${code}?page=${page}&lokasi=${location}`;
         }
-        console.log("url production",`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setProductionData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

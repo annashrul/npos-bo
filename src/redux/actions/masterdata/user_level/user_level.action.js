@@ -27,15 +27,15 @@ export  const FetchUserLevel = (page=1,q,perpage) => {
             url = `userLevel?page=${page}&q=${q}`;
         }
 
-        console.log(url);
+        
         axios.get(HEADERS.URL + `${url}&perpage=${perpage}`,headers)
             .then(function(response){
                 const data = response.data;
-                console.log("FETCH USER LEVEL",data);
+                
                 dispatch(setUserLevel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error);
+            
         })
     }
 };
@@ -50,7 +50,7 @@ export const createUserLevel = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -77,7 +77,7 @@ export const createUserLevel = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -111,14 +111,14 @@ export const updateUserLevel = (id,data) => {
             .catch(function (error) {
                 // handle error
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -131,7 +131,7 @@ export const deleteUserLevel = (id) => {
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
-                console.log("DATA",data);
+                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -150,14 +150,14 @@ export const deleteUserLevel = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

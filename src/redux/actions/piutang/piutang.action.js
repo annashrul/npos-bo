@@ -53,14 +53,14 @@ export const FetchPiutang = (nota) => {
         axios.get(HEADERS.URL + `piutang/get?nota=${nota}`)
             .then(function (response) {
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(FetchNotaPiutang(data.result.lokasi));
                 dispatch(setPiutang(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'Failed',
@@ -85,7 +85,7 @@ export const FetchNotaPiutang = (lokasi) => {
             .catch(function (error) {
                 // handle error
 
-                console.log(error);
+                
 
             })
 
@@ -120,7 +120,7 @@ export const storePiutang = (data) => {
                 });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -136,15 +136,15 @@ export const FetchPiutangReport = (page=1,where='')=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL PIUTANG REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPiutangReport(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -157,15 +157,15 @@ export const FetchPiutangReportExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=`${where}`
         }
-        console.log("URL PIUTANG REPORT",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setPiutangReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -197,14 +197,14 @@ export const DeletePiutangReport = (id)=>{
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                console.log(error);
+                
                 Swal.fire({
                     title: 'failed',
                     type: 'danger',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }

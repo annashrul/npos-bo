@@ -63,7 +63,7 @@ class Produksi extends Component{
 
     }
     getProps(param){
-        console.log("GET PROPS",param);
+        
 
         if (param.auth.user) {
             let lk = [];
@@ -135,7 +135,7 @@ class Produksi extends Component{
     HandleChangeBarangPaket(lk){
         let val = lk.value;
         let exp = val.split("|", 2);
-        console.log(exp[0]);
+        
         let err = Object.assign({}, this.state.error, {
             barang_paket: ""
         });
@@ -454,7 +454,7 @@ class Produksi extends Component{
                                         break;
                                     }
                                 }
-                                console.log(data);
+                                
                             }
                         })
 

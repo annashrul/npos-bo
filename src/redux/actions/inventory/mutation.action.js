@@ -69,7 +69,7 @@ export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -87,7 +87,7 @@ export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
             })
             .catch(function (error) {
                 // handle error
-                console.log(error);
+                
             })
 
     }
@@ -123,7 +123,7 @@ export const saveApprovalMutation = (data) => {
                 // });
 
                 if (error.response) {
-                    console.log("error")
+                    
                 }
             })
     }
@@ -136,15 +136,15 @@ export const FetchMutation = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchMutasi",data);
+                
                 dispatch(setMutation(data));
                 dispatch(setLoadingApprovalMutation(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -156,15 +156,15 @@ export const FetchMutationExcel = (page=1,where='',perpage=99999)=>{
         if(where!==''){
             url+=where
         }
-        console.log(url)
+        
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                console.log("FetchMutasi",data);
+                
                 dispatch(setMutationExcel(data));
                 dispatch(setLoadingApprovalMutation(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }
@@ -184,15 +184,15 @@ export const FetchMutationData = (page=1,code,dateFrom='',dateTo='',location='')
         if(location!==''){
             que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
         }
-        console.log("url alokasi",`${que}`);
+        
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){
                 const data = response.data;
-                console.log(data);
+                
                 dispatch(setMutationData(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
-            console.log(error)
+            
         })
     }
 }

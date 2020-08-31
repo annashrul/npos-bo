@@ -245,11 +245,11 @@ class TrxOpname extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
+        
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-        console.log("",barcode);
+        
 
 
     }
@@ -337,7 +337,7 @@ class TrxOpname extends Component{
                                 })
                             });
                             data['detail'] = detail;
-                            console.log("SUBMITTED",data);
+                            
                             this.props.dispatch(storeOpname(data));
                         }
                     })
@@ -403,7 +403,7 @@ class TrxOpname extends Component{
     
     getData() {
         const data = get(table);
-        console.log("LOG FUNCTION getData()",data);
+        
         data.then(res => {
             let brg = [];
             res.map((i) => {

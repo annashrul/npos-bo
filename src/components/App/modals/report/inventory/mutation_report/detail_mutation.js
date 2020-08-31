@@ -19,7 +19,7 @@ class DetailMutation extends Component{
     };
 
     render(){
-        console.log("############# STATE SIITU",this.props);
+        
         const {data} = this.props.mutationDetail;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
@@ -83,7 +83,7 @@ class DetailMutation extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapState", state);
+    
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

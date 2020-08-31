@@ -20,7 +20,6 @@ class DetailPoReport extends Component{
         this.props.dispatch(ModalToggle(bool));
     };
     render(){
-        console.log(this.props.poReportDetail);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "poReportDetail"} size="lg">
