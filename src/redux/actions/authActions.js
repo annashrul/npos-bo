@@ -47,6 +47,7 @@ export const loginUser = (userData) =>
                     harga3:res.data.result.nama_harga.harga3,
                     harga4:res.data.result.nama_harga.harga4,
                     set_harga:res.data.result.set_harga,
+                    site_title:res.data.result.title,
                 })
             
                 // Set token to Auth Header 

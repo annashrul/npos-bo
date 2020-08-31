@@ -5,11 +5,8 @@ import {FetchLabaRugiReport} from "redux/actions/report/laba_rugi/laba_rugi.acti
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
-import Paginationq from "helper";
-import Preloader from "../../../../Preloader";
 import {rangeDate, toRp} from "../../../../helper";
 import {FetchLabaRugiReportExcel} from "../../../../redux/actions/report/laba_rugi/laba_rugi.action";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 class ReportLabaRugi extends Component{
     constructor(props){

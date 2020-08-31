@@ -122,12 +122,21 @@ class Card extends Component {
                                         <p className="text-12 mb-0 text-right">{toRp(parseInt(item.net_omset))}</p>
                                     </div>
                                 </div>
+                                <hr style={{margin:'unset'}}></hr>
                                 <div className="row">
                                     <div className="col-6">
                                         <p className="text-10 mb-0 text-left">Cash</p>
                                     </div>
                                     <div className="col-6" >
                                         <p className="text-12 mb-0 text-right">{toRp(parseInt(item.tunai))}</p>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <p className="text-10 mb-0 text-left">Piutang</p>
+                                    </div>
+                                    <div className="col-6" >
+                                        <p className="text-12 mb-0 text-right">{toRp(parseInt(item.piutang))}</p>
                                     </div>
                                 </div>
                                 <div className="row">

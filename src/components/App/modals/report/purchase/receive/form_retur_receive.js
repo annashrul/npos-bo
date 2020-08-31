@@ -103,7 +103,6 @@ class FormReturReceive extends Component{
            }
 
         });
-        console.log("SUBMITTED",data);
         this.props.dispatch(storeReturTanpaNota(data));
 
     }
