@@ -638,7 +638,6 @@ class SideMenu extends Component {
             modul_report,modul_report_penjualan,modul_report_inventory,modul_report_pembelian,modul_report_pembayaran,
             modul_cetak_barcode
         } = this.state;
-        console.log("LAPORAN PENJUALAN",modul_report_penjualan);
         return (
             <nav>
                 <ul className="sidebar-menu" data-widget="tree">
@@ -850,7 +849,6 @@ class SideMenu extends Component {
                         )
                     } style={modul_setting===true?{display:'block'}:{display:'none'}}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
-                    }>
 
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>
