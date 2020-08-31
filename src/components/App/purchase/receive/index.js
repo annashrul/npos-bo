@@ -92,7 +92,6 @@ class Receive extends Component{
             })
             .catch(function (error) {
                 if (error.response) {
-                    console.log("error")
                 }
             })
     }
@@ -103,7 +102,6 @@ class Receive extends Component{
             destroy(table);
             const data = this.fetchDataEdit();
             data.then(res=>{
-                console.log("REPONS",res);
                 res.detail.map((v,i)=>{
                     const data_final={
                         "kd_brg" : v.kode_barang,
@@ -196,7 +194,6 @@ class Receive extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-        console.log("DATA EDIT",nextProps.dataEdit);
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
@@ -236,7 +233,6 @@ class Receive extends Component{
         if (nextProps.po_data){
             if (nextProps.po_data.master!==undefined){
                 if(this.props.po_data===undefined){
-                    console.log("PO HITTTTTTTT");
                     this.props.dispatch(FetchNota(nextProps.po_data.master.lokasi))
                     this.setState({
                         location: nextProps.po_data.master.lokasi,
@@ -299,7 +295,6 @@ class Receive extends Component{
             localStorage.removeItem('data_master_receive');
             localStorage.removeItem('data_detail_receive');
             destroy('receive');
-            console.log("DESTROY DATA PEMBELIAN");
         }
 
     }
@@ -332,7 +327,6 @@ class Receive extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        console.log(err);
         this.setState({
             location: lk.value,
             error: err
@@ -351,7 +345,6 @@ class Receive extends Component{
         let err = Object.assign({}, this.state.error, {
             supplier: ""
         });
-        console.log(err);
         this.setState({
             supplier: sp.value,
             error: err
@@ -448,7 +441,6 @@ class Receive extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -529,7 +521,6 @@ class Receive extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
-        console.log(item);
         const finaldt = {
             kd_brg: item.kd_brg,
             barcode:item.barcode,
@@ -601,7 +592,6 @@ class Receive extends Component{
         e.preventDefault();
 
         // validator head form
-        console.log(this.state.catatan);
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "" || this.state.notasupplier === "" || this.state.penerima === "" || this.props.checkNotaPem) {
             if(this.state.catatan===""){
@@ -661,16 +651,16 @@ class Receive extends Component{
                                 let disc2 = 0;
                                 let ppn = 0;
                                 if (item.diskon != 0) {
-                                    disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
+                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
                                     if (item.diskon2 != 0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
                                 if (item.ppn != 0) {
-                                    ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
+                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                 }
-                                subtotal += ((parseInt(item.harga_beli) - disc2) + ppn) * parseFloat(item.qty);
+                                subtotal += ((parseInt(item.harga_beli,10) - disc2) + ppn) * parseFloat(item.qty);
                                 detail.push({
                                     kd_brg: item.kd_brg,
                                     barcode: item.barcode,
@@ -701,10 +691,8 @@ class Receive extends Component{
                                 userid: this.state.userid,
                                 detail: detail
                             };
-                            console.log("SUBMITTED",data_final);
                             if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
                                 this.props.dispatch(updateReceive(data_final,this.props.match.params.slug));
-                                console.log("###################### UPDATE ######################");
                             }else{
                                 this.props.dispatch(storeReceive(data_final));
                             }
@@ -721,7 +709,6 @@ class Receive extends Component{
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     barcode: data[0].barcode,
@@ -769,7 +756,7 @@ class Receive extends Component{
                 'error'
             )
         } else {
-            const searchby = parseInt(this.state.searchby) === 1 ? 'kd_brg' : (parseInt(this.state.searchby) === 2 ? 'barcode' : 'deskripsi')
+            const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
             this.setState({search: ''});
 
@@ -790,8 +777,6 @@ class Receive extends Component{
                     satuan: i.satuan
                 });
             });
-            console.log("databrg",res);
-            console.log("brgval",brg);
             this.setState({
                 databrg: res,
                 brgval: brg
@@ -857,15 +842,15 @@ class Receive extends Component{
                                                         id="passwordHelpBlock"
                                                         class="form-text text-muted"
                                                     >
-                                                        {parseInt(this.state.ambil_data)==1?'Pembelian langsung.':(parseInt(this.state.ambil_data)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
+                                                        {parseInt(this.state.ambil_data,10)==1?'Pembelian langsung.':(parseInt(this.state.ambil_data,10)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
                                                     </small>
                                                 </div>
                                             </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data)==1?{display:'none'}:{display:'block'}}>
+                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)==1?{display:'none'}:{display:'block'}}>
                                                 <div className="form-group">
                                                     <Select
                                                         options={this.state.data_nota}
-                                                        placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data)===2?'PO':'Pre-Receive')}
+                                                        placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===2?'PO':'Pre-Receive')}
                                                         onChange={this.HandleChangeNota}
                                                         value = {
                                                             this.state.data_nota.find(op => {
@@ -905,7 +890,7 @@ class Receive extends Component{
                                                         id="passwordHelpBlock"
                                                         class="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby)==1?'Kode Barang':(parseInt(this.state.searchby)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>
@@ -1229,17 +1214,16 @@ class Receive extends Component{
                                                 let disc2=0;
                                                 let ppn=0;
                                                 if(item.diskon!=0){
-                                                    disc1 = parseInt(item.harga_beli) * (parseFloat(item.diskon) / 100);
+                                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
                                                     disc2=disc1;
                                                     if(item.diskon2!=0){
                                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                                     }
                                                 }
                                                 if(item.ppn!=0){
-                                                    ppn = parseInt(item.harga_beli) * (parseFloat(item.ppn) / 100);
+                                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                                 }
-                                                subtotal+=((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty);
-                                                // console.log('gt',grandtotal);
+                                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
                                                 return (
                                                     <tr key={index} >
                                                         <td style={columnStyle}>
@@ -1264,7 +1248,7 @@ class Receive extends Component{
                                                         <td style={columnStyle}>{item.stock}</td>
                                                         <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
                                                         <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
-                                                        <td style={columnStyle}>{((parseInt(item.harga_beli)-disc2)+ppn)*parseFloat(item.qty)}</td>
+                                                        <td style={columnStyle}>{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
                                                     </tr>
                                                 )
                                             })
