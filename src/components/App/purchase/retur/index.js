@@ -117,7 +117,6 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
-        console.log(err);
         this.setState({
             location: lk.value,
             error: err
@@ -134,7 +133,6 @@ class ReturTanpaNota extends Component{
         let err = Object.assign({}, this.state.error, {
             supplier: ""
         });
-        console.log(err);
         this.setState({
             supplier: sp.value,
             error: err
@@ -195,7 +193,6 @@ class ReturTanpaNota extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column,val);
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
@@ -289,7 +286,6 @@ class ReturTanpaNota extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
-        console.log(item);
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg:item.nm_brg,
@@ -358,7 +354,6 @@ class ReturTanpaNota extends Component{
         e.preventDefault();
 
         // validator head form
-        console.log(this.state.catatan);
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.supplier === "") {
             if(this.state.catatan===""){
@@ -422,7 +417,6 @@ class ReturTanpaNota extends Component{
                             });
                             data['detail'] = detail;
                             this.props.dispatch(storeReturTanpaNota(data));
-                            console.log("SUBMITTED",data);
                         }
                     })
                 }
@@ -435,7 +429,6 @@ class ReturTanpaNota extends Component{
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
             if (res == undefined) {
-                console.log('GADA');
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg:data[0].nm_brg,
@@ -479,7 +472,7 @@ class ReturTanpaNota extends Component{
                 'error'
             )
         } else {
-            const searchby = parseInt(this.state.searchby) === 1 ? 'kd_brg' : (parseInt(this.state.searchby) === 2 ? 'barcode' : 'deskripsi')
+            const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
             this.setState({search: ''});
 
@@ -554,7 +547,7 @@ class ReturTanpaNota extends Component{
                                                                 className="form-text text-muted"
                                                             >
                                                                 Cari
-                                                                berdasarkan {parseInt(this.state.searchby) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                                berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                                             </small>
                                                         </div>
                                                     </div>
@@ -756,11 +749,11 @@ class ReturTanpaNota extends Component{
                                                 <tbody>
                                                 {
                                                     this.state.databrg.map((item, index) => {
-                                                        let total_retur=parseInt(item.qty_retur)*parseInt(item.harga_beli);
+                                                        let total_retur=parseInt(item.qty_retur,10)*parseInt(item.harga_beli,10);
                                                         grand_total = grand_total + total_retur;
                                                         localStorage.setItem("grand_total",grand_total);
-                                                        qty_retur = qty_retur+parseInt(item.qty_retur);
-                                                        total_stock = total_stock+parseInt(item.stock);
+                                                        qty_retur = qty_retur+parseInt(item.qty_retur,10);
+                                                        total_stock = total_stock+parseInt(item.stock,10);
                                                         return (
                                                             <tr key={index}>
                                                                 <td style={columnStyle}>
