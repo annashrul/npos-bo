@@ -24,11 +24,11 @@ class User extends Component{
             let access = nextProps.auth.user.access;
             if(access!==undefined&&access!==null){
                 if(nextProps.auth.user.access[11]['label']==="0"){
-                    alert("bukan halaman kamu");
-                    this.props.history.push({
-                        pathname: '/',
-                        state: {from: this.props.location.pathname}
-                    });
+                    // alert("bukan halaman kamu");
+                    // this.props.history.push({
+                    //     pathname: '/',
+                    //     state: {from: this.props.location.pathname}
+                    // });
                 }
             }
         }
