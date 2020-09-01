@@ -386,7 +386,7 @@ class Alokasi extends Component{
                         kd_brg: res.kd_brg,
                         nm_brg: res.nm_brg,
                         barcode: newbrg.barcode,
-                        satuan: res.satuan,
+                        satuan: newbrg.satuan,
                         harga_beli: newbrg.harga_beli,
                         hrg_jual: newbrg.harga,
                         stock: newbrg.stock,
