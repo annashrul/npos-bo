@@ -18,6 +18,7 @@ import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {HEADERS} from 'redux/actions/_constants'
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class SaleArchive extends Component{
     constructor(props){
@@ -476,14 +477,16 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <UncontrolledButtonDropdown>
+                                                                            <DropdownToggle caret>
                                                                                 Aksi
-                                                                            </button>
-                                                                            <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
-                                                                                <a className="dropdown-item" href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</a>
-                                                                            </div>
+                                                                            </DropdownToggle>
+                                                                            <DropdownMenu>
+                                                                                <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</DropdownItem>
+                                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
+                                                                                <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                            </DropdownMenu>
+                                                                            </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.kd_trx}</td>

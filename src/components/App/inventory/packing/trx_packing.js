@@ -305,7 +305,6 @@ class TrxPacking extends Component{
                                 })
                             });
                             data['detail'] = detail;
-                            console.log(data);
                             this.props.dispatch(storePacking(data));
                         }
                     })
@@ -319,7 +318,6 @@ class TrxPacking extends Component{
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
-        console.log(item);
         const finaldt = {
             barcode:item.barcode,
             harga_beli:item.harga_beli,

@@ -3,7 +3,9 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import moment from "moment";
-import {FetchBrgPackingTrx} from "../../../../redux/actions/inventory/packing.action";
+import {FetchBrgPackingTrx, storePacking} from "../../../../redux/actions/inventory/packing.action";
+import Swal from "sweetalert2";
+import {storeExpedisi} from "../../../../redux/actions/inventory/expedisi.action";
 
 class Expedisi extends Component{
     constructor(props) {
@@ -53,8 +55,16 @@ class Expedisi extends Component{
         if(param.barang!==[]){
             if(param.barang.detail!==undefined){
                 let data=[];
+                let checked;
+
                 param.barang.detail.map((v,i)=>{
-                    console.log(localStorage.isChecked+i);
+                    if(localStorage.getItem(`isChecked${i}`)!==undefined){
+                        if(localStorage.getItem(`isChecked${i}`)==="true"){
+                            checked=true;
+                        }else{
+                            checked=false;
+                        }
+                    }
                     data.push({
                         kd_packing:v.kd_packing,
                         kode_barang: v.kode_barang,
@@ -62,7 +72,7 @@ class Expedisi extends Component{
                         barcode: v.barcode,
                         satuan: v.satuan,
                         nm_brg: v.nm_brg,
-                        isChecked:localStorage.isChecked+i==="true"?true:false
+                        isChecked:checked
                     })
                 });
                 this.setState({brgVal:data});
@@ -80,6 +90,12 @@ class Expedisi extends Component{
             this.props.dispatch(FetchBrgPackingTrx(localStorage.search_expedisi));
             this.setState({search:localStorage.search_expedisi})
         }
+        if(localStorage.lokasi1_expedisi!==undefined){
+            this.setState({location1:localStorage.lokasi1_expedisi})
+        }
+        if(localStorage.lokasi2_expedisi!==undefined){
+            this.setState({location2:localStorage.lokasi2_expedisi})
+        }
     }
     handleChange(e){
         const column = e.target.name;
@@ -96,9 +112,10 @@ class Expedisi extends Component{
     }
     handleChangeDynamic(event,i){
         let checked=event.target.checked;
-        checked===true?localStorage.setItem(`isChecked${i}`,"true"):localStorage.setItem(`isChecked${i}`,"false");
         this.state.brgVal[i].isChecked = checked;
         this.setState({});
+        checked===true?localStorage.setItem(`isChecked${i}`,"true"):localStorage.setItem(`isChecked${i}`,"false");
+
     }
     HandleChangeLokasi(lk) {
         let err = Object.assign({}, this.state.error, {location1: ""});
@@ -136,11 +153,68 @@ class Expedisi extends Component{
             this.setState({error:err});
         }
         else{
-            alert("bus");
+            if(this.state.brgVal.length===0){
+                Swal.fire(
+                    'Error!',
+                    'Pilih barang untuk melanjutkan Transaksi Expedisi.',
+                    'error'
+                )
+            }else{
+                Swal.fire({
+                    title: 'Simpan Expedisi?',
+                    text: "Pastikan data yang anda masukan sudah benar!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Simpan!',
+                    cancelButtonText: 'Tidak!'
+                }).then((result) => {
+                    if (result.value) {
+                        let parsedata={};
+                        parsedata['kode'] = this.state.search;
+                        parsedata['tanggal'] = moment(this.state.tanggal).format("yyyy-MM-DD");
+                        parsedata['lokasi_asal'] = this.state.location1;
+                        parsedata['lokasi_tujuan'] = this.state.location2;
+                        parsedata['pengirim'] = this.state.pengirim;
+                        parsedata['userid'] = this.state.userid;
+                        let detail=[];
+                        this.state.brgVal.map((v,i)=>{
+                            if(v.isChecked===true){
+                                detail.push({
+                                    kd_packing:v.kd_packing,
+                                    ket:'-',
+                                    jml_koli:v.qty,
+                                })
+                            }
+                        })
+                        parsedata['detail'] = detail;
+                        this.props.dispatch(storeExpedisi(parsedata));
+                    }
+                })
+
+            }
+
         }
     }
     handleReset(e){
         e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then((result) => {
+            if (result.value) {
+                localStorage.removeItem("lokasi1_expedisi");
+                localStorage.removeItem("lokasi2_expedisi");
+                localStorage.removeItem("search_expedisi");
+                window.location.reload(false);
+            }
+        })
     }
     handleSearch(){
         localStorage.setItem("search_expedisi",this.state.search);
