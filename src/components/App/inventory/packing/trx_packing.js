@@ -9,6 +9,7 @@ import {toRp} from "helper";
 import {ToastQ} from "helper";
 import {FetchAlokasi} from "../../../../redux/actions/inventory/alokasi.action";
 import {FetchBrgPacking, FetchCodePacking, storePacking} from "../../../../redux/actions/inventory/packing.action";
+import StickyBox from "react-sticky-box";
 
 
 const table='packing';
@@ -68,7 +69,8 @@ class TrxPacking extends Component{
                 faktur_alokasi_data:no_faktur
             })
         }
-        typeof param.barang.detail === 'object' ? param.barang.detail.length > 0 ? this.getData() : "" : "";
+        // typeof param.barang.detail === 'object' ? param.barang.detail.length > 0 ? this.getData() : "" : "";
+
         this.setState({
             no_packing:this.props.code
         })
@@ -91,14 +93,14 @@ class TrxPacking extends Component{
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
     }
-
-
     componentWillMount(){
         this.getProps(this.props);
         this.props.dispatch(FetchCodePacking());
         this.props.dispatch(FetchAlokasi(1,'&status=0&perpage=1000'));
     }
     handleChangeFakturAlokasi(lk){
+        destroy(table);
+        this.getData();
         let err = Object.assign({}, this.state.error, {
             faktur_alokasi: ""
         });
@@ -125,7 +127,6 @@ class TrxPacking extends Component{
             });
         }
     }
-
     HandleRemove(e, id){
         e.preventDefault()
         Swal.fire({
@@ -172,6 +173,46 @@ class TrxPacking extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
+        if(column==='satuan'){
+            const cek = cekData('barcode', barcode, table);
+            cek.then(res => {
+                if (res === undefined) {
+                    ToastQ.fire({
+                        icon: 'error',
+                        title: `not found.`
+                    })
+                } else {
+                    let newbrg=[];
+                    datas.map(i=>{
+                        if(i.satuan===val){
+                            newbrg=i;
+                        }
+                        return null;
+                    })
+
+                    let final= {
+                        id: res.id,
+
+                        barcode:res.barcode,
+                        harga_beli:newbrg.harga_beli,
+                        harga_jual:res.harga_jual,
+                        kode_barang: res.kode_barang,
+                        nm_brg:res.nm_brg,
+                        qty_alokasi:res.qty_alokasi,
+                        qty_packing:res.qty_packing,
+                        satuan:res.satuan,
+                        stock:res.stock,
+                        tambahan:res.tambahan,
+                    }
+                    update(table, final);
+                    ToastQ.fire({
+                        icon: 'success',
+                        title: `${column} has been changed.`
+                    })
+                }
+                this.getData()
+            })
+        }
 
     }
     HandleChangeInput(e,id){
@@ -264,6 +305,7 @@ class TrxPacking extends Component{
                                 })
                             });
                             data['detail'] = detail;
+                            console.log(data);
                             this.props.dispatch(storePacking(data));
                         }
                     })
@@ -274,6 +316,59 @@ class TrxPacking extends Component{
         }
 
 
+    }
+    HandleAddBrg(e,item) {
+        e.preventDefault();
+        console.log(item);
+        const finaldt = {
+            barcode:item.barcode,
+            harga_beli:item.harga_beli,
+            harga_jual:item.harga_jual,
+            kode_barang: item.kode_barang,
+            nm_brg:item.nm_brg,
+            qty_alokasi:item.qty_alokasi,
+            qty_packing:item.qty_alokasi,
+            satuan:item.satuan,
+            stock:item.stock,
+            tambahan:item.tambahan,
+        };
+        const cek = cekData('kode_barang',item.kode_barang,table);
+        cek.then(res => {
+            if(res===undefined){
+                store(table, finaldt)
+            }else{
+                update(table,{
+                    id:res.id,
+                    barcode:res.barcode,
+                    harga_beli:res.harga_beli,
+                    harga_jual:res.harga_jual,
+                    kode_barang: res.kode_barang,
+                    nm_brg:res.nm_brg,
+                    qty_alokasi:res.qty_alokasi,
+                    qty_packing:parseFloat(res.qty_packing)+1,
+                    satuan:res.satuan,
+                    stock:res.stock,
+                    tambahan:res.tambahan,
+
+                    //
+                    // kd_brg: res.kd_brg,
+                    // nm_brg:res.nm_brg,
+                    // barcode:res.barcode,
+                    // satuan:res.satuan,
+                    // deskripsi:res.deskripsi,
+                    // kondisi:res.kondisi,
+                    // stock:res.stock,
+                    // ppn:res.ppn,
+                    // harga_beli:res.harga_beli,
+                    // ket:res.ket,
+                    // qty_retur:parseFloat(res.qty_retur)+1,
+                    // tambahan:res.tambahan
+                })
+            }
+
+
+            this.getData()
+        })
     }
     autoSetQty(kode,data){
         const cek = cekData('kode_barang', kode, table);
@@ -335,112 +430,239 @@ class TrxPacking extends Component{
                     <div className="row">
                         {/*START RIGHT*/}
                         <div className="col-md-12">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="row">
-                                                <div className="col-md-3">
-                                                    <div className="form-group">
-                                                        <label htmlFor="">No. Packing</label>
-                                                        <input type="text" readOnly className="form-control" style={{fontWeight: 'bolder'}} value={this.state.no_packing}/>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">Tanggal</label>
-                                                        <input type="date" name="tanggal" className="form-control" value={this.state.tanggal} onChange={(e => this.HandleCommonInputChange(e))}/>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">No. Faktur Alokasi</label>
-                                                        <Select options={this.state.faktur_alokasi_data} placeholder="Pilih" onChange={this.handleChangeFakturAlokasi} value={this.state.faktur_alokasi_data.find(op => {return op.value === this.state.faktur_alokasi})}/>
-                                                        <div className="invalid-feedback"
-                                                             style={this.state.error.faktur_alokasi !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                            {this.state.error.faktur_alokasi}
+                            <div style={{ height: "100vh"}}>
+                                <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                    <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}>
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <div className="chat-area">
+                                                    <div className="chat-header-text d-flex border-none mb-10">
+                                                        <div className="chat-about">
+                                                            <div className="chat-with font-18">Pilih Barang</div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">Penerima</label>
-                                                        <input type="text" name="penerima" className="form-control" value={this.state.penerima} onChange={(e => this.HandleCommonInputChange(e))} onBlur={(e) => this.HandleChangeInput(e, null)}/>
-                                                        <div className="invalid-feedback"
-                                                             style={this.state.error.penerima !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                            {this.state.error.penerima}
+                                                    <div className="chat-search">
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <div className="form-group">
+                                                                    <div className="input-group input-group-sm">
+                                                                        <select name='searchby'
+                                                                                className="form-control form-control-sm"
+                                                                                onChange={(e) => this.HandleCommonInputChange(e, false)}>
+                                                                            <option value={1}>Kode Barang</option>
+                                                                            <option value={2}>Barcode</option>
+                                                                            <option value={3}>Deskripsi</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <small
+                                                                        id="passwordHelpBlock"
+                                                                        className="form-text text-muted"
+                                                                    >
+                                                                        Cari
+                                                                        berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-12">
+                                                                <div className="form-group">
+                                                                    <div className="input-group input-group-sm">
+                                                                        <input
+                                                                            autoFocus
+                                                                            type="text"
+                                                                            id="chat-search"
+                                                                            name="search"
+                                                                            className="form-control form-control-sm"
+                                                                            placeholder="Search"
+                                                                            value={this.state.search}
+                                                                            onChange={(e) => this.HandleCommonInputChange(e, false)}
+                                                                            onKeyPress={
+                                                                                event => {
+                                                                                    if (event.key === 'Enter') {
+                                                                                        this.HandleSearch();
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        />
+                                                                        <span className="input-group-append">
+                                  <button
+                                      type="button"
+                                      className="btn btn-primary"
+                                      onClick={
+                                          event => {
+                                              event.preventDefault();
+                                              this.HandleSearch();
+                                          }
+                                      }
+                                  >
+                                    <i className="fa fa-search"/>
+                                  </button>
+                                </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/*end chat-search*/}
+                                                    <div className="people-list">
+                                                        <div id="chat_user_2">
+                                                            <ul className="chat-list list-unstyled">
+                                                                {
+                                                                    this.props.barang.detail!==undefined?this.props.barang.detail.length !== 0 ?
+                                                                        this.props.barang.detail.map((i, inx) => {
+                                                                            return (
+                                                                                <li className="clearfix" key={inx}
+                                                                                    onClick={(e) => this.HandleAddBrg(e, {
+                                                                                        barcode: i.barcode,
+                                                                                        harga_beli:i.harga_beli,
+                                                                                        harga_jual:i.harga_jual,
+                                                                                        kode_barang:i.kode_barang,
+                                                                                        nm_brg:i.nm_brg,
+                                                                                        qty_alokasi:i.qty,
+                                                                                        qty_packing:i.qty,
+                                                                                        satuan:i.satuan,
+                                                                                        stock:i.stock,
+                                                                                        tambahan:i.tambahan,
+
+                                                                                    })}>
+                                                                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar"/>
+                                                                                    <div className="about">
+                                                                                        <div className="status"><small>{i.nm_brg.toLowerCase()}</small></div>
+                                                                                        <div className="status"><small>{i.kode_barang.toLowerCase()}</small></div>
+                                                                                    </div>
+                                                                                </li>
+                                                                            )
+                                                                        }) : (
+                                                                            <div style={{
+                                                                                textAlign: 'center',
+                                                                                fontSize: "11px",
+                                                                                fontStyle: "italic"
+                                                                            }}>Barang tidak ditemukan.</div>
+                                                                        ):""
+
+                                                                }
+
+
+                                                            </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="table-responsive" style={{overflowX: "auto",zoom:"80%"}}>
-                                                <table className="table table-hover">
-                                                    <thead>
-                                                    <tr>
-                                                        <th style={columnStyle}>#</th>
-                                                        <th style={columnStyle}>Kode</th>
-                                                        <th style={columnStyle}>barcode</th>
-                                                        <th style={columnStyle}>Nama</th>
-                                                        <th style={columnStyle}>Satuan</th>
-                                                        <th style={columnStyle}>Harga Beli</th>
-                                                        <th style={columnStyle}>Stock Sistem</th>
-                                                        <th style={columnStyle}>Qty Alokasi</th>
-                                                        <th style={columnStyle}>Qty Packing</th>
-                                                    </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                    {
-                                                        this.state.databrg.map((item, index) => {
-                                                            let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
-                                                            return (
-                                                                <tr key={index}>
-                                                                    <td style={columnStyle}>
-                                                                        <a href="about:blank" className='btn btn-danger btn-sm'
-                                                                           onClick={(e) => this.HandleRemove(e, item.id)}><i
-                                                                            className='fa fa-trash'/></a>
-                                                                    </td>
-                                                                    <td style={columnStyle}>{item.kode_barang}</td>
-                                                                    <td style={columnStyle}>{item.barcode}</td>
-                                                                    <td style={columnStyle}>{item.nm_brg}</td>
-                                                                    <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
-                                                                        {
-                                                                            item.tambahan.map(i => {
-                                                                                return (
-                                                                                    <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
-                                                                                )
-                                                                            })
-                                                                        }
-                                                                    </select></td>
-                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli,10))} className="form-control"/></td>
-                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
-                                                                    <td style={columnStyle}><input readOnly={true} type='text' name='qty_alokasi' value={item.qty_alokasi} className="form-control"/></td>
-                                                                    <td style={columnStyle}>
-                                                                        <input type='text' name='qty_packing' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} className="form-control" value={qty_packing}/>
-
-                                                                    </td>
-
-                                                                </tr>
-                                                            )
-                                                        })
-                                                    }
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-
                                         </div>
+                                    </StickyBox>
+                                    <div style={{width:"80%"}}>
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="row">
+                                                            <div className="col-md-3">
+                                                                <div className="form-group">
+                                                                    <label htmlFor="">No. Packing</label>
+                                                                    <input type="text" readOnly className="form-control" style={{fontWeight: 'bolder'}} value={this.state.no_packing}/>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-3">
+                                                                <div className="form-group">
+                                                                    <label className="control-label font-12">Tanggal</label>
+                                                                    <input type="date" name="tanggal" className="form-control" value={this.state.tanggal} onChange={(e => this.HandleCommonInputChange(e))}/>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-3">
+                                                                <div className="form-group">
+                                                                    <label className="control-label font-12">No. Faktur Alokasi</label>
+                                                                    <Select options={this.state.faktur_alokasi_data} placeholder="Pilih" onChange={this.handleChangeFakturAlokasi} value={this.state.faktur_alokasi_data.find(op => {return op.value === this.state.faktur_alokasi})}/>
+                                                                    <div className="invalid-feedback"
+                                                                         style={this.state.error.faktur_alokasi !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                                        {this.state.error.faktur_alokasi}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-3">
+                                                                <div className="form-group">
+                                                                    <label className="control-label font-12">Penerima</label>
+                                                                    <input type="text" name="penerima" className="form-control" value={this.state.penerima} onChange={(e => this.HandleCommonInputChange(e))} onBlur={(e) => this.HandleChangeInput(e, null)}/>
+                                                                    <div className="invalid-feedback"
+                                                                         style={this.state.error.penerima !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                                        {this.state.error.penerima}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="table-responsive" style={{overflowX: "auto",zoom:"80%"}}>
+                                                            <table className="table table-hover">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th style={columnStyle}>#</th>
+                                                                    <th style={columnStyle}>Kode</th>
+                                                                    <th style={columnStyle}>barcode</th>
+                                                                    <th style={columnStyle}>Nama</th>
+                                                                    <th style={columnStyle}>Satuan</th>
+                                                                    <th style={columnStyle}>Harga Beli</th>
+                                                                    <th style={columnStyle}>Stock Sistem</th>
+                                                                    <th style={columnStyle}>Qty Alokasi</th>
+                                                                    <th style={columnStyle}>Qty Packing</th>
+                                                                </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                {
+                                                                    this.state.databrg.map((item, index) => {
+                                                                        let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)<parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
+
+                                                                        return (
+                                                                            <tr key={index}>
+                                                                                <td style={columnStyle}>
+                                                                                    <a href="about:blank" className='btn btn-danger btn-sm'
+                                                                                       onClick={(e) => this.HandleRemove(e, item.id)}><i
+                                                                                        className='fa fa-trash'/></a>
+                                                                                </td>
+                                                                                <td style={columnStyle}>{item.kode_barang}</td>
+                                                                                <td style={columnStyle}>{item.barcode}</td>
+                                                                                <td style={columnStyle}>{item.nm_brg}</td>
+                                                                                <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                                                                                    {
+                                                                                        item.tambahan.map(i => {
+                                                                                            return (
+                                                                                                <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                                                            )
+                                                                                        })
+                                                                                    }
+                                                                                </select></td>
+                                                                                <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={toRp(parseInt(item.harga_beli,10))} className="form-control"/></td>
+                                                                                <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
+                                                                                <td style={columnStyle}><input readOnly={true} type='text' name='qty_alokasi' value={item.qty_alokasi} className="form-control"/></td>
+                                                                                <td style={columnStyle}>
+                                                                                    <input type='text' name='qty_packing' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} className="form-control" value={parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):parseInt(this.state.brgval[index].qty_packing,10)}/>
+                                                                                    {
+                                                                                        parseInt(this.state.brgval[index].qty_packing,10)>parseInt(item.qty_alokasi,10)?<small style={{color:'red'}}>Qty Packing Tidak Boleh Melebihi Qty Alokasi</small>:''
+                                                                                    }
+                                                                                </td>
+
+                                                                            </tr>
+                                                                        )
+                                                                    })
+                                                                }
+                                                                </tbody>
+                                                            </table>
+
+                                                        </div>
+
+                                                    </div>
 
 
-                                    </div>
-                                </div>
-                                <div className="card-header">
-                                    <div className="dashboard-btn-group d-flex align-items-center">
-                                        <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                        <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                                </div>
+                                            </div>
+                                            <div className="card-header">
+                                                <div className="dashboard-btn-group d-flex align-items-center">
+                                                    <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                    <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         {/*END RIGHT*/}
                     </div>

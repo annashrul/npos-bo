@@ -10,6 +10,9 @@ export function setLoading(load){
 export function setExpedisi(data=[]){
     return {type:EXPEDISI.SUCCESS,data}
 }
+export function setExpedisiTrx(data=[]){
+    return {type:EXPEDISI.SUCCESS_TRX,data}
+}
 export function setExpedisiExcel(data=[]){
     return {type:EXPEDISI.SUCCESS_EXCEL,data}
 }
@@ -129,7 +132,6 @@ export const storeExpedisi = (data) => {
             })
     }
 }
-
 export const storeExpedisiPosting = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true));
