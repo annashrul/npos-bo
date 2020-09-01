@@ -14770,3 +14770,7 @@ table.tableBodyScroll tbody tr {
 .custom-map-modal .modal-body {
   overflow-y: auto;
 }
+.nohover:hover {
+  border: 0 !important;
+  background:transparent !important;
+}

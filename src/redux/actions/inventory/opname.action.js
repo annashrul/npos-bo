@@ -119,7 +119,7 @@ export const storeOpname = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -156,7 +156,7 @@ export const storeOpnamePosting = (data,param) => {
             .catch(function (error) {
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 

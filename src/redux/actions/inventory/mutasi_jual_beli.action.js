@@ -65,7 +65,7 @@ export const FetchDataBayarMutasiJualBeli = (kode) => {
                 dispatch(setLoadingMutasiJualBeli(false));
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -101,7 +101,7 @@ export const storeMutasiJualBeli = (data) => {
                 dispatch(setLoadingMutasiJualBeli(false));
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 

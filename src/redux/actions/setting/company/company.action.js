@@ -2,7 +2,7 @@ import {COMPANY,HEADERS} from "../../_constants";
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {setLoading} from "../../sale/sale.action";
-
+import {logoutUser} from "../../authActions";
 
 export function setLoadingGet(load) {
     return {
@@ -71,13 +71,21 @@ export const storeCompany = (data) => {
                 
                 dispatch(FetchCompany());
                 dispatch(setLoadingPost(false));
+                Swal.fire({
+                    title: 'Berhasil merubah data.',
+                    type: 'success',
+                    text: "Silahkan login kembali untuk melanjutkan",
+                }).then((res)=>{
+                    dispatch(logoutUser());
+                });
+
 
             })
             .catch(function (error) {
                 dispatch(setLoadingPost(false));
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 

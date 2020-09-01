@@ -80,7 +80,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })
@@ -105,7 +105,7 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })
@@ -140,7 +140,7 @@ export const storeProduksi = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -176,7 +176,7 @@ export const storeApproval = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 

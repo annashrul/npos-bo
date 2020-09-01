@@ -65,7 +65,7 @@ export const FetchHutang = (nota) => {
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: "Data Tidak Ditemukan",
                 });
             })
@@ -115,7 +115,7 @@ export const storeHutang = (data) => {
                 dispatch(setLoadingPost(false));
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -188,7 +188,7 @@ export const DeleteHutangReport = (id)=>{
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -200,7 +200,7 @@ export const DeleteHutangReport = (id)=>{
                 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

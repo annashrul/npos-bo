@@ -122,7 +122,7 @@ export const storeExpedisi = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -158,7 +158,7 @@ export const storeExpedisiPosting = (data,param) => {
             .catch(function (error) {
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 

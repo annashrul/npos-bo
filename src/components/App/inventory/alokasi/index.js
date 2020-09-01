@@ -8,7 +8,6 @@ import {FetchNota,storeAlokasi} from 'redux/actions/inventory/alokasi.action'
 import {FetchDnReport,FetchDnData,setDnData} from 'redux/actions/inventory/dn.action'
 
 import { Scrollbars } from "react-custom-scrollbars";
-import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
@@ -95,19 +94,24 @@ class Alokasi extends Component{
     }
 
     componentDidMount() {
+         let jt=[
+            {value:"Alokasi",label:"Alokasi"},
+            {value:"Mutasi",label:"Mutasi"},
+            {value:"Transaksi",label:"Transaksi"},
+        ];
+        this.setState({jenis_trx_data:jt});
         this.getData()
         if (localStorage.catatan !== undefined && localStorage.catatan !== '') {
             this.setState({
                 catatan: localStorage.catatan
             })
         }
-
         if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
-            if (localStorage.ambil_data === 2) {
+            if (parseInt(localStorage.ambil_data,10) === 2) {
                 this.props.dispatch(FetchDnReport(1, 1000))
             }
             this.setState({
-                ambil_data: localStorage.ambil_data
+                ambil_data: parseInt(localStorage.ambil_data,10)
             })
         }
 
@@ -116,9 +120,6 @@ class Alokasi extends Component{
             this.setState({
                 ambil_nota: localStorage.nota
             })
-            // this.props.dispatch(FetchDnData(localStorage.nota));
-            // destroy(table)
-            // this.getData()
         }
 
         if (localStorage.lk !== undefined && localStorage.lk !== '') {
@@ -139,12 +140,6 @@ class Alokasi extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-        let jt=[
-            {value:"Alokasi",label:"Alokasi"},
-            {value:"Mutasi",label:"Mutasi"},
-            {value:"Transaksi",label:"Transaksi"},
-        ];
-        this.setState({jenis_trx_data:jt});
         this.getProps(nextProps);
         if (nextProps.auth.user) {
             let lk = []
@@ -246,12 +241,9 @@ class Alokasi extends Component{
                 penerima: ""
             }
         })
-
-
-
+        destroy(table)
         localStorage.setItem('nota', nota.value);
         this.props.dispatch(FetchDnData(nota.value));
-        destroy(table)
         localStorage.removeItem('sp');
         localStorage.removeItem('lk');
         localStorage.removeItem('catatan');
@@ -314,9 +306,10 @@ class Alokasi extends Component{
         }
 
         if (column === 'ambil_data') {
-            if(val===2){
-                this.props.dispatch(FetchDnReport(1, 1000))
+            if(parseInt(val,10)===2){
+                this.props.dispatch(FetchDnReport(1, 1000));
             }
+
             localStorage.setItem('ambil_data',val);
             destroy(table)
             this.getData()
@@ -720,7 +713,7 @@ class Alokasi extends Component{
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
                                                         <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1} selected={this.state.ambil_data === 1}>Langsung</option>
+                                                            <option value={1} selected={this.state.ambil_data===1}>Langsung</option>
                                                             <option value={2} selected={this.state.ambil_data===2}>Delivery Note</option>
                                                         </select>
                                                     </div>
