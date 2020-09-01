@@ -11,6 +11,9 @@ export function setLoading(load){
 export function setBarangPacking(data=[]){
     return {type:PACKING.GET_BARANG_SUCCESS,data}
 }
+export function setBarangPackingTrx(data=[]){
+    return {type:PACKING.GET_BARANG_SUCCESS_TRX,data}
+}
 
 export function setProduksiFailed(data=[]){
     return {type:PACKING.GET_BARANG_FAILED,data}
@@ -41,8 +44,6 @@ export const FetchBrgPacking = (kode,db)=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
-                
-
                 if(data.result.detail.length===1){
                     const barang = data.result.detail;
                     const cek=db(barang[0].kode_barang,barang);
@@ -105,3 +106,25 @@ export const storePacking = (data) => {
             })
     }
 }
+
+export const FetchBrgPackingTrx = (kode)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `packing/get/${kode}`;
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                dispatch(setBarangPackingTrx(data));
+                dispatch(setLoading(false));
+
+            }).catch(function(error){
+            dispatch(setLoading(false));
+            Swal.fire({
+                title: 'failed',
+                type: 'danger',
+                // text: error.response.data.msg,
+            });
+        })
+    }
+}
+
