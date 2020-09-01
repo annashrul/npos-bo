@@ -9,7 +9,7 @@ import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import jsPDF from 'jspdf';
 import "jspdf-autotable";
 
-class MutationReportExcel extends Component{
+class TransactionReportExcel extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -46,7 +46,7 @@ class MutationReportExcel extends Component{
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN ADJUSTMENT</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN ALOKASI MUTASI TRX</center></h3>'+
         '</div>';
         console.log(stringHtml)
         const headers = [[
@@ -55,21 +55,23 @@ class MutationReportExcel extends Component{
             "Lokasi Asal",
             "Lokasi Tujuan",
             "No. Faktur Beli",
-            "Status",
+            "Status Penerimaan",
+            "Status Pembayaran",
             "Keterangan",
         ]];
-        let data = typeof this.props.mutationReportExcel.data === 'object'?this.props.mutationReportExcel.data.map(v=> [
+        let data = typeof this.props.transactionReportExcel.data === 'object'?this.props.transactionReportExcel.data.map(v=> [
            v.no_faktur_mutasi,
            moment(v.tgl_mutasi).format("DD-MM-YYYY"),
            v.lokasi_asal,
            v.lokasi_tujuan,
            v.no_faktur_beli,
-           v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):""),
+           v.status==='0'?'Dikirim':(v.status==='1'?'Diterima':""),
+           String(v.status_transaksi)==='0'?'Belum Lunas':(String(v.status_transaksi)==='1'?'Lunas':""),
            v.keterangan,
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
-            "mutation_",
+            "transaction_",
             stringHtml,
             headers,
             data,
@@ -80,8 +82,8 @@ class MutationReportExcel extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formMutationExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update MutationExcel"}</ModalHeader> */}
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formTransactionExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
+                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update TransactionExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
@@ -111,8 +113,8 @@ class MutationReportExcel extends Component{
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>
                                             <ReactHTMLTableToExcel
                                                 className="btn btn-circle btn-lg btn-success"
-                                                table={'laporan_mutation'}
-                                                filename={'laporan_mutation'}
+                                                table={'laporan_transaction'}
+                                                filename={'laporan_transaction'}
                                                 sheet="kas"
                                                 buttonText={<i className="fa fa-print"></i>}>
                                             </ReactHTMLTableToExcel>
@@ -127,13 +129,13 @@ class MutationReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_mutation" style={{display:this.state.view === false?'none':'inline-table'}}>
-                        <thead className="bg-light">
+                        <table className="table table-hover table-bordered table-responsive"  id="laporan_transaction" style={{display:this.state.view === false?'none':'inline-table'}}>
+                            <thead className="bg-light">
                                 <tr>
                                     <th className="text-black" colSpan={7}>{this.props.startDate} - {this.props.startDate}</th>
                                 </tr>
                                 <tr>
-                                    <th className="text-black" colSpan={7}>LAPORAN ALOKASI MUTASI</th>
+                                    <th className="text-black" colSpan={7}>LAPORAN ALOKASI MUTASI TRX</th>
                                 </tr>
 
                                 <tr>
@@ -142,7 +144,8 @@ class MutationReportExcel extends Component{
                                     <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
                                     <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
                                     <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status Penerimaan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status Pembayaran</th>
                                     <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
                                 </tr>
                                 <tr></tr>
@@ -150,8 +153,8 @@ class MutationReportExcel extends Component{
                                 {
                                     <tbody>
                                     {
-                                        typeof this.props.mutationReportExcel.data==='object'? this.props.mutationReportExcel.data.length>0?
-                                            this.props.mutationReportExcel.data.map((v,i)=>{
+                                        typeof this.props.transactionReportExcel.data==='object'? this.props.transactionReportExcel.data.length>0?
+                                            this.props.transactionReportExcel.data.map((v,i)=>{
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{v.no_faktur_mutasi}</td>
@@ -160,6 +163,7 @@ class MutationReportExcel extends Component{
                                                         <td style={columnStyle}>{v.lokasi_tujuan}</td>
                                                         <td style={columnStyle}>{v.no_faktur_beli}</td>
                                                         <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
+                                                        <td style={columnStyle}>{String(v.status_transaksi)==='0'?statusQ('info','Belum Lunas'):(String(v.status_transaksi)==='1'?statusQ('success','Lunas'):"")}</td>
                                                         <td style={columnStyle}>{v.keterangan}</td>
                                                     </tr>
                                                 );
@@ -177,9 +181,9 @@ class MutationReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        mutationReportExcel:state.mutationReducer.report_excel,
+        transactionReportExcel:state.transactionReducer.report_excel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(MutationReportExcel);
+export default connect(mapStateToProps)(TransactionReportExcel);
