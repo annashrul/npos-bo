@@ -110,13 +110,13 @@ Last Updated: Oct 24, 2019
 /* Import Fonts & CSS Files */
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500,600,700|Open+Sans:400,600&amp;display=swap");
 @import url(css/bootstrap.min.css);
-@import url(css/owl.carousel.min.css);
+/*@import url(css/owl.carousel.min.css);*/
 @import url(css/animate.css);
-@import url(css/nice-select.css);
-@import url(css/jquery-ui.min.css);
-@import url(css/default-assets/themify-icons.css);
+/*@import url(css/nice-select.css);*/
+/*@import url(css/jquery-ui.min.css);*/
+/*@import url(css/default-assets/themify-icons.css);*/
 @import url(css/font-awesome.min.css);
-@import url(css/pe-icon-7-stroke.min.css);
+/*@import url(css/pe-icon-7-stroke.min.css);*/
 @import url(css/style.css);
 @import url(css/material-design-iconic-font.min.css);
 @import url(etline/style.css);

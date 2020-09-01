@@ -466,20 +466,7 @@ class SideMenu extends Component {
     componentDidMount(){
         let dataUser=[];
         this.getProps(this.props);
-        let loc =this.props.auth.user.access;
-        if(loc!==undefined&&loc!==null){
-            this.setState({
-                product:this.props.auth.user.access[10]['label'],
-                user:this.props.auth.user.access[11]['label'],
-                department:this.props.auth.user.access[12]['label'],
-                supplier:this.props.auth.user.access[13]['label'],
-                location:this.props.auth.user.access[14]['label'],
-                customer:this.props.auth.user.access[15]['label'],
-                cash:this.props.auth.user.access[16]['label'],
-                sales:this.props.auth.user.access[17]['label'],
-                bank:this.props.auth.user.access[18]['label'],
-            })
-        }
+      
         const path = this.props.location.pathname;
         if(path==='/user' || path==='/location' || path==='/company'){
             
