@@ -164,6 +164,7 @@ class ProductionReport extends Component{
             });
         });
         let status = [
+            {kode:"",value: "Semua"},
             {kode:"1",value: "Approve"},
             {kode:"0",value: "Not Approve"},
         ];
@@ -197,6 +198,9 @@ class ProductionReport extends Component{
                 })
             }
         }
+        localStorage.setItem('status_production_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_production_report)
+        localStorage.setItem('sort_production_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_production_report)
+        localStorage.setItem('filter_production_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_production_report)
     }
     HandleChangeLokasi(lk) {
         this.setState({

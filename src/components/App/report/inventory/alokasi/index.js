@@ -5,13 +5,13 @@ import {FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail} from "redux/actions
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
+import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
-import Preloader from "../../../../../Preloader";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {statusQ} from "../../../../../helper";
+import Preloader from "Preloader";
+import {statusQ} from "helper";
 class AlokasiReport extends Component{
     constructor(props){
         super(props);
@@ -21,12 +21,16 @@ class AlokasiReport extends Component{
         this.handleSearch = this.handleSearch.bind(this);
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
+            status:"",
+            status_data:[],
             sort:"",
             sort_data:[],
             filter:"",
@@ -55,6 +59,9 @@ class AlokasiReport extends Component{
         }
         if (localStorage.filter_alokasi_report !== undefined && localStorage.filter_alokasi_report !== null) {
             this.setState({filter: localStorage.filter_alokasi_report})
+        }
+        if (localStorage.status_alokasi_report !== undefined && localStorage.status_alokasi_report !== null) {
+            this.setState({status: localStorage.status_alokasi_report})
         }
     }
     handlePageChange(pageNumber){
@@ -91,6 +98,7 @@ class AlokasiReport extends Component{
         let dateTo=localStorage.date_to_alokasi_report;
         let lokasi = localStorage.location_alokasi_report;
         let any = localStorage.any_alokasi_report;
+        let status=localStorage.status_alokasi_report;
         let sort=localStorage.sort_alokasi_report;
         let filter=localStorage.filter_alokasi_report;
         let where='';
@@ -100,6 +108,9 @@ class AlokasiReport extends Component{
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             where+=`&lokasi=${lokasi}`;
         }
+        if(status!==undefined&&status!==null&&status!==''){
+            where+=`&status=${status}`;
+        }
         if(filter!==undefined&&filter!==null&&filter!==''){
             if(sort!==undefined&&sort!==null&&sort!==''){
                 where+=`&sort=${filter}|${sort}`;
@@ -108,8 +119,11 @@ class AlokasiReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchAlokasi(pageNumber,where))
-        this.props.dispatch(FetchAlokasiExcel(pageNumber,where))
+        // this.props.dispatch(FetchAlokasiExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
@@ -119,6 +133,20 @@ class AlokasiReport extends Component{
         let data_sort=[];
         sort.map((i) => {
             data_sort.push({
+                value: i.kode,
+                label: i.value
+            });
+        });
+        let status = [
+            {kode:"",value: "Semua"},
+            {kode:"3",value: "Diterima"},
+            {kode:"2",value: "Dikirim"},
+            {kode:"1",value: "Packing"},
+            {kode:"0",value: "Proses"},
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
                 value: i.kode,
                 label: i.value
             });
@@ -137,14 +165,12 @@ class AlokasiReport extends Component{
         });
         this.setState({
             sort_data: data_sort,
-            // sort:sort[0].kode,
             filter_data: data_filter,
-            // filter:filter[0].kode,
+            status_data: data_status,
         });
-        localStorage.setItem('sort_alokasi_report',localStorage.sort_alokasi_report===''||localStorage.sort_alokasi_report===undefined?sort[0].kode:localStorage.sort_alokasi_report)
-        // 
-        localStorage.setItem('filter_alokasi_report',localStorage.filter_alokasi_report===''||localStorage.filter_alokasi_report===undefined?filter[0].kode:localStorage.filter_alokasi_report)
-        // 
+        localStorage.setItem('status_alokasi_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_production_report)
+        localStorage.setItem('sort_alokasi_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_alokasi_report)
+        localStorage.setItem('filter_alokasi_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_alokasi_report)
         if (nextProps.auth.user) {
             let lk = [{
                 value: '',
@@ -186,13 +212,26 @@ class AlokasiReport extends Component{
         });
         localStorage.setItem('filter_alokasi_report', fl.value);
     }
-    
+    HandleChangeStatus(st) {
+        this.setState({
+            status: st.value,
+        });
+        localStorage.setItem('status_alokasi_report', st.value);
+    }
 
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formAlokasiExcel"));
+        this.props.dispatch(FetchAlokasiExcel(1,this.state.where_data,total));
+    }
 
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,current_page,from,to,data} = this.props.alokasiReport;
+        const {per_page,current_page,from,to,data,total} = this.props.alokasiReport;
         return (
             <Layout page="Laporan Alokasi">
                 <div className="col-12 box-margin">
@@ -228,6 +267,26 @@ class AlokasiReport extends Component{
                                         />
                                     </div>
                                 </div>
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label className="control-label font-12">
+                                            Status
+                                        </label>
+                                        <Select
+                                            options={this.state.status_data}
+                                            // placeholder="Pilih Tipe Kas"
+                                            onChange={this.HandleChangeStatus}
+                                            value={
+                                                this.state.status_data.find(op => {
+                                                    return op.value === this.state.status
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
@@ -273,61 +332,14 @@ class AlokasiReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_alokasi_to_excel"
-                                            filename="laporan_penjualan"
-                                            sheet="barang"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
 
                                 </div>
 
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_alokasi_to_excel" style={{display:"none"}}>
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={7}>{this.state.startDate} - {this.state.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={7}>LAPORAN ALOKASI</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No Faktur Mutasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.alokasiReportExcel.data==='object'? this.props.alokasiReportExcel.data.length>0?
-                                            this.props.alokasiReportExcel.data.map((v,i)=>{
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.kd_lokasi_1}</td>
-                                                        <td style={columnStyle}>{v.kd_lokasi_2}</td>
-                                                        <td style={columnStyle}>{v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))}</td>
-                                                        <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
-                                                        <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    </tbody>
-                                }
-                            </table>
-                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -390,15 +402,16 @@ class AlokasiReport extends Component{
                                 </table>
 
                             </div>
-                            {/*<div style={{"marginTop":"20px","float":"right"}}>*/}
-                                {/*<Paginationq*/}
-                                    {/*current_page={current_page}*/}
-                                    {/*per_page={per_page}*/}
-                                    {/*total={total}*/}
-                                    {/*callback={this.handlePageChange.bind(this)}*/}
-                                {/*/>*/}
-                            {/*</div>*/}
+                            <div style={{"marginTop":"20px","float":"right"}}>
+                                <Paginationq
+                                    current_page={current_page}
+                                    per_page={per_page}
+                                    total={total}
+                                    callback={this.handlePageChange.bind(this)}
+                                />
+                            </div>
                             <DetailAlokasi alokasiDetail={this.props.alokasiDetail}/>
+                            <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>
                 </div>
