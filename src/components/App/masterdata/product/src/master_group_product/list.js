@@ -10,6 +10,12 @@ import {FetchSubDepartmentAll} from "redux/actions/masterdata/department/sub_dep
 import FormGroupProduct from "components/App/modals/masterdata/group_product/form_group_product";
 import {statusQ} from "helper";
 import Paginationq from 'helper';
+import {
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
 
 class ListGroupProduct extends Component{
     constructor(props){
@@ -60,7 +66,6 @@ class ListGroupProduct extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formGroupProduct"));
         this.props.dispatch(FetchSubDepartmentAll());
-        console.log(margin)
         this.setState({
             detail:{
                 "kel_brg":kel_brg,
@@ -135,15 +140,18 @@ class ListGroupProduct extends Component{
                                            <tr key={i}>
                                                <td style={columnStyle}>{/* Example split danger button */}
                                                    <div className="btn-group">
-                                                       <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                           Aksi
-                                                       </button>
-                                                       <div className="dropdown-menu">
-                                                           <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                       <UncontrolledButtonDropdown>
+                                                        <DropdownToggle caret>
+                                                            Aksi
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                   
+                                                            <DropdownItem onClick={(e)=>this.handleEdit(
                                                                e,v.kel_brg,v.nm_kel_brg,v.group2,v.margin,v.dis_persen,v.status,'-'
-                                                           )}>Edit</a>
-                                                           <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</a>
-                                                       </div>
+                                                           )}>Edit</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>this.handleDelete(e,v.kel_brg)}>Delete</DropdownItem>
+                                                        </DropdownMenu>
+                                                        </UncontrolledButtonDropdown>
                                                    </div>
                                                </td>
                                                <td style={columnStyle}>{v.kel_brg}</td>

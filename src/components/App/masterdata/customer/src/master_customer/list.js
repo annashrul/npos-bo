@@ -1,21 +1,24 @@
 import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
-import Pagination from "react-js-pagination";
-import {ModalToggle, ModalType} from "../../../../../../redux/actions/modal.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq, {statusQ} from "helper";
 import {
     deleteCustomer,
     FetchCustomer,
     FetchCustomerEdit,
     setCustomerEdit
-} from "../../../../../../redux/actions/masterdata/customer/customer.action";
+} from "redux/actions/masterdata/customer/customer.action";
+import {
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
 import FormCustomer from "components/App/modals/masterdata/customer/form_customer";
 import {
-    FetchCustomerType,
     FetchCustomerTypeAll
 } from "redux/actions/masterdata/customer_type/customer_type.action";
 import Swal from "sweetalert2";
-import Preloader from "Preloader";
 
 class ListCustomer extends Component{
     constructor(props){
@@ -28,7 +31,6 @@ class ListCustomer extends Component{
         }
     }
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         localStorage.setItem("page_customer",pageNumber);
         this.props.dispatch(FetchCustomer(pageNumber,''))
     }
@@ -61,7 +63,6 @@ class ListCustomer extends Component{
         this.props.dispatch(FetchCustomerEdit(i))
     }
     handleDelete(e,id){
-        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -80,7 +81,7 @@ class ListCustomer extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -122,15 +123,17 @@ class ListCustomer extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}>{/* Example split danger button */}
+                                                <td style={columnStyle}>
                                                     <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModalEdit(e,v.kd_cust)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_cust)}>Delete</a>
-                                                        </div>
+                                                            <UncontrolledButtonDropdown>
+                                                            <DropdownToggle caret>
+                                                                Aksi
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={(e)=>this.toggleModalEdit(e,v.kd_cust)}>Edit</DropdownItem>
+                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_cust)}>Delete</DropdownItem>
+                                                            </DropdownMenu>
+                                                            </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.kd_cust}</td>

@@ -5,6 +5,7 @@ import FormUserLevel from "components/App/modals/masterdata/user_level/form_user
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
 import {FetchUserLevel,deleteUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class ListUserLevel extends Component{
     constructor(props){
@@ -97,14 +98,15 @@ class ListUserLevel extends Component{
                                                    </div>
                                                    <div className="col-3">
                                                        <div className="dashboard-dropdown">
-                                                           <div className="dropdown">
-                                                               <button style={{marginTop:"-5px"}} className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
-                                                               <div className="dropdown-menu dropdown-menu-right"
-                                                                    aria-labelledby="dashboardDropdown50">
-                                                                   <a className="dropdown-item" href="!#" onClick={(e)=>this.toggleModal(e,i)}><i className="ti-pencil-alt"></i> Edit</a>
-                                                                   <a className="dropdown-item" href="!#" onClick={(e)=>handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</a>
-                                                               </div>
-                                                           </div>
+                                                           <UncontrolledButtonDropdown>
+                                                            <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                                <i className="zmdi zmdi-more-vert"></i>
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={(e)=>this.toggleModal(e,i)}><i className="ti-pencil-alt"></i> Edit</DropdownItem>
+                                                                <DropdownItem onClick={(e)=>handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                            </DropdownMenu>
+                                                            </UncontrolledButtonDropdown>
                                                        </div>
                                                    </div>
                                                    <div className="col-12">

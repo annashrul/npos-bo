@@ -11,8 +11,8 @@ import {
 } from "redux/actions/masterdata/location/location.action";
 import Swal from "sweetalert2";
 import DetailLocationModal from "components/App/modals/masterdata/location/detail_location";
-
 import Paginationq from "helper";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class ListLocation extends Component{
     constructor(props) {
@@ -132,16 +132,16 @@ class ListLocation extends Component{
                                         return(
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}
-                                                    <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <button className="dropdown-item" onClick={(e)=>this.handleEdit(e,v.kode)}>Edit</button>
-                                                            <button className="dropdown-item" onClick={(e)=>this.handleDetail(e,v.kode)}>Detail</button>
-                                                            <button className="dropdown-item" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</button>
-                                                        </div>
-                                                    </div>
+                                                        <UncontrolledButtonDropdown>
+                                                        <DropdownToggle caret>
+                                                            Aksi
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                            <DropdownItem onClick={(e)=>this.handleEdit(e,v.kode)}>Edit</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>this.handleDetail(e,v.kode)}>Detail</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</DropdownItem>
+                                                        </DropdownMenu>
+                                                        </UncontrolledButtonDropdown>
                                                 </td>
                                                 <td style={columnStyle}>{v.kode}</td>
                                                 <td style={columnStyle}>{v.nama_toko}</td>

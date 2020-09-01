@@ -5,6 +5,7 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq, {statusQ} from "helper";
 import FormSupplier from "components/App/modals/masterdata/supplier/form_supplier";
 import Swal from "sweetalert2";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class ListSupplier extends Component{
     constructor(props){
@@ -120,13 +121,15 @@ class ListSupplier extends Component{
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="about:blank" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
-                                                            <a className="dropdown-item" href="about:blank" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</a>
-                                                        </div>
+                                                            <UncontrolledButtonDropdown>
+                                                            <DropdownToggle caret>
+                                                                Aksi
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={(e)=>this.toggleModal(e,i)}>Edit</DropdownItem>
+                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</DropdownItem>
+                                                            </DropdownMenu>
+                                                            </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.kode}</td>
