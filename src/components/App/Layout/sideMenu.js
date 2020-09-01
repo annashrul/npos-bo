@@ -660,7 +660,7 @@ class SideMenu extends Component {
                             ?" active menu-open" : "")
                     } style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
 
-                        <a tabIndex="0" onClick={(e) => this.changeMenu(e,'masterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>
+                        <a href="#" onClick={(e) => this.changeMenu(e,'masterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isMasterdata===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isMasterdata===true
                         ?"block" : "none"}}>
                             <li className={path==='/product'?"active":''} style={this.state.barang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product" style={{width:'fit-content'}}> <i className="fa fa-list-alt" />Barang</Link></li>
@@ -690,7 +690,7 @@ class SideMenu extends Component {
                         path === '/approval_opname'||
                         path === '/packing'
                         ?" active menu-open" : "")} style={modul_inventory===true?{display:'block'}:{display:'none'}}>
-                        <a tabIndex="0" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
+                        <a href="#" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
                         ?"block" : "none"}}>
                             <li className={path==='/delivery_note'?"active":''} style={this.state.delivery_note==="0"?{"display":"none"}:{"display":"block"}}><Link to="/delivery_note" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
@@ -714,7 +714,7 @@ class SideMenu extends Component {
                     {/* PEMBELIAN MODUL START */}
 
                     <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}>
-                        <a tabIndex="0" onClick={(e) => this.changeMenu(e,'receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
+                        <a href="#" onClick={(e) => this.changeMenu(e,'receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReceive===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReceive===true
                         ?"block" : "none"}}>
                             <li className={path==='/purchase_order'?"active":''} style={this.state.purchase_order==="0"?{"display":"none"}:{"display":"block"}}><Link to="/purchase_order" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
@@ -809,7 +809,7 @@ class SideMenu extends Component {
                                 path==='/report/purchase_by_supplier'
                                 ?" active menu-open" : "")} style={modul_report_pembelian===true?{display:'block'}:{display:'none'}}>
 
-                                <a tabIndex="0" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
+                                <a href="#" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true
                         ?"block" : "none"}}>
                                     <li className={path==='/report/po'?"active":''} style={this.state.r_purchase_order==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/po" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
@@ -825,7 +825,7 @@ class SideMenu extends Component {
                                 path==='/report/piutang'
                                 ?" active menu-open" : "")} style={modul_report_pembayaran===true?{display:'block'}:{display:'none'}}>
 
-                                <a tabIndex="0" onClick={(e) => this.changeMenu(e,'report_pembayaran')}><i className="fa fa-money"/>Pembayaran <i className="fa fa-angle-right"></i></a>
+                                <a href="#" onClick={(e) => this.changeMenu(e,'report_pembayaran')}><i className="fa fa-money"/>Pembayaran <i className="fa fa-angle-right"></i></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembayaran===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembayaran===true
                         ?"block" : "none"}}>
                                     <li className={path==='/report/hutang'?"active":''} style={this.state.r_hutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/hutang" style={{width:'fit-content'}}> <i className="fa fa-dollar" />Hutang</Link></li>
@@ -850,7 +850,6 @@ class SideMenu extends Component {
                         )
                     } style={modul_setting===true?{display:'block'}:{display:'none'}}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
-                    }>
 
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>

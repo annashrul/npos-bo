@@ -5,13 +5,13 @@ import {FetchMutation,FetchMutationExcel, FetchMutationData} from "redux/actions
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailMutation from "components/App/modals/report/inventory/mutation_report/detail_mutation";
+import MutationReportExcel from "components/App/modals/report/inventory/mutation_report/form_mutation_excel";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
-import Preloader from "../../../../../Preloader";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {statusQ} from "../../../../../helper";
+import Preloader from "Preloader";
+import {statusQ} from "helper";
 class MutationReport extends Component{
     constructor(props){
         super(props);
@@ -23,6 +23,7 @@ class MutationReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
@@ -121,12 +122,14 @@ class MutationReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchMutation(pageNumber,where))
-        this.props.dispatch(FetchMutationExcel(pageNumber,where))
+        // this.props.dispatch(FetchMutationExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -138,7 +141,6 @@ class MutationReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"no_faktur_mutasi",value: "Kode Mutasi"},
             {kode:"tgl_mutasi",value: "Tanggal"},
             {kode:"status",value: "Status"},
@@ -151,10 +153,9 @@ class MutationReport extends Component{
             });
         });
         let status = [
-            {kode:"",value: "Default"},
-            {kode:"0",value: "0"},
-            {kode:"1",value: "1"},
-            {kode:"2",value: "2"},
+            {kode:"",value: "Semua"},
+            {kode:"0",value: "Dikirim"},
+            {kode:"1",value: "Diterima"},
         ];
         let data_status=[];
         status.map((i) => {
@@ -186,6 +187,10 @@ class MutationReport extends Component{
                 })
             }
         }
+        
+        localStorage.setItem('status_mutation_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_production_report)
+        localStorage.setItem('sort_mutation_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_mutation_report)
+        localStorage.setItem('filter_mutation_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_mutation_report)
     }
     HandleChangeLokasi(lk) {
         this.setState({
@@ -216,10 +221,19 @@ class MutationReport extends Component{
         localStorage.setItem('status_mutation_report', st.value);
     }
 
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formMutationExcel"));
+        this.props.dispatch(FetchMutationExcel(1,this.state.where_data,total));
+    }
+
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,current_page,from,to,data} = this.props.mutationReport;
+        const {per_page,current_page,from,to,data,total} = this.props.mutationReport;
         return (
             <Layout page="Laporan Mutation">
                 <div className="col-12 box-margin">
@@ -272,6 +286,10 @@ class MutationReport extends Component{
                                         />
                                     </div>
                                 </div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
@@ -317,13 +335,9 @@ class MutationReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_mutation_to_excel"
-                                            filename="laporan_mutasi"
-                                            sheet="mutasi"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
 
                                 </div>
@@ -429,15 +443,16 @@ class MutationReport extends Component{
                                 </table>
 
                             </div>
-                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                            <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
                                     total={total}
                                     callback={this.handlePageChange.bind(this)}
                                 />
-                            </div> */}
+                            </div>
                             <DetailMutation mutationDetail={this.props.mutationDetail}/>
+                            <MutationReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>
                 </div>
