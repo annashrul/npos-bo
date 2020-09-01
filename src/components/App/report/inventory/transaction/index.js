@@ -5,13 +5,13 @@ import {FetchTransaction, FetchTransactionExcel, FetchTransactionData} from "red
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailTransaction from "components/App/modals/report/inventory/transaction_report/detail_transaction";
+import TransactionReportExcel from "components/App/modals/report/inventory/transaction_report/form_transaction_excel";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
-import Preloader from "../../../../../Preloader";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {statusQ} from "../../../../../helper";
+import Preloader from "Preloader";
+import {statusQ} from "helper";
 class TransactionReport extends Component{
     constructor(props){
         super(props);
@@ -23,6 +23,7 @@ class TransactionReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
@@ -120,12 +121,14 @@ class TransactionReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchTransaction(pageNumber,where))
-        this.props.dispatch(FetchTransactionExcel(pageNumber,where))
+        // this.props.dispatch(FetchTransactionExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -137,7 +140,6 @@ class TransactionReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"no_faktur_mutasi",value: "Kode Mutasi"},
             {kode:"tgl_mutasi",value: "Tanggal"},
             {kode:"status",value: "Status"},
@@ -185,6 +187,10 @@ class TransactionReport extends Component{
                 })
             }
         }
+    
+        // localStorage.setItem('status_transaction_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_transaction_report)
+        localStorage.setItem('sort_transaction_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_transaction_report)
+        localStorage.setItem('filter_transaction_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_transaction_report)
     }
     HandleChangeLokasi(lk) {
         this.setState({
@@ -215,10 +221,17 @@ class TransactionReport extends Component{
         localStorage.setItem('status_transaction_report', st.value);
     }
 
-
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formTransactionExcel"));
+        this.props.dispatch(FetchTransactionExcel(1,this.state.where_data,total));
+    }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,current_page,from,to,data} = this.props.transactionReport;
+        const {per_page,last_page,current_page,from,to,data,total} = this.props.transactionReport;
         return (
             <Layout page="Laporan Transaction">
                 <div className="col-12 box-margin">
@@ -316,63 +329,14 @@ class TransactionReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_transaction_to_excel"
-                                            filename="laporan_alokasi_mutasi"
-                                            sheet="barang"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
 
                                 </div>
 
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_transaction_to_excel" style={{display:"none"}}>
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={8}>{this.state.startDate} - {this.state.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={8}>LAPORAN ALOKASI TRANSAKSI</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Faktur</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Mutasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status Penerimaan</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status Pembayaran</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.transactionReportExcel.data==='object'? this.props.transactionReportExcel.data.length>0?
-                                            this.props.transactionReportExcel.data.map((v,i)=>{
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.lokasi_asal}</td>
-                                                        <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                                                        <td style={columnStyle}>{v.no_faktur_beli}</td>
-                                                        <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
-                                                        <td style={columnStyle}>{String(v.status_transaksi)==='0'?statusQ('info','Belum Lunas'):(String(v.status_transaksi)==='1'?statusQ('success','Lunas'):"")}</td>
-                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    </tbody>
-                                }
-                            </table>
-                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -435,15 +399,16 @@ class TransactionReport extends Component{
                                 </table>
 
                             </div>
-                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                            <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
-                                    total={total}
+                                    total={(last_page*per_page)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
-                            </div> */}
+                            </div>
                             <DetailTransaction transactionDetail={this.props.transactionDetail}/>
+                            <TransactionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>
                 </div>

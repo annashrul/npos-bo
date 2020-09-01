@@ -4,14 +4,13 @@ import Paginationq from "helper";
 import {FetchExpedisi, FetchExpedisiExcel, FetchExpedisiData} from "redux/actions/inventory/expedisi.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-// import DetailExpedisi from "components/App/modals/report/inventory/expedisi_report/detail_expedisi";
+import ExpedisiReportExcel from "components/App/modals/report/inventory/expedisi_report/form_expedisi_excel";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
-import Preloader from "../../../../../Preloader";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {statusQ} from "../../../../../helper";
+import Preloader from "Preloader";
+import {statusQ} from "helper";
 class ExpedisiReport extends Component{
     constructor(props){
         super(props);
@@ -23,6 +22,7 @@ class ExpedisiReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
@@ -120,12 +120,14 @@ class ExpedisiReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchExpedisi(pageNumber,where))
-        this.props.dispatch(FetchExpedisiExcel(pageNumber,where))
+        // this.props.dispatch(FetchExpedisiExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -137,7 +139,6 @@ class ExpedisiReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"kd_expedisi",value: "Kode Ekspedisi"},
             {kode:"tgl_expedisi",value: "Tanggal"},
             {kode:"status",value: "Status"},
@@ -151,10 +152,10 @@ class ExpedisiReport extends Component{
             });
         });
         let status = [
-            {kode:"",value: "Default"},
-            {kode:"0",value: "0"},
-            {kode:"1",value: "1"},
-            {kode:"2",value: "2"},
+            {kode:"",value: "Semua"},
+            {kode:"0",value: "Proses"},
+            {kode:"1",value: "Dikirim"},
+            {kode:"2",value: "Diterima"},
         ];
         let data_status=[];
         status.map((i) => {
@@ -186,6 +187,11 @@ class ExpedisiReport extends Component{
                 })
             }
         }
+    
+        localStorage.setItem('status_expedisi_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_expedisi_report)
+        localStorage.setItem('sort_expedisi_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_expedisi_report)
+        localStorage.setItem('filter_expedisi_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_expedisi_report)
+    
     }
     HandleChangeLokasi(lk) {
         this.setState({
@@ -215,11 +221,19 @@ class ExpedisiReport extends Component{
         });
         localStorage.setItem('status_expedisi_report', st.value);
     }
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formExpedisiExcel"));
+        this.props.dispatch(FetchExpedisiExcel(1,this.state.where_data,total));
+    }
 
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,current_page,from,to,data} = this.props.expedisiReport;
+        const {per_page,last_page,current_page,from,to,data} = this.props.expedisiReport;
         return (
             <Layout page="Laporan Expedisi">
                 <div className="col-12 box-margin">
@@ -272,6 +286,9 @@ class ExpedisiReport extends Component{
                                         />
                                     </div>
                                 </div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
@@ -317,13 +334,9 @@ class ExpedisiReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_expedisi_to_excel"
-                                            filename="laporan_expedisi"
-                                            sheet="expedisi"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
 
                                 </div>
@@ -429,15 +442,16 @@ class ExpedisiReport extends Component{
                                 </table>
 
                             </div>
-                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                            <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
-                                    total={total}
+                                    total={(per_page*last_page)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
-                            </div> */}
+                            </div>
                             {/* <DetailExpedisi expedisiDetail={this.props.expedisiDetail}/> */}
+                            <ExpedisiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />
                         </div>
                     </div>
                 </div>

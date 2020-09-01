@@ -187,7 +187,7 @@ class OpnameReport extends Component{
             }
         }
         
-        localStorage.setItem('status_opname_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_production_report)
+        localStorage.setItem('status_opname_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_opname_report)
         localStorage.setItem('sort_opname_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_opname_report)
         localStorage.setItem('filter_opname_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_opname_report)
     }

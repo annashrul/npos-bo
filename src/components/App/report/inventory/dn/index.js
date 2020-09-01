@@ -188,7 +188,7 @@ class DnReport extends Component{
                 })
             }
         }
-        localStorage.setItem('status_dn_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_production_report)
+        localStorage.setItem('status_dn_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_dn_report)
         localStorage.setItem('sort_dn_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_dn_report)
         localStorage.setItem('filter_dn_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_dn_report)
     }
