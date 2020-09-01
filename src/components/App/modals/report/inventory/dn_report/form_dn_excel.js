@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import WrapperModal from ".././_wrapper.modal";
+import WrapperModal from "../../../_wrapper.modal";
 import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
 import moment from "moment";
 import {rangeDate, toRp, to_pdf,statusQ} from "helper";
@@ -11,7 +11,7 @@ import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 
-class HutangReportExcel extends Component{
+class DnReportExcel extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -44,42 +44,36 @@ class HutangReportExcel extends Component{
     printDocument = (e) => {
         e.preventDefault();
         let stringHtml = '',tprice=0;
+        let loc_val = this.props.location===''?'SEMUA':this.props.location;
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
+        '<h3 align="center"><center>LOKASI : '+ loc_val +'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN HUTANG</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN DELIVERY NOTE</center></h3>'+
         '</div>';
-        
+        console.log(stringHtml)
         const headers = [[
-            "No Nota",
-            "Faktur Beli",
-            "Tanggal Bayar",
-            "Cara Bayar",
-            "Jumlah",
-            "Nama Bank",
-            "Jatuh Tempo",
-            "No Giro",
-            "Tanggal Cair Giro",
-            "Nama",
-            "Keterangann"
+            "No DN",
+            "Tanggal",
+            "Lokasi Asal",
+            "Lokasi Tujuan",
+            "Status",
+            "No. Faktur Beli",
+            "Keterangan",
         ]];
-        let data = typeof this.props.hutangReportExcel.data === 'object'?this.props.hutangReportExcel.data.map(v=> [
-           v.no_nota,
-           v.fak_beli,
-           moment(v.tgl_byr).format("DD-MM-YYYY"),
-           v.cara_byr,
-           v.jumlah,
-           v.nm_bank,
-           moment(v.tgl_jatuh_tempo).format("DD-MM-YYYY"),
-           v.nogiro,
-           moment(v.tgl_cair_giro).format("DD-MM-YYYY"),
-           v.nama,
-           v.ket,
+        let data = typeof this.props.dnReportExcel.data === 'object'?this.props.dnReportExcel.data.map(v=> [
+           v.no_delivery_note,
+           moment(v.tanggal).format("DD-MM-YYYY"),
+           v.kd_lokasi_1,
+           v.kd_lokasi_2,
+           v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):""))),
+           v.no_faktur_beli?v.no_faktur_beli:'-',
+           v.keterangan?v.keterangan:'-',
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
-            "hutang_",
+            "dn_",
             stringHtml,
             headers,
             data,
@@ -89,12 +83,9 @@ class HutangReportExcel extends Component{
       }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let subtotal=0;
-        let t_harga_beli = 0;
-        let t_qty = 0;
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formHutangExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update HutangExcel"}</ModalHeader> */}
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formDnExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
+                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update DnExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
@@ -124,8 +115,8 @@ class HutangReportExcel extends Component{
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>
                                             <ReactHTMLTableToExcel
                                                 className="btn btn-circle btn-lg btn-success"
-                                                table={'laporan_hutang'}
-                                                filename={'laporan_hutang'}
+                                                table={'laporan_dn'}
+                                                filename={'laporan_dn'}
                                                 sheet="kas"
                                                 buttonText={<i className="fa fa-print"></i>}>
                                             </ReactHTMLTableToExcel>
@@ -140,26 +131,22 @@ class HutangReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_hutang" style={{display:this.state.view === false?'none':'inline-table'}}>
+                        <table className="table table-hover table-bordered table-responsive"  id="laporan_dn" style={{display:this.state.view === false?'none':'inline-table'}}>
                             <thead className="bg-light">
                                 <tr>
-                                    <th className="text-black" colSpan={11}>{this.props.startDate} - {this.props.startDate}</th>
+                                    <th className="text-black" colSpan={7}>{this.props.startDate} - {this.props.startDate}</th>
                                 </tr>
                                 <tr>
-                                    <th className="text-black" colSpan={11}>LAPORAN HUTANG</th>
+                                    <th className="text-black" colSpan={7}>LAPORAN DELIVERY NOTE</th>
                                 </tr>
 
                                 <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No Nota</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Faktur Beli</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Bayar</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Cara Bayar</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jumlah</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Bank</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jatuh Tempo</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No Giro</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Cair Giro</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No DN</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
                                     <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
                                 </tr>
                                 <tr></tr>
@@ -167,39 +154,21 @@ class HutangReportExcel extends Component{
                                 {
                                     <tbody>
                                     {
-                                        typeof this.props.hutangReportExcel.data==='object'? this.props.hutangReportExcel.data.length>0?
-                                            this.props.hutangReportExcel.data.map((v,i)=>{
-                                                t_harga_beli +=parseFloat(v.hpp);
-                                                t_qty +=parseFloat(v.qty_estimasi);
+                                        typeof this.props.dnReportExcel.data==='object'? this.props.dnReportExcel.data.length>0?
+                                            this.props.dnReportExcel.data.map((v,i)=>{
                                                 return (
                                                     <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_nota}</td>
-                                                        <td style={columnStyle}>{v.fak_beli}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_byr).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.cara_byr}</td>
-                                                        <td style={columnStyle}>{v.jumlah}</td>
-                                                        <td style={columnStyle}>{v.nm_bank}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_jatuh_tempo).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.nogiro}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_cair_giro).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.nama}</td>
-                                                        <td style={columnStyle}>{v.ket}</td>
+                                                        <td style={columnStyle}>{v.no_delivery_note}</td>
+                                                        <td style={columnStyle}>{moment(v.tanggal).format("DD-MM-YYYY")}</td>
+                                                        <td style={columnStyle}>{v.kd_lokasi_1}</td>
+                                                        <td style={columnStyle}>{v.kd_lokasi_2}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))}</td>
+                                                        <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
+                                                        <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
                                                     </tr>
                                                 );
                                             }) : "No data." : "No data."
                                     }
-                                    {/* <tfoot>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Total</td>
-                                            <td style={columnStyle}>{t_qty}</td>
-                                            <td style={columnStyle}>{t_harga_beli}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Rata - rata</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_qty)/parseInt(typeof this.props.hutangReportExcel.data === 'object' ? this.props.hutangReportExcel.data.length > 0 ? this.props.hutangReportExcel.data.length : 0 : 0))}</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_harga_beli)/parseInt(typeof this.props.hutangReportExcel.data === 'object' ? this.props.hutangReportExcel.data.length > 0 ? this.props.hutangReportExcel.data.length : 0 : 0))}</td>
-                                        </tr>
-                                    </tfoot> */}
                                     </tbody>
                                 }
                             </table>
@@ -212,9 +181,9 @@ class HutangReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        hutangReportExcel:state.hutangReducer.report_excel,
+        dnReportExcel:state.dnReducer.report_excel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(HutangReportExcel);
+export default connect(mapStateToProps)(DnReportExcel);

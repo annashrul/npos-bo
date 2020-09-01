@@ -6,6 +6,7 @@ import FormSubDepartment from "components/App/modals/masterdata/department/form_
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
 import {FetchAllDepartment} from "../../../../redux/actions/masterdata/department/department.action";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class ListSubDepartment extends Component{
     constructor(props){
@@ -18,7 +19,6 @@ class ListSubDepartment extends Component{
         }
     }
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
     }
     handlesearch(e){
         e.preventDefault();
@@ -64,8 +64,7 @@ class ListSubDepartment extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
-        console.log(data);
+        const {total,per_page,current_page,data} = this.props.data;
 
         return (
             <div className="row">
@@ -104,13 +103,15 @@ class ListSubDepartment extends Component{
                                                 <tr key={i}>
                                                     <td style={columnStyle}>
                                                         <div className="btn-group">
-                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                Action
-                                                            </button>
-                                                            <div className="dropdown-menu">
-                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
-                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</a>
-                                                            </div>
+                                                                <UncontrolledButtonDropdown>
+                                                                <DropdownToggle caret>
+                                                                    Aksi
+                                                                </DropdownToggle>
+                                                                <DropdownMenu>
+                                                                    <DropdownItem onClick={(e)=>this.toggleModal(e,i)}>Edit</DropdownItem>
+                                                                    <DropdownItem onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</DropdownItem>
+                                                                </DropdownMenu>
+                                                                </UncontrolledButtonDropdown>
                                                         </div>
                                                     </td>
                                                     <td style={columnStyle}>{v.kode}</td>

@@ -1,14 +1,18 @@
 import React,{Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import Pagination from "react-js-pagination";
 import Paginationq from "helper";
 import {
     deleteCustomerType,
     FetchCustomerType
-} from "../../../../../../redux/actions/masterdata/customer_type/customer_type.action";
-import {ModalToggle, ModalType} from "../../../../../../redux/actions/modal.action";
+} from "redux/actions/masterdata/customer_type/customer_type.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Swal from "sweetalert2";
-import {deleteLocationCategory} from "redux/actions/masterdata/location_category/location_category.action";
+import {
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
 import FormCustomerType from "components/App/modals/masterdata/customer_type/form_customer_type";
 
 class ListCustomerType extends Component{
@@ -21,7 +25,6 @@ class ListCustomerType extends Component{
         }
     }
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
     }
     handlesearch(e){
         e.preventDefault();
@@ -65,8 +68,7 @@ class ListCustomerType extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
-        console.log(data);
+        const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -106,13 +108,15 @@ class ListCustomerType extends Component{
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</a>
-                                                        </div>
+                                                            <UncontrolledButtonDropdown>
+                                                            <DropdownToggle caret>
+                                                                Aksi
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={(e)=>this.toggleModal(e,i)}>Edit</DropdownItem>
+                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</DropdownItem>
+                                                            </DropdownMenu>
+                                                            </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.kode}</td>

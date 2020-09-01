@@ -14,7 +14,7 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import socketIOClient from "socket.io-client";
 import {HEADERS} from 'redux/actions/_constants'
 import {rangeDate} from "../../../helper";
-
+import Clock from "../common/clock"
 const socket = socketIOClient(HEADERS.URL);
 
 class Dashboard extends Component {
@@ -404,13 +404,8 @@ class Dashboard extends Component {
                         <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
                             <div className="dashboard-clock">
                                 <div id="dashboardDate">{moment().format("dddd, Do MMM YYYY")}</div>
-                                <ul className="d-flex align-items-center justify-content-end">
-                                <li id="hours">12</li>
-                                <li>:</li>
-                                <li id="min">31</li>
-                                <li>:</li>
-                                <li id="sec">46</li>
-                                </ul>
+                                <Clock/>
+                                
                             </div>
                             <div className="dashboard-btn-group d-flex align-items-center">
                                 <button type="button" onClick={(e)=>this.handleSubmit(e)} className="btn btn-primary ml-1 float-right"><i className="fa fa-refresh"></i></button>

@@ -5,13 +5,13 @@ import {FetchDn, FetchDnExcel, FetchDnData} from "redux/actions/inventory/dn.act
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailDn from "components/App/modals/report/inventory/dn_report/detail_dn";
+import DnReportExcel from "components/App/modals/report/inventory/dn_report/form_dn_excel";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
-import Preloader from "../../../../../Preloader";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {statusQ} from "../../../../../helper";
+import Preloader from "Preloader";
+import {statusQ} from "helper";
 class DnReport extends Component{
     constructor(props){
         super(props);
@@ -23,6 +23,7 @@ class DnReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
@@ -120,12 +121,14 @@ class DnReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchDn(pageNumber,where))
-        this.props.dispatch(FetchDnExcel(pageNumber,where))
+        // this.props.dispatch(FetchDnExcel(pageNumber,where))
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -137,7 +140,6 @@ class DnReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"no_delivery_note",value: "No DN"},
             {kode:"tanggal",value: "Tanggal"},
             {kode:"status",value: "Status"},
@@ -150,10 +152,11 @@ class DnReport extends Component{
             });
         });
         let status = [
-            {kode:"",value: "Default"},
-            {kode:"0",value: "0"},
-            {kode:"1",value: "1"},
-            {kode:"2",value: "2"},
+            {kode:"",value: "Semua"},
+            {kode:"3",value: "Diterima"},
+            {kode:"2",value: "Dikirim"},
+            {kode:"1",value: "Packing"},
+            {kode:"0",value: "Proses"},
         ];
         let data_status=[];
         status.map((i) => {
@@ -185,6 +188,9 @@ class DnReport extends Component{
                 })
             }
         }
+        localStorage.setItem('status_dn_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_dn_report)
+        localStorage.setItem('sort_dn_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_dn_report)
+        localStorage.setItem('filter_dn_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_dn_report)
     }
     HandleChangeLokasi(lk) {
         this.setState({
@@ -214,12 +220,18 @@ class DnReport extends Component{
         });
         localStorage.setItem('status_dn_report', st.value);
     }
-
-
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formDnExcel"));
+        this.props.dispatch(FetchDnExcel(1,this.state.where_data,total));
+    }
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,current_page,from,to,data} = this.props.dnReport;
+        const {per_page,current_page,from,to,data,total} = this.props.dnReport;
         return (
             <Layout page="Laporan Dn">
                 <div className="col-12 box-margin">
@@ -272,6 +284,9 @@ class DnReport extends Component{
                                         />
                                     </div>
                                 </div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
@@ -317,13 +332,9 @@ class DnReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_dn_to_excel"
-                                            filename="laporan_dn"
-                                            sheet="barang"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
 
                                 </div>
@@ -434,15 +445,16 @@ class DnReport extends Component{
                                 </table>
 
                             </div>
-                            {/*<div style={{"marginTop":"20px","float":"right"}}>*/}
-                                {/*<Paginationq*/}
-                                    {/*current_page={current_page}*/}
-                                    {/*per_page={per_page}*/}
-                                    {/*total={total}*/}
-                                    {/*callback={this.handlePageChange.bind(this)}*/}
-                                {/*/>*/}
-                            {/*</div>*/}
+                            <div style={{"marginTop":"20px","float":"right"}}>
+                                <Paginationq
+                                    current_page={current_page}
+                                    per_page={per_page}
+                                    total={total}
+                                    callback={this.handlePageChange.bind(this)}
+                                />
+                            </div>
                             <DetailDn dnDetail={this.props.dnDetail}/>
+                            <DnReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>
                 </div>

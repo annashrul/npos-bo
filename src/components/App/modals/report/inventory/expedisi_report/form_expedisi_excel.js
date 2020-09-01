@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import WrapperModal from ".././_wrapper.modal";
+import WrapperModal from "../../../_wrapper.modal";
 import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
 import moment from "moment";
 import {rangeDate, toRp, to_pdf,statusQ} from "helper";
@@ -11,7 +11,7 @@ import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 
-class PurchaseBySupplierReportExcel extends Component{
+class ExpedisiReportExcel extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -44,26 +44,36 @@ class PurchaseBySupplierReportExcel extends Component{
     printDocument = (e) => {
         e.preventDefault();
         let stringHtml = '',tprice=0;
+        let loc_val = this.props.location===''?'SEMUA':this.props.location;
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
+        '<h3 align="center"><center>LOKASI : '+ loc_val +'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN PEMBELIAN BY SUPPLIER</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN EXPEDISI</center></h3>'+
         '</div>';
-        
+        console.log(stringHtml)
         const headers = [[
-            "Kode",
-            "Nama",
-            "Total Pembelian"
+            "Kode Expedisi.",
+            "Tanggal",
+            "Pengirim",
+            "Lokasi Asal",
+            "Lokasi Tujuan",
+            "Nama Operator",
+            "Status",
         ]];
-        let data = typeof this.props.purchase_by_supplierReportExcel.data === 'object'?this.props.purchase_by_supplierReportExcel.data.map(v=> [
-           v.kode,
-           v.nama,
-           v.total_pembelian,
+        let data = typeof this.props.expedisiReportExcel.data === 'object'?this.props.expedisiReportExcel.data.map(v=> [
+           v.kd_expedisi,
+           moment(v.tgl_expedisi).format("DD-MM-YYYY"),
+           v.pengirim,
+           v.nama_lokasi_asal,
+           v.nama_lokasi_tujuan,
+           v.nama_operator,
+           v.status==='0'?'Belum Expedisi':(v.status==='1'?'Sudah Expedisi':""),
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
-            "purchase_by_supplier_",
+            "expedisi_",
             stringHtml,
             headers,
             data,
@@ -73,12 +83,9 @@ class PurchaseBySupplierReportExcel extends Component{
       }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let subtotal=0;
-        let t_harga_beli = 0;
-        let t_qty = 0;
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPurchaseBySupplierExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update PurchaseBySupplierExcel"}</ModalHeader> */}
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formExpedisiExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
+                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update ExpedisiExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
@@ -108,8 +115,8 @@ class PurchaseBySupplierReportExcel extends Component{
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>
                                             <ReactHTMLTableToExcel
                                                 className="btn btn-circle btn-lg btn-success"
-                                                table={'laporan_purchase_by_supplier'}
-                                                filename={'laporan_purchase_by_supplier'}
+                                                table={'laporan_expedisi'}
+                                                filename={'laporan_expedisi'}
                                                 sheet="kas"
                                                 buttonText={<i className="fa fa-print"></i>}>
                                             </ReactHTMLTableToExcel>
@@ -124,53 +131,47 @@ class PurchaseBySupplierReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_purchase_by_supplier" style={{display:this.state.view === false?'none':'inline-table'}}>
+                        <table className="table table-hover table-bordered table-responsive"  id="laporan_expedisi" style={{display:this.state.view === false?'none':'inline-table'}}>
                             <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={3}>{this.props.startDate} - {this.props.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={3}>LAPORAN PEMBELIAN BY SUPPLIER</th>
-                                </tr>
+                                    <tr>
+                                        <th className="text-black" colSpan={7}>{this.props.startDate} - {this.props.startDate}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" colSpan={7}>{this.props.location===''?'SEMUA LOKASI':this.props.location}</th>
+                                    </tr>
 
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Total Pembelian</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
+                                    <tr>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kode Expedisi.</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Pengirim</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Operator</th>
+                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                    </tr>
+                                    <tr></tr>
+                                    </thead>
                                     {
-                                        typeof this.props.purchase_by_supplierReportExcel.data==='object'? this.props.purchase_by_supplierReportExcel.data.length>0?
-                                            this.props.purchase_by_supplierReportExcel.data.map((v,i)=>{
-                                                t_harga_beli +=parseFloat(v.hpp);
-                                                t_qty +=parseFloat(v.qty_estimasi);
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.kode}</td>
-                                                        <td style={columnStyle}>{v.nama}</td>
-                                                        <td style={columnStyle}>{v.total_pembelian}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
+                                        <tbody>
+                                        {
+                                            typeof this.props.expedisiReportExcel.data==='object'? this.props.expedisiReportExcel.data.length>0?
+                                                this.props.expedisiReportExcel.data.map((v,i)=>{
+                                                    return (
+                                                        <tr key={i}>
+                                                            <td style={columnStyle}>{v.kd_expedisi}</td>
+                                                            <td style={columnStyle}>{moment(v.tgl_expedisi).format("DD-MM-YYYY")}</td>
+                                                            <td style={columnStyle}>{v.pengirim}</td>
+                                                            <td style={columnStyle}>{v.nama_lokasi_asal}</td>
+                                                            <td style={columnStyle}>{v.nama_lokasi_tujuan}</td>
+                                                            <td style={columnStyle}>{v.nama_operator}</td>
+                                                            <td style={columnStyle}>{v.status==='0'?statusQ('danger','Belum Expedisi'):(v.status==='1'?statusQ('warning','Sudah Expedisi'):"")}</td>
+                                                        </tr>
+                                                    );
+                                                }) : "No data." : "No data."
+                                        }
+                                        </tbody>
                                     }
-                                    {/* <tfoot>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Total</td>
-                                            <td style={columnStyle}>{t_qty}</td>
-                                            <td style={columnStyle}>{t_harga_beli}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Rata - rata</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_qty)/parseInt(typeof this.props.purchase_by_supplierReportExcel.data === 'object' ? this.props.purchase_by_supplierReportExcel.data.length > 0 ? this.props.purchase_by_supplierReportExcel.data.length : 0 : 0))}</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_harga_beli)/parseInt(typeof this.props.purchase_by_supplierReportExcel.data === 'object' ? this.props.purchase_by_supplierReportExcel.data.length > 0 ? this.props.purchase_by_supplierReportExcel.data.length : 0 : 0))}</td>
-                                        </tr>
-                                    </tfoot> */}
-                                    </tbody>
-                                }
-                            </table>
+                                </table>
                     </ModalBody>
                 </form>
             </WrapperModal>
@@ -180,9 +181,9 @@ class PurchaseBySupplierReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        purchase_by_supplierReportExcel:state.poReducer.pbs_data_excel,
+        expedisiReportExcel:state.expedisiReducer.report_excel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(PurchaseBySupplierReportExcel);
+export default connect(mapStateToProps)(ExpedisiReportExcel);

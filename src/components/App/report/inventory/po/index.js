@@ -7,17 +7,17 @@ import {poReportDetail} from "redux/actions/purchase/purchase_order/po.action";
 import moment from "moment";
 import Paginationq, {statusQ} from "helper";
 import DetailPoReport from "components/App/modals/report/purchase/purchase_order/detail_po_report";
+import PoReportExcel from "components/App/modals/report/purchase/purchase_order/form_po_excel";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {rangeDate} from "../../../../../helper";
-import Preloader from "../../../../../Preloader";
+import {rangeDate} from "helper";
+import Preloader from "Preloader";
 
 class PoReport extends Component{
     constructor(props){
         super(props);
         this.handleSearch = this.handleSearch.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
+        this.toggle = this.toggle.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -26,6 +26,7 @@ class PoReport extends Component{
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
             master:{},
+            where_data:"",
             any:"",
             location:"",
             location_data:[],
@@ -63,7 +64,6 @@ class PoReport extends Component{
     }
     componentWillReceiveProps(nextProps){
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -75,7 +75,6 @@ class PoReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"no_po",value: "No. PO"},
             {kode:"tgl_po",value: "Tanggal PO"},
             {kode:"tglkirim",value: "Tanggal Kirim"},
@@ -91,10 +90,9 @@ class PoReport extends Component{
             });
         });
         let status = [
-            {kode:"",value: "Default"},
-            {kode:"0",value: "0"},
-            {kode:"1",value: "1"},
-            {kode:"2",value: "2"},
+            {kode:"",value: "Semua"},
+            {kode:"0",value: "Processing"},
+            {kode:"1",value: "Ordered"},
         ];
         let data_status=[];
         status.map((i) => {
@@ -109,6 +107,11 @@ class PoReport extends Component{
             status_data: data_status,
         });
         this.getProps(nextProps);
+    
+        localStorage.setItem('status_po_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_po_report)
+        localStorage.setItem('sort_po_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_po_report)
+        localStorage.setItem('filter_po_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_po_report)
+    
     }
     componentWillMount(){
         this.getProps(this.props);
@@ -168,8 +171,11 @@ class PoReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(fetchPoReport(pageNumber,where))
-        this.props.dispatch(fetchPoReportExcel(pageNumber,where))
+        // this.props.dispatch(fetchPoReportExcel(pageNumber,where))
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
@@ -197,7 +203,7 @@ class PoReport extends Component{
         localStorage.setItem('any_po_report',this.state.any);
         this.handleParamter(1);
     }
-    toggleModal(e, no_po,i) {
+    toggle(e, no_po,i) {
         e.preventDefault();
         this.props.dispatch(poReportDetail(1,no_po));
         const bool = !this.props.isOpen;
@@ -240,6 +246,15 @@ class PoReport extends Component{
     }
 
 
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formPoExcel"));
+        this.props.dispatch(fetchPoReportExcel(1,this.state.where_data,total));
+    }
+
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
@@ -281,6 +296,9 @@ class PoReport extends Component{
                                         />
                                     </div>
                                 </div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
+                                <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
@@ -321,58 +339,18 @@ class PoReport extends Component{
                                         <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                     </div>
                                 </div>
-                                <div className="col-6 col-xs-6 col-md-4">
+                                <div className="col-6 col-xs-6 col-md-3">
                                     <div className="form-group">
-                                        <button onClick={(e=>this.handleSearch(e))} style={{marginTop:"29px",marginRight:"2px"}} type="button" className="btn btn-primary" ><i className="fa fa-search"/></button>
-                                        <ReactHTMLTableToExcel className="btn btn-primary btnBrg" table="report_po_to_excel" filename="laporan_po" sheet="laporan po" buttonText="export excel"/>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                            <i className="fa fa-search"/>
+                                        </button>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                            <i className="fa fa-print"></i> Export
+                                        </button>
                                     </div>
+
                                 </div>
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_po_to_excel" style={{display:"none"}}>
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={8}>{this.state.startDate} - {this.state.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={8}>LAPORAN PO</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. PO</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Kirim</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Supplier</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jenis</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Operator</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.poReportExcel.data==='object'? this.props.poReportExcel.data.length>0?
-                                            this.props.poReportExcel.data.map((v,i)=>{
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_po}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_po).format("YYYY-MM-DD")}</td>
-                                                        <td style={columnStyle}>{moment(v.tglkirim).format("YYYY-MM-DD")}</td>
-                                                        <td style={columnStyle}>{v.nama_supplier}</td>
-                                                        <td style={columnStyle}>{v.lokasi}</td>
-                                                        <td style={columnStyle}>{v.jenis}</td>
-                                                        <td style={columnStyle}>{v.kd_kasir}</td>
-                                                        <td style={columnStyle}>{v.status==='0'?statusQ('warning','Processing'):statusQ('success','Ordered')}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    </tbody>
-                                }
-                            </table>
-                            {/*END DATA EXCEL*/}
                             {
                                 !this.props.isLoading?(
                                     <div className="table-responsive" style={{overflowX: "auto"}}>
@@ -403,7 +381,7 @@ class PoReport extends Component{
                                                                                 Action
                                                                             </button>
                                                                             <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,v.no_po,i)}>Detail</a>
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_po,i)}>Detail</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)">Edit</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)">Delete</a>
                                                                                 <a className="dropdown-item" href="javascript:void(0)">Nota</a>
@@ -436,7 +414,7 @@ class PoReport extends Component{
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
-                                    total={total}
+                                    total={(last_page*per_page)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
@@ -445,6 +423,7 @@ class PoReport extends Component{
                     </div>
                 </div>
                 <DetailPoReport master={this.state.master} poReportDetail={this.props.dataReportDetail}/>
+                <PoReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
             </Layout>
         );
     }

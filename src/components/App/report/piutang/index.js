@@ -177,6 +177,7 @@ class PiutangReport extends Component{
             });
         });
         let status = [
+            {kode:"",value: "Semua"},
             {kode:"1",value: "Approve"},
             {kode:"0",value: "Not Approve"},
         ];
@@ -210,6 +211,10 @@ class PiutangReport extends Component{
                 })
             }
         }
+        // localStorage.setItem('status_piutang_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_piutang_report)
+        localStorage.setItem('sort_piutang_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_piutang_report)
+        localStorage.setItem('filter_piutang_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_piutang_report)
+    
     }
     HandleChangeLokasi(lk) {
         this.setState({

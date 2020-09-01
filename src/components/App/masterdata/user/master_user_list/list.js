@@ -15,7 +15,13 @@ import {
 } from "redux/actions/masterdata/user_list/user_list.action";
 import {FetchAllLocation} from "redux/actions/masterdata/location/location.action";
 import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
-import {ModalToggle, ModalType} from "../../../../../redux/actions/modal.action";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
 
 class ListUserList extends Component{
     constructor(props){
@@ -69,7 +75,6 @@ class ListUserList extends Component{
     }
 
     handleDelete(e, id) {
-        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -132,15 +137,16 @@ class ListUserList extends Component{
                                                         </div>
                                                     </div>
                                                     <div className="dashboard-dropdown">
-                                                        <div className="dropdown">
-                                                            <button className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
-                                                            <div className="dropdown-menu dropdown-menu-right"
-                                                                 aria-labelledby="dashboardDropdown50">
-                                                                <button className="dropdown-item" onClick={(e)=>this.toggleEdit(e,v.id)}><i className="ti-pencil-alt"></i> Edit</button>
-                                                                <button className="dropdown-item" onClick={(e)=>this.handleDetail(e,v.id)}><i className="ti-eye"></i> Detail</button>
-                                                                <button className="dropdown-item" onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</button>
-                                                            </div>
-                                                        </div>
+                                                            <UncontrolledButtonDropdown>
+                                                            <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                                <i className="zmdi zmdi-more-vert"></i>
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                <DropdownItem onClick={(e)=>this.toggleEdit(e,v.id)}><i className="ti-pencil-alt"></i> Edit</DropdownItem>
+                                                                <DropdownItem onClick={(e)=>this.handleDetail(e,v.id)}><i className="ti-eye"></i> Detail</DropdownItem>
+                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                            </DropdownMenu>
+                                                            </UncontrolledButtonDropdown>
                                                     </div>
                                                 </div>
                                             </div>

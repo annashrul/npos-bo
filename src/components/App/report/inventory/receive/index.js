@@ -10,6 +10,7 @@ import moment from "moment";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import Paginationq from "helper";
 import DetailReceiveReport from "../../../modals/report/purchase/receive/detail_receive_report";
+import ReceiveReportExcel from "../../../modals/report/purchase/receive/form_receive_excel";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import {
     deleteReceiveReport,
@@ -20,14 +21,12 @@ import {
 import {toRp} from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
 import Swal from "sweetalert2";
-import Receive from "../../../purchase/receive";
-import {HEADERS} from "../../../../../redux/actions/_constants";
 
 class ReceiveReport extends Component{
     constructor(props){
         super(props);
         this.handleSearch       = this.handleSearch.bind(this);
-        this.toggleModal        = this.toggleModal.bind(this);
+        this.toggle        = this.toggle.bind(this);
         this.handleEvent        = this.handleEvent.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeType   = this.HandleChangeType.bind(this);
@@ -39,6 +38,7 @@ class ReceiveReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.state={
+            where_data:"",
             detail          :{},
             startDate       :moment(new Date()).format("yyyy-MM-DD"),
             endDate         :moment(new Date()).format("yyyy-MM-DD"),
@@ -112,7 +112,6 @@ class ReceiveReport extends Component{
             });
         });
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -124,7 +123,6 @@ class ReceiveReport extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"no_faktur_beli",value: "No. Faktur Beli"},
             {kode:"tgl_beli",value: "Tanggal Beli"},
             {kode:"disc",value: "Diskon"},
@@ -145,7 +143,7 @@ class ReceiveReport extends Component{
             });
         });
         let status = [
-            {kode:"",value: "Default"},
+            {kode:"",value: "Semua"},
             {kode:"0",value: "0"},
             {kode:"1",value: "1"},
             {kode:"2",value: "2"},
@@ -181,6 +179,11 @@ class ReceiveReport extends Component{
                 })
             }
         }
+    
+        // localStorage.setItem('status_receive_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_receive_report)
+        localStorage.setItem('sort_receive_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_receive_report)
+        localStorage.setItem('filter_receive_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_receive_report)
+    
     }
     checkingParameter(pageNumber){
         let where='';
@@ -214,8 +217,11 @@ class ReceiveReport extends Component{
         if(any!==undefined&&any!==null&&any!==''){
             if(where!==''){where+='&'}where+=`search=${any}`
         }
+        this.setState({
+            where_data:where
+        })
         this.props.dispatch(FetchReport(pageNumber===null?1:pageNumber,where));
-        this.props.dispatch(FetchReportExcel(where));
+        // this.props.dispatch(FetchReportExcel(where));
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
@@ -273,7 +279,7 @@ class ReceiveReport extends Component{
         localStorage.setItem("any_receive_report",this.state.any_receive_report);
         this.checkingParameter(1);
     }
-    toggleModal(e, kdTrx,tgl,lokasi,penerima,pelunasan,operator) {
+    toggle(e, kdTrx,tgl,lokasi,penerima,pelunasan,operator) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
@@ -322,6 +328,14 @@ class ReceiveReport extends Component{
         // window.location.href = `/receive/${kode}`;
         this.props.history.push(`/receive/${kode}`);
         // this.props.dispatch(FetchReceiveData(kode,'edit'));
+    }
+    toggleModal(e,total,perpage) {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        let range = total*perpage;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formReceiveExcel"));
+        this.props.dispatch(FetchReportExcel(1,this.state.where_data,total));
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -386,6 +400,9 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
+                                       <div className="col-6 col-xs-6 col-md-2"></div>
+                                       <div className="col-6 col-xs-6 col-md-2"></div>
+                                       <div className="col-6 col-xs-6 col-md-2"></div>
                                        <div className="col-6 col-xs-6 col-md-2">
                                            <div className="form-group">
                                                <label className="control-label font-12">
@@ -426,92 +443,23 @@ class ReceiveReport extends Component{
                                                <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
                                            </div>
                                        </div>
+                                        <div className="col-6 col-xs-6 col-md-3">
+                                            <div className="form-group">
+                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                    <i className="fa fa-search"/>
+                                                </button>
+                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                    <i className="fa fa-print"></i> Export
+                                                </button>
+                                            </div>
+
+                                        </div>
                                    </div>
                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12"/>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                            <i className="fa fa-search"/>
-                                        </button>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-primary btnBrg"
-                                            table="report_receive_to_excel"
-                                            filename="laporan_pembelian"
-                                            sheet="laporan pembelian"
-                                            buttonText="export excel">
-                                        </ReactHTMLTableToExcel>
-                                    </div>
-
-                                </div>
 
 
                             </div>
                             <div style={{overflowX: "auto"}}>
-                                {/*EXPORT EXCEL*/}
-                                <table className="table table-hover table-bordered" id="report_receive_to_excel" style={{display:"none"}}>
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={15}>{this.state.startDate} - {this.state.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={15}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>No Faktur</th>
-                                        <th className="text-black" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" style={columnStyle}>Penerima</th>
-                                        <th className="text-black" style={columnStyle}>Tipe</th>
-                                        <th className="text-black" style={columnStyle}>Pelunasan</th>
-                                        <th className="text-black" style={columnStyle}>Diskon</th>
-                                        <th className="text-black" style={columnStyle}>PPN</th>
-                                        <th className="text-black" style={columnStyle}>Supplier</th>
-                                        <th className="text-black" style={columnStyle}>Operator</th>
-                                        <th className="text-black" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" style={columnStyle}>Serial</th>
-                                        <th className="text-black" style={columnStyle}>Kontrabon</th>
-                                        <th className="text-black" style={columnStyle}>Jumlah Kontabon</th>
-                                        <th className="text-black" style={columnStyle}>Qty Beli</th>
-                                        <th className="text-black" style={columnStyle}>Total Beli</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        !this.props.isLoading ? (
-                                            <tbody>
-                                            {
-                                                (
-                                                    typeof data === 'object' ? data.length>0?
-                                                        data.map((v,i)=>{
-                                                            return(
-                                                                <tr key={i}>
-
-                                                                    <td style={columnStyle}>{v.no_faktur_beli}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_beli).format("YYYY-MM-DD")}</td>
-                                                                    <td style={columnStyle}>{v.nama_penerima}</td>
-                                                                    <td style={columnStyle}>{v.type}</td>
-                                                                    <td style={columnStyle}>{v.pelunasan}</td>
-                                                                    <td style={columnStyle}>{v.disc}</td>
-                                                                    <td style={columnStyle}>{v.ppn}</td>
-                                                                    <td style={columnStyle}>{v.supplier}</td>
-                                                                    <td style={columnStyle}>{v.operator}</td>
-                                                                    <td style={columnStyle}>{v.lokasi}</td>
-                                                                    <td style={columnStyle}>{v.serial}</td>
-                                                                    <td style={columnStyle}>{v.kontabon}</td>
-                                                                    <td style={columnStyle}>{v.jumlah_kontrabon}</td>
-                                                                    <td style={columnStyle}>{v.qty_beli}</td>
-                                                                    <td style={columnStyle}>{v.total_beli}</td>
-                                                                </tr>
-                                                            )
-                                                        })
-                                                        : "No data.":"No data."
-                                                )
-                                            }
-                                            </tbody>
-                                        ) : <Preloader/>
-                                    }
-
-                                </table>
-                                {/*END EXPORT EXCEL*/}
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
@@ -548,7 +496,7 @@ class ReceiveReport extends Component{
                                                                                 Aksi
                                                                             </button>
                                                                             <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(
+                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(
                                                                                     e,v.no_faktur_beli,
                                                                                     moment(v.tgl_beli).format("YYYY-MM-DD"),
                                                                                     v.lokasi,
@@ -613,6 +561,7 @@ class ReceiveReport extends Component{
                             </div>
                             <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail}/>
                             <FormReturReceive dataRetur={this.props.dataRetur}/>
+                            <ReceiveReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />
                         </div>
                     </div>
                 </div>
