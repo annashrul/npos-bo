@@ -43,7 +43,6 @@ class AdjustmentReport extends Component{
     }
     componentWillReceiveProps = (nextProps) => {
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -56,7 +55,6 @@ class AdjustmentReport extends Component{
             return null;
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"kd_trx",value: "Kode Trx"},
             {kode:"tgl",value: "Tanggal"},
             {kode:"username",value: "Username"},
@@ -92,6 +90,9 @@ class AdjustmentReport extends Component{
                 })
             }
         }
+        // localStorage.setItem('status_adjust_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_adjust_report)
+        localStorage.setItem('sort_adjust_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_adjust_report)
+        localStorage.setItem('filter_adjust_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_adjust_report)
     }
     componentWillMount(){
         let page=localStorage.page_adjust_report;
@@ -220,7 +221,7 @@ class AdjustmentReport extends Component{
     render(){
         const {
             total,
-            // last_page,
+            last_page,
             per_page,
             current_page,
             // from,
@@ -294,7 +295,7 @@ class AdjustmentReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
                                             <i className="fa fa-print"></i> Export
                                         </button>
                                     </div>
@@ -324,15 +325,6 @@ class AdjustmentReport extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
-                                                                            {/* <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Action
-                                                                            </button>
-                                                                            <div className="dropdown-menu">
-                                                                                <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModalDetodal(e,v.kd_trx)}>Detail</a>
-                                                                                <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
-                                                                                http://192.168.100.10:3000/reports/adjust/AA-2008070002-1.pdf
-                                                                                <a tabIndex="0" className="dropdown-item" href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</a>
-                                                                            </div> */}
                                                                             <UncontrolledButtonDropdown>
                                                                             <DropdownToggle caret>
                                                                                 Aksi
@@ -365,7 +357,7 @@ class AdjustmentReport extends Component{
                                 <Paginationq
                                     current_page={parseInt(current_page,10)}
                                     per_page={parseInt(per_page,10)}
-                                    total={parseInt(total,10)}
+                                    total={parseInt((per_page*last_page),10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>

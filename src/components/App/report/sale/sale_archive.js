@@ -215,7 +215,7 @@ class SaleArchive extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {
             total,
-            // last_page,
+            last_page,
             per_page,
             current_page,
             // from,
@@ -299,7 +299,7 @@ class SaleArchive extends Component{
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"/>
                                     </button>
-                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
                                         <i className="fa fa-print"></i> Export
                                     </button>
                                     {/* <ReactHTMLTableToExcel
@@ -566,7 +566,7 @@ class SaleArchive extends Component{
                                     <Paginationq
                                         current_page={parseInt(current_page,10)}
                                         per_page={parseInt(per_page,10)}
-                                        total={parseInt(total,10)}
+                                        total={parseInt((per_page*last_page),10)}
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                 </div>

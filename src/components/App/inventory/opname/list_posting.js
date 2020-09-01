@@ -153,7 +153,7 @@ class ListPosting extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {per_page,current_page,from,to,data,total} = this.props.data;
+        const {per_page,last_page,current_page,from,to,data,total} = this.props.data;
         this.state.dataPosting = this.props.data.data;
         const {total_fisik,total_akhir,total_hpp} = this.props.total!==undefined?this.props.total:[];
         let total_fisik_per=0;

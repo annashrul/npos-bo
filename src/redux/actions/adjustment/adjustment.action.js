@@ -45,10 +45,10 @@ export const FetchAdjustment = (page=1,where='')=>{
         })
     }
 }
-export const FetchAdjustmentExcel = (where='')=>{
+export const FetchAdjustmentExcel = (page='',where='',perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url =  `adjustment/report?page=1&perpage=10000`;
+        let url =  `adjustment/report?page=${page}&perpage=${perpage}`;
         if(where!==''){
             url+=where;
         }

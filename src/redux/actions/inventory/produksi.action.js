@@ -207,7 +207,7 @@ export const FetchProduction = (page=1,where='')=>{
     }
 }
 
-export const FetchProductionExcel = (page=1,where='',perpage=99999)=>{
+export const FetchProductionExcel = (page=1,where='',perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let url=`production/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;

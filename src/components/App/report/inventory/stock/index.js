@@ -228,7 +228,7 @@ class InventoryReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {per_page,current_page,from,to,data,total} = this.props.stockReport;
+        const {per_page,last_page,current_page,from,to,data,total} = this.props.stockReport;
         const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total_stock;
 
         let total_dn_per=0;
@@ -317,7 +317,7 @@ class InventoryReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleSearch(e))}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
                                             <i className="fa fa-print"></i> Export
                                         </button>
                                     </div>
@@ -505,7 +505,7 @@ class InventoryReport extends Component{
                                 <Paginationq
                                     current_page={parseInt(current_page,10)}
                                     per_page={parseInt(per_page,10)}
-                                    total={parseInt(total,10)}
+                                    total={parseInt((per_page*last_page),10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>

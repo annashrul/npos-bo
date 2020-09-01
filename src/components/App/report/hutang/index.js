@@ -256,7 +256,7 @@ class HutangReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,current_page,from,to,data,total} = this.props.hutangReport;
+        const {per_page,last_page,current_page,from,to,data,total} = this.props.hutangReport;
         return (
             <Layout page="Laporan Hutang">
                 <div className="col-12 box-margin">
@@ -357,7 +357,7 @@ class HutangReport extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
                                             <i className="fa fa-print"></i> Export
                                         </button>
                                     </div>
@@ -438,7 +438,7 @@ class HutangReport extends Component{
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
-                                    total={total}
+                                    total={parseInt((per_page*last_page),10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div> */}

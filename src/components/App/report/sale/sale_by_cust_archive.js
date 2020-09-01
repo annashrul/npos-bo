@@ -70,7 +70,6 @@ class SaleByCustArchive extends Component{
             });
         });
         let sort = [
-            {kode:"",value: "Default"},
             {kode:"desc",value: "DESCENDING"},
             {kode:"asc",value: "ASCENDING"},
         ];
@@ -82,7 +81,6 @@ class SaleByCustArchive extends Component{
             });
         });
         let filter = [
-            {kode:"",value: "Default"},
             {kode:"kd_cust",value: "Kode Cust."},
             {kode:"nama",value: "Nama"},
             {kode:"qty",value: "QTY"},
@@ -100,7 +98,7 @@ class SaleByCustArchive extends Component{
             });
         });
         let status = [
-            {kode:"",value: "Default"},
+            {kode:"",value: "Semua"},
             {kode:"0",value: "0"},
             {kode:"1",value: "1"},
             {kode:"2",value: "2"},
@@ -136,6 +134,9 @@ class SaleByCustArchive extends Component{
                 })
             }
         }
+        // localStorage.setItem('status_sale_by_cust_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_sale_by_cust_report)
+        localStorage.setItem('sort_sale_by_cust_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_sale_by_cust_report)
+        localStorage.setItem('filter_sale_by_cust_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_sale_by_cust_report)
     }
     componentWillMount(){
         let page=localStorage.getItem("pageNumber_sale_by_cust_report");
@@ -423,7 +424,7 @@ class SaleByCustArchive extends Component{
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                             <i className="fa fa-search"/>
                                         </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
                                             <i className="fa fa-print"></i> Export
                                         </button>
                                     </div>
