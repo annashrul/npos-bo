@@ -5,7 +5,7 @@ import {
 const initialState = {
     isLoading: false,
     data: [], msg:"", status:"",
-    code:"-",
+    code:"-",data_trx:[],
 };
 
 export const packingReducer = (state = initialState, action) => {
@@ -15,6 +15,10 @@ export const packingReducer = (state = initialState, action) => {
                 status: action.data.status,
                 msg: action.data.msg,
                 data: action.data.result,
+            });
+        case PACKING.GET_BARANG_SUCCESS_TRX:
+            return Object.assign({}, state, {
+                data_trx: action.data.result,
             });
         case PACKING.GET_CODE:
             return Object.assign({}, state, {

@@ -34,7 +34,7 @@ class SideMenu extends Component {
             //INVENTORY
             modul_inventory:false,
             modul_inventory_mutasi:false,
-            delivery_note:'',alokasi:'',approval_mutasi:'',adjusment:'',opname:'',approval_opname:'',packing:'',approval_mutasi_jual_beli:'',bayar_mutasi_jual_beli:'',
+            delivery_note:'',alokasi:'',approval_mutasi:'',adjusment:'',opname:'',approval_opname:'',packing:'',expedisi:'',approval_mutasi_jual_beli:'',bayar_mutasi_jual_beli:'',
             //PEMBELIAN
             modul_pembelian:false,
             purchase_order:'',receive_pembelian:'',retur_tanpa_nota:'',
@@ -356,12 +356,10 @@ class SideMenu extends Component {
                 }
                 if(delivery_note!=='0'&&alokasi!=='0'&&approval_mutasi!=='0'&&adjusment!=='0'&&opname!=='0'&&approval_opname!=='0'&&packing!=='0'&&approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
                     this.setState({modul_inventory:true});
-                }else{
-                    if(approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
-                        this.setState({modul_inventory:true,modul_inventory_mutasi:true});
-                    }
                 }
-
+                if(approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
+                    this.setState({modul_inventory:true,modul_inventory_mutasi:true});
+                }
 
                 if(purchase_order!=='0'&&receive_pembelian!=='0'&&retur_tanpa_nota!=='0'){
                     this.setState({modul_pembelian:true});
@@ -467,7 +465,6 @@ class SideMenu extends Component {
       
         const path = this.props.location.pathname;
         if(path==='/user' || path==='/location' || path==='/company'){
-            
             this.setState({
                 isSetting:true
             })
@@ -493,6 +490,7 @@ class SideMenu extends Component {
             path === '/opname'||
             path === '/approval_opname' ||
             path === '/packing' ||
+            path === '/expedisi' ||
             path === '/approval_mutasi_jual_beli' ||
             path === '/bayar_mutasi_jual_beli'
         ){
@@ -672,7 +670,8 @@ class SideMenu extends Component {
                         path === '/approval_mutasi'||
                         path === '/opname'||
                         path === '/approval_opname'||
-                        path === '/packing'
+                        path === '/packing'||
+                        path === '/expedisi'
                         ?" active menu-open" : "")} style={modul_inventory===true?{display:'block'}:{display:'none'}}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
@@ -684,6 +683,7 @@ class SideMenu extends Component {
                             <li className={path==='/opname'?"active":''} style={this.state.opname==="0"?{"display":"none"}:{"display":"block"}}><Link to="/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname </Link></li>
                             <li className={path==='/approval_opname'?"active":''} style={this.state.approval_opname==="0"?{"display":"none"}:{"display":"block"}}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Opname </Link></li>
                             <li className={path==='/packing'?"active":''} style={this.state.packing==="0"?{"display":"none"}:{"display":"block"}}><Link to="/packing" style={{width:'fit-content'}}> <i className="fa fa-codepen" />Packing </Link></li>
+                            <li className={path==='/expedisi'?"active":''} style={this.state.packing==="0"?{"display":"none"}:{"display":"block"}}><Link to="/expedisi" style={{width:'fit-content'}}> <i className="fa fa-truck" />Expedisi </Link></li>
                             <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/approval_mutasi_jual_beli'|| path==='/bayar_mutasi_jual_beli'?" active menu-open" : "")} style={modul_inventory_mutasi===true?{display:'block'}:{display:'none'}}>
                                 <a href="javascript:void(0)" onClick={(e) => this.changeMenu(e,'trx_mutasi')}><i className="zmdi zmdi-card" /> <span>Mutasi Jual Beli</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isTrxMutasi===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxMutasi===true ?"block" : "none"}}>
@@ -834,7 +834,6 @@ class SideMenu extends Component {
                         )
                     } style={modul_setting===true?{display:'block'}:{display:'none'}}>
                         <a href="#" onClick={(e) => this.changeMenu(e,'setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
-
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>
                             <li className={path==='/company'?"active":''} style={this.state.pengaturan_umum==="0"?{"display":"none"}:{"display":"block"}}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>

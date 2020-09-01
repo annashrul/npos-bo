@@ -227,10 +227,10 @@ export const FetchReportDetail = (page=1,code)=>{
         })
     }
 }
-export const FetchReportExcel = (where='') => {
+export const FetchReportExcel = (page=1,where='',perpage=99999) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url=`receive/report?page=1&perpage=10000`;
+        let url=`receive/report?page=${isNaN(page)||page==='NaN'?1:page}&perpage=${isNaN(perpage)||perpage==='NaN'?99999:perpage}`;
         if(where!==''){
             url+=`&${where}`
         }
