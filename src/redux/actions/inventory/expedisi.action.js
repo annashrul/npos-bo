@@ -111,15 +111,14 @@ export const storeExpedisi = (data) => {
                     type: 'success',
                     text:"Transaksi Berhasil",
                 }).then((result)=>{
-                    destroy('expedisi');
-                    localStorage.removeItem("location_expedisi");
+                    localStorage.removeItem("lokasi1_expedisi");
+                    localStorage.removeItem("lokasi2_expedisi");
+                    localStorage.removeItem("search_expedisi");
                     window.location.reload(false);
                 });
                 dispatch(setLoading(false));
-
             })
             .catch(function (error) {
-
                 Swal.fire({
                     title: 'Failed',
                     type: 'danger',
