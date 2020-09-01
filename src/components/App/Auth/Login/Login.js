@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import BgAuth from "../../../../assets/images/logo2.png"
+import BgAuth from "../../../../assets/logo.png"
 import './login.css'
 import {loginUser} from 'redux/actions/authActions';
 import Swal from 'sweetalert2'
