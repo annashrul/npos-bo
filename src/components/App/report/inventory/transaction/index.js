@@ -12,6 +12,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import {statusQ} from "helper";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 class TransactionReport extends Component{
     constructor(props){
         super(props);
@@ -363,13 +364,14 @@ class TransactionReport extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Action
-                                                                            </button>
-                                                                            <div className="dropdown-menu">
-                                                                                {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</a>
-                                                                            </div>
+                                                                            <UncontrolledButtonDropdown>
+                                                                                <DropdownToggle caret>
+                                                                                    Aksi
+                                                                                </DropdownToggle>
+                                                                                <DropdownMenu>
+                                                                                    <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
+                                                                                </DropdownMenu>
+                                                                                </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.no_faktur_mutasi}</td>

@@ -12,6 +12,7 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import {statusQ} from "helper";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 class DnReport extends Component{
     constructor(props){
         super(props);
@@ -413,13 +414,14 @@ class DnReport extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Action
-                                                                            </button>
-                                                                            <div className="dropdown-menu">
-                                                                                {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_delivery_note,'','')}>Detail</a>
-                                                                            </div>
+                                                                            <UncontrolledButtonDropdown>
+                                                                                <DropdownToggle caret>
+                                                                                    Aksi
+                                                                                </DropdownToggle>
+                                                                                <DropdownMenu>
+                                                                                    <DropdownItem onClick={(e)=>this.toggle(e,v.no_delivery_note,'','')}>Detail</DropdownItem>
+                                                                                </DropdownMenu>
+                                                                                </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.no_delivery_note}</td>

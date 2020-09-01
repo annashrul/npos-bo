@@ -12,6 +12,7 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class PoReport extends Component{
     constructor(props){
@@ -377,15 +378,14 @@ class PoReport extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Action
-                                                                            </button>
-                                                                            <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_po,i)}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)">Edit</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)">Delete</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)">Nota</a>
-                                                                            </div>
+                                                                            <UncontrolledButtonDropdown>
+                                                                                <DropdownToggle caret>
+                                                                                    Aksi
+                                                                                </DropdownToggle>
+                                                                                <DropdownMenu>
+                                                                                    <DropdownItem onClick={(e)=>this.toggle(e,v.no_po,i)}>Detail</DropdownItem>
+                                                                                </DropdownMenu>
+                                                                                </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.no_po}</td>
