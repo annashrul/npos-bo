@@ -32,7 +32,6 @@ export const store = (table,data) => {
             return true;
         },
         error => {
-            console.log(error);
             return false;
     });
 }
@@ -45,7 +44,6 @@ export const update = (table,data)=>{
             return true;
         },
         error => {
-            console.log(error);
             return false;
         });
 }
@@ -57,7 +55,6 @@ export const del = (table,id)=>{
         return true;
     },
     error => {
-        console.log(error);
         return false;
     });
 }
