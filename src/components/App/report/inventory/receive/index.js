@@ -11,7 +11,7 @@ import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import Paginationq from "helper";
 import DetailReceiveReport from "../../../modals/report/purchase/receive/detail_receive_report";
 import ReceiveReportExcel from "../../../modals/report/purchase/receive/form_receive_excel";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import {
     deleteReceiveReport,
     FetchReceiveData,
@@ -492,25 +492,26 @@ class ReceiveReport extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Aksi
-                                                                            </button>
-                                                                            <div className="dropdown-menu">
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(
+                                                                            <UncontrolledButtonDropdown>
+                                                                                <DropdownToggle caret>
+                                                                                    Aksi
+                                                                                </DropdownToggle>
+                                                                                <DropdownMenu>
+                                                                                    <DropdownItem onClick={(e)=>this.toggle(
                                                                                     e,v.no_faktur_beli,
                                                                                     moment(v.tgl_beli).format("YYYY-MM-DD"),
                                                                                     v.lokasi,
                                                                                     v.nama_penerima,
                                                                                     v.pelunasan,
                                                                                     v.operator
-                                                                                )}>Detail</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleRetur(
+                                                                                )}>Detail</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleRetur(
                                                                                     e,v.no_faktur_beli
-                                                                                )}>Retur</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(
+                                                                                )}>Retur</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDelete(
                                                                                     e,v.no_faktur_beli
-                                                                                )}>Delete</a>
-                                                                                <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleChangePage(
+                                                                                )}>Delete</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleChangePage(
                                                                                     e,
                                                                                     v.no_faktur_beli,
                                                                                     v.kd_lokasi,
@@ -519,8 +520,9 @@ class ReceiveReport extends Component{
                                                                                     v.nama_penerima,
                                                                                     v.nonota,
                                                                                     v.type
-                                                                                )}>Edit</a>
-                                                                            </div>
+                                                                                )}>Edit</DropdownItem>
+                                                                                </DropdownMenu>
+                                                                                </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.no_faktur_beli}</td>

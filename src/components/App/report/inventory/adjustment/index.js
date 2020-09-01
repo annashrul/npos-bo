@@ -14,6 +14,7 @@ import {rangeDate} from "helper";
 import {HEADERS} from "redux/actions/_constants";
 import {FetchAdjustmentExcel} from "redux/actions/adjustment/adjustment.action";
 import AdjustmentReportExcel from 'components/App/modals/report/inventory/adjustment_report/form_adjustment_excel'
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 
 class AdjustmentReport extends Component{
@@ -21,7 +22,7 @@ class AdjustmentReport extends Component{
         super(props);
         this.handleSearch = this.handleSearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-        this.toggleModalDetal = this.toggleModalDetal.bind(this);
+        this.toggleModalDet = this.toggleModalDet.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -323,15 +324,25 @@ class AdjustmentReport extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            {/* <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                                 Action
                                                                             </button>
                                                                             <div className="dropdown-menu">
                                                                                 <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModalDetodal(e,v.kd_trx)}>Detail</a>
                                                                                 <a tabIndex="0" className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</a>
-                                                                                {/*http://192.168.100.10:3000/reports/adjust/AA-2008070002-1.pdf*/}
+                                                                                http://192.168.100.10:3000/reports/adjust/AA-2008070002-1.pdf
                                                                                 <a tabIndex="0" className="dropdown-item" href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</a>
-                                                                            </div>
+                                                                            </div> */}
+                                                                            <UncontrolledButtonDropdown>
+                                                                            <DropdownToggle caret>
+                                                                                Aksi
+                                                                            </DropdownToggle>
+                                                                            <DropdownMenu>
+                                                                                <DropdownItem onClick={(e)=>this.toggleModalDet(e,v.kd_trx)}>Detail</DropdownItem>
+                                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
+                                                                                <DropdownItem href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                            </DropdownMenu>
+                                                                            </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.kd_trx}</td>
