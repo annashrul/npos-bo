@@ -92,7 +92,7 @@ export const createPromo = (data) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -104,7 +104,7 @@ export const createPromo = (data) => {
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -131,7 +131,7 @@ export const updatePromo = (id,data) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -142,7 +142,7 @@ export const updatePromo = (id,data) => {
             .catch(function (error) {
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -168,7 +168,7 @@ export const deletePromo = (id) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -179,7 +179,7 @@ export const deletePromo = (id) => {
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
@@ -212,7 +212,7 @@ export const FetchBrg1 = (page=1,perpage=10,where='')=>  {
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })
@@ -242,7 +242,7 @@ export const FetchBrg2 = (page=1,perpage=10,where='')=>  {
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })

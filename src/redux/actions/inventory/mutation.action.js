@@ -108,7 +108,7 @@ export const saveApprovalMutation = (data) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -118,7 +118,7 @@ export const saveApprovalMutation = (data) => {
                 // dispatch(setLoading(false));
                 // Swal.fire({
                 //     title: 'failed',
-                //     type: 'danger',
+                //     type: 'error',
                 //     text: error.response.data.msg,
                 // });
 

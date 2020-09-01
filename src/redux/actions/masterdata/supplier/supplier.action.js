@@ -76,7 +76,7 @@ export const createSupplier = (data,token) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -88,7 +88,7 @@ export const createSupplier = (data,token) => {
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -115,7 +115,7 @@ export const updateSupplier = (id,data,token) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -128,7 +128,7 @@ export const updateSupplier = (id,data,token) => {
                 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
@@ -154,7 +154,7 @@ export const deleteSupplier = (id,token) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -166,7 +166,7 @@ export const deleteSupplier = (id,token) => {
                 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

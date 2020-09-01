@@ -114,7 +114,7 @@ export const storeReceive= (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -166,7 +166,7 @@ export const updateReceive= (data,kode) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -227,7 +227,7 @@ export const FetchReportDetail = (page=1,code)=>{
         })
     }
 }
-export const FetchReportExcel = (page=1,where='',perpage=99999) => {
+export const FetchReportExcel = (page=1,where='',perpage='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
         let url=`receive/report?page=${isNaN(page)||page==='NaN'?1:page}&perpage=${isNaN(perpage)||perpage==='NaN'?99999:perpage}`;
@@ -263,7 +263,7 @@ export const deleteReceiveReport = (id) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -274,7 +274,7 @@ export const deleteReceiveReport = (id) => {
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

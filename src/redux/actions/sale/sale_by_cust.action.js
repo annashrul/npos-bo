@@ -125,7 +125,7 @@ export const storeSaleByCust = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -220,7 +220,7 @@ export const deleteReportSaleByCust = (kd_trx) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -240,7 +240,7 @@ export const deleteReportSaleByCust = (kd_trx) => {
                 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

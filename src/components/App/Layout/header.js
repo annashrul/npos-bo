@@ -10,6 +10,13 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import {toRp} from "../../../helper";
 import {HEADERS} from "redux/actions/_constants"
+import {
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -69,6 +76,7 @@ class Header extends Component {
                     })
                     this.props.logoutUser();
                 }
+                localStorage.setItem("site_title", data.result.title);
                 this.setState({
                     isShowNotif: parseInt(data.result.day) <= 7 ? true : false,
                     isDay: data.result.day,
@@ -142,25 +150,27 @@ class Header extends Component {
               {/* <!-- Mobile AREAAAAAA --> */}
               <div className="right-side-trigger" style={{width:'unset',height:'unset',marginRight:'unset'}} >
                 <li className="nav-item dropdown" style={{listStyleType:'none'}}>
-                    <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""/></button>
-                    <div className="dropdown-menu dropdown-menu-right">
-                        {/* <!-- Top Notifications Area --> */}
-                        <div className="user-profile-area">
-                            <div className="user-profile-heading">
-                                {/* <!-- Thumb --> */}
-                                <div className="profile-img">
-                                    <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
+                    <UncontrolledButtonDropdown nav inNavbar>
+                                <DropdownToggle caret inNavbar className="nohover">
+                                    <img src={this.props.auth.user.foto} alt=""/>
+                                </DropdownToggle>
+                            <DropdownMenu right>
+                                <div className="user-profile-area">
+                                    <div className="user-profile-heading">
+                                        <div className="profile-img">
+                                            <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
+                                        </div>
+                                        <div className="profile-text">
+                                            <h6>{this.props.auth.user.username}</h6>
+                                            <span>{this.props.auth.user.lvl}</span>
+                                        </div>
+                                    </div>
+                                    <DropdownItem  onClick={this.handleLogout}>
+                                    <i className="fa fa-chain-broken profile-icon bg-warning" aria-hidden="true"/> Sign-out
+                                    </DropdownItem>
                                 </div>
-                                {/* <!-- Profile Text --> */}
-                                <div className="profile-text">
-                                    <h6>{this.props.auth.user.username}</h6>
-                                    <span>{this.props.auth.user.lvl}</span>
-                                </div>
-                            </div>
-                            <a onClick={this.handleLogout} className="dropdown-item"><i className="ti-unlink profile-icon bg-warning" aria-hidden="true"/> Sign-out</a>
-                        </div>
-                    {/* </div> */}
-                    </div>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                 </li>
               </div>
               {/* <!-- END Mobile AREAAAAAA --> */}
@@ -170,25 +180,27 @@ class Header extends Component {
                
 
                   <li className="nav-item dropdown">
-                      <button type="button" className="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={this.props.auth.user.foto} alt=""/></button>
-                      <div className="dropdown-menu dropdown-menu-right">
-                          {/* <!-- Top Notifications Area --> */}
-                          <div className="user-profile-area">
-                              <div className="user-profile-heading">
-                                  {/* <!-- Thumb --> */}
-                                  <div className="profile-img">
-                                      <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
-                                  </div>
-                                  {/* <!-- Profile Text --> */}
-                                  <div className="profile-text">
-                                      <h6>{this.props.auth.user.username}</h6>
-                                      <span>{this.props.auth.user.lvl}</span>
-                                  </div>
-                              </div>
-                              <a onClick={this.handleLogout} className="dropdown-item" style={{cursor:"pointer"}}><i className="fa fa-chain-broken profile-icon bg-warning" aria-hidden="true"/> Sign-out</a>
-                          </div>
-                      {/* </div> */}
-                      </div>
+                        <UncontrolledButtonDropdown nav inNavbar>
+                                <DropdownToggle caret inNavbar className="nohover">
+                                    <img src={this.props.auth.user.foto} alt=""/>
+                                </DropdownToggle>
+                            <DropdownMenu right>
+                                <div className="user-profile-area">
+                                    <div className="user-profile-heading">
+                                        <div className="profile-img">
+                                            <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
+                                        </div>
+                                        <div className="profile-text">
+                                            <h6>{this.props.auth.user.username}</h6>
+                                            <span>{this.props.auth.user.lvl}</span>
+                                        </div>
+                                    </div>
+                                    <DropdownItem  onClick={this.handleLogout}>
+                                    <i className="fa fa-chain-broken profile-icon bg-warning" aria-hidden="true"/> Sign-out
+                                    </DropdownItem>
+                                </div>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                   </li>
 
                 </ul>

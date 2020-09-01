@@ -207,7 +207,7 @@ class ReportCash extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {
             total,
-            // last_page,
+            last_page,
             per_page,
             current_page,
             // from,
@@ -296,7 +296,7 @@ class ReportCash extends Component{
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"></i>
                                     </button>
-                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,total,per_page))}>
+                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
                                         <i className="fa fa-print"></i> Export
                                     </button>
                                 </div>
@@ -414,7 +414,7 @@ class ReportCash extends Component{
                                     <Paginationq
                                         current_page={parseInt(current_page,10)}
                                         per_page={parseInt(per_page,10)}
-                                        total={parseInt(total,10)}
+                                        total={parseInt((per_page*last_page),10)}
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                     <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />
