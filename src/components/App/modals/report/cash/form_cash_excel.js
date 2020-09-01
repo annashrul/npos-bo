@@ -9,6 +9,8 @@ import moment from "moment";
 import {rangeDate, toRp} from "../../../../../helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import jsPDF from 'jspdf';
+import imgExcel from 'assets/xls.png';
+import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 import {to_pdf} from "helper";
 
@@ -97,7 +99,7 @@ class CashReportExcel extends Component{
                             <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src="/img/pdf.png" alt=""></img>
+                                        <img src={imgPdf} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
@@ -109,7 +111,7 @@ class CashReportExcel extends Component{
                             <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src="/img/xls.png" alt=""></img>
+                                        <img src={imgExcel} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>

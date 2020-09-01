@@ -7,6 +7,8 @@ import moment from "moment";
 import {rangeDate, toRp, to_pdf,statusQ} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import jsPDF from 'jspdf';
+import imgExcel from 'assets/xls.png';
+import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 
 class AlokasiReportExcel extends Component{
@@ -48,7 +50,7 @@ class AlokasiReportExcel extends Component{
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>LOKASI : '+ loc_val +'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN ADJUSTMENT</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN ALOKASI</center></h3>'+
         '</div>';
         console.log(stringHtml)
         const headers = [[
@@ -95,7 +97,7 @@ class AlokasiReportExcel extends Component{
                             <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src="/img/pdf.png" alt=""></img>
+                                        <img src={imgPdf} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
@@ -107,7 +109,7 @@ class AlokasiReportExcel extends Component{
                             <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src="/img/xls.png" alt=""></img>
+                                        <img src={imgExcel} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>

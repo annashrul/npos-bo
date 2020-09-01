@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import WrapperModal from "../../_wrapper.modal";
+import WrapperModal from "../../../_wrapper.modal";
 import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
 import moment from "moment";
 import {rangeDate, toRp, to_pdf,statusQ} from "helper";
@@ -11,7 +11,7 @@ import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 
-class SaleReturReportExcel extends Component{
+class PoReportExcel extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -48,26 +48,32 @@ class SaleReturReportExcel extends Component{
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN RETUR PENJUALAN</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN ALOKASI MUTASI TRX</center></h3>'+
         '</div>';
-        
+        console.log(stringHtml)
         const headers = [[
-            "Kode Trx",
+            "No. PO",
             "Tanggal",
-            "Nama",
-            "Nilai Retur",
-            "Diskon Itemn"
+            "Tanggal Kirim",
+            "Nama Supplier",
+            "Lokasi",
+            "Jenis",
+            "Operator",
+            "Status",
         ]];
-        let data = typeof this.props.sale_returReportExcel.data === 'object'?this.props.sale_returReportExcel.data.map(v=> [
-           v.kd_trx,
-           moment(v.tgl).format("DD-MM-YYYY"),
-           v.nama,
-           v.nilai_retur,
-           v.diskon_item,
+        let data = typeof this.props.poReportExcel.data === 'object'?this.props.poReportExcel.data.map(v=> [
+           v.no_po,
+           moment(v.tgl_po).format("YYYY-MM-DD"),
+           moment(v.tglkirim).format("YYYY-MM-DD"),
+           v.nama_supplier,
+           v.lokasi,
+           v.jenis,
+           v.kd_kasir,
+           v.status==='0'?'Processing':'Ordered',
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
-            "sale_retur_",
+            "po_",
             stringHtml,
             headers,
             data,
@@ -77,12 +83,9 @@ class SaleReturReportExcel extends Component{
       }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let subtotal=0;
-        let t_harga_beli = 0;
-        let t_qty = 0;
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleReturExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleReturExcel"}</ModalHeader> */}
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPoExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
+                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update PoExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
@@ -112,8 +115,8 @@ class SaleReturReportExcel extends Component{
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>
                                             <ReactHTMLTableToExcel
                                                 className="btn btn-circle btn-lg btn-success"
-                                                table={'laporan_sale_retur'}
-                                                filename={'laporan_sale_retur'}
+                                                table={'laporan_po'}
+                                                filename={'laporan_po'}
                                                 sheet="kas"
                                                 buttonText={<i className="fa fa-print"></i>}>
                                             </ReactHTMLTableToExcel>
@@ -128,54 +131,46 @@ class SaleReturReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_sale_retur" style={{display:this.state.view === false?'none':'inline-table'}}>
+                        <table className="table table-hover table-bordered table-responsive"  id="laporan_po" style={{display:this.state.view === false?'none':'inline-table'}}>
                             <thead className="bg-light">
                                 <tr>
-                                    <th className="text-black" colSpan={5}>{this.props.startDate} - {this.props.startDate}</th>
+                                    <th className="text-black" colSpan={8}>{this.state.startDate} - {this.state.startDate}</th>
                                 </tr>
                                 <tr>
-                                    <th className="text-black" colSpan={5}>LAPORAN RETUR PENJUALAN</th>
+                                    <th className="text-black" colSpan={8}>LAPORAN PO</th>
                                 </tr>
 
                                 <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Trx</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. PO</th>
                                     <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nilai Retur</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Item</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Kirim</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Supplier</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jenis</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Operator</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
                                 </tr>
                                 <tr></tr>
                                 </thead>
                                 {
                                     <tbody>
                                     {
-                                        typeof this.props.sale_returReportExcel.data==='object'? this.props.sale_returReportExcel.data.length>0?
-                                            this.props.sale_returReportExcel.data.map((v,i)=>{
-                                                t_harga_beli +=parseFloat(v.hpp);
-                                                t_qty +=parseFloat(v.qty_estimasi);
+                                        typeof this.props.poReportExcel.data==='object'? this.props.poReportExcel.data.length>0?
+                                            this.props.poReportExcel.data.map((v,i)=>{
                                                 return (
                                                     <tr key={i}>
-                                                        <td style={columnStyle}>{v.kd_trx}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.nama}</td>
-                                                        <td style={columnStyle}>{v.nilai_retur}</td>
-                                                        <td style={columnStyle}>{v.diskon_item}</td>
+                                                        <td style={columnStyle}>{v.no_po}</td>
+                                                        <td style={columnStyle}>{moment(v.tgl_po).format("YYYY-MM-DD")}</td>
+                                                        <td style={columnStyle}>{moment(v.tglkirim).format("YYYY-MM-DD")}</td>
+                                                        <td style={columnStyle}>{v.nama_supplier}</td>
+                                                        <td style={columnStyle}>{v.lokasi}</td>
+                                                        <td style={columnStyle}>{v.jenis}</td>
+                                                        <td style={columnStyle}>{v.kd_kasir}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('warning','Processing'):statusQ('success','Ordered')}</td>
                                                     </tr>
                                                 );
                                             }) : "No data." : "No data."
                                     }
-                                    {/* <tfoot>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Total</td>
-                                            <td style={columnStyle}>{t_qty}</td>
-                                            <td style={columnStyle}>{t_harga_beli}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={columnStyle} colSpan="6">Rata - rata</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_qty)/parseInt(typeof this.props.sale_returReportExcel.data === 'object' ? this.props.sale_returReportExcel.data.length > 0 ? this.props.sale_returReportExcel.data.length : 0 : 0))}</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_harga_beli)/parseInt(typeof this.props.sale_returReportExcel.data === 'object' ? this.props.sale_returReportExcel.data.length > 0 ? this.props.sale_returReportExcel.data.length : 0 : 0))}</td>
-                                        </tr>
-                                    </tfoot> */}
                                     </tbody>
                                 }
                             </table>
@@ -188,9 +183,9 @@ class SaleReturReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        sale_returReportExcel:state.saleReducer.sale_retur_export,
+        poReportExcel:state.poReducer.report_excel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(SaleReturReportExcel);
+export default connect(mapStateToProps)(PoReportExcel);
