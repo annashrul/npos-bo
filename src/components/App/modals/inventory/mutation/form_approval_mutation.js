@@ -35,8 +35,8 @@ class FormApprovalMutation extends Component{
                     "hrg_beli":v.hrg_beli,
                     "total_qty":v.total_qty,
                     "total_approval":v.total_approval,
-                    "sisa_approval":0,
-                    "isReadonly":parseInt(v.total_qty)===parseInt(v.total_approval)?true:false,
+                    "sisa_approval":v.total_qty,
+                    "isReadonly":parseInt(v.total_qty,10)===parseInt(v.total_approval,10)?true:false,
                 });
                 // Object.assign(v,{
                 //     isReadonly:false,
@@ -112,8 +112,8 @@ class FormApprovalMutation extends Component{
                                             <td style={columnStyle}>{i+1}</td>
                                             <td style={columnStyle}>{v.kd_brg}</td>
                                             <td style={columnStyle}>{v.barcode}</td>
-                                            <td style={columnStyle}>{v.satuan}</td>
                                             <td style={columnStyle}>{v.nm_brg}</td>
+                                            <td style={columnStyle}>{v.satuan}</td>
                                             <td style={columnStyle}>{v.hrg_beli}</td>
                                             <td style={columnStyle}>{v.total_qty}</td>
                                             <td style={columnStyle}>{v.total_approval}</td>
@@ -129,21 +129,7 @@ class FormApprovalMutation extends Component{
                                                      style={parseInt(v.sisa_approval) > (parseInt(v.total_qty)-parseInt(v.total_approval)) ? {display: 'block'} : {display: 'none'}}>
                                                     Qty Approval Melebihi Total Qty.
                                                 </div>
-                                                {/*<small style={{color:"red",fontWeight:"bold"}}>{this.state.error}</small>*/}
-                                                {/*<div className="row">*/}
-                                                    {/*<div className="col-md-6">*/}
-                                                        {/*<input type="text" name="sisa_approval" className="form-control" value={v.sisa_approval} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {*/}
-                                                            {/*event => {*/}
-                                                                {/*if (event.key === 'Enter') {*/}
-                                                                    {/*this.handleOnEnter(i);*/}
-                                                                {/*}*/}
-                                                            {/*}*/}
-                                                        {/*}/>*/}
-                                                    {/*</div>*/}
-                                                    {/*<div className="col-md-6">*/}
-                                                        {/*<button className="btn btn-primary btn-sm" onClick={this.handleOnEnter(i)}>Approval</button>*/}
-                                                    {/*</div>*/}
-                                                {/*</div>*/}
+
                                             </td>
                                         </tr>
                                     )

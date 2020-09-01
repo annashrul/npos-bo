@@ -31,7 +31,7 @@ class TrxOpname extends Component{
             location_data:[],
             location:"",
             catatan:'-',
-            tgl_order: new Date(),
+            tgl_order: moment(new Date()).format("yyyy-MM-DD"),
             searchby:"",
             search:"",
             userid:0,
@@ -529,16 +529,8 @@ class TrxOpname extends Component{
                                                 <label className="control-label font-12">
                                                     Tanggal Order
                                                 </label>
-                                                <div className="input-group">
-                                                    <DatePicker
-                                                        className="form-control rounded-right"
-                                                        selected={this.state.tgl_order}
-                                                        onChange={this.setTglOrder}
-                                                    />
-                                                </div>
+                                                <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e) => this.HandleCommonInputChange(e)}/>
                                             </div>
-
-
                                         </div>
                                         <div className="col-md-6">
 

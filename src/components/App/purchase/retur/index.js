@@ -31,7 +31,7 @@ class ReturTanpaNota extends Component{
         this.state = {
             databrg: [],
             brgval:[],
-            tanggal: new Date(),
+            tanggal: moment(new Date()).format("yyyy-MM-DD"),
             location_data:[],
             location:"",
             supplier_data:[],
@@ -655,18 +655,7 @@ class ReturTanpaNota extends Component{
                                                         <label className="control-label font-12">
                                                             Tanggal Order
                                                         </label>
-                                                        <div className="input-group">
-                                                            <div className="input-group-prepend">
-                                                                        <span className="input-group-text">
-                                                                          <i className="fa fa-calendar"/>
-                                                                        </span>
-                                                            </div>
-                                                            <DatePicker
-                                                                className="form-control rounded-right"
-                                                                selected={this.state.tanggal}
-                                                                onChange={this.setTanggal}
-                                                            />
-                                                        </div>
+                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                     </div>
 
                                                     <div className="form-group">

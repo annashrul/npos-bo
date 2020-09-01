@@ -38,7 +38,7 @@ class Receive extends Component{
             no_faktur_beli:"-",
             databrg: [],
             brgval:[],
-            tanggal: new Date(),
+            tanggal: moment(new Date()).format("yyyy-MM-DD"),
             harga_beli: 0,
             diskon:0,
             ppn:0,
@@ -995,12 +995,14 @@ class Receive extends Component{
                                     <div className="row">
                                         <div className="col-md-6">
                                             <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    No. Transaksi
+                                                </label>
                                                 <input
                                                     type="text"
                                                     readOnly
-                                                    className="form-control-plaintext form-control-sm"
+                                                    className="form-control"
                                                     id="nota"
-                                                    style={{fontWeight:'bolder'}}
                                                     value={this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null?this.state.no_faktur_beli:this.props.nota}
                                                 />
                                             </div>
@@ -1010,18 +1012,7 @@ class Receive extends Component{
                                                         <label className="control-label font-12">
                                                             Tanggal Order
                                                         </label>
-                                                        <div className="input-group">
-                                                            <div className="input-group-prepend">
-                                    <span className="input-group-text">
-                                      <i className="fa fa-calendar" />
-                                    </span>
-                                                            </div>
-                                                            <DatePicker
-                                                                className="form-control rounded-right"
-                                                                selected={this.state.tanggal}
-                                                                onChange={this.setTanggal}
-                                                            />
-                                                        </div>
+                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e)=>this.HandleCommonInputChange(e,true)}/>
                                                     </div>
                                                     <div className="form-group">
                                                         <label className="control-label font-12">

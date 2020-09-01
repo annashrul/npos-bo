@@ -66,7 +66,7 @@ class DeliveryNote extends Component{
           addingItemName: "",
           databrg: [],
           brgval:[],
-          tanggal: new Date(),
+          tanggal: moment(new Date()).format("yyyy-MM-DD"),
           qty:0,
           location_data:[],
           location:"",
@@ -822,12 +822,12 @@ class DeliveryNote extends Component{
                       <div className="row">
                         <div className="col-md-4">
                           <div className="form-group">
-                            <input
+                              <label className="control-label font-12">No. Transaksi</label>
+                              <input
                               type="text"
                               readOnly
-                              className="form-control-plaintext form-control-sm"
+                              className="form-control"
                               id="nota"
-                              style={{fontWeight:'bolder'}}
                               value={this.props.nota}
                             />
                           </div>
@@ -835,18 +835,7 @@ class DeliveryNote extends Component{
                             <label className="control-label font-12">
                               Tanggal
                             </label>
-                            <div className="input-group">
-                              <div className="input-group-prepend">
-                                <span className="input-group-text">
-                                  <i className="fa fa-calendar" />
-                                </span>
-                              </div>
-                              <DatePicker
-                                className="form-control rounded-right"
-                                selected={this.state.tanggal}
-                                onChange={this.setTanggal}
-                              />
-                            </div>
+                              <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))}/>
                           </div>
                         </div>
                           
@@ -859,7 +848,7 @@ class DeliveryNote extends Component{
                                     </label>
                                     <Select 
                                       options={this.state.location_data}
-                                      placeholder = "Pilih Lokasi Asal"
+                                      placeholder = "==== Pilih ===="
                                       onChange={this.HandleChangeLokasi}
                                       value = {
                                         this.state.location_data.find(op => {
@@ -880,7 +869,7 @@ class DeliveryNote extends Component{
                                       options={this.state.location_data.filter(
                                         option => option.value !== this.state.location
                                       )}
-                                      placeholder="Pilih Lokasi Tujuan"
+                                      placeholder="==== Pilih ===="
                                       onChange={this.HandleChangeLokasi2}
                                       value = {
                                         this.state.location_data.find(op => {
@@ -904,6 +893,7 @@ class DeliveryNote extends Component{
                                   rows={3}
                                   onChange={(e=>this.HandleCommonInputChange(e))}
                                   name="catatan"
+                                  style={{height:'116px'}}
                                   value={this.state.catatan}
                                 />
                                 <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>

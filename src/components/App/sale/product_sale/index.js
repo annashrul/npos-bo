@@ -36,8 +36,8 @@ class Sale extends Component{
             addingItemName: "",
             databrg: [],
             brgval:[],
-            tgl_order: new Date(),
-            tgl_kirim: new Date(),
+            tgl_order:moment(new Date()).format("yyyy-MM-DD"),
+            tgl_kirim:moment(new Date()).format("yyyy-MM-DD"),
             harga_beli: 0,
             diskon:0,
             ppn:0,
@@ -785,16 +785,18 @@ class Sale extends Component{
                         <div style={{ height: "auto",width:"80%"}}>
                             <div className="card">
                                 <div className="container" style={{marginTop: "20px"}}>
-                                    <form className=''>
+                                    <form className='' style={{zoom:'85%'}}>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <div className="form-group">
+                                                    <label className="control-label font-12">
+                                                        No. Transaksi
+                                                    </label>
                                                     <input
                                                         type="text"
                                                         readOnly
-                                                        className="form-control-plaintext form-control-sm"
+                                                        className="form-control"
                                                         id="nota"
-                                                        style={{fontWeight: 'bolder'}}
                                                         value={this.props.nota}
                                                     />
                                                 </div>
@@ -804,14 +806,7 @@ class Sale extends Component{
                                                             <label className="control-label font-12">
                                                                 Tanggal Order
                                                             </label>
-                                                            <div className="input-group">
-
-                                                                <DatePicker
-                                                                    className="form-control rounded-right"
-                                                                    selected={this.state.tgl_order}
-                                                                    onChange={this.setTglOrder}
-                                                                />
-                                                            </div>
+                                                            <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                         </div>
                                                         <div className="form-group">
                                                             <label className="control-label font-12">
@@ -866,7 +861,7 @@ class Sale extends Component{
                                                                 Catatan
                                                             </label>
                                                             <textarea
-                                                                style={{height: "84px"}}
+                                                                style={{height: "112px"}}
                                                                 className="form-control"
                                                                 id="exampleTextarea1"
                                                                 rows={3}
