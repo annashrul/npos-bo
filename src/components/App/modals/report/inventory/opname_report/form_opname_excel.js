@@ -50,7 +50,7 @@ class OpnameReportExcel extends Component{
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>LOKASI : '+ loc_val +'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN ADJUSTMENT</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN OPNAME</center></h3>'+
         '</div>';
         console.log(stringHtml)
         const headers = [[

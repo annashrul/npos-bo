@@ -11,7 +11,7 @@ import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 
-class ExpedisiReportExcel extends Component{
+class PoReportExcel extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -44,36 +44,36 @@ class ExpedisiReportExcel extends Component{
     printDocument = (e) => {
         e.preventDefault();
         let stringHtml = '',tprice=0;
-        let loc_val = this.props.location===''?'SEMUA':this.props.location;
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
-        '<h3 align="center"><center>LOKASI : '+ loc_val +'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN EXPEDISI</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN ALOKASI MUTASI TRX</center></h3>'+
         '</div>';
         console.log(stringHtml)
         const headers = [[
-            "Kode Expedisi.",
+            "No. PO",
             "Tanggal",
-            "Pengirim",
-            "Lokasi Asal",
-            "Lokasi Tujuan",
-            "Nama Operator",
+            "Tanggal Kirim",
+            "Nama Supplier",
+            "Lokasi",
+            "Jenis",
+            "Operator",
             "Status",
         ]];
-        let data = typeof this.props.expedisiReportExcel.data === 'object'?this.props.expedisiReportExcel.data.map(v=> [
-           v.kd_expedisi,
-           moment(v.tgl_expedisi).format("DD-MM-YYYY"),
-           v.pengirim,
-           v.nama_lokasi_asal,
-           v.nama_lokasi_tujuan,
-           v.nama_operator,
-           v.status==='0'?'Belum Expedisi':(v.status==='1'?'Sudah Expedisi':""),
+        let data = typeof this.props.poReportExcel.data === 'object'?this.props.poReportExcel.data.map(v=> [
+           v.no_po,
+           moment(v.tgl_po).format("YYYY-MM-DD"),
+           moment(v.tglkirim).format("YYYY-MM-DD"),
+           v.nama_supplier,
+           v.lokasi,
+           v.jenis,
+           v.kd_kasir,
+           v.status==='0'?'Processing':'Ordered',
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
-            "expedisi_",
+            "po_",
             stringHtml,
             headers,
             data,
@@ -84,8 +84,8 @@ class ExpedisiReportExcel extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formExpedisiExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update ExpedisiExcel"}</ModalHeader> */}
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPoExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
+                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update PoExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
@@ -115,8 +115,8 @@ class ExpedisiReportExcel extends Component{
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>
                                             <ReactHTMLTableToExcel
                                                 className="btn btn-circle btn-lg btn-success"
-                                                table={'laporan_expedisi'}
-                                                filename={'laporan_expedisi'}
+                                                table={'laporan_po'}
+                                                filename={'laporan_po'}
                                                 sheet="kas"
                                                 buttonText={<i className="fa fa-print"></i>}>
                                             </ReactHTMLTableToExcel>
@@ -131,47 +131,49 @@ class ExpedisiReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_expedisi" style={{display:this.state.view === false?'none':'inline-table'}}>
+                        <table className="table table-hover table-bordered table-responsive"  id="laporan_po" style={{display:this.state.view === false?'none':'inline-table'}}>
                             <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={7}>{this.props.startDate} - {this.props.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={7}>{this.props.location===''?'SEMUA LOKASI':this.props.location}</th>
-                                    </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={8}>{this.state.startDate} - {this.state.startDate}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" colSpan={8}>LAPORAN PO</th>
+                                </tr>
 
-                                    <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kode Expedisi.</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Pengirim</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Operator</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    </tr>
-                                    <tr></tr>
-                                    </thead>
+                                <tr>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. PO</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Kirim</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Supplier</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jenis</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Operator</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                </tr>
+                                <tr></tr>
+                                </thead>
+                                {
+                                    <tbody>
                                     {
-                                        <tbody>
-                                        {
-                                            typeof this.props.expedisiReportExcel.data==='object'? this.props.expedisiReportExcel.data.length>0?
-                                                this.props.expedisiReportExcel.data.map((v,i)=>{
-                                                    return (
-                                                        <tr key={i}>
-                                                            <td style={columnStyle}>{v.kd_expedisi}</td>
-                                                            <td style={columnStyle}>{moment(v.tgl_expedisi).format("DD-MM-YYYY")}</td>
-                                                            <td style={columnStyle}>{v.pengirim}</td>
-                                                            <td style={columnStyle}>{v.nama_lokasi_asal}</td>
-                                                            <td style={columnStyle}>{v.nama_lokasi_tujuan}</td>
-                                                            <td style={columnStyle}>{v.nama_operator}</td>
-                                                            <td style={columnStyle}>{v.status==='0'?statusQ('danger','Belum Expedisi'):(v.status==='1'?statusQ('warning','Sudah Expedisi'):"")}</td>
-                                                        </tr>
-                                                    );
-                                                }) : "No data." : "No data."
-                                        }
-                                        </tbody>
+                                        typeof this.props.poReportExcel.data==='object'? this.props.poReportExcel.data.length>0?
+                                            this.props.poReportExcel.data.map((v,i)=>{
+                                                return (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{v.no_po}</td>
+                                                        <td style={columnStyle}>{moment(v.tgl_po).format("YYYY-MM-DD")}</td>
+                                                        <td style={columnStyle}>{moment(v.tglkirim).format("YYYY-MM-DD")}</td>
+                                                        <td style={columnStyle}>{v.nama_supplier}</td>
+                                                        <td style={columnStyle}>{v.lokasi}</td>
+                                                        <td style={columnStyle}>{v.jenis}</td>
+                                                        <td style={columnStyle}>{v.kd_kasir}</td>
+                                                        <td style={columnStyle}>{v.status==='0'?statusQ('warning','Processing'):statusQ('success','Ordered')}</td>
+                                                    </tr>
+                                                );
+                                            }) : "No data." : "No data."
                                     }
-                                </table>
+                                    </tbody>
+                                }
+                            </table>
                     </ModalBody>
                 </form>
             </WrapperModal>
@@ -181,9 +183,9 @@ class ExpedisiReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        expedisiReportExcel:state.expedisiReducer.report_excel,
+        poReportExcel:state.poReducer.report_excel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(ExpedisiReportExcel);
+export default connect(mapStateToProps)(PoReportExcel);
