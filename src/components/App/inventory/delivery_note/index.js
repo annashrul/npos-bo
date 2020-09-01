@@ -352,6 +352,7 @@ class DeliveryNote extends Component{
                 datas.map(i=>{
                   if(i.satuan===val){
                     newbrg=i;
+                    // console.log("change",newbrg);
                   }
                 })
 
@@ -360,7 +361,7 @@ class DeliveryNote extends Component{
                       kd_brg: res.kd_brg,
                       nm_brg: res.nm_brg,
                       barcode: newbrg.barcode,
-                      satuan: res.satuan,
+                      satuan: newbrg.satuan,
                       harga_beli: newbrg.harga_beli,
                       hrg_jual: newbrg.harga,
                       stock: newbrg.stock,
@@ -537,6 +538,7 @@ class DeliveryNote extends Component{
                     userid: this.state.userid,
                     detail: detail
                   };
+                  // console.log(data_final);
                   this.props.dispatch(storeDN(data_final));
                 }
               })

@@ -97,7 +97,7 @@ export const storeClosing = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -124,7 +124,7 @@ export const reClosing = (data) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -135,7 +135,7 @@ export const reClosing = (data) => {
 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

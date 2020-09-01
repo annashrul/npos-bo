@@ -63,7 +63,7 @@ export const FetchBrgPacking = (kode,db)=>{
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })
@@ -96,7 +96,7 @@ export const storePacking = (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -121,7 +121,7 @@ export const FetchBrgPackingTrx = (kode)=>{
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })

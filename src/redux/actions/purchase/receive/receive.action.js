@@ -114,7 +114,7 @@ export const storeReceive= (data) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -166,7 +166,7 @@ export const updateReceive= (data,kode) => {
 
                 Swal.fire({
                     title: 'Failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
 
@@ -263,7 +263,7 @@ export const deleteReceiveReport = (id) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -274,7 +274,7 @@ export const deleteReceiveReport = (id) => {
                 dispatch(setLoading(false));
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {

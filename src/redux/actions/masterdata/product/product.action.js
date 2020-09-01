@@ -76,7 +76,7 @@ export const FetchProduct = (page=1,where,param='',db=null)=>{
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 text: error.response.data.msg,
             });
         })
@@ -142,7 +142,7 @@ export const deleteProduct = (id) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -154,7 +154,7 @@ export const deleteProduct = (id) => {
                 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
@@ -195,7 +195,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })
@@ -230,7 +230,7 @@ export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,
 
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 // text: error.response.data.msg,
             });
         })
@@ -252,7 +252,7 @@ export const FetchProductEdit = (kode)=>{
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 text: error.msg,
             });
         })
@@ -278,7 +278,7 @@ export const updateProduct = (id,data) => {
                 } else {
                     Swal.fire({
                         title: 'failed',
-                        type: 'danger',
+                        type: 'error',
                         text: data.msg,
                     });
                 }
@@ -291,7 +291,7 @@ export const updateProduct = (id,data) => {
                 
                 Swal.fire({
                     title: 'failed',
-                    type: 'danger',
+                    type: 'error',
                     text: error.response.data.msg,
                 });
                 if (error.response) {
@@ -316,7 +316,7 @@ export const FetchProductDetail = (kode)=>{
             dispatch(setLoading(false));
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 text: error.response.data.msg,
             });
         })
@@ -374,7 +374,7 @@ export const FetchProductSale = (page=1,where,param='',db)=>{
             dispatch(setLoadingBrgSale(false));
             Swal.fire({
                 title: 'failed',
-                type: 'danger',
+                type: 'error',
                 text: error.response.data.msg,
             });
         })

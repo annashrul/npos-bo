@@ -8,6 +8,7 @@ import {FetchBrgSame} from "redux/actions/masterdata/product/product.action";
 import Layout from "../Layout";
 import ModalCetakBarcode from "../modals/modal_cetak_barcode";
 import moment from "moment";
+import {toRp} from "../../../helper";
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -284,7 +285,7 @@ class CetakBarcode extends Component{
                             let barcode = 'barcode, title, harga_jual\n';
                             res.map(item => {
                                 for(let i=0;i<parseInt(item.qty,10);i++){
-                                    barcode += item.barcode + ', ' + item.title + ', '+item.harga_jual
+                                    barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
                                     barcode +='\n'
                                 }
                                 detail.push({
@@ -315,7 +316,6 @@ class CetakBarcode extends Component{
                                 if (result.value) {
                                     // window.location.reload();
                                     localStorage.removeItem('lk');
-
                                     destroy('cetak_barcode');
                                     this.getData();
                                     const win = window.open("NetindoAppBartend:",'_blank');
