@@ -5,8 +5,7 @@ import Swal from "sweetalert2";
 import Paginationq from "helper";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {FetchCash} from "redux/actions/masterdata/cash/cash.action";
-
-
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class ListCash extends Component{
     constructor(props){
@@ -25,7 +24,6 @@ class ListCash extends Component{
 
 
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         this.setState({activePage: pageNumber});
         this.props.pagin(pageNumber);
     }
@@ -56,7 +54,6 @@ class ListCash extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formCash"));
         if(i!==null){
-            console.log(this.props.data.data[i].title);
             this.state.detail = {"id":this.props.data.data[i].id,"jenis":parseInt(this.props.data.data[i].jenis),"type":parseInt(this.props.data.data[i].type),"title":this.props.data.data[i].title};
         }else{
             this.state.detail = undefined;
@@ -74,7 +71,6 @@ class ListCash extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                console.log(this.props);
                 this.props.deletes(id);
             }
         })
@@ -82,7 +78,6 @@ class ListCash extends Component{
 
     render(){
         const toggleModal = this.toggleModal;
-        const toggleModalUpdate = this.toggleModalUpdate;
         const handleDelete = this.handleDelete;
         const {current_page,data,from,last_page,per_page,to,total} = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
@@ -136,13 +131,15 @@ class ListCash extends Component{
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
                                                             <div className="btn-group">
-                                                                <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    Action
-                                                                </button>
-                                                                <div className="dropdown-menu">
-                                                                    <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>toggleModal(e,i)}>Edit</a>
-                                                                    <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>handleDelete(e,v.id)}>Delete</a>
-                                                                </div>
+                                                                    <UncontrolledButtonDropdown>
+                                                                    <DropdownToggle caret>
+                                                                        Aksi
+                                                                    </DropdownToggle>
+                                                                    <DropdownMenu>
+                                                                        <DropdownItem onClick={(e)=>toggleModal(e,i)}>Edit</DropdownItem>
+                                                                        <DropdownItem onClick={(e)=>handleDelete(e,v.id)}>Delete</DropdownItem>
+                                                                    </DropdownMenu>
+                                                                    </UncontrolledButtonDropdown>
                                                             </div>
                                                         </td>
                                                         <td style={columnStyle}>{v.title}</td>

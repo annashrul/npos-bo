@@ -8,6 +8,8 @@ import {
 } from "redux/actions/masterdata/location_category/location_category.action";
 import FormLocationCategory from "components/App/modals/masterdata/location_category/form_location_category";
 import Swal from "sweetalert2";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+
 class ListLocationCategory extends Component{
     constructor(props) {
         super(props);
@@ -101,15 +103,15 @@ class ListLocationCategory extends Component{
                                         return(
                                             <tr key={i}>
                                                 <td style={columnStyle}>
-                                                    <div className="btn-group">
-                                                        <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggleModal(e,i)}>Edit</a>
-                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id)}>Delete</a>
-                                                        </div>
-                                                    </div>
+                                                        <UncontrolledButtonDropdown>
+                                                        <DropdownToggle caret>
+                                                            Aksi
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                            <DropdownItem onClick={(e)=>this.toggleModal(e,i)}>Edit</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>this.handleDelete(e,v.id)}>Delete</DropdownItem>
+                                                        </DropdownMenu>
+                                                        </UncontrolledButtonDropdown>
                                                 </td>
                                                 <td style={columnStyle}>{v.nama}</td>
                                             </tr>

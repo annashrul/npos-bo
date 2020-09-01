@@ -1,10 +1,13 @@
 import React,{Component} from 'react';
 import {deleteBank, FetchBank} from "redux/actions/masterdata/bank/bank.action";
 import connect from "react-redux/es/connect/connect";
-import Paginationq, {statusQ} from "helper";
+import Paginationq from "helper";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import FormBank from "components/App/modals/masterdata/bank/form_bank";
 import Swal from "sweetalert2";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import Noimage from 'assets/default.png';
+
 class ListBank extends Component{
     constructor(props){
         super(props);
@@ -17,7 +20,6 @@ class ListBank extends Component{
         }
     }
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         this.setState({activePage: pageNumber});
         this.props.pagin(pageNumber);
     }
@@ -61,7 +63,6 @@ class ListBank extends Component{
     }
 
     handleDelete(e,id){
-        console.log(id);
         e.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
@@ -79,8 +80,7 @@ class ListBank extends Component{
 
     }
     render(){
-        const {current_page,data,from,last_page,per_page,to,total} = this.props.data;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const {current_page,data,per_page,total} = this.props.data;
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -111,7 +111,7 @@ class ListBank extends Component{
                                             <div className="card">
                                                 <div className="social-widget">
                                                     <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
-                                                        <img src={v.foto==='-'?'https://icoconvert.com/images/noimage2.png':v.foto} style={{height:"120px"}} alt=""/>
+                                                        <img src={v.foto==='-'?Noimage:v.foto} style={{height:"120px"}} alt=""/>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-8 text-left">
@@ -123,14 +123,18 @@ class ListBank extends Component{
                                                             <div className="p-2">
                                                                 <div className="dashboard-dropdown">
                                                                     <div className="dropdown">
-                                                                        <button style={{marginTop:"-7px"}} className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
-                                                                        <div className="dropdown-menu dropdown-menu-right"
-                                                                             aria-labelledby="dashboardDropdown50">
-                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(
+                                                                      
+                                                                    <UncontrolledButtonDropdown>
+                                                                    <DropdownToggle caret>
+                                                                        <i style={{color:'white '}} className="fa fa-sort-desc"/>
+                                                                    </DropdownToggle>
+                                                                    <DropdownMenu>
+                                                                        <DropdownItem  onClick={(e)=>this.handleEdit(
                                                                                 e,v.id,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama
-                                                                            )}><i className="ti-pencil-alt"></i> Edit</a>
-                                                                            <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</a>
-                                                                        </div>
+                                                                            )}><i className="ti-pencil-alt"></i> Edit</DropdownItem>
+                                                                        <DropdownItem onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                                    </DropdownMenu>
+                                                                    </UncontrolledButtonDropdown>
                                                                     </div>
                                                                 </div>
                                                             </div>

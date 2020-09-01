@@ -17,14 +17,12 @@ class ListPriceProduct extends Component{
     }
 
     handlePageChange(pageNumber){
-        console.log(`active page is ${pageNumber}`);
         let any = localStorage.getItem('any_price_product');
         if(any!==''){
             this.props.dispatch(FetchPriceProduct(pageNumber,any));
         }else{
             this.props.dispatch(FetchPriceProduct(pageNumber,''));
         }
-        console.log(any);
 
     }
     handlesearch(e){

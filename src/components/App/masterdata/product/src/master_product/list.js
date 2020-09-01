@@ -28,6 +28,13 @@ import imgY from 'assets/status-Y.png';
 import imgT from 'assets/status-T.png';
 import {rangeDate} from "helper";
 import Select from "react-select";
+import {
+    UncontrolledButtonDropdown,
+    DropdownMenu,
+    DropdownItem,
+    DropdownToggle
+} from 'reactstrap';
+
 class ListProduct extends Component{
     constructor(props){
         super(props);
@@ -473,18 +480,17 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.stock_min}</td>
                                                 <td style={columnStyle}>
                                                     <div className="btn-group mb-2 mr-2">
-                                                        <button type="button"
-                                                                className="btn btn-primary dropdown-toggle"
-                                                                data-toggle="dropdown" data-display="static"
-                                                                aria-haspopup="true" aria-expanded="false">
+                                                        <UncontrolledButtonDropdown>
+                                                        <DropdownToggle caret>
                                                             Aksi
-                                                        </button>
-                                                        <div className="dropdown-menu dropdown-menu-lg-right">
-                                                            <button className="dropdown-item" type="button" onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</button>
-                                                            <button className="dropdown-item" type="button" onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</button>
-                                                            <button className="dropdown-item" type="button" onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</button>
-                                                            <button className="dropdown-item" type="button" onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</button>
-                                                        </div>
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                            <DropdownItem onClick={(e)=>this.handlePriceCustomer(e,v.kd_brg,v.nm_brg)}>Set Harga Customer</DropdownItem>
+                                                            <DropdownItem  onClick={(e)=>this.loc_detail(e,v.kd_brg)}>Detail</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>loc_edit(e,v.kd_brg)}>Edit</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>loc_delete(e,v.kd_brg)}>Delete</DropdownItem>
+                                                        </DropdownMenu>
+                                                        </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
                                             </tr>
