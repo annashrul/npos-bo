@@ -1,14 +1,14 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
+import {ModalBody} from "reactstrap";
 import moment from "moment";
-import {rangeDate, toRp} from "helper";
+import {toRp} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
-import imgPdf from 'assets/pdf.png';
+// import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 import {to_pdf_l} from "helper";
 
@@ -47,7 +47,7 @@ class SaleReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>LOKASI : '+(this.props.location===''?'SEMUA LOKASI':this.props.location)+'</center></h3>';
@@ -85,22 +85,22 @@ class SaleReportExcel extends Component{
             moment(v.jam).format("hh:mm:ss"),
             v.nama,
             v.kd_kasir,
-            toRp(parseInt(v.omset)),
-            toRp(parseInt(v.diskon_item)),
+            toRp(parseInt(v.omset,10)),
+            toRp(parseInt(v.diskon_item,10)),
             toRp(v.dis_rp),
             v.dis_persen,
-            toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual)),
-            toRp(parseInt(v.hrg_jual)),
-            toRp(parseInt(v.profit)),
+            toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10)),
+            toRp(parseInt(v.hrg_jual,10)),
+            toRp(parseInt(v.profit,10)),
             v.regmember?v.regmember:"-",
             v.kas_lain,
             v.ket_kas_lain,
-            toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain)),
-            toRp(parseInt(v.rounding)),
-            toRp(parseInt(v.bayar)),
-            toRp(parseInt(v.change)),
-            toRp(parseInt(v.jml_kartu)),
-            toRp(parseInt(v.charge)),
+            toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10)),
+            toRp(parseInt(v.rounding,10)),
+            toRp(parseInt(v.bayar,10)),
+            toRp(parseInt(v.change,10)),
+            toRp(parseInt(v.jml_kartu,10)),
+            toRp(parseInt(v.charge,10)),
             v.kartu,
             v.status,
             v.lokasi,
@@ -117,22 +117,7 @@ class SaleReportExcel extends Component{
         this.toggle(e);
       }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        // const {total,last_page,per_page,current_page,from,to,data} = this.props.saleReport;
-        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
-        let omset_per = 0;
-        let dis_item_per = 0;
-        let sub_total_per = 0;
-        let dis_persen_per = 0;
-        let dis_rp_per = 0;
-        let kas_lain_per = 0;
-        let gt_per = 0;
-        let bayar_per = 0;
-        let jml_kartu_per = 0;
-        let charge_per = 0;
-        let change_per = 0;
-        let voucher_per = 0;
-        let rounding_per = 0;
+        const columnStyle = {verticalAlign: "middle", textAlign: "center"};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleExcel"}</ModalHeader> */}
@@ -233,22 +218,22 @@ class SaleReportExcel extends Component{
                                                             <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
                                                             <td style={columnStyle}>{v.nama}</td>
                                                             <td style={columnStyle}>{v.kd_kasir}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                             <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli)*parseInt(v.hrg_jual))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
                                                             <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
                                                             <td style={columnStyle}>{v.kas_lain}</td>
                                                             <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
                                                             <td style={columnStyle}>{v.kartu}</td>
                                                             <td style={columnStyle}>{v.status}</td>
                                                             <td style={columnStyle}>{v.lokasi}</td>

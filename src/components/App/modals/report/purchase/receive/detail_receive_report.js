@@ -32,7 +32,15 @@ class DetailReceiveReport extends Component{
         localStorage.removeItem(`pelunasan_${que}`);
     };
     render(){
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.receiveReportDetail;
+        const {
+            total,
+            last_page,
+            per_page,
+            current_page,
+            from,
+            to,
+            data
+        } = this.props.receiveReportDetail;
         let que=`detail_receive_report`;
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};
 

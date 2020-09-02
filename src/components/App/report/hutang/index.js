@@ -158,6 +158,7 @@ class HutangReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"no_nota",value: "No Nota"},
@@ -176,6 +177,7 @@ class HutangReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -188,6 +190,7 @@ class HutangReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -206,6 +209,7 @@ class HutangReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

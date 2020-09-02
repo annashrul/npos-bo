@@ -2,8 +2,7 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {toRp} from "helper";
+import {ModalToggle} from "redux/actions/modal.action";
 class DetailAlokasi extends Component{
     constructor(props){
         super(props);

@@ -31,9 +31,7 @@ export function setCashReportExcel(data=[]){
 export const FetchCash = (page=1,type='masuk',param)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
+        
         let q = '';
         if(param !== '' && param!==null){
             q = '&q='+param;
@@ -54,9 +52,7 @@ export const FetchCash = (page=1,type='masuk',param)=>{
 export const FetchCashDetail = (id)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
+        
         axios.get(HEADERS.URL+`kas/${id}`)
             .then(function(response){
                 const data = response.data;

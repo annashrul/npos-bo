@@ -1,7 +1,6 @@
 import {PRICE_PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {FetchLocationCategory} from "../location_category/location_category.action";
 
 
 export function setLoading(load){
@@ -17,9 +16,6 @@ export function setPriceProductFailed(data=[]){
 export const FetchPriceProduct = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let url = '';
         if(q===''){
             url = `barangHarga?page=${page}`

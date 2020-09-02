@@ -128,6 +128,7 @@ class PurchaseBySupplierReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"kode",value: "Kode"},
@@ -140,6 +141,7 @@ class PurchaseBySupplierReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"1",value: "Approve"},
@@ -151,6 +153,7 @@ class PurchaseBySupplierReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -169,6 +172,7 @@ class PurchaseBySupplierReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

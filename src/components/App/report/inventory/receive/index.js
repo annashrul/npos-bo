@@ -121,6 +121,7 @@ class ReceiveReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"no_faktur_beli",value: "No. Faktur Beli"},
@@ -141,6 +142,7 @@ class ReceiveReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -154,6 +156,7 @@ class ReceiveReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -173,6 +176,7 @@ class ReceiveReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -339,7 +343,15 @@ class ReceiveReport extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {
+            total,
+            last_page,
+            per_page,
+            current_page,
+            from,
+            to,
+            data
+        } = this.props.data;
         return (
             <Layout page="Laporan Pembelian">
                 <div className="col-12 box-margin" style={{zoom:"80%"}}>

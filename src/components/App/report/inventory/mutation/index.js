@@ -140,6 +140,7 @@ class MutationReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"no_faktur_mutasi",value: "Kode Mutasi"},
@@ -152,6 +153,7 @@ class MutationReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -164,6 +166,7 @@ class MutationReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -182,6 +185,7 @@ class MutationReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

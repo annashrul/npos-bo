@@ -139,6 +139,7 @@ class DnReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"no_delivery_note",value: "No DN"},
@@ -151,6 +152,7 @@ class DnReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -165,6 +167,7 @@ class DnReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -183,6 +186,7 @@ class DnReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

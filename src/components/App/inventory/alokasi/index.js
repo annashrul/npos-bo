@@ -80,6 +80,7 @@ class Alokasi extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -598,7 +599,7 @@ class Alokasi extends Component{
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg: data[0].nm_brg,
@@ -721,7 +722,7 @@ class Alokasi extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        {parseInt(this.state.ambil_data,10)==1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
+                                                        {parseInt(this.state.ambil_data,10)===1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
                                                     </small>
                                                 </div>
                                             </div>
@@ -769,7 +770,7 @@ class Alokasi extends Component{
                                                         id="passwordHelpBlock"
                                                         className="form-text text-muted"
                                                     >
-                                                        Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                                     </small>
                                                 </div>
                                             </div>

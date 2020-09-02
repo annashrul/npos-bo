@@ -56,6 +56,7 @@ class PoReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -74,6 +75,7 @@ class PoReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"no_po",value: "No. PO"},
@@ -89,6 +91,7 @@ class PoReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -101,6 +104,7 @@ class PoReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -259,7 +263,15 @@ class PoReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data}  = this.props.poReport;
+        const {
+            total,
+            last_page,
+            per_page,
+            current_page,
+            from,
+            to,
+            data
+        }  = this.props.poReport;
         return (
             <Layout page="Laporan Purchase Order">
                 <div className="col-12 box-margin">

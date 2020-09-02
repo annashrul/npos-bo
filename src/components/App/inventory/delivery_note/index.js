@@ -109,6 +109,7 @@ class DeliveryNote extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

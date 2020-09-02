@@ -2,7 +2,6 @@ import React,{Component} from 'react';
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
-import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
@@ -445,10 +444,10 @@ class Sale extends Component{
                         let disc1 = 0;
                         let disc2 = 0;
                         let ppn = 0;
-                        let hrg=parseInt(item.harga);
-                        let ppnInt=parseInt(item.ppn);
-                        let disc_rp=parseInt(item.diskon_nominal);
-                        let disc_per=parseInt(item.diskon_persen);
+                        let hrg=parseInt(item.harga,10);
+                        let ppnInt=parseInt(item.ppn,10);
+                        let disc_rp=parseInt(item.diskon_nominal,10);
+                        let disc_per=parseInt(item.diskon_persen,10);
                         if(disc_per!==0){
                             disc1 = hrg-(hrg*(disc_per/100));
                             disc2 = disc1;
@@ -467,10 +466,10 @@ class Sale extends Component{
                             ppn = hrg*(ppnInt/100);
                         }
 
-                        subtotal+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+                        subtotal+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10);
                         detail.push({
                             kode_trx:this.props.nota,
-                            subtotal:(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty),
+                            subtotal:(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10),
                             price:item.harga,
                             qty:item.qty,
                             kategori:item.kategori,
@@ -481,6 +480,7 @@ class Sale extends Component{
                             hrg_beli:item.hrg_beli,
                             diskon:0
                         })
+                        return null;
                     });
                     moment.locale("id");
                     let master = {
@@ -588,13 +588,13 @@ class Sale extends Component{
         }else{
             let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
 
-            if(parseInt(this.state.searchby)===1){
+            if(parseInt(this.state.searchby,10)===1){
                 if(where!==''){where+='&';}where+=`searchby=kd_brg`
             }
-            if(parseInt(this.state.searchby)===2){
+            if(parseInt(this.state.searchby,10)===2){
                 if(where!==''){where+='&';}where+=`searchby=barcode`
             }
-            if(parseInt(this.state.searchby)===3){
+            if(parseInt(this.state.searchby,10)===3){
                 if(where!==''){where+='&';}where+=`searchby=deskripsi`
             }
 
@@ -621,6 +621,7 @@ class Sale extends Component{
                     qty: i.qty,
                     satuan: i.satuan
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
@@ -637,6 +638,7 @@ class Sale extends Component{
                     value: i.kd_cust,
                     label: i.nama
                 })
+                return null;
             })
         }
         let totalsub=0;
@@ -684,7 +686,7 @@ class Sale extends Component{
                                                             className="form-text text-muted"
                                                         >
                                                             Cari
-                                                            berdasarkan {parseInt(this.state.searchby) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                            berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                                         </small>
                                                     </div>
                                                 </div>
@@ -906,10 +908,10 @@ class Sale extends Component{
                                                     let disc1 = 0;
                                                     let disc2 = 0;
                                                     let ppn = 0;
-                                                    let hrg=parseInt(item.harga);
-                                                    let ppnInt=parseInt(item.ppn);
-                                                    let disc_rp=parseInt(item.diskon_nominal);
-                                                    let disc_per=parseInt(item.diskon_persen);
+                                                    let hrg=parseInt(item.harga,10);
+                                                    let ppnInt=parseInt(item.ppn,10);
+                                                    let disc_rp=parseInt(item.diskon_nominal,10);
+                                                    let disc_per=parseInt(item.diskon_persen,10);
                                                     // 2000-(2000*(10/100)) = 1800 // diskon 1 (%)
                                                     // 1800-(1800*(10/100)) = 1620 // diskon 2 (%)
                                                     // 2000+(2000*(10/100)) = 2200 // ppn
@@ -931,7 +933,7 @@ class Sale extends Component{
                                                         ppn = hrg*(ppnInt/100);
                                                     }
 
-                                                    totalsub+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty);
+                                                    totalsub+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10);
 
                                                     return (
                                                         <tr key={index}>
@@ -968,7 +970,7 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].qty}/>
                                                             </td>
-                                                            <td style={{textAlign:"right"}}>{toRp((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
 
                                                         </tr>
                                                     )

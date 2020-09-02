@@ -1,7 +1,6 @@
 import {CUSTOMER_TYPE, HEADERS} from "../../_constants";
 import axios from 'axios'
 import Swal from "sweetalert2";
-import {FetchCustomer} from "../customer/customer.action";
 
 
 export function setLoading(load){
@@ -21,9 +20,6 @@ export function setCustomerTypeFailed(data=[]){
 export const FetchCustomerType = (page=1,q,perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let url = '';
         if(q===null||q===''||q===undefined){
             url=`customerType?page=${page}`;
@@ -49,9 +45,7 @@ export const FetchCustomerType = (page=1,q,perpage='')=>{
 export const FetchCustomerTypeAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
+        
         axios.get(HEADERS.URL+`customerType?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;

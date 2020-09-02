@@ -11,7 +11,7 @@ import {stringifyFormData} from "helper";
 import {sendUserList, setUserListEdit, updateUserList} from "redux/actions/masterdata/user_list/user_list.action";
 import moment from "moment";
 import FileBase64 from "react-file-base64";
-import {ModalToggle} from "../../../../../redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 class FormUserList extends Component{
     constructor(props){
         super(props);
@@ -128,9 +128,9 @@ class FormUserList extends Component{
             parseData['email']=this.state.email;
             parseData['nohp']=this.state.nohp;
             parseData['tgl_lahir']=this.state.tgl_lahir;
-            parseData['password']= parseInt(this.state.password.length) > 0 ? this.state.password : '-';
-            parseData['password_confirmation']= parseInt(this.state.password_confirmation.length) > 0 ? this.state.password_confirmation : '-';
-            parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length) > 0 ? this.state.password_otorisasi : '-';
+            parseData['password']= parseInt(this.state.password.length,10) > 0 ? this.state.password : '-';
+            parseData['password_confirmation']= parseInt(this.state.password_confirmation.length,10) > 0 ? this.state.password_confirmation : '-';
+            parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length,10) > 0 ? this.state.password_otorisasi : '-';
             if(this.state.foto.base64!==undefined){
                 parseData['foto']=this.state.foto.base64;
             }

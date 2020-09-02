@@ -70,6 +70,7 @@ class Produksi extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -80,11 +81,12 @@ class Produksi extends Component{
         if(param.barangPaket.length>0){
             this.getData();
             let brg=[];
-            typeof param.barangPaket === 'object' ? param.barangPaket.map((v,i)=>{
+            (typeof param.barangPaket === 'object') ? param.barangPaket.map((v)=>{
                 brg.push({
                     value:`${v.kd_brg} | ${v.barcode}`,
                     label:v.nm_brg,
                 })
+                return null;
             }): "No data.";
             this.setState({
                 barang_paket_data:brg
@@ -129,8 +131,8 @@ class Produksi extends Component{
         });
     };
     HandleChangeBarangPaket(lk){
-        let val = lk.value;
-        let exp = val.split("|", 2);
+        // let val = lk.value;
+        // let exp = val.split("|", 2);
         let err = Object.assign({}, this.state.error, {
             barang_paket: ""
         });
@@ -231,7 +233,7 @@ class Produksi extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 let saldo_stock = res.stock;
@@ -324,7 +326,7 @@ class Produksi extends Component{
         const val = e.target.value;
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -382,7 +384,7 @@ class Produksi extends Component{
             }else{
                 const data = get(table);
                 data.then(res => {
-                    if (res.length==0){
+                    if (res.length===0){
                         Swal.fire(
                             'Error!',
                             'Pilih barang untuk melanjutkan Produksi.',
@@ -421,6 +423,7 @@ class Produksi extends Component{
                                     // if(parseFloat(item.qty_adjust) > parseFloat(item.stock)){
                                     //     alert("qty melebihi sistem");
                                     // }
+                                    return null;
                                 });
                                 data['detail'] = detail;
 
@@ -459,7 +462,7 @@ class Produksi extends Component{
     autoSetQty(kode,data){
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 store(table, {
                     barcode:data[0].barcode,
                     harga_beli:data[0].harga_beli,
@@ -528,6 +531,7 @@ class Produksi extends Component{
                     qty_adjust: i.qty_adjust,
                     status: i.status,
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
@@ -560,7 +564,7 @@ class Produksi extends Component{
                                         </div>
                                         <small id="passwordHelpBlock" className="form-text text-muted">
                                             Cari
-                                            berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+                                            berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
                                     <div className="form-group">

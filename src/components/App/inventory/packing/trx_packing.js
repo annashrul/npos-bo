@@ -50,6 +50,7 @@ class TrxPacking extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -59,11 +60,12 @@ class TrxPacking extends Component{
         }
         if(param.codeAlokasi.data!==undefined){
             let no_faktur=[];
-            typeof param.codeAlokasi.data === 'object' ? param.codeAlokasi.data.map((v,i)=>{
+            (typeof param.codeAlokasi.data === 'object') ? param.codeAlokasi.data.map((v)=>{
                 no_faktur.push({
                     value:v.no_faktur_mutasi,
                     label:v.no_faktur_mutasi,
                 })
+                return null;
             }): "No data.";
             this.setState({
                 faktur_alokasi_data:no_faktur
@@ -221,7 +223,7 @@ class TrxPacking extends Component{
         if(id!==null){
             const cek = cekData('barcode', id, table);
             cek.then(res => {
-                if (res == undefined) {
+                if (res === undefined) {
                     ToastQ.fire({
                         icon: 'error',
                         title: `not found.`
@@ -269,7 +271,7 @@ class TrxPacking extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan Produksi.',
@@ -303,6 +305,7 @@ class TrxPacking extends Component{
                                     "satuan": item.satuan,
                                     "qty": item.qty_packing,
                                 })
+                                return null;
                             });
                             data['detail'] = detail;
                             this.props.dispatch(storePacking(data));
@@ -371,7 +374,7 @@ class TrxPacking extends Component{
     autoSetQty(kode,data){
         const cek = cekData('kode_barang', kode, table);
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 store(table, {
                     qty_alokasi:data[0].qty,
                     kode_barang:data[0].kode_barang,
@@ -410,6 +413,7 @@ class TrxPacking extends Component{
                 brg.push({
                     qty_packing: i.qty_packing,
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
@@ -457,7 +461,7 @@ class TrxPacking extends Component{
                                                                         className="form-text text-muted"
                                                                     >
                                                                         Cari
-                                                                        berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                                        berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                                                     </small>
                                                                 </div>
                                                             </div>
@@ -605,7 +609,6 @@ class TrxPacking extends Component{
                                                                 <tbody>
                                                                 {
                                                                     this.state.databrg.map((item, index) => {
-                                                                        let qty_packing = parseInt(this.state.brgval[index].qty_packing,10)<parseInt(item.qty_alokasi,10)?parseInt(item.qty_alokasi,10):this.state.brgval[index].qty_packing;
 
                                                                         return (
                                                                             <tr key={index}>
@@ -621,7 +624,7 @@ class TrxPacking extends Component{
                                                                                     {
                                                                                         item.tambahan.map(i => {
                                                                                             return (
-                                                                                                <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                                                                <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
                                                                                             )
                                                                                         })
                                                                                     }

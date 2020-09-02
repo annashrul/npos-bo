@@ -3,11 +3,11 @@ import Layout from "../Layout";
 import DatePicker from "react-datepicker";
 import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
-import {FetchPiutang, FetchNotaPiutang, setPiutang, storePiutang} from "../../../redux/actions/piutang/piutang.action";
+import {FetchPiutang, storePiutang} from "redux/actions/piutang/piutang.action";
 import moment from "moment";
-import {toRp} from "../../../helper";
+import {toRp} from "helper";
 import Swal from "sweetalert2";
-import Preloader from "../../../Preloader";
+import Preloader from "Preloader";
 
 class BayarPiutang extends Component{
     constructor(props) {
@@ -147,13 +147,13 @@ class BayarPiutang extends Component{
             
         }
 
-        else if(this.state.jumlah_bayar===''||this.state.jumlah_bayar==='0' || parseInt(this.state.jumlah_bayar)===0){
+        else if(this.state.jumlah_bayar===''||this.state.jumlah_bayar==='0' || parseInt(this.state.jumlah_bayar,10)===0){
             err = Object.assign({}, err, {
                 jumlah_bayar:"Jumlah Bayar Tidak Boleh Kosong"
             });
             this.setState({error: err,})
         }
-        else if(parseInt(this.state.jumlah_bayar)>(parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar))){
+        else if(parseInt(this.state.jumlah_bayar,10)>(parseInt(this.props.getPiutang.gt,10)-parseInt(this.props.getPiutang.jumlah_telah_bayar,10))){
             err = Object.assign({}, err, {
                 jumlah_bayar:"Jumlah Bayar Tidak Boleh Lebih Dari Jumlah Piutang"
             });
@@ -178,7 +178,7 @@ class BayarPiutang extends Component{
                     data['nota_jual'] = this.state.nota_pembelian;;
                     data['tanggal'] = moment(this.state.tgl).format("yyyy-MM-DD");
                     data['jumlah'] = this.state.jumlah_bayar;
-                    data['jumlah_piutang'] = parseInt(this.props.getPiutang.gt);
+                    data['jumlah_piutang'] = parseInt(this.props.getPiutang.gt,10);
                     data['tgl_jatuh_tempo'] = moment(this.props.getPiutang.tempo).format("yyyy-MM-DD");
                     data['lokasi'] = this.props.getPiutang.lokasi===undefined||this.props.getPiutang.lokasi===''||this.props.getPiutang.lokasi===null?'LK/0001':this.props.getPiutang.lokasi;
                     data['cara_byr'] = this.state.jenis_trx;
@@ -279,7 +279,7 @@ class BayarPiutang extends Component{
                                                onKeyPress = {
                                                    event => {
                                                        if (event.key === 'Enter') {
-                                                           this.handleSearch;
+                                                           this.handleSearch
 
                                                        }
                                                    }
@@ -343,7 +343,7 @@ class BayarPiutang extends Component{
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Piutang</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.gt!==undefined?toRp(parseInt(this.props.getPiutang.gt)):"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.gt!==undefined?toRp(parseInt(this.props.getPiutang.gt,10)):"0"}/>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Yang Telah Dibayar</label>
@@ -353,7 +353,7 @@ class BayarPiutang extends Component{
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label className="control-label font-12">Sisa Piutang</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.gt!==undefined?toRp(parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar)):"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.gt!==undefined?toRp(parseInt(this.props.getPiutang.gt,10)-parseInt(this.props.getPiutang.jumlah_telah_bayar,10)):"0"}/>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Bayar</label>

@@ -2,8 +2,7 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {toRp} from "helper";
+import {ModalToggle} from "redux/actions/modal.action";
 class DetailProduction extends Component{
     constructor(props){
         super(props);
@@ -24,8 +23,6 @@ class DetailProduction extends Component{
         
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         let t_harga_beli = 0;
-        let r_harga_beli = 0;
-        let l_harga_beli = 0;
         return (
             <div>
                 <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduction"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>

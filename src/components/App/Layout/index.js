@@ -48,13 +48,6 @@ class Layout extends Component {
     }
 
     render() {
-        const style = {
-            overflowY: 'auto',
-            '::-webkit-scrollbar': {
-                width: '0px',
-                background: 'transparent'
-            }
-          };
         return (
             <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active":"ecaps-page-wrapper " + (this.props.triggerMobileEcaps?"mobile-menu-active":"")}>
                 {/* Side Menu */}

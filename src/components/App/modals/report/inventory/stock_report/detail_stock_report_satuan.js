@@ -56,7 +56,6 @@ class DetailStockReportSatuan extends Component{
         
         const {data} = this.props.stockReportDetailSatuan;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const lokasi = this.props.auth;
         let totPrice1=0;
         let totPrice2=0;
         let totPrice3=0;
@@ -154,7 +153,7 @@ class DetailStockReportSatuan extends Component{
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
-                                                            <a className="btn btn-sm btn-primary" href="javascript:void(0)" onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
+                                                            <a className="btn btn-sm btn-primary" href="#" onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
                                                         </td>
                                                         {this.state.data_lok.filter(cat => cat.kode===v.lokasi).map(filteredCat => (
                                                         <td>{filteredCat.nama_toko}</td>

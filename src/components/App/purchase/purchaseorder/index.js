@@ -6,7 +6,6 @@ import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.a
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storePo} from 'redux/actions/purchase/purchase_order/po.action'
 import { Scrollbars } from "react-custom-scrollbars";
-import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';

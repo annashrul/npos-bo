@@ -3,8 +3,6 @@ import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {toRp} from "helper";
-import moment from "moment";
 class DetailAdjustmentReport extends Component{
     constructor(props){
         super(props);
@@ -14,7 +12,6 @@ class DetailAdjustmentReport extends Component{
 
     toggle(e){
         e.preventDefault();
-        const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(false));
         this.props.dispatch(ModalType("detailAdjustment"));
 

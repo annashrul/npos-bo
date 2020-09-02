@@ -62,7 +62,7 @@ export const addFooters = doc => {
     var width   = doc.internal.pageSize.getWidth();
     var height  = doc.internal.pageSize.getHeight();
     doc.page=1;
-    const pageCount = doc.internal.getNumberOfPages();
+    // const pageCount = doc.internal.getNumberOfPages();
     doc.setFontSize(7);
     doc.text(width-40, height - 30, 'Page - ' + doc.page);
     doc.page ++;
@@ -89,7 +89,7 @@ export const toMoney = (angka) => {
     return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
 export const toPersen= (val1,val2) => {
-    let con =  (parseFloat(val1)/parseInt(val2))*100;
+    let con =  (parseFloat(val1)/parseInt(val2,10))*100;
     return con.toFixed(2);
 }
 export const toNominal= (val1,val2) => {
@@ -100,7 +100,7 @@ export const toNominal= (val1,val2) => {
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),
-    var number_string = (angka==''||angka==undefined)? String(0.0) : angka.toString(),
+    var number_string = (angka===''||angka===undefined)? String(0.0) : angka.toString(),
         split = number_string.split('.'),
         sisa = split[0].length % 3,
         rupiah = split[0].substr(0, sisa),
@@ -151,7 +151,7 @@ class Paginationq extends Component{
     render(){
         return (
             <Pagination
-                activePage={parseInt(this.props.current_page)}
+                activePage={parseInt(this.props.current_page,10)}
                 itemsCountPerPage={this.props.per_page}
                 totalItemsCount={this.props.total}
                 pageRangeDisplayed={5}

@@ -2,7 +2,6 @@ import {OPNAME, HEADERS} from "../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
-import {setAdjustmentAll} from "../adjustment/adjustment.action";
 
 export function setLoading(load){
     return {type : OPNAME.LOADING,load}
@@ -102,7 +101,6 @@ export const storeOpname = (data) => {
         const url = HEADERS.URL + `opname`;
         axios.post(url, data)
             .then(function (response) {
-                const data = (response.data)
                 Swal.fire({
                     title: 'Success',
                     type: 'success',
@@ -141,7 +139,6 @@ export const storeOpnamePosting = (data,param) => {
         }
         axios.post(HEADERS.URL + url, data)
             .then(function (response) {
-                const data = (response.data)
                 Swal.fire({
                     title: 'Success',
                     type: 'success',

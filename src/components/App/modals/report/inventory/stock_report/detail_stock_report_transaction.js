@@ -2,8 +2,7 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {toRp} from "helper";
+import {ModalType} from "redux/actions/modal.action";
 import Paginationq from "helper";
 import moment from "moment";
 import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/stock_report.action";
@@ -82,9 +81,9 @@ class DetailStockReportTransaction extends Component{
                                 (
                                     typeof data === 'object' ? data.length > 0 ?
                                         data.map((v,i)=>{
-                                            totStockIn=totStockIn+parseInt(v.stock_in);
-                                            totStockOut=totStockOut+parseInt(v.stock_out);
-                                            totQty=totQty+parseInt(v.qty);
+                                            totStockIn=totStockIn+parseInt(v.stock_in,10);
+                                            totStockOut=totStockOut+parseInt(v.stock_out,10);
+                                            totQty=totQty+parseInt(v.qty,10);
 
                                             return (
                                                 <tr key={i}>

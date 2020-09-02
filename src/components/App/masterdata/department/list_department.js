@@ -62,7 +62,15 @@ class ListDepartment extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.data;
+        const {
+            total,
+            // last_page,
+            per_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.data;
         return (
             <div className="row">
                <div className="col-md-12">

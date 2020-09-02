@@ -1,7 +1,6 @@
 import {DEPT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {FetchCash} from "../cash/cash.action";
 
 export function setLoading(load){
     return {type : DEPT.LOADING,load}
@@ -19,9 +18,7 @@ export function setDepartmentFailed(data=[]){
 export const FetchDepartment = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
+        
         let url = '';
         if(q===''){
             url = `departement?page=${page}`;

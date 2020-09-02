@@ -57,7 +57,7 @@ class Header extends Component {
         .then(res => res.json())
         .then(
             (data) => {
-                if (parseInt(data.result.day)===0){
+                if (parseInt(data.result.day,10)===0){
                     Swal.fire({
                         title: 'Warning!',
                         html: `<h6>Aplikasi telah kedaluarsa.</h6><br/>
@@ -78,7 +78,7 @@ class Header extends Component {
                 }
                 localStorage.setItem("site_title", data.result.title);
                 this.setState({
-                    isShowNotif: parseInt(data.result.day) <= 7 ? true : false,
+                    isShowNotif: parseInt(data.result.day,10) <= 7 ? true : false,
                     isDay: data.result.day,
                     tanggal_tempo: moment(data.result.tgl_tempo).format("yyyy-MM-DD"),
                     server_price: data.result.server_price,
@@ -102,7 +102,7 @@ class Header extends Component {
       e.preventDefault();
       Swal.fire({
           title: 'Informasi Pembayaran.',
-          html:`<div class="card"><div class="card-header"><h6 class="text-left">Silahkan lakukan pembayaran ke akun dibawah ini</h6></div><div class="card-body"><table class="table table-bordered table-hover"><thead><tr><th>Harga Server</th><th>No. Rekening</th><th>Atas Nama</th></tr></thead><tbody><tr><td>${toRp(parseInt(this.state.server_price))}</td><td>${this.state.acc_number}</td><td>${this.state.acc_name}</td></tr></tbody></table></div></div>`,
+          html:`<div class="card"><div class="card-header"><h6 class="text-left">Silahkan lakukan pembayaran ke akun dibawah ini</h6></div><div class="card-body"><table class="table table-bordered table-hover"><thead><tr><th>Harga Server</th><th>No. Rekening</th><th>Atas Nama</th></tr></thead><tbody><tr><td>${toRp(parseInt(this.state.server_price,10))}</td><td>${this.state.acc_number}</td><td>${this.state.acc_name}</td></tr></tbody></table></div></div>`,
           icon: 'info',
           confirmButtonColor: '#ff9800',
           confirmButtonText: 'Oke',

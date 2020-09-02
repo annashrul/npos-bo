@@ -139,6 +139,7 @@ class TransactionReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"no_faktur_mutasi",value: "Kode Mutasi"},
@@ -151,6 +152,7 @@ class TransactionReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         // let status = [
         //     {kode:"",value: "Default"},
@@ -182,6 +184,7 @@ class TransactionReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

@@ -128,6 +128,7 @@ class SaleReturReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"kd_trx",value: "Kode Trx"},
@@ -142,6 +143,7 @@ class SaleReturReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"1",value: "Approve"},
@@ -153,6 +155,7 @@ class SaleReturReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -171,6 +174,7 @@ class SaleReturReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,

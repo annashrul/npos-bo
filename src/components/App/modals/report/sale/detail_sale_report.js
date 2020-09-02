@@ -73,11 +73,11 @@ class DetailSaleReport extends Component{
                                             <tr key={i}>
                                                 <td style={columnStyle}>{v.sku}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.open_price))}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual))}</td>
+                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.open_price,10))}</td>
+                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
                                                 <td style={{textAlign:"right"}}>{v.qty} ({v.satuan})</td>
                                                 <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.subtotal))}</td>
+                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.subtotal,10))}</td>
                                             </tr>
                                         );
                                     }) : "No data." : "No data."

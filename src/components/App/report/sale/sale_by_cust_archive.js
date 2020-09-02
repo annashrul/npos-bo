@@ -79,6 +79,7 @@ class SaleByCustArchive extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"kd_cust",value: "Kode Cust."},
@@ -96,6 +97,7 @@ class SaleByCustArchive extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -109,6 +111,7 @@ class SaleByCustArchive extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -128,6 +131,7 @@ class SaleByCustArchive extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -307,7 +311,15 @@ class SaleByCustArchive extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.sale_by_custReport;
+        const {
+            total,
+            last_page,
+            per_page,
+            current_page,
+            from,
+            to,
+            data
+        } = this.props.sale_by_custReport;
 
         return (
             <Layout page="Laporan Arsip Penjualan">

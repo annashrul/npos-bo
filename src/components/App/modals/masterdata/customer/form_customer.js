@@ -52,11 +52,12 @@ class FormCustomer extends Component{
         }
         let cust=[];
         typeof param.dataCustomerTypeAll.data === 'object' ?
-            param.dataCustomerTypeAll.data.map((v,i)=>{
+            param.dataCustomerTypeAll.data.map((v)=>{
                 cust.push({
                     value: v.kode,
                     label: v.nama
                 });
+                return null;
             })
         :  "no data";
         this.setState({

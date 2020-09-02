@@ -77,6 +77,7 @@ class ListProduct extends Component{
                 value: i.value,
                 label: i.label
             });
+            return null;
         });
         this.setState({
             sort_by_data: sort_by,
@@ -122,7 +123,7 @@ class ListProduct extends Component{
         localStorage.setItem("semua_periode_barang",event.target.checked);
         
         let column=event.target.name;
-        let value=event.target.name;
+        // let value=event.target.name;
         this.setState({
             [column]: event.target.checked,
         });
@@ -413,7 +414,7 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.supplier}</td>
                                                 <td style={columnStyle}>{v.kategori}</td>
-                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
+                                                <td style={columnStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
                                             </tr>
                                         )
@@ -469,14 +470,14 @@ class ListProduct extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page)-1))}</td>
+                                                <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
                                                 <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.supplier}</td>
                                                 <td style={columnStyle}>{v.kategori}</td>
-                                                <td style={columnStyle}>{v.jenis==='0'? <img src={imgT} width="20px"/>: <img src={imgY} width="20px"/>}</td>
+                                                <td style={columnStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
                                                 <td style={columnStyle}>
                                                     <div className="btn-group mb-2 mr-2">

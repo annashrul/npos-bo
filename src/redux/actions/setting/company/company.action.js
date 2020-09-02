@@ -1,7 +1,6 @@
 import {COMPANY,HEADERS} from "../../_constants";
 import axios from "axios"
 import Swal from 'sweetalert2'
-import {setLoading} from "../../sale/sale.action";
 import {logoutUser} from "../../authActions";
 
 export function setLoadingGet(load) {
@@ -67,8 +66,6 @@ export const storeCompany = (data) => {
         const url = HEADERS.URL + `site`;
         axios.put(url, data)
             .then(function (response) {
-                const data = (response.data)
-                
                 dispatch(FetchCompany());
                 dispatch(setLoadingPost(false));
                 Swal.fire({

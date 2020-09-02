@@ -2,7 +2,6 @@ import {PACKING, HEADERS} from "../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
-import {cekData, store,update} from "../../../components/model/app.model";
 
 export function setLoading(load){
     return {type : PACKING.LOADING,load}

@@ -3,7 +3,6 @@ import {store,get, update,destroy,cekData,del} from "components/model/app.model"
 import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
 import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
@@ -72,6 +71,7 @@ class TrxOpname extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -172,7 +172,7 @@ class TrxOpname extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
-            if(res==undefined){
+            if(res===undefined){
                 store(table, finaldt)
             }else{
                 update(table,{
@@ -254,7 +254,7 @@ class TrxOpname extends Component{
         const val = e.target.value;
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 Toast.fire({
                     icon: 'error',
                     title: `not found.`
@@ -299,7 +299,7 @@ class TrxOpname extends Component{
         }else{
             const data = get(table);
             data.then(res => {
-                if (res.length==0){
+                if (res.length===0){
                     Swal.fire(
                         'Error!',
                         'Pilih barang untuk melanjutkan Opname.',
@@ -317,7 +317,6 @@ class TrxOpname extends Component{
                         cancelButtonText: 'Tidak!'
                     }).then((result) => {
                         if (result.value) {
-                            let subtotal = 0;
                             let detail = [];
                             let data={};
                             data['kd_kasir'] = this.state.userid;
@@ -331,6 +330,7 @@ class TrxOpname extends Component{
                                     "hrg_beli": item.harga_beli,
                                     "barcode": item.barcode
                                 })
+                                return null;
                             });
                             data['detail'] = detail;
                             this.props.dispatch(storeOpname(data));
@@ -344,7 +344,7 @@ class TrxOpname extends Component{
     autoSetQty(kode,data){
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                 store(table, {
                     barcode:data[0].barcode,
                     harga_beli:data[0].harga_beli,
@@ -435,7 +435,7 @@ class TrxOpname extends Component{
                                             className="form-text text-muted"
                                         >
                                             Cari
-                                            berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+                                            berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
                                     <div className="form-group">

@@ -25,9 +25,6 @@ export function setCustomerFailed(data=[]){
 export const FetchCustomer = (page=1,q)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let url = '';
         if(q===null||q===''||q===undefined){
             url=`customer?page=${page}`;

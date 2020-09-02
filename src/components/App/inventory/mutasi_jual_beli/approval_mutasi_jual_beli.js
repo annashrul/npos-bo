@@ -34,6 +34,7 @@ class ApprovalMutasiJualBeli extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -74,7 +75,15 @@ class ApprovalMutasiJualBeli extends Component{
         this.props.dispatch(FetchApprovalMutationDetail(1,kd_trx))
     }
     render(){
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.mutation;
+        const {
+            total,
+            // last_page,
+            per_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.mutation;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <Layout page="Approval Mutasi">

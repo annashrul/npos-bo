@@ -1,7 +1,6 @@
 import {LOCATION_CATEGORY,HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {FetchLocation} from "../location/location.action";
 
 export function setLoading(load){
     return {type : LOCATION_CATEGORY.LOADING,load}
@@ -16,9 +15,6 @@ export function setLocationCategoryFailed(data=[]){
 export const FetchLocationCategory = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
         let url = '';
         if(q===''){
             url=`lokasiKategori?page=${page}`;

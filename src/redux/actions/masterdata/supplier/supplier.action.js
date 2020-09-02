@@ -19,9 +19,7 @@ export function setSupplierFailed(data=[]){
 export const FetchSupplier = (page=1,q='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
+        
         let url = '';
         if(q===''){
             url = `supplier?page=${page}`;
@@ -43,9 +41,7 @@ export const FetchSupplier = (page=1,q='')=>{
 export const FetchSupplierAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        const headers={
-            headers:{'Content-Type': 'application/x-www-form-urlencoded'}
-        };
+        
         axios.get(HEADERS.URL+`supplier?page=1&perpage=100`)
             .then(function(response){
                 const data = response.data;

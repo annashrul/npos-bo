@@ -3,11 +3,11 @@ import Layout from "../Layout";
 import DatePicker from "react-datepicker";
 import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
-import {FetchHutang, FetchNotaHutang, setHutang, storeHutang} from "../../../redux/actions/hutang/hutang.action";
+import {FetchHutang, storeHutang} from "redux/actions/hutang/hutang.action";
 import moment from "moment";
-import {toRp} from "../../../helper";
+import {toRp} from "helper";
 import Swal from "sweetalert2";
-import Preloader from "../../../Preloader";
+import Preloader from "Preloader";
 
 class BayarHutang extends Component{
     constructor(props) {
@@ -157,7 +157,7 @@ class BayarHutang extends Component{
                     data['bank'] = '-';
                     data['cara_byr'] = this.state.jenis_trx;
                     data['jumlah_bayar'] = this.state.jumlah_bayar;
-                    data['jumlah_hutang'] = parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar);
+                    data['jumlah_hutang'] = parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10);
                     data['ket'] = this.state.catatan;
                     data['lokasi'] = this.props.getHutang.lokasi;
                     data['nogiro'] = 0;
@@ -305,7 +305,7 @@ class BayarHutang extends Component{
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Hutang</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian)):"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian,10)):"0"}/>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Yang Telah Dibayar</label>
@@ -315,7 +315,7 @@ class BayarHutang extends Component{
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label className="control-label font-12">Sisa Hutang</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar)):"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10)):"0"}/>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Bayar</label>
@@ -325,14 +325,14 @@ class BayarHutang extends Component{
                                             {this.state.error.jumlah_bayar}
                                         </div>
                                         {
-                                            this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar)) ? <small style={{fontWeight:"bold",color:"red"}}>Jumlah Bayar Melebihi Hutang</small>:""
+                                            this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10)) ? <small style={{fontWeight:"bold",color:"red"}}>Jumlah Bayar Melebihi Hutang</small>:""
                                         }
                                     </div>
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <div className="pull-right" style={{alignSelf: "flex-end"}}>
-                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian)-parseInt(this.props.getHutang.jumlah_bayar))?true:false}>Simpan</button>
+                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10))?true:false}>Simpan</button>
                                             <button className="btn btn-danger btn-sm" style={{marginTop:"29px",marginLeft:"5px"}} onClick={this.handleCancel}>Batal</button>
                                         </div>
 

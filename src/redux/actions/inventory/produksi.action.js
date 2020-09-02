@@ -2,8 +2,7 @@ import {PRODUKSI, HEADERS} from "../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
-import {setLoadingbrg, setProductbrg} from "../masterdata/product/product.action";
-import {toRp} from "../../../helper";
+import {setLoadingbrg} from "../masterdata/product/product.action";
 
 export function setLoading(load){
     return {type : PRODUKSI.LOADING,load}
@@ -122,7 +121,7 @@ export const storeProduksi = (data) => {
                 
                 Swal.fire({
                     title: 'Transaksi berhasil.',
-                    html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem)}</td></tr></tbody></table>`,
+                    html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp,10)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem,10)}</td></tr></tbody></table>`,
                     icon: 'success',
                     showCancelButton: true,
                     cancelButtonColor: '#2196F3',
@@ -157,7 +156,6 @@ export const storeApproval = (data) => {
         const url = HEADERS.URL + `production/approve`;
         axios.post(url, data)
             .then(function (response) {
-                const data = (response.data)
                 Swal.fire({
                     title: 'Berhasil Diapprove!',
                     icon: 'success',

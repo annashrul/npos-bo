@@ -38,6 +38,7 @@ class Closing extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -97,7 +98,15 @@ class Closing extends Component{
     }
 
     render(){
-        const {total,last_page,per_page,current_page,from,to,data} = this.props.closing;
+        const {
+            total,
+            last_page,
+            per_page,
+            current_page,
+            from,
+            to,
+            data
+        } = this.props.closing;
         return (
             <Layout page="Closing">
                 <div className="col-12 box-margin">

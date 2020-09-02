@@ -2,10 +2,8 @@ import React,{Component} from 'react';
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import {toRp} from "helper";
-import moment from "moment";
-import {FetchApprovalMutation} from "../../../../../../redux/actions/inventory/mutation.action";
 class DetailPoReport extends Component{
     constructor(props){
         super(props);

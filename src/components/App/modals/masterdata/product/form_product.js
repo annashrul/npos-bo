@@ -2,18 +2,15 @@ import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
-import {stringifyFormData} from "helper";
 import {setProductEdit,createProduct,updateProduct} from "redux/actions/masterdata/product/product.action";
-import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
-import {FetchCheck, setCheck, setLoading} from "redux/actions/site.action";
+import {FetchCheck} from "redux/actions/site.action";
 import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
 import Select from "react-select";
 import FileBase64 from "react-file-base64";
 import moment from "moment";
-import {toPersen} from "../../../../../helper";
 
 class FormProduct extends Component{
     constructor(props){
@@ -377,10 +374,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
                                 "isCheckedPCS":true,
                                 "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
                                 "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
                                 "ppnPCS": barang_hrg[x][0].ppn,
                                 "servicePCS": barang_hrg[x][0].service
@@ -389,10 +386,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
                                 "isCheckedPACK":false,
                                 "hrgBeliPACK": barang_hrg[x][1].harga_beli,
-                                "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                                "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                                "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                                "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin1PACK":((parseInt(barang_hrg[x][1].harga,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
+                                "margin2PACK":((parseInt(barang_hrg[x][1].harga2,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
+                                "margin3PACK":((parseInt(barang_hrg[x][1].harga3,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
+                                "margin4PACK":((parseInt(barang_hrg[x][1].harga4,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
                                 "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
                                 "ppnPACK":barang_hrg[x][1].ppn,
                                 "servicePACK":barang_hrg[x][1].service
@@ -401,10 +398,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][2].nama_toko,"lokasi":barang_hrg[x][2].lokasi,
                                 "isCheckedKARTON":false,
                                 "hrgBeliKARTON": barang_hrg[x][2].harga_beli,
-                                "margin1KARTON":((parseInt(barang_hrg[x][2].harga)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                                "margin2KARTON":((parseInt(barang_hrg[x][2].harga2)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                                "margin3KARTON":((parseInt(barang_hrg[x][2].harga3)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
-                                "margin4KARTON":((parseInt(barang_hrg[x][2].harga4)-parseInt(barang_hrg[x][2].harga_beli))/parseInt(barang_hrg[x][2].harga_beli))*100,
+                                "margin1KARTON":((parseInt(barang_hrg[x][2].harga,10)-parseInt(barang_hrg[x][2].harga_beli,10))/parseInt(barang_hrg[x][2].harga_beli,10))*100,
+                                "margin2KARTON":((parseInt(barang_hrg[x][2].harga2,10)-parseInt(barang_hrg[x][2].harga_beli,10))/parseInt(barang_hrg[x][2].harga_beli,10))*100,
+                                "margin3KARTON":((parseInt(barang_hrg[x][2].harga3,10)-parseInt(barang_hrg[x][2].harga_beli,10))/parseInt(barang_hrg[x][2].harga_beli,10))*100,
+                                "margin4KARTON":((parseInt(barang_hrg[x][2].harga4,10)-parseInt(barang_hrg[x][2].harga_beli,10))/parseInt(barang_hrg[x][2].harga_beli,10))*100,
                                 "hrgJual1KARTON": barang_hrg[x][2].harga,"hrgJual2KARTON": barang_hrg[x][2].harga2,"hrgJual3KARTON": barang_hrg[x][2].harga3,"hrgJual4KARTON": barang_hrg[x][2].harga4,
                                 "ppnKARTON": barang_hrg[x][2].ppn,
                                 "serviceKARTON": barang_hrg[x][2].service
@@ -419,10 +416,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
                                 "isCheckedPCS":true,
                                 "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
                                 "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
                                 "ppnPCS": barang_hrg[x][0].ppn,
                                 "servicePCS": barang_hrg[x][0].service
@@ -431,10 +428,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][1].nama_toko,"lokasi":barang_hrg[x][1].lokasi,
                                 "isCheckedPACK":true,
                                 "hrgBeliPACK": barang_hrg[x][1].harga_beli,
-                                "margin1PACK":((parseInt(barang_hrg[x][1].harga)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                                "margin2PACK":((parseInt(barang_hrg[x][1].harga2)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                                "margin3PACK":((parseInt(barang_hrg[x][1].harga3)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
-                                "margin4PACK":((parseInt(barang_hrg[x][1].harga4)-parseInt(barang_hrg[x][1].harga_beli))/parseInt(barang_hrg[x][1].harga_beli))*100,
+                                "margin1PACK":((parseInt(barang_hrg[x][1].harga,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
+                                "margin2PACK":((parseInt(barang_hrg[x][1].harga2,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
+                                "margin3PACK":((parseInt(barang_hrg[x][1].harga3,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
+                                "margin4PACK":((parseInt(barang_hrg[x][1].harga4,10)-parseInt(barang_hrg[x][1].harga_beli,10))/parseInt(barang_hrg[x][1].harga_beli,10))*100,
                                 "hrgJual1PACK":barang_hrg[x][1].harga,"hrgJual2PACK":barang_hrg[x][1].harga2,"hrgJual3PACK":barang_hrg[x][1].harga3,"hrgJual4PACK":barang_hrg[x][1].harga4,
                                 "ppnPACK":barang_hrg[x][1].ppn,
                                 "servicePACK":barang_hrg[x][1].service
@@ -449,10 +446,10 @@ class FormProduct extends Component{
                                 "nama_toko":barang_hrg[x][0].nama_toko,"lokasi":barang_hrg[x][0].lokasi,
                                 "isCheckedPCS":true,
                                 "hrgBeliPCS": barang_hrg[x][0].harga_beli,
-                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
-                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4)-parseInt(barang_hrg[x][0].harga_beli))/parseInt(barang_hrg[x][0].harga_beli))*100,
+                                "margin1PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin2PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga2,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin3PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga3,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
+                                "margin4PCS":param.dataEdit.kategori==='4'?'0':((parseInt(barang_hrg[x][0].harga4,10)-parseInt(barang_hrg[x][0].harga_beli,10))/parseInt(barang_hrg[x][0].harga_beli,10))*100,
                                 "hrgJual1PCS":barang_hrg[x][0].harga,"hrgJual2PCS":barang_hrg[x][0].harga2,"hrgJual3PCS":barang_hrg[x][0].harga3,"hrgJual4PCS":barang_hrg[x][0].harga4,
                                 "ppnPCS": barang_hrg[x][0].ppn,
                                 "servicePCS": barang_hrg[x][0].service
@@ -486,7 +483,7 @@ class FormProduct extends Component{
             this.state.check = param.dataLocation;
             let brgHrg=[];
             if(typeof data === 'object'){
-                data.map((v,i)=>{
+                data.map((v)=>{
                     Object.assign(v,{
                         isChecked:false,
                         PACK:false,
@@ -534,7 +531,7 @@ class FormProduct extends Component{
         let group1=[];
         let group2=[];
         if(param.data.data!==undefined){
-            typeof param.data.data === 'object' ? param.data.data.map((v,i)=>{
+            typeof param.data.data === 'object' ? param.data.data.map((v)=>{
                 kel_brg.push({
                     value:v.kel_brg,
                     label:v.nm_kel_brg,
@@ -545,7 +542,7 @@ class FormProduct extends Component{
             })
         }
         if(param.dataSupplier!==undefined){
-            param.dataSupplier.map((v,i)=>{
+            param.dataSupplier.map((v)=>{
                 group1.push({
                     value:v.kode,
                     label:v.nama,
@@ -557,7 +554,7 @@ class FormProduct extends Component{
         }
 
         if(param.dataSubDept.data!==undefined){
-            typeof param.dataSubDept.data === 'object' ? param.dataSubDept.data.map((v,i)=>{
+            typeof param.dataSubDept.data === 'object' ? param.dataSubDept.data.map((v)=>{
                 group2.push({
                     value:v.kode,
                     label:v.nama,
@@ -591,7 +588,6 @@ class FormProduct extends Component{
     }
     checkData(event,i){
         event.preventDefault();
-        let name = event.target.name;
         let val = event.target.value;
         let barangSku = [...this.state.barangSku];
         barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
@@ -828,48 +824,48 @@ class FormProduct extends Component{
         if(event.target.name==="hrgBeliPCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
             if(this.state.barangSku.length > 1){
-                barangHarga[i][1].hrgBeliPACK = parseInt(event.target.value*qty_konversi[1]);
-                barangHarga[i][2].hrgBeliKARTON = parseInt(event.target.value*qty_konversi[2]);
+                barangHarga[i][1].hrgBeliPACK = parseInt(event.target.value*qty_konversi[1],10);
+                barangHarga[i][2].hrgBeliKARTON = parseInt(event.target.value*qty_konversi[2],10);
             }
-            this.state.hrgBeliPACK =  parseInt(event.target.value*qty_konversi[1]);
-            this.state.hrgBeliKARTON =  parseInt(event.target.value*qty_konversi[2]);
+            this.state.hrgBeliPACK =  parseInt(event.target.value*qty_konversi[1],10);
+            this.state.hrgBeliKARTON =  parseInt(event.target.value*qty_konversi[2],10);
         }
         if(event.target.name==="margin1PCS"){
             barangHarga[i] = {...barangHarga[i], [event.target.name]: event.target.value};
-            barangHarga[i].hrgJual1PCS = parseInt(barangHarga[i].hrgBeliPCS) * (parseInt(event.target.value)/100) + parseInt(barangHarga[i].hrgBeliPCS);
+            barangHarga[i].hrgJual1PCS = parseInt(barangHarga[i].hrgBeliPCS,10) * (parseInt(event.target.value,10)/100,10) + parseInt(barangHarga[i].hrgBeliPCS,10);
 
         }
         if(event.target.name==="margin1PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].hrgJual1PCS = parseInt(barangHarga[i][0].hrgBeliPCS) * (parseInt(event.target.value)/100) + parseInt(barangHarga[i][0].hrgBeliPCS);
+            barangHarga[i][0].hrgJual1PCS = parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(event.target.value,10)/100) + parseInt(barangHarga[i][0].hrgBeliPCS,10);
         }
         if(event.target.name==="margin2PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].hrgJual2PCS = parseInt(barangHarga[i][0].hrgBeliPCS) * (parseInt(event.target.value)/100) + parseInt(barangHarga[i][0].hrgBeliPCS);
+            barangHarga[i][0].hrgJual2PCS = parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(event.target.value,10)/100) + parseInt(barangHarga[i][0].hrgBeliPCS,10);
         }
         if(event.target.name==="margin3PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].hrgJual3PCS = parseInt(barangHarga[i][0].hrgBeliPCS) * (parseInt(event.target.value)/100) + parseInt(barangHarga[i][0].hrgBeliPCS);
+            barangHarga[i][0].hrgJual3PCS = parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(event.target.value,10)/100) + parseInt(barangHarga[i][0].hrgBeliPCS,10);
         }
         if(event.target.name==="margin4PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].hrgJual4PCS = parseInt(barangHarga[i][0].hrgBeliPCS) * (parseInt(event.target.value)/100) + parseInt(barangHarga[i][0].hrgBeliPCS);
+            barangHarga[i][0].hrgJual4PCS = parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(event.target.value,10)/100) + parseInt(barangHarga[i][0].hrgBeliPCS,10);
         }
         if(event.target.name==="hrgJual1PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].margin1PCS = ((parseInt(event.target.value)-parseInt(barangHarga[i][0].hrgBeliPCS))/parseInt(barangHarga[i][0].hrgBeliPCS))*100;
+            barangHarga[i][0].margin1PCS = ((parseInt(event.target.value,10)-parseInt(barangHarga[i][0].hrgBeliPCS,10))/parseInt(barangHarga[i][0].hrgBeliPCS,10))*100;
         }
         if(event.target.name==="hrgJual2PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].margin2PCS = ((parseInt(event.target.value)-parseInt(barangHarga[i][0].hrgBeliPCS))/parseInt(barangHarga[i][0].hrgBeliPCS))*100;
+            barangHarga[i][0].margin2PCS = ((parseInt(event.target.value,10)-parseInt(barangHarga[i][0].hrgBeliPCS,10))/parseInt(barangHarga[i][0].hrgBeliPCS,10))*100;
         }
         if(event.target.name==="hrgJual3PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].margin3PCS = ((parseInt(event.target.value)-parseInt(barangHarga[i][0].hrgBeliPCS))/parseInt(barangHarga[i][0].hrgBeliPCS))*100;
+            barangHarga[i][0].margin3PCS = ((parseInt(event.target.value,10)-parseInt(barangHarga[i][0].hrgBeliPCS,10))/parseInt(barangHarga[i][0].hrgBeliPCS,10))*100;
         }
         if(event.target.name==="hrgJual4PCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
-            barangHarga[i][0].margin4PCS = ((parseInt(event.target.value)-parseInt(barangHarga[i][0].hrgBeliPCS))/parseInt(barangHarga[i][0].hrgBeliPCS))*100;
+            barangHarga[i][0].margin4PCS = ((parseInt(event.target.value,10)-parseInt(barangHarga[i][0].hrgBeliPCS,10))/parseInt(barangHarga[i][0].hrgBeliPCS,10))*100;
         }
         if(event.target.name==="servicePCS"){
             barangHarga[i][0] = {...barangHarga[i][0], [event.target.name]: event.target.value};
@@ -894,10 +890,10 @@ class FormProduct extends Component{
                 if(this.state.barangSku.length === 3){
                     let qty_konversi=[];
                     this.state.barangSku[x].konversi!==undefined?qty_konversi.push(this.state.barangSku[x].konversi):0;
-                    barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1]);
-                    barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2]);
-                    this.state.hrgBeliPACK =  parseInt(value*qty_konversi[1]);
-                    this.state.hrgBeliKARTON =  parseInt(value*qty_konversi[2]);
+                    barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1],10);
+                    barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2],10);
+                    this.state.hrgBeliPACK =  parseInt(value*qty_konversi[1],10);
+                    this.state.hrgBeliKARTON =  parseInt(value*qty_konversi[2],10);
                 }
             }
             if(column==='hrgBeliPACK'){
@@ -914,104 +910,104 @@ class FormProduct extends Component{
         if(column==='margin1PCS'||column==='margin2PCS'||column==='margin3PCS'||column==='margin4PCS'|| column==='margin1PACK'||column==='margin2PACK'||column==='margin3PACK'||column==='margin4PACK'|| column==='margin1KARTON'||column==='margin2KARTON'||column==='margin3KARTON'||column==='margin4KARTON'){
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             if(column==='margin1PCS'){
-                barangHarga[i][x].hrgJual1PCS = parseInt(barangHarga[i][x].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPCS);
-                this.state.hrgJual1PCS= parseInt(barangHarga[i][x].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPCS);
+                barangHarga[i][x].hrgJual1PCS = parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPCS,10);
+                this.state.hrgJual1PCS= parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10);
             }
             if(column==='margin2PCS'){
-                barangHarga[i][x].hrgJual2PCS = parseInt(barangHarga[i][x].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPCS);
-                this.state.hrgJual2PCS= parseInt(barangHarga[i][x].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPCS);
+                barangHarga[i][x].hrgJual2PCS = parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPCS,10);
+                this.state.hrgJual2PCS= parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10);
             }
             if(column==='margin3PCS'){
-                barangHarga[i][x].hrgJual3PCS = parseInt(barangHarga[i][x].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPCS);
-                this.state.hrgJual3PCS= parseInt(barangHarga[i][x].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPCS);
+                barangHarga[i][x].hrgJual3PCS = parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPCS,10);
+                this.state.hrgJual3PCS= parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10);
             }
             if(column==='margin4PCS'){
-                barangHarga[i][0].hrgJual4PCS = parseInt(barangHarga[i][0].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[i][0].hrgBeliPCS);
-                this.state.hrgJual4PCS= parseInt(barangHarga[i][0].hrgBeliPCS) * (parseInt(value)/100) + parseInt(barangHarga[0].hrgBeliPCS);
+                barangHarga[i][0].hrgJual4PCS = parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][0].hrgBeliPCS,10);
+                this.state.hrgJual4PCS= parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[0].hrgBeliPCS,10);
             }
             if(column==='margin1PACK'){
-                barangHarga[i][x].hrgJual1PACK = parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPACK);
-                this.state.hrgJual1PACK= parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPACK);
+                barangHarga[i][x].hrgJual1PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
+                this.state.hrgJual1PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
             }
             if(column==='margin2PACK'){
-                barangHarga[i][x].hrgJual2PACK = parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPACK);
-                this.state.hrgJual2PACK= parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPACK);
+                barangHarga[i][x].hrgJual2PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
+                this.state.hrgJual2PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
             }
             if(column==='margin3PACK'){
-                barangHarga[i][x].hrgJual3PACK = parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPACK);
-                this.state.hrgJual4PACK= parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPACK);
+                barangHarga[i][x].hrgJual3PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
+                this.state.hrgJual4PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
             }
             if(column==='margin4PACK'){
-                barangHarga[i][x].hrgJual4PACK = parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliPACK);
-                this.state.hrgJual4PACK= parseInt(barangHarga[i][x].hrgBeliPACK) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliPACK);
+                barangHarga[i][x].hrgJual4PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
+                this.state.hrgJual4PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
             }
             if(column==='margin1KARTON'){
-                barangHarga[i][x].hrgJual1KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON);
-                this.state.hrgJual1KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliKARTON);
+                barangHarga[i][x].hrgJual1KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
+                this.state.hrgJual1KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
             }
             if(column==='margin2KARTON'){
-                barangHarga[i][x].hrgJual2KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON);
-                this.state.hrgJual2KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliKARTON);
+                barangHarga[i][x].hrgJual2KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
+                this.state.hrgJual2KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
             }
             if(column==='margin3KARTON'){
-                barangHarga[i][x].hrgJual3KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON);
-                this.state.hrgJual3KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliKARTON);
+                barangHarga[i][x].hrgJual3KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
+                this.state.hrgJual3KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
             }
             if(column==='margin4KARTON'){
-                barangHarga[i][x].hrgJual4KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON);
-                this.state.hrgJual4KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON) * (parseInt(value)/100) + parseInt(barangHarga[x].hrgBeliKARTON);
+                barangHarga[i][x].hrgJual4KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
+                this.state.hrgJual4KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
             }
 
         }
         if(column==='hrgJual1PCS'||column==='hrgJual2PCS'||column==='hrgJual3PCS'||column==='hrgJual4PCS'||column==='hrgJual1PACK'||column==='hrgJual2PACK'||column==='hrgJual3PACK'||column==='hrgJual4PACK'||column==='hrgJual1KARTON'||column==='hrgJual2KARTON'||column==='hrgJual3KARTON'||column==='hrgJual4KARTON'){
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             if(column==='hrgJual1PCS'){
-                barangHarga[i][x].margin1PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
-                this.state.margin1PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
+                barangHarga[i][x].margin1PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.state.margin1PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
             }
             if(column==='hrgJual2PCS'){
-                barangHarga[i][x].margin2PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
-                this.state.margin2PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
+                barangHarga[i][x].margin2PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.state.margin2PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
             }
             if(column==='hrgJual3PCS'){
-                barangHarga[i][x].margin3PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
-                this.state.margin3PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
+                barangHarga[i][x].margin3PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.state.margin3PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
             }
             if(column==='hrgJual4PCS'){
-                barangHarga[i][x].margin4PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
-                this.state.margin4PCS = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPCS))/parseInt(barangHarga[i][x].hrgBeliPCS))*100;
+                barangHarga[i][x].margin4PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.state.margin4PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
             }
             if(column==='hrgJual1PACK'){
-                barangHarga[i][x].margin1PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
-                this.state.margin1PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
+                barangHarga[i][x].margin1PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.state.margin1PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
             }
             if(column==='hrgJual2PACK'){
-                barangHarga[i][x].margin2PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
-                this.state.margin2PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
+                barangHarga[i][x].margin2PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.state.margin2PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
             }
             if(column==='hrgJual3PACK'){
-                barangHarga[i][x].margin3PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
-                this.state.margin3PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
+                barangHarga[i][x].margin3PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.state.margin3PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
             }
             if(column==='hrgJual4PACK'){
-                barangHarga[i][x].margin4PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
-                this.state.margin4PACK = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliPACK))/parseInt(barangHarga[i][x].hrgBeliPACK))*100;
+                barangHarga[i][x].margin4PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.state.margin4PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
             }
             if(column==='hrgJual1KARTON'){
-                barangHarga[i][x].margin1KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
-                this.state.margin1KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
+                barangHarga[i][x].margin1KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.state.margin1KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
             }
             if(column==='hrgJual2KARTON'){
-                barangHarga[i][x].margin2KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
-                this.state.margin2KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
+                barangHarga[i][x].margin2KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.state.margin2KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
             }
             if(column==='hrgJual3KARTON'){
-                barangHarga[i][x].margin3KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
-                this.state.margin3KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
+                barangHarga[i][x].margin3KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.state.margin3KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
             }
             if(column==='hrgJual4KARTON'){
-                barangHarga[i][x].margin4KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
-                this.state.margin4KARTON = ((parseInt(value)-parseInt(barangHarga[i][x].hrgBeliKARTON))/parseInt(barangHarga[i][x].hrgBeliKARTON))*100;
+                barangHarga[i][x].margin4KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.state.margin4KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
             }
         }
 
@@ -1149,64 +1145,64 @@ class FormProduct extends Component{
         }
         if(name === 'hrg_beli'){
             this.setState({
-                hrg_beli_pack : parseInt(val*qty_konversi[1]),
-                hrg_beli_karton : parseInt(val*qty_konversi[2]),
+                hrg_beli_pack : parseInt(val*qty_konversi[1],10),
+                hrg_beli_karton : parseInt(val*qty_konversi[2],10),
             });
         }
         if(name === "hrgjual1"){
             this.setState({
-                margin1:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin1:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
             });
-            margin1_pcs = ((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin1_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
 
         }
         if(name === "hrgjual2"){
             this.setState({
-                margin2:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin2:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
 
             });
-            margin2_pcs = ((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin2_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
         if(name === "hrgjual3"){
             this.setState({
-                margin3:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin3:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
 
             });
-            margin3_pcs = ((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin3_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
         if(name === "hrgjual4"){
             this.setState({
-                margin4:((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin4:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
             });
-            margin4_pcs = ((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin4_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
         if(name === "margin1"){
             this.setState({
-                hrgjual1:parseInt(this.state.hrg_beli) * (parseInt(val)/100) + parseInt(this.state.hrg_beli),
+                hrgjual1:parseInt(this.state.hrg_beli,10) * (parseInt(val,10)/100) + parseInt(this.state.hrg_beli,10),
             });
-            hrg_jual_1_pcs = parseInt(this.state.hrg_beli) * (parseInt(val)/100) + parseInt(this.state.hrg_beli);
+            hrg_jual_1_pcs = parseInt(this.state.hrg_beli,10) * (parseInt(val,10)/100) + parseInt(this.state.hrg_beli,10);
         }
         if(name === "margin2"){
             this.setState({
-                hrgjual2:(parseInt(this.state.hrg_beli) * (parseInt(val)/100)) + parseInt(this.state.hrg_beli)
+                hrgjual2:(parseInt(this.state.hrg_beli,10) * (parseInt(val,10)/100)) + parseInt(this.state.hrg_beli,10)
             });
-            hrg_jual_2_pcs = (parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli);
+            hrg_jual_2_pcs = (parseInt(this.state.hrg_beli,10)*(parseInt(val,10)/100))+parseInt(this.state.hrg_beli,10);
         }
         if(name === "margin3"){
-            this.setState({hrgjual3:(parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli)});
-            hrg_jual_3_pcs = (parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli);
+            this.setState({hrgjual3:(parseInt(this.state.hrg_beli,10)*(parseInt(val,10)/100))+parseInt(this.state.hrg_beli,10)});
+            hrg_jual_3_pcs = (parseInt(this.state.hrg_beli,10)*(parseInt(val,10)/100))+parseInt(this.state.hrg_beli,10);
         }
         if(name === "margin4"){
-            this.setState({hrgjual4:(parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli)});
-            hrg_jual_4_pcs = (parseInt(this.state.hrg_beli)*(parseInt(val)/100))+parseInt(this.state.hrg_beli);
+            this.setState({hrgjual4:(parseInt(this.state.hrg_beli,10)*(parseInt(val,10)/100))+parseInt(this.state.hrg_beli,10)});
+            hrg_jual_4_pcs = (parseInt(this.state.hrg_beli,10)*(parseInt(val,10)/100))+parseInt(this.state.hrg_beli,10);
         }
         if(localStorage.getItem("samarata") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++){
                 if(name === 'hrg_beli'){
                     this.state.barangHarga[i][0].hrgBeliPCS = val;
                     if(this.state.barangSku.length === 3){
-                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1]);
-                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2]);
+                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1],10);
+                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
                     }
 
                 }
@@ -1263,56 +1259,56 @@ class FormProduct extends Component{
         }
         if(column === 'hrg_beli'){
             this.setState({
-                hrg_beli_pack : parseInt(value*qty_konversi[1]),
-                hrg_beli_karton : parseInt(value*qty_konversi[2]),
+                hrg_beli_pack : parseInt(value*qty_konversi[1],10),
+                hrg_beli_karton : parseInt(value*qty_konversi[2],10),
             });
         }
         if(column === "margin1"){
             this.setState({
-                hrgjual1:parseInt(this.state.hrg_beli) * (parseInt(value)/100) + parseInt(this.state.hrg_beli),
+                hrgjual1:parseInt(this.state.hrg_beli,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli,10),
             });
-            hrg_jual_1_pcs = parseInt(this.state.hrg_beli) * (parseInt(value)/100) + parseInt(this.state.hrg_beli);
+            hrg_jual_1_pcs = parseInt(this.state.hrg_beli,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli,10);
         }
         if(column === "margin2"){
             this.setState({
-                hrgjual2:(parseInt(this.state.hrg_beli) * (parseInt(value)/100)) + parseInt(this.state.hrg_beli)
+                hrgjual2:(parseInt(this.state.hrg_beli,10) * (parseInt(value,10)/100)) + parseInt(this.state.hrg_beli,10)
             });
-            hrg_jual_2_pcs = (parseInt(this.state.hrg_beli)*(parseInt(value)/100))+parseInt(this.state.hrg_beli);
+            hrg_jual_2_pcs = (parseInt(this.state.hrg_beli,10)*(parseInt(value,10)/100))+parseInt(this.state.hrg_beli,10);
         }
         if(column === "margin3"){
-            this.setState({hrgjual3:(parseInt(this.state.hrg_beli)*(parseInt(value)/100))+parseInt(this.state.hrg_beli)});
-            hrg_jual_3_pcs = (parseInt(this.state.hrg_beli)*(parseInt(value)/100))+parseInt(this.state.hrg_beli);
+            this.setState({hrgjual3:(parseInt(this.state.hrg_beli,10)*(parseInt(value,10)/100))+parseInt(this.state.hrg_beli,10)});
+            hrg_jual_3_pcs = (parseInt(this.state.hrg_beli,10)*(parseInt(value,10)/100))+parseInt(this.state.hrg_beli,10);
         }
         if(column === "margin4"){
-            this.setState({hrgjual4:(parseInt(this.state.hrg_beli)*(parseInt(value)/100))+parseInt(this.state.hrg_beli)});
-            hrg_jual_4_pcs = (parseInt(this.state.hrg_beli)*(parseInt(value)/100))+parseInt(this.state.hrg_beli);
+            this.setState({hrgjual4:(parseInt(this.state.hrg_beli,10)*(parseInt(value,10)/100))+parseInt(this.state.hrg_beli,10)});
+            hrg_jual_4_pcs = (parseInt(this.state.hrg_beli,10)*(parseInt(value,10)/100))+parseInt(this.state.hrg_beli,10);
         }
         if(column === "hrgjual1"){
             this.setState({
-                margin1:((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin1:((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
             });
-            margin1_pcs = ((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin1_pcs = ((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
 
         }
         if(column === "hrgjual2"){
             this.setState({
-                margin2:((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin2:((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
 
             });
-            margin2_pcs = ((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin2_pcs = ((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
         if(column === "hrgjual3"){
             this.setState({
-                margin3:((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin3:((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
 
             });
-            margin3_pcs = ((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin3_pcs = ((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
         if(column === "hrgjual4"){
             this.setState({
-                margin4:((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100,
+                margin4:((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
             });
-            margin4_pcs = ((parseInt(value)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+            margin4_pcs = ((parseInt(value,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
 
         if(localStorage.getItem("samarata") === "true"){
@@ -1320,8 +1316,8 @@ class FormProduct extends Component{
                 if(column === 'hrg_beli'){
                     this.state.barangHarga[i][0].hrgBeliPCS = value;
                     if(this.state.barangSku.length === 3){
-                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1]);
-                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2]);
+                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1],10);
+                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2],10);
                     }
                 }
                 if(column === 'margin1'){
@@ -1370,74 +1366,74 @@ class FormProduct extends Component{
                 }
                 if(column==="margin1_pack"){
                     this.setState({
-                        hrgjual1_pack:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
-                        hrgJual1PACK:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
+                        hrgjual1_pack:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
+                        hrgJual1PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin1PACK:value,
                     });
                     this.state.barangHarga[i][1].margin1PACK = value;
-                    this.state.barangHarga[i][1].hrgJual1PACK = parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack);
+                    this.state.barangHarga[i][1].hrgJual1PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
                 }
                 if(column==="margin2_pack"){
                     this.setState({
-                        hrgjual2_pack:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
-                        hrgJual2PACK:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
+                        hrgjual2_pack:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
+                        hrgJual2PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin2PACK:value,
                     });
                     this.state.barangHarga[i][1].margin2PACK = value;
-                    this.state.barangHarga[i][1].hrgJual2PACK = parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack);                }
+                    this.state.barangHarga[i][1].hrgJual2PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);                }
                 if(column==="margin3_pack"){
                     this.setState({
-                        hrgjual3_pack:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
-                        hrgJual3PACK:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
+                        hrgjual3_pack:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
+                        hrgJual3PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin3PACK:value,
                     });
                     this.state.barangHarga[i][1].margin3PACK = value;
-                    this.state.barangHarga[i][1].hrgJual3PACK = parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack);
+                    this.state.barangHarga[i][1].hrgJual3PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
                 }
                 if(column==="margin4_pack"){
                     this.setState({
-                        hrgjual4_pack:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
-                        hrgJual4PACK:parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack),
+                        hrgjual4_pack:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
+                        hrgJual4PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin4PACK:value,
                     });
                     this.state.barangHarga[i][1].margin4PACK = value;
-                    this.state.barangHarga[i][1].hrgJual4PACK = parseInt(this.state.hrg_beli_pack) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_pack);
+                    this.state.barangHarga[i][1].hrgJual4PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
                 }
                 if(column==="hrgjual1_pack"){
                     this.setState({
-                        margin1_pack:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
-                        margin1PACK:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
+                        margin1_pack:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
+                        margin1PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual1PACK:value
                     });
-                    this.state.barangHarga[i][1].margin1PACK = ((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100;
+                    this.state.barangHarga[i][1].margin1PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
                     this.state.barangHarga[i][1].hrgJual1PACK = value;
-                    // margin4_pcs = ((parseInt(val)-parseInt(this.state.hrg_beli))/parseInt(this.state.hrg_beli))*100;
+                    // margin4_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
                 }
                 if(column==="hrgjual2_pack"){
                     this.setState({
-                        margin2_pack:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
-                        margin2PACK:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
+                        margin2_pack:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
+                        margin2PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual2PACK:value
                     });
-                    this.state.barangHarga[i][1].margin2PACK = ((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100;
+                    this.state.barangHarga[i][1].margin2PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
                     this.state.barangHarga[i][1].hrgJual2PACK = value;
                 }
                 if(column==="hrgjual3_pack"){
                     this.setState({
-                        margin3_pack:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
-                        margin3PACK:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
+                        margin3_pack:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
+                        margin3PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual3PACK:value
                     });
-                    this.state.barangHarga[i][1].margin3PACK = ((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100;
+                    this.state.barangHarga[i][1].margin3PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
                     this.state.barangHarga[i][1].hrgJual3PACK = value;
                 }
                 if(column==="hrgjual4_pack"){
                     this.setState({
-                        margin4_pack:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
-                        margin4PACK:((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100,
+                        margin4_pack:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
+                        margin4PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual4PACK:value
                     });
-                    this.state.barangHarga[i][1].margin4PACK = ((parseInt(value)-parseInt(this.state.hrg_beli_pack))/parseInt(this.state.hrg_beli_pack))*100;
+                    this.state.barangHarga[i][1].margin4PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
                     this.state.barangHarga[i][1].hrgJual4PACK = value;
                 }
                 if(column==="service_pack"){
@@ -1457,73 +1453,73 @@ class FormProduct extends Component{
                 }
                 if (column === "margin1_karton") {
                     this.setState({
-                        hrgjual1_karton:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
-                        hrgJual1KARTON:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
+                        hrgjual1_karton:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
+                        hrgJual1KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin1KARTON:value
                     });
                     this.state.barangHarga[i][2].margin1KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual1KARTON = parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton);
+                    this.state.barangHarga[i][2].hrgJual1KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
                 }
                 if (column === "margin2_karton") {
                     this.setState({
-                        hrgjual2_karton:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
-                        hrgJual2KARTON:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
+                        hrgjual2_karton:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
+                        hrgJual2KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin2KARTON:value
                     });
                     this.state.barangHarga[i][2].margin2KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual2KARTON = parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton);                }
+                    this.state.barangHarga[i][2].hrgJual2KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);                }
                 if (column === "margin3_karton") {
                     this.setState({
-                        hrgjual3_karton:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
-                        hrgJual3KARTON:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
+                        hrgjual3_karton:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
+                        hrgJual3KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin3KARTON:value
                     });
                     this.state.barangHarga[i][2].margin3KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual3KARTON = parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton);
+                    this.state.barangHarga[i][2].hrgJual3KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
                 }
                 if (column === "margin4_karton") {
                     this.setState({
-                        hrgjual4_karton:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
-                        hrgJual4KARTON:parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton),
+                        hrgjual4_karton:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
+                        hrgJual4KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin4KARTON:value
                     });
                     this.state.barangHarga[i][2].margin4KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual4KARTON = parseInt(this.state.hrg_beli_karton) * (parseInt(value)/100) + parseInt(this.state.hrg_beli_karton);
+                    this.state.barangHarga[i][2].hrgJual4KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
                 }
                 if (column === "hrgjual1_karton") {
                     this.setState({
-                        margin1_karton:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
-                        margin1KARTON:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
+                        margin1_karton:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
+                        margin1KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual1KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin1KARTON = ((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100;
+                    this.state.barangHarga[i][2].margin1KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
                     this.state.barangHarga[i][2].hrgJual1KARTON = value;
                 }
                 if (column === "hrgjual2_karton") {
                     this.setState({
-                        margin2_karton:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
-                        margin2KARTON:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
+                        margin2_karton:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
+                        margin2KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual2KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin2KARTON = ((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100;
+                    this.state.barangHarga[i][2].margin2KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
                     this.state.barangHarga[i][2].hrgJual2KARTON = value;
                 }
                 if (column === "hrgjual3_karton") {
                     this.setState({
-                        margin3_karton:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
-                        margin3KARTON:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
+                        margin3_karton:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
+                        margin3KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual3KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin3KARTON = ((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100;
+                    this.state.barangHarga[i][2].margin3KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
                     this.state.barangHarga[i][2].hrgJual3KARTON = value;
                 }
                 if (column === "hrgjual4_karton") {
                     this.setState({
-                        margin4_karton:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
-                        margin4KARTON:((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100,
+                        margin4_karton:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
+                        margin4KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual4KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin4KARTON = ((parseInt(value)-parseInt(this.state.hrg_beli_karton))/parseInt(this.state.hrg_beli_karton))*100;
+                    this.state.barangHarga[i][2].margin4KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
                     this.state.barangHarga[i][2].hrgJual4KARTON = value;
                 }
                 if (column === "service_karton") {
@@ -1567,43 +1563,43 @@ class FormProduct extends Component{
                     "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
                     "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
                 });
-                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
                 if(this.state.jenis!=='4'){
-                    if(parseInt(this.state.barangHarga[i][0].margin1PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].margin1PCS,10) < 0){
                         alert(`margin 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                         return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
                         alert(`margin 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                         return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
                         alert(`margin 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                         return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
                         alert(`margin 4 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                         return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual1PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) < 0){
                         alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) < 0){
                         alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) < 0){
                         alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) < 0){
                         alert(`harga jual 4 ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].ppnPCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].ppnPCS,10) < 0){
                         alert(`ppn satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
-                    if(parseInt(this.state.barangHarga[i][0].servicePCS) < 0){
+                    if(parseInt(this.state.barangHarga[i][0].servicePCS,10) < 0){
                         alert(`service satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                     }
                 }
@@ -1632,81 +1628,81 @@ class FormProduct extends Component{
                     "harga4":this.state.barangHarga[i][1].hrgJual4PACK,
                 });
                 // VALIDASI PCS
-                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].margin1PCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].margin1PCS,10) < 0){
                     alert(`margin 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                     return;
                 }
-                // if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
                 //     alert(`margin 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].margin3PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].margin3PCS,10) < 0){
                 //     alert(`margin 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].margin4PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].margin4PCS,10) < 0){
                 //     alert(`margin 4 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) < 0){
                 //     alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) < 0){
                 //     alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) < 0){
                 //     alert(`harga jual 4 ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 // }
-                if(parseInt(this.state.barangHarga[i][0].ppnPCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].ppnPCS,10) < 0){
                     alert(`ppn satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].servicePCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].servicePCS,10) < 0){
                     alert(`service satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
                 }
                 // VALIDASI PACK
-                if(parseInt(this.state.barangHarga[i][1].hrgBeliPACK) === 0||parseInt(this.state.barangHarga[i][1].hrgBeliPACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].margin1PACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].margin1PACK,10) < 0){
                     alert(`margin 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                // if(parseInt(this.state.barangHarga[i][1].margin2PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].margin2PACK,10) < 0){
                 //     alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].margin3PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].margin3PACK,10) < 0){
                 //     alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].margin4PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].margin4PACK,10) < 0){
                 //     alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) < 0){
                 //     alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) < 0){
                 //     alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) < 0){
                 //     alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                if(parseInt(this.state.barangHarga[i][1].ppnPACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].ppnPACK,10) < 0){
                     alert(`ppn satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].servicePACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].servicePACK,10) < 0){
                     alert(`service satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
 
@@ -1746,120 +1742,120 @@ class FormProduct extends Component{
                     "harga4":this.state.barangHarga[i][2].hrgJual4KARTON,
                 });
                 // VALIDASI PCS
-                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].margin1PCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].margin1PCS,10) < 0){
                     alert(`margin 1 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                // if(parseInt(this.state.barangHarga[i][0].margin2PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
                 //     alert(`margin 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].margin3PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].margin3PCS,10) < 0){
                 //     alert(`margin 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].margin4PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].margin4PCS,10) < 0){
                 //     alert(`margin 4 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) < 0){
                 //     alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) < 0){
                 //     alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS) < 0){
+                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) < 0){
                 //     alert(`harga jual 4 ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                if(parseInt(this.state.barangHarga[i][0].ppnPCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].ppnPCS,10) < 0){
                     alert(`ppn satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][0].servicePCS) < 0){
+                if(parseInt(this.state.barangHarga[i][0].servicePCS,10) < 0){
                     alert(`service satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
                 }
                 // VALIDASI PACK
-                if(parseInt(this.state.barangHarga[i][1].hrgBeliPACK) === 0||parseInt(this.state.barangHarga[i][1].hrgBeliPACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].margin1PACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].margin1PACK,10) < 0){
                     alert(`margin 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                // if(parseInt(this.state.barangHarga[i][1].margin2PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].margin2PACK,10) < 0){
                 //     alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].margin3PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].margin3PACK,10) < 0){
                 //     alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].margin4PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].margin4PACK,10) < 0){
                 //     alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) < 0){
                 //     alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) < 0){
                 //     alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK) < 0){
+                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) < 0){
                 //     alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                if(parseInt(this.state.barangHarga[i][1].ppnPACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].ppnPACK,10) < 0){
                     alert(`ppn satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][1].servicePACK) < 0){
+                if(parseInt(this.state.barangHarga[i][1].servicePACK,10) < 0){
                     alert(`service satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
                 }
                 // VALIDASI KARTON
-                if(parseInt(this.state.barangHarga[i][2].hrgBeliKARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgBeliKARTON) < 0){
+                if(parseInt(this.state.barangHarga[i][2].hrgBeliKARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgBeliKARTON,10) < 0){
                     alert(`harga beli satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                if(parseInt(this.state.barangHarga[i][2].margin1KARTON) < 0){
+                if(parseInt(this.state.barangHarga[i][2].margin1KARTON,10) < 0){
                     alert(`margin 1 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
                     return;
                 }
-                // if(parseInt(this.state.barangHarga[i][2].margin2KARTON) < 0){
+                // if(parseInt(this.state.barangHarga[i][2].margin2KARTON,10) < 0){
                 //     alert(`margin 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][2].margin3KARTON) < 0){
+                // if(parseInt(this.state.barangHarga[i][2].margin3KARTON,10) < 0){
                 //     alert(`margin 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][2].margin4KARTON) < 0){
+                // if(parseInt(this.state.barangHarga[i][2].margin4KARTON,10) < 0){
                 //     alert(`margin 4 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
                 //     return;
                 // }
-                if(parseInt(this.state.barangHarga[i][2].hrgJual1KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual1KARTON) < 0){
+                if(parseInt(this.state.barangHarga[i][2].hrgJual1KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual1KARTON,10) < 0){
                     alert(`harga jual 1 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                // if(parseInt(this.state.barangHarga[i][2].hrgJual2KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual2KARTON) < 0){
+                // if(parseInt(this.state.barangHarga[i][2].hrgJual2KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual2KARTON,10) < 0){
                 //     alert(`harga jual 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][2].hrgJual3KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual3KARTON) < 0){
+                // if(parseInt(this.state.barangHarga[i][2].hrgJual3KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual3KARTON,10) < 0){
                 //     alert(`harga jual 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                // if(parseInt(this.state.barangHarga[i][2].hrgJual4KARTON) === 0||parseInt(this.state.barangHarga[i][2].hrgJual4KARTON) < 0){
+                // if(parseInt(this.state.barangHarga[i][2].hrgJual4KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual4KARTON,10) < 0){
                 //     alert(`harga jual 4 ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 // }
-                if(parseInt(this.state.barangHarga[i][2].ppnKARTON) < 0){
+                if(parseInt(this.state.barangHarga[i][2].ppnKARTON,10) < 0){
                     alert(`ppn satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 }
-                if(parseInt(this.state.barangHarga[i][2].serviceKARTON) < 0){
+                if(parseInt(this.state.barangHarga[i][2].serviceKARTON,10) < 0){
                     alert(`service satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
                 }
             }

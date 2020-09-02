@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchExpedisi, FetchExpedisiExcel, FetchExpedisiData} from "redux/actions/inventory/expedisi.action";
+import {FetchExpedisi, FetchExpedisiExcel} from "redux/actions/inventory/expedisi.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import ExpedisiReportExcel from "components/App/modals/report/inventory/expedisi_report/form_expedisi_excel";
@@ -30,8 +30,6 @@ class ExpedisiReport extends Component{
             endDate:moment(new Date()).format("yyyy-MM-DD"),
             sort:"",
             sort_data:[],
-            filter:"",
-            filter_data:[],
             filter:"",
             filter_data:[],
             status:"",
@@ -137,6 +135,7 @@ class ExpedisiReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let filter = [
             {kode:"kd_expedisi",value: "Kode Ekspedisi"},
@@ -150,6 +149,7 @@ class ExpedisiReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let status = [
             {kode:"",value: "Semua"},
@@ -163,6 +163,7 @@ class ExpedisiReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         this.setState({
             sort_data: data_sort,
@@ -181,6 +182,7 @@ class ExpedisiReport extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -224,7 +226,7 @@ class ExpedisiReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formExpedisiExcel"));
         this.props.dispatch(FetchExpedisiExcel(1,this.state.where_data,total));
@@ -233,7 +235,14 @@ class ExpedisiReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data} = this.props.expedisiReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data
+        } = this.props.expedisiReport;
         return (
             <Layout page="Laporan Expedisi">
                 <div className="col-12 box-margin">

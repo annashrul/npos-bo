@@ -3,9 +3,9 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import moment from "moment";
-import {FetchBrgPackingTrx, storePacking} from "../../../../redux/actions/inventory/packing.action";
+import {FetchBrgPackingTrx} from "redux/actions/inventory/packing.action";
 import Swal from "sweetalert2";
-import {storeExpedisi} from "../../../../redux/actions/inventory/expedisi.action";
+import {storeExpedisi} from "redux/actions/inventory/expedisi.action";
 
 class Expedisi extends Component{
     constructor(props) {
@@ -45,6 +45,7 @@ class Expedisi extends Component{
                         value: i.kode,
                         label: i.nama
                     });
+                    return null;
                 })
                 this.setState({
                     location_data: lk,
@@ -74,8 +75,10 @@ class Expedisi extends Component{
                         nm_brg: v.nm_brg,
                         isChecked:checked
                     })
+                    return null;
                 });
                 this.setState({brgVal:data});
+                return null;
             }
         }
     }
@@ -113,7 +116,7 @@ class Expedisi extends Component{
     handleChangeDynamic(event,i){
         let checked=event.target.checked;
         this.state.brgVal[i].isChecked = checked;
-        this.setState({});
+        this.setState();
         checked===true?localStorage.setItem(`isChecked${i}`,"true"):localStorage.setItem(`isChecked${i}`,"false");
 
     }
@@ -187,6 +190,7 @@ class Expedisi extends Component{
                                     jml_koli:v.qty,
                                 })
                             }
+                            return null;
                         })
                         parsedata['detail'] = detail;
                         this.props.dispatch(storeExpedisi(parsedata));

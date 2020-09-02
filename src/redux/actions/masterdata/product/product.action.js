@@ -1,9 +1,6 @@
 import {PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {store, update,cekData} from "components/model/app.model";
-import {FetchBank} from "../bank/bank.action";
-import {FetchCash} from "../cash/cash.action";
 
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}

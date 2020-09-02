@@ -2,8 +2,6 @@ import {SALE,HEADERS} from "../_constants";
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {destroy} from "components/model/app.model";
-import {FetchBank} from "../masterdata/bank/bank.action";
-import {setReportDetail} from "../purchase/receive/receive.action";
 import moment from "moment";
 
 
