@@ -434,14 +434,14 @@ class HutangReport extends Component{
                                 </table>
 
                             </div>
-                            {/* <div style={{"marginTop":"20px","float":"right"}}>
+                            <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
                                     total={parseInt((per_page*last_page),10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
-                            </div> */}
+                            </div>
                             {/* <DetailHutang hutangDetail={this.props.hutangDetail}/> */}
                             <HutangReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                             {/* <ApproveHutang/> */}

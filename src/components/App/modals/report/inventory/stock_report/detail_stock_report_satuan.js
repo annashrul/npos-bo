@@ -208,7 +208,7 @@ class DetailStockReportSatuan extends Component{
                     </ModalBody>
 
                 </WrapperModal>
-                <DetailStockReportTransaction lok={this.state.data_lok} />
+                <DetailStockReportTransaction lok={this.state.data_lok} startDate={this.props.startDate} endDate={this.props.endDate} code={localStorage.getItem('codeDetailTrx')} />
             </div>
         );
     }

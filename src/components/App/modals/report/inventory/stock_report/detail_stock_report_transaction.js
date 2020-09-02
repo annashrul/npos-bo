@@ -4,11 +4,19 @@ import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {toRp} from "helper";
+import Paginationq from "helper";
 import moment from "moment";
+import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/stock_report.action";
 class DetailStockReportTransaction extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
+    }
+
+    handlePageChange(pageNumber){
+        localStorage.setItem("page_stock_detail_trx_report",pageNumber);
+        this.props.dispatch(FetchStockReportDetailTransaction(pageNumber, this.props.code, this.props.startDate, this.props.endDate, localStorage.getItem("locationDetailTrx")))
     }
 
 
@@ -19,7 +27,10 @@ class DetailStockReportTransaction extends Component{
     };
 
     render(){
-        const {data} = this.props.stockReportDetailTransaction;
+        const {data,
+            current_page,
+            per_page,
+            last_page} = this.props.stockReportDetailTransaction;
         const lok = this.props.lok;
         let totStockIn=0;
         let totStockOut=0;
@@ -98,6 +109,14 @@ class DetailStockReportTransaction extends Component{
                             </tr>
                             </tfoot>
                         </table>
+                        <div style={{"marginTop":"20px","float":"right"}}>
+                                <Paginationq
+                                    current_page={parseInt(current_page,10)}
+                                    per_page={parseInt(per_page,10)}
+                                    total={parseInt((per_page*last_page),10)}
+                                    callback={this.handlePageChange.bind(this)}
+                                />
+                            </div>
                     </div>
                 </ModalBody>
             </WrapperModal>
