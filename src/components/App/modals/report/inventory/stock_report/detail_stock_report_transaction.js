@@ -106,9 +106,12 @@ class DetailStockReportTransaction extends Component{
 }
 
 const mapStateToProps = (state) => {
+
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
+        stockReportDetailTransaction: state.stockReportReducer.dataDetailTransaksi,
+        isLoading: state.stockReportReducer.isLoading,
     }
 }
 // const mapDispatch

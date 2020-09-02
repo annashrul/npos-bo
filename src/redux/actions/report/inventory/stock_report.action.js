@@ -100,21 +100,7 @@ export const FetchStockReportDetailSatuan = (page=1,code,dateFrom='',dateTo='',l
 export const FetchStockReportDetailTransaction = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        // let que = '';
-        // if(dateFrom===''&&dateTo===''&&location===''){
-        //     que = `report/stock/${code}/detail?page=${page}`;
-        // }
-        // if(dateFrom!==''&&dateTo!==''&&location===''){
-        //     que = `report/stock/${code}/detail?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        // }
-        // if(dateFrom!==''&&dateTo!==''&&location!==''){
-        //     que = `report/stock/${code}/detail?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        // }
-        // if(location!==''){
-        //     que = `report/stock/${code}/detail?page=${page}&lokasi=${location}`;
-        // }
-        // 
-        axios.get(HEADERS.URL+`report/stock/${code}/detail?page=${page}&datefrom=2019-01-16&lokasi=${location}&dateto=2020-06-18`)
+        axios.get(HEADERS.URL + `report/stock/${code}/detail?page=${page}&datefrom=${dateFrom}&lokasi=${location}&dateto=${dateTo}`)
             .then(function(response){
                 const data = response.data;
                 

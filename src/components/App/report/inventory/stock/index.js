@@ -29,15 +29,37 @@ class InventoryReport extends Component{
             isSelected:false,
             location:"",
             location_data:[],
-            status_data: [],
+            status_data: [
+                {value: "",label:'Semua Stock'},
+                {value: "<",label:'Stock -'},
+                {value: ">",label:'Stock +'},
+                {value: "=",label:'Stock 0'},
+            ],
             status:"",
             any:"",
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD"),
-            search_by:"",
-            search_by_data:[],
+            search_by:"br.kd_brg",
+            search_by_data:[
+                {value: "br.kd_brg", label:'Kode Barang'},
+                {value: "br.nm_brg", label:'Nama Barang'},
+                {value: "br.group1", label:'Supplier'}
+            ],
         }
     }
+    componentWillUnmount() {
+        localStorage.removeItem('page_stock_report');
+        localStorage.removeItem('code');
+        localStorage.removeItem('barcode');
+        localStorage.removeItem('name');
+        localStorage.removeItem('date_from_stock_report');
+        localStorage.removeItem('date_to_stock_report');
+        localStorage.removeItem('lk_stock_report');
+        localStorage.removeItem('search_by_stock_report');
+        localStorage.removeItem('st_stock_report');
+        localStorage.removeItem('where_stock_report');
+    }
+
     componentDidMount(){
         if (localStorage.lk_stock_report !== undefined && localStorage.lk_stock_report !== '') {
             this.setState({
@@ -78,21 +100,16 @@ class InventoryReport extends Component{
     handlePageChange(pageNumber){
         localStorage.setItem("page_stock_report",pageNumber);
         this.handleParameter(pageNumber);
-
     }
     toggle(e,code,barcode,name){
         e.preventDefault();
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
-        // this.setState({detail:{}});
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailStockReportSatuan"));
-        // this.setState({
-        //     detail:{"code":localStorage.getItem("code")}
-        // });
-        // this.state.detail = {"code":"11111"};
+     
         this.props.dispatch(FetchStockReportDetailSatuan(1,code,'','',''))
     };
     handleChange(event){
@@ -114,44 +131,13 @@ class InventoryReport extends Component{
         this.handleParameter(1);
     }
     componentWillReceiveProps = (nextProps) => {
-        let sb=[];
-        let searchBy=[
-            {value: "kd_brg", label:'Kode Barang'},
-            {value: "nm_brg", label:'Nama Barang'},
-            {value: "group1", label:'Supplier'},
-        ];
-        searchBy.map((i) => {
-            sb.push({
-                value: i.value,
-                label: i.label
-            });
-            return null;
-        })
-        let status= [
-            {value: "",label:'Semua Stock'},
-            {value: "<",label:'Stock -'},
-            {value: ">",label:'Stock +'},
-            {value: "=",label:'Stock 0'},
-        ];
-        let st=[];
-        status.map((i) => {
-            st.push({
-                value: i.value,
-                label: i.label
-            });
-            return null;
-        })
-        this.setState({
-            status_data: st,
-            search_by_data:sb
-        })
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
                 lk.push({
                     value: '-',
-                    label: 'Pilih Lokasi'
+                    label: 'Semua Lokasi'
                 });
                 loc.map((i) => {
                     lk.push({
@@ -206,7 +192,7 @@ class InventoryReport extends Component{
         }
 
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&search=${any}`;
+            where+=`&q=${any}`;
         }
         this.setState({
             where_data:where
@@ -219,7 +205,6 @@ class InventoryReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formStockExcel"));
         this.props.dispatch(FetchStockReportExcel(1,this.state.where_data,total));
@@ -228,7 +213,7 @@ class InventoryReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.stockReport;
+        const {per_page,last_page,current_page,data,total} = this.props.stockReport;
         const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total_stock;
 
         let total_dn_per=0;
@@ -505,11 +490,11 @@ class InventoryReport extends Component{
                                 <Paginationq
                                     current_page={parseInt(current_page,10)}
                                     per_page={parseInt(per_page,10)}
-                                    total={parseInt((per_page*last_page),10)}
+                                    total={parseInt((total),10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan}/>
+                            <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan} startDate={this.state.startDate} endDate={this.state.endDate}/>
                             <StockReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>

@@ -34,7 +34,7 @@ class DetailStockReportSatuan extends Component{
         localStorage.setItem("barcodeDetailTrx",barcode);
         localStorage.setItem("nameDetailTrx",name);
         this.props.dispatch(ModalType("detailStockReportTransaction"));
-        this.props.dispatch(FetchStockReportDetailTransaction(1,code,'','',localStorage.getItem("locationDetailTrx")))
+        this.props.dispatch(FetchStockReportDetailTransaction(1, code, this.props.startDate, this.props.endDate, localStorage.getItem("locationDetailTrx")))
     };
     componentDidMount(){
         this.getLok()
@@ -208,7 +208,7 @@ class DetailStockReportSatuan extends Component{
                     </ModalBody>
 
                 </WrapperModal>
-                <DetailStockReportTransaction token={this.props.token} stockReportDetailTransaction={this.props.stockReportDetailTransaction} lok={this.state.data_lok}/>
+                <DetailStockReportTransaction lok={this.state.data_lok} />
             </div>
         );
     }
@@ -220,7 +220,6 @@ const mapStateToProps = (state) => {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
         auth:state.auth,
-        stockReportDetailTransaction:state.stockReportReducer.dataDetailTransaksi,
         isLoading: state.stockReportReducer.isLoading,
     }
 }
