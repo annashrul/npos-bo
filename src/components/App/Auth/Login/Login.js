@@ -106,6 +106,7 @@ class Login extends Component {
                         })
                     }
                 }
+                localStorage.setItem("logos",data.result.logo)
                 localStorage.setItem("site_title", data.result.title)
                 document.title = `${data.result.title}`;
                 this.setState({

@@ -7,7 +7,9 @@ import {toRp} from "helper";
 import {FetchBank} from "redux/actions/masterdata/bank/bank.action";
 import Preloader from "../../../../Preloader";
 import {storeSale} from "../../../../redux/actions/sale/sale.action";
-
+import {
+    withRouter
+} from 'react-router-dom';
 class FormSale extends Component{
     constructor(props){
         super(props);
@@ -97,7 +99,7 @@ class FormSale extends Component{
             parsedata['detail']=this.props.detail;
 
             
-            this.props.dispatch(storeSale(parsedata));
+            this.props.dispatch(storeSale(parsedata,(arr)=>this.props.history.push(arr)));
         }
 
     }
@@ -181,4 +183,4 @@ const mapStateToProps = (state) => {
         isLoading: state.bankReducer.isLoading,
     }
 }
-export default connect(mapStateToProps)(FormSale);
+export default withRouter(connect(mapStateToProps)(FormSale));
