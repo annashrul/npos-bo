@@ -16,6 +16,10 @@ const initialState = {
 
 export const siteReducer = (state = initialState, action) => {
     switch (action.type) {
+        case SITE.SUCCESS:
+            return Object.assign({}, state,{
+                data: action.data
+            });
         case SITE.DOWNLOAD_TXT:
             return Object.assign({}, state,{
                 get_link: action.data.result

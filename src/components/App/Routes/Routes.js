@@ -54,10 +54,12 @@ import BayarPiutang from "../piutang/bayar_piutang";
 import CetakBarcode from "../cetak_barcode";
 import NotFound from "../common/notfound";
 import SaleReturReport from "../report/sale/sale_retur_archive";
+import GlobalSetting from "../setting/global_setting";
 
 const Routes = (
     <div>
         <Switch>
+            <Route path="/global_setting" exact strict component={GlobalSetting} />
             <Route path="/login" exact strict component={Login} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
