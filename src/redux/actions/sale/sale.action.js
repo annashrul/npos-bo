@@ -114,12 +114,14 @@ export const storeSale = (data,param) => {
                     type: 'info',
                     html: "Terimakasih Telah Melakukan Transaksi Di Toko Kami" +
                         "<br><br>" +
-                        '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">' + 'Nota PDF' + '</button>    ' +
-                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">' + 'Nota 3ply' + '</button>   ',
+                        '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
                     showCancelButton: true,
                     showConfirmButton: false
                 }).then((result) => {
                     destroy('sale');
+                    localStorage.removeItem('cs');
+                    localStorage.removeItem('lk');
                     window.location.reload(false);
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {

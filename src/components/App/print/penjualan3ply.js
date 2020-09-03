@@ -34,7 +34,7 @@ export default class Print3ply extends Component {
                     <table style={{height: '10cm', position: 'relative'}} width="100%" cellSpacing={0} cellPadding={1}>
                         <thead>
                         <tr>
-                            <th colSpan={4} rowSpan={3} className="h1"><img className="img_head" src={localStorage.getItem('logos')} /></th>
+                            <th colSpan={4} rowSpan={3} className="h1"><img className="img_head" alt="LOGO" src={localStorage.getItem('logos')} /></th>
                             <th rowSpan={3} className="judul">NOTA PENJUALAN</th>
                             <th className="h2" colSpan={3}>Tgl Jual</th>
                             <th className="h2">: {master.tgl}</th>
