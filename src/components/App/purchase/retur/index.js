@@ -8,7 +8,6 @@ import {setProductbrg} from "redux/actions/masterdata/product/product.action";
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import StickyBox from "react-sticky-box";
 import {toRp} from "helper";
-import DatePicker from "react-datepicker";
 import Select from "react-select";
 import moment from "moment";
 import {storeReturTanpaNota} from "../../../../redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
@@ -508,7 +507,7 @@ class ReturTanpaNota extends Component{
         let qty_retur = 0;
         let grand_total = 0;
         let opSupplier=[];
-        if(this.props.supplier!=[]){
+        if(this.props.supplier!==[]){
             this.props.supplier.map(i=>{
                 opSupplier.push({
                     value: i.kode,
@@ -553,7 +552,7 @@ class ReturTanpaNota extends Component{
                                                                 className="form-text text-muted"
                                                             >
                                                                 Cari
-                                                                berdasarkan {parseInt(this.state.searchby,10) == 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
+                                                                berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                                             </small>
                                                         </div>
                                                     </div>

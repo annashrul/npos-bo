@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
+import {ModalBody} from "reactstrap";
 import moment from "moment";
-import {rangeDate, toRp, to_pdf,statusQ} from "helper";
+import {to_pdf} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
@@ -43,7 +43,7 @@ class SaleReturReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
@@ -77,9 +77,9 @@ class SaleReturReportExcel extends Component{
       }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let subtotal=0;
-        let t_harga_beli = 0;
-        let t_qty = 0;
+        // let subtotal=0;
+        // let t_harga_beli = 0;
+        // let t_qty = 0;
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleReturExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleReturExcel"}</ModalHeader> */}
@@ -151,8 +151,8 @@ class SaleReturReportExcel extends Component{
                                     {
                                         typeof this.props.sale_returReportExcel.data==='object'? this.props.sale_returReportExcel.data.length>0?
                                             this.props.sale_returReportExcel.data.map((v,i)=>{
-                                                t_harga_beli +=parseFloat(v.hpp);
-                                                t_qty +=parseFloat(v.qty_estimasi);
+                                                // t_harga_beli +=parseFloat(v.hpp);
+                                                // t_qty +=parseFloat(v.qty_estimasi);
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{v.kd_trx}</td>

@@ -445,6 +445,7 @@ class PurchaseOrder extends Component{
                                     harga_beli: item.harga_beli,
                                     qty: item.qty
                                 })
+                                return null;
                             })
                             let data_final = {
                                 tgl_order: moment(this.state.tgl_order).format("YYYY-MM-DD"),

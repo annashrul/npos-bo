@@ -6,7 +6,7 @@ import {ModalBody} from "reactstrap";
 import moment from "moment";
 import {toRp} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-// import jsPDF from 'jspdf';
+// // import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";

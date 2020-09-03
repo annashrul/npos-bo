@@ -51,7 +51,7 @@ class FormCustomer extends Component{
             })
         }
         let cust=[];
-        typeof param.dataCustomerTypeAll.data === 'object' ?
+        if(typeof param.dataCustomerTypeAll.data === 'object'){
             param.dataCustomerTypeAll.data.map((v)=>{
                 cust.push({
                     value: v.kode,
@@ -59,7 +59,16 @@ class FormCustomer extends Component{
                 });
                 return null;
             })
-        :  "no data";
+        }
+        // typeof param.dataCustomerTypeAll.data === 'object' ?
+        //     param.dataCustomerTypeAll.data.map((v)=>{
+        //         cust.push({
+        //             value: v.kode,
+        //             label: v.nama
+        //         });
+        //         return null;
+        //     })
+        // :  "no data";
         this.setState({
             cust_type_data: cust,
         })

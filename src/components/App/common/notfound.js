@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-const mainStyle = {
-    height: '100%',
-    display: 'grid'
-};
-const childStyle={
-    margin: 'auto'
-}
+// const mainStyle = {
+//     height: '100%',
+//     display: 'grid'
+// };
+// const childStyle={
+//     margin: 'auto'
+// }
 export default class Footer extends Component {
     constructor(props) {
         super(props);

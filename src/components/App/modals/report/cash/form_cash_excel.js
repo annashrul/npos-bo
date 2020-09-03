@@ -1,14 +1,12 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {FetchCashExcel} from "redux/actions/masterdata/cash/cash.action";
-import {stringifyFormData} from "helper";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
+import {ModalBody} from "reactstrap";
 import moment from "moment";
-import {rangeDate, toRp} from "../../../../../helper";
+import {toRp} from "../../../../../helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
@@ -49,7 +47,7 @@ class CashReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<h3 align="center"><center>TIPE : '+(this.props.tipe===''?'SEMUA':this.props.tipe.toUpperCase())+'</center></h3>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
@@ -70,7 +68,7 @@ class CashReportExcel extends Component{
         
         const headers = [["No", "Tgl","Kd Trx","Keterangan","Lokasi","Kassa","Kasir","Tipe","Jenis","Jumlah"]];
         let data = typeof this.props.cashReportExcel.data === 'object'?this.props.cashReportExcel.data.map(v=> [
-           1,moment(v.tgl).format("yyyy-MM-DD"),v.kd_trx,v.keterangan,v.lokasi,v.kassa,v.kasir,v.type,v.jenis,toRp(parseInt(v.jumlah))
+           1,moment(v.tgl).format("yyyy-MM-DD"),v.kd_trx,v.keterangan,v.lokasi,v.kassa,v.kasir,v.type,v.jenis,toRp(parseInt(v.jumlah,10))
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
@@ -166,7 +164,7 @@ class CashReportExcel extends Component{
                                 (
                                     typeof this.props.cashReportExcel.data === 'object' ? this.props.cashReportExcel.data.length > 0 ?
                                         this.props.cashReportExcel.data.map((v,i)=>{
-                                            subtotal = subtotal+parseInt(v.jumlah);
+                                            subtotal = subtotal+parseInt(v.jumlah,10);
                                             return(
                                                 <tr key={i}>
                                                     <td style={columnStyle}>{i+1}</td>
@@ -178,7 +176,7 @@ class CashReportExcel extends Component{
                                                     <td style={columnStyle}>{v.kasir}</td>
                                                     <td style={columnStyle}>{v.type}</td>
                                                     <td style={columnStyle}>{v.jenis}</td>
-                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jumlah))}</td>
+                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jumlah,10))}</td>
                                                 </tr>
                                             )
                                         })

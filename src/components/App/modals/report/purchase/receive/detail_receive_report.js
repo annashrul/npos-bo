@@ -33,12 +33,12 @@ class DetailReceiveReport extends Component{
     };
     render(){
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,
-            from,
-            to,
+            // from,
+            // to,
             data
         } = this.props.receiveReportDetail;
         let que=`detail_receive_report`;
@@ -96,7 +96,7 @@ class DetailReceiveReport extends Component{
                             {
                                 typeof data==='object'?data.length>0?(
                                     data.map((v,i)=>{
-                                        let subtotal=parseInt(v.harga_beli)*parseInt(v.jumlah_beli)-parseInt(v.disc1)-parseInt(v.disc2)+parseInt(v.ppn_item);
+                                        let subtotal=parseInt(v.harga_beli,10)*parseInt(v.jumlah_beli,10)-parseInt(v.disc1,10)-parseInt(v.disc2,10)+parseInt(v.ppn_item,10);
                                         return (
                                             <tr>
                                                 <td style={columnStyle}>{v.kode_barang}</td>
@@ -120,9 +120,9 @@ class DetailReceiveReport extends Component{
                     </div>
                     <div style={{"marginTop":"20px","float":"right"}}>
                         <Paginationq
-                            current_page={parseInt(current_page)}
-                            per_page={parseInt(per_page)}
-                            total={parseInt(total)}
+                            current_page={parseInt(current_page,10)}
+                            per_page={parseInt(per_page,10)}
+                            total={parseInt(last_page*per_page,10)}
                             callback={this.handlePageChange.bind(this)}
                         />
                     </div>

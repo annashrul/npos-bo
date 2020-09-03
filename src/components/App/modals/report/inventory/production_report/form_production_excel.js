@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
+import {ModalBody} from "reactstrap";
 import moment from "moment";
-import {rangeDate, toRp, to_pdf,statusQ} from "helper";
+import {to_pdf,statusQ} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
@@ -43,7 +43,7 @@ class ProductionReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
@@ -71,7 +71,7 @@ class ProductionReportExcel extends Component{
            v.lokasi,
            v.nama_toko,
            v.qty_estimasi,
-           parseInt(v.hpp),
+           parseInt(v.hpp,10),
            v.status===0?'Not Approved':(v.status===1?'Aproved':""),
            v.keterangan
         ]):'';
@@ -87,7 +87,7 @@ class ProductionReportExcel extends Component{
       }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let subtotal=0;
+        // let subtotal=0;
         let t_harga_beli = 0;
         let t_qty = 0;
         return (
@@ -177,7 +177,7 @@ class ProductionReportExcel extends Component{
                                                         <td style={columnStyle}>{v.lokasi}</td>
                                                         <td style={columnStyle}>{v.nama_toko}</td>
                                                         <td style={columnStyle}>{v.qty_estimasi}</td>
-                                                        <td style={columnStyle}>{parseInt(v.hpp)}</td>
+                                                        <td style={columnStyle}>{parseInt(v.hpp,10)}</td>
                                                         <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Aproved'):"")}</td>
                                                         <td style={columnStyle}>{v.keterangan}</td>
                                                     </tr>
@@ -192,8 +192,8 @@ class ProductionReportExcel extends Component{
                                         </tr>
                                         <tr>
                                             <td style={columnStyle} colSpan="6">Rata - rata</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_qty)/parseInt(typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0))}</td>
-                                            <td style={columnStyle}>{parseInt(parseInt(t_harga_beli)/parseInt(typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0))}</td>
+                                            <td style={columnStyle}>{parseInt(parseInt(t_qty,10)/parseInt(typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0,10),10)}</td>
+                                            <td style={columnStyle}>{parseInt(parseInt(t_harga_beli,10)/parseInt(typeof this.props.productionReportExcel.data === 'object' ? this.props.productionReportExcel.data.length > 0 ? this.props.productionReportExcel.data.length : 0 : 0,10),10)}</td>
                                         </tr>
                                     </tfoot>
                                     </tbody>

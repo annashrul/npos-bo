@@ -32,12 +32,12 @@ export const receiveReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 code: action.data.result
             });
-        case RECEIVE.RECEIVE_DATA:
-            return Object.assign({}, state, {
-                status: action.data.status,
-                msg: action.data.msg,
-                data: action.data.result,
-            });
+        // case RECEIVE.RECEIVE_DATA:
+        //     return Object.assign({}, state, {
+        //         status: action.data.status,
+        //         msg: action.data.msg,
+        //         data: action.data.result,
+        //     });
         case RECEIVE.RECEIVE_REPORT_DETAIL:
             return Object.assign({}, state,{
                 status:action.data.status,

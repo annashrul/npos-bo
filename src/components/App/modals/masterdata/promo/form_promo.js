@@ -1,22 +1,16 @@
 import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
-import {FormGroup, Input, Label, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "helper";
 import {createPromo} from "redux/actions/masterdata/promo/promo.action";
 import Select from "react-select";
-import {HEADERS} from "redux/actions/_constants";
-import {FetchUserLevel} from "redux/actions/masterdata/user_level/user_level.action";
 import {FetchCustomerType} from "redux/actions/masterdata/customer_type/customer_type.action";
 import {toRp} from "helper";
 import moment from "moment";
-import {FetchAllLocation} from "redux/actions/masterdata/location/location.action";
-import FileBase64 from "react-file-base64";
-import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_product.action";
-import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
 import Paginationq,{toPersen} from "helper";
 import {FetchBrg2,FetchBrg1, setPromoDetail, updatePromo} from "redux/actions/masterdata/promo/promo.action";
+import FileBase64 from 'react-file-base64';
 
 class FormPromo extends Component{
     constructor(props){
@@ -94,6 +88,7 @@ class FormPromo extends Component{
                     value:v.kode,
                     label:v.nama,
                 })
+                return null;
             });
             this.setState({jenis_member_data:cust});
         }
@@ -104,6 +99,7 @@ class FormPromo extends Component{
                     value:v.kode,
                     label:v.title,
                 })
+                return null;
             });
             this.setState({category_data:kategori});
         }
@@ -128,6 +124,7 @@ class FormPromo extends Component{
                     value:v.kel_brg,
                     label:v.nm_kel_brg,
                 })
+                return null;
             });
             this.setState({kel_brg_data:kel_brg});
         }
@@ -138,6 +135,7 @@ class FormPromo extends Component{
                     value:v.kode,
                     label:v.nama,
                 })
+                return null;
             });
             this.setState({supplier_data:supplier});
         }
@@ -310,6 +308,7 @@ class FormPromo extends Component{
             if(checked===true){
                this.state.lokasi_data.map((v,i)=>{
                    lok.push(`${v.value}`).toString()
+                   return null;
                 });
                 this.setState({
                     lokasi:lok,
@@ -322,6 +321,7 @@ class FormPromo extends Component{
                         label:v.label,
                     });
                     lok.push(`${v.value}`);
+                    return null;
                 });
                 this.setState({lokasi:'',isCheckedLokasi:false});
             }
@@ -567,9 +567,10 @@ class FormPromo extends Component{
                     })
                 }
             }
+            return null;
         });
         if(this.state.category==='kelbrg'){
-            if(this.state.diskon1===''||parseInt(this.state.diskon1)===0||this.state.diskon1==='0'){
+            if(this.state.diskon1===''||parseInt(this.state.diskon1,10)===0||this.state.diskon1==='0'){
                 err = Object.assign({}, err, {diskon1:"diskon 1 tidak boleh kosong"});
                 this.setState({error: err});
                 return;
@@ -580,7 +581,7 @@ class FormPromo extends Component{
 
         }
         if(this.state.category==='spr'){
-            if(this.state.diskon1===''||parseInt(this.state.diskon1)===0||this.state.diskon1==='0'){
+            if(this.state.diskon1===''||parseInt(this.state.diskon1,10)===0||this.state.diskon1==='0'){
                 err = Object.assign({}, err, {diskon1:"diskon 1 tidak boleh kosong"});
                 this.setState({error: err});
                 return;
@@ -596,6 +597,7 @@ class FormPromo extends Component{
                         barcode:v.barcode, diskon:0, diskon2:0, min_trx:0, min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
                     })
                 }
+                return null;
             });
             this.state.barang_data1.map((v,i)=>{
                 if(v.checked_bg===true){
@@ -603,6 +605,7 @@ class FormPromo extends Component{
                         barcode:v.barcode, diskon:0, diskon2:0, min_trx:0, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
                     })
                 }
+                return null;
             });
         }
 
@@ -650,7 +653,9 @@ class FormPromo extends Component{
         for(let i=0;i<lokasi.length;i++){
             locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
         }
-        this.state.lokasi_data = locG;
+        this.setState({
+            lokasi_data : locG
+        })
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
                 <ModalHeader toggle={this.toggle}>
@@ -767,11 +772,11 @@ class FormPromo extends Component{
                                             <div className="col-md-6">
                                                 <label htmlFor="">Diskon 1 Persen</label>
                                                 <input className="form-control" type="number" name="diskon1" value={
-                                                    parseInt(this.state.diskon1)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1)>100?'':this.state.diskon1:this.state.diskon1)
+                                                    parseInt(this.state.diskon1,10)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1,10)>100?'':this.state.diskon1:this.state.diskon1)
                                                 } onChange={this.handleChange}/>
                                                 <small style={{fontWeight:"bold",color:"red"}}>
-                                                    {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1)>100?'inputan tidak boleh lebih dari 100':'':''}
-                                                    {parseInt(this.state.diskon1)<0?'inputan tidak boleh berisi angka negatif':''}
+                                                    {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon1,10)>100?'inputan tidak boleh lebih dari 100':'':''}
+                                                    {parseInt(this.state.diskon1,10)<0?'inputan tidak boleh berisi angka negatif':''}
                                                 </small>
 
                                                 <div className="invalid-feedback"
@@ -782,11 +787,11 @@ class FormPromo extends Component{
                                             <div className="col-md-6">
                                                 <label htmlFor="">Diskon 2 Persen</label>
                                                 <input className="form-control" type="number" name="diskon2" value={
-                                                    parseInt(this.state.diskon2)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2)>100?'':this.state.diskon2:this.state.diskon2)
+                                                    parseInt(this.state.diskon2,10)<0?0:(this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2,10)>100?'':this.state.diskon2:this.state.diskon2)
                                                 } onChange={this.handleChange}/>
                                                 <small style={{fontWeight:"bold",color:"red"}}>
-                                                    {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2)>100?'inputan tidak boleh lebih dari 100':'':''}
-                                                    {parseInt(this.state.diskon2)<0?'inputan tidak boleh berisi angka negatif':''}
+                                                    {this.state.isCheckedDiskonPersen?parseInt(this.state.diskon2,10)>100?'inputan tidak boleh lebih dari 100':'':''}
+                                                    {parseInt(this.state.diskon2,10)<0?'inputan tidak boleh berisi angka negatif':''}
                                                 </small>
                                                 <div className="invalid-feedback"
                                                      style={this.state.error.diskon2 !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -829,9 +834,9 @@ class FormPromo extends Component{
                             </div>
                             <div style={{"float":"right","marginBottom":"10px"}}>
                                 <Paginationq
-                                    current_page={parseInt(this.props.barang1.current_page)}
-                                    per_page={parseInt(this.props.barang1.per_page)}
-                                    total={parseInt(this.props.barang1.total)}
+                                    current_page={parseInt(this.props.barang1.current_page,10)}
+                                    per_page={parseInt(this.props.barang1.per_page,10)}
+                                    total={parseInt(this.props.barang1.total,10)}
                                     callback={this.handlePagin1.bind(this)}
                                 />
                             </div>
@@ -854,7 +859,7 @@ class FormPromo extends Component{
                                         this.state.barang_data.length>0?this.state.barang_data.map((v,i)=>{
                                             return (
                                                 <tr>
-                                                    <td style={columnStyle}> {i+1 + (5 * (parseInt(this.props.barang1.current_page)-1))}</td>
+                                                    <td style={columnStyle}> {i+1 + (5 * (parseInt(this.props.barang1.current_page,10)-1))}</td>
                                                     <td style={columnStyle}>
                                                         <input type="checkbox" name="checked" checked={v.checked} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                     </td>
@@ -874,17 +879,17 @@ class FormPromo extends Component{
                                                         this.state.category==='tm'||this.state.category==='bg'?"":(
                                                             <td style={columnStyle}>
                                                                 <input style={{textAlign:"right"}} type="text" name="qty" className="form-control" value={
-                                                                    v.checked===false?0:parseInt(v.qty)<0?0:(v.jenis==='persen'?parseInt(v.qty)>100?0:v.qty:v.qty)
+                                                                    v.checked===false?0:parseInt(v.qty,10)<0?0:(v.jenis==='persen'?parseInt(v.qty,10)>100?0:v.qty:v.qty)
                                                                 } onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                                 {
                                                                     v.jenis==='persen'?
-                                                                        parseInt(v.qty)>100 ?
+                                                                        parseInt(v.qty,10)>100 ?
                                                                             (<small style={{color:"red",fontWeight:"bold"}}>inputan tidak boleh lebih dari 100</small>)
                                                                             :""
                                                                         :''
                                                                 }
                                                                 {
-                                                                    parseInt(v.qty)<0?<small style={{color:"red",fontWeight:"bold"}}>inputan tidak boleh berisi angka negatif</small>:""
+                                                                    parseInt(v.qty,10)<0?<small style={{color:"red",fontWeight:"bold"}}>inputan tidak boleh berisi angka negatif</small>:""
                                                                 }
                                                             </td>
                                                         )
@@ -893,17 +898,17 @@ class FormPromo extends Component{
                                                         this.state.category==='tm'||this.state.category==='bg'?"":(
                                                             <td style={columnStyle}>
                                                                 <input style={{textAlign:"right"}} type="text" name="qty2" className="form-control" value={
-                                                                    v.checked===false?0:parseInt(v.qty2)<0?0:(v.jenis==='persen'?parseInt(v.qty2)>100?0:v.qty2:v.qty2)
+                                                                    v.checked===false?0:parseInt(v.qty2,10)<0?0:(v.jenis==='persen'?parseInt(v.qty2,10)>100?0:v.qty2:v.qty2)
                                                                 } onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                                 {
                                                                     v.jenis==='persen'?
-                                                                        parseInt(v.qty2)>100 ?
+                                                                        parseInt(v.qty2,10)>100 ?
                                                                             (<small style={{color:"red",fontWeight:"bold"}}>inputan tidak boleh lebih dari 100</small>)
                                                                             :""
                                                                         :''
                                                                 }
                                                                 {
-                                                                    parseInt(v.qty2)<0?<small style={{color:"red",fontWeight:"bold"}}>inputan tidak boleh berisi angka negatif</small>:""
+                                                                    parseInt(v.qty2,10)<0?<small style={{color:"red",fontWeight:"bold"}}>inputan tidak boleh berisi angka negatif</small>:""
                                                                 }
                                                             </td>
                                                         )
@@ -938,9 +943,9 @@ class FormPromo extends Component{
                             </div>
                             <div style={this.state.category==='bg'?{display:"block","float":"right","marginBottom":"10px"}:{display:"none"}}>
                                 <Paginationq
-                                    current_page={parseInt(this.props.barang2.current_page)}
-                                    per_page={parseInt(this.props.barang2.per_page)}
-                                    total={parseInt(this.props.barang2.total)}
+                                    current_page={parseInt(this.props.barang2.current_page,10)}
+                                    per_page={parseInt(this.props.barang2.per_page,10)}
+                                    total={parseInt(this.props.barang2.total,10)}
                                     callback={this.handlePagin2.bind(this)}
                                 />
                             </div>
@@ -961,7 +966,7 @@ class FormPromo extends Component{
                                         this.state.barang_data1.length>0?this.state.barang_data1.map((v,i)=>{
                                             return (
                                                 <tr>
-                                                    <td style={columnStyle}> {i+1 + (5 * (parseInt(this.props.barang2.current_page)-1))}</td>
+                                                    <td style={columnStyle}> {i+1 + (5 * (parseInt(this.props.barang2.current_page,10)-1))}</td>
                                                     <td style={columnStyle}>
                                                         <input type="checkbox" name="checked_bg" checked={v.checked_bg} onChange={(e)=>this.handleChangeDynamic(e,i)}/>
                                                     </td>

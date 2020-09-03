@@ -294,6 +294,7 @@ class CetakBarcode extends Component{
                                     "harga_jual": item.harga_jual,
                                     "qty": item.qty,
                                 })
+                                return null;
                             });
                             this.setState({
                                 data_barcode:barcode
@@ -387,11 +388,13 @@ class CetakBarcode extends Component{
                 brg.push({
                     qty: i.qty,
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
                 brgval: brg
             })
+            return null;
         });
     }
 

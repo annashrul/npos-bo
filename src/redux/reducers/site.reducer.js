@@ -1,5 +1,4 @@
 import {
-    ADJUSTMENT,
     SITE
 } from "../actions/_constants";
 

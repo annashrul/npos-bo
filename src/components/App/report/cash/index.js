@@ -206,7 +206,7 @@ class ReportCash extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,

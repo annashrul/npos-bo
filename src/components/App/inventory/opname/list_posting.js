@@ -154,8 +154,16 @@ class ListPosting extends Component{
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.data;
-        this.state.dataPosting = this.props.data.data;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.data;
+        this.setState({dataPosting : this.props.data.data});
         const {total_fisik,total_akhir,total_hpp} = this.props.total!==undefined?this.props.total:[];
         let total_fisik_per=0;
         let total_akhir_per=0;
@@ -292,7 +300,7 @@ class ListPosting extends Component{
                                     <Paginationq
                                         current_page={current_page}
                                         per_page={per_page}
-                                        total={total}
+                                        total={last_page*per_page}
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                 </div>

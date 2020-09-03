@@ -34,8 +34,6 @@ class TransactionReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
-            filter:"",
-            filter_data:[],
             status:"",
             status_data:[],
         }
@@ -99,7 +97,7 @@ class TransactionReport extends Component{
     handleParameter(pageNumber){
         let dateFrom=localStorage.date_from_transaction_report;
         let dateTo=localStorage.date_to_transaction_report;
-        let lokasi = localStorage.location_transaction_report;
+        // let lokasi = localStorage.location_transaction_report;
         let any = localStorage.any_transaction_report;
         let sort=localStorage.sort_transaction_report;
         let filter=localStorage.filter_transaction_report;
@@ -228,14 +226,22 @@ class TransactionReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formTransactionExcel"));
         this.props.dispatch(FetchTransactionExcel(1,this.state.where_data,total));
     }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.transactionReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.transactionReport;
         return (
             <Layout page="Laporan Transaction">
                 <div className="col-12 box-margin">

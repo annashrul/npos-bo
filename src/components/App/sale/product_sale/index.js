@@ -260,13 +260,13 @@ class Sale extends Component{
                         title: `not found.`
                     })
                 } else {
-                    let newbrg=[];
-                    datas.map(i=>{
-                        if(i.satuan===val){
-                            newbrg=i;
-                        }
-                        return true;
-                    })
+                    // let newbrg=[];
+                    // datas.map(i=>{
+                    //     if(i.satuan===val){
+                    //         newbrg=i;
+                    //     }
+                    //     return true;
+                    // })
 
                     let final= {
                         id: res.id,
@@ -312,7 +312,9 @@ class Sale extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.state.subtotal=0;
+                this.setState({
+                    subtotal:0
+                })
                 del(table,id)
                     .then(res=>{
                         this.getData();

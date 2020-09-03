@@ -65,11 +65,15 @@ class FormUserList extends Component{
     toggleChange = (e) => {
         this.setState({isChecked: e.target.checked,});
         if(e.target.checked === true){
-            this.state.opt = [];
-            this.state.selectedOption = this.state.opt1;
+            this.setState({
+                opt : [],
+                selectedOption : this.state.opt1,
+            })
         }else{
-            this.state.opt = this.state.opt1;
-            this.state.selectedOption = [];
+            this.setState({
+                opt : this.state.opt1,
+                selectedOption : [],
+            })
         }
     }
     componentWillMount(){
@@ -192,7 +196,7 @@ class FormUserList extends Component{
         for(let i=0;i<lokasi.length;i++){
             locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
         }
-        this.state.opt = locG;
+        this.setState({opt : locG})
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserList"} size="lg">

@@ -34,8 +34,6 @@ class DnReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
-            filter:"",
-            filter_data:[],
             status:"",
             status_data:[],
         }
@@ -228,7 +226,7 @@ class DnReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formDnExcel"));
         this.props.dispatch(FetchDnExcel(1,this.state.where_data,total));
@@ -236,7 +234,15 @@ class DnReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.dnReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.dnReport;
         return (
             <Layout page="Laporan Dn">
                 <div className="col-12 box-margin">
