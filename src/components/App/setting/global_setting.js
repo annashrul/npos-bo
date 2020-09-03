@@ -88,7 +88,35 @@ class GlobalSetting extends Component{
             acc_number:this.state.acc_number,
             promo:this.state.promo,
         };
-        this.props.dispatch(storeSite(parsedata));
+        let timerInterval;
+        Swal.fire({
+            title: 'Tunggu Sebentar',
+            html: 'data sedang dikirim ke server',
+            timer: 2000,
+            timerProgressBar: true,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    const content = Swal.getContent()
+                    if (content) {
+                        const b = content.querySelector('b')
+                        if (b) {
+                            b.textContent = Swal.getTimerLeft()
+                        }
+                    }
+                }, 100)
+            },
+            onClose: () => {
+                clearInterval(timerInterval)
+                // this.props.dispatch(storeSite(parsedata));
+            }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                this.props.dispatch(storeSite(parsedata));
+            }
+        })
+
 
     }
 
@@ -105,7 +133,7 @@ class GlobalSetting extends Component{
                             <div className="card-body">
                                 <h2>Waktu Jatuh Tempo {this.state.tanggal_tempo}</h2>
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.isChecked} onChange={this.handleChange}/> Pilih Date Picker</label>
+                                    <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.isChecked} onChange={this.handleChange}/> Pilih { this.state.isChecked===true?'Datepicker':'Dropdown'}</label>
                                     {
                                         this.state.isChecked===true?(
                                             <input type="date" name={"tanggal_tempo_picker"} className="form-control" value={this.state.tanggal_tempo_picker} onChange={this.handleChange}/>

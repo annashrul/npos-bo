@@ -64,7 +64,6 @@ export const FetchSite = () => {
     }
 }
 export const storeSite = (data) => {
-    console.log(data);
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `site`;
