@@ -60,13 +60,22 @@ class TrxPacking extends Component{
         }
         if(param.codeAlokasi.data!==undefined){
             let no_faktur=[];
-            (typeof param.codeAlokasi.data === 'object') ? param.codeAlokasi.data.map((v)=>{
-                no_faktur.push({
-                    value:v.no_faktur_mutasi,
-                    label:v.no_faktur_mutasi,
+            if(typeof param.codeAlokasi.data === 'object'){
+                param.codeAlokasi.data.map((v)=>{
+                    no_faktur.push({
+                        value:v.no_faktur_mutasi,
+                        label:v.no_faktur_mutasi,
+                    })
+                    return null;
                 })
-                return null;
-            }): "No data.";
+            }
+            // (typeof param.codeAlokasi.data === 'object') ? param.codeAlokasi.data.map((v)=>{
+            //     no_faktur.push({
+            //         value:v.no_faktur_mutasi,
+            //         label:v.no_faktur_mutasi,
+            //     })
+            //     return null;
+            // }): "No data.";
             this.setState({
                 faktur_alokasi_data:no_faktur
             })

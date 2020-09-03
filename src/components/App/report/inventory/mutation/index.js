@@ -34,8 +34,6 @@ class MutationReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
-            filter:"",
-            filter_data:[],
             status:"",
             status_data:[],
         }
@@ -99,7 +97,7 @@ class MutationReport extends Component{
     handleParameter(pageNumber){
         let dateFrom=localStorage.date_from_mutation_report;
         let dateTo=localStorage.date_to_mutation_report;
-        let lokasi = localStorage.location_mutation_report;
+        // let lokasi = localStorage.location_mutation_report;
         let any = localStorage.any_mutation_report;
         let sort=localStorage.sort_mutation_report;
         let filter=localStorage.filter_mutation_report;
@@ -229,7 +227,7 @@ class MutationReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formMutationExcel"));
         this.props.dispatch(FetchMutationExcel(1,this.state.where_data,total));
@@ -238,7 +236,15 @@ class MutationReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.mutationReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.mutationReport;
         return (
             <Layout page="Laporan Mutation">
                 <div className="col-12 box-margin">

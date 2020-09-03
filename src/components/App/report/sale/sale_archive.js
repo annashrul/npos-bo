@@ -214,7 +214,7 @@ class SaleArchive extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,

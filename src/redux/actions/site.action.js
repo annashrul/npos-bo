@@ -1,10 +1,9 @@
 import {
     SITE,
-    HEADERS, ADJUSTMENT
+    HEADERS
 } from "./_constants"
 import axios from "axios"
-import {destroy,store} from "components/model/app.model";
-import {ModalToggle, ModalType} from "./modal.action";
+import {destroy} from "components/model/app.model";
 
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));

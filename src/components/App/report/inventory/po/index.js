@@ -37,8 +37,6 @@ class PoReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
-            filter:"",
-            filter_data:[],
             status:"",
             status_data:[],
         }
@@ -254,7 +252,7 @@ class PoReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formPoExcel"));
         this.props.dispatch(fetchPoReportExcel(1,this.state.where_data,total));
@@ -264,12 +262,12 @@ class PoReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,
-            from,
-            to,
+            // from,
+            // to,
             data
         }  = this.props.poReport;
         return (

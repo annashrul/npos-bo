@@ -111,7 +111,7 @@ Last Updated: Oct 24, 2019
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500,600,700|Open+Sans:400,600&amp;display=swap");
 @import url(css/bootstrap.min.css);
 /*@import url(css/owl.carousel.min.css);*/
-@import url(css/animate.css);
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css");
 /*@import url(css/nice-select.css);*/
 /*@import url(css/jquery-ui.min.css);*/
 /*@import url(css/default-assets/themify-icons.css);*/

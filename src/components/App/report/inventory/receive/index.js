@@ -110,6 +110,7 @@ class ReceiveReport extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let sort = [
             {kode:"desc",value: "DESCENDING"},
@@ -336,7 +337,7 @@ class ReceiveReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formReceiveExcel"));
         this.props.dispatch(FetchReportExcel(1,this.state.where_data,total));
@@ -344,12 +345,12 @@ class ReceiveReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,
-            from,
-            to,
+            // from,
+            // to,
             data
         } = this.props.data;
         return (
@@ -551,7 +552,7 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{v.kontabon}</td>
                                                                     <td style={columnStyle}>{v.jumlah_kontrabon}</td>
                                                                     <td style={columnStyle}>{v.qty_beli}</td>
-                                                                    <td style={columnStyle}>{toRp(parseInt(v.total_beli))}</td>
+                                                                    <td style={columnStyle}>{toRp(parseInt(v.total_beli,10))}</td>
                                                                 </tr>
                                                             )
                                                         })
@@ -567,9 +568,9 @@ class ReceiveReport extends Component{
                             </div>
                             <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq
-                                    current_page={parseInt(current_page)}
-                                    per_page={parseInt(per_page)}
-                                    total={parseInt(total)}
+                                    current_page={parseInt(current_page,10)}
+                                    per_page={parseInt(per_page,10)}
+                                    total={parseInt(last_page*per_page,10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>

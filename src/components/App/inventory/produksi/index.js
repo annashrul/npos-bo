@@ -81,13 +81,22 @@ class Produksi extends Component{
         if(param.barangPaket.length>0){
             this.getData();
             let brg=[];
-            (typeof param.barangPaket === 'object') ? param.barangPaket.map((v)=>{
-                brg.push({
-                    value:`${v.kd_brg} | ${v.barcode}`,
-                    label:v.nm_brg,
+            if(typeof param.barangPaket === 'object'){
+                param.barangPaket.map((v)=>{
+                    brg.push({
+                        value:`${v.kd_brg} | ${v.barcode}`,
+                        label:v.nm_brg,
+                    })
+                    return null;
                 })
-                return null;
-            }): "No data.";
+            }
+            // (typeof param.barangPaket === 'object') ? param.barangPaket.map((v)=>{
+            //     brg.push({
+            //         value:`${v.kd_brg} | ${v.barcode}`,
+            //         label:v.nm_brg,
+            //     })
+            //     return null;
+            // }): "No data.";
             this.setState({
                 barang_paket_data:brg
             })

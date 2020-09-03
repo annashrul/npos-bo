@@ -112,7 +112,7 @@ export const toRp = (angka) => {
         rupiah += separator + ribuan.join('.');
     }
 
-    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
     return rupiah;
 };
 export const ToastQ = Swal.mixin({
@@ -145,9 +145,9 @@ export const getMargin = (hrg_jual,hrg_beli) => {
 };
 
 class Paginationq extends Component{
-    constructor(props){
-        super(props);
-    }
+    // constructor(props){
+    //     super(props);
+    // }
     render(){
         return (
             <Pagination

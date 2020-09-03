@@ -25,26 +25,50 @@ class FormReturReceive extends Component{
     componentWillReceiveProps(nextprops){
         if(nextprops.dataRetur!==undefined&&nextprops.dataRetur!==[]){
             let dataRetur=[];
-            typeof nextprops.dataRetur.detail === 'object'? nextprops.dataRetur.detail.map((v,i)=>{
-                this.setState({
-                    data_retur:dataRetur,
-                    userid: nextprops.auth.user.id,
-                    lokasi:nextprops.dataRetur.master.lokasi,
-                    no_faktur_beli:nextprops.dataRetur.master.no_faktur_beli,
+            if(typeof nextprops.dataRetur.detail === 'object'){
+                nextprops.dataRetur.detail.map((v,i)=>{
+                    this.setState({
+                        data_retur:dataRetur,
+                        userid: nextprops.auth.user.id,
+                        lokasi:nextprops.dataRetur.master.lokasi,
+                        no_faktur_beli:nextprops.dataRetur.master.no_faktur_beli,
+                    })
+                    dataRetur.push({
+                        "kode_barang":v.kode_barang,
+                        "harga":v.harga,
+                        "harga_beli":v.harga_beli,
+                        "barcode":v.barcode,
+                        "satuan":v.satuan,
+                        "stock":v.stock,
+                        "nm_brg":v.nm_brg,
+                        "qty":v.qty,
+                        "qty_retur":0,
+                        "kondisi":v.kondisi
+                    })
+                    return null;
                 })
-                dataRetur.push({
-                    "kode_barang":v.kode_barang,
-                    "harga":v.harga,
-                    "harga_beli":v.harga_beli,
-                    "barcode":v.barcode,
-                    "satuan":v.satuan,
-                    "stock":v.stock,
-                    "nm_brg":v.nm_brg,
-                    "qty":v.qty,
-                    "qty_retur":0,
-                    "kondisi":v.kondisi
-                })
-            }) : [];
+            }
+            // typeof nextprops.dataRetur.detail === 'object'? nextprops.dataRetur.detail.map((v,i)=>{
+            //     this.setState({
+            //         data_retur:dataRetur,
+            //         userid: nextprops.auth.user.id,
+            //         lokasi:nextprops.dataRetur.master.lokasi,
+            //         no_faktur_beli:nextprops.dataRetur.master.no_faktur_beli,
+            //     })
+            //     dataRetur.push({
+            //         "kode_barang":v.kode_barang,
+            //         "harga":v.harga,
+            //         "harga_beli":v.harga_beli,
+            //         "barcode":v.barcode,
+            //         "satuan":v.satuan,
+            //         "stock":v.stock,
+            //         "nm_brg":v.nm_brg,
+            //         "qty":v.qty,
+            //         "qty_retur":0,
+            //         "kondisi":v.kondisi
+            //     })
+            //     return null;
+            // }) : [];
 
         }
     }
@@ -62,7 +86,7 @@ class FormReturReceive extends Component{
         data_retur[i] = {...data_retur[i], [column]: val};
         this.setState({ data_retur });
         if(column === 'qty_retur'){
-            if(parseInt(data_retur[i].qty_retur) > parseInt(data_retur[i].stock) || parseInt(data_retur[i].qty_retur) < 0 || parseInt(data_retur[i].qty_retur) > parseInt(data_retur[i].qty)){
+            if(parseInt(data_retur[i].qty_retur,10) > parseInt(data_retur[i].stock,10) || parseInt(data_retur[i].qty_retur,10) < 0 || parseInt(data_retur[i].qty_retur,10) > parseInt(data_retur[i].qty,10)){
                 this.setState({disabelButton:true})
             }else{
                 this.setState({disabelButton:false})
@@ -78,11 +102,11 @@ class FormReturReceive extends Component{
         let subtotal = 0;
         let send = false;
         this.state.data_retur.map((v, i) => {
-            if (parseInt(v.qty_retur) > parseInt(v.stock)) {
+            if (parseInt(v.qty_retur,10) > parseInt(v.stock,10)) {
                 alert('gagal');
-                return;
+                return null;
             } else {
-                subtotal += parseInt(v.qty_retur) * parseInt(v.harga_beli);
+                subtotal += parseInt(v.qty_retur,10) * parseInt(v.harga_beli,10);
                 detail.push({
                     "kd_brg": v.kode_barang,
                     "barcode": v.barcode,
@@ -102,6 +126,7 @@ class FormReturReceive extends Component{
                 data['detail'] = detail;
                 send = true;
             }
+            return null;
         });
         if (send === true) {
             this.props.dispatch(storeReturTanpaNota(data));
@@ -162,7 +187,7 @@ class FormReturReceive extends Component{
                                             <td style={columnStyle}>{v.nm_brg}</td>
                                             <td style={columnStyle}>{v.satuan}</td>
                                             <td style={columnStyle}>{v.stock}</td>
-                                            <td style={columnStyle}>{toRp(parseInt(v.harga_beli))}</td>
+                                            <td style={columnStyle}>{toRp(parseInt(v.harga_beli,10))}</td>
                                             <td style={columnStyle}>0</td>
                                             <td style={columnStyle}>0</td>
                                             <td style={columnStyle}>{v.qty}</td>

@@ -1,14 +1,12 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
-import moment from "moment";
-import {rangeDate, toRp, to_pdf,statusQ} from "helper";
+import {ModalBody} from "reactstrap";
+import {toRp,to_pdf} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
-import imgPdf from 'assets/pdf.png';
+// import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 
 class StockReportExcel extends Component{
@@ -43,7 +41,7 @@ class StockReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
@@ -64,9 +62,9 @@ class StockReportExcel extends Component{
         let data = typeof this.props.sale_by_custReportExcel.data === 'object'?this.props.sale_by_custReportExcel.data.map(v=> [
            v.kd_cust,
            v.nama,
-           toRp(parseInt(v.gross_sales)),
-           toRp(parseInt(v.diskon_item)),
-           toRp(parseInt(v.diskon_trx)),
+           toRp(parseInt(v.gross_sales,10)),
+           toRp(parseInt(v.diskon_item,10)),
+           toRp(parseInt(v.diskon_trx,10)),
            toRp(v.service),
            v.qty,
         ]):'';
@@ -170,12 +168,12 @@ class StockReportExcel extends Component{
                                         typeof this.props.stockReportExcel.data==='object'? this.props.stockReportExcel.data.length>0?
                                             this.props.stockReportExcel.data.map((v,i)=>{
                                                 const stok_akhir = (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - parseFloat(v.stock_keluar));
-                                                total_dn_per = total_dn_per+parseInt(v.delivery_note);
-                                                total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
+                                                total_dn_per = total_dn_per+parseInt(v.delivery_note,10);
+                                                total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal,10);
                                                 total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
                                                 total_last_stock_per = total_last_stock_per + stok_akhir;
-                                                total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
-                                                total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
+                                                total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
+                                                total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{v.kd_brg}</td>

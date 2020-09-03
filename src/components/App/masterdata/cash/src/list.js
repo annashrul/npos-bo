@@ -37,7 +37,7 @@ class ListCash extends Component{
         localStorage.setItem('type',type);
         localStorage.setItem('any',any);
 
-        if(type!==''||type!==undefined && any!==''||any!==undefined){
+        if((type!==''||type!==undefined) && (any!==''||any!==undefined)){
             this.props.dispatch(FetchCash(1,type,any));
         }else if(type!==''||type!==undefined){
             this.props.dispatch(FetchCash(1,type,''));
@@ -54,9 +54,13 @@ class ListCash extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formCash"));
         if(i!==null){
-            this.state.detail = {"id":this.props.data.data[i].id,"jenis":parseInt(this.props.data.data[i].jenis),"type":parseInt(this.props.data.data[i].type),"title":this.props.data.data[i].title};
+            this.setState({
+                detail : {"id":this.props.data.data[i].id,"jenis":parseInt(this.props.data.data[i].jenis,10),"type":parseInt(this.props.data.data[i].type,10),"title":this.props.data.data[i].title}
+            })
         }else{
-            this.state.detail = undefined;
+            this.setState({
+                detail : undefined
+            })
         }
     }
     handleDelete(e, id) {
@@ -79,7 +83,15 @@ class ListCash extends Component{
     render(){
         const toggleModal = this.toggleModal;
         const handleDelete = this.handleDelete;
-        const {current_page,data,from,last_page,per_page,to,total} = this.props.data;
+        const {
+            current_page,
+            data,
+            // from,
+            // last_page,
+            per_page,
+            // to,
+            total
+        } = this.props.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>

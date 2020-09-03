@@ -12,7 +12,6 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
-import {statusQ} from "helper";
 import Swal from 'sweetalert2'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 class PiutangReport extends Component{
@@ -252,7 +251,7 @@ class PiutangReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formPiutangExcel"));
         this.props.dispatch(FetchPiutangReportExcel(this.state.where_data,total));
@@ -260,7 +259,15 @@ class PiutangReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.piutangReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.piutangReport;
         
         return (
             <Layout page="Laporan Piutang">

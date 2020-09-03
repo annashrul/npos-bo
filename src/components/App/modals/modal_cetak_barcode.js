@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
-import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "./_wrapper.modal";
-import {destroy,store} from "components/model/app.model";
+import {destroy} from "components/model/app.model";
 
 class ModalCetakBarcode extends Component{
     constructor(props){

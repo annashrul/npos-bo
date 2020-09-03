@@ -12,7 +12,6 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
-import {statusQ} from "helper";
 import Swal from 'sweetalert2'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
@@ -252,7 +251,7 @@ class HutangReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formHutangExcel"));
         this.props.dispatch(FetchHutangReportExcel(1,this.state.where_data,total));
@@ -260,7 +259,15 @@ class HutangReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.hutangReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.hutangReport;
         return (
             <Layout page="Laporan Hutang">
                 <div className="col-12 box-margin">

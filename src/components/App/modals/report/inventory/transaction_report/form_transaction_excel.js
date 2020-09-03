@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
+import {ModalBody} from "reactstrap";
 import moment from "moment";
-import {rangeDate, toRp, to_pdf,statusQ} from "helper";
+import {to_pdf,statusQ} from "helper";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
@@ -43,7 +43,7 @@ class TransactionReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+

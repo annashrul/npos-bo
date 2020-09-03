@@ -227,7 +227,7 @@ class AlokasiReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formAlokasiExcel"));
         this.props.dispatch(FetchAlokasiExcel(1,this.state.where_data,total));
@@ -236,7 +236,15 @@ class AlokasiReport extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {per_page,last_page,current_page,from,to,data,total} = this.props.alokasiReport;
+        const {
+            per_page,
+            last_page,
+            current_page,
+            // from,
+            // to,
+            data,
+            // total
+        } = this.props.alokasiReport;
         return (
             <Layout page="Laporan Alokasi">
                 <div className="col-12 box-margin">

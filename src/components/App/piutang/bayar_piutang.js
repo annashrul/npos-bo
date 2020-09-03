@@ -279,7 +279,7 @@ class BayarPiutang extends Component{
                                                onKeyPress = {
                                                    event => {
                                                        if (event.key === 'Enter') {
-                                                           this.handleSearch
+                                                           this.handleSearch()
 
                                                        }
                                                    }
