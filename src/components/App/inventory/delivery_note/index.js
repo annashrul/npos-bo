@@ -353,7 +353,7 @@ class DeliveryNote extends Component{
                 datas.map(i=>{
                   if(i.satuan===val){
                     newbrg=i;
-                    // console.log("change",newbrg);
+                    // 
                   }
                   return null;
                 })
@@ -541,7 +541,7 @@ class DeliveryNote extends Component{
                     userid: this.state.userid,
                     detail: detail
                   };
-                  // console.log(data_final);
+                  // 
                   this.props.dispatch(storeDN(data_final));
                 }
               })

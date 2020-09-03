@@ -51,7 +51,7 @@ class ReceiveReportExcel extends Component{
         '<h3 align="center"><center>&nbsp;</center></h3>'+
         '<h3 style="text-align:center"><center>LAPORAN ALOKASI MUTASI TRX</center></h3>'+
         '</div>';
-        console.log(stringHtml)
+        
         const headers = [[
             "No Faktur",
             "Tanggal",

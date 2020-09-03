@@ -115,7 +115,7 @@ class Expedisi extends Component{
     }
     handleChangeDynamic(event,i){
         let checked=event.target.checked;
-        console.log("wwwwwwwwwwwwwwww",this.state.brgVal)
+        // 
         // this.setState({
         //     brgVal:[i].isChecked
         // })

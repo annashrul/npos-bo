@@ -156,7 +156,7 @@ class FormUserLevel extends Component{
         this.setState({})
     };
     handleLoopAccess(moduls=[],nextProps=[]){
-        console.log(moduls);
+        
         if(nextProps!==null)
             moduls.forEach(modul=>{
                 for(let i=0;i<nextProps.length;i++){

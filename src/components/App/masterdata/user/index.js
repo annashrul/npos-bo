@@ -39,7 +39,7 @@ class User extends Component{
     }
     handleSelect = (index) => {
         this.setState({selectedIndex: index}, () => {
-            console.log('Selected tab: ' + this.state.selectedIndex);
+            
         });
         if(index !== 0){
             localStorage.setItem('page_user','level');

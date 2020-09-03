@@ -52,7 +52,7 @@ class DnReportExcel extends Component{
         '<h3 align="center"><center>&nbsp;</center></h3>'+
         '<h3 style="text-align:center"><center>LAPORAN DELIVERY NOTE</center></h3>'+
         '</div>';
-        console.log(stringHtml)
+        
         const headers = [[
             "No DN",
             "Tanggal",

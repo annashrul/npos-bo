@@ -40,7 +40,7 @@ class Customer extends Component{
     }
     handleSelect = (index) => {
         this.setState({selectedIndex: index}, () => {
-            console.log('Selected tab: ' + this.state.selectedIndex);
+            
         })
     };
 

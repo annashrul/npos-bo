@@ -113,7 +113,7 @@ class BayarHutang extends Component{
         }
         else{
             this.props.dispatch(FetchHutang(this.state.nota_pembelian));
-            console.log(this.props.nota);
+            
         }
         this.setState({
             error: err
