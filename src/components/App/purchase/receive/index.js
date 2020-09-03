@@ -9,7 +9,6 @@ import {FetchNota,storeReceive} from 'redux/actions/purchase/receive/receive.act
 import {FetchPoReport,FetchPoData,setPoData} from 'redux/actions/purchase/purchase_order/po.action'
 
 import { Scrollbars } from "react-custom-scrollbars";
-import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
@@ -781,6 +780,7 @@ class Receive extends Component{
                     qty_bonus: i.qty_bonus,
                     satuan: i.satuan
                 });
+                return null;
             });
             this.setState({
                 databrg: res,

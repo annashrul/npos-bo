@@ -1,13 +1,14 @@
 import React,{Component} from 'react';
 import WrapperModal from "components/App/modals/_wrapper.modal";
-import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {ModalBody, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {toRp} from "helper";
 import {FetchBank} from "redux/actions/masterdata/bank/bank.action";
 import Preloader from "../../../../Preloader";
 import {storeSale} from "../../../../redux/actions/sale/sale.action";
-
+import {
+    withRouter
+} from 'react-router-dom';
 class FormSale extends Component{
     constructor(props){
         super(props);
@@ -31,9 +32,10 @@ class FormSale extends Component{
     componentWillReceiveProps(nextProps){
         
         if(nextProps.master!==undefined&&nextProps.master!==[]){
-            
-            this.state.gt=nextProps.master.gt;
-            this.state.kode_trx=nextProps.master.kode_trx;
+            this.setState({
+                gt:nextProps.master.gt,
+                kode_trx:nextProps.master.kode_trx
+            })
         }
     }
     handleChange = (event) => {
@@ -41,7 +43,7 @@ class FormSale extends Component{
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
             this.setState({
-                change:parseInt(tunai)-this.state.gt
+                change:parseInt(tunai,10)-this.state.gt
             });
             Object.assign(this.props.master,{
                 tunai:this.state.tunai,
@@ -97,7 +99,7 @@ class FormSale extends Component{
             parsedata['detail']=this.props.detail;
 
             
-            this.props.dispatch(storeSale(parsedata));
+            this.props.dispatch(storeSale(parsedata,(arr)=>this.props.history.push(arr)));
         }
 
     }
@@ -181,4 +183,4 @@ const mapStateToProps = (state) => {
         isLoading: state.bankReducer.isLoading,
     }
 }
-export default connect(mapStateToProps)(FormSale);
+export default withRouter(connect(mapStateToProps)(FormSale));

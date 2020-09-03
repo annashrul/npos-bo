@@ -26,14 +26,24 @@ class FormGroupProduct extends Component{
         let group2=[];
         
         if(param.group2.data!==undefined){
-            typeof param.group2.data === 'object' ?
+            if(typeof param.group2.data === 'object'){
                 param.group2.data.map((v,i)=>{
                     group2.push({
                         value:v.kode,
                         label:v.nama,
                     })
+                    return null;
                 })
-                : "";
+            }
+            // typeof param.group2.data === 'object' ?
+            //     param.group2.data.map((v,i)=>{
+            //         group2.push({
+            //             value:v.kode,
+            //             label:v.nama,
+            //         })
+            //         return null;
+            //     })
+            //     : "";
         }
         this.setState({group2_data:group2});
         if (param.detail !== [] && param.detail !== undefined) {

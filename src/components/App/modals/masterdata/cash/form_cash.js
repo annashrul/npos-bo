@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {createCash, FetchCash, updateCash} from "redux/actions/masterdata/cash/cash.action";
 import {stringifyFormData} from "helper";

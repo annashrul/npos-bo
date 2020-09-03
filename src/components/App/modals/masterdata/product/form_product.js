@@ -334,7 +334,9 @@ class FormProduct extends Component{
             }));
 
         }else{
-            this.state.kd_brg = "";
+            this.setState({
+                kd_brg : ""
+            })
         }
     }
     toggle = (e) => {
@@ -350,8 +352,8 @@ class FormProduct extends Component{
             nm_harga3:param.auth.user.harga3,
             nm_harga4:param.auth.user.harga4,
             set_harga:param.auth.user.set_harga,
+            codeServer:param.productCode
         });
-        this.state.codeServer = param.productCode;
         if(param.dataEdit !== undefined && param.dataEdit !== []){
             
             let barang_sku = typeof param.dataEdit.barang_sku === 'object' ? param.dataEdit.barang_sku : this.state.barangSku;
@@ -480,7 +482,9 @@ class FormProduct extends Component{
         }
         else{
             const {data} = param.dataLocation;
-            this.state.check = param.dataLocation;
+            this.setState({
+                check : param.dataLocation
+            })
             let brgHrg=[];
             if(typeof data === 'object'){
                 data.map((v)=>{
@@ -521,6 +525,7 @@ class FormProduct extends Component{
                             }
                         ]
                     )
+                    return null;
                 });
                 this.setState({
                     barangHarga:brgHrg
@@ -531,12 +536,22 @@ class FormProduct extends Component{
         let group1=[];
         let group2=[];
         if(param.data.data!==undefined){
-            typeof param.data.data === 'object' ? param.data.data.map((v)=>{
-                kel_brg.push({
-                    value:v.kel_brg,
-                    label:v.nm_kel_brg,
+            if(typeof param.data.data === 'object'){
+                param.data.data.map((v)=>{
+                    kel_brg.push({
+                        value:v.kel_brg,
+                        label:v.nm_kel_brg,
+                    })
+                    return null;
                 })
-            }): "no data"
+            }
+            // typeof param.data.data === 'object' ? param.data.data.map((v)=>{
+            //     kel_brg.push({
+            //         value:v.kel_brg,
+            //         label:v.nm_kel_brg,
+            //     })
+            //     return null;
+            // }): "no data"
             this.setState({
                 kel_brg_data:kel_brg
             })
@@ -547,6 +562,7 @@ class FormProduct extends Component{
                     value:v.kode,
                     label:v.nama,
                 })
+                return null;
             })
             this.setState({
                 group1_data:group1
@@ -554,12 +570,22 @@ class FormProduct extends Component{
         }
 
         if(param.dataSubDept.data!==undefined){
-            typeof param.dataSubDept.data === 'object' ? param.dataSubDept.data.map((v)=>{
-                group2.push({
-                    value:v.kode,
-                    label:v.nama,
+            if(typeof param.dataSubDept.data === 'object'){
+                param.dataSubDept.data.map((v)=>{
+                    group2.push({
+                        value:v.kode,
+                        label:v.nama,
+                    })
+                    return null;
                 })
-            }): "no data"
+            }
+            // typeof param.dataSubDept.data === 'object' ? param.dataSubDept.data.map((v)=>{
+            //     group2.push({
+            //         value:v.kode,
+            //         label:v.nama,
+            //     })
+            //     return null;
+            // }): "no data"
             this.setState({
                 group2_data:group2
             })
@@ -827,8 +853,10 @@ class FormProduct extends Component{
                 barangHarga[i][1].hrgBeliPACK = parseInt(event.target.value*qty_konversi[1],10);
                 barangHarga[i][2].hrgBeliKARTON = parseInt(event.target.value*qty_konversi[2],10);
             }
-            this.state.hrgBeliPACK =  parseInt(event.target.value*qty_konversi[1],10);
-            this.state.hrgBeliKARTON =  parseInt(event.target.value*qty_konversi[2],10);
+            this.setState({
+                hrgBeliPACK :  parseInt(event.target.value*qty_konversi[1],10),
+                hrgBeliKARTON :  parseInt(event.target.value*qty_konversi[2],10)
+        })
         }
         if(event.target.name==="margin1PCS"){
             barangHarga[i] = {...barangHarga[i], [event.target.name]: event.target.value};
@@ -885,23 +913,34 @@ class FormProduct extends Component{
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             
             if(column==='hrgBeliPCS'){
-                this.state.hrgBeliPCS = value;
+                this.setState({
+                    hrgBeliPCS : value
+                })
                 barangHarga[i][0].hrgBeliPCS = value;
                 if(this.state.barangSku.length === 3){
                     let qty_konversi=[];
-                    this.state.barangSku[x].konversi!==undefined?qty_konversi.push(this.state.barangSku[x].konversi):0;
+                    if(this.state.barangSku[x].konversi!==undefined){
+                        qty_konversi.push(this.state.barangSku[x].konversi)
+                    }
+                    // this.state.barangSku[x].konversi!==undefined?qty_konversi.push(this.state.barangSku[x].konversi):0;
                     barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1],10);
                     barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2],10);
-                    this.state.hrgBeliPACK =  parseInt(value*qty_konversi[1],10);
-                    this.state.hrgBeliKARTON =  parseInt(value*qty_konversi[2],10);
+                    this.setState({
+                        hrgBeliPACK :  parseInt(value*qty_konversi[1],10),
+                        hrgBeliKARTON :  parseInt(value*qty_konversi[2],10)
+                    })
                 }
             }
             if(column==='hrgBeliPACK'){
-                this.state.hrgBeliPACK = value;
+                this.setState({
+                    hrgBeliPACK : value
+                })
                 barangHarga[i][1].hrgBeliPACK = value;
             }
             if(column==='hrgBeliKARTON'){
-                this.state.hrgBeliKARTON = value;
+                this.state({
+                    hrgBeliKARTON : value
+                })
                 barangHarga[i][2].hrgBeliKARTON = value;
             }
 
@@ -911,51 +950,75 @@ class FormProduct extends Component{
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             if(column==='margin1PCS'){
                 barangHarga[i][x].hrgJual1PCS = parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPCS,10);
-                this.state.hrgJual1PCS= parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10);
+                this.setState({
+                    hrgJual1PCS : parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10)
+                })
             }
             if(column==='margin2PCS'){
                 barangHarga[i][x].hrgJual2PCS = parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPCS,10);
-                this.state.hrgJual2PCS= parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10);
+                this.setState({
+                    hrgJual2PCS : parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10)
+                })
             }
             if(column==='margin3PCS'){
                 barangHarga[i][x].hrgJual3PCS = parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPCS,10);
-                this.state.hrgJual3PCS= parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10);
+                this.setState({
+                    hrgJual3PCS : parseInt(barangHarga[i][x].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPCS,10)
+                })
             }
             if(column==='margin4PCS'){
                 barangHarga[i][0].hrgJual4PCS = parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][0].hrgBeliPCS,10);
-                this.state.hrgJual4PCS= parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[0].hrgBeliPCS,10);
+                this.setState({
+                    hrgJual4PCS : parseInt(barangHarga[i][0].hrgBeliPCS,10) * (parseInt(value,10)/100) + parseInt(barangHarga[0].hrgBeliPCS,10)
+                })
             }
             if(column==='margin1PACK'){
                 barangHarga[i][x].hrgJual1PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
-                this.state.hrgJual1PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
+                this.setState({
+                    hrgJual1PACK : parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10)
+                })
             }
             if(column==='margin2PACK'){
                 barangHarga[i][x].hrgJual2PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
-                this.state.hrgJual2PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
+                this.setState({
+                    hrgJual2PACK : parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10)
+                })
             }
             if(column==='margin3PACK'){
                 barangHarga[i][x].hrgJual3PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
-                this.state.hrgJual4PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
+                this.setState({
+                    hrgJual4PACK : parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10)
+                })
             }
             if(column==='margin4PACK'){
                 barangHarga[i][x].hrgJual4PACK = parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliPACK,10);
-                this.state.hrgJual4PACK= parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10);
+                this.setState({
+                    hrgJual4PACK : parseInt(barangHarga[i][x].hrgBeliPACK,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliPACK,10)
+                })
             }
             if(column==='margin1KARTON'){
                 barangHarga[i][x].hrgJual1KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
-                this.state.hrgJual1KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
+                this.setState({
+                    hrgJual1KARTON : parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10)
+                })
             }
             if(column==='margin2KARTON'){
                 barangHarga[i][x].hrgJual2KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
-                this.state.hrgJual2KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
+                this.setState({
+                    hrgJual2KARTON : parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10)
+                })
             }
             if(column==='margin3KARTON'){
                 barangHarga[i][x].hrgJual3KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
-                this.state.hrgJual3KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
+                this.setState({
+                    hrgJual3KARTON : parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10)
+                })
             }
             if(column==='margin4KARTON'){
                 barangHarga[i][x].hrgJual4KARTON = parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[i][x].hrgBeliKARTON,10);
-                this.state.hrgJual4KARTON= parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10);
+                this.setState({
+                    hrgJual4KARTON : parseInt(barangHarga[i][x].hrgBeliKARTON,10) * (parseInt(value,10)/100) + parseInt(barangHarga[x].hrgBeliKARTON,10)
+                })
             }
 
         }
@@ -963,76 +1026,112 @@ class FormProduct extends Component{
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             if(column==='hrgJual1PCS'){
                 barangHarga[i][x].margin1PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
-                this.state.margin1PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.setState({
+                    margin1PCS : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100
+                })
             }
             if(column==='hrgJual2PCS'){
                 barangHarga[i][x].margin2PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
-                this.state.margin2PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.setState({
+                    margin2PCS : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100
+                })
             }
             if(column==='hrgJual3PCS'){
                 barangHarga[i][x].margin3PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
-                this.state.margin3PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.setState({
+                    margin3PCS : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100
+                })
             }
             if(column==='hrgJual4PCS'){
                 barangHarga[i][x].margin4PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
-                this.state.margin4PCS = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100;
+                this.setState({
+                    margin4PCS : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPCS,10))/parseInt(barangHarga[i][x].hrgBeliPCS,10))*100
+                })
             }
             if(column==='hrgJual1PACK'){
                 barangHarga[i][x].margin1PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
-                this.state.margin1PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.setState({
+                    margin1PACK : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100
+                })
             }
             if(column==='hrgJual2PACK'){
                 barangHarga[i][x].margin2PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
-                this.state.margin2PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.setState({
+                    margin2PACK : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100
+                })
             }
             if(column==='hrgJual3PACK'){
                 barangHarga[i][x].margin3PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
-                this.state.margin3PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.setState({
+                    margin3PACK : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100
+                })
             }
             if(column==='hrgJual4PACK'){
                 barangHarga[i][x].margin4PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
-                this.state.margin4PACK = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100;
+                this.setState({
+                    margin4PACK : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliPACK,10))/parseInt(barangHarga[i][x].hrgBeliPACK,10))*100
+                })
             }
             if(column==='hrgJual1KARTON'){
                 barangHarga[i][x].margin1KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
-                this.state.margin1KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.setState({
+                    margin1KARTON : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100
+                })
             }
             if(column==='hrgJual2KARTON'){
                 barangHarga[i][x].margin2KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
-                this.state.margin2KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.setState({
+                    margin2KARTON : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100
+                })
             }
             if(column==='hrgJual3KARTON'){
                 barangHarga[i][x].margin3KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
-                this.state.margin3KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.setState({
+                    margin3KARTON : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100
+                })
             }
             if(column==='hrgJual4KARTON'){
                 barangHarga[i][x].margin4KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
-                this.state.margin4KARTON = ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100;
+                this.setState({
+                    margin4KARTON : ((parseInt(value,10)-parseInt(barangHarga[i][x].hrgBeliKARTON,10))/parseInt(barangHarga[i][x].hrgBeliKARTON,10))*100
+                })
             }
         }
 
         if(column==='servicePCS'||column==='servicePACK'||column==='serviceKARTON'){
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             if(column==='servicePCS'){
-                this.state.servicePCS = value;
+                this.setState({
+                    servicePCS : value
+                })
             }
             if(column==='servicePACK'){
-                this.state.servicePACK = value;
+                this.setState({
+                    servicePACK : value
+                })
             }
             if(column==='serviceKARTON'){
-                this.state.serviceKARTON = value;
+                this.setState({
+                    serviceKARTON : value
+                })
             }
         }
         if(column==='ppnPCS'||column==='ppnPACK'||column==='ppnKARTON'){
             barangHarga[i][x] = {...barangHarga[i][x], [column]: value};
             if(column==='ppnPCS'){
-                this.state.ppnPCS = value;
+                this.setState({
+                    ppnPCS : value
+                })
             }
             if(column==='ppnPACK'){
-                this.state.ppnPACK = value;
+                this.setState({
+                    ppnPACK : value
+                })
             }
             if(column==='ppnKARTON'){
-                this.state.ppnKARTON = value;
+                this.setState({
+                    ppnKARTON : value
+                })
             }
         }
         this.setState({ barangHarga });
@@ -1044,6 +1143,7 @@ class FormProduct extends Component{
             let data=this.state.barangHarga;
             data.map((v,i)=>{
                 Object.assign(v[0],{"isCheckedPCS":event.target.checked})
+                return null;
             });
             this.setState({barangHarga: data});
         }
@@ -1054,6 +1154,7 @@ class FormProduct extends Component{
             let data=this.state.barangHarga;
             data.map((v,i)=>{
                 Object.assign(v[1],{"isCheckedPACK":event.target.checked})
+                return null;
             });
             this.setState({barangHarga: data});
         }
@@ -1064,6 +1165,7 @@ class FormProduct extends Component{
             let data=this.state.barangHarga;
             data.map((v,i)=>{
                 Object.assign(v[2],{"isCheckedKARTON":event.target.checked})
+                return null;
             });
             this.setState({barangHarga: data});
         }
@@ -1199,48 +1301,96 @@ class FormProduct extends Component{
         if(localStorage.getItem("samarata") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++){
                 if(name === 'hrg_beli'){
-                    this.state.barangHarga[i][0].hrgBeliPCS = val;
+                    // this.state.barangHarga[i][0].hrgBeliPCS = val;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgBeliPCS = val;
+                    this.setState({barangHarga: barangHarga});
                     if(this.state.barangSku.length === 3){
-                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1],10);
-                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
+                        // this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1],10);
+                        // this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1],10);
+                    barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
+                    this.setState({barangHarga: barangHarga});
                     }
 
                 }
                 if(name === 'margin1'){
-                    this.state.barangHarga[i][0].margin1PCS = val;
-                    this.state.barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    // this.state.barangHarga[i][0].margin1PCS = val;
+                    // this.state.barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin1PCS = val;
+                    barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'margin2'){
-                    this.state.barangHarga[i][0].margin2PCS = val;
-                    this.state.barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
-
+                    // this.state.barangHarga[i][0].margin2PCS = val;
+                    // this.state.barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin2PCS = val;
+                    barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'margin3'){
-                    this.state.barangHarga[i][0].margin3PCS = val;
-                    this.state.barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    // this.state.barangHarga[i][0].margin3PCS = val;
+                    // this.state.barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin3PCS = val;
+                    barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'margin4'){
-                    this.state.barangHarga[i][0].margin4PCS = val;
-                    this.state.barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    // this.state.barangHarga[i][0].margin4PCS = val;
+                    // this.state.barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin4PCS = val;
+                    barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual1'){
-                    this.state.barangHarga[i][0].hrgJual1PCS = val;
-                    this.state.barangHarga[i][0].margin1PCS = margin1_pcs;
+                    // this.state.barangHarga[i][0].hrgJual1PCS = val;
+                    // this.state.barangHarga[i][0].margin1PCS = margin1_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual1PCS = val;
+                    barangHarga[i][0].margin1PCS = margin1_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual2'){
-                    this.state.barangHarga[i][0].hrgJual2PCS = val;
-                    this.state.barangHarga[i][0].margin2PCS = margin2_pcs;
+                    // this.state.barangHarga[i][0].hrgJual2PCS = val;
+                    // this.state.barangHarga[i][0].margin2PCS = margin2_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual2PCS = val;
+                    barangHarga[i][0].margin2PCS = margin2_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual3'){
-                    this.state.barangHarga[i][0].hrgJual3PCS = val;
-                    this.state.barangHarga[i][0].margin3PCS = margin3_pcs;
+                    // this.state.barangHarga[i][0].hrgJual3PCS = val;
+                    // this.state.barangHarga[i][0].margin3PCS = margin3_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual3PCS = val;
+                    barangHarga[i][0].margin3PCS = margin3_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual4'){
-                    this.state.barangHarga[i][0].hrgJual4PCS = val;
-                    this.state.barangHarga[i][0].margin4PCS = margin4_pcs;
+                    // this.state.barangHarga[i][0].hrgJual4PCS = val;
+                    // this.state.barangHarga[i][0].margin4PCS = margin4_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual4PCS = val;
+                    barangHarga[i][0].margin4PCS = margin4_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
-                if(name === 'service'){this.state.barangHarga[i][0].servicePCS = val;}
-                if(name === 'ppn'){this.state.barangHarga[i][0].ppnPCS = val;}
+                if(name === 'service'){
+                    // this.state.barangHarga[i][0].servicePCS = val;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].servicePCS = val;
+                    this.setState({barangHarga: barangHarga});
+                }
+                if(name === 'ppn'){
+                    // this.state.barangHarga[i][0].ppnPCS = val;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].ppnPCS = val;
+                    this.setState({barangHarga: barangHarga});
+                }
             }
         }
     }
@@ -1314,55 +1464,110 @@ class FormProduct extends Component{
         if(localStorage.getItem("samarata") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++) {
                 if(column === 'hrg_beli'){
-                    this.state.barangHarga[i][0].hrgBeliPCS = value;
+                    // this.state.barangHarga[i][0].hrgBeliPCS = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgBeliPCS = value;
+                    this.setState({barangHarga: barangHarga});
                     if(this.state.barangSku.length === 3){
-                        this.state.barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1],10);
-                        this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2],10);
+                        // this.state.barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1],10);
+                        // this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2],10);
+                        let barangHarga = this.state.barangHarga;
+                        barangHarga[i][1].hrgBeliPACK = parseInt(value*qty_konversi[1],10);
+                        barangHarga[i][2].hrgBeliKARTON = parseInt(value*qty_konversi[2],10);
+                        this.setState({barangHarga: barangHarga});
                     }
                 }
                 if(column === 'margin1'){
-                    this.state.barangHarga[i][0].margin1PCS = value;
-                    this.state.barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    // this.state.barangHarga[i][0].margin1PCS = value;
+                    // this.state.barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin1PCS = value;
+                    barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    this.setState({barangHarga: barangHarga});
                     
                 }
                 if(column === 'margin2'){
-                    this.state.barangHarga[i][0].margin2PCS = value;
-                    this.state.barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
+                    // this.state.barangHarga[i][0].margin2PCS = value;
+                    // this.state.barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin2PCS = value;
+                    barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
+                    this.setState({barangHarga: barangHarga});
 
                 }
                 if(column === 'margin3'){
-                    this.state.barangHarga[i][0].margin3PCS = value;
-                    this.state.barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    // this.state.barangHarga[i][0].margin3PCS = value;
+                    // this.state.barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin3PCS = value;
+                    barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column === 'margin4'){
-                    this.state.barangHarga[i][0].margin4PCS = value;
-                    this.state.barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    // this.state.barangHarga[i][0].margin4PCS = value;
+                    // this.state.barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].margin4PCS = value;
+                    barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column === 'hrgjual1'){
-                    this.state.barangHarga[i][0].hrgJual1PCS = value;
-                    this.state.barangHarga[i][0].margin1PCS = margin1_pcs;
+                    // this.state.barangHarga[i][0].hrgJual1PCS = value;
+                    // this.state.barangHarga[i][0].margin1PCS = margin1_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual1PCS = value;
+                    barangHarga[i][0].margin1PCS = margin1_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column === 'hrgjual2'){
-                    this.state.barangHarga[i][0].hrgJual2PCS = value;
-                    this.state.barangHarga[i][0].margin2PCS = margin2_pcs;
+                    // this.state.barangHarga[i][0].hrgJual2PCS = value;
+                    // this.state.barangHarga[i][0].margin2PCS = margin2_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual2PCS = value;
+                    barangHarga[i][0].margin2PCS = margin2_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column === 'hrgjual3'){
-                    this.state.barangHarga[i][0].hrgJual3PCS = value;
-                    this.state.barangHarga[i][0].margin3PCS = margin3_pcs;
+                    // this.state.barangHarga[i][0].hrgJual3PCS = value;
+                    // this.state.barangHarga[i][0].margin3PCS = margin3_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual3PCS = value;
+                    barangHarga[i][0].margin3PCS = margin3_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column === 'hrgjual4'){
-                    this.state.barangHarga[i][0].hrgJual4PCS = value;
-                    this.state.barangHarga[i][0].margin4PCS = margin4_pcs;
+                    // this.state.barangHarga[i][0].hrgJual4PCS = value;
+                    // this.state.barangHarga[i][0].margin4PCS = margin4_pcs;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].hrgJual4PCS = value;
+                    barangHarga[i][0].margin4PCS = margin4_pcs;
+                    this.setState({barangHarga: barangHarga});
                 }
-                if(column === 'service'){this.state.barangHarga[i][0].servicePCS = value;}
-                if(column === 'ppn'){this.state.barangHarga[i][0].ppnPCS = value;}
+                if(column === 'service'){
+                    // this.state.barangHarga[i][0].servicePCS = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].servicePCS = value;
+                    this.setState({barangHarga: barangHarga});
+                }
+                if(column === 'ppn'){
+                    // this.state.barangHarga[i][0].ppnPCS = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][0].ppnPCS = value;
+                    this.setState({barangHarga: barangHarga});
+                }
             }
         }
         if(localStorage.getItem("samarata_pack") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++){
                 if(column==="hrg_beli_pack"){
-                    this.state.barangHarga[i][1].hrgBeliPACK =  value;
-                    this.state.hrgBeliPACK = value;
+                    // this.state.barangHarga[i][1].hrgBeliPACK =  value;
+                    // this.state.hrgBeliPACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].hrgBeliPACK =  value;
+                    this.setState({
+                        barangHarga : barangHarga,
+                        hrgBeliPACK : value
+                    });
                 }
                 if(column==="margin1_pack"){
                     this.setState({
@@ -1370,8 +1575,12 @@ class FormProduct extends Component{
                         hrgJual1PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin1PACK:value,
                     });
-                    this.state.barangHarga[i][1].margin1PACK = value;
-                    this.state.barangHarga[i][1].hrgJual1PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    // this.state.barangHarga[i][1].margin1PACK = value;
+                    // this.state.barangHarga[i][1].hrgJual1PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin1PACK = value;
+                    barangHarga[i][1].hrgJual1PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column==="margin2_pack"){
                     this.setState({
@@ -1379,16 +1588,25 @@ class FormProduct extends Component{
                         hrgJual2PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin2PACK:value,
                     });
-                    this.state.barangHarga[i][1].margin2PACK = value;
-                    this.state.barangHarga[i][1].hrgJual2PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);                }
+                    // this.state.barangHarga[i][1].margin2PACK = value;
+                    // this.state.barangHarga[i][1].hrgJual2PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);                }
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin2PACK = value;
+                    barangHarga[i][1].hrgJual2PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    this.setState({barangHarga: barangHarga});
+                }
                 if(column==="margin3_pack"){
                     this.setState({
                         hrgjual3_pack:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         hrgJual3PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin3PACK:value,
                     });
-                    this.state.barangHarga[i][1].margin3PACK = value;
-                    this.state.barangHarga[i][1].hrgJual3PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    // this.state.barangHarga[i][1].margin3PACK = value;
+                    // this.state.barangHarga[i][1].hrgJual3PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin3PACK = value;
+                    barangHarga[i][1].hrgJual3PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column==="margin4_pack"){
                     this.setState({
@@ -1396,8 +1614,12 @@ class FormProduct extends Component{
                         hrgJual4PACK:parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10),
                         margin4PACK:value,
                     });
-                    this.state.barangHarga[i][1].margin4PACK = value;
-                    this.state.barangHarga[i][1].hrgJual4PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    // this.state.barangHarga[i][1].margin4PACK = value;
+                    // this.state.barangHarga[i][1].hrgJual4PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin4PACK = value;
+                    barangHarga[i][1].hrgJual4PACK = parseInt(this.state.hrg_beli_pack,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_pack,10);
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column==="hrgjual1_pack"){
                     this.setState({
@@ -1405,8 +1627,12 @@ class FormProduct extends Component{
                         margin1PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual1PACK:value
                     });
-                    this.state.barangHarga[i][1].margin1PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
-                    this.state.barangHarga[i][1].hrgJual1PACK = value;
+                    // this.state.barangHarga[i][1].margin1PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    // this.state.barangHarga[i][1].hrgJual1PACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin1PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    barangHarga[i][1].hrgJual1PACK = value;
+                    this.setState({barangHarga: barangHarga});
                     // margin4_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
                 }
                 if(column==="hrgjual2_pack"){
@@ -1415,8 +1641,12 @@ class FormProduct extends Component{
                         margin2PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual2PACK:value
                     });
-                    this.state.barangHarga[i][1].margin2PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
-                    this.state.barangHarga[i][1].hrgJual2PACK = value;
+                    // this.state.barangHarga[i][1].margin2PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    // this.state.barangHarga[i][1].hrgJual2PACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin2PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    barangHarga[i][1].hrgJual2PACK = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column==="hrgjual3_pack"){
                     this.setState({
@@ -1424,8 +1654,12 @@ class FormProduct extends Component{
                         margin3PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual3PACK:value
                     });
-                    this.state.barangHarga[i][1].margin3PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
-                    this.state.barangHarga[i][1].hrgJual3PACK = value;
+                    // this.state.barangHarga[i][1].margin3PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    // this.state.barangHarga[i][1].hrgJual3PACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin3PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    barangHarga[i][1].hrgJual3PACK = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column==="hrgjual4_pack"){
                     this.setState({
@@ -1433,23 +1667,42 @@ class FormProduct extends Component{
                         margin4PACK:((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100,
                         hrgJual4PACK:value
                     });
-                    this.state.barangHarga[i][1].margin4PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
-                    this.state.barangHarga[i][1].hrgJual4PACK = value;
+                    // this.state.barangHarga[i][1].margin4PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    // this.state.barangHarga[i][1].hrgJual4PACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].margin4PACK = ((parseInt(value,10)-parseInt(this.state.hrg_beli_pack,10))/parseInt(this.state.hrg_beli_pack,10))*100;
+                    barangHarga[i][1].hrgJual4PACK = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if(column==="service_pack"){
-                    this.state.barangHarga[i][1].servicePACK =  value;
-                    this.state.servicePACK = value;
+                    // this.state.barangHarga[i][1].servicePACK =  value;
+                    // this.state.servicePACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].servicePACK =  value;
+                    this.setState({
+                        barangHarga : barangHarga,
+                        servicePACK : value
+                    });
                 }
                 if(column==="ppn_pack"){
-                    this.state.barangHarga[i][1].ppnPACK = value;
-                    this.state.ppnPACK = value;
+                    // this.state.barangHarga[i][1].ppnPACK = value;
+                    // this.state.ppnPACK = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][1].ppnPACK = value;
+                    this.setState({
+                        barangHarga : barangHarga,
+                        ppnPACK : value
+                    });
                 }
             }
         }
         if(localStorage.getItem("samarata_karton") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++) {
                 if (column === "hrg_beli_karton") {
-                    this.state.barangHarga[i][2].hrgBeliKARTON = value;
+                    // this.state.barangHarga[i][2].hrgBeliKARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].hrgBeliKARTON = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "margin1_karton") {
                     this.setState({
@@ -1457,8 +1710,12 @@ class FormProduct extends Component{
                         hrgJual1KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin1KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin1KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual1KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    // this.state.barangHarga[i][2].margin1KARTON = value;
+                    // this.state.barangHarga[i][2].hrgJual1KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin1KARTON = value;
+                    barangHarga[i][2].hrgJual1KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "margin2_karton") {
                     this.setState({
@@ -1466,16 +1723,25 @@ class FormProduct extends Component{
                         hrgJual2KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin2KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin2KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual2KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);                }
+                    // this.state.barangHarga[i][2].margin2KARTON = value;
+                    // this.state.barangHarga[i][2].hrgJual2KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin2KARTON = value;
+                    barangHarga[i][2].hrgJual2KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    this.setState({barangHarga: barangHarga});
+                }
                 if (column === "margin3_karton") {
                     this.setState({
                         hrgjual3_karton:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         hrgJual3KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin3KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin3KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual3KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    // this.state.barangHarga[i][2].margin3KARTON = value;
+                    // this.state.barangHarga[i][2].hrgJual3KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin3KARTON = value;
+                    barangHarga[i][2].hrgJual3KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "margin4_karton") {
                     this.setState({
@@ -1483,8 +1749,12 @@ class FormProduct extends Component{
                         hrgJual4KARTON:parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10),
                         margin4KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin4KARTON = value;
-                    this.state.barangHarga[i][2].hrgJual4KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    // this.state.barangHarga[i][2].margin4KARTON = value;
+                    // this.state.barangHarga[i][2].hrgJual4KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin4KARTON = value;
+                    barangHarga[i][2].hrgJual4KARTON = parseInt(this.state.hrg_beli_karton,10) * (parseInt(value,10)/100) + parseInt(this.state.hrg_beli_karton,10);
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "hrgjual1_karton") {
                     this.setState({
@@ -1492,8 +1762,12 @@ class FormProduct extends Component{
                         margin1KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual1KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin1KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
-                    this.state.barangHarga[i][2].hrgJual1KARTON = value;
+                    // this.state.barangHarga[i][2].margin1KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    // this.state.barangHarga[i][2].hrgJual1KARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin1KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    barangHarga[i][2].hrgJual1KARTON = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "hrgjual2_karton") {
                     this.setState({
@@ -1501,8 +1775,12 @@ class FormProduct extends Component{
                         margin2KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual2KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin2KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
-                    this.state.barangHarga[i][2].hrgJual2KARTON = value;
+                    // this.state.barangHarga[i][2].margin2KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    // this.state.barangHarga[i][2].hrgJual2KARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin2KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    barangHarga[i][2].hrgJual2KARTON = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "hrgjual3_karton") {
                     this.setState({
@@ -1510,8 +1788,12 @@ class FormProduct extends Component{
                         margin3KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual3KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin3KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
-                    this.state.barangHarga[i][2].hrgJual3KARTON = value;
+                    // this.state.barangHarga[i][2].margin3KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    // this.state.barangHarga[i][2].hrgJual3KARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin3KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    barangHarga[i][2].hrgJual3KARTON = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "hrgjual4_karton") {
                     this.setState({
@@ -1519,22 +1801,35 @@ class FormProduct extends Component{
                         margin4KARTON:((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100,
                         hrgJual4KARTON:value
                     });
-                    this.state.barangHarga[i][2].margin4KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
-                    this.state.barangHarga[i][2].hrgJual4KARTON = value;
+                    // this.state.barangHarga[i][2].margin4KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    // this.state.barangHarga[i][2].hrgJual4KARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].margin4KARTON = ((parseInt(value,10)-parseInt(this.state.hrg_beli_karton,10))/parseInt(this.state.hrg_beli_karton,10))*100;
+                    barangHarga[i][2].hrgJual4KARTON = value;
+                    this.setState({barangHarga: barangHarga});
                 }
                 if (column === "service_karton") {
-                    this.state.barangHarga[i][2].serviceKARTON = value;
-                    this.state.serviceKARTON = value;
+                    // this.state.barangHarga[i][2].serviceKARTON = value;
+                    // this.state.serviceKARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].serviceKARTON = value;
+                    this.setState({
+                        barangHarga : barangHarga,
+                        serviceKARTON : value
+                    });
                 }
                 if (column === "ppn_karton") {
-                    this.state.barangHarga[i][2].ppnKARTON = value;
-                    this.state.ppnKARTON = value;
+                    // this.state.barangHarga[i][2].ppnKARTON = value;
+                    // this.state.ppnKARTON = value;
+                    let barangHarga = this.state.barangHarga;
+                    barangHarga[i][2].ppnKARTON = value;
+                    this.setState({
+                        barangHarga : barangHarga,
+                        ppnKARTON : value
+                    });
                 }
             }
-
-        }
-
-
+    }
 
     }
     validasiLastForm(){
@@ -1946,7 +2241,7 @@ class FormProduct extends Component{
                                         <div className="form-group">
                                             <label htmlFor="inputState" className="col-form-label">{this.props.dataEdit===undefined?<input type="checkbox" checked={this.state.generateCode} onChange={this.generateCode}/>:""} Kode Barang</label>
                                             <input readOnly={this.props.dataEdit===undefined?false:true} type="text" className="form-control" name="kd_brg" value={this.state.kd_brg} onChange={(e)=>this.handleChange(e,null)} required/>
-                                            <div className="invalid-feedback" style={this.state.error.kd_brg || this.props.checkKodeBarang===true !== "" ? {display: 'block'} : {display: 'none'}}>
+                                            <div className="invalid-feedback" style={this.state.error.kd_brg || this.props.checkKodeBarang===true ? {display: 'block'} : {display: 'none'}}>
                                                 {
                                                     this.state.kd_brg===''||this.state.kd_brg===undefined?this.state.error.kd_brg:(this.props.checkKodeBarang===true?"kode barang sudah digunakan":"")
                                                 }
@@ -2098,7 +2393,7 @@ class FormProduct extends Component{
                                             {(()=>{
                                                 let container =[];
                                                 for(let x=0; x<this.state.barangSku.length; x++){
-                                                    let satuan=(x===0)?"Pcs":(x===1?"Pack":"Karton");
+                                                    // let satuan=(x===0)?"Pcs":(x===1?"Pack":"Karton");
                                                     container.push(
                                                         <tr key={x}>
                                                             <td>

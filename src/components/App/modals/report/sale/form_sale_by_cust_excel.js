@@ -1,12 +1,11 @@
 import React,{Component} from 'react';
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
+import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody, ModalHeader,ModalFooter} from "reactstrap";
-import moment from "moment";
-import {rangeDate, toRp, to_pdf,statusQ} from "helper";
+import {ModalBody} from "reactstrap";
+import {toRp, to_pdf} from 'helper'
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf';
 import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
@@ -43,7 +42,7 @@ class SaleByCustReportExcel extends Component{
     };
     printDocument = (e) => {
         e.preventDefault();
-        let stringHtml = '',tprice=0;
+        let stringHtml = '';
         stringHtml+=
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
@@ -64,9 +63,9 @@ class SaleByCustReportExcel extends Component{
         let data = typeof this.props.sale_by_custReportExcel.data === 'object'?this.props.sale_by_custReportExcel.data.map(v=> [
            v.kd_cust,
            v.nama,
-           toRp(parseInt(v.gross_sales)),
-           toRp(parseInt(v.diskon_item)),
-           toRp(parseInt(v.diskon_trx)),
+           toRp(parseInt(v.gross_sales,10)),
+           toRp(parseInt(v.diskon_item,10)),
+           toRp(parseInt(v.diskon_trx,10)),
            toRp(v.service),
            v.qty,
         ]):'';
@@ -82,9 +81,9 @@ class SaleByCustReportExcel extends Component{
       }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let subtotal=0;
-        let t_harga_beli = 0;
-        let t_qty = 0;
+        // let subtotal=0;
+        // let t_harga_beli = 0;
+        // let t_qty = 0;
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleByCustExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleByCustExcel"}</ModalHeader> */}
@@ -162,9 +161,9 @@ class SaleByCustReportExcel extends Component{
                                                         <tr key={i}>
                                                             <td style={columnStyle}>{v.kd_cust}</td>
                                                             <td style={columnStyle}>{v.nama}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx,10))}</td>
                                                             <td style={{textAlign:"right"}}>{toRp(v.service)}</td>
                                                             <td style={{textAlign:"right"}}>{v.qty}</td>
                                                         </tr>

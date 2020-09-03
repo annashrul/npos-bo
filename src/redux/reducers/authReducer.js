@@ -1,5 +1,4 @@
 import { AUTH} from '../actions/_constants';
-import isEmpty from 'lodash/isEmpty';
 
 const initialState = {
     isAuthenticated: false,

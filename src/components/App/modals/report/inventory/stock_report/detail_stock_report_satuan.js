@@ -153,7 +153,7 @@ class DetailStockReportSatuan extends Component{
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
-                                                            <a className="btn btn-sm btn-primary" href="#" onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
+                                                            <a className="btn btn-sm btn-primary" href={null} onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
                                                         </td>
                                                         {this.state.data_lok.filter(cat => cat.kode===v.lokasi).map(filteredCat => (
                                                         <td>{filteredCat.nama_toko}</td>

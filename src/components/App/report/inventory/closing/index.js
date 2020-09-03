@@ -1,13 +1,10 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
-import Preloader from "Preloader";
 import connect from "react-redux/es/connect/connect";
 import Paginationq from "helper";
-import {FetchClosing, reClosing} from "redux/actions/report/closing/closing.action";
+import {FetchClosing} from "redux/actions/report/closing/closing.action";
 import Select from 'react-select';
 import moment from "moment";
-import Swal from "sweetalert2";
-import DatePicker from 'react-datepicker';
 import 'moment/locale/id'
 import Card from './src/card'
 
@@ -99,12 +96,12 @@ class Closing extends Component{
 
     render(){
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,
-            from,
-            to,
+            // from,
+            // to,
             data
         } = this.props.closing;
         return (
@@ -157,7 +154,7 @@ class Closing extends Component{
                                 <Paginationq
                                     current_page={current_page}
                                     per_page={per_page}
-                                    total={parseInt(total)}
+                                    total={parseInt(last_page*per_page,10)}
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>

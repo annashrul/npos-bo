@@ -22,11 +22,18 @@ class CustomerPrice extends Component{
     componentWillReceiveProps(nextProps){
         
         let data=[];
-        typeof nextProps.dataCustomerPrice.data==='object'?
+        if(typeof nextProps.dataCustomerPrice.data==='object'){
             nextProps.dataCustomerPrice.data.map((v,i)=>{
                 data.push({"kd_cust":v.kd_cust,"nama":v.nama,"harga":v.harga});
+                return null;
             })
-        : "";
+        }
+        // typeof nextProps.dataCustomerPrice.data==='object'?
+        //     nextProps.dataCustomerPrice.data.map((v,i)=>{
+        //         data.push({"kd_cust":v.kd_cust,"nama":v.nama,"harga":v.harga});
+        //         return null;
+        //     })
+        // : "";
         this.setState({dataCustomer:data});
     }
     handleChange(event,i){

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Layout from '../Layout';
 import Chart from "react-apexcharts";
@@ -275,10 +274,10 @@ class Dashboard extends Component {
         
         socket.on("set_dashboard", (data) => {
             this.setState({
-                grossSales:toRp(parseInt(data.header.penjualan)),
-                netSales:toRp(parseInt(data.header.net_sales)),
+                grossSales:toRp(parseInt(data.header.penjualan,10)),
+                netSales:toRp(parseInt(data.header.net_sales,10)),
                 trxNum:data.header.transaksi,
-                avgTrx:toRp(parseInt(data.header.avg)),
+                avgTrx:toRp(parseInt(data.header.avg,10)),
                 lokasi_sales: data.lokasi_sales,
                 lokasi_tr: data.lokasi_tr,
                 hourly: data.hourly,
@@ -314,6 +313,7 @@ class Dashboard extends Component {
                   value: i.kode,
                   label: i.nama
                 });
+                return null;
               })
               
               this.setState({

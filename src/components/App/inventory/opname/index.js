@@ -402,11 +402,13 @@ class TrxOpname extends Component{
                 brg.push({
                     qty_fisik: i.qty_fisik,
                 });
+                return null;
             })
             this.setState({
                 databrg: res,
                 brgval: brg
             })
+            return null;
         });
     }
 

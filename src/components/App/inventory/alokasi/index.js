@@ -380,6 +380,7 @@ class Alokasi extends Component{
                         if(i.satuan===val){
                             newbrg=i;
                         }
+                        return null;
                     })
 
                     let final= {
@@ -557,6 +558,7 @@ class Alokasi extends Component{
                                     hrg_beli: item.harga_beli,
                                     hrg_jual:item.hrg_jual
                                 })
+                                return null;
                             })
                             let data_final = {
                                 tgl_mutasi: moment(this.state.tanggal).format("YYYY-MM-DD"),
@@ -657,6 +659,7 @@ class Alokasi extends Component{
                 err.push({
                     qty:''
                 })
+                return null;
             })
             this.setState({
                 databrg: res,

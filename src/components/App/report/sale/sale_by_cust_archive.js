@@ -1,7 +1,6 @@
 import React,{Component} from 'react'
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {FetchCashReport} from "redux/actions/masterdata/cash/cash.action";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
@@ -18,8 +17,6 @@ import {
 } from "redux/actions/sale/sale_by_cust.action";
 import DetailSaleByCustReport from "../../modals/report/sale/detail_sale_by_cust_report";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import {HEADERS} from "../../../../redux/actions/_constants";
 
 class SaleByCustArchive extends Component{
     constructor(props){
@@ -47,8 +44,6 @@ class SaleByCustArchive extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
-            filter:"",
-            filter_data:[],
             status:"",
             status_data:[],
         }
@@ -68,6 +63,7 @@ class SaleByCustArchive extends Component{
                 value: i.kode,
                 label: i.value
             });
+            return null;
         });
         let sort = [
             {kode:"desc",value: "DESCENDING"},
@@ -218,7 +214,7 @@ class SaleByCustArchive extends Component{
         let dateFrom=localStorage.getItem("date_from_sale_by_cust_report");
         let dateTo=localStorage.getItem("date_to_sale_by_cust_report");
         let tipe=localStorage.getItem("type_sale_by_cust_report");
-        let lokasi=localStorage.getItem("location_sale_by_cust_report");
+        // let lokasi=localStorage.getItem("location_sale_by_cust_report");
         let any=localStorage.getItem("any_sale_by_cust_report");
         let sort=localStorage.sort_sale_by_cust_report;
         let filter=localStorage.filter_sale_by_cust_report;
@@ -303,7 +299,7 @@ class SaleByCustArchive extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        let range = total*perpage;
+        // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formSaleByCustExcel"));
         this.props.dispatch(FetchReportSaleByCustExcel(1,this.state.where_data,total));
@@ -312,12 +308,12 @@ class SaleByCustArchive extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,
-            from,
-            to,
+            // from,
+            // to,
             data
         } = this.props.sale_by_custReport;
 
@@ -482,9 +478,9 @@ class SaleByCustArchive extends Component{
                                                                     </td> */}
                                                                     <td style={columnStyle}>{v.kd_cust}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.service)}</td>
                                                                     <td style={{textAlign:"right"}}>{v.qty}</td>
                                                                 </tr>
@@ -501,9 +497,9 @@ class SaleByCustArchive extends Component{
                                 </div>
                                 <div style={{"marginTop":"20px","float":"right"}}>
                                     <Paginationq
-                                        current_page={parseInt(current_page)}
-                                        per_page={parseInt(per_page)}
-                                        total={parseInt(total)}
+                                        current_page={parseInt(current_page,10)}
+                                        per_page={parseInt(per_page,10)}
+                                        total={parseInt(last_page*per_page,10)}
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                 </div>

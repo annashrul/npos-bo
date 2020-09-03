@@ -156,7 +156,7 @@ class FormUserLevel extends Component{
         this.setState({})
     };
     handleLoopAccess(moduls=[],nextProps=[]){
-        console.log(moduls);
+        
         if(nextProps!==null)
             moduls.forEach(modul=>{
                 for(let i=0;i<nextProps.length;i++){
@@ -174,7 +174,7 @@ class FormUserLevel extends Component{
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.detail !== undefined && nextProps.detail !== []) {
-            let akses = [];
+            // let akses = [];
             this.handleLoopAccess(
                 this.state.setting.concat(this.state.masterdata).concat(this.state.inventory).concat(this.state.pembelian).concat(this.state.penjualan).concat(this.state.pembayaran).concat(this.state.report).concat(this.state.produksi).concat(this.state.cetak_barcode),
                 nextProps.detail.access);

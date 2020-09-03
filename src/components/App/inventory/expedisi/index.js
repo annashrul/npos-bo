@@ -115,8 +115,15 @@ class Expedisi extends Component{
     }
     handleChangeDynamic(event,i){
         let checked=event.target.checked;
-        this.state.brgVal[i].isChecked = checked;
-        this.setState();
+        // 
+        // this.setState({
+        //     brgVal:[i].isChecked
+        // })
+        var brgVal = this.state.brgVal;
+        brgVal[i].isChecked = checked;
+        this.setState({brgVal: brgVal});
+        // this.state.brgVal[i].isChecked = checked;
+        // this.setState();
         checked===true?localStorage.setItem(`isChecked${i}`,"true"):localStorage.setItem(`isChecked${i}`,"false");
 
     }

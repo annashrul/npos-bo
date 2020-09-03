@@ -13,6 +13,7 @@ import FormSale from "../../modals/sale/form_sale";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 
+
 const table='sale'
 const Toast = Swal.mixin({
     toast: true,
@@ -259,13 +260,13 @@ class Sale extends Component{
                         title: `not found.`
                     })
                 } else {
-                    let newbrg=[];
-                    datas.map(i=>{
-                        if(i.satuan===val){
-                            newbrg=i;
-                        }
-                        return true;
-                    })
+                    // let newbrg=[];
+                    // datas.map(i=>{
+                    //     if(i.satuan===val){
+                    //         newbrg=i;
+                    //     }
+                    //     return true;
+                    // })
 
                     let final= {
                         id: res.id,
@@ -311,7 +312,9 @@ class Sale extends Component{
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.state.subtotal=0;
+                this.setState({
+                    subtotal:0
+                })
                 del(table,id)
                     .then(res=>{
                         this.getData();
@@ -430,7 +433,7 @@ class Sale extends Component{
                 if (res.length===0){
                     Swal.fire(
                         'Error!',
-                        'Pilih barang untuk melanjutkan PO.',
+                        'Pilih barang untuk melanjutkan Penjualan.',
                         'error'
                     )
                 }else{
@@ -478,7 +481,9 @@ class Sale extends Component{
                             sku:item.barcode,
                             open_price:item.harga===item.harga_old?0:item.harga,
                             hrg_beli:item.hrg_beli,
-                            diskon:0
+                            diskon:0,
+                            nm_brg: item.nm_brg,
+                            satuan: item.satuan
                         })
                         return null;
                     });
@@ -1055,4 +1060,4 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth
 });
 
-export default connect(mapStateToPropsCreateItem)(Sale);
+export default (connect(mapStateToPropsCreateItem)(Sale));

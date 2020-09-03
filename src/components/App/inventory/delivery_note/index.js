@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import axios from 'axios';
-import DatePicker from "react-datepicker";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import connect from "react-redux/es/connect/connect";
@@ -42,6 +41,7 @@ const filterColors = (inputValue) => {
                   value: i.no_faktur_beli,
                   label: i.no_faktur_beli
                 });
+                return null;
               })
               return options;
               
@@ -147,7 +147,7 @@ class DeliveryNote extends Component{
                         };
                         store(table, datas)
                         this.getData();
-
+                        return null;
                     })
                 }
 
@@ -166,7 +166,7 @@ class DeliveryNote extends Component{
       }
 
       if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
-        if (localStorage.ambil_data == 2) {
+        if (localStorage.ambil_data === 2) {
           // this.props.dispatch(FetchPoReport(1, 1000))
         }
         this.setState({
@@ -282,7 +282,7 @@ class DeliveryNote extends Component{
       }
 
       if (column === 'ambil_data') {
-        if(val==2){
+        if(val===2){
           // this.props.dispatch(FetchPoReport(1, 1000))
         }
         localStorage.setItem('ambil_data',val);
@@ -306,7 +306,7 @@ class DeliveryNote extends Component{
        
         const cek = cekData('barcode', id, table);
         cek.then(res => {
-            if (res == undefined) {
+            if (res === undefined) {
                  Toast.fire({
                      icon: 'error',
                      title: `not found.`
@@ -343,7 +343,7 @@ class DeliveryNote extends Component{
         if(column==='satuan'){
           const cek = cekData('barcode', barcode, table);
           cek.then(res => {
-              if (res == undefined) {
+              if (res === undefined) {
                   Toast.fire({
                       icon: 'error',
                       title: `not found.`
@@ -353,8 +353,9 @@ class DeliveryNote extends Component{
                 datas.map(i=>{
                   if(i.satuan===val){
                     newbrg=i;
-                    // console.log("change",newbrg);
+                    // 
                   }
+                  return null;
                 })
 
                   let final= {
@@ -425,7 +426,7 @@ class DeliveryNote extends Component{
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
            cek.then(res => {
-               if(res==undefined){
+               if(res===undefined){
                     store(table, finaldt)
                }else{
                    update(table,{
@@ -498,7 +499,7 @@ class DeliveryNote extends Component{
       }else{
         const data = get(table);
         data.then(res => {
-            if (res.length==0){
+            if (res.length===0){
                Swal.fire(
                  'Error!',
                  'Pilih barang untuk melanjutkan Delivery Note.',
@@ -528,6 +529,7 @@ class DeliveryNote extends Component{
                       hrg_beli: item.harga_beli,
                       hrg_jual:item.hrg_jual
                     })
+                    return null;
                   })
                   let data_final = {
                     tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
@@ -539,7 +541,7 @@ class DeliveryNote extends Component{
                     userid: this.state.userid,
                     detail: detail
                   };
-                  // console.log(data_final);
+                  // 
                   this.props.dispatch(storeDN(data_final));
                 }
               })
@@ -552,7 +554,7 @@ class DeliveryNote extends Component{
     autoSetQty(kode, data) {
       const cek = cekData('kd_brg', kode, table);
       return cek.then(res => {
-        if (res == undefined) {
+        if (res === undefined) {
           store(table, {
             kd_brg: data[0].kd_brg,
             nm_brg: data[0].nm_brg,
@@ -610,6 +612,7 @@ class DeliveryNote extends Component{
           err.push({
             qty:''
           })
+          return null;
         })
         this.setState({
           databrg: res,
@@ -618,6 +621,7 @@ class DeliveryNote extends Component{
             qty: err
           })
         })
+        return null;
       });
     }
 
@@ -665,15 +669,15 @@ class DeliveryNote extends Component{
                             <div className="form-group">
                                 <div className="input-group input-group-sm">
                                   <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                    <option value={1} selected={this.state.ambil_data == 1}>Delivery Note Langsung</option>
-                                    <option value={2} selected={this.state.ambil_data==2}>Pembelian</option>
+                                    <option value={1} selected={this.state.ambil_data === 1}>Delivery Note Langsung</option>
+                                    <option value={2} selected={this.state.ambil_data===2}>Pembelian</option>
                                   </select>
                                   </div>
                                 <small
                                   id="passwordHelpBlock"
                                   className="form-text text-muted"
                                 >
-                                  {parseInt(this.state.ambil_data,10)==1?'Delivery note langsung.':'Ambil data DN dari Pembelian.'}
+                                  {parseInt(this.state.ambil_data,10)===1?'Delivery note langsung.':'Ambil data DN dari Pembelian.'}
                                 </small>
                             </div>
                           </div>
@@ -728,7 +732,7 @@ class DeliveryNote extends Component{
                                   id="passwordHelpBlock"
                                   className="form-text text-muted"
                                 >
-                                  Cari berdasarkan {parseInt(this.state.searchby,10)==1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+                                  Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
                                 </small>
                             </div>
                           </div>
@@ -849,7 +853,7 @@ class DeliveryNote extends Component{
                                     </label>
                                     <Select 
                                       options={this.state.location_data}
-                                      placeholder = "==== Pilih ===="
+                                      placeholder = "=== Pilih ==="
                                       onChange={this.HandleChangeLokasi}
                                       value = {
                                         this.state.location_data.find(op => {
@@ -870,7 +874,7 @@ class DeliveryNote extends Component{
                                       options={this.state.location_data.filter(
                                         option => option.value !== this.state.location
                                       )}
-                                      placeholder="==== Pilih ===="
+                                      placeholder="=== Pilih ==="
                                       onChange={this.HandleChangeLokasi2}
                                       value = {
                                         this.state.location_data.find(op => {
@@ -951,7 +955,7 @@ class DeliveryNote extends Component{
                                                   {
                                                       item.tambahan.map(i => {
                                                           return (
-                                                              <option value={i.satuan} selected={i.satuan == item.satuan}>{i.satuan}</option>
+                                                              <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
                                                           )
                                                       })
                                                   }

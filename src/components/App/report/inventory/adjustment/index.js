@@ -220,7 +220,7 @@ class AdjustmentReport extends Component{
 
     render(){
         const {
-            total,
+            // total,
             last_page,
             per_page,
             current_page,

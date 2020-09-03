@@ -1,10 +1,8 @@
 import React,{Component} from 'react';
-import {ModalBody, ModalHeader, ModalFooter} from "reactstrap";
+import {ModalBody, ModalHeader} from "reactstrap";
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle} from "redux/actions/modal.action";
-import {stringifyFormData} from "helper";
-import {saveCustomerPrice,FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
 import {FetchApprovalMutation, saveApprovalMutation} from "../../../../../redux/actions/inventory/mutation.action";
 
 class FormApprovalMutation extends Component{
@@ -25,7 +23,7 @@ class FormApprovalMutation extends Component{
     componentWillReceiveProps(nextProps){
         
         let data=[];
-        typeof nextProps.dataApproval.data==='object'?
+        if(typeof nextProps.dataApproval.data==='object'){
             nextProps.dataApproval.data.map((v,i)=>{
                 data.push({
                     "kd_brg":v.kd_brg,
@@ -41,8 +39,28 @@ class FormApprovalMutation extends Component{
                 // Object.assign(v,{
                 //     isReadonly:false,
                 // });
+                return null;
             })
-            : "";
+        }
+        // typeof nextProps.dataApproval.data==='object'?
+        //     nextProps.dataApproval.data.map((v,i)=>{
+        //         data.push({
+        //             "kd_brg":v.kd_brg,
+        //             "barcode":v.barcode,
+        //             "nm_brg":v.nm_brg,
+        //             "satuan":v.satuan,
+        //             "hrg_beli":v.hrg_beli,
+        //             "total_qty":v.total_qty,
+        //             "total_approval":v.total_approval,
+        //             "sisa_approval":v.total_qty,
+        //             "isReadonly":parseInt(v.total_qty,10)===parseInt(v.total_approval,10)?true:false,
+        //         });
+        //         // Object.assign(v,{
+        //         //     isReadonly:false,
+        //         // });
+        //         return null;
+        //     })
+        //     : "";
         this.setState({dataApproval:data});
     }
     handleChange(event,i){
@@ -54,19 +72,21 @@ class FormApprovalMutation extends Component{
     }
     handleOnEnter(i){
         let data={};
-        if(parseInt(this.state.dataApproval[i].sisa_approval) > (parseInt(this.state.dataApproval[i].total_qty)-parseInt(this.state.dataApproval[i].total_approval))){
+        if(parseInt(this.state.dataApproval[i].sisa_approval,10) > (parseInt(this.state.dataApproval[i].total_qty,10)-parseInt(this.state.dataApproval[i].total_approval,10))){
 
         }else{
             data['kd_trx']          = localStorage.getItem("kd_trx_mutasi");
             data['sisa_approval']   = this.state.dataApproval[i].sisa_approval;
             data['barcode']         = this.state.dataApproval[i].barcode;
             // 
-            let total_qty =  this.state.dataApproval[i].total_qty;
-            let total_approval =  this.state.dataApproval[i].total_approval;
-            let jumlah = parseInt(total_qty)-parseInt(total_approval);
-            if(parseInt(this.state.dataApproval[i].sisa_approval)>0){
+            // let total_qty =  this.state.dataApproval[i].total_qty;
+            // let total_approval =  this.state.dataApproval[i].total_approval;
+            if(parseInt(this.state.dataApproval[i].sisa_approval,10)>0){
                 this.props.dispatch(saveApprovalMutation(data));
-                this.state.dataApproval[i].isReadonly=true;
+                // this.state.dataApproval[i].isReadonly=true;
+                var dataApproval = this.state.dataApproval;
+                dataApproval[i].isReadonly = true;
+                this.setState({dataApproval: dataApproval});
                 
             }
             this.setState({});
@@ -126,7 +146,7 @@ class FormApprovalMutation extends Component{
                                                     }
                                                 }/>
                                                 <div className="invalid-feedback"
-                                                     style={parseInt(v.sisa_approval) > (parseInt(v.total_qty)-parseInt(v.total_approval)) ? {display: 'block'} : {display: 'none'}}>
+                                                     style={parseInt(v.sisa_approval,10) > (parseInt(v.total_qty,10)-parseInt(v.total_approval,10)) ? {display: 'block'} : {display: 'none'}}>
                                                     Qty Approval Melebihi Total Qty.
                                                 </div>
 

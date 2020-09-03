@@ -1,6 +1,6 @@
 import {
     SITE,
-    HEADERS, ADJUSTMENT
+    HEADERS
 } from "./_constants"
 import axios from "axios"
 import {destroy,store} from "components/model/app.model";

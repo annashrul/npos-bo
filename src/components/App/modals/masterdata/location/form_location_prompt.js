@@ -44,7 +44,7 @@ class FormLocationPrompt extends Component{
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
         parseData['password'] = this.state.password;
-        if(parseData['password']==LOC_VERIF.password){
+        if(parseData['password']===LOC_VERIF.password){
             this.props.dispatch(ModalType("formLocation"));
         } else {
             Swal.fire({
