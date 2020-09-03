@@ -676,12 +676,19 @@ class SideMenu extends Component {
         }
     }
 
-     getSortByClass(){
-        setTimeout(() => {
-            return 'none';
-          }, 500);
-      }
+    getSortByClass(){
+    setTimeout(() => {
+        return 'none';
+        }, 500);
+    }
     render() {
+        const clickAble = {
+            color: '#a6b6d0',
+            "&:hover": {
+                color: "#333"
+            },
+            cursor: 'pointer'
+        }
         const path = this.props.location.pathname;
         const {
             modul_setting,
