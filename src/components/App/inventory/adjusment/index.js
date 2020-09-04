@@ -4,10 +4,13 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.action";
+import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
-import {FetchCodeAdjustment, storeAdjusment} from "../../../../redux/actions/adjustment/adjustment.action";
+import {FetchCodeAdjustment, storeAdjusment} from "redux/actions/adjustment/adjustment.action";
+import {
+    withRouter
+} from 'react-router-dom';
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -323,6 +326,7 @@ class TrxAdjustment extends Component{
                         'error'
                     )
                 }else{
+                    console.log("qqqqqqqqqqqqqqqqqq=",this.props)
                     Swal.fire({
                         title: 'Simpan Adjusment?',
                         text: "Pastikan data yang anda masukan sudah benar!",
@@ -360,7 +364,9 @@ class TrxAdjustment extends Component{
                                 return null;
                             });
                             data['detail'] = detail;
-                            this.props.dispatch(storeAdjusment(data));
+                            data['master'] = this.state.databrg;
+                            data['nota'] = this.props.nota;
+                            this.props.dispatch(storeAdjusment(data,(arr)=>this.props.history.push(arr)));
                         }
                     })
 
@@ -725,4 +731,4 @@ const mapStateToPropsCreateItem = (state) => ({
     nota:state.adjustmentReducer.get_code
 });
 
-export default connect(mapStateToPropsCreateItem)(TrxAdjustment);
+export default withRouter(connect(mapStateToPropsCreateItem)(TrxAdjustment));

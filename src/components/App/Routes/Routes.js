@@ -55,12 +55,14 @@ import CetakBarcode from "../cetak_barcode";
 import NotFound from "../common/notfound";
 import SaleReturReport from "../report/sale/sale_retur_archive";
 import Print3ply from "../print/penjualan3ply";
+import Adjust3ply from "../print/adjust3ply";
 
 const Routes = (
     <div>
         <Switch>
             <Route path="/login" exact strict component={Login} />
             <Route path="/print3ply" exact strict component={Print3ply} />
+            <Route path="/adjust3ply" exact strict component={Adjust3ply} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}
