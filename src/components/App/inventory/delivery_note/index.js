@@ -15,6 +15,9 @@ import {FetchReceiveData,setPoData} from 'redux/actions/purchase/receive/receive
 import { Scrollbars } from "react-custom-scrollbars";
 import {HEADERS} from 'redux/actions/_constants'
 import {toRp} from "../../../../helper";
+import {
+    withRouter
+} from 'react-router-dom';
 
 const table='delivery_note'
 const Toast = Swal.mixin({
@@ -542,7 +545,11 @@ class DeliveryNote extends Component{
                     detail: detail
                   };
                   // 
-                  this.props.dispatch(storeDN(data_final));
+                  let parsedata={};
+                  parsedata['detail'] = data_final;
+                  parsedata['master'] = this.state.databrg;
+                  parsedata['nota'] = this.props.nota;
+                  this.props.dispatch(storeDN(parsedata,(arr)=>this.props.history.push(arr)));
                 }
               })
             }
@@ -1031,4 +1038,4 @@ const mapStateToPropsCreateItem = (state) => ({
   checkNotaPem: state.siteReducer.check
 });
 
-export default connect(mapStateToPropsCreateItem)(DeliveryNote);
+export default withRouter(connect(mapStateToPropsCreateItem)(DeliveryNote));
