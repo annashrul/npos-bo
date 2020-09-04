@@ -3,7 +3,9 @@ import {
     HEADERS
 } from "./_constants"
 import axios from "axios"
-import {destroy} from "components/model/app.model";
+import {destroy,store} from "components/model/app.model";
+import {ModalToggle, ModalType} from "./modal.action";
+import * as Swal from "sweetalert2";
 
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));
@@ -30,6 +32,12 @@ export function setLoading(load) {
         load
     }
 }
+export function setSite(data = []) {
+    return {
+        type: SITE.SUCCESS,
+        data
+    }
+}
 export function setCheck(data = []) {
     return {
         type: SITE.SUCCESS_CHECK,
@@ -39,6 +47,51 @@ export function setCheck(data = []) {
 export function setLinkTxt(data=[]){
     return {type:SITE.DOWNLOAD_TXT,data}
 }
+export const FetchSite = () => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `site/logo`)
+            .then(function (response) {
+                const data = response.data;
+                dispatch(setSite(data));
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+            })
+
+    }
+}
+export const storeSite = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `site`;
+        axios.put(url,data)
+            .then(function (response) {
+                dispatch(setLoading(false));
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: `Data Berhasil DIsimpan`,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#ff9800',
+                    confirmButtonText: 'Oke',
+                }).then((result) => {
+                    if (result.value) {
+                        dispatch(FetchSite());
+                        dispatch(setLoading(false));
+                    }
+                })
+
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+            })
+
+    }
+}
 export const FetchCheck = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true))
@@ -46,7 +99,7 @@ export const FetchCheck = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = response.data
-                
+
                 dispatch(setCheck(data))
                 dispatch(setLoading(false));
 
