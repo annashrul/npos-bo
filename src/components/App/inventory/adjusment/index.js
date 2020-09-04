@@ -326,7 +326,7 @@ class TrxAdjustment extends Component{
                         'error'
                     )
                 }else{
-                    console.log("qqqqqqqqqqqqqqqqqq=",this.props)
+                    
                     Swal.fire({
                         title: 'Simpan Adjusment?',
                         text: "Pastikan data yang anda masukan sudah benar!",

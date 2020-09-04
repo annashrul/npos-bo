@@ -42,9 +42,10 @@ class SideMenu extends Component {
             //PEMBELIAN
             modul_pembelian:false,
             purchase_order:'',receive_pembelian:'',retur_tanpa_nota:'',
-            //PENJUALAN
+            //TRANSAKSI
             modul_penjualan:false,
             penjualan_barang:'',
+            cash_trx:'',
             //PEMBAYARAN
             modul_pembayaran:false,
             hutang:'',piutang:'',
@@ -367,8 +368,9 @@ class SideMenu extends Component {
                 let purchase_order=param.auth.user.access[40]['label']!==null?param.auth.user.access[40]['label']:"0";
                 let receive_pembelian=param.auth.user.access[41]['label']!==null?param.auth.user.access[41]['label']:"0";
                 let retur_tanpa_nota=param.auth.user.access[42]['label']!==null?param.auth.user.access[42]['label']:"0";
-                //PENJUALAN
+                //TRANSAKSI
                 let penjualan_barang=param.auth.user.access[50]['label']!==null?param.auth.user.access[50]['label']:"0";
+                let cash_trx=param.auth.user.access[50]['label']!==null?param.auth.user.access[50]['label']:"0";
                 //PEMBAYARAN
                 let hutang=param.auth.user.access[60]['label']!==null?param.auth.user.access[60]['label']:"0";
                 let piutang=param.auth.user.access[61]['label']!==null?param.auth.user.access[61]['label']:"0";
@@ -422,7 +424,7 @@ class SideMenu extends Component {
                 if(purchase_order!=='0'&&receive_pembelian!=='0'&&retur_tanpa_nota!=='0'){
                     this.setState({modul_pembelian:true});
                 }
-                if(penjualan_barang!=='0'){
+                if(penjualan_barang!=='0' &&cash_trx!=='0'){
                     this.setState({modul_penjualan:true});
                 }
                 if(hutang!=='0'&&piutang!=='0'){
@@ -485,8 +487,9 @@ class SideMenu extends Component {
                     purchase_order:purchase_order,
                     receive_pembelian:receive_pembelian,
                     retur_tanpa_nota:retur_tanpa_nota,
-                    //PENJUALAN
+                    //TRANSAKSI
                     penjualan_barang:penjualan_barang,
+                    cash_trx:cash_trx,
                     //PEMBAYARAN
                     hutang:hutang,
                     piutang:piutang,
@@ -798,15 +801,16 @@ class SideMenu extends Component {
                     </li>
                     {/* PEMBELIAN MODUL END */}
 
-                    {/* PENJUALAN MODUL START */}
+                    {/* TRANSAKSI MODUL START */}
                     <li className={"treeview" + (this.state.isSale===true  || path==='/sale'?" active menu-open" : "")} style={modul_penjualan===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Penjualan</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Transaksi</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true
                         ?"block" : "none"}}>
                             <li className={path==='/sale'?"active":''} style={this.state.penjualan_barang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Penjualan Barang</Link></li>
+                            <li className={path==='/cash_trx'?"active":''} style={this.state.cash_trx==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash_trx" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Transaksi Kas</Link></li>
                         </ul>
                     </li>
-                    {/* PENJUALAN MODUL END */}
+                    {/* TRANSAKSI MODUL END */}
 
                     {/* PEMBAYARAN SECTION START */}
                     <li className={"treeview" + (this.state.isPaid===true  || path==='/bayar_hutang' || path==='/bayar_piutang'?" active menu-open" : "")} style={modul_pembayaran===true?{display:'block'}:{display:'none'}}>
@@ -837,7 +841,7 @@ class SideMenu extends Component {
                             <li className={path==='/report/laba_rugi'?"active":''} style={this.state.r_laba_rugi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/laba_rugi" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Laba Rugi</Link></li>
                             <li className={path==='/report/production'?"active":''} style={this.state.r_produksi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/production" style={{width:'fit-content'}}> <i className="fa fa-product-hunt" />Produksi</Link></li>
 
-                            {/* SUBLAPORAN PENJUALAN MODUL START */}
+                            {/* SUBLAPORAN TRANSAKSI MODUL START */}
                             <li className={"treeview" + (this.state.isReportPenjualan===true || 
                                 path==='/report/sale_archive' || 
                                 path==='/report/sale_retur_archive' || 
@@ -851,7 +855,7 @@ class SideMenu extends Component {
                                     <li className={path==='/report/sale_by_cust_archive'?"active":''} style={this.state.r_penjualan_by_customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/sale_by_cust_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Cust.</Link></li>
                                 </ul>
                             </li>
-                            {/* SUBLAPORAN PENJUALAN MODUL END */}
+                            {/* SUBLAPORAN TRANSAKSI MODUL END */}
 
                             {/* SUBLAPORAN INVENTORY MODUL START */}
                             <li className={"treeview" + (this.state.isReportInventory===true ||

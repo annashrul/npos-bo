@@ -84,10 +84,10 @@ export function setSaleReturReportExcel(data=[]){
     return {type:SALE.SUCCESS_SALE_RETUR_EXCEL,data}
 }
 
-export const FetchNotaSale = () => {
+export const FetchNotaSale = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `pos/getcode`)
+        axios.get(HEADERS.URL + `pos/getcode?lokasi=${lokasi}`)
             .then(function (response) {
                 const data = response.data
                 

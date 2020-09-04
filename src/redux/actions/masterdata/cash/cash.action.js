@@ -28,7 +28,7 @@ export function setCashReportExcel(data=[]){
     return {type : CASH.EXCEL_REPORT,data}
 }
 
-export const FetchCash = (page=1,type='masuk',param)=>{
+export const FetchCash = (page=1,type='masuk',param,perpage)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         
@@ -38,7 +38,13 @@ export const FetchCash = (page=1,type='masuk',param)=>{
         }else{
             q = '';
         }
-        axios.get(HEADERS.URL+`kas?page=${page}&type=${type}${q}`)
+        let p = '';
+        if(perpage !== '' && perpage!==null){
+            p = '&perpage='+perpage;
+        }else{
+            p = '';
+        }
+        axios.get(HEADERS.URL+`kas?page=${page}&type=${type}${q}${p}`)
             .then(function(response){
                 const data = response.data;
                 
@@ -87,6 +93,58 @@ export const createCash = (data) => {
                 }
                 dispatch(setLoading(false));
                 dispatch(FetchCash(1,'masuk',''));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+                
+                Swal.fire({
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    
+                }
+            })
+
+    }
+}
+export const StoreCashTrx = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `pos/kas`;
+        axios.post(url,data)
+            .then(function (response) {
+                const data = (response.data);
+                
+                if (data.status === 'success') {
+                    // Swal.fire({
+                    //     title: 'Success',
+                    //     type: 'success',
+                    //     text: data.msg,
+                    // });
+                    Swal.fire({
+                        title: 'Success',
+                        text: data.msg,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Tutup'
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.reload();
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // handle error

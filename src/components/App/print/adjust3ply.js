@@ -16,7 +16,7 @@ export default class Adjust3ply extends Component {
       }
       componentWillMount(){
           const getData = this.props.location.state.data;
-          console.log(getData);
+          
           this.setState({
               data: getData.detail,
               master: getData.master,
@@ -36,9 +36,9 @@ export default class Adjust3ply extends Component {
 
       render() {
         const {master,data,nota,kd_kasir,tgl,lokasi,keterangan}=this.state;
-        console.log("eeeeeeeeeeeee",master)
-        console.log("qqqqqqqqqqqqq",data)
-        console.log("iiiiiiiiiiiii",nota)
+        
+        
+        
         return (
             <Layout>
                 <div  id="print_3ply">

@@ -42,6 +42,7 @@ import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import Sale from '../sale/product_sale'
+import CashTrx from '../sale/cash_trx'
 import Company from "../setting/company";
 import ReportCash from "../report/cash";
 import ReportLabaRugi from "../report/laba_rugi";
@@ -106,9 +107,10 @@ const Routes = (
             <PrivateRoute path="/retur_tanpa_nota" exact strict component={ReturTanpaNota} />
             {/* PEMBELIAN SECTION END */}
 
-            {/* PENJUALAN SECTION START */}
+            {/* TRANSAKSI SECTION START */}
             <PrivateRoute path="/sale" exact strict component={Sale} />
-            {/* PENJUALAN SECTION END */}
+            <PrivateRoute path="/cash_trx" exact strict component={CashTrx} />
+            {/* TRANSAKSI SECTION END */}
 
             {/* PEMBAYARAN SECTION START */}
             <PrivateRoute path="/bayar_hutang" exact strict component={BayarHutang} />

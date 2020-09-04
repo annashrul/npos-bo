@@ -79,7 +79,7 @@ class Sale extends Component{
         
         
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
-            this.props.dispatch(FetchNotaSale());
+            this.props.dispatch(FetchNotaSale(localStorage.lk));
             this.setState({
                 location:localStorage.lk
             })
@@ -143,7 +143,7 @@ class Sale extends Component{
             error: err
         })
         localStorage.setItem('lk', lk.value);
-        this.props.dispatch(FetchNotaSale());
+        this.props.dispatch(FetchNotaSale(lk.value));
         if (this.state.customer!==""){
             // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.customer, this.autoSetQty))
             // let where=`lokasi=${lk.value}&customer=${this.state.customer}&q=010000013`;
