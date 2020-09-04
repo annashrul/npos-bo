@@ -587,7 +587,7 @@ class SideMenu extends Component {
             this.setState({
                 isReceive:true
             })
-        } else if(path==='/sale'){
+        } else if(path==='/sale' || path==='/cash_trx'){
             
             this.setState({
                 isSale:true
