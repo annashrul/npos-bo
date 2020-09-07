@@ -6,6 +6,9 @@ import moment from "moment";
 import {FetchBrgPackingTrx} from "redux/actions/inventory/packing.action";
 import Swal from "sweetalert2";
 import {storeExpedisi} from "redux/actions/inventory/expedisi.action";
+import {
+    withRouter
+} from 'react-router-dom';
 
 class Expedisi extends Component{
     constructor(props) {
@@ -200,7 +203,10 @@ class Expedisi extends Component{
                             return null;
                         })
                         parsedata['detail'] = detail;
-                        this.props.dispatch(storeExpedisi(parsedata));
+                        let newparse = {}
+                        newparse['detail'] = parsedata;
+                        newparse['master'] = this.state.brgVal;
+                        this.props.dispatch(storeExpedisi(newparse,(arr)=>this.props.history.push(arr)));
                     }
                 })
 
@@ -355,4 +361,4 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
 });
 
-export default connect(mapStateToPropsCreateItem)(Expedisi);
+export default withRouter(connect(mapStateToPropsCreateItem)(Expedisi));

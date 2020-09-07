@@ -97,21 +97,44 @@ export const FetchExpedisiExcel = (page=1,where='',perpage=99999)=>{
 // }
 
 
-export const storeExpedisi = (data) => {
+export const storeExpedisi = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
+        const rawdata=data;
         const url = HEADERS.URL + `expedisi`;
-        axios.post(url, data)
+        axios.post(url, data.detail)
             .then(function (response) {
                 Swal.fire({
-                    title: 'Success',
-                    type: 'success',
-                    text:"Transaksi Berhasil",
+                    title: 'Transaksi berhasil.',
+                    type: 'info',
+                    html: `Data telah disimpan!` +
+                        "<br><br>" +
+                        // '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+                    showCancelButton: true,
+                    showConfirmButton: false
                 }).then((result)=>{
                     localStorage.removeItem("lokasi1_expedisi");
                     localStorage.removeItem("lokasi2_expedisi");
                     localStorage.removeItem("search_expedisi");
                     window.location.reload(false);
+                });
+                // document.getElementById("btnNotaPdf").addEventListener("click", () => {
+                //     const win = window.open(data.result.nota, '_blank');
+                //     if (win != null) {
+                //         win.focus();
+                //     }
+                // });
+                document.getElementById("btnNota3ply").addEventListener("click", () => {
+                    param({
+                        pathname: '/expedisi3ply',
+                        state: {
+                            data: rawdata,
+                            nota: data.result.kode
+                        }
+                    })
+                    Swal.closeModal();
+                    return false;
                 });
                 dispatch(setLoading(false));
             })

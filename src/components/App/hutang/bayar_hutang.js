@@ -8,6 +8,9 @@ import moment from "moment";
 import {toRp} from "helper";
 import Swal from "sweetalert2";
 import Preloader from "Preloader";
+import {
+    withRouter
+} from 'react-router-dom';
 
 class BayarHutang extends Component{
     constructor(props) {
@@ -167,7 +170,7 @@ class BayarHutang extends Component{
                     data['tanggal_cair'] = moment(new Date()).format("yyyy-MM-DD");
                     data['tgl_jatuh_tempo'] = moment(this.props.getHutang.tgl_jatuh_tempo).format("yyyy-MM-DD");
                     data['userid'] = this.state.userid;
-                    this.props.dispatch(storeHutang(data));
+                    this.props.dispatch(storeHutang(data,(arr)=>this.props.history.push(arr)));
                 }
             })
 
@@ -357,4 +360,4 @@ const mapStateToPropsCreateItem = (state) => ({
     isLoadingPost:state.hutangReducer.isLoadingPost
 });
 
-export default connect(mapStateToPropsCreateItem)(BayarHutang);
+export default withRouter(connect(mapStateToPropsCreateItem)(BayarHutang));

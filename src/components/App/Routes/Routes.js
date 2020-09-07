@@ -60,7 +60,9 @@ import Print3ply from "../print/penjualan3ply";
 import Adjust3ply from "../print/adjust3ply";
 import Dn3ply from "../print/dn3ply";
 import Alokasi3ply from "../print/alokasi3ply";
-import Pakcing3ply from "../print/packing3ply";
+import Packing3ply from "../print/packing3ply";
+import Expedisi3ply from "../print/expedisi3ply";
+import BayarHutang3ply from "../print/bayar_hutang3ply";
 
 const Routes = (
     <div>
@@ -71,7 +73,9 @@ const Routes = (
             <Route path="/adjust3ply" exact strict component={Adjust3ply} />
             <Route path="/dn3ply" exact strict component={Dn3ply} />
             <Route path="/alokasi3ply" exact strict component={Alokasi3ply} />
-            <Route path="/packing3ply" exact strict component={Pakcing3ply} />
+            <Route path="/packing3ply" exact strict component={Packing3ply} />
+            <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
+            <Route path="/bayar_hutang3ply" exact strict component={BayarHutang3ply} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}
