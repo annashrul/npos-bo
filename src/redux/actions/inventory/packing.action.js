@@ -69,34 +69,56 @@ export const FetchBrgPacking = (kode,db)=>{
     }
 }
 
-export const storePacking = (data) => {
+export const storePacking = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
+        const rawdata=data;
         const url = HEADERS.URL + `packing`;
-        axios.post(url, data)
+        axios.post(url, data.detail)
             .then(function (response) {
                 const data = (response.data)
                 Swal.fire({
                     title: 'Transaksi berhasil.',
-                    text: `Disimpan dengan nota: ${data.result.insertId}`,
-                    icon: 'success',
+                    type: 'info',
+                    html: `Disimpan dengan nota: ${data.result.insertId}` +
+                        "<br><br>" +
+                        // '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
                     showCancelButton: true,
-                    confirmButtonColor: '#ff9800',
+                    showConfirmButton: false
                 }).then((result) => {
                     destroy('packing');
                     localStorage.removeItem('faktur_alokasi_packing');
                     localStorage.removeItem('penerima_packing');
                     window.location.reload(false);
                 })
+                // document.getElementById("btnNotaPdf").addEventListener("click", () => {
+                //     const win = window.open(data.result.nota, '_blank');
+                //     if (win != null) {
+                //         win.focus();
+                //     }
+                // });
+                document.getElementById("btnNota3ply").addEventListener("click", () => {
+                    param({
+                        pathname: '/packing3ply',
+                        state: {
+                            data: rawdata,
+                            nota: data.result.kode
+                        }
+                    })
+                    Swal.closeModal();
+                    return false;
+                });
                 dispatch(setLoading(false));
 
             })
             .catch(function (error) {
+                console.log("wwwwwww",error)
 
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: "error.response.data.msg===undefined?'something wrong':error.response.data.msg",
                 });
 
                 if (error.response) {

@@ -10,6 +10,9 @@ import {ToastQ} from "helper";
 import {FetchAlokasi} from "../../../../redux/actions/inventory/alokasi.action";
 import {FetchBrgPacking, FetchCodePacking, storePacking} from "../../../../redux/actions/inventory/packing.action";
 import StickyBox from "react-sticky-box";
+import {
+    withRouter
+} from 'react-router-dom';
 
 
 const table='packing';
@@ -316,8 +319,11 @@ class TrxPacking extends Component{
                                 })
                                 return null;
                             });
-                            data['detail'] = detail;
-                            this.props.dispatch(storePacking(data));
+                            let parsedata={};
+                            parsedata['detail'] = data;
+                            parsedata['master'] = this.state.databrg;
+                            parsedata['nota'] = this.props.code;
+                            this.props.dispatch(storePacking(parsedata,(arr)=>this.props.history.push(arr)));
                         }
                     })
 
@@ -691,4 +697,4 @@ const mapStateToPropsCreateItem = (state) => ({
     codeAlokasi:state.alokasiReducer.data
 });
 
-export default connect(mapStateToPropsCreateItem)(TrxPacking);
+export default withRouter(connect(mapStateToPropsCreateItem)(TrxPacking));
