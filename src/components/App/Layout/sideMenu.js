@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Link} from "react-router-dom"
 import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
+import { logoutUser } from "../../../redux/actions/authActions";
+import PropTypes from "prop-types";
 
 class SideMenu extends Component {
     constructor(props){
@@ -684,6 +686,10 @@ class SideMenu extends Component {
         return 'none';
         }, 500);
     }
+    
+    handleLogout = () => {
+        this.props.logoutUser();
+    };
     render() {
         // const clickAble = {
         //     color: '#a6b6d0',
@@ -937,17 +943,21 @@ class SideMenu extends Component {
                     </li>
                     {/* SETTINGS MODUL END */}
 
-                    {/* <li  className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li> */}
+                    {/* LOGOUT MODUL START */}
+                    <li><a href="/" onClick={this.handleLogout}> <i className="fa fa-chain-broken" /><span> Logout</span></a></li>
+                    {/* LOGOUT MODUL END */}
                 </ul>
             </nav>
             )
     }
 }
-
+SideMenu.propTypes = {
+    logoutUser: PropTypes.func.isRequired
+};
 const mapStateToProps = (state) => {
     return{
         auth: state.auth
     }
 }
 
-export default withRouter(connect(mapStateToProps)(SideMenu))
+export default withRouter(connect(mapStateToProps,{logoutUser})(SideMenu))

@@ -644,18 +644,31 @@ class FormPromo extends Component{
         }
         this.props.dispatch(FetchBrg2(1,5,where));
     }
-    render(){
-        const {lokasi_data,isArrLength} = this.state;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
+
+    getDerivedStateFromProps(props, state) {
+        let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
 
         let locG = [];
         for(let i=0;i<lokasi.length;i++){
             locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
         }
-        this.setState({
-            lokasi_data : locG
-        })
+        // this.setState({
+        //     lokasi_data : locG
+        // })
+        state.lokasi_data = locG;
+    }
+    render(){
+        const {lokasi_data,isArrLength} = this.state;
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        // let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
+
+        // let locG = [];
+        // for(let i=0;i<lokasi.length;i++){
+        //     locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
+        // }
+        // this.setState({
+        //     lokasi_data : locG
+        // })
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
                 <ModalHeader toggle={this.toggle}>

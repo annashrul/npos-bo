@@ -185,18 +185,31 @@ class FormUserList extends Component{
         })
 
     };
-    render(){
-        const curr = new Date();
-        curr.setDate(curr.getDate() + 3);
-        const date = curr.toISOString().substr(0, 10);
-        let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
-        let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
+    getDerivedStateFromProps(props, state) {
+        let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
 
         let locG = [];
         for(let i=0;i<lokasi.length;i++){
             locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
         }
-        this.setState({opt : locG})
+        // this.setState({
+        //     lokasi_data : locG
+        // })
+        state.lokasi_data = locG;
+    }
+    render(){
+        const curr = new Date();
+        curr.setDate(curr.getDate() + 3);
+        const date = curr.toISOString().substr(0, 10);
+        let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
+
+        // let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
+
+        // let locG = [];
+        // for(let i=0;i<lokasi.length;i++){
+        //     locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
+        // }
+        // this.setState({opt : locG})
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserList"} size="lg">

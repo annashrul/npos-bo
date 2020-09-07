@@ -152,8 +152,8 @@ class Paginationq extends Component{
         return (
             <Pagination
                 activePage={parseInt(this.props.current_page,10)}
-                itemsCountPerPage={this.props.per_page}
-                totalItemsCount={this.props.total}
+                itemsCountPerPage={parseInt(this.props.per_page,10)}
+                totalItemsCount={parseInt(this.props.total,10)}
                 pageRangeDisplayed={5}
                 onChange={this.props.callback}
                 itemClass="page-item"
