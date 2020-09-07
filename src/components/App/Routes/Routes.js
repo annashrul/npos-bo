@@ -59,6 +59,7 @@ import GlobalSetting from "../setting/global_setting";
 import Print3ply from "../print/penjualan3ply";
 import Adjust3ply from "../print/adjust3ply";
 import Dn3ply from "../print/dn3ply";
+import Alokasi3ply from "../print/alokasi3ply";
 
 const Routes = (
     <div>
@@ -68,6 +69,7 @@ const Routes = (
             <Route path="/print3ply" exact strict component={Print3ply} />
             <Route path="/adjust3ply" exact strict component={Adjust3ply} />
             <Route path="/dn3ply" exact strict component={Dn3ply} />
+            <Route path="/alokasi3ply" exact strict component={Alokasi3ply} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}

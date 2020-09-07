@@ -11,6 +11,9 @@ import { Scrollbars } from "react-custom-scrollbars";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
+import {
+    withRouter
+} from 'react-router-dom';
 
 const table='alokasi'
 const Toast = Swal.mixin({
@@ -571,8 +574,12 @@ class Alokasi extends Component{
                                 jenis_trx: this.state.jenis_trx,
                                 detail: detail
                             };
+                            let parsedata={};
+                            parsedata['detail'] = data_final;
+                            parsedata['master'] = this.state.databrg;
+                            parsedata['nota'] = this.props.nota;
                             if(err_stock===''){
-                                this.props.dispatch(storeAlokasi(data_final));
+                                this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
                             }else{
                                 Swal.fire({
                                     title: `Anda yakin akan melanjutkan transaksi?`,
@@ -585,7 +592,7 @@ class Alokasi extends Component{
                                     cancelButtonText: 'Tidak!'
                                 }).then((result) => {
                                     if (result.value) {
-                                        this.props.dispatch(storeAlokasi(data_final));
+                                        this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
                                     }
                                 })
                             }
@@ -1070,4 +1077,4 @@ const mapStateToPropsCreateItem = (state) => ({
     checkNotaPem: state.siteReducer.check
 });
 
-export default connect(mapStateToPropsCreateItem)(Alokasi);
+export default withRouter(connect(mapStateToPropsCreateItem)(Alokasi));

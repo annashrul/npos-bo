@@ -1,30 +1,22 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 
-export default class Adjust3ply extends Component {
+export default class Print3ply extends Component {
       constructor(props) {
         super(props);
         this.state = {
             data:[],
             master:[],
-            nota:'',
-            kd_kasir:'',
-            tgl:'',
-            lokasi:'',
-            keterangan:'',
+            nota:''
         };
       }
       componentWillMount(){
           const getData = this.props.location.state.data;
-          
+          console.log("11111111111111111111111",getData);
           this.setState({
               data: getData.detail,
               master: getData.master,
               nota: getData.nota,
-              kd_kasir: getData.kd_kasir,
-              tgl: getData.tgl,
-              lokasi: getData.lokasi,
-              keterangan: getData.keterangan,
           })
       }
 
@@ -35,17 +27,15 @@ export default class Adjust3ply extends Component {
       }
 
       render() {
-        const {master,data,nota,kd_kasir,tgl,lokasi,keterangan}=this.state;
-        
-        
-        
+        const {master,data,nota}=this.state;
+        console.log("22222222222222222222",this.state)
         return (
             <Layout>
                 <div  id="print_3ply">
                     <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '9pt'}}>
                         <thead>
                         <tr>
-                            <td colSpan={8} style={{textAlign: 'center'}}>Delivery Note ({nota})</td>
+                            <td colSpan={8} style={{textAlign: 'center'}}>Alokasi Barang ({nota})</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,9 +53,9 @@ export default class Adjust3ply extends Component {
                             <td />
                             <td>Tanggal</td>
                             <td>:</td>
-                            <td>{data.tanggal}</td>
+                            <td>{data.tgl_mutasi}</td>
                             <td />
-                            <td>Operator</td>
+                            <td>EDP</td>
                             <td>:</td>
                             <td>{data.userid}</td>
                         </tr>
@@ -75,9 +65,9 @@ export default class Adjust3ply extends Component {
                             <td>:</td>
                             <td>{data.lokasi_asal}</td>
                             <td />
-                            <td />
-                            <td />
-                            <td />
+                            <td>Jenis Transaksi</td>
+                            <td>:</td>
+                            <td>{data.jenis_trx}</td>
                         </tr>
                         <tr>
                             <th />
@@ -85,9 +75,9 @@ export default class Adjust3ply extends Component {
                             <td>:</td>
                             <td>{data.lokasi_tujuan}</td>
                             <td />
-                            <td>Kode Pembelian</td>
+                            <td>No Delivery Note</td>
                             <td>:</td>
-                            <td>{data.kode_pembelian}</td>
+                            <td>{data.kode_delivery_note}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -97,36 +87,34 @@ export default class Adjust3ply extends Component {
                             <td style={{width: '5%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">No</td>
                             <td style={{width: '15%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Nama</td>
                             <td style={{width: '15%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Barcode</td>
-                            <td style={{width: '15%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
-                            <td style={{width: '15%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
-                            <td style={{width: '15%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual1</td>
-                            <td style={{width: '40%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock</td>
+                            <td style={{width: '40%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
+                            <td style={{width: '10%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
+                            {/* <td style={{width: '10%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual1</td> */}
+                            {/* <td style={{width: '10%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock</td> */}
+                            <td style={{width: '10%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Qty</td>
+                            {/* <td style={{width: '15%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">Subtotal</td> */}
                         </tr>
                         </thead>
                         <tbody>
-                            {
-                                master.map((item, index) => {
-                                    let saldo_stock = item.saldo_stock;
-                                    if(item.status === 'kurang'){
-                                        saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
-                                    }
-                                    if(item.status === 'tambah' || item.status===''){
-                                        saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
-                                    }
-                                    return (
-                                        <tr key={index}>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} >{item.nm_brg}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} >{item.barcode}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.hrg_jual}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{saldo_stock}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
+                        {
+                            master.map((item,index)=>{
+                                // subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty);
+                                return (
+                                    <tr key={index} >
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
+                                        {/* <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.hrg_jual}</td> */}
+                                        {/* <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td> */}
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty}</td>
+                                        {/* <td style={columnStyle}>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty)}</td> */}
+                                    </tr>
+                                )
+                            })
+
+                        }
                         </tbody>
                         <tfoot>
                         <tr>
@@ -158,6 +146,7 @@ export default class Adjust3ply extends Component {
                         </tr>
                         </tbody>
                     </table>
+
                     </div>
 
             </Layout>

@@ -1,32 +1,9 @@
 import React,{Component} from 'react';
-import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 import Select from 'react-select'
 import Swal from 'sweetalert2'
-import moment from 'moment';
-import {FetchCustomerAll} from "redux/actions/masterdata/customer/customer.action";
-import {setProductbrg, FetchProductSale} from "redux/actions/masterdata/product/product.action";
-import StickyBox from "react-sticky-box";
-import {toRp} from "helper";
-import FormSale from "../../modals/sale/form_sale";
-import {ModalToggle,ModalType} from "redux/actions/modal.action";
-import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import {FetchCash, StoreCashTrx} from "redux/actions/masterdata/cash/cash.action";
-
-
-const table='sale'
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
 
 class Sale extends Component{
 
