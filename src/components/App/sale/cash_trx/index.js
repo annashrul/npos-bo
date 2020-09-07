@@ -116,7 +116,7 @@ class Sale extends Component{
         if(column==='jumlah'){
             let err = Object.assign({}, this.state.error, {
                 jumlah: "",
-                error: err
+                error: ""
             });
             this.setState({
                 error: err
@@ -125,7 +125,7 @@ class Sale extends Component{
         if(column==='keterangan'){
             let err = Object.assign({}, this.state.error, {
                 keterangan: "",
-                error: err
+                error: ""
             });
             this.setState({
                 error: err

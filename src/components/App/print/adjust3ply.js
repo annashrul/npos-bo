@@ -35,7 +35,7 @@ export default class Adjust3ply extends Component {
       }
 
       render() {
-        const {master,data,nota,kd_kasir,tgl,lokasi,keterangan}=this.state;
+        const {master,nota,kd_kasir,tgl,lokasi,keterangan}=this.state;
         
         
         
@@ -115,7 +115,7 @@ export default class Adjust3ply extends Component {
                                             <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}}>{item.stock}</td>
                                             <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}}>{item.status}</td>
                                             <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}}>{item.qty_adjust}</td>
-                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}}>{item.saldo_stock}</td>
+                                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}}>{saldo_stock}</td>
                                         </tr>
                                     )
                                 })
