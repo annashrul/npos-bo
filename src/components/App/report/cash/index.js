@@ -7,7 +7,7 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
 import Preloader from "../../../../Preloader";
-import {rangeDate, toRp} from "../../../../helper";
+import {kassa, rangeDate, toRp} from "../../../../helper";
 import {FetchCashReportExcel} from "../../../../redux/actions/masterdata/cash/cash.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import CashReportExcel from 'components/App/modals/report/cash/form_cash_excel'
@@ -47,25 +47,9 @@ class ReportCash extends Component{
             });
             return null;
         });
-        let kassa = [
-            {value: "Semua Kassa",kode: ""},
-            {value: "A",kode: "A"},{value: "B",kode: "B"},{value: "C",kode: "C"},{value: "D",kode: "D"},{value: "E",kode: "E"},{value: "F",kode: "F"},{value: "G",kode: "G"},{value: "H",kode: "H"},
-            {value: "I",kode: "I"},{value: "J",kode: "J"},{value: "K",kode: "K"},{value: "L",kode: "L"},{value: "M",kode: "M"},{value: "N",kode: "N"},{value: "O",kode: "O"},{value: "P",kode: "P"},
-            {value: "Q",kode: "Q"},{value: "R",kode: "R"},{value: "S",kode: "S"},{value: "T",kode: "T"},{value: "U",kode: "U"},{value: "V",kode: "V"},{value: "W",kode: "W"},{value: "X",kode: "X"},
-            {value: "Y",kode: "Y"},{value: "Z",kode: "Z"}
-        ];
-        let data_kassa=[];
 
-        kassa.map((i) => {
-            data_kassa.push({
-                value: i.kode,
-                label: i.value
-            });
-            return null;
-        });
 
         this.setState({
-            kassa_data: data_kassa,
             type_data: data_type,
         });
         if (nextProps.auth.user) {
@@ -260,7 +244,7 @@ class ReportCash extends Component{
                                         Kassa
                                     </label>
                                     <Select
-                                        options={this.state.kassa_data}
+                                        options={kassa('semua')}
                                         placeholder="Pilih Kassa"
                                         onChange={this.HandleChangeKassa}
                                         value={

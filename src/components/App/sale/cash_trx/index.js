@@ -64,7 +64,7 @@ class Sale extends Component{
             }
         }
         if (nextProps.auth.user) {
-            let lk = []
+            let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
                 loc.map((i) => {
@@ -73,7 +73,7 @@ class Sale extends Component{
                         label: i.nama
                     });
                     return true;
-                })
+                });
                 this.setState({
                     location_data: lk,
                 })
@@ -279,7 +279,11 @@ class Sale extends Component{
                                                     options={this.state.location_data}
                                                     placeholder="Pilih Lokasi"
                                                     onChange={this.HandleChangeLokasi}
-                                                    value={this.state.location}
+                                                    value={
+                                                        this.state.location_data.find(op => {
+                                                            return op.value === this.state.location
+                                                        })
+                                                    }
 
                                                 />
                                                 <div className="invalid-feedback"
@@ -290,14 +294,15 @@ class Sale extends Component{
                                         </div>
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                {/* <label className="control-label font-12">
-                                                    Kassa
-                                                </label> */}
                                                 <Select
-                                                    options={kassa()}
+                                                    options={kassa('')}
                                                     placeholder="Pilih Kassa"
                                                     onChange={this.HandleChangeKassa}
-                                                    value={this.state.kassa}
+                                                    value={
+                                                        kassa('').find(op => {
+                                                            return op.value === this.state.kassa
+                                                        })
+                                                    }
                                                 />
                                                 <div className="invalid-feedback"
                                                         style={this.state.error.kassa !== "" ? {display: 'block'} : {display: 'none'}}>

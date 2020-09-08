@@ -19,11 +19,13 @@ class FormUserList extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.HandleChangeUserLevel = this.HandleChangeUserLevel.bind(this);
         this.state={
             show:false,
             nama:"", username:"", password:"", password_confirmation:"", password_otorisasi:"",
-            email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",
+            email:"", alamat:"", tgl_lahir:moment(new Date()).format("yyyy-MM-DD"), foto:"", nohp:"", lokasi:"",
             user_lvl:"0", status:"1",
+            user_lvl_data:[],
             selectedOption: [],
             isChecked: false,
             opt : [],
@@ -37,20 +39,6 @@ class FormUserList extends Component{
         }
 
     }
-    handleLocation(data=[]){
-        let loc = [];let val = [];
-        for(let i=0;i<data.length;i++){
-            loc.push({value:data[i].kode,label:data[i].nama_toko});
-            val.push({kode:data[i].kode});
-        }
-        this.setState({
-            opt1:loc,
-            selectedOption:loc,
-        });
-    }
-
-
-
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -78,36 +66,8 @@ class FormUserList extends Component{
                 selectedOption : [],
             })
         }
-
-        // if(event.target.name==='checked_lokasi'){
-        //     let lokasi=[];let lok=[];
-        //     let err = Object.assign({}, this.state.error, {"lokasi": ""});
-        //     this.setState({error: err});
-        //     if(event.target.checked===true){
-        //        this.state.opt.map((v,i)=>{
-        //            console.log("asdasdasdasd",v.value);
-        //            lok.push(`${v.value}`).toString()
-        //            return null;
-        //         });
-        //         this.setState({
-        //             opt:lok,
-        //             isChecked:true
-        //         });
-        //     }else{
-        //         this.state.opt.map((v,i)=>{
-        //             console.log("asdasdasdasd",v.value);
-        //             lokasi.push({
-        //                 value:v.value,
-        //                 label:v.label,
-        //             });
-        //             lok.push(`${v.value}`);
-        //             return null;
-        //         });
-        //         this.setState({opt:'',isChecked:false});
-        //     }
-
-        // }
     }
+
     componentDidMount(){
         if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
             let lokasiUser = typeof this.props.userListEdit.lokasi === 'object' ? this.props.userListEdit.lokasi : [];
@@ -167,7 +127,7 @@ class FormUserList extends Component{
             parseData['password']= parseInt(this.state.password.length,10) > 0 ? this.state.password : '-';
             parseData['password_confirmation']= parseInt(this.state.password_confirmation.length,10) > 0 ? this.state.password_confirmation : '-';
             parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length,10) > 0 ? this.state.password_otorisasi : '-';
-            if(this.state.foto.base64!==undefined){
+            if(this.state.foto!==undefined){
                 parseData['foto']=this.state.foto.base64;
             }
             if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
@@ -217,34 +177,32 @@ class FormUserList extends Component{
         })
 
     };
+    HandleChangeUserLevel(val){
+        this.setState({
+            user_lvl:val.value,
+        })
+    }
     static getDerivedStateFromProps(props, state) {
+        let userLevel = typeof props.userLevel.data === 'object' ? props.userLevel.data : [];
+        let userG = [];
         let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
-
         let locG = [];
         for(let i=0;i<lokasi.length;i++){
             locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
         }
-        // this.setState({
-        //     lokasi_data : locG
-        // })
+        for(let i=0;i<userLevel.length;i++){
+            userG.push({value:userLevel[i].id,label:userLevel[i].lvl})
+        }
         state.opt = locG;
+        state.user_lvl_data = userG;
         return null;
     }
     render(){
         const curr = new Date();
         curr.setDate(curr.getDate() + 3);
         const date = curr.toISOString().substr(0, 10);
-        let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
-        console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",this.props.userListEdit)
-        console.log("fffffffffffffffffffffff",this.state.selectedOption)
+        // let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
 
-        // let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
-
-        // let locG = [];
-        // for(let i=0;i<lokasi.length;i++){
-        //     locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
-        // }
-        // this.setState({opt : locG})
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserList"} size="lg">
@@ -256,7 +214,7 @@ class FormUserList extends Component{
                         <div className="row">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label>Name</label>
+                                    <label>Nama</label>
                                     <input type="text" className="form-control" name="nama" value={this.state.nama}  onChange={this.handleChange} />
                                     <div className="invalid-feedback" style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.nama}</div>
                                 </div>
@@ -269,15 +227,15 @@ class FormUserList extends Component{
                                     <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Password Confirmation<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'(  kosongkan jika tidak akan diubah )':''}</small></label>
+                                    <label>Konfirmasi Password<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'(  kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control"  name="password_confirmation" value={this.state.password_confirmation} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Password Otoritation<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
+                                    <label>Otorisasi Password<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label">Location&nbsp;<input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
+                                    <label htmlFor="inputState" className="col-form-label">Lokasi&nbsp;<input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange}/> Pilih Semua </label>
                                     <Select
                                             required
                                             disabled
@@ -288,30 +246,24 @@ class FormUserList extends Component{
                                             name="lokasi"
                                         />
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label">User Level</label>
-                                    <select className="form-control" name="user_lvl" defaultValue={this.state.user_lvl} value={this.state.user_lvl} onChange={this.handleChange} required>
-                                        <option value="0">Choose User Level</option>
-                                        {
-                                            userLevel.map(function(item,i){
-                                                return (
-                                                    <option key={i} value={item.id}>{item.lvl}</option>
-                                                )
-                                            })
-                                        }
+                                <label className="control-label font-12">
+                                    User Level
+                                </label>
+                                <Select
+                                    options={this.state.user_lvl_data}
+                                    placeholder="Pilih User Level"
+                                    onChange={this.HandleChangeUserLevel}
+                                    value={
+                                        this.state.user_lvl_data.find(op => {
+                                            return op.value === this.state.user_lvl
+                                        })
+                                    }
 
-                                    </select>
-                                </div>
-
-
-
-
-
-
+                                />
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label">Foto</label><br/>
+                                    <label htmlFor="inputState" className="col-form-label">Photo</label><br/>
                                     <FileBase64
                                         multiple={ false }
                                         className="mr-3 form-control-file"
@@ -322,11 +274,11 @@ class FormUserList extends Component{
                                     <input type="text" className="form-control" name="nohp" defaultValue="0" onChange={this.handleChange}/>
                                 </div>
                                 <div className="form-group">
-                                    <label>Emai</label>
+                                    <label>Email</label>
                                     <input type="email" className="form-control" aria-describedby="emailHelp" name="email" value={this.state.email} onChange={this.handleChange}  />
                                 </div>
                                 <div className="form-group">
-                                    <label>Birth Date</label>
+                                    <label>Tanggal Lahir</label>
                                     <input
                                         type="date"
                                         name="tgl_lahir"
@@ -342,13 +294,13 @@ class FormUserList extends Component{
                                 <div className="form-group">
                                     <label htmlFor="inputState" className="col-form-label">Status</label>
                                     <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
-                                        <option value="1">Active</option>
-                                        <option value="0">In Active</option>
+                                        <option value="1">Aktif</option>
+                                        <option value="0">Tidak Aktif</option>
                                     </select>
                                 </div>
                                 <div className="form-group">
-                                    <label>Address</label>
-                                    <textarea rows="2" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} style={{height:"145px"}}>-</textarea>
+                                    <label>Alamat</label>
+                                    <textarea rows="2" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} style={{height:"125px"}}>-</textarea>
                                 </div>
 
                             </div>
