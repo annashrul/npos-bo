@@ -302,6 +302,7 @@ class FormUserLevel extends Component{
             let array=[];
             this.state.array_modul.map(val=>{
                 array.push(...this.state[val]);
+                return val;
             });
             this.handleLoopAccess(
                 array,

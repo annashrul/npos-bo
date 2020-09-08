@@ -60,14 +60,14 @@ export const loginUser = (userData) =>
             Swal.close() 
             if (err.message === 'Network Error') {
                  Swal.fire(
-                     'Something wrong.',
-                     'No connection to server.',
+                     'Server tidak tersambung!.',
+                     'Periksa koneksi internet anda.',
                      'error'
                  )
             }else{
                 Swal.fire(
-                    'Something wrong.',
                     err.response.data.msg,
+                    '',
                     'error'
                 )
                 dispatch({type: AUTH.GET_ERRORS, payload: err.response.data.msg})
