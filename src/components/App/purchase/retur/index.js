@@ -10,7 +10,8 @@ import StickyBox from "react-sticky-box";
 import {toRp} from "helper";
 import Select from "react-select";
 import moment from "moment";
-import {storeReturTanpaNota} from "../../../../redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
+import {storeReturTanpaNota} from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
+import {withRouter} from 'react-router-dom';
 const table='retur_tanpa_nota';
 const Toast = Swal.mixin({
     toast: true,
@@ -418,7 +419,12 @@ class ReturTanpaNota extends Component{
                                 return null;
                             });
                             data['detail'] = detail;
-                            this.props.dispatch(storeReturTanpaNota(data));
+
+                            let parsedata = {};
+                            parsedata['detail'] = data;
+                            parsedata['master'] = this.state.databrg;
+                            parsedata['nota'] = '';
+                            this.props.dispatch(storeReturTanpaNota(parsedata,(arr)=>this.props.history.push(arr)));
                         }
                     })
                 }
@@ -856,4 +862,4 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
 });
 
-export default connect(mapStateToPropsCreateItem)(ReturTanpaNota);
+export default withRouter(connect(mapStateToPropsCreateItem)(ReturTanpaNota));

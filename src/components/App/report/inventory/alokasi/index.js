@@ -235,7 +235,7 @@ class AlokasiReport extends Component{
 
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {
             per_page,
             last_page,
@@ -247,186 +247,189 @@ class AlokasiReport extends Component{
         } = this.props.alokasiReport;
         return (
             <Layout page="Laporan Alokasi">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor=""> Periode </label>
-                                        <DateRangePicker
-                                            style={{display:'unset'}}
-                                            ranges={rangeDate}
-                                            alwaysShowCalendars={true}
-                                            onEvent={this.handleEvent}
-                                        >
-                                            <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
-                                        </DateRangePicker>
-                                    </div>
-                                </div>
-
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor="">Lokasi</label>
-                                        <Select
-                                            options={this.state.location_data}
-                                            onChange={this.HandleChangeLokasi}
-                                            placeholder="Pilih Lokasi"
-                                            value = {
-                                                this.state.location_data.find(op => {
-                                                    return op.value === this.state.location
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Status
-                                        </label>
-                                        <Select
-                                            options={this.state.status_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeStatus}
-                                            value={
-                                                this.state.status_data.find(op => {
-                                                    return op.value === this.state.status
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Filter
-                                        </label>
-                                        <Select
-                                            options={this.state.filter_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeFilter}
-                                            value={
-                                                this.state.filter_data.find(op => {
-                                                    return op.value === this.state.filter
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Sort
-                                        </label>
-                                        <Select
-                                            options={this.state.sort_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeSort}
-                                            value={
-                                                this.state.sort_data.find(op => {
-                                                    return op.value === this.state.sort
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label>Cari</label>
-                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-3">
-                                    <div className="form-group">
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                            <i className="fa fa-search"/>
-                                        </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                            <i className="fa fa-print"></i> Export
-                                        </button>
+                <div className="card">
+                    <div className="card-header">
+                        <h5>Laporan Alokasi</h5>
+                    </div>
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-md-10">
+                                <div className="row">
+                                    <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
+                                        <div className="form-group">
+                                            <label htmlFor=""> Periode </label>
+                                            <DateRangePicker ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                                                <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                            </DateRangePicker>
+                                        </div>
                                     </div>
 
+                                    <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
+                                        <div className="form-group">
+                                            <label htmlFor="">Lokasi</label>
+                                            <Select
+                                                options={this.state.location_data}
+                                                onChange={this.HandleChangeLokasi}
+                                                placeholder="Pilih Lokasi"
+                                                value = {
+                                                    this.state.location_data.find(op => {
+                                                        return op.value === this.state.location
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">
+                                                Status
+                                            </label>
+                                            <Select
+                                                options={this.state.status_data}
+                                                // placeholder="Pilih Tipe Kas"
+                                                onChange={this.HandleChangeStatus}
+                                                value={
+                                                    this.state.status_data.find(op => {
+                                                        return op.value === this.state.status
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">
+                                                Filter
+                                            </label>
+                                            <Select
+                                                options={this.state.filter_data}
+                                                // placeholder="Pilih Tipe Kas"
+                                                onChange={this.HandleChangeFilter}
+                                                value={
+                                                    this.state.filter_data.find(op => {
+                                                        return op.value === this.state.filter
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">
+                                                Sort
+                                            </label>
+                                            <Select
+                                                options={this.state.sort_data}
+                                                // placeholder="Pilih Tipe Kas"
+                                                onChange={this.HandleChangeSort}
+                                                value={
+                                                    this.state.sort_data.find(op => {
+                                                        return op.value === this.state.sort
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
+                                        <div className="form-group">
+                                            <label>Cari</label>
+                                            <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="col-md-2" style={{zoom:"85%",textAlign:"right"}}>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <div className="form-group">
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                <i className="fa fa-search"/>
+                                            </button>
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                <i className="fa fa-print"></i> Export
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
-                                <table className="table table-hover table-bordered">
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No Faktur Mutasi</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Asal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Tujuan</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No. Faktur Beli</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        !this.props.isLoading?(
-                                            <tbody>
-                                            {
-                                                (
-                                                    typeof data === 'object' ? data.length>0?
-                                                        data.map((v,i)=>{
-                                                            // total_dn_per = total_dn_per+parseInt(v.delivery_note);
-                                                            // total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
-                                                            // total_last_stock_per = total_last_stock_per+parseInt(v.stock_akhir);
-                                                            // total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
-                                                            // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
-                                                            return(
-                                                                <tr key={i}>
-                                                                    <td style={columnStyle}>{/* Example split danger button */}
-                                                                        <div className="btn-group">
-                                                                            <UncontrolledButtonDropdown>
-                                                                                <DropdownToggle caret>
-                                                                                    Aksi
-                                                                                </DropdownToggle>
-                                                                                <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
-                                                                                </DropdownMenu>
-                                                                                </UncontrolledButtonDropdown>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.lokasi_asal}</td>
-                                                                    <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                                                                    <td style={columnStyle}>{
-                                                                        v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))
-                                                                        // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                                                                    }</td>
-                                                                    <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
-                                                                    <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
 
-                                                                </tr>
-                                                            )
-                                                        })
-                                                        : "No data." : "No data."
-                                                )
-                                            }
-                                            </tbody>
-                                        ):<Preloader/>
-                                    }
-                                </table>
 
-                            </div>
-                            <div style={{"marginTop":"20px","float":"right"}}>
-                                <Paginationq
-                                    current_page={current_page}
-                                    per_page={per_page}
-                                    total={parseInt((per_page*last_page),10)}
-                                    callback={this.handlePageChange.bind(this)}
-                                />
-                            </div>
-                            <DetailAlokasi alokasiDetail={this.props.alokasiDetail}/>
-                            <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
+                        <div style={{overflowX: "auto"}}>
+                            <table className="table table-hover table-bordered">
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">#</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">No Faktur Mutasi</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Asal</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Tujuan</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">No. Faktur Beli</th>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
+                                </tr>
+                                </thead>
+                                {
+                                    !this.props.isLoading?(
+                                        <tbody>
+                                        {
+                                            (
+                                                typeof data === 'object' ? data.length>0?
+                                                    data.map((v,i)=>{
+                                                        // total_dn_per = total_dn_per+parseInt(v.delivery_note);
+                                                        // total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
+                                                        // total_last_stock_per = total_last_stock_per+parseInt(v.stock_akhir);
+                                                        // total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
+                                                        // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
+                                                        return(
+                                                            <tr key={i}>
+                                                                <td style={columnStyle}>{/* Example split danger button */}
+                                                                    <div className="btn-group">
+                                                                        <UncontrolledButtonDropdown>
+                                                                            <DropdownToggle caret>
+                                                                                Aksi
+                                                                            </DropdownToggle>
+                                                                            <DropdownMenu>
+                                                                                <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
+                                                                            </DropdownMenu>
+                                                                        </UncontrolledButtonDropdown>
+                                                                    </div>
+                                                                </td>
+                                                                <td style={columnStyle}>{v.no_faktur_mutasi}</td>
+                                                                <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
+                                                                <td style={columnStyle}>{v.lokasi_asal}</td>
+                                                                <td style={columnStyle}>{v.lokasi_tujuan}</td>
+                                                                <td style={columnStyle}>{
+                                                                    v.status==='0'?statusQ('danger','proses'):(v.status==='1'?statusQ('warning','packing'):(v.status==='2'?statusQ('info','dikirim'):(v.status==='3'?statusQ('success','diterima'):"")))
+                                                                    // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
+                                                                }</td>
+                                                                <td style={columnStyle}>{v.no_faktur_beli?v.no_faktur_beli:'-'}</td>
+                                                                <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
+
+                                                            </tr>
+                                                        )
+                                                    })
+                                                    : "No data." : "No data."
+                                            )
+                                        }
+                                        </tbody>
+                                    ):<Preloader/>
+                                }
+                            </table>
+
+                        </div>
+                        <div style={{"marginTop":"20px","float":"right"}}>
+                            <Paginationq
+                                current_page={current_page}
+                                per_page={per_page}
+                                total={parseInt((per_page*last_page),10)}
+                                callback={this.handlePageChange.bind(this)}
+                            />
+                        </div>
+                        <DetailAlokasi alokasiDetail={this.props.alokasiDetail}/>
+                        <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                     </div>
                 </div>
             </Layout>

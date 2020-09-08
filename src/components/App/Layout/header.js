@@ -57,7 +57,7 @@ class Header extends Component {
         .then(res => res.json())
         .then(
             (data) => {
-                if (parseInt(data.result.day,10)===0){
+                if (parseInt(data.result.day,10)===0||parseInt(data.result.day,10) < 0){
                     Swal.fire({
                         title: 'Warning!',
                         html: `<h6>Aplikasi telah kedaluarsa.</h6><br/>
@@ -77,6 +77,7 @@ class Header extends Component {
                     this.props.logoutUser();
                 }
                 localStorage.setItem("site_title", data.result.title);
+
                 this.setState({
                     isShowNotif: parseInt(data.result.day,10) <= 7 ? true : false,
                     isDay: data.result.day,

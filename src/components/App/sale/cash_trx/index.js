@@ -4,6 +4,7 @@ import Layout from "components/App/Layout"
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import {FetchCash, StoreCashTrx} from "redux/actions/masterdata/cash/cash.action";
+import {kassa} from "../../../../helper";
 
 class Sale extends Component{
 
@@ -28,12 +29,7 @@ class Sale extends Component{
             location: "",
             location_data: [],
             kassa: "A",
-            kassa_data:  [
-                {value: "A",label: "A"},{value: "B",label: "B"},{value: "C",label: "C"},{value: "D",label: "D"},{value: "E",label: "E"},{value: "F",label: "F"},{value: "G",label: "G"},{value: "H",label: "H"},
-                {value: "I",label: "I"},{value: "J",label: "J"},{value: "K",label: "K"},{value: "L",label: "L"},{value: "M",label: "M"},{value: "N",label: "N"},{value: "O",label: "O"},{value: "P",label: "P"},
-                {value: "Q",label: "Q"},{value: "R",label: "R"},{value: "S",label: "S"},{value: "T",label: "T"},{value: "U",label: "U"},{value: "V",label: "V"},{value: "W",label: "W"},{value: "X",label: "X"},
-                {value: "Y",label: "Y"},{value: "Z",label: "Z"}
-            ],
+
             selectedOpt:"",
             error:{
                 kassa:"",
@@ -50,7 +46,6 @@ class Sale extends Component{
     }
 
     componentWillReceiveProps = (nextProps) => {
-        
         if (nextProps.cash.data) {
             let j = []
             let jns = nextProps.cash.data;
@@ -69,7 +64,7 @@ class Sale extends Component{
             }
         }
         if (nextProps.auth.user) {
-            let lk = []
+            let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
                 loc.map((i) => {
@@ -78,7 +73,7 @@ class Sale extends Component{
                         label: i.nama
                     });
                     return true;
-                })
+                });
                 this.setState({
                     location_data: lk,
                 })
@@ -141,6 +136,7 @@ class Sale extends Component{
         let err = Object.assign({}, this.state.error, {
             kassa: ""
         });
+
         this.setState({
             kassa: ks,
             error: err
@@ -283,7 +279,11 @@ class Sale extends Component{
                                                     options={this.state.location_data}
                                                     placeholder="Pilih Lokasi"
                                                     onChange={this.HandleChangeLokasi}
-                                                    value={this.state.location}
+                                                    value={
+                                                        this.state.location_data.find(op => {
+                                                            return op.value === this.state.location
+                                                        })
+                                                    }
 
                                                 />
                                                 <div className="invalid-feedback"
@@ -294,14 +294,15 @@ class Sale extends Component{
                                         </div>
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                {/* <label className="control-label font-12">
-                                                    Kassa
-                                                </label> */}
                                                 <Select
-                                                    options={this.state.kassa_data}
+                                                    options={kassa('')}
                                                     placeholder="Pilih Kassa"
                                                     onChange={this.HandleChangeKassa}
-                                                    value={this.state.kassa}
+                                                    value={
+                                                        kassa('').find(op => {
+                                                            return op.value === this.state.kassa
+                                                        })
+                                                    }
                                                 />
                                                 <div className="invalid-feedback"
                                                         style={this.state.error.kassa !== "" ? {display: 'block'} : {display: 'none'}}>

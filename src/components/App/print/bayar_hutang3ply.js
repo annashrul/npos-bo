@@ -12,7 +12,7 @@ export default class Print3ply extends Component {
       }
       componentWillMount(){
           const getData = this.props.location.state.data;
-          console.log("11111111111111111111111",getData);
+          
           this.setState({
               data: getData,
           })
@@ -52,7 +52,7 @@ export default class Print3ply extends Component {
             tgl_jatuh_tempo,
             userid,
         }=this.state.data;
-        console.log("22222222222222222222",this.state.data)
+        
         return (
             <Layout>
                 <div  id="print_3ply">

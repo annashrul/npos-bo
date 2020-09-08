@@ -7,7 +7,7 @@ import {LOC_VERIF} from "../../../redux/actions/_constants";
 
 class GlobalSetting extends Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state={
             isShow:false,
             isChecked:false,
