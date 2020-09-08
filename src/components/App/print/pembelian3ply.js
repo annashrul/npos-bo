@@ -28,7 +28,6 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data,nota}=this.state;
-        let subtotal = 0;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -115,7 +114,6 @@ export default class Print3ply extends Component {
                                 if(item.ppn!==0){
                                     ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
                                 }
-                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
                                 return (
                                     <tr key={index}>
                                         <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>

@@ -64,9 +64,9 @@ class FormUserList extends Component{
 
     toggleChange = (e) => {
         this.setState({isChecked: e.target.checked,});
-        console.log("qqdqdwef",this.state.opt);
-        console.log("qqdqdwef",this.state.opt1);
-        console.log("qqdqdwef",this.state.selectedOption);
+        
+        
+        
         if(e.target.checked === true){
             this.setState({
                 opt : [],
@@ -85,7 +85,7 @@ class FormUserList extends Component{
         //     this.setState({error: err});
         //     if(event.target.checked===true){
         //        this.state.opt.map((v,i)=>{
-        //            console.log("asdasdasdasd",v.value);
+        //            
         //            lok.push(`${v.value}`).toString()
         //            return null;
         //         });
@@ -95,7 +95,7 @@ class FormUserList extends Component{
         //         });
         //     }else{
         //         this.state.opt.map((v,i)=>{
-        //             console.log("asdasdasdasd",v.value);
+        //             
         //             lokasi.push({
         //                 value:v.value,
         //                 label:v.label,
@@ -235,8 +235,8 @@ class FormUserList extends Component{
         curr.setDate(curr.getDate() + 3);
         const date = curr.toISOString().substr(0, 10);
         let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
-        console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",this.props.userListEdit)
-        console.log("fffffffffffffffffffffff",this.state.selectedOption)
+        
+        
 
         // let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
 

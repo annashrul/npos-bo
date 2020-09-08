@@ -27,7 +27,7 @@ export default class Print3ply extends Component {
       }
 
       render() {
-        const {master,data,nota}=this.state;
+        const {master,data}=this.state;
 
         let total_stock = 0;
         let qty_retur = 0;
