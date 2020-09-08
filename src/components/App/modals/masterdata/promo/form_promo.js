@@ -267,9 +267,21 @@ class FormPromo extends Component{
         this.props.dispatch(FetchBrg1(1,5));
         this.props.dispatch(FetchBrg2(1,5));
     }
-    componentWillReceiveProps(nextProps){
-        this.getProps(nextProps);
+    componentWillReceiveProps(props){
+        this.getProps(props);
+        let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
+
+        let locG = [];
+        for(let i=0;i<lokasi.length;i++){
+            locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
+        }
+        this.setState({
+            lokasi_data : locG
+        })
+        // state.lokasi_data = locG;
+        return null;
     }
+
 
     handleChange = (event) => {
         let column=event.target.name;
@@ -517,7 +529,7 @@ class FormPromo extends Component{
                 return;
             }
         }
-        if(parseData['lokasi']===''||parseData['lokasi']===undefined){
+        if(this.state.isCheckedLokasi?!this.state.isCheckedLokasi:parseData['lokasi']===''||parseData['lokasi']===undefined){
             err = Object.assign({}, err, {lokasi:"lokasi tidak boleh kosong"});
             this.setState({error: err});
             return;
@@ -645,18 +657,19 @@ class FormPromo extends Component{
         this.props.dispatch(FetchBrg2(1,5,where));
     }
 
-    getDerivedStateFromProps(props, state) {
-        let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
+    // static getDerivedStateFromProps(props, state) {
+    //     let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
 
-        let locG = [];
-        for(let i=0;i<lokasi.length;i++){
-            locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
-        }
-        // this.setState({
-        //     lokasi_data : locG
-        // })
-        state.lokasi_data = locG;
-    }
+    //     let locG = [];
+    //     for(let i=0;i<lokasi.length;i++){
+    //         locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
+    //     }
+    //     // this.setState({
+    //     //     lokasi_data : locG
+    //     // })
+    //     state.lokasi_data = locG;
+    //     return null;
+    // }
     render(){
         const {lokasi_data,isArrLength} = this.state;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -669,6 +682,7 @@ class FormPromo extends Component{
         // this.setState({
         //     lokasi_data : locG
         // })
+        console.log("aaaaaaa",lokasi_data)
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
                 <ModalHeader toggle={this.toggle}>

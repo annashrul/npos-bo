@@ -25,7 +25,7 @@ class FormUserList extends Component{
             email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",
             user_lvl:"0", status:"1",
             selectedOption: [],
-            isChecked: true,
+            isChecked: false,
             opt : [],
             opt1:[],
             token:'',
@@ -185,7 +185,7 @@ class FormUserList extends Component{
         })
 
     };
-    getDerivedStateFromProps(props, state) {
+    static getDerivedStateFromProps(props, state) {
         let lokasi = typeof props.lokasi.data === 'object' ? props.lokasi.data : [];
 
         let locG = [];
@@ -195,7 +195,11 @@ class FormUserList extends Component{
         // this.setState({
         //     lokasi_data : locG
         // })
-        state.lokasi_data = locG;
+        state.opt = locG;
+        console.log("iiiiiiiiiiii4",locG);
+        console.log("iiiiiiiiiiii5",props);
+        console.log("iiiiiiiiiiii6",state);
+        return null;
     }
     render(){
         const curr = new Date();

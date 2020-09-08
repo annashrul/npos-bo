@@ -111,6 +111,13 @@ class Sale extends Component{
             [column]: val
         });
         if(column==='kategori'){
+            this.setState({
+               jumlah : '',
+               keterangan : '',
+               jenis : '',
+               location : '',
+               kassa : '',
+            });
             this.props.dispatch(FetchCash(1,val,'',this.state.perpage));
         }
         if(column==='jumlah'){
@@ -148,7 +155,7 @@ class Sale extends Component{
             kassa: ""
         });
         this.setState({
-            kassa: ks.value,
+            kassa: ks,
             error: err
         });
         // localStorage.setItem('kassa_cash_report', ks.value);
@@ -159,7 +166,7 @@ class Sale extends Component{
             location: ""
         });
         this.setState({
-            location:lk.value,
+            location:lk,
             error: err
         })
     }
@@ -218,11 +225,11 @@ class Sale extends Component{
                 "kd_kasir": this.state.userid,
                 "jumlah": this.state.jumlah,
                 "keterangan": this.state.keterangan,
-                "lokasi": this.state.location,
-                "kassa": this.state.kassa,
+                "lokasi": this.state.location.value,
+                "kassa": this.state.kassa.value,
                 "kd_trx": "",
                 "type_kas": this.state.kategori,
-                "jenis": this.state.jenis
+                "jenis": this.state.jenis.value
             };
             
             Swal.fire({
@@ -281,11 +288,7 @@ class Sale extends Component{
                                                     options={this.state.location_data}
                                                     placeholder="Pilih Lokasi"
                                                     onChange={this.HandleChangeLokasi}
-                                                    value={
-                                                        this.state.location_data.find(op => {
-                                                            return op.value === this.state.location
-                                                        })
-                                                    }
+                                                    value={this.state.location}
 
                                                 />
                                                 <div className="invalid-feedback"
@@ -303,11 +306,7 @@ class Sale extends Component{
                                                     options={this.state.kassa_data}
                                                     placeholder="Pilih Kassa"
                                                     onChange={this.HandleChangeKassa}
-                                                    value={
-                                                        this.state.kassa_data.find(op => {
-                                                            return op.value === this.state.kassa
-                                                        })
-                                                    }
+                                                    value={this.state.kassa}
                                                 />
                                                 <div className="invalid-feedback"
                                                         style={this.state.error.kassa !== "" ? {display: 'block'} : {display: 'none'}}>
