@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {withRouter} from "react-router-dom"
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 
 class SideMenu extends Component {
     constructor(props){
@@ -687,8 +688,21 @@ class SideMenu extends Component {
         }, 500);
     }
     
-    handleLogout = () => {
-        this.props.logoutUser();
+    handleLogout = (e) => {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Apakah anda yakin akan logout aplikasi?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.logoutUser();
+            }
+        })
     };
     render() {
         // const clickAble = {
@@ -944,7 +958,7 @@ class SideMenu extends Component {
                     {/* SETTINGS MODUL END */}
 
                     {/* LOGOUT MODUL START */}
-                    <li><a href="/" onClick={this.handleLogout}> <i className="fa fa-chain-broken" /><span> Logout</span></a></li>
+                    <li><a href={null} style={{cursor:'pointer',color:'#a6b6d0'}} onClick={(event)=>this.handleLogout(event)}> <i className="fa fa-chain-broken" /><span> Logout</span></a></li>
                     {/* LOGOUT MODUL END */}
                 </ul>
             </nav>

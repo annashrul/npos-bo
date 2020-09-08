@@ -183,6 +183,23 @@ class Header extends Component {
                         <UncontrolledButtonDropdown nav inNavbar>
                                 <DropdownToggle caret inNavbar className="nohover">
                                     <img src={this.props.auth.user.foto} alt=""/>
+                                    <div className="user-name">
+                                        <table>
+                                            <tr>
+                                                <td className="fs1">
+                                                    <p>{this.props.auth.user.username}</p>
+                                                    <span>{this.props.auth.user.lvl}</span>
+
+                                                </td>
+                                                <td className="fs1">
+                                                    <p>
+                                                    <i class="fa fa-angle-down lnr" style={{marginleft:'20px'}}></i>
+                                                    </p>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </DropdownToggle>
                             <DropdownMenu right>
                                 <div className="user-profile-area">

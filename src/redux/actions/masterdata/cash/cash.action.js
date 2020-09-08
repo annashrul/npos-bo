@@ -28,7 +28,7 @@ export function setCashReportExcel(data=[]){
     return {type : CASH.EXCEL_REPORT,data}
 }
 
-export const FetchCash = (page=1,type='masuk',param,perpage)=>{
+export const FetchCash = (page=1,type='masuk',param=null,perpage=10)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         

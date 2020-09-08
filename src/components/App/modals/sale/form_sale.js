@@ -22,7 +22,7 @@ class FormSale extends Component{
             },
             gt:0,
             kode_trx:'',
-            jenis_trx:"TUNAI",
+            jenis_trx:"Tunai",
             tunai:0,
             change:0,
             bank:''
@@ -38,6 +38,7 @@ class FormSale extends Component{
             })
         }
     }
+
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
         if(event.target.name === 'tunai'){
@@ -71,6 +72,7 @@ class FormSale extends Component{
             }
         }
     }
+
     toggle = (e) => {
         e.preventDefault();
         const bool = !this.props.isOpen;
@@ -80,28 +82,34 @@ class FormSale extends Component{
     handleSubmit(e){
         e.preventDefault();
         let err = this.state.error;
-        if (this.state.tunai === "" || this.state.tunai === 0){
-            
-            if(this.state.tunai==="" || this.state.tunai === 0){
-                
+        if (this.state.jenis_trx.toLowerCase() === 'kredit'){
+            let parsedata = {};
+            parsedata['master'] = this.props.master;
+            parsedata['split'] = [];
+            parsedata['join'] = [];
+            parsedata['detail'] = this.props.detail;
+
+
+            this.props.dispatch(storeSale(parsedata, (arr) => this.props.history.push(arr)));
+        }else{ 
+            if(parseFloat(this.state.tunai)<this.state.gt){
                 err = Object.assign({}, err, {
                     tunai:"Jumlah uang tidak boleh kurang dari total pembayaran"
                 });
+                this.setState({
+                    error: err
+                })
+            }else{
+                let parsedata={};
+                parsedata['master']=this.props.master;
+                parsedata['split'] = [];
+                parsedata['join'] = [];
+                parsedata['detail']=this.props.detail;
+
+
+                this.props.dispatch(storeSale(parsedata,(arr)=>this.props.history.push(arr)));
             }
-            this.setState({
-                error: err
-            })
-        }else{
-            let parsedata={};
-            parsedata['master']=this.props.master;
-            parsedata['split'] = [];
-            parsedata['join'] = [];
-            parsedata['detail']=this.props.detail;
-
-            
-            this.props.dispatch(storeSale(parsedata,(arr)=>this.props.history.push(arr)));
         }
-
     }
     componentWillMount(){
         this.props.dispatch(FetchBank(1,'',100));
@@ -126,8 +134,8 @@ class FormSale extends Component{
                             <div className="form-group">
                                 <label htmlFor="">Jenis Pembayaran</label>
                                 <select name="jenis_trx" id="jenis_trx" className="form-control" value={this.state.jenis_trx} defaultValue={this.state.jenis_trx} onChange={this.handleChange}>
-                                    <option value="TUNAI">TUNAI</option>
-                                    <option value="TRANSFER">TRANSFER</option>
+                                    <option value="Tunai">TUNAI</option>
+                                    <option value="Transfer">TRANSFER</option>
                                     <option value="Kredit">KREDIT</option>
                                 </select>
                             </div>

@@ -11,8 +11,8 @@ class Cash extends Component{
         this.state = {
             section:"list",
             token:"",
-            type:localStorage.getItem('type'),
-            any:localStorage.getItem('any'),
+            type:localStorage.getItem('type')!==null && localStorage.getItem('type')!==undefined?localStorage.getItem('type'):"0",
+            any:localStorage.getItem('any')!==null && localStorage.getItem('any')!==undefined?localStorage.getItem('any'):"",
         }
         this.handlePagin=this.handlePagin.bind(this);
         this.handleDelete=this.handleDelete.bind(this);
