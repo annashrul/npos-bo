@@ -64,10 +64,13 @@ class FormUserList extends Component{
 
     toggleChange = (e) => {
         this.setState({isChecked: e.target.checked,});
+        console.log("qqdqdwef",this.state.opt);
+        console.log("qqdqdwef",this.state.opt1);
+        console.log("qqdqdwef",this.state.selectedOption);
         if(e.target.checked === true){
             this.setState({
                 opt : [],
-                selectedOption : this.state.opt1,
+                selectedOption : this.state.opt,
             })
         }else{
             this.setState({
@@ -75,8 +78,37 @@ class FormUserList extends Component{
                 selectedOption : [],
             })
         }
+
+        // if(event.target.name==='checked_lokasi'){
+        //     let lokasi=[];let lok=[];
+        //     let err = Object.assign({}, this.state.error, {"lokasi": ""});
+        //     this.setState({error: err});
+        //     if(event.target.checked===true){
+        //        this.state.opt.map((v,i)=>{
+        //            console.log("asdasdasdasd",v.value);
+        //            lok.push(`${v.value}`).toString()
+        //            return null;
+        //         });
+        //         this.setState({
+        //             opt:lok,
+        //             isChecked:true
+        //         });
+        //     }else{
+        //         this.state.opt.map((v,i)=>{
+        //             console.log("asdasdasdasd",v.value);
+        //             lokasi.push({
+        //                 value:v.value,
+        //                 label:v.label,
+        //             });
+        //             lok.push(`${v.value}`);
+        //             return null;
+        //         });
+        //         this.setState({opt:'',isChecked:false});
+        //     }
+
+        // }
     }
-    componentWillMount(){
+    componentDidMount(){
         if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
             let lokasiUser = typeof this.props.userListEdit.lokasi === 'object' ? this.props.userListEdit.lokasi : [];
             let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
@@ -206,6 +238,8 @@ class FormUserList extends Component{
         curr.setDate(curr.getDate() + 3);
         const date = curr.toISOString().substr(0, 10);
         let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
+        console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",this.props.userListEdit)
+        console.log("fffffffffffffffffffffff",this.state.selectedOption)
 
         // let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
 
@@ -246,20 +280,20 @@ class FormUserList extends Component{
                                     <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label">Location<input type="checkbox" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
+                                    <label htmlFor="inputState" className="col-form-label">Location&nbsp;<input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange}/> Select All </label>
                                     <Select
-                                        required
-                                        disabled
-                                        isMulti
-                                        value={this.state.selectedOption}
-                                        onChange={this.handleOnChange}
-                                        options={this.state.opt}
-                                        name="lokasi"
-                                    />
+                                            required
+                                            disabled
+                                            isMulti
+                                            value={this.state.selectedOption}
+                                            onChange={this.handleOnChange}
+                                            options={this.state.opt}
+                                            name="lokasi"
+                                        />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="inputState" className="col-form-label">User Level</label>
-                                    <select id="inputState" className="form-control" name="user_lvl" defaultValue={this.state.user_lvl} value={this.state.user_lvl} onChange={this.handleChange} required>
+                                    <select className="form-control" name="user_lvl" defaultValue={this.state.user_lvl} value={this.state.user_lvl} onChange={this.handleChange} required>
                                         <option value="0">Choose User Level</option>
                                         {
                                             userLevel.map(function(item,i){
@@ -310,7 +344,7 @@ class FormUserList extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="inputState" className="col-form-label">Status</label>
-                                    <select id="inputState" className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
                                         <option value="1">Active</option>
                                         <option value="0">In Active</option>
                                     </select>
