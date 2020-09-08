@@ -16,7 +16,7 @@ export default class Print3ply extends Component {
           this.setState({
               data: getData.detail,
               master: getData.master,
-              nota: this.props.location.state.nota,
+              nota: getData.nota,
           })
       }
 
@@ -28,77 +28,151 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data,nota}=this.state;
+        let subtotal = 0;
         return (
             <Layout>
                 <div  id="print_3ply">
-                    <table style={{height: '10cm', position: 'relative'}} width="100%" cellSpacing={0} cellPadding={1}>
+                    <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '9pt'}}>
                         <thead>
                         <tr>
-                            <th colSpan={4} rowSpan={3} className="h1"><img className="img_head" alt="LOGO" src={localStorage.getItem('logos')} /></th>
-                            <th rowSpan={3} className="judul">NOTA PENJUALAN</th>
-                            <th className="h2" colSpan={3}>Tgl Jual</th>
-                            <th className="h2">: {master.tgl}</th>
-                        </tr>
-                        <tr>
-                            <th className="h2" colSpan={3}>Kode Trx.</th>
-                            <th className="h2">: {nota}</th>
-                        </tr>
-                        <tr>
-                            <th className="h2" colSpan={3}>Customer</th>
-                            <th className="h2">: {master.kd_cust}</th>
-                        </tr>
-                        <tr>
-                            <th colSpan={2} className="h3">Jenis Trx.</th>
-                            <th className="h3" colSpan={3}>: {master.jenis_trx}</th>
-                            <th rowSpan={2} colSpan={4} className="h3" />
-                        </tr>
-                        <tr>
-                            <th colSpan={2} className="h3" style={{borderTopColor: 'transparent'}}>Keterangan</th>
-                            <th className="h3" colSpan={4} style={{borderTopColor: 'transparent'}}>: {master.optional_note}</th>
-                        </tr>
-                        </thead>
-                    </table>
-                    <table width="100%">
-                        <thead>
-                        <tr>
-                            <th className="tengah">Banyaknya</th>
-                            <th className="tengah">KODE BARANG</th>
-                            <th className="tengah">NAMA BARANG</th>
-                            <th className="tengah">HARGA @ Rp</th>
-                            <th className="tengah">Jumlah</th>
+                            <td colSpan={8} style={{textAlign: 'center'}}>Laporan Arsip Pembelian ({nota})</td>
                         </tr>
                         </thead>
                         <tbody>
-                            {
-                                data.length>0?
-                                    data.map((item,key)=>{
-                                        return(
-                                        <tr><td className="isi center">{item.qty} {item.satuan}</td><td className="isi">{item.sku}</td><td className="isi">{item.nm_brg}</td><td className="isi kanan">{item.price}</td><td className="isi kanan">{item.subtotal}</td>  </tr>
-                                        )
-                                    })
-                                :""
-                            }
-                        
-                        </tbody>
-                        <tbody><tr>
-                            <th colSpan={3}>Tiga Ribu Rupiah </th>
-                            <th className="kanan">Total Rp</th>
-                            <th className="kanan">3,000</th>
+                        <tr>
+                            <td width="2%" />
+                            <td width="20%" />
+                            <td width="2%" />
+                            <td width="28%" />
+                            <td width="10%" />
+                            <td width="12%" />
+                            <td width="2%" />
+                            <td width="25%" />
                         </tr>
-                        </tbody></table>
-                    <table width="100%" style={{marginTop: '0.5cm'}}>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Tanggal</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{data.tanggal}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Operator</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{data.userid}</td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Pelunasan</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{/*?=$row['Pelunasan']?*/}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Penerima</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{data.nama_penerima}</td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Lokasi</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{data.lokasi_beli}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}} />
+                            <td style={{fontSize: '10pt !important'}} />
+                            <td style={{fontSize: '10pt !important'}} />
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '9pt'}}>
                         <thead>
                         <tr>
-                            <th className="isi atas tengah borderTB borderLR" style={{width: '3cm'}}>Tanda Terima,</th>
-                            <th className="isi tengah" style={{width: '4cm'}}>Barang yang sudah dibeli tidak dapat ditukar/dikembalikan</th>
-                            <th className="isi atas tengah borderTB borderLR" style={{width: '3cm'}}>Hormat kami,</th>
-                        </tr>
-                        <tr>
-                            <td className="borderLR borderTB tengah" style={{height: '2cm'}}>(_____________)</td>
-                            <td className="borderLR borderTB" />
-                            <td className="borderLR borderTB tengah">(_____________)</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">No</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Nama barang</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Barcode</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Satuan</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Harga Beli</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Diskon</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">PPN %</td>
+                            {/* <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Stock %</td> */}
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">QTY</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Bonus</td>
+                            <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Subtotal</td>
                         </tr>
                         </thead>
+                        <tbody>
+                        {
+                            master.map((item, index) => {
+                                let disc1=0;
+                                let disc2=0;
+                                let ppn=0;
+                                if(item.diskon!==0){
+                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
+                                    disc2=disc1;
+                                    if(item.diskon2!==0){
+                                        disc2 = disc1 * (parseFloat(item.diskon2) / 100);
+                                    }
+                                }
+                          
+
+                                if(item.ppn!==0){
+                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
+                                }
+                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
+                                return (
+                                    <tr key={index}>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.diskon}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.ppn}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_bonus}</td>
+                                        <td style={{borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
+
+                                    </tr>
+                                )
+                            })
+                        }
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} colSpan={8}>TOTAL</td>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} />
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} className="text-right">{data.sub_total}</td>
+                        </tr>
+                        <tr>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} colSpan={9}>DISKON</td>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} className="text-right">{data.sub_total/data.discount_harga}</td>
+                        </tr>
+                        <tr>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} colSpan={9}>PPN</td>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} className="text-right">{data.ppn}</td>
+                        </tr>
+                        <tr>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} colSpan={9}>GRAND TOTAL</td>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} className="text-right">{(data.sub_total - (data.sub_total * (parseFloat(data.discount_harga/data.sub_total) / 100))) + (data.sub_total * (parseFloat(data.ppn) / 100))}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '9pt'}}>
+                        <thead>
+                        <tr>
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} width="33%" />
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} width="33%" />
+                            <td style={{borderTop: 'solid', borderWidth: 'thin'}} width="33%" />
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style={{textAlign: 'center'}}>
+                            </td>
+                            <td style={{textAlign: 'center'}}>
+                            </td>
+                            <td style={{textAlign: 'center'}}>
+                            <b><br /><br /><br /><br />_____________</b>
+                            </td>
+                        </tr>
+                        </tbody>
                     </table>
                     </div>
 

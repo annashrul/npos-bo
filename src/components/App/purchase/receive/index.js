@@ -15,6 +15,7 @@ import moment from 'moment';
 import {updateReceive} from "redux/actions/purchase/receive/receive.action";
 import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
+import {withRouter} from "react-router-dom"
 
 const table='receive';
 const Toast = Swal.mixin({
@@ -693,10 +694,14 @@ class Receive extends Component{
                                 userid: this.state.userid,
                                 detail: detail
                             };
+                            let parsedata = {};
+                            parsedata['detail'] = data_final;
+                            parsedata['master'] = this.state.databrg;
+                            parsedata['nota'] = this.props.nota;
                             if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
-                                this.props.dispatch(updateReceive(data_final,this.props.match.params.slug));
+                                this.props.dispatch(updateReceive(parsedata,this.props.match.params.slug));
                             }else{
-                                this.props.dispatch(storeReceive(data_final));
+                                this.props.dispatch(storeReceive(parsedata,(arr)=>this.props.history.push(arr)));
                             }
                             return null;
                         }
@@ -1328,4 +1333,4 @@ const mapStateToPropsCreateItem = (state) => ({
 
 });
 
-export default connect(mapStateToPropsCreateItem)(Receive);
+export default withRouter(connect(mapStateToPropsCreateItem)(Receive));
