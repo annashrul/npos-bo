@@ -113,7 +113,7 @@ export const storePacking = (data,param) => {
 
             })
             .catch(function (error) {
-                console.log("wwwwwww",error)
+                
 
                 Swal.fire({
                     title: 'Failed',

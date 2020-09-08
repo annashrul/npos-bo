@@ -682,7 +682,7 @@ class FormPromo extends Component{
         // this.setState({
         //     lokasi_data : locG
         // })
-        console.log("aaaaaaa",lokasi_data)
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
                 <ModalHeader toggle={this.toggle}>

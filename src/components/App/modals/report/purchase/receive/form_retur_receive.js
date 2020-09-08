@@ -129,7 +129,11 @@ class FormReturReceive extends Component{
             return null;
         });
         if (send === true) {
-            this.props.dispatch(storeReturTanpaNota(data));
+            let parsedata={};
+            parsedata['detail'] = data;
+            parsedata['master'] = this.state.data_retur;
+            parsedata['nota'] = '';
+            this.props.dispatch(storeReturTanpaNota(parsedata,(arr)=>this.props.history.push(arr)));
         }
 
     }

@@ -12,7 +12,7 @@ export default class Print3ply extends Component {
       }
       componentWillMount(){
           const getData = this.props.location.state.data;
-          console.log("11111111111111111111111",getData);
+          
           this.setState({
               data: getData.detail,
               master: getData.master,
@@ -28,7 +28,7 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data}=this.state;
-        console.log("22222222222222222222",this.state)
+        
         return (
             <Layout>
                 <div  id="print_3ply">

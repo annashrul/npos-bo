@@ -52,9 +52,9 @@ class FormUserList extends Component{
 
     toggleChange = (e) => {
         this.setState({isChecked: e.target.checked,});
-        console.log("qqdqdwef",this.state.opt);
-        console.log("qqdqdwef",this.state.opt1);
-        console.log("qqdqdwef",this.state.selectedOption);
+        
+        
+        
         if(e.target.checked === true){
             this.setState({
                 opt : [],
@@ -201,7 +201,6 @@ class FormUserList extends Component{
         const curr = new Date();
         curr.setDate(curr.getDate() + 3);
         const date = curr.toISOString().substr(0, 10);
-        // let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
 
 
         return (
