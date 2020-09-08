@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/Layout/header.js" afterPath="$PROJECT_DIR$/src/components/App/Layout/header.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/cash/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/cash/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/dn/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/dn/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/expedisi/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/expedisi/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/mutation/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/mutation/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/opname/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/opname/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/production/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/production/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/report/inventory/transaction/index.js" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/transaction/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/sale/cash_trx/index.js" afterPath="$PROJECT_DIR$/src/components/App/sale/cash_trx/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/helper.js" afterPath="$PROJECT_DIR$/src/helper.js" />
-    </list>
+    <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -35,14 +17,11 @@
       <file leaf-file-name="form_user_list.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="122" column="50" lean-forward="true" selection-start-line="122" selection-start-column="50" selection-end-line="122" selection-end-column="50" />
+            <state relative-caret-position="32">
+              <caret line="184" column="35" lean-forward="false" selection-start-line="184" selection-start-column="11" selection-end-line="184" selection-end-column="35" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
                 <element signature="e#1679#1917#0" expanded="false" />
-                <element signature="e#1945#2464#0" expanded="false" />
-                <element signature="n#!!block;n#getFiles#0;n#FormUserList#0" expanded="false" />
-                <element signature="n#!!block;n#toggle#0;n#FormUserList#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -52,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/App/sale/product_sale/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="372">
-              <caret line="160" column="5" lean-forward="true" selection-start-line="136" selection-start-column="4" selection-end-line="160" selection-end-column="5" />
+              <caret line="160" column="5" lean-forward="false" selection-start-line="136" selection-start-column="4" selection-end-line="160" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -69,7 +48,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>paket</find>
       <find>kode barang</find>
       <find>this.state.kd_brg</find>
       <find>onHandleChangeChildPack</find>
@@ -99,6 +77,7 @@
       <find>console</find>
       <find>handleLocation</find>
       <find>getDerivedStateFromProps</find>
+      <find>head</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -419,12 +398,12 @@
       <workItem from="1599118472573" duration="9120000" />
       <workItem from="1599460492701" duration="211000" />
       <workItem from="1599460927935" duration="1729000" />
-      <workItem from="1599548909291" duration="15650000" />
+      <workItem from="1599548909291" duration="15953000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="752950000" />
+    <option name="totallyTimeSpent" value="753253000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -437,7 +416,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47068146" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.029605264" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08552632" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -684,27 +663,27 @@
           <caret line="141" column="0" lean-forward="false" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
           <folding>
             <element signature="e#0#26#0" expanded="false" />
-            <marker date="1599549665297" expanded="true" signature="3985:9435" ph="&lt;Switch/&gt;" />
-            <marker date="1599549665297" expanded="true" signature="3985:9446" ph="&lt;div/&gt;" />
-            <marker date="1599549665297" expanded="true" signature="4007:4036" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="4124:4151" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="4167:4197" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="4826:4854" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="4870:4900" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="4999:5027" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="5043:5072" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="5971:5998" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6014:6043" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6321:6348" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6364:6393" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6559:6586" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6602:6632" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6823:6851" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="6867:6893" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="8780:8804" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="8820:8848" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="9093:9119" ph="/*...*/" />
-            <marker date="1599549665297" expanded="true" signature="9135:9161" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="4239:9689" ph="&lt;Switch/&gt;" />
+            <marker date="1599564851432" expanded="true" signature="4239:9700" ph="&lt;div/&gt;" />
+            <marker date="1599564851432" expanded="true" signature="4261:4290" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="4378:4405" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="4421:4451" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="5080:5108" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="5124:5154" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="5253:5281" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="5297:5326" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="6225:6252" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="6268:6297" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="6575:6602" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="6618:6647" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="6813:6840" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="6856:6886" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="7077:7105" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="7121:7147" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="9034:9058" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="9074:9102" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="9347:9373" ph="/*...*/" />
+            <marker date="1599564851432" expanded="true" signature="9389:9415" ph="/*...*/" />
           </folding>
         </state>
       </provider>
@@ -893,7 +872,7 @@
         <state relative-caret-position="170">
           <caret line="136" column="0" lean-forward="false" selection-start-line="136" selection-start-column="0" selection-end-line="136" selection-end-column="0" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="false" />
             <element signature="e#1210#4420#0" expanded="false" />
           </folding>
         </state>
@@ -939,7 +918,7 @@
         <state relative-caret-position="267">
           <caret line="393" column="45" lean-forward="true" selection-start-line="393" selection-start-column="45" selection-end-line="393" selection-end-column="45" />
           <folding>
-            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#0#38#0" expanded="false" />
             <element signature="e#769#1453#0" expanded="false" />
             <element signature="e#1485#2199#0" expanded="false" />
             <element signature="e#2231#3023#0" expanded="false" />
@@ -976,21 +955,18 @@
     <entry file="file://$PROJECT_DIR$/src/components/App/sale/product_sale/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="372">
-          <caret line="160" column="5" lean-forward="true" selection-start-line="136" selection-start-column="4" selection-end-line="160" selection-end-column="5" />
+          <caret line="160" column="5" lean-forward="false" selection-start-line="136" selection-start-column="4" selection-end-line="160" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="122" column="50" lean-forward="true" selection-start-line="122" selection-start-column="50" selection-end-line="122" selection-end-column="50" />
+        <state relative-caret-position="32">
+          <caret line="184" column="35" lean-forward="false" selection-start-line="184" selection-start-column="11" selection-end-line="184" selection-end-column="35" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <element signature="e#1679#1917#0" expanded="false" />
-            <element signature="e#1945#2464#0" expanded="false" />
-            <element signature="n#!!block;n#getFiles#0;n#FormUserList#0" expanded="false" />
-            <element signature="n#!!block;n#toggle#0;n#FormUserList#0" expanded="false" />
           </folding>
         </state>
       </provider>
