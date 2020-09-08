@@ -35,7 +35,8 @@ export default class Adjust3ply extends Component {
       }
 
       render() {
-        const {master,data,nota,kd_kasir,tgl,lokasi,keterangan}=this.state;
+        // const {master,data,nota,kd_kasir,tgl,lokasi,keterangan}=this.state;
+        const {master,data,nota}=this.state;
         
         
         

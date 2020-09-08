@@ -3,8 +3,7 @@ import {
     HEADERS
 } from "./_constants"
 import axios from "axios"
-import {destroy,store} from "components/model/app.model";
-import {ModalToggle, ModalType} from "./modal.action";
+import {destroy} from "components/model/app.model";
 import * as Swal from "sweetalert2";
 
 export const setEcaps = (bool) => dispatch => {

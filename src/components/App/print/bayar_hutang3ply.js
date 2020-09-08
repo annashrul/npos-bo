@@ -44,7 +44,6 @@ export default class Print3ply extends Component {
             jumlah_bayar,
             jumlah_hutang,
             ket,
-            lokasi,
             nogiro,
             nota_beli,
             pembulatan,
