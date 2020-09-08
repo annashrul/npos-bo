@@ -165,8 +165,8 @@ class Login extends Component {
             this.props.loginUser(user);
         }else{
             Swal.fire(
-                'Error!',
-                'Isi username dan password terlebih dahulu.',
+                'Isi Username dan Password Terlebih Dahulu! ',
+                'Lengkapi form untuk melanjutkan.',
                 'error'
             )
         }

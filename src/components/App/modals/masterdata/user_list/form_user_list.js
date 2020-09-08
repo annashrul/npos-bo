@@ -12,6 +12,9 @@ import {sendUserList, setUserListEdit, updateUserList} from "redux/actions/maste
 import moment from "moment";
 import FileBase64 from "react-file-base64";
 import {ModalToggle} from "redux/actions/modal.action";
+import axios from "axios";
+import {HEADERS} from "redux/actions/_constants";
+
 class FormUserList extends Component{
     constructor(props){
         super(props);
@@ -22,7 +25,7 @@ class FormUserList extends Component{
         this.state={
             show:false,
             nama:"", username:"", password:"", password_confirmation:"", password_otorisasi:"",
-            email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",
+            email: "", alamat: "", tgl_lahir: moment().format("YYYY-MM-DD"), foto: "-", nohp: "", lokasi: "",
             user_lvl:"0", status:"1",
             selectedOption: [],
             isChecked: false,
@@ -54,19 +57,58 @@ class FormUserList extends Component{
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
-        let err = Object.assign({}, this.state.error, {
-            [event.target.name]: ""
-        });
-        this.setState({
-            error: err
-        });
+
+        if (event.target.name === 'username') {
+            const data=this.fetchData({
+                table: 'user_akun',
+                kolom: 'username',
+                value: event.target.value
+            });
+            data.then(res => {
+                if (res.result === 1) {
+                    
+                    let err = Object.assign({}, this.state.error, {
+                       'username': "Username telah digunakan."
+                    });
+                    this.setState({
+                        error: err
+                    });
+                } else {
+                    let err = Object.assign({}, this.state.error, {
+                       'username': ""
+                    });
+                    this.setState({
+                        error: err
+                    });
+                }
+            });
+        }else{
+            let err = Object.assign({}, this.state.error, {
+                [event.target.name]: ""
+            });
+            this.setState({
+                error: err
+            });
+        }
+        
+    }
+
+    async fetchData(data) {
+        const url = HEADERS.URL + `site/cekdata`;
+        return await axios.post(url, data)
+            .then(function (response) {
+                const data = response.data;
+                return data;
+            })
+            .catch(function (error) {
+                if (error.response) {
+
+                }
+            })
     }
 
     toggleChange = (e) => {
         this.setState({isChecked: e.target.checked,});
-        console.log("qqdqdwef",this.state.opt);
-        console.log("qqdqdwef",this.state.opt1);
-        console.log("qqdqdwef",this.state.selectedOption);
         if(e.target.checked === true){
             this.setState({
                 opt : [],
@@ -140,13 +182,16 @@ class FormUserList extends Component{
     handleSubmit(e){
         e.preventDefault();
         let err = this.state.error;
-        if (this.state.nama === "" || this.state.nama === undefined) {
-            err = Object.assign({}, err, {
-                nama: "nama tidak boleh kosong."
-            });
-            this.setState({
-                error: err
-            })
+        if (this.state.nama === "" || this.state.nama === undefined || this.state.error.username !== "") {
+            if (this.state.nama === "" || this.state.nama === undefined){
+                err = Object.assign({}, err, {
+                    nama: "nama tidak boleh kosong."
+                });
+                this.setState({
+                    error: err
+                })
+                
+            }
         }else{
             const form = e.target;
             let data = new FormData(form);
@@ -158,22 +203,28 @@ class FormUserList extends Component{
             parseData['username']=this.state.username;
             parseData['user_lvl']=this.state.user_lvl;
             parseData['lokasi']=lok;
-            parseData['status']=this.state.status;
+            parseData['status']=this.state.status===undefined?1:this.state.status;
             parseData['nama']=this.state.nama;
-            parseData['alamat']=this.state.alamat;
-            parseData['email']=this.state.email;
-            parseData['nohp']=this.state.nohp;
+            parseData['alamat'] = this.state.alamat === undefined ? "-" : this.state.alamat;
+            parseData['email'] = this.state.email === undefined ? '-' : this.state.email;
+            parseData['nohp'] = this.state.nohp === undefined ? 0 : this.state.nohp;
             parseData['tgl_lahir']=this.state.tgl_lahir;
             parseData['password']= parseInt(this.state.password.length,10) > 0 ? this.state.password : '-';
             parseData['password_confirmation']= parseInt(this.state.password_confirmation.length,10) > 0 ? this.state.password_confirmation : '-';
             parseData['password_otorisasi']= parseInt(this.state.password_otorisasi.length,10) > 0 ? this.state.password_otorisasi : '-';
-            if(this.state.foto.base64!==undefined){
-                parseData['foto']=this.state.foto.base64;
+            if (this.state.foto!==undefined){
+                if(this.state.foto.base64 !== undefined) {
+                    parseData['foto']=this.state.foto.base64;
+                }
+            }else{
+                parseData['foto'] ='-'
             }
             if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
                 this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData));
+                this.props.dispatch(ModalToggle(false));
             }else{
                 this.props.dispatch(sendUserList(parseData));
+                this.props.dispatch(ModalToggle(false));
             }
         }
 
@@ -203,8 +254,8 @@ class FormUserList extends Component{
             password_otorisasi:"",
             email:"",
             alamat:"",
-            tgl_lahir:"",
-            foto:"",
+            tgl_lahir: moment().format("YYYY-MM-DD"),
+            foto:"-",
             nohp:"",
             lokasi:"",
             user_lvl:"",
@@ -235,17 +286,6 @@ class FormUserList extends Component{
         curr.setDate(curr.getDate() + 3);
         const date = curr.toISOString().substr(0, 10);
         let userLevel = typeof this.props.userLevel.data === 'object' ? this.props.userLevel.data : [];
-        console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",this.props.userListEdit)
-        console.log("fffffffffffffffffffffff",this.state.selectedOption)
-
-        // let lokasi = typeof this.props.lokasi.data === 'object' ? this.props.lokasi.data : [];
-
-        // let locG = [];
-        // for(let i=0;i<lokasi.length;i++){
-        //     locG.push({value:lokasi[i].kode,label:lokasi[i].nama_toko})
-        // }
-        // this.setState({opt : locG})
-
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserList"} size="lg">
 
@@ -263,6 +303,8 @@ class FormUserList extends Component{
                                 <div className="form-group">
                                     <label>Username</label>
                                     <input type="text" className="form-control" name="username" value={this.state.username} onChange={this.handleChange} />
+                                    <div className="invalid-feedback" style={this.state.error.username !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.username}</div>
+
                                 </div>
                                 <div className="form-group">
                                     <label>Password <small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
@@ -332,7 +374,7 @@ class FormUserList extends Component{
                                         name="tgl_lahir"
                                         className="form-control"
                                         data-parse="date"
-                                        placeholder="MM/DD//YYYY"
+                                        placeholder="MM/DD/YYYY"
                                         defaultValue={date}
                                         value={this.state.tgl_lahir}
                                         pattern="\d{2}\/\d{2}/\d{4}"

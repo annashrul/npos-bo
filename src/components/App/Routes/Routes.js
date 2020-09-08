@@ -67,8 +67,8 @@ import BayarHutang3ply from "../print/bayar_hutang3ply";
 const Routes = (
     <div>
         <Switch>
-            <Route path="/global_setting" exact strict component={GlobalSetting} />
             <Route path="/login" exact strict component={Login} />
+            <Route path="/config" exact strict component={GlobalSetting} />
             <Route path="/print3ply" exact strict component={Print3ply} />
             <Route path="/adjust3ply" exact strict component={Adjust3ply} />
             <Route path="/dn3ply" exact strict component={Dn3ply} />
