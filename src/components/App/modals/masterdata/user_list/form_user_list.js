@@ -89,7 +89,6 @@ class FormUserList extends Component{
                     }
                 }
             }
-            console.log("VALLLLLLLLLLL",val);
             this.setState({
                 nama: this.props.userListEdit.nama,
                 username: this.props.userListEdit.username,
@@ -197,9 +196,6 @@ class FormUserList extends Component{
         //     lokasi_data : locG
         // })
         state.opt = locG;
-        console.log("iiiiiiiiiiii4",locG);
-        console.log("iiiiiiiiiiii5",props);
-        console.log("iiiiiiiiiiii6",state);
         return null;
     }
     render(){

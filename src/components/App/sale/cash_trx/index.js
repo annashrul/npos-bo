@@ -27,8 +27,13 @@ class Sale extends Component{
             jenis_data: [],
             location: "",
             location_data: [],
-            kassa: "",
-            kassa_data: [],
+            kassa: "A",
+            kassa_data:  [
+                {value: "A",label: "A"},{value: "B",label: "B"},{value: "C",label: "C"},{value: "D",label: "D"},{value: "E",label: "E"},{value: "F",label: "F"},{value: "G",label: "G"},{value: "H",label: "H"},
+                {value: "I",label: "I"},{value: "J",label: "J"},{value: "K",label: "K"},{value: "L",label: "L"},{value: "M",label: "M"},{value: "N",label: "N"},{value: "O",label: "O"},{value: "P",label: "P"},
+                {value: "Q",label: "Q"},{value: "R",label: "R"},{value: "S",label: "S"},{value: "T",label: "T"},{value: "U",label: "U"},{value: "V",label: "V"},{value: "W",label: "W"},{value: "X",label: "X"},
+                {value: "Y",label: "Y"},{value: "Z",label: "Z"}
+            ],
             selectedOpt:"",
             error:{
                 kassa:"",
@@ -79,25 +84,7 @@ class Sale extends Component{
                 })
             }
         }
-        let kassa = [
-            {value: "A",kode: "A"},{value: "B",kode: "B"},{value: "C",kode: "C"},{value: "D",kode: "D"},{value: "E",kode: "E"},{value: "F",kode: "F"},{value: "G",kode: "G"},{value: "H",kode: "H"},
-            {value: "I",kode: "I"},{value: "J",kode: "J"},{value: "K",kode: "K"},{value: "L",kode: "L"},{value: "M",kode: "M"},{value: "N",kode: "N"},{value: "O",kode: "O"},{value: "P",kode: "P"},
-            {value: "Q",kode: "Q"},{value: "R",kode: "R"},{value: "S",kode: "S"},{value: "T",kode: "T"},{value: "U",kode: "U"},{value: "V",kode: "V"},{value: "W",kode: "W"},{value: "X",kode: "X"},
-            {value: "Y",kode: "Y"},{value: "Z",kode: "Z"}
-        ];
-        let data_kassa=[];
 
-        kassa.map((i) => {
-            data_kassa.push({
-                value: i.kode,
-                label: i.value
-            });
-            return null;
-        });
-
-        this.setState({
-            kassa_data: data_kassa,
-        });
     }
 
     componentWillUnmount(){
@@ -182,7 +169,15 @@ class Sale extends Component{
             confirmButtonText: 'Yes!'
         }).then((result) => {
             if (result.value) {
-                window.location.reload(false);
+                this.setState({
+                    kategori:"masuk",
+                    jumlah:"",
+                    keterangan:"",
+                    jenis:"",
+                    location:"",
+                    kassa:"A",
+                    selectedOpt:"",
+                })
             }
         })
     }

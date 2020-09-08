@@ -430,7 +430,7 @@ class SaleArchive extends Component{
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
                                             <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Subtotal</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
@@ -498,7 +498,7 @@ class SaleArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                                     <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
                                                                     <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>

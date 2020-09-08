@@ -14774,3 +14774,30 @@ table.tableBodyScroll tbody tr {
   border: 0 !important;
   background:transparent !important;
 }
+
+.user-name {
+  float: right;
+  margin-top:3px;
+  margin-left: 11px;
+  height: 35px;
+}
+
+.user-name p {
+  font-size: .6em;
+  color: #FC8213;
+  font-weight: 700;
+  margin:0 !important;
+  padding:0 !important;
+  margin-bottom:-10px !important;
+}
+
+.user-name span {
+  font-size: .4em;
+  font-style: italic;
+  color: #424f63;
+  font-weight: normal;
+}
+
+.fs1{
+  font-size:1em !important;
+}
