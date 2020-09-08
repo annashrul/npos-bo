@@ -163,7 +163,6 @@ class ListPosting extends Component{
             data,
             // total
         } = this.props.data;
-        this.setState({dataPosting : this.props.data.data});
         const {total_fisik,total_akhir,total_hpp} = this.props.total!==undefined?this.props.total:[];
         let total_fisik_per=0;
         let total_akhir_per=0;

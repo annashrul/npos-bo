@@ -89,6 +89,7 @@ class FormUserList extends Component{
                     }
                 }
             }
+            console.log("VALLLLLLLLLLL",val);
             this.setState({
                 nama: this.props.userListEdit.nama,
                 username: this.props.userListEdit.username,
