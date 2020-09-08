@@ -7,7 +7,7 @@ import {LOC_VERIF} from "../../../redux/actions/_constants";
 
 class GlobalSetting extends Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state={
             isShow:false,
             isChecked:false,
@@ -18,9 +18,9 @@ class GlobalSetting extends Component{
             tanggal_tempo:moment(new Date()).format("yyyy/MM/DD"),
             tanggal_tempo_picker:moment(new Date()).format("yyyy-MM-DD"),
             tanggal_tempo_select:moment(new Date()).format("yyyy-MM-DD")
-        }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     getProps(param){
         if(param.site.result!==undefined){
