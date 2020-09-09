@@ -104,7 +104,7 @@ class ListArea extends Component{
                                         <div className="col-sm-6 col-xl-3" key={i}>
                                             <div className="single-gallery--item mb-50">
                                                 <div className="gallery-thumb">
-                                                <img src={v.gambar} alt='' onError={(e)=>{e.target.onerror = null; e.target.src="https://via.placeholder.com/300x200"}} />
+                                                <img src={v.gambar} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src="https://via.placeholder.com/300x200"}} />
                                                 </div>
                                                 <div className="gallery-text-area">
                                                 <h6 className="text-white font-16 mb-0">{v.nama}</h6>

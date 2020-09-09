@@ -42,6 +42,8 @@ class Alokasi extends Component{
             location_data:[],
             location:"",
             location2:"",
+            location_val:"",
+            location2_val:"",
             catatan:"",
             userid:0,
             searchby:1,
@@ -260,6 +262,7 @@ class Alokasi extends Component{
         });
         this.setState({
             location: lk.value,
+            location_val: lk.label,
             error: err
         })
         localStorage.setItem('lk', lk.value);
@@ -277,6 +280,7 @@ class Alokasi extends Component{
         });
         this.setState({
             location2: sp.value,
+            location2_val: sp.label,
             error: err
         })
         localStorage.setItem('lk2', sp.value);
@@ -578,6 +582,10 @@ class Alokasi extends Component{
                             parsedata['detail'] = data_final;
                             parsedata['master'] = this.state.databrg;
                             parsedata['nota'] = this.props.nota;
+                            parsedata['logo'] = this.props.auth.user.logo;
+                            parsedata['user'] = this.props.auth.user.username;
+                            parsedata['lokasi_asal'] = this.state.location_val;
+                            parsedata['lokasi_tujuan'] = this.state.location2_val;
                             if(err_stock===''){
                                 this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
                             }else{

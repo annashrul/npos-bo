@@ -17,6 +17,8 @@ class Expedisi extends Component{
             userid:0,
             location1:"",
             location2:"",
+            location_val:"",
+            location2_val:"",
             location_data:[],
             tanggal:moment(new Date()).format("yyyy-MM-DD"),
             pengirim:'',
@@ -134,6 +136,7 @@ class Expedisi extends Component{
         let err = Object.assign({}, this.state.error, {location1: ""});
         this.setState({
             location1: lk.value,
+        location_val: lk.label,
             error: err
         })
         localStorage.setItem('lokasi1_expedisi', lk.value);
@@ -142,6 +145,7 @@ class Expedisi extends Component{
         let err = Object.assign({}, this.state.error, {location2: ""});
         this.setState({
             location2: sp.value,
+        location2_val: sp.label,
             error: err
         })
         localStorage.setItem('lokasi2_expedisi', sp.value);
@@ -191,6 +195,7 @@ class Expedisi extends Component{
                         parsedata['lokasi_tujuan'] = this.state.location2;
                         parsedata['pengirim'] = this.state.pengirim;
                         parsedata['userid'] = this.state.userid;
+                        parsedata['catatan'] = this.state.catatan;
                         let detail=[];
                         this.state.brgVal.map((v,i)=>{
                             if(v.isChecked===true){
@@ -206,6 +211,10 @@ class Expedisi extends Component{
                         let newparse = {}
                         newparse['detail'] = parsedata;
                         newparse['master'] = this.state.brgVal;
+                        newparse['logo'] = this.props.auth.user.logo;
+                        newparse['user'] = this.props.auth.user.username;
+                        newparse['lokasi_asal'] = this.state.location_val;
+                        newparse['lokasi_tujuan'] = this.state.location2_val;
                         this.props.dispatch(storeExpedisi(newparse,(arr)=>this.props.history.push(arr)));
                     }
                 })

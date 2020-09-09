@@ -53,7 +53,24 @@ class Company extends Component{
             splash: files.base64
         })
     };
+
+    getProps(param){
+        if (param.auth.user) {
+            let access = param.auth.user.access;
+            if(access!==undefined&&access!==null){
+                if(param.auth.user.access[0]['value']==="0"){
+                    alert("bukan halaman kamu");
+                    this.props.history.push({
+                        pathname: '/',
+                        state: {from: this.props.location.pathname}
+                    });
+                }
+            }
+        }
+    }
+
     componentWillMount(){
+        this.getProps(this.props);
         this.props.dispatch(FetchCompany());
         this.setState({
             title: this.props.company.title
@@ -61,7 +78,7 @@ class Company extends Component{
     }
 
     componentWillReceiveProps(nextprops){
-
+        this.getProps(nextprops);
         this.setState({
             title:nextprops.company.title,
             meta_key:nextprops.company.meta_key!==null?nextprops.company.meta_key:'-',

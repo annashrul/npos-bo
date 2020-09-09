@@ -2,6 +2,7 @@ body {
     background-color:#FFFFFF !important;
 }
 #print_3ply{
+    zoom:100% !important;
     font-family: 'Courier New'
 }
 #non-printable {

@@ -7,7 +7,11 @@ export default class Print3ply extends Component {
         this.state = {
             data:[],
             master:[],
-            nota:''
+            nota:'',
+            logo:'',
+            user:'',
+            lokasi_asal:'',
+            lokasi_tujuan:'',
         };
       }
       componentWillMount(){
@@ -17,6 +21,10 @@ export default class Print3ply extends Component {
               data: getData.detail,
               master: getData.master,
               nota: getData.nota,
+              logo: getData.logo,
+              user: getData.user,
+              lokasi_asal: getData.lokasi_asal,
+              lokasi_tujuan: getData.lokasi_tujuan,
           })
       }
 
@@ -27,15 +35,16 @@ export default class Print3ply extends Component {
       }
 
       render() {
-        const {master,data}=this.state;
+        const {master,data,logo,user,lokasi_asal,lokasi_tujuan}=this.state;
         
         return (
             <Layout>
                 <div  id="print_3ply">
-                <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '9pt'}}>
+                <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                     <thead>
                         <tr>
-                        <td colSpan={8} style={{textAlign: 'center'}}>Expedisi Kiriman Barang</td>
+                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={logo} /></td>
+                            <td colSpan={5} style={{textAlign: 'center'}}>Expedisi Kiriman Barang</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +66,7 @@ export default class Print3ply extends Component {
                         <td />
                         <td>Operator</td>
                         <td>:</td>
-                        <td>{data.userid}</td>
+                        <td>{user}</td>
                         </tr>
                         <tr>
                         <th />
@@ -73,7 +82,7 @@ export default class Print3ply extends Component {
                         <th />
                         <td>Lokasi Asal</td>
                         <td>:</td>
-                        <td>{data.lokasi_asal}</td>
+                        <td>{lokasi_asal}</td>
                         <td />
                         <td />
                         <td />
@@ -83,16 +92,16 @@ export default class Print3ply extends Component {
                         <th />
                         <td>Lokasi Tujuan</td>
                         <td>:</td>
-                        <td>{data.lokasi_tujuan}</td>
+                        <td>{lokasi_tujuan}</td>
                         <td />
-                        <td />
-                        <td />
-                        <td />
+                        <td>Keterangan</td>
+                        <td>:</td>
+                        <td>{data.catatan}</td>
                         </tr>
                     </tbody>
                     </table>
 
-                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '9pt'}}>
+                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                         <thead>
                         <tr>
                             <td style={{width: '5%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">No</td>
@@ -129,7 +138,7 @@ export default class Print3ply extends Component {
                         </tr>
                         </tfoot>
                     </table>
-                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '9pt'}}>
+                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                         <thead>
                         <tr>
                             <td style={{borderTop: 'solid', borderWidth: 'thin'}} width="33%" />

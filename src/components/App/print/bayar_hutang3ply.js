@@ -50,16 +50,18 @@ export default class Print3ply extends Component {
             tanggal,
             tanggal_cair,
             tgl_jatuh_tempo,
-            userid,
+            user,
+            logo
         }=this.state.data;
         
         return (
             <Layout>
                 <div  id="print_3ply">
-                    <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '9pt'}}>
+                    <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                         <thead>
                         <tr>
-                            <td colSpan={8} className="text-center">Nota Bayar Hutang</td>
+                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={logo} /></td>
+                            <td colSpan={5} className="text-center">Nota Bayar Hutang</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -81,7 +83,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Operator</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{userid}</td>
+                            <td style={{fontSize: '10pt !important'}}>{user}</td>
                         </tr>
                         <tr>
                             <td />
@@ -135,7 +137,7 @@ export default class Print3ply extends Component {
                         </tr>
                         </tbody>
                     </table>
-                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '9pt'}}>
+                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                         <thead>
                         <tr>
                             <td style={{borderTop: 'solid', borderWidth: 'thin'}} width="33%" />

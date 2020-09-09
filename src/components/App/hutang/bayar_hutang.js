@@ -19,6 +19,7 @@ class BayarHutang extends Component{
             tgl: new Date(),
             no_trx : "",
             location:"",
+            location_val:"",
             jenis_trx_data:[],
             jenis_trx:"",
             nota_pembelian:"",
@@ -170,6 +171,9 @@ class BayarHutang extends Component{
                     data['tanggal_cair'] = moment(new Date()).format("yyyy-MM-DD");
                     data['tgl_jatuh_tempo'] = moment(this.props.getHutang.tgl_jatuh_tempo).format("yyyy-MM-DD");
                     data['userid'] = this.state.userid;
+                    data['logo'] = this.props.auth.user.logo;
+                    data['user'] = this.props.auth.user.username;
+                    data['lokasi_val'] = this.state.location_val;
                     this.props.dispatch(storeHutang(data,(arr)=>this.props.history.push(arr)));
                 }
             })
