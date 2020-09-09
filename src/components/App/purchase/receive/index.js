@@ -45,6 +45,7 @@ class Receive extends Component{
             qty:0,
             location_data:[],
             location:"",
+            location_val:"",
             supplier:"",
             catatan:"",
             notasupplier:"",
@@ -330,6 +331,7 @@ class Receive extends Component{
         });
         this.setState({
             location: lk.value,
+        location_val: lk.label,
             error: err
         })
         localStorage.setItem('lk', lk.value);
@@ -698,6 +700,9 @@ class Receive extends Component{
                             parsedata['detail'] = data_final;
                             parsedata['master'] = this.state.databrg;
                             parsedata['nota'] = this.props.nota;
+                            parsedata['logo'] = this.props.auth.user.logo;
+                            parsedata['user'] = this.props.auth.user.username;
+                            parsedata['lokasi_beli'] = this.state.location_val;
                             if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
                                 this.props.dispatch(updateReceive(parsedata,this.props.match.params.slug));
                             }else{

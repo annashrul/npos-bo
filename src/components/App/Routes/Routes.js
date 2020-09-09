@@ -55,6 +55,8 @@ import BayarPiutang from "../piutang/bayar_piutang";
 import CetakBarcode from "../cetak_barcode";
 import NotFound from "../common/notfound";
 import SaleReturReport from "../report/sale/sale_retur_archive";
+import Area from '../masterdata/area';
+import Meja from '../masterdata/meja';
 import GlobalSetting from "../setting/global_setting";
 import Print3ply from "../print/penjualan3ply";
 import Adjust3ply from "../print/adjust3ply";
@@ -93,6 +95,9 @@ const Routes = (
             <PrivateRoute path="/sales" exact strict component={Sales} />
             <PrivateRoute path="/department" exact strict component={Department} />
             <PrivateRoute path="/product" exact strict component={Product} />
+
+            <PrivateRoute path="/area" exact strict component={Area} />
+            <PrivateRoute path="/meja" exact strict component={Meja} />
             {/* MASTERDATA SECTION END */}
 
             {/* PRODUCTION SECTION START */}
