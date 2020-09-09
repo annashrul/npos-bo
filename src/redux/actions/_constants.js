@@ -223,6 +223,28 @@ export const SUB_DEPT = {
     POST_LOADING: 'SET_SUB_DEPT_POST_LOADING'
 }
 /****************
+ MEJA
+ *****************/
+export const MEJA = {
+    LOADING: 'SET_MEJA_LOADING',
+    SUCCESS: 'SET_MEJA_SUCCESS',
+    FAILED: 'SET_MEJA_FAILED',
+    DETAIL: 'SET_MEJA_DETAIL',
+    ALL: 'SET_MEJA_ALL',
+    POST_LOADING: 'SET_MEJA_POST_LOADING'
+}
+/****************
+ AREA
+ *****************/
+export const AREA = {
+    LOADING: 'SET_AREA_LOADING',
+    SUCCESS: 'SET_AREA_SUCCESS',
+    FAILED: 'SET_AREA_FAILED',
+    DETAIL: 'SET_AREA_DETAIL',
+    ALL: 'SET_AREA_ALL',
+    POST_LOADING: 'SET_AREA_POST_LOADING'
+}
+/****************
  SUPPLIER
  *****************/
 export const SUPPLIER = {
