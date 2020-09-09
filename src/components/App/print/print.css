@@ -2,7 +2,7 @@ body {
     background-color:#FFFFFF !important;
 }
 #print_3ply{
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Courier New'
 }
 #non-printable {
     height: auto;
@@ -140,7 +140,7 @@ td {
 
 @media print {
     @page {
-        size: landscape;
+        size: portrait;
     }
 }
 

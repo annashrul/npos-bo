@@ -42,7 +42,7 @@ export default class Adjust3ply extends Component {
         return (
             <Layout>
                 <div  id="print_3ply">
-                        <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '9pt'}}>
+                        <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                             <thead>
                             <tr>
                                 <td colSpan={8} style={{textAlign: 'center'}}>Adjustment Stock ({nota})</td>
@@ -79,7 +79,7 @@ export default class Adjust3ply extends Component {
                             </tr>
                             </tbody>
                         </table>
-                        <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '9pt'}}>
+                        <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                             <thead>
                             <tr>
                                 <td style={{width: '5%', borderBottom: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}}>No</td>
