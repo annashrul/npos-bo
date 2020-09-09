@@ -32,6 +32,7 @@ class TrxAdjustment extends Component{
             brgval:[],
             location_data:[],
             location:"",
+            location_val:"",
             catatan:'-',
             tgl_order: moment(new Date()).format("yyyy-MM-DD"),
             searchby:"",
@@ -99,11 +100,14 @@ class TrxAdjustment extends Component{
         });
     };
     HandleChangeLokasi(lk){
+        // let index = lk.nativeEvent.target.selectedIndex;
+        console.log("jwjkwhhkjwkjw",lk);
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
         this.setState({
             location: lk.value,
+            location_val: lk.label,
             error: err
         })
         localStorage.setItem('lk', lk.value);
@@ -366,6 +370,9 @@ class TrxAdjustment extends Component{
                             data['detail'] = detail;
                             data['master'] = this.state.databrg;
                             data['nota'] = this.props.nota;
+                            data['logo'] = this.props.auth.user.logo;
+                            data['user'] = this.props.auth.user.username;
+                            data['lokasi_val'] = this.state.location_val;
                             this.props.dispatch(storeAdjusment(data,(arr)=>this.props.history.push(arr)));
                         }
                     })

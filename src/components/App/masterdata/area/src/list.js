@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
 import {deleteArea, FetchArea} from "redux/actions/masterdata/area/area.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import Paginationq, {statusQ} from "helper";
+import Paginationq from "helper";
 // import FormArea from "components/App/modals/masterdata/area/form_area";
 import Swal from "sweetalert2";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
@@ -73,7 +73,6 @@ class ListArea extends Component{
 
     }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
@@ -105,7 +104,7 @@ class ListArea extends Component{
                                         <div className="col-sm-6 col-xl-3" key={i}>
                                             <div className="single-gallery--item mb-50">
                                                 <div className="gallery-thumb">
-                                                <img src={v.gambar} alt onError={(e)=>{e.target.onerror = null; e.target.src="https://via.placeholder.com/300x200"}} />
+                                                <img src={v.gambar} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src="https://via.placeholder.com/300x200"}} />
                                                 </div>
                                                 <div className="gallery-text-area">
                                                 <h6 className="text-white font-16 mb-0">{v.nama}</h6>

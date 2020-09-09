@@ -323,6 +323,8 @@ class TrxPacking extends Component{
                             parsedata['detail'] = data;
                             parsedata['master'] = this.state.databrg;
                             parsedata['nota'] = this.props.code;
+                            parsedata['logo'] = this.props.auth.user.logo;
+                            parsedata['user'] = this.props.auth.user.username;
                             this.props.dispatch(storePacking(parsedata,(arr)=>this.props.history.push(arr)));
                         }
                     })

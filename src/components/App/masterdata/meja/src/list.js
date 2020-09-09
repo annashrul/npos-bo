@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import connect from "react-redux/es/connect/connect";
 import {deleteMeja, FetchMeja} from "redux/actions/masterdata/meja/meja.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import Paginationq, {statusQ} from "helper";
+import Paginationq from "helper";
 // import FormMeja from "components/App/modals/masterdata/meja/form_meja";
 import Swal from "sweetalert2";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';

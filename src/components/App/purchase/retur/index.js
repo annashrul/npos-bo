@@ -34,6 +34,7 @@ class ReturTanpaNota extends Component{
             tanggal: moment(new Date()).format("yyyy-MM-DD"),
             location_data:[],
             location:"",
+            location_val:"",
             supplier_data:[],
             supplier:"",
             catatan:"-",
@@ -121,6 +122,7 @@ class ReturTanpaNota extends Component{
 
         this.setState({
             location: lk.value,
+            location_val: lk.label,
             error: err
         })
         localStorage.setItem('lk', lk.value);
@@ -424,6 +426,9 @@ class ReturTanpaNota extends Component{
                             parsedata['detail'] = data;
                             parsedata['master'] = this.state.databrg;
                             parsedata['nota'] = '';
+                            parsedata['logo'] = this.props.auth.user.logo;
+                            parsedata['user'] = this.props.auth.user.username;
+                            parsedata['lokasi'] = this.state.location_val;
                             this.props.dispatch(storeReturTanpaNota(parsedata,(arr)=>this.props.history.push(arr)));
                         }
                     })
