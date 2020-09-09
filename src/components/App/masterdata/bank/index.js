@@ -4,7 +4,7 @@ import Layout from "../../Layout";
 import ListBank from "./src/list";
 import connect from "react-redux/es/connect/connect";
 import {FetchBank} from "redux/actions/masterdata/bank/bank.action";
-import {cekAkses} from "../../../../helper";
+// import {cekAkses} from "../../../../helper";
 
 class Bank extends Component{
     constructor(props){

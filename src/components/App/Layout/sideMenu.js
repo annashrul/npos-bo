@@ -748,13 +748,13 @@ class SideMenu extends Component {
                             <li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank" style={{width:'fit-content'}}> <i className="fa fa-bank" />Bank </Link></li>
                             <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="fa fa-ticket" />Promo </Link></li>
 
-                            <li className={"treeview" + (this.state.isArea===true || path==='/area'|| path==='/meja'?" active menu-open" : "")} style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
+                            {/* <li className={"treeview" + (this.state.isArea===true || path==='/area'|| path==='/meja'?" active menu-open" : "")} style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
                                 <a href="!#" onClick={(e) => this.changeMenu(e,'area')}><i className="fa fa-map" /> <span>Data Area</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isArea===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isArea===true ?"block" : "none"}}>
                                     <li className={path==='/area'?"active":''} style={this.state.area==="0"?{"display":"none"}:{"display":"block"}}><Link to="/area" style={{width:'fit-content'}}> <i className="zmdi zmdi-balance" />Area </Link></li>
                                     <li className={path==='/meja'?"active":''} style={this.state.meja==="0"?{"display":"none"}:{"display":"block"}}><Link to="/meja" style={{width:'fit-content'}}> <i className="zmdi zmdi-panorama-wide-angle" />Meja </Link></li>
                                 </ul>
-                            </li>
+                            </li> */}
                         </ul>
                     </li>
                     {/* MASTERDATA MODUL END */}

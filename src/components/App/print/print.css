@@ -1,9 +1,9 @@
 body {
     background-color:#FFFFFF !important;
-    zoom:100%!important;
 }
 #print_3ply{
-    font-family: 'Courier Prime', monospace;
+    zoom:100% !important;
+    font-family: 'Courier New'
 }
 #non-printable {
     height: auto;
