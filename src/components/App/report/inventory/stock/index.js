@@ -289,7 +289,7 @@ class InventoryReport extends Component{
 
                                     </div>
                                 </div>
-                                <div className="col-6 col-xs-6 col-md-2" style={{paddingLeft:"0px"}}>
+                                <div className="col-6 col-xs-6 col-md-2">
                                     <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                     <div className="form-group">
                                         <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
@@ -297,7 +297,7 @@ class InventoryReport extends Component{
 
                                 </div>
 
-                                <div className="col-6 col-xs-6 col-md-2">
+                                <div className="col-6 col-xs-6 col-md-2" style={{textAlign:"right"}}>
                                     <div className="form-group">
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleSearch(e))}>
                                             <i className="fa fa-search"/>
@@ -500,7 +500,7 @@ class InventoryReport extends Component{
                     </div>
 
                 </div>
-                {/*}*/}
+
             </Layout>
         );
     }

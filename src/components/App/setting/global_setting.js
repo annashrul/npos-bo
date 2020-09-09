@@ -7,7 +7,7 @@ import {LOC_VERIF} from "../../../redux/actions/_constants";
 
 class GlobalSetting extends Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state={
             isShow:false,
             isChecked:false,
@@ -15,9 +15,10 @@ class GlobalSetting extends Component{
             acc_name:'',
             acc_number:'',
             promo:'-',
-            tanggal_tempo:moment(new Date()).format("yyyy/MM/DD"),
+            tanggal_tempo:'-',
+            tanggal_tempo_formated: moment(new Date()).format("Do MMMM YYYY"),
             tanggal_tempo_picker:moment(new Date()).format("yyyy-MM-DD"),
-            tanggal_tempo_select:moment(new Date()).format("yyyy-MM-DD")
+            tanggal_tempo_select:'-'
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -26,6 +27,7 @@ class GlobalSetting extends Component{
         if(param.site.result!==undefined){
             this.setState({
                 tanggal_tempo:moment(param.site.result.tanggal_tempo).format("yyyy/MM/DD"),
+                tanggal_tempo_formated: moment(param.site.result.tanggal_tempo).format("Do MMMM YYYY"),
                 harga_server:param.site.result.server_price,
                 acc_name:param.site.result.acc_name,
                 acc_number:param.site.result.acc_number,
@@ -36,26 +38,33 @@ class GlobalSetting extends Component{
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
     }
+
     componentWillMount(){
         this.getProps(this.props);
+        let count=1;
         Swal.fire({
-            title: 'Masukan Password Anda',
+            title: '',
             input: 'password',
             inputAttributes: {
                 autocapitalize: 'off'
             },
             showCancelButton: false,
-            confirmButtonText: 'Masuk',
+            confirmButtonText: 'Akses',
             showLoaderOnConfirm: true,
             closeOnClickOutside: false,
             allowOutsideClick: false,
             preConfirm: (login) => {
-                if(LOC_VERIF.password === login){
+                if(LOC_VERIF.password === btoa(login)){
                     this.props.dispatch(FetchSite());
                     this.setState({
                         isShow:true,
                     })
                 }else{
+                    if(count===3){
+                        alert("Access Denied.")
+                        window.location = "http://www.google.com";
+                    }
+                    count++;
                     Swal.showValidationMessage(
                         `Password Salah`
                     )
@@ -69,30 +78,46 @@ class GlobalSetting extends Component{
 
         })
     }
+
     handleChange = (event) => {
         let column=event.target.name;
         let value=event.target.value;
         this.setState({ [column]: value });
-        if(event.target.checked){
-            this.setState({isChecked:true})
-        }else{
-            this.setState({isChecked:false})
+        if (column === 'checkboxTgl'){
+            if(event.target.checked){
+                //datepicker
+                this.setState({isChecked:true})
+            }else{
+                //dropdown
+                this.setState({isChecked:false})
+            }
         }
     }
     handleSubmit(e){
         e.preventDefault();
-        let parsedata={
-            tanggal_promo:this.state.isChecked===true?moment(this.state.tanggal_tempo_picker).format('yyyy-MM-DD'):this.state.tanggal_tempo_select,
-            server_price:this.state.harga_server,
-            acc_name:this.state.acc_name,
-            acc_number:this.state.acc_number,
-            promo:this.state.promo,
-        };
+        let parsedata=[];
+        if (this.state.tanggal_tempo_select==='-'){
+            parsedata = {
+                server_price: this.state.harga_server,
+                acc_name: this.state.acc_name,
+                acc_number: this.state.acc_number,
+                promo: this.state.promo,
+            };
+        }else{
+            parsedata = {
+                tanggal_tempo: this.state.isChecked === true ? moment(this.state.tanggal_tempo_picker).format('yyyy-MM-DD') : this.state.tanggal_tempo_select,
+                server_price: this.state.harga_server,
+                acc_name: this.state.acc_name,
+                acc_number: this.state.acc_number,
+                promo: this.state.promo,
+            };
+        }
+
         let timerInterval;
         Swal.fire({
             title: 'Tunggu Sebentar',
             html: 'data sedang dikirim ke server',
-            timer: 2000,
+            timer: 1000,
             timerProgressBar: true,
             onBeforeOpen: () => {
                 Swal.showLoading()
@@ -128,18 +153,20 @@ class GlobalSetting extends Component{
                     isShow===true?(
                         <div className="card">
                             <div className="card-header">
-                                <h4>Form Global Setting</h4>
+                                <h4>Global Setting</h4>
                             </div>
                             <div className="card-body">
-                                <h2>Waktu Jatuh Tempo {this.state.tanggal_tempo}</h2>
+                                <h4><small>Tanggal Jatuh Tempo:</small><br/> {this.state.tanggal_tempo_formated}</h4>
+                                <br/>
                                 <div className="form-group">
-                                    <label htmlFor="inputState" className="col-form-label"><input type="checkbox" checked={this.state.isChecked} onChange={this.handleChange}/> Pilih { this.state.isChecked===true?'Datepicker':'Dropdown'}</label>
+                                    <label>Tambah Masa Sewa</label><br/>
+                                    <label htmlFor="inputState" className="col-form-label"><input type="checkbox" name="checkboxTgl" checked={this.state.isChecked} onChange={this.handleChange}/> Pilih { this.state.isChecked!==true?'Datepicker':'Dropdown'}</label>
                                     {
                                         this.state.isChecked===true?(
                                             <input type="date" name={"tanggal_tempo_picker"} className="form-control" value={this.state.tanggal_tempo_picker} onChange={this.handleChange}/>
                                         ):(
                                             <select name="tanggal_tempo_select" className="form-control" value={this.state.tanggal_tempo_select} defaultValue={this.state.tanggal_tempo_select} onChange={this.handleChange}>
-                                                <option value="">==== Pilih ====</option>
+                                                <option value="-">==== Pilih ====</option>
                                                 <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(30, 'days').format('yyyy-MM-DD')}>1 Bulan</option>
                                                 <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(60, 'days').format('yyyy-MM-DD')}>2 Bulan</option>
                                                 <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(90, 'days').format('yyyy-MM-DD')}>3 Bulan</option>

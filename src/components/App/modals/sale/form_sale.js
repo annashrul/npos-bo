@@ -27,6 +27,7 @@ class FormSale extends Component{
             change:0,
             bank:''
         };
+        this.handleSetTunai = this.handleSetTunai.bind(this)
     }
 
     componentWillReceiveProps(nextProps){
@@ -79,6 +80,12 @@ class FormSale extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.setState({})
     };
+    handleSetTunai(e){
+        e.preventDefault();
+        this.setState({
+            tunai: this.state.gt
+        })
+    }
     handleSubmit(e){
         e.preventDefault();
         let err = this.state.error;
@@ -122,7 +129,8 @@ class FormSale extends Component{
                 <ModalBody>
                     <div className="row">
                         <div className="col-md-6">
-                            <button className="btn btn-success">TOTAL = <b>{this.state.gt}</b></button>
+                            <button className="btn btn-success" onClick={(event)=>this.handleSetTunai(event)} data-toggle="tooltip" title="Masukan total ke jumlah uang.">TOTAL: <b>{this.state.gt}</b></button>
+
                         </div>
                         <div className="col-md-6" style={{textAlign:"right"}}>
                             <button className="btn btn-primary" onClick={this.handleSubmit}>Simpan</button>

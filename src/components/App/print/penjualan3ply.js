@@ -28,6 +28,7 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data,nota}=this.state;
+        let gt=0;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -72,6 +73,7 @@ export default class Print3ply extends Component {
                             {
                                 data.length>0?
                                     data.map((item,key)=>{
+                                        gt += item.subtotal;
                                         return(
                                         <tr><td className="isi center">{item.qty} {item.satuan}</td><td className="isi">{item.sku}</td><td className="isi">{item.nm_brg}</td><td className="isi kanan">{item.price}</td><td className="isi kanan">{item.subtotal}</td>  </tr>
                                         )
@@ -83,7 +85,7 @@ export default class Print3ply extends Component {
                         <tbody><tr>
                             <th colSpan={3}>Tiga Ribu Rupiah </th>
                             <th className="kanan">Total Rp</th>
-                            <th className="kanan">3,000</th>
+                            <th className="kanan">{gt}</th>
                         </tr>
                         </tbody></table>
                     <table width="100%" style={{marginTop: '0.5cm'}}>

@@ -23,7 +23,7 @@ export const HEADERS ={
       PASSWORD MODAL ADD LOCATION
 *****************/
 export const LOC_VERIF ={
-  password:"netindo35a"
+  password: "bmV0aW4xMjM0YSE="
 }
 
 /****************

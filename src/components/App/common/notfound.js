@@ -27,9 +27,9 @@ export default class Footer extends Component {
                 <div className="error-thumb">
                 <img src={this.state.link} alt="" />
                 </div>
-                <h2>Opps! This page Could Not Be Found!</h2>
-                <p>Sorry bit the page you are looking for does not exist, have been removed or name changed</p>
-                <a className="btn btn-rounded btn-primary mt-30" href="/">Back To Home</a>
+                <h2>Halaman ini tidak tersedia!</h2>
+                <p>Silahkan kembali ke halaman awal untuk melanjutan.</p>
+                <a className="btn btn-rounded btn-primary mt-30" href="/">Kembali ke dashboard</a>
             </div>
             </div>
 

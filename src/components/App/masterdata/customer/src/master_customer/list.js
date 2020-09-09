@@ -110,7 +110,6 @@ class ListCustomer extends Component{
                             <th className="text-black" style={columnStyle}>Address</th>
                             <th className="text-black" style={columnStyle}>Status</th>
                             <th className="text-black" style={columnStyle}>Handphone</th>
-                            <th className="text-black" style={columnStyle}>Special Price</th>
                             <th className="text-black" style={columnStyle}>Cust Type</th>
                             <th className="text-black" style={columnStyle}>Gender</th>
                             <th className="text-black" style={columnStyle}>Email</th>
@@ -141,7 +140,6 @@ class ListCustomer extends Component{
                                                 <td style={columnStyle}>{v.alamat}</td>
                                                 <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
                                                 <td style={columnStyle}>{v.tlp}</td>
-                                                <td style={columnStyle}>{v.special_price==='1'?statusQ('success','Yes'):statusQ('danger','No')}</td>
                                                 <td style={columnStyle}>{v.cust_type}</td>
                                                 <td style={columnStyle}>{v.jenis_kelamin==='1'?'Male':'Female'}</td>
                                                 <td style={columnStyle}>{v.email}</td>
