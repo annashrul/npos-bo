@@ -4,6 +4,7 @@ import Layout from "../../Layout";
 import ListBank from "./src/list";
 import connect from "react-redux/es/connect/connect";
 import {FetchBank} from "redux/actions/masterdata/bank/bank.action";
+import {cekAkses} from "../../../../helper";
 
 class Bank extends Component{
     constructor(props){
@@ -15,11 +16,11 @@ class Bank extends Component{
         }
         this.handlePagin=this.handlePagin.bind(this);
     }
-    componentWillReceiveProps = (nextProps) => {
-        if (nextProps.auth.user) {
-            let access = nextProps.auth.user.access;
+    getProps(param){
+        if (param.auth.user) {
+            let access = param.auth.user.access;
             if(access!==undefined&&access!==null){
-                if(nextProps.auth.user.access[16]['label']==="0"){
+                if(param.auth.user.access[16]['value']==="0"){
                     alert("bukan halaman kamu");
                     this.props.history.push({
                         pathname: '/',
@@ -29,10 +30,14 @@ class Bank extends Component{
             }
         }
     }
+    componentWillReceiveProps = (nextProps) => {
+        this.getProps(nextProps);
+    }
 
     componentWillMount(){
         let any = this.state.any;
         this.props.dispatch(FetchBank(1,any===undefined?'':any));
+        this.getProps(this.props);
     }
     handlePagin(param){
         let any = this.state.any;

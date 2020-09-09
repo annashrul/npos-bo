@@ -345,7 +345,6 @@ class FormProduct extends Component{
         this.clearState()
     };
     getProps(param){
-        
         this.setState({
             nm_harga1:param.auth.user.harga1,
             nm_harga2:param.auth.user.harga2,
@@ -749,7 +748,7 @@ class FormProduct extends Component{
         if(this.state.kd_brg===''||this.state.kd_brg===undefined){
             err = Object.assign({}, err, {kd_brg:"kode barang tidak boleh kosong"});
             this.setState({error: err});
-            
+
             return;
         }
         if(this.state.nm_brg===''||this.state.nm_brg===undefined){
@@ -1408,10 +1407,13 @@ class FormProduct extends Component{
             qty_konversi.push(this.state.barangSku[i].konversi);
         }
         if(column === 'hrg_beli'){
-            this.setState({
-                hrg_beli_pack : parseInt(value*qty_konversi[1],10),
-                hrg_beli_karton : parseInt(value*qty_konversi[2],10),
-            });
+            if(this.state.jenis==='0'){
+                this.setState({
+                    hrg_beli_pack : parseInt(value*qty_konversi[1],10),
+                    hrg_beli_karton : parseInt(value*qty_konversi[2],10),
+                });
+            }
+
         }
         if(column === "margin1"){
             this.setState({
@@ -1829,339 +1831,16 @@ class FormProduct extends Component{
                     });
                 }
             }
-    }
+        }
 
     }
-    validasiLastForm(){
-        let barangSku = [];
-        let barangHarga = [];
-        let barcode=[];
-        for(let i=0;i<this.state.barangSku.length;i++){
-            barangSku.push({
-                "barcode":this.state.barangSku[i].barcode,
-                "satuan":this.state.barangSku[i].qty,
-                "qty_konversi":this.state.barangSku[i].konversi,
-                "satuan_jual":this.state.barangSku[i].satuan_jual,
-            });
-            barcode.push(this.state.barangSku[i].barcode);
-        }
-        for(let i=0;i<this.state.barangHarga.length;i++){
-            if(this.state.barangSku.length === 1){
-                barangHarga.push({
-                    "lokasi":this.state.barangHarga[i][0].lokasi,
-                    "harga":this.state.barangHarga[i][0].hrgJual1PCS,
-                    "harga_beli":this.state.barangHarga[i][0].hrgBeliPCS,
-                    "barcode":barcode[0],
-                    "ppn":this.state.barangHarga[i][0].ppnPCS,
-                    "service":this.state.barangHarga[i][0].servicePCS,
-                    "harga2":this.state.barangHarga[i][0].hrgJual2PCS,
-                    "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
-                    "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
-                });
-                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) < 0){
-                    alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(this.state.jenis!=='4'){
-                    if(parseInt(this.state.barangHarga[i][0].margin1PCS,10) < 0){
-                        alert(`margin 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                        return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
-                        alert(`margin 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                        return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
-                        alert(`margin 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                        return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
-                        alert(`margin 4 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                        return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) < 0){
-                        alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) < 0){
-                        alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) < 0){
-                        alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) === 0 ||parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) < 0){
-                        alert(`harga jual 4 ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].ppnPCS,10) < 0){
-                        alert(`ppn satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                    }
-                    if(parseInt(this.state.barangHarga[i][0].servicePCS,10) < 0){
-                        alert(`service satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                    }
-                }
-            }
-            else if(this.state.barangSku.length === 2){
-                barangHarga.push({
-                    "lokasi":this.state.barangHarga[i][0].lokasi,
-                    "harga":this.state.barangHarga[i][0].hrgJual1PCS,
-                    "harga_beli":this.state.barangHarga[i][0].hrgBeliPCS,
-                    "barcode":barcode[0],
-                    "ppn":this.state.barangHarga[i][0].ppnPCS,
-                    "service":this.state.barangHarga[i][0].servicePCS,
-                    "harga2":this.state.barangHarga[i][0].hrgJual2PCS,
-                    "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
-                    "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
-                });
-                barangHarga.push({
-                    "lokasi":this.state.barangHarga[i][1].lokasi,
-                    "harga":this.state.barangHarga[i][1].hrgJual1PACK,
-                    "harga_beli":this.state.barangHarga[i][1].hrgBeliPACK,
-                    "barcode":barcode[1]===undefined?"0":barcode[1],
-                    "ppn":this.state.barangHarga[i][1].ppnPACK,
-                    "service":this.state.barangHarga[i][1].servicePACK,
-                    "harga2":this.state.barangHarga[i][1].hrgJual2PACK,
-                    "harga3":this.state.barangHarga[i][1].hrgJual3PACK,
-                    "harga4":this.state.barangHarga[i][1].hrgJual4PACK,
-                });
-                // VALIDASI PCS
-                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) < 0){
-                    alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].margin1PCS,10) < 0){
-                    alert(`margin 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                    return;
-                }
-                // if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
-                //     alert(`margin 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].margin3PCS,10) < 0){
-                //     alert(`margin 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].margin4PCS,10) < 0){
-                //     alert(`margin 4 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) < 0){
-                    alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) < 0){
-                //     alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) < 0){
-                //     alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) < 0){
-                //     alert(`harga jual 4 ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                // }
-                if(parseInt(this.state.barangHarga[i][0].ppnPCS,10) < 0){
-                    alert(`ppn satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].servicePCS,10) < 0){
-                    alert(`service satuan ${this.state.barangSku[0].qty} tidak boleh kurang dari 0`);return;
-                }
-                // VALIDASI PACK
-                if(parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) < 0){
-                    alert(`harga beli satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].margin1PACK,10) < 0){
-                    alert(`margin 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                // if(parseInt(this.state.barangHarga[i][1].margin2PACK,10) < 0){
-                //     alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].margin3PACK,10) < 0){
-                //     alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].margin4PACK,10) < 0){
-                //     alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) < 0){
-                    alert(`harga jual 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) < 0){
-                //     alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) < 0){
-                //     alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) < 0){
-                //     alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                if(parseInt(this.state.barangHarga[i][1].ppnPACK,10) < 0){
-                    alert(`ppn satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].servicePACK,10) < 0){
-                    alert(`service satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
 
-            }
-            else{
-                barangHarga.push({
-                    "lokasi":this.state.barangHarga[i][0].lokasi,
-                    "harga":this.state.barangHarga[i][0].hrgJual1PCS,
-                    "harga_beli":this.state.barangHarga[i][0].hrgBeliPCS,
-                    "barcode":barcode[0],
-                    "ppn":this.state.barangHarga[i][0].ppnPCS,
-                    "service":this.state.barangHarga[i][0].servicePCS,
-                    "harga2":this.state.barangHarga[i][0].hrgJual2PCS,
-                    "harga3":this.state.barangHarga[i][0].hrgJual3PCS,
-                    "harga4":this.state.barangHarga[i][0].hrgJual4PCS,
-                });
-                barangHarga.push({
-                    "lokasi":this.state.barangHarga[i][1].lokasi,
-                    "harga":this.state.barangHarga[i][1].hrgJual1PACK,
-                    "harga_beli":this.state.barangHarga[i][1].hrgBeliPACK,
-                    "barcode":barcode[1]===undefined?"0":barcode[1],
-                    "ppn":this.state.barangHarga[i][1].ppnPACK,
-                    "service":this.state.barangHarga[i][1].servicePACK,
-                    "harga2":this.state.barangHarga[i][1].hrgJual2PACK,
-                    "harga3":this.state.barangHarga[i][1].hrgJual3PACK,
-                    "harga4":this.state.barangHarga[i][1].hrgJual4PACK,
-                });
-                barangHarga.push({
-                    "lokasi":this.state.barangHarga[i][2].lokasi,
-                    "harga":this.state.barangHarga[i][2].hrgJual1KARTON,
-                    "harga_beli":this.state.barangHarga[i][2].hrgBeliKARTON,
-                    "barcode":barcode[2]===undefined?"0":barcode[2],
-                    "ppn":this.state.barangHarga[i][2].ppnKARTON,
-                    "service":this.state.barangHarga[i][2].serviceKARTON,
-                    "harga2":this.state.barangHarga[i][2].hrgJual2KARTON,
-                    "harga3":this.state.barangHarga[i][2].hrgJual3KARTON,
-                    "harga4":this.state.barangHarga[i][2].hrgJual4KARTON,
-                });
-                // VALIDASI PCS
-                if(parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgBeliPCS,10) < 0){
-                    alert(`harga beli satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].margin1PCS,10) < 0){
-                    alert(`margin 1 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                // if(parseInt(this.state.barangHarga[i][0].margin2PCS,10) < 0){
-                //     alert(`margin 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].margin3PCS,10) < 0){
-                //     alert(`margin 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].margin4PCS,10) < 0){
-                //     alert(`margin 4 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                if(parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual1PCS,10) < 0){
-                    alert(`harga jual 1 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual2PCS,10) < 0){
-                //     alert(`harga jual 2 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual3PCS,10) < 0){
-                //     alert(`harga jual 3 satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) === 0||parseInt(this.state.barangHarga[i][0].hrgJual4PCS,10) < 0){
-                //     alert(`harga jual 4 ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                if(parseInt(this.state.barangHarga[i][0].ppnPCS,10) < 0){
-                    alert(`ppn satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][0].servicePCS,10) < 0){
-                    alert(`service satuan ${this.state.barangSku[0].qty} di lokasi ${this.state.barangHarga[i][0].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                // VALIDASI PACK
-                if(parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgBeliPACK,10) < 0){
-                    alert(`harga beli satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].margin1PACK,10) < 0){
-                    alert(`margin 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                // if(parseInt(this.state.barangHarga[i][1].margin2PACK,10) < 0){
-                //     alert(`margin 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].margin3PACK,10) < 0){
-                //     alert(`margin 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].margin4PACK,10) < 0){
-                //     alert(`margin 4 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                if(parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual1PACK,10) < 0){
-                    alert(`harga jual 1 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual2PACK,10) < 0){
-                //     alert(`harga jual 2 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual3PACK,10) < 0){
-                //     alert(`harga jual 3 satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) === 0||parseInt(this.state.barangHarga[i][1].hrgJual4PACK,10) < 0){
-                //     alert(`harga jual 4 ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                if(parseInt(this.state.barangHarga[i][1].ppnPACK,10) < 0){
-                    alert(`ppn satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][1].servicePACK,10) < 0){
-                    alert(`service satuan ${this.state.barangSku[1].qty} di lokasi ${this.state.barangHarga[i][1].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                // VALIDASI KARTON
-                if(parseInt(this.state.barangHarga[i][2].hrgBeliKARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgBeliKARTON,10) < 0){
-                    alert(`harga beli satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                if(parseInt(this.state.barangHarga[i][2].margin1KARTON,10) < 0){
-                    alert(`margin 1 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                    return;
-                }
-                // if(parseInt(this.state.barangHarga[i][2].margin2KARTON,10) < 0){
-                //     alert(`margin 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][2].margin3KARTON,10) < 0){
-                //     alert(`margin 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][2].margin4KARTON,10) < 0){
-                //     alert(`margin 4 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);
-                //     return;
-                // }
-                if(parseInt(this.state.barangHarga[i][2].hrgJual1KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual1KARTON,10) < 0){
-                    alert(`harga jual 1 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                // if(parseInt(this.state.barangHarga[i][2].hrgJual2KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual2KARTON,10) < 0){
-                //     alert(`harga jual 2 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][2].hrgJual3KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual3KARTON,10) < 0){
-                //     alert(`harga jual 3 satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                // if(parseInt(this.state.barangHarga[i][2].hrgJual4KARTON,10) === 0||parseInt(this.state.barangHarga[i][2].hrgJual4KARTON,10) < 0){
-                //     alert(`harga jual 4 ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                // }
-                if(parseInt(this.state.barangHarga[i][2].ppnKARTON,10) < 0){
-                    alert(`ppn satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-                if(parseInt(this.state.barangHarga[i][2].serviceKARTON,10) < 0){
-                    alert(`service satuan ${this.state.barangSku[2].qty} di lokasi ${this.state.barangHarga[i][2].nama_toko} tidak boleh kurang dari 0`);return;
-                }
-            }
-        }
-        return [{"barangSku":barangSku,"barangHarga":barangHarga}];
-    }
     handleSubmit(e){
         e.preventDefault();
-        let parseData = {};
-        let barangSku = [];
-        let barangHrg = [];
+        let parseData   = {};
+        let barangSku   = [];
+        let barangHarga = [];
+        let barcode     = [];
         parseData["kd_brg"]     = this.state.kd_brg;
         parseData["nm_brg"]     = this.state.nm_brg;
         parseData["kel_brg"]    = this.state.kel_brg;
@@ -2176,21 +1855,73 @@ class FormProduct extends Component{
         parseData["poin"]       = this.state.poin;
         parseData["online"]     = this.state.online;
         parseData["berat"]      = this.state.berat;
-        if(parseData['gambar']===''){parseData['gambar']='-';
-        }else{parseData['gambar']=this.state.gambar.base64;}
-        let arr=this.validasiLastForm();
-        if(arr!==undefined){
-            for(let x=0;x<arr.length;x++){
-                for(let y=0;y<arr[x].barangSku.length;y++){
-                    barangSku.push(arr[x].barangSku[y]);
+        parseData['gambar']     = parseData['gambar']===''?'-':this.state.gambar.base64;
+        for(let sku=0;sku<this.state.barangSku.length;sku++){
+            let stateSku=this.state.barangSku[sku];
+            let satuan='';
+            if(sku===0){satuan=`PCS`;}
+            if(sku===1){satuan=`PACK`;}
+            if(sku===2){satuan=`KARTON`;}
+            barangSku.push({
+                "barcode"       :stateSku.barcode,
+                "satuan"        :stateSku.qty,
+                "qty_konversi"  :stateSku.konversi,
+                "satuan_jual"   :stateSku.satuan_jual,
+            });
+            barcode.push(stateSku.barcode);
+            for(let brgHrg=0;brgHrg<this.state.barangHarga.length;brgHrg++){
+                let stateBrgHrg     = this.state.barangHarga[brgHrg][sku];
+                let hrgbeli         = `hrgBeli${satuan}`;
+                let ppn             = `ppn${satuan}`;
+                let service         = `service${satuan}`;
+                let hrgJual1        = `hrgJual1${satuan}`;
+                let hrgJual2        = `hrgJual2${satuan}`;
+                let hrgJual3        = `hrgJual3${satuan}`;
+                let hrgJual4        = `hrgJual4${satuan}`;
+                for(let setHrg=0;setHrg<this.state.set_harga;setHrg++){
+                    let valHrgJual  = `hrgJual${setHrg+1}${satuan}`;
+                    let valMargin   = `margin${setHrg+1}${satuan}`;
+                    let lblHrg      = `nm_harga${setHrg+1}`;
+                    if(parseInt(stateBrgHrg[hrgbeli],10)===0||parseInt(stateBrgHrg[hrgbeli],10)<0||stateBrgHrg[hrgbeli]===''){
+                        alert(`harga beli ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                        return false;
+                    }
+                    if(parseInt(stateBrgHrg[valMargin],10)<0){
+                        alert(`margin ${setHrg+1} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh kurang dari 0`);
+                        return false;
+                    }
+                    if(parseInt(stateBrgHrg[valHrgJual],10)===0||parseInt(stateBrgHrg[valHrgJual],10)<0||stateBrgHrg[valHrgJual]===''){
+                        alert(`harga jual ${this.state[lblHrg]} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                        return false;
+                    }
+                    if(parseInt(stateBrgHrg[service],10)<0||stateBrgHrg[service]===''){
+                        alert(`service ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                        return false;
+                    }
+                    if(parseInt(stateBrgHrg[ppn],10)<0||stateBrgHrg[hrgbeli]===''){
+                        alert(`ppn ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                        return false;
+                    }
                 }
-                for(let y=0;y<arr[x].barangHarga.length;y++){
-                    barangHrg.push(arr[x].barangHarga[y]);
-                }
+
+                barangHarga.push({
+                    "lokasi"    : stateBrgHrg.lokasi,
+                    "barcode"   : barcode[sku],
+                    "harga_beli": stateBrgHrg[hrgbeli],
+                    "ppn"       : stateBrgHrg[ppn],
+                    "service"   : stateBrgHrg[service],
+                    "harga"     : stateBrgHrg[hrgJual1],
+                    "harga2"    : stateBrgHrg[hrgJual2],
+                    "harga3"    : stateBrgHrg[hrgJual3],
+                    "harga4"    : stateBrgHrg[hrgJual4],
+                });
             }
         }
+
+
+
         parseData["barang_sku"]     = barangSku;
-        parseData["barang_harga"]   = barangHrg;
+        parseData["barang_harga"]   = barangHarga;
         if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{
@@ -2574,7 +2305,7 @@ class FormProduct extends Component{
                                                                                         <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`service ${lbl}`} className="form-control" name={stateService} value={this.state[stateService]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className="col-md-3 text-center">
+                                                                                <div className="col-md-3">
                                                                                     <div className="form-group">
                                                                                         <label style={{fontSize:"8px"}}>PPN {lbl}</label>
                                                                                         <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`ppn ${lbl}`} className="form-control" name={statePpn} value={this.state[statePpn]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
