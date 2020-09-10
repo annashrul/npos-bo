@@ -38,6 +38,7 @@ class TrxAdjustment extends Component{
             searchby:"",
             search:"",
             userid:0,
+            perpage:5,
             error:{
                 location:"",
                 catatan:""
@@ -52,6 +53,7 @@ class TrxAdjustment extends Component{
         this.HandleReset=this.HandleReset.bind(this);
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
+        this.handleLoadMore=this.handleLoadMore.bind(this);
 
     }
     getProps(param){
@@ -84,11 +86,17 @@ class TrxAdjustment extends Component{
 
         }
         if (localStorage.lk!==undefined&&localStorage.lk!=='') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty));
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,5));
             this.props.dispatch(FetchCodeAdjustment(localStorage.lk));
         }
     }
     componentWillReceiveProps = (nextProps) => {
+        let perpage=this.state.perpage;
+        if(this.props.barang.length === perpage){
+            this.setState({
+                perpage:perpage+5
+            });
+        }
        this.getProps(nextProps);
     }
     componentWillMount(){
@@ -100,8 +108,6 @@ class TrxAdjustment extends Component{
         });
     };
     HandleChangeLokasi(lk){
-        // let index = lk.nativeEvent.target.selectedIndex;
-        
         let err = Object.assign({}, this.state.error, {
             location: ""
         });
@@ -111,9 +117,8 @@ class TrxAdjustment extends Component{
             error: err
         })
         localStorage.setItem('lk', lk.value);
-        // let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
         this.props.dispatch(FetchCodeAdjustment(lk.value));
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty,5));
         destroy(table);
         this.getData()
     }
@@ -463,6 +468,20 @@ class TrxAdjustment extends Component{
             })
         });
     }
+    handleLoadMore(){
+        let perpage = parseInt(this.props.paginBrg.per_page,10);
+        let lengthBrg = parseInt(this.props.barang.length,10);
+        if(perpage===lengthBrg || perpage<lengthBrg){
+            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,this.state.perpage));
+        }
+        else{
+            Swal.fire({
+                title: 'Perhatian',
+                icon: 'warning',
+                text: 'barang sudah habis',
+            });
+        }
+    }
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
@@ -524,7 +543,7 @@ class TrxAdjustment extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
+                                    <Scrollbars style={{ width: "100%", height: "300px", maxHeight:'100%' }}>
                                         <div className="people-list">
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
@@ -558,8 +577,9 @@ class TrxAdjustment extends Component{
                                                                     })}>
                                                                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar" />
                                                                         <div className="about">
-                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.nm_brg}</small></div>
-                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.nm_brg}</small></div>
+                                                                            <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                            <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
+
                                                                         </div>
                                                                     </li>
                                                                 )
@@ -574,7 +594,9 @@ class TrxAdjustment extends Component{
                                             </div>
                                         </div>
                                     </Scrollbars>
-
+                                    <div className="form-group">
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'Tunggu Sebentar':'tampilkan lebih banyak'}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -735,7 +757,8 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    nota:state.adjustmentReducer.get_code
+    nota:state.adjustmentReducer.get_code,
+    paginBrg:state.productReducer.pagin_brg,
 });
 
 export default withRouter(connect(mapStateToPropsCreateItem)(TrxAdjustment));
