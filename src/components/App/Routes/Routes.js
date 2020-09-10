@@ -67,6 +67,7 @@ import Expedisi3ply from "../print/expedisi3ply";
 import BayarHutang3ply from "../print/bayar_hutang3ply";
 import Pembelian3ply from "../print/pembelian3ply";
 import Retur3ply from "../print/retur3ply";
+import Po3ply from "../print/po3ply";
 
 const Routes = (
     <div>
@@ -82,6 +83,7 @@ const Routes = (
             <Route path="/bayar_hutang3ply" exact strict component={BayarHutang3ply} />
             <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
             <Route path="/retur3ply" exact strict component={Retur3ply} />
+            <Route path="/po3ply" exact strict component={Po3ply} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}
