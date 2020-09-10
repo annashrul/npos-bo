@@ -43,6 +43,7 @@ class Area extends Component{
                                     pagin={this.handlePagin}
                                     search={this.handleSearch}
                                     token={this.state.token}
+                                    auth={this.props.auth}
                                 /> ) : <Preloader/>
                             }
                         </div>

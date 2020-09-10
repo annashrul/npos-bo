@@ -350,7 +350,7 @@ class SideMenu extends Component {
         if (param.auth.user) {
             let akses =param.auth.user.access;
             if(akses!==undefined&&akses!==null){
-                console.log("USER LEVEL",akses);
+                
                 // SETTING
                 let pengaturan_umum                 = akses[0]['value']!==null?akses[0]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
                 let pengguna                        = akses[1]['value']!==null?akses[1]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
