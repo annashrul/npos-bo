@@ -27,6 +27,8 @@ class SaleArchive extends Component{
             where_data:"",
             type_data:[],
             type:"",
+            status_data:[],
+            status:"",
             location_data:[],
             location:"",
             any_sale_report:"",
@@ -35,6 +37,7 @@ class SaleArchive extends Component{
         }
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeType = this.HandleChangeType.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -59,10 +62,27 @@ class SaleArchive extends Component{
             });
             return null;
         });
-
         this.setState({
             type_data: data_type,
         });
+
+        let status = [
+            {kode:"",value: "Semua Status"},
+            {kode:"0",value: "Belum Lunas"},
+            {kode:"1",value: "Lunas"}
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
+                value: i.kode,
+                label: i.value
+            });
+            return null;
+        });
+        this.setState({
+            status_data: data_status,
+        });
+
         if (nextProps.auth.user) {
             let lk = [{
                 value: "",
@@ -124,6 +144,12 @@ class SaleArchive extends Component{
         });
         localStorage.setItem('type_sale_report', type.value);
     }
+    HandleChangeStatus(status) {
+        this.setState({
+            status: status.value,
+        });
+        localStorage.setItem('status_sale_report', status.value);
+    }
     HandleChangeLokasi(lk) {
         this.setState({
             location: lk.value,
@@ -150,6 +176,7 @@ class SaleArchive extends Component{
         let dateFrom=localStorage.getItem("date_from_sale_report");
         let dateTo=localStorage.getItem("date_to_sale_report");
         let tipe=localStorage.getItem("type_sale_report");
+        let status=localStorage.getItem("status_sale_report");
         let lokasi=localStorage.getItem("location_sale_report");
         let any=localStorage.getItem("any_sale_report");
         if(dateFrom!==undefined&&dateFrom!==null){
@@ -159,6 +186,9 @@ class SaleArchive extends Component{
         }
         if(tipe!==undefined&&tipe!==null&&tipe!==''){
             if(where!==''){where+='&'}where+=`type=${tipe}`
+        }
+        if(status!==undefined&&status!==null&&status!==''){
+            if(where!==''){where+='&'}where+=`status=${status}`
         }
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
@@ -283,6 +313,23 @@ class SaleArchive extends Component{
                                         value={
                                             this.state.type_data.find(op => {
                                                 return op.value === this.state.type
+                                            })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-6 col-xs-6 col-md-2">
+                                <div className="form-group">
+                                    <label className="control-label font-12">
+                                        Status
+                                    </label>
+                                    <Select
+                                        options={this.state.status_data}
+                                        placeholder="Pilih Status Transaksi"
+                                        onChange={this.HandleChangeStatus}
+                                        value={
+                                            this.state.status_data.find(op => {
+                                                return op.value === this.state.status
                                             })
                                         }
                                     />
