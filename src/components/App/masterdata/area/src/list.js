@@ -48,7 +48,7 @@ class ListArea extends Component{
         if(i===null){
             this.setState({detail:undefined});
         }else{
-            console.log("ccccccccccccc",this.props.data)
+            
             this.setState({
                 detail:{
                     "lokasi":this.props.data.data[i].lokasi,
@@ -79,7 +79,7 @@ class ListArea extends Component{
     render(){
         const {total,per_page,current_page,data} = this.props.data;
         let getImg = Default;
-        console.log("ooooooooooo",this.state.lokasi_data);
+        
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -107,7 +107,7 @@ class ListArea extends Component{
                             typeof data === 'object' ?
                                 data.map((v,i)=>{
                                     let getLok = this.state.lokasi_data.filter(item => item.kode === v.lokasi);
-                                    console.log("kkkkkkkkkkk",getLok);
+                                    
                                     return(
                                         <div className="col-sm-6 col-xl-3" key={i}>
                                             <div className="single-gallery--item mb-50">

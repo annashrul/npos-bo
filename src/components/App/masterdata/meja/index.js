@@ -57,7 +57,7 @@ class Meja extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("kkkkkkkkkkkkkkk",state)
+    
     return {
         area:state.areaReducer.dataArea,
         meja:state.mejaReducer.data,

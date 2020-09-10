@@ -57,7 +57,7 @@ class FormArea extends Component{
     componentWillReceiveProps(nextProps) {
         if (nextProps.detail !== [] && nextProps.detail !== undefined) {
             let data = this.state.location_data.filter(item => item.value === nextProps.detail.lokasi);
-            console.log("vvvvvvvvvvvvvvv",data);
+            
             this.setState({
                 nama: nextProps.detail.nama,
                 location: data,
@@ -70,7 +70,7 @@ class FormArea extends Component{
                 id:''
             })
         }
-        console.log("aaaaaaaaaaaaaaa",nextProps);
+        
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
@@ -126,7 +126,7 @@ class FormArea extends Component{
         })
     };
     render(){
-        console.log("mmmmmmmmmm",this.state.location);
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formArea"} size="md">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Area":"Update Area"}</ModalHeader>

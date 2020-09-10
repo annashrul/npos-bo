@@ -71,7 +71,7 @@ class ListMeja extends Component{
 
     }
     render(){
-        console.log("dddddddddd",this.props);
+        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,per_page,current_page,data} = this.props.data;
         return (

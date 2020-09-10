@@ -3,7 +3,6 @@ import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "helper";
 import {createMeja, updateMeja} from "redux/actions/masterdata/meja/meja.action";
 import Select from 'react-select';
 
@@ -62,10 +61,10 @@ class FormMeja extends Component{
         localStorage.setItem('area_meja', ar);
     }
     componentWillReceiveProps(nextProps) {
-        console.log("ffffffffffff",nextProps);
+        
         if (nextProps.detail !== [] && nextProps.detail !== undefined) {
             let data = nextProps.area.filter(item => item.id_area === nextProps.detail.area);
-            console.log("vvvvvvvvvvvvvvv",data[0]);
+            
             this.setState({
                 nama: nextProps.detail.nama,
                 kapasitas: nextProps.detail.kapasitas,
@@ -86,7 +85,7 @@ class FormMeja extends Component{
                 id:''
             })
         }
-        console.log("aaaaaaaaaaaaaaa",nextProps);
+        
         if (nextProps.auth.user) {
             let ar = [];
             let are = nextProps.area;
@@ -107,8 +106,6 @@ class FormMeja extends Component{
     }
     handleSubmit(e){
         e.preventDefault();
-        const form = e.target;
-        // let data = new FormData(form);
         let parseData = {};
         let parseDataU = {};
         ;
@@ -162,8 +159,8 @@ class FormMeja extends Component{
         })
     };
     render(){
-        console.log("mmmmmmmmmm",this.state.area);
-        console.log("jjjjjjjjjj",this.props);
+        
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formMeja"} size="md">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Meja":"Update Meja"}</ModalHeader>
