@@ -5,22 +5,29 @@ import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
 import {createSales, updateSales} from "redux/actions/masterdata/sales/sales.action";
+import Select from 'react-select'
 class FormSales extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.state = {
             nama:'',status:'',
-            error:{nama:'',status:''}
+            location_data:[],
+            location:"",
+            error:{nama:'',status:'',
+                location:"",}
         };
     }
     getProps(param){
         if (param.detail !== [] && param.detail !== undefined) {
+            let data = this.state.location_data.filter(item => item.value === param.detail.lokasi);
             this.setState({
                 nama: param.detail.nama,
                 status: param.detail.status,
                 kode: param.detail.kode,
+                location: data,
             })
         }else{
             this.setState({
@@ -30,11 +37,39 @@ class FormSales extends Component{
     }
     componentWillReceiveProps(nextProps) {
         this.getProps(nextProps)
+        
+        if (nextProps.auth.user) {
+            let lk = [];
+            let loc = nextProps.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                    return null;
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: nextProps.auth.user.id
+                })
+            }
+        }
     }
     componentWillMount(){
         this.getProps(this.props);
     }
 
+    HandleChangeLokasi(lk){
+        let err = Object.assign({}, this.state.error, {
+            location: ""
+        });
+        this.setState({
+            location: lk,
+            error: err
+        })
+        localStorage.setItem('location_sales', lk);
+    }
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
         let err = Object.assign({}, this.state.error, {[event.target.name]: ""});
@@ -54,11 +89,16 @@ class FormSales extends Component{
         let parseData = stringifyFormData(data);
         parseData['nama'] = this.state.nama;
         parseData['status'] = this.state.status;
+        parseData['lokasi'] = this.state.location.value;
         parseData['kode'] = this.state.kode;
         let err = this.state.error;
 
         if(parseData['nama']===''||parseData['nama']===undefined){
             err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else if(this.state.location===''||this.state.location===undefined){
+            err = Object.assign({}, err, {status:"lokasi tidak boleh kosong"});
             this.setState({error: err});
         }
         else if(parseData['status']===''||parseData['status']===undefined){
@@ -94,6 +134,19 @@ class FormSales extends Component{
                             </div>
                         </div>
                         <div className="form-group">
+                            <label>Lokasi</label>
+                            <Select
+                                options={this.state.location_data}
+                                placeholder="Pilih Lokasi"
+                                onChange={this.HandleChangeLokasi}
+                                value={this.state.location}
+                            />
+                            <div className="invalid-feedback"
+                                 style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.location}
+                            </div>
+                        </div>
+                        <div className="form-group">
                             <label>Status</label>
                             <select name="status" className="form-control" id="type" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
                                 <option value="">==== Pilih ====</option>
@@ -120,6 +173,7 @@ class FormSales extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        auth:state.auth,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
