@@ -348,107 +348,110 @@ class SideMenu extends Component {
     }
     getProps(param){
         if (param.auth.user) {
-            let loc =param.auth.user.access;
-            if(loc!==undefined&&loc!==null){
+            let akses =param.auth.user.access;
+            if(akses!==undefined&&akses!==null){
+                console.log("USER LEVEL",akses);
                 // SETTING
-                let pengaturan_umum=param.auth.user.access[0]['label']!==null?param.auth.user.access[0]['label']:"0";
-                let pengguna=param.auth.user.access[1]['label']!==null?param.auth.user.access[1]['label']:"0";
-                let lokasi=param.auth.user.access[2]['label']!==null?param.auth.user.access[2]['label']:"0";
+                let pengaturan_umum                 = akses[0]['value']!==null?akses[0]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
+                let pengguna                        = akses[1]['value']!==null?akses[1]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
+                let lokasi                          = akses[2]['value']!==null?akses[2]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
                 //MASTERDATA
-                let barang=param.auth.user.access[10]['label']!==null?param.auth.user.access[10]['label']:"0";
-                let departemen=param.auth.user.access[11]['label']!==null?param.auth.user.access[11]['label']:"0";
-                let supplier=param.auth.user.access[12]['label']!==null?param.auth.user.access[12]['label']:"0";
-                let customer=param.auth.user.access[13]['label']!==null?param.auth.user.access[13]['label']:"0";
-                let kas=param.auth.user.access[14]['label']!==null?param.auth.user.access[14]['label']:"0";
-                let sales=param.auth.user.access[15]['label']!==null?param.auth.user.access[15]['label']:"0";
-                let bank=param.auth.user.access[16]['label']!==null?param.auth.user.access[16]['label']:"0";
-                let promo=param.auth.user.access[17]['label']!==null?param.auth.user.access[17]['label']:"0";
+                let barang                          = akses[10]['value']!==null?akses[10]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let departemen                      = akses[11]['value']!==null?akses[11]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let supplier                        = akses[12]['value']!==null?akses[12]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let customer                        = akses[13]['value']!==null?akses[13]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let kas                             = akses[14]['value']!==null?akses[14]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let sales                           = akses[15]['value']!==null?akses[15]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let bank                            = akses[16]['value']!==null?akses[16]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let promo                           = akses[17]['value']!==null?akses[17]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //PRODUKSI
-                let produksi=param.auth.user.access[20]['label']!==null?param.auth.user.access[20]['label']:"0";
+                let produksi                        = akses[20]['value']!==null?akses[20]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //INVENTORY
-                let delivery_note=param.auth.user.access[30]['label']!==null?param.auth.user.access[30]['label']:"0";
-                let alokasi=param.auth.user.access[31]['label']!==null?param.auth.user.access[31]['label']:"0";
-                let approval_mutasi=param.auth.user.access[32]['label']!==null?param.auth.user.access[32]['label']:"0";
-                let adjusment=param.auth.user.access[33]['label']!==null?param.auth.user.access[33]['label']:"0";
-                let opname=param.auth.user.access[34]['label']!==null?param.auth.user.access[34]['label']:"0";
-                let approval_opname=param.auth.user.access[35]['label']!==null?param.auth.user.access[35]['label']:"0";
-                let packing=param.auth.user.access[36]['label']!==null?param.auth.user.access[36]['label']:"0";
-                let expedisi=param.auth.user.access[36]['label']!==null?param.auth.user.access[36]['label']:"0";
-                let approval_mutasi_jual_beli=param.auth.user.access[37]['label']!==null?param.auth.user.access[37]['label']:"0";
-                let bayar_mutasi_jual_beli=param.auth.user.access[38]['label']!==null?param.auth.user.access[38]['label']:"0";
+                let delivery_note                   = akses[30]['value']!==null?akses[30]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let alokasi                         = akses[31]['value']!==null?akses[31]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let approval_mutasi                 = akses[32]['value']!==null?akses[32]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let adjusment                       = akses[33]['value']!==null?akses[33]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let opname                          = akses[34]['value']!==null?akses[34]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let approval_opname                 = akses[35]['value']!==null?akses[35]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let packing                         = akses[36]['value']!==null?akses[36]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let expedisi                        = akses[37]['value']!==null?akses[37]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let approval_mutasi_jual_beli       = akses[38]['value']!==null?akses[38]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let bayar_mutasi_jual_beli          = akses[39]['value']!==null?akses[39]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //PEMBELIAN
-                let purchase_order=param.auth.user.access[40]['label']!==null?param.auth.user.access[40]['label']:"0";
-                let receive_pembelian=param.auth.user.access[41]['label']!==null?param.auth.user.access[41]['label']:"0";
-                let retur_tanpa_nota=param.auth.user.access[42]['label']!==null?param.auth.user.access[42]['label']:"0";
+                let purchase_order                  = akses[40]['value']!==null?akses[40]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let receive_pembelian               = akses[41]['value']!==null?akses[41]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let retur_tanpa_nota                = akses[42]['value']!==null?akses[42]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //TRANSAKSI
-                let penjualan_barang=param.auth.user.access[50]['label']!==null?param.auth.user.access[50]['label']:"0";
-                let cash_trx=param.auth.user.access[50]['label']!==null?param.auth.user.access[50]['label']:"0";
+                let penjualan_barang                = akses[50]['value']!==null?akses[50]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let cash_trx                        = akses[51]['value']!==null?akses[50]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //PEMBAYARAN
-                let hutang=param.auth.user.access[60]['label']!==null?param.auth.user.access[60]['label']:"0";
-                let piutang=param.auth.user.access[61]['label']!==null?param.auth.user.access[61]['label']:"0";
+                let hutang                          = akses[60]['value']!==null?akses[60]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let piutang                         = akses[61]['value']!==null?akses[61]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //REPORT
-                let r_closing=param.auth.user.access[70]['label']!==null?param.auth.user.access[70]['label']:"0";
-                let r_kas=param.auth.user.access[71]['label']!==null?param.auth.user.access[71]['label']:"0";
-                let r_laba_rugi=param.auth.user.access[72]['label']!==null?param.auth.user.access[72]['label']:"0";
-                let r_produksi=param.auth.user.access[73]['label']!==null?param.auth.user.access[73]['label']:"0";
-                let r_arsip_penjualan=param.auth.user.access[74]['label']!==null?param.auth.user.access[74]['label']:"0";
-                let r_arsip_retur_penjualan=param.auth.user.access[75]['label']!==null?param.auth.user.access[75]['label']:"0";
-                let r_penjualan_by_customer=param.auth.user.access[76]['label']!==null?param.auth.user.access[76]['label']:"0";
-                let r_stock=param.auth.user.access[77]['label']!==null?param.auth.user.access[77]['label']:"0";
-                let r_adjusment=param.auth.user.access[78]['label']!==null?param.auth.user.access[78]['label']:"0";
-                let r_alokasi=param.auth.user.access[79]['label']!==null?param.auth.user.access[79]['label']:"0";
-                let r_delivery_note=param.auth.user.access[80]['label']!==null?param.auth.user.access[80]['label']:"0";
-                let r_opname=param.auth.user.access[81]['label']!==null?param.auth.user.access[81]['label']:"0";
-                let r_mutasi=param.auth.user.access[82]['label']!==null?param.auth.user.access[82]['label']:"0";
-                let r_alokasi_trx=param.auth.user.access[83]['label']!==null?param.auth.user.access[83]['label']:"0";
-                let r_expedisi=param.auth.user.access[84]['label']!==null?param.auth.user.access[84]['label']:"0";
-                let r_purchase_order=param.auth.user.access[85]['label']!==null?param.auth.user.access[85]['label']:"0";
-                let r_receive=param.auth.user.access[86]['label']!==null?param.auth.user.access[86]['label']:"0";
-                let r_arsip_pembelian_by_supplier=param.auth.user.access[87]['label']!==null?param.auth.user.access[87]['label']:"0";
-                let r_hutang=param.auth.user.access[88]['label']!==null?param.auth.user.access[88]['label']:"0";
-                let r_piutang=param.auth.user.access[89]['label']!==null?param.auth.user.access[89]['label']:"0";
+                let r_closing                       = akses[70]['value']!==null?akses[70]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_kas                           = akses[71]['value']!==null?akses[71]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_laba_rugi                     = akses[72]['value']!==null?akses[72]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_produksi                      = akses[73]['value']!==null?akses[73]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_arsip_penjualan               = akses[74]['value']!==null?akses[74]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_arsip_retur_penjualan         = akses[75]['value']!==null?akses[75]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_penjualan_by_customer         = akses[76]['value']!==null?akses[76]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_stock                         = akses[77]['value']!==null?akses[77]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_adjusment                     = akses[78]['value']!==null?akses[78]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_alokasi                       = akses[79]['value']!==null?akses[79]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_delivery_note                 = akses[80]['value']!==null?akses[80]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_opname                        = akses[81]['value']!==null?akses[81]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_mutasi                        = akses[82]['value']!==null?akses[82]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_alokasi_trx                   = akses[83]['value']!==null?akses[83]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_expedisi                      = akses[84]['value']!==null?akses[84]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_purchase_order                = akses[85]['value']!==null?akses[85]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_receive                       = akses[86]['value']!==null?akses[86]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_arsip_pembelian_by_supplier   = akses[87]['value']!==null?akses[87]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_hutang                        = akses[88]['value']!==null?akses[88]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_piutang                       = akses[89]['value']!==null?akses[89]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //CETAK BARCODE
-                let cetak_barcode=param.auth.user.access[90]['label']!==null?param.auth.user.access[90]['label']:"0";
-                //pengecekan apabila fitur bernilai 0
+                let cetak_barcode                   = akses[90]['value']!==null?akses[90]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                // start pengecekan apabila fitur bernilai 0
+                //setting
                 if(pengaturan_umum!=='0'&&pengguna!=='0'&&lokasi!=='0'){
                     this.setState({modul_setting:true});
                 }
+                //masterdata
                 if(barang!=='0'&&departemen!=='0'&&supplier!=='0'&&customer!=='0'&&kas!=='0'&&sales!=='0'&&bank!=='0'&&promo!=='0'){
                     this.setState({modul_masterdata:true});
                 }
+                //produksi
                 if(produksi!=='0'){
                     this.setState({modul_produksi:true});
                 }
-                if(delivery_note!=='0'&&alokasi!=='0'&&approval_mutasi!=='0'&&adjusment!=='0'&&opname!=='0'&&approval_opname!=='0'&&packing!=='0'&&approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
+                //inventory
+                if(delivery_note!=='0'&&alokasi!=='0'&&approval_mutasi!=='0'&&adjusment!=='0'&&opname!=='0'&&approval_opname!=='0'&&packing!=='0'&&expedisi!=='0'&&approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
                     this.setState({modul_inventory:true});
                 }
-                if(approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
+                if(approval_mutasi_jual_beli!=='0'||bayar_mutasi_jual_beli!=='0'){
                     this.setState({modul_inventory:true,modul_inventory_mutasi:true});
                 }
-                if(opname!=='0'&&approval_opname!=='0'){
+                if(opname!=='0'||approval_opname!=='0'){
                     this.setState({modul_inventory:true,modul_inventory_opname:true});
                 }
                 if(packing!=='0'||expedisi!=='0'){
                     this.setState({modul_inventory:true,modul_inventory_pengiriman:true});
                 }
-
-
-                if(purchase_order!=='0'&&receive_pembelian!=='0'&&retur_tanpa_nota!=='0'){
+                if(purchase_order!=='0'||receive_pembelian!=='0'||retur_tanpa_nota!=='0'){
                     this.setState({modul_pembelian:true});
                 }
-                if(penjualan_barang!=='0' &&cash_trx!=='0'){
+                if(penjualan_barang!=='0'||cash_trx!=='0'){
                     this.setState({modul_penjualan:true});
                 }
-                if(hutang!=='0'&&piutang!=='0'){
+                if(hutang!=='0'||piutang!=='0'){
                     this.setState({modul_pembayaran:true});
                 }
                 if(
-                    r_closing!=='0'&&r_kas!=='0'&&r_laba_rugi!=='0'&&
-                    r_produksi!=='0'&&
-                    r_arsip_penjualan!=='0'&&r_arsip_retur_penjualan!=='0'&&r_penjualan_by_customer!=='0'&&
-                    r_stock!=='0'&&r_adjusment!=='0'&& r_alokasi!=='0'&& r_delivery_note!=='0'&& r_opname!=='0'&& r_mutasi!=='0'&& r_alokasi_trx!=='0'&& r_expedisi!=='0'&&
-                    r_purchase_order!=='0'&& r_receive!=='0'&& r_arsip_pembelian_by_supplier!=='0'&&
-                    r_hutang!=='0'&& r_piutang!=='0'
+                    r_closing!=='0'||r_kas!=='0'||r_laba_rugi!=='0'||
+                    r_produksi!=='0'||
+                    r_arsip_penjualan!=='0'||r_arsip_retur_penjualan!=='0'||r_penjualan_by_customer!=='0'||
+                    r_stock!=='0'||r_adjusment!=='0'|| r_alokasi!=='0'|| r_delivery_note!=='0'|| r_opname!=='0'|| r_mutasi!=='0'|| r_alokasi_trx!=='0'|| r_expedisi!=='0'||
+                    r_purchase_order!=='0'|| r_receive!=='0'|| r_arsip_pembelian_by_supplier!=='0'||
+                    r_hutang!=='0'|| r_piutang!=='0'
                 ){
                     this.setState({modul_report:true});
                 }
@@ -464,71 +467,39 @@ class SideMenu extends Component {
                 if(r_hutang!=='0'||r_piutang!=='0'){
                     this.setState({modul_report:true,modul_report_pembayaran:true});
                 }
-
                 if(cetak_barcode!=='0'){
                     this.setState({modul_cetak_barcode:true});
                 }
-
+                // end pengecekan apabila fitur bernilai 0
+                // start set ke state nilai yang sudah dicek
                 this.setState({
                     // SETTING
-                    pengaturan_umum:pengaturan_umum,
-                    pengguna:pengguna,
-                    lokasi:lokasi,
+                    pengaturan_umum:pengaturan_umum, pengguna:pengguna, lokasi:lokasi,
                     // //MASTERDATA
-                    barang:barang,
-                    departemen:departemen,
-                    supplier:supplier,
-                    customer:customer,
-                    kas:kas,
-                    sales:sales,
-                    bank:bank,
-                    promo:promo,
+                    barang:barang, departemen:departemen, supplier:supplier, customer:customer, kas:kas,
+                    sales:sales, bank:bank, promo:promo,
                     // //PRODUKSI
                     produksi:produksi,
                     //INVENTORY
-                    delivery_note:delivery_note,
-                    alokasi:alokasi,
-                    approval_mutasi:approval_mutasi,
-                    adjusment:adjusment,
-                    opname:opname,
-                    approval_opname:approval_opname,
-                    packing:packing,
-                    approval_mutasi_jual_beli:approval_mutasi_jual_beli,
-                    bayar_mutasi_jual_beli:bayar_mutasi_jual_beli,
+                    delivery_note:delivery_note, alokasi:alokasi, approval_mutasi:approval_mutasi, adjusment:adjusment, opname:opname, approval_opname:approval_opname,
+                    packing:packing, approval_mutasi_jual_beli:approval_mutasi_jual_beli, bayar_mutasi_jual_beli:bayar_mutasi_jual_beli,
                     //PEMBELIAN
-                    purchase_order:purchase_order,
-                    receive_pembelian:receive_pembelian,
+                    purchase_order:purchase_order, receive_pembelian:receive_pembelian,
                     retur_tanpa_nota:retur_tanpa_nota,
                     //TRANSAKSI
-                    penjualan_barang:penjualan_barang,
-                    cash_trx:cash_trx,
+                    penjualan_barang:penjualan_barang, cash_trx:cash_trx,
                     //PEMBAYARAN
-                    hutang:hutang,
-                    piutang:piutang,
+                    hutang:hutang, piutang:piutang,
                     //REPORT
-                    r_closing:r_closing,
-                    r_kas:r_kas,
-                    r_laba_rugi:r_laba_rugi,
-                    r_produksi:r_produksi,
-                    r_arsip_penjualan:r_arsip_penjualan,
-                    r_arsip_retur_penjualan:r_arsip_retur_penjualan,
-                    r_penjualan_by_customer:r_penjualan_by_customer,
-                    r_stock:r_stock,
-                    r_adjusment:r_adjusment,
-                    r_alokasi:r_alokasi,
-                    r_delivery_note:r_delivery_note,
-                    r_opname:r_opname,
-                    r_mutasi:r_mutasi,
-                    r_alokasi_trx:r_alokasi_trx,
-                    r_expedisi:r_expedisi,
-                    r_purchase_order:r_purchase_order,
-                    r_receive:r_receive,
-                    r_arsip_pembelian_by_supplier:r_arsip_pembelian_by_supplier,
-                    r_hutang:r_hutang,
-                    r_piutang:r_piutang,
+                    r_closing:r_closing, r_kas:r_kas, r_laba_rugi:r_laba_rugi, r_produksi:r_produksi, r_arsip_penjualan:r_arsip_penjualan,
+                    r_arsip_retur_penjualan:r_arsip_retur_penjualan, r_penjualan_by_customer:r_penjualan_by_customer, r_stock:r_stock,
+                    r_adjusment:r_adjusment, r_alokasi:r_alokasi, r_delivery_note:r_delivery_note, r_opname:r_opname, r_mutasi:r_mutasi,
+                    r_alokasi_trx:r_alokasi_trx, r_expedisi:r_expedisi, r_purchase_order:r_purchase_order, r_receive:r_receive,
+                    r_arsip_pembelian_by_supplier:r_arsip_pembelian_by_supplier, r_hutang:r_hutang, r_piutang:r_piutang,
                     //CETAK BARCODE
                     cetak_barcode:cetak_barcode,
                 })
+                // end set ke state nilai yang sudah dicek
             }
         }
     }
@@ -738,7 +709,7 @@ class SideMenu extends Component {
             modul_masterdata,
             // modul_produksi,
             modul_inventory,modul_inventory_mutasi,modul_inventory_opname,modul_inventory_pengiriman,
-            // modul_pembelian,
+            modul_pembelian,
             modul_penjualan,
             modul_pembayaran,
             modul_report,modul_report_penjualan,modul_report_inventory,modul_report_pembelian,modul_report_pembayaran,
@@ -777,13 +748,13 @@ class SideMenu extends Component {
                             <li className={path==='/bank'?"active":''} style={this.state.bank==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bank" style={{width:'fit-content'}}> <i className="fa fa-bank" />Bank </Link></li>
                             <li className={path==='/promo'?"active":''} style={this.state.promo==="0"?{"display":"none"}:{"display":"block"}}><Link to="/promo" style={{width:'fit-content'}}> <i className="fa fa-ticket" />Promo </Link></li>
 
-                            <li className={"treeview" + (this.state.isArea===true || path==='/area'|| path==='/meja'?" active menu-open" : "")} style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
+                            {/* <li className={"treeview" + (this.state.isArea===true || path==='/area'|| path==='/meja'?" active menu-open" : "")} style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
                                 <a href="!#" onClick={(e) => this.changeMenu(e,'area')}><i className="fa fa-map" /> <span>Data Area</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isArea===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isArea===true ?"block" : "none"}}>
                                     <li className={path==='/area'?"active":''} style={this.state.area==="0"?{"display":"none"}:{"display":"block"}}><Link to="/area" style={{width:'fit-content'}}> <i className="zmdi zmdi-balance" />Area </Link></li>
                                     <li className={path==='/meja'?"active":''} style={this.state.meja==="0"?{"display":"none"}:{"display":"block"}}><Link to="/meja" style={{width:'fit-content'}}> <i className="zmdi zmdi-panorama-wide-angle" />Meja </Link></li>
                                 </ul>
-                            </li>
+                            </li> */}
                         </ul>
                     </li>
                     {/* MASTERDATA MODUL END */}
@@ -838,7 +809,7 @@ class SideMenu extends Component {
 
                     {/* PEMBELIAN MODUL START */}
 
-                    <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}>
+                    <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}  style={modul_pembelian===true?{display:'block'}:{display:'none'}}>
                         <a href="!#" onClick={(e) => this.changeMenu(e,'receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReceive===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReceive===true
                         ?"block" : "none"}}>
@@ -935,12 +906,12 @@ class SideMenu extends Component {
                                 path==='/report/purchase_by_supplier'
                                 ?" active menu-open" : "")} style={modul_report_pembelian===true?{display:'block'}:{display:'none'}}>
 
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"></i></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true
                         ?"block" : "none"}}>
                                     <li className={path==='/report/po'?"active":''} style={this.state.r_purchase_order==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/po" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
                                     <li className={path==='/report/receive'?"active":''} style={this.state.r_receive==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/receive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Receive</Link></li>
-                                    <li className={path==='/report/purchase_by_supplier'?"active":''} style={this.state.r_arsip_pembelian_by_supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/purchase_by_supplier" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Arsip Pembelian by Supplier</Link></li>
+                                    <li className={path==='/report/purchase_by_supplier'?"active":''} style={this.state.r_arsip_pembelian_by_supplier==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/purchase_by_supplier" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Pembelian by Supplier</Link></li>
                                 </ul>
                             </li>
                             {/* SUBLAPORAN PEMBELIAN MODUL END */}
@@ -951,7 +922,7 @@ class SideMenu extends Component {
                                 path==='/report/piutang'
                                 ?" active menu-open" : "")} style={modul_report_pembayaran===true?{display:'block'}:{display:'none'}}>
 
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_pembayaran')}><i className="fa fa-money"/>Pembayaran <i className="fa fa-angle-right"></i></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_pembayaran')}><i className="fa fa-money"/>Pembayaran <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembayaran===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembayaran===true
                         ?"block" : "none"}}>
                                     <li className={path==='/report/hutang'?"active":''} style={this.state.r_hutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/hutang" style={{width:'fit-content'}}> <i className="fa fa-dollar" />Hutang</Link></li>
@@ -990,7 +961,7 @@ class SideMenu extends Component {
                     {/* LOGOUT MODUL END */}
                 </ul>
             </nav>
-            )
+        )
     }
 }
 SideMenu.propTypes = {

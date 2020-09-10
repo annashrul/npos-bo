@@ -192,9 +192,9 @@ class Header extends Component {
                                                     <span>{this.props.auth.user.lvl}</span>
 
                                                 </td>
-                                                <td className="fs1">
+                                                <td className="fs1"  style={{paddingLeft:'10px'}}>
                                                     <p>
-                                                    <i class="fa fa-angle-down lnr" style={{marginleft:'20px'}}></i>
+                                                    <i class="fa fa-angle-down lnr"></i>
                                                     </p>
 
                                                 </td>
