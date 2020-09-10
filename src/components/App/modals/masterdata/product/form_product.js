@@ -1122,34 +1122,35 @@ class FormProduct extends Component{
         this.setState({ barangHarga });
     }
     handleAllCheckedSku(event,i,lbl){
+        let checked=event.target.checked;
         if(lbl === 'PCS'){
-            event.target.checked===true?localStorage.setItem("isReadonly","true"):localStorage.setItem("isReadonly","false");
-            event.target.checked===true?localStorage.setItem("samarata","true"):localStorage.setItem("samarata","false");
+            checked===true?localStorage.setItem("isReadonly","true"):localStorage.setItem("isReadonly","false");
+            checked===true?localStorage.setItem("samarata","true"):localStorage.setItem("samarata","false");
             let data=this.state.barangHarga;
             data.map((v,i)=>{
-                Object.assign(v[0],{"isCheckedPCS":event.target.checked})
+                Object.assign(v[0],{"isCheckedPCS":checked});
                 return null;
             });
             this.setState({barangHarga: data});
         }
         if(lbl === 'PACK'){
-            event.target.checked===true?localStorage.setItem("isReadonlySamaPack","true"):localStorage.setItem("isReadonlySamaPack","false");
-            event.target.checked===true?localStorage.setItem("isReadonlyPack","true"):localStorage.setItem("isReadonlyPack","false");
-            event.target.checked===true?localStorage.setItem("samarata_pack","true"):localStorage.setItem("samarata_pack","false");
+            checked===true?localStorage.setItem("isReadonlySamaPack","true"):localStorage.setItem("isReadonlySamaPack","false");
+            checked===true?localStorage.setItem("isReadonlyPack","true"):localStorage.setItem("isReadonlyPack","false");
+            checked===true?localStorage.setItem("samarata_pack","true"):localStorage.setItem("samarata_pack","false");
             let data=this.state.barangHarga;
             data.map((v,i)=>{
-                Object.assign(v[1],{"isCheckedPACK":event.target.checked})
+                Object.assign(v[1],{"isCheckedPACK":checked});
                 return null;
             });
             this.setState({barangHarga: data});
         }
         if(lbl === 'KARTON'){
-            event.target.checked===true?localStorage.setItem("isReadonlySamaKarton","true"):localStorage.setItem("isReadonlySamaKarton","false");
-            event.target.checked===true?localStorage.setItem("isReadonlyKarton","true"):localStorage.setItem("isReadonlyKarton","false");
-            event.target.checked===true?localStorage.setItem("samarata_karton","true"):localStorage.setItem("samarata_karton","false");
+            checked===true?localStorage.setItem("isReadonlySamaKarton","true"):localStorage.setItem("isReadonlySamaKarton","false");
+            checked===true?localStorage.setItem("isReadonlyKarton","true"):localStorage.setItem("isReadonlyKarton","false");
+            checked===true?localStorage.setItem("samarata_karton","true"):localStorage.setItem("samarata_karton","false");
             let data=this.state.barangHarga;
             data.map((v,i)=>{
-                Object.assign(v[2],{"isCheckedKARTON":event.target.checked})
+                Object.assign(v[2],{"isCheckedKARTON":checked});
                 return null;
             });
             this.setState({barangHarga: data});
@@ -1186,16 +1187,16 @@ class FormProduct extends Component{
             }));
         }
         if(i!==null){
-            let barangSku = [...this.state.barangSku];
-            barangSku[i] = {...barangSku[i], [event.target.name]: event.target.value};
+            let barangSku   = [...this.state.barangSku];
+            barangSku[i]    = {...barangSku[i], [event.target.name]: event.target.value};
             this.setState({ barangSku });
         }
         if(event.target.name === 'jenis'){
             if(event.target.value === '0'){
                 let brgSku = [];
                 for(let i=0;i<3;i++){
-                    let brcd=i===0?`${this.state.kd_brg}01`:(i===1?`${this.state.kd_brg}02`:`${this.state.kd_brg}03`);
-                    let satuan=(i===0)?"Pcs":(i===1?"Pack":"Karton");
+                    let brcd    = i===0?`${this.state.kd_brg}01`:(i===1?`${this.state.kd_brg}02`:`${this.state.kd_brg}03`);
+                    let satuan  = (i===0)?"Pcs":(i===1?"Pack":"Karton");
                     brgSku.push({"barcode":brcd,"qty":satuan,"konversi":"0","satuan_jual":"1"})
                 }
                 this.setState({barangSku: brgSku});
@@ -1211,16 +1212,7 @@ class FormProduct extends Component{
             else{
                 let brgSku = [];
                 for(let i=0;i<1;i++){
-                    let satuan='';
-                    if(event.target.value==='2'){
-                        satuan='';
-                    }
-                    else if(event.target.value==='1'){
-                        satuan='Pcs';
-                    }
-                    else if(event.target.value==='3'){
-                        satuan='Pack';
-                    }
+                    let satuan=val==='1'?'':(val==='1'?'Pcs':'Pack');
                     brgSku.push({"barcode":`${this.state.kd_brg}01`,"qty":satuan,"konversi":"0","satuan_jual":"1"})
                 }
                 this.setState({barangSku: brgSku});
@@ -1241,19 +1233,16 @@ class FormProduct extends Component{
                 margin1:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
             });
             margin1_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
-
         }
         if(name === "hrgjual2"){
             this.setState({
                 margin2:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
-
             });
             margin2_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
         if(name === "hrgjual3"){
             this.setState({
                 margin3:((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100,
-
             });
             margin3_pcs = ((parseInt(val,10)-parseInt(this.state.hrg_beli,10))/parseInt(this.state.hrg_beli,10))*100;
         }
@@ -1286,92 +1275,70 @@ class FormProduct extends Component{
         if(localStorage.getItem("samarata") === "true"){
             for(let i=0;i<this.state.barangHarga.length;i++){
                 if(name === 'hrg_beli'){
-                    // this.state.barangHarga[i][0].hrgBeliPCS = val;
                     let barangHarga = this.state.barangHarga;
                     barangHarga[i][0].hrgBeliPCS = val;
                     this.setState({barangHarga: barangHarga});
-                    if(this.state.barangSku.length === 3){
-                        // this.state.barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1],10);
-                        // this.state.barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
-                    let barangHarga = this.state.barangHarga;
-                    barangHarga[i][1].hrgBeliPACK = parseInt(val*qty_konversi[1],10);
-                    barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
-                    this.setState({barangHarga: barangHarga});
+                    if(1 === 2){
+                        let barangHarga = this.state.barangHarga;
+                        barangHarga[i][1].hrgBeliPACK   = parseInt(val*qty_konversi[1],10);
+                        barangHarga[i][2].hrgBeliKARTON = parseInt(val*qty_konversi[2],10);
+                        this.setState({barangHarga: barangHarga});
                     }
-
                 }
                 if(name === 'margin1'){
-                    // this.state.barangHarga[i][0].margin1PCS = val;
-                    // this.state.barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].margin1PCS = val;
-                    barangHarga[i][0].hrgJual1PCS = hrg_jual_1_pcs;
+                    barangHarga[i][0].margin1PCS    = val;
+                    barangHarga[i][0].hrgJual1PCS   = hrg_jual_1_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'margin2'){
-                    // this.state.barangHarga[i][0].margin2PCS = val;
-                    // this.state.barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].margin2PCS = val;
-                    barangHarga[i][0].hrgJual2PCS = hrg_jual_2_pcs;
+                    barangHarga[i][0].margin2PCS    = val;
+                    barangHarga[i][0].hrgJual2PCS   = hrg_jual_2_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'margin3'){
-                    // this.state.barangHarga[i][0].margin3PCS = val;
-                    // this.state.barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].margin3PCS = val;
-                    barangHarga[i][0].hrgJual3PCS = hrg_jual_3_pcs;
+                    barangHarga[i][0].margin3PCS    = val;
+                    barangHarga[i][0].hrgJual3PCS   = hrg_jual_3_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'margin4'){
-                    // this.state.barangHarga[i][0].margin4PCS = val;
-                    // this.state.barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].margin4PCS = val;
-                    barangHarga[i][0].hrgJual4PCS = hrg_jual_4_pcs;
+                    barangHarga[i][0].margin4PCS    = val;
+                    barangHarga[i][0].hrgJual4PCS   = hrg_jual_4_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual1'){
-                    // this.state.barangHarga[i][0].hrgJual1PCS = val;
-                    // this.state.barangHarga[i][0].margin1PCS = margin1_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].hrgJual1PCS = val;
-                    barangHarga[i][0].margin1PCS = margin1_pcs;
+                    barangHarga[i][0].hrgJual1PCS   = val;
+                    barangHarga[i][0].margin1PCS    = margin1_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual2'){
-                    // this.state.barangHarga[i][0].hrgJual2PCS = val;
-                    // this.state.barangHarga[i][0].margin2PCS = margin2_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].hrgJual2PCS = val;
-                    barangHarga[i][0].margin2PCS = margin2_pcs;
+                    barangHarga[i][0].hrgJual2PCS   = val;
+                    barangHarga[i][0].margin2PCS    = margin2_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual3'){
-                    // this.state.barangHarga[i][0].hrgJual3PCS = val;
-                    // this.state.barangHarga[i][0].margin3PCS = margin3_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].hrgJual3PCS = val;
-                    barangHarga[i][0].margin3PCS = margin3_pcs;
+                    barangHarga[i][0].hrgJual3PCS   = val;
+                    barangHarga[i][0].margin3PCS    = margin3_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'hrgjual4'){
-                    // this.state.barangHarga[i][0].hrgJual4PCS = val;
-                    // this.state.barangHarga[i][0].margin4PCS = margin4_pcs;
                     let barangHarga = this.state.barangHarga;
-                    barangHarga[i][0].hrgJual4PCS = val;
-                    barangHarga[i][0].margin4PCS = margin4_pcs;
+                    barangHarga[i][0].hrgJual4PCS   = val;
+                    barangHarga[i][0].margin4PCS    = margin4_pcs;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'service'){
-                    // this.state.barangHarga[i][0].servicePCS = val;
                     let barangHarga = this.state.barangHarga;
                     barangHarga[i][0].servicePCS = val;
                     this.setState({barangHarga: barangHarga});
                 }
                 if(name === 'ppn'){
-                    // this.state.barangHarga[i][0].ppnPCS = val;
                     let barangHarga = this.state.barangHarga;
                     barangHarga[i][0].ppnPCS = val;
                     this.setState({barangHarga: barangHarga});
@@ -1806,22 +1773,25 @@ class FormProduct extends Component{
                         alert(`harga beli ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
                         return false;
                     }
-                    if(parseInt(stateBrgHrg[valMargin],10)<0){
-                        alert(`margin ${setHrg+1} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh kurang dari 0`);
-                        return false;
+                    if(this.state.jenis!=='4'){
+                        if(parseInt(stateBrgHrg[valMargin],10)<0){
+                            alert(`margin ${setHrg+1} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh kurang dari 0`);
+                            return false;
+                        }
+                        if(parseInt(stateBrgHrg[valHrgJual],10)===0||parseInt(stateBrgHrg[valHrgJual],10)<0||stateBrgHrg[valHrgJual]===''){
+                            alert(`harga jual ${this.state[lblHrg]} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                            return false;
+                        }
+                        if(parseInt(stateBrgHrg[service],10)<0||stateBrgHrg[service]===''){
+                            alert(`service ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                            return false;
+                        }
+                        if(parseInt(stateBrgHrg[ppn],10)<0||stateBrgHrg[hrgbeli]===''){
+                            alert(`ppn ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
+                            return false;
+                        }
                     }
-                    if(parseInt(stateBrgHrg[valHrgJual],10)===0||parseInt(stateBrgHrg[valHrgJual],10)<0||stateBrgHrg[valHrgJual]===''){
-                        alert(`harga jual ${this.state[lblHrg]} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
-                        return false;
-                    }
-                    if(parseInt(stateBrgHrg[service],10)<0||stateBrgHrg[service]===''){
-                        alert(`service ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
-                        return false;
-                    }
-                    if(parseInt(stateBrgHrg[ppn],10)<0||stateBrgHrg[hrgbeli]===''){
-                        alert(`ppn ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''} di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
-                        return false;
-                    }
+
                 }
 
                 barangHarga.push({
@@ -2139,20 +2109,11 @@ class FormProduct extends Component{
                                             {(()=>{
                                                 let container =[];
                                                 for(let i=0; i<this.state.barangSku.length; i++){
-                                                    let lbl=this.state.barangSku[i].qty;
-                                                    let stateHargaBeli = i===0?'hrg_beli':(i===1?'hrg_beli_pack':'hrg_beli_karton');
-                                                    let stateService = i===0?'service':(i===1?'service_pack':'service_karton');
-                                                    let statePpn = i===0?'ppn':(i===1?'ppn_pack':'ppn_karton');
-                                                    let satuan;
-                                                    if(i===0){
-                                                        satuan='Pcs';
-                                                    }
-                                                    if(i===1){
-                                                        satuan='Pack';
-                                                    }
-                                                    if(i===2){
-                                                        satuan='Karton';
-                                                    }
+                                                    let lbl             = this.state.barangSku[i].qty;
+                                                    let stateHargaBeli  = i===0?'hrg_beli':(i===1?'hrg_beli_pack':'hrg_beli_karton');
+                                                    let stateService    = i===0?'service':(i===1?'service_pack':'service_karton');
+                                                    let statePpn        = i===0?'ppn':(i===1?'ppn_pack':'ppn_karton');
+                                                    let satuan          = i===0?'Pcs':(i===1?'Pack':'Karton');
 
                                                     container.push(
                                                         <div className="col-md-12">
@@ -2184,7 +2145,7 @@ class FormProduct extends Component{
                                                                                                 containers.push(
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>margin {z+1} {lbl}</label>
-                                                                                                        <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`margin ${z+1} ${lbl}`} className="form-control" name={stateMargin} value={this.state[stateMargin]} onChange={(e)=>this.handleChangeMore(e)}  style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={this.state.jenis === '4'} type="number" placeholder={`margin ${z+1} ${lbl}`} className="form-control" name={stateMargin} value={this.state[stateMargin]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 )
                                                                                             }
@@ -2202,16 +2163,13 @@ class FormProduct extends Component{
                                                                                                 containers.push(
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                                        <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`hrg jual ${this.state[place]} ${lbl}`} className="form-control" name={stateHargaJual} value={this.state[stateHargaJual]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={this.state.jenis === '4'} type="number" placeholder={`hrg jual ${this.state[place]} ${lbl}`} className="form-control" name={stateHargaJual} value={this.state[stateHargaJual]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 )
-
                                                                                             }
                                                                                             return containers;
                                                                                         })()
                                                                                     }
-
-
                                                                                 </div>
 
                                                                             </div>
@@ -2222,24 +2180,21 @@ class FormProduct extends Component{
                                                                                 <div className="col-md-3">
                                                                                     <div className="form-group">
                                                                                         <label style={{fontSize:"8px"}}>service {lbl}</label>
-                                                                                        <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`service ${lbl}`} className="form-control" name={stateService} value={this.state[stateService]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        <input readOnly={this.state.jenis === '4'} type="number" placeholder={`service ${lbl}`} className="form-control" name={stateService} value={this.state[stateService]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="col-md-3">
                                                                                     <div className="form-group">
                                                                                         <label style={{fontSize:"8px"}}>PPN {lbl}</label>
-                                                                                        <input readOnly={this.state.jenis==='4'?true:false} type="number" placeholder={`ppn ${lbl}`} className="form-control" name={statePpn} value={this.state[statePpn]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
+                                                                                        <input readOnly={this.state.jenis === '4'} type="number" placeholder={`ppn ${lbl}`} className="form-control" name={statePpn} value={this.state[statePpn]} onChange={(e)=>this.handleChangeMore(e)} style={{fontSize:"10px"}}/>
                                                                                     </div>
                                                                                 </div>
-
                                                                             </div>
                                                                         </div>
-
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     )
                                                 }
                                                 return container;
@@ -2254,19 +2209,18 @@ class FormProduct extends Component{
 
                                             {
                                                 this.state.barangHarga.map((v,i)=>{
-                                                    
                                                     return (
                                                         <div className="col-md-12" key={i}>
                                                             {
                                                                 (()=>{
                                                                     let containers =[];
                                                                     for(let x=0; x<this.state.barangSku.length; x++){
-                                                                        let satuan = '',checked;
-                                                                        let lbl=this.state.barangSku[x].qty;
-                                                                        let isReadonly='isReadonly';
-                                                                        let hargaBeli,nameHargaBeli='hrgBeli';
-                                                                        let service,serviceName='service';
-                                                                        let ppn,ppnName='ppn';
+                                                                        let satuan                  = '',checked;
+                                                                        let lbl                     = this.state.barangSku[x].qty;
+                                                                        let isReadonly              = 'isReadonly';
+                                                                        let hargaBeli,nameHargaBeli = 'hrgBeli';
+                                                                        let service,serviceName     = 'service';
+                                                                        let ppn,ppnName             = 'ppn';
                                                                         if(x===0){
                                                                             satuan='Pcs';
                                                                             checked=v[x].isCheckedPCS;
@@ -2307,7 +2261,7 @@ class FormProduct extends Component{
                                                                                                 <div className="col-md-4">
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>harga beli </label>
-                                                                                                        <input readOnly={localStorage.getItem(`${isReadonly}`)==='true'?true:false} type="number" placeholder="hrg beli" className="form-control" name={nameHargaBeli} value={hargaBeli}  onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={localStorage.getItem(`${isReadonly}`) === 'true'} type="number" placeholder="hrg beli" className="form-control" name={nameHargaBeli} value={hargaBeli} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div className="col-md-4">
@@ -2315,22 +2269,12 @@ class FormProduct extends Component{
                                                                                                         (()=>{
                                                                                                             let container =[];
                                                                                                             for(let z=0; z<this.state.set_harga; z++){
-                                                                                                                let marginName;
-                                                                                                                if(x===0){
-                                                                                                                    marginName=`margin${z+1}PCS`;
-                                                                                                                }
-                                                                                                                if(x===1){
-                                                                                                                    marginName=`margin${z+1}PACK`;
-                                                                                                                }
-                                                                                                                if(x===2){
-                                                                                                                    marginName=`margin${z+1}KARTON`;
-                                                                                                                }
-
-                                                                                                                let marginValue=v[x][marginName];
+                                                                                                                let marginName  = x===0?`margin${z+1}PCS`:(x===1?`margin${z+1}PACK`:`margin${z+1}KARTON`);
+                                                                                                                let marginValue = v[x][marginName];
                                                                                                                 container.push(
                                                                                                                     <div className="form-group">
                                                                                                                         <label style={{fontSize:"8px"}}>margin {z+1}</label>
-                                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`)==="true"?true:false} type="number" placeholder={`margin ${z+1}`} className="form-control" name={marginName} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} value={marginValue} style={{fontSize:"10px"}}/>
+                                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`) === "true"} type="number" placeholder={`margin ${z+1}`} className="form-control" name={marginName} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} value={marginValue} style={{fontSize:"10px"}}/>
                                                                                                                     </div>
 
                                                                                                                 )
@@ -2345,15 +2289,14 @@ class FormProduct extends Component{
                                                                                                         (()=>{
                                                                                                             let container =[];
                                                                                                             for(let z=0; z<this.state.set_harga; z++){
-                                                                                                                let place=`nm_harga${z+1}`;
-                                                                                                                // let nama=`hrgJual${z+1}PACK`;
-                                                                                                                let hrgName=`hrgJual${z+1}${satuan!==undefined?satuan.toUpperCase():''}`;
-                                                                                                                let hrg=`hrgJual${z+1}${satuan!==undefined?satuan.toUpperCase():''}`;
-                                                                                                                let hrgValue=v[x][hrg];
+                                                                                                                let place   = `nm_harga${z+1}`;
+                                                                                                                let hrgName = `hrgJual${z+1}${satuan!==undefined?satuan.toUpperCase():''}`;
+                                                                                                                let hrg     = `hrgJual${z+1}${satuan!==undefined?satuan.toUpperCase():''}`;
+                                                                                                                let hrgValue= v[x][hrg];
                                                                                                                 container.push(
                                                                                                                     <div className="form-group">
                                                                                                                         <label style={{fontSize:"8px"}}>harga jual {this.state[place]}</label>
-                                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`)==="true"?true:false} type="number" placeholder={`hrg jual ${this.state[place]}`} className="form-control" name={hrgName} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} value={hrgValue} style={{fontSize:"10px"}}/>
+                                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`) === "true"} type="number" placeholder={`hrg jual ${this.state[place]}`} className="form-control" name={hrgName} value={hrgValue} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
                                                                                                                     </div>
                                                                                                                 )
                                                                                                             }
@@ -2372,13 +2315,13 @@ class FormProduct extends Component{
                                                                                                 <div className="col-md-3">
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>service</label>
-                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`)==='true'?true:false} type="number" placeholder="service" className="form-control" name={serviceName} value={service} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`)==='true'} type="number" placeholder="service" className="form-control" name={serviceName} value={service} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div className="col-md-3">
                                                                                                     <div className="form-group">
                                                                                                         <label style={{fontSize:"8px"}}>PPN</label>
-                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`)==='true'?true:false} type="number" placeholder="PPN" className="form-control" name={ppnName} value={ppn} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
+                                                                                                        <input readOnly={this.state.jenis==='4'?true:localStorage.getItem(`${isReadonly}`)==='true'} type="number" placeholder="PPN" className="form-control" name={ppnName} value={ppn} onChange={(e)=>this.onHandleChangeChildSku(e,i,x,satuan)} style={{fontSize:"10px"}}/>
                                                                                                     </div>
                                                                                                 </div>
 
