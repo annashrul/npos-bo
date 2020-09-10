@@ -42,6 +42,8 @@ class Produksi extends Component{
             search:"",
             userid:0,
             qty_estimasi:0,
+            perpage:5,
+            isload:false,
             error:{
                 location:"",
                 catatan:"",
@@ -58,9 +60,11 @@ class Produksi extends Component{
         this.HandleReset=this.HandleReset.bind(this);
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
+        this.handleLoadMore=this.handleLoadMore.bind(this);
 
     }
     getProps(param){
+
         if (param.auth.user) {
             let lk = [];
             let loc = param.auth.user.lokasi;
@@ -90,13 +94,6 @@ class Produksi extends Component{
                     return null;
                 })
             }
-            // (typeof param.barangPaket === 'object') ? param.barangPaket.map((v)=>{
-            //     brg.push({
-            //         value:`${v.kd_brg} | ${v.barcode}`,
-            //         label:v.nm_brg,
-            //     })
-            //     return null;
-            // }): "No data.";
             this.setState({
                 barang_paket_data:brg
             })
@@ -117,12 +114,21 @@ class Produksi extends Component{
         }
         if (localStorage.location_produksi!==undefined&&localStorage.location_produksi!=='') {
             // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_produksi, null, this.autoSetQty));
-            this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',localStorage.location_produksi,this.autoSetQty));
+            this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',localStorage.location_produksi,this.autoSetQty,5));
             this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',localStorage.location_produksi));
             this.props.dispatch(FetchCodeAdjustment(localStorage.location_produksi));
         }
     }
     componentWillReceiveProps = (nextProps) => {
+        let perpage=this.state.perpage;
+        if(typeof this.props.barangBahan.data === 'object'){
+            if(this.props.barangBahan.data.length === perpage){
+                this.setState({
+                    perpage:perpage+5
+                });
+            }
+        }
+
         this.getProps(nextProps);
     }
     componentWillUnmount(){
@@ -140,15 +146,13 @@ class Produksi extends Component{
         });
     };
     HandleChangeBarangPaket(lk){
-        // let val = lk.value;
-        // let exp = val.split("|", 2);
         let err = Object.assign({}, this.state.error, {
             barang_paket: ""
         });
         this.setState({
             barang_paket: lk.value,
             error: err
-        })
+        });
         localStorage.setItem('barang_paket_produksi', lk.value);
     }
     HandleChangeLokasi(lk){
@@ -158,11 +162,10 @@ class Produksi extends Component{
         this.setState({
             location: lk.value,
             error: err
-        })
+        });
         localStorage.setItem('location_produksi', lk.value);
         this.props.dispatch(FetchCodeProduksi(lk.value));
-        // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
-        this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',lk.value,this.autoSetQty));
+        this.props.dispatch(FetchBrgProduksiBahan(1,'barcode','',lk.value,this.autoSetQty,5));
         this.props.dispatch(FetchBrgProduksiPaket(1,'barcode','',lk.value));
 
         destroy(table);
@@ -191,21 +194,13 @@ class Produksi extends Component{
                 'error'
             )
         }else{
-            // alert("bus "+this.state.searchby);
-
-            // let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
-            //
             if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
-                // this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'kd_brg',this.state.search,this.state.location));
-
             }
             if(parseInt(this.state.searchby,10)===2){
-                // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiBahan(1,'barcode',this.state.search,this.state.location,this.autoSetQty));
                 this.props.dispatch(FetchBrgProduksiPaket(1,'barcode',this.state.search,this.state.location));
-
             }
             if(parseInt(this.state.searchby,10)===3){
                 this.props.dispatch(FetchBrgProduksiBahan(1,'deskripsi',this.state.search,this.state.location,this.autoSetQty));
@@ -548,8 +543,19 @@ class Produksi extends Component{
             })
         });
     }
+    handleLoadMore(){
+        if(parseInt(this.props.barangBahan.total,10)>parseInt(this.props.barangBahan.per_page,10)){
+            this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty,this.state.perpage));
+        }
+        else{
+            Swal.fire({
+                title: 'Perhatian',
+                icon: 'warning',
+                text: 'barang sudah habis',
+            });
+        }
+    }
     render() {
-
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Produksi">
@@ -563,7 +569,7 @@ class Produksi extends Component{
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
-                                        <label htmlFor="">Plih Barang</label>
+                                        <label htmlFor="">Plih Barang {this.state.isload?'text':'acuy'}</label>
                                         <div className="input-group input-group-sm">
                                             <select name='searchby' className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
                                                 <option value={1}>Kode Barang</option>
@@ -588,13 +594,14 @@ class Produksi extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
+                                    <Scrollbars style={{ width: "100%", height: "300px", maxHeight:'100%' }}>
                                         <div className="people-list">
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
                                                     {
-                                                        this.props.barangBahan.length!==0?
-                                                            this.props.barangBahan.map((i,inx)=>{
+
+                                                        typeof this.props.barangBahan.data ==='object'? this.props.barangBahan.data.length!==0?
+                                                            this.props.barangBahan.data.map((i,inx)=>{
                                                                 return(
                                                                     <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                         barcode:i.barcode,
@@ -627,14 +634,18 @@ class Produksi extends Component{
                                                                         </div>
                                                                     </li>
                                                                 )
-                                                            }):(
-                                                                <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
-                                                            )
+                                                            })
+                                                        :(
+                                                            <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                                        ) :""
                                                     }
                                                 </ul>
                                             </div>
                                         </div>
                                     </Scrollbars>
+                                    <div className="form-group">
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.isLoading?'Tunggu Sebentar':'tampilkan lebih banyak'}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

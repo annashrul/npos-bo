@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" afterPath="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" afterPath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/redux/reducers/inventory/produksi/produksi.reducer.js" afterPath="$PROJECT_DIR$/src/redux/reducers/inventory/produksi/produksi.reducer.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -18,77 +21,65 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="sideMenu.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/App/Layout/sideMenu.js">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/App/inventory/produksi/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="900" column="0" lean-forward="false" selection-start-line="900" selection-start-column="0" selection-end-line="900" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="form_product.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-821">
-              <caret line="1791" column="25" lean-forward="false" selection-start-line="1791" selection-start-column="25" selection-end-line="1791" selection-end-column="25" />
+            <state relative-caret-position="190">
+              <caret line="125" column="31" lean-forward="true" selection-start-line="125" selection-start-column="31" selection-end-line="125" selection-end-column="31" />
               <folding>
-                <element signature="n#!!block;n#getProps#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#componentWillReceiveProps#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#componentWillMount#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#fetchData#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#checkData#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#handleKelompokBarang#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#handleGroup1#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#handleGroup2#0;n#FormProduct#0" expanded="false" />
-                <element signature="e#33572#37612#0" expanded="false" />
-                <element signature="n#!!block;n#onHandleChangeChild#0;n#FormProduct#0" expanded="false" />
-                <element signature="e#38632#38911#0" expanded="false" />
-                <element signature="e#38956#39235#0" expanded="false" />
-                <element signature="e#39280#39559#0" expanded="false" />
-                <element signature="e#39604#39883#0" expanded="false" />
-                <element signature="e#39929#40205#0" expanded="false" />
-                <element signature="e#40251#40527#0" expanded="false" />
-                <element signature="e#40573#40849#0" expanded="false" />
-                <element signature="e#40895#41171#0" expanded="false" />
-                <element signature="e#41216#41324#0" expanded="false" />
-                <element signature="e#41365#41473#0" expanded="false" />
-                <element signature="e#41935#42765#0" expanded="false" />
-                <element signature="e#42804#42966#0" expanded="false" />
-                <element signature="e#43007#43169#0" expanded="false" />
-                <element signature="n#!!block;n#handleCheckChieldElementSku#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#handleChange#0;n#FormProduct#0" expanded="false" />
-                <element signature="e#57976#58142#0" expanded="false" />
-                <element signature="e#58163#58363#0" expanded="false" />
-                <element signature="e#58405#59660#0" expanded="false" />
-                <element signature="e#59744#59820#0" expanded="false" />
-                <element signature="e#59852#60041#0" expanded="false" />
-                <element signature="e#60073#60362#0" expanded="false" />
-                <element signature="e#60394#60683#0" expanded="false" />
-                <element signature="e#60715#61004#0" expanded="false" />
-                <element signature="e#61036#61325#0" expanded="false" />
-                <element signature="e#61356#61653#0" expanded="false" />
-                <element signature="e#61684#61980#0" expanded="false" />
-                <element signature="e#62011#62273#0" expanded="false" />
-                <element signature="e#62304#62566#0" expanded="false" />
-                <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" expanded="false" />
-                <element signature="n#!!block;n#getFiles#0;n#FormProduct#0" expanded="false" />
-                <element signature="e#94050#94904#0" expanded="false" />
-                <element signature="e#107657#113317#0" expanded="false" />
+                <element signature="e#0#38#0" expanded="true" />
+                <element signature="e#2413#2895#0" expanded="false" />
+                <element signature="e#2934#3398#0" expanded="false" />
+                <element signature="n#!!block;n#componentDidMount#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#componentWillUnmount#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#componentWillMount#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#setTglOrder#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeBarangPaket#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeLokasi#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleCommonInputChange#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleSearch#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleAddBrg#0;n#Produksi#0" expanded="false" />
+                <element signature="e#7620#8390#0" expanded="false" />
+                <element signature="e#8473#9996#0" expanded="false" />
+                <element signature="n#!!block;n#HandleRemove#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleReset#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeInputValue#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeInput#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#HandleSubmit#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#autoSetQty#0;n#Produksi#0" expanded="false" />
+                <element signature="n#!!block;n#getData#0;n#Produksi#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="list.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js">
+      <file leaf-file-name="product.action.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="478" column="0" lean-forward="false" selection-start-line="478" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
+            <state relative-caret-position="304">
+              <caret line="96" column="23" lean-forward="true" selection-start-line="92" selection-start-column="20" selection-end-line="96" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="produksi.action.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="124" column="36" lean-forward="true" selection-start-line="124" selection-start-column="20" selection-end-line="124" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="produksi.reducer.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/redux/reducers/inventory/produksi/produksi.reducer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="34" column="45" lean-forward="false" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
               <folding>
-                <element signature="e#0#38#0" expanded="true" />
-                <element signature="e#17336#20020#0" expanded="false" />
+                <element signature="e#0#59#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,9 +138,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/App/inventory/mutasi_jual_beli/bayar_mutasi_jual_beli.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/report/purchase/receive/form_retur_receive.js" />
-        <option value="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/approval_mutasi/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/inventory/opname/list_posting.js" />
@@ -190,14 +178,17 @@
         <option value="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/Auth/Login/Login.js" />
         <option value="$PROJECT_DIR$/src/components/App/Layout/header.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" />
-        <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" />
         <option value="$PROJECT_DIR$/src/helper.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/bank/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/setting/company/index.js" />
         <option value="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
         <option value="$PROJECT_DIR$/src/components/App/masterdata/product/src/master_product/list.js" />
+        <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js" />
+        <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js" />
+        <option value="$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js" />
+        <option value="$PROJECT_DIR$/src/redux/reducers/inventory/produksi/produksi.reducer.js" />
+        <option value="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" />
       </list>
     </option>
   </component>
@@ -293,7 +284,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
@@ -301,6 +292,36 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="produksi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
               <item name="masterdata" type="462c0819:PsiDirectoryNode" />
               <item name="product" type="462c0819:PsiDirectoryNode" />
             </path>
@@ -308,22 +329,25 @@
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
-              <item name="product" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
-              <item name="product" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="master_product" type="462c0819:PsiDirectoryNode" />
+              <item name="redux" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+              <item name="inventory" type="462c0819:PsiDirectoryNode" />
+              <item name="produksi" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -421,12 +445,12 @@
       <workItem from="1599460927935" duration="1729000" />
       <workItem from="1599548909291" duration="16802000" />
       <workItem from="1599638215702" duration="13695000" />
-      <workItem from="1599718211846" duration="244000" />
+      <workItem from="1599718211846" duration="4865000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="768041000" />
+    <option name="totallyTimeSpent" value="772662000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -439,7 +463,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47068146" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2631579" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07236842" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -475,43 +499,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/DBConfig.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="241" column="36" lean-forward="false" selection-start-line="241" selection-start-column="25" selection-end-line="241" selection-end-column="36" />
-          <caret line="242" column="35" lean-forward="false" selection-start-line="242" selection-start-column="25" selection-end-line="242" selection-end-column="35" />
-          <caret line="243" column="35" lean-forward="false" selection-start-line="243" selection-start-column="25" selection-end-line="243" selection-end-column="35" />
-          <caret line="244" column="32" lean-forward="false" selection-start-line="244" selection-start-column="25" selection-end-line="244" selection-end-column="32" />
-          <caret line="245" column="31" lean-forward="false" selection-start-line="245" selection-start-column="25" selection-end-line="245" selection-end-column="31" />
-          <caret line="246" column="30" lean-forward="false" selection-start-line="246" selection-start-column="25" selection-end-line="246" selection-end-column="30" />
-          <caret line="247" column="31" lean-forward="false" selection-start-line="247" selection-start-column="25" selection-end-line="247" selection-end-column="31" />
-          <caret line="248" column="36" lean-forward="false" selection-start-line="248" selection-start-column="25" selection-end-line="248" selection-end-column="36" />
-          <caret line="249" column="36" lean-forward="false" selection-start-line="249" selection-start-column="25" selection-end-line="249" selection-end-column="36" />
-          <caret line="250" column="33" lean-forward="false" selection-start-line="250" selection-start-column="25" selection-end-line="250" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/packing.action.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/expedisi/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/cetak_barcode/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="318" column="0" lean-forward="false" selection-start-line="318" selection-start-column="0" selection-end-line="318" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/inventory/packing/trx_packing.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2206">
@@ -607,6 +594,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -628,6 +616,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="141" column="0" lean-forward="false" selection-start-line="141" selection-start-column="0" selection-end-line="141" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="false" />
+            <marker date="1599651754907" expanded="true" signature="5277:9904" ph="&lt;Switch/&gt;" />
+            <marker date="1599651754907" expanded="true" signature="5277:9915" ph="&lt;div/&gt;" />
+            <marker date="1599651754907" expanded="true" signature="4253:4282" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="4370:4397" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="4413:4443" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="5295:5323" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="5339:5369" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="5468:5496" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="5512:5541" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="6440:6467" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="6483:6512" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="6790:6817" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="6833:6862" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="7028:7055" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="7071:7101" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="7292:7320" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="7336:7362" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="9249:9273" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="9289:9317" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="9562:9588" ph="/*...*/" />
+            <marker date="1599651754907" expanded="true" signature="9604:9630" ph="/*...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -780,14 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="235" column="35" lean-forward="false" selection-start-line="235" selection-start-column="35" selection-end-line="235" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/sale/product_sale/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16">
@@ -809,35 +813,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2320">
-          <caret line="393" column="31" lean-forward="false" selection-start-line="393" selection-start-column="31" selection-end-line="393" selection-end-column="31" />
-          <folding>
-            <element signature="e#769#1453#0" expanded="false" />
-            <element signature="e#1485#2199#0" expanded="false" />
-            <element signature="e#2231#3023#0" expanded="false" />
-            <element signature="e#3055#3767#0" expanded="false" />
-            <element signature="e#3799#4493#0" expanded="false" />
-            <element signature="e#4525#5203#0" expanded="false" />
-            <element signature="e#5235#6770#0" expanded="false" />
-            <element signature="e#6802#7485#0" expanded="false" />
-            <element signature="e#7517#8205#0" expanded="false" />
-            <element signature="e#8573#9257#0" expanded="false" />
-            <element signature="e#9289#10003#0" expanded="false" />
-            <element signature="e#10035#10827#0" expanded="false" />
-            <element signature="e#10859#11571#0" expanded="false" />
-            <element signature="e#11603#12297#0" expanded="false" />
-            <element signature="e#12329#13007#0" expanded="false" />
-            <element signature="e#13039#14574#0" expanded="false" />
-            <element signature="e#14606#15289#0" expanded="false" />
-            <element signature="e#15321#16009#0" expanded="false" />
-            <element signature="e#19006#19275#0" expanded="false" />
-            <element signature="e#19325#19684#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/setting/company/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="992">
@@ -850,7 +825,154 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="900" column="0" lean-forward="false" selection-start-line="900" selection-start-column="0" selection-end-line="900" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1599718587603" expanded="true" signature="327:62165" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="12066:25794" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="12097:25788" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="12193:25778" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="12651:12729" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="13912:13988" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="14093:14170" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="15661:15738" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="16151:16228" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="16487:16565" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="16824:16898" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="19929:20010" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="20323:20399" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="20560:20639" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="20701:20778" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21032:21110" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21192:21298" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21354:21460" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21510:21620" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21710:21788" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21847:21925" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="21973:22052" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="22633:22708" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="22814:22917" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="23087:23190" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="23287:23390" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="23442:23546" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="23586:23668" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="23685:23788" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="23819:25704" ph="{&quot;pengaturan_umum&quot;: pengaturan_umum...}" />
+            <marker date="1599718587603" expanded="true" signature="25818:30969" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="25982:26067" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="26010:26056" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="26415:26746" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="26456:26505" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="26621:26736" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="26657:26717" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27167:28082" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27208:27256" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27396:27582" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27428:27567" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27644:27830" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27676:27815" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27886:28072" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="27918:28057" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="28170:28268" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="28211:28257" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="28314:28409" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="28355:28398" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="29270:30675" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="29311:29356" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="29732:29853" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="29779:29839" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30011:30132" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30058:30118" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30313:30434" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30360:30420" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30542:30664" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30589:30650" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30736:30824" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30764:30813" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30881:30963" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="30909:30952" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31017:31220" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31113:31214" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31141:31203" ph="{&quot;activePath&quot;: nextProps.activePath...}" />
+            <marker date="1599718587603" expanded="true" signature="31242:31312" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31265:31299" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31344:31795" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31392:31671" ph="{&quot;title&quot;: 'Apakah anda yakin akan logout aplikasi?'...}" />
+            <marker date="1599718587603" expanded="true" signature="31690:31788" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31722:31778" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31810:62163" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="31820:32000" ph="//..." />
+            <marker date="1599718587603" expanded="true" signature="32550:62147" ph="&lt;nav/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="32572:62128" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="32642:32669" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="32835:32860" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="32884:32912" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="32934:37231" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="33731:37205" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="33898:33980" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="35977:37174" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="37253:37279" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="37303:37329" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="37593:37617" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="37641:37668" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="37690:43900" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="38520:43874" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="38686:38767" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="39874:41156" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="40304:41122" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="41185:42437" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="41617:42403" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="42466:43844" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="42928:43810" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="43922:43947" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="43971:43998" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="44021:45605" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="44459:45579" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="44623:44702" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="45627:45652" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="45676:45703" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="45725:46921" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="46097:46895" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="46258:46334" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="46943:46968" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="46992:47022" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="47044:48259" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="47445:48233" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="47606:47682" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="48281:48309" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="48333:48358" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="48380:59710" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="49133:59684" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="50527:50565" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="50595:52493" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="51220:52459" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="52523:52559" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="52591:52629" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="52659:56002" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="53486:55968" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="56032:56068" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="56100:56138" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="56168:58008" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="56769:57974" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="56941:57028" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="58038:58074" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="58106:58145" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="58175:59586" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="58708:59552" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="58881:58969" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="59616:59653" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="59732:59755" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="59779:59808" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="60072:60099" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="60123:60149" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="60171:61773" ph="&lt;li/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="60721:61747" ph="&lt;ul/&gt;" />
+            <marker date="1599718587603" expanded="true" signature="60885:60964" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="61795:61819" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="61843:61867" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="62083:62105" ph="/*...*/" />
+            <marker date="1599718587603" expanded="true" signature="62187:62232" ph="{&quot;logoutUser&quot;: PropTypes.func.isRequired...}" />
+            <marker date="1599718587603" expanded="true" signature="62269:62315" ph="{...}" />
+            <marker date="1599718587603" expanded="true" signature="62281:62313" ph="{&quot;auth&quot;: state.auth...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -920,8 +1042,100 @@
         <state relative-caret-position="511">
           <caret line="478" column="0" lean-forward="false" selection-start-line="478" selection-start-column="0" selection-end-line="478" selection-end-column="0" />
           <folding>
-            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#0#38#0" expanded="false" />
             <element signature="e#17336#20020#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/user_level/form_user_level.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="454">
+          <caret line="405" column="36" lean-forward="true" selection-start-line="405" selection-start-column="36" selection-end-line="405" selection-end-column="36" />
+          <folding>
+            <element signature="e#769#1453#0" expanded="false" />
+            <element signature="e#1485#2199#0" expanded="false" />
+            <element signature="e#2231#3023#0" expanded="false" />
+            <element signature="e#3055#3767#0" expanded="false" />
+            <element signature="e#3799#4493#0" expanded="false" />
+            <element signature="e#4525#5203#0" expanded="false" />
+            <element signature="e#5235#6770#0" expanded="false" />
+            <element signature="e#6802#7485#0" expanded="false" />
+            <element signature="e#7517#8205#0" expanded="false" />
+            <element signature="e#8541#16157#0" expanded="false" />
+            <element signature="n#!!block;n#getProps#0;n#FormUserLevel#0" expanded="false" />
+            <element signature="n#!!block;n#componentWillReceiveProps#0;n#FormUserLevel#0" expanded="false" />
+            <element signature="n#!!block;n#componentWillMount#0;n#FormUserLevel#0" expanded="false" />
+            <element signature="e#16816#16967#0" expanded="false" />
+            <element signature="n#!!block;n#handleLoopAccess#0;n#FormUserLevel#0" expanded="false" />
+            <element signature="e#17451#17720#0" expanded="false" />
+            <element signature="e#17770#18129#0" expanded="false" />
+            <element signature="e#18161#18355#0" expanded="false" />
+            <element signature="n#!!block;n#handleSubmit#0;n#FormUserLevel#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/user_list/form_user_list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="262" column="31" lean-forward="true" selection-start-line="262" selection-start-column="31" selection-end-line="262" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/reducers/inventory/produksi/produksi.reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="34" column="45" lean-forward="false" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/inventory/produksi.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="124" column="36" lean-forward="true" selection-start-line="124" selection-start-column="20" selection-end-line="124" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="96" column="23" lean-forward="true" selection-start-line="92" selection-start-column="20" selection-end-line="96" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/inventory/produksi/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="125" column="31" lean-forward="true" selection-start-line="125" selection-start-column="31" selection-end-line="125" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="e#2413#2895#0" expanded="false" />
+            <element signature="e#2934#3398#0" expanded="false" />
+            <element signature="n#!!block;n#componentDidMount#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#componentWillUnmount#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#componentWillMount#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#setTglOrder#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeBarangPaket#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeLokasi#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleCommonInputChange#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleSearch#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleAddBrg#0;n#Produksi#0" expanded="false" />
+            <element signature="e#7620#8390#0" expanded="false" />
+            <element signature="e#8473#9996#0" expanded="false" />
+            <element signature="n#!!block;n#HandleRemove#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleReset#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeInputValue#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeInput#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#HandleSubmit#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#autoSetQty#0;n#Produksi#0" expanded="false" />
+            <element signature="n#!!block;n#getData#0;n#Produksi#0" expanded="false" />
           </folding>
         </state>
       </provider>
