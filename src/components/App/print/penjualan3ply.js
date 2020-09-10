@@ -12,7 +12,7 @@ export default class Print3ply extends Component {
       }
       componentWillMount(){
           const getData = this.props.location.state.data;
-          console.log(getData);
+          
           this.setState({
               data: getData.detail,
               master: getData.master,
