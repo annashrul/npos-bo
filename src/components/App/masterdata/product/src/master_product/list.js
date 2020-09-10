@@ -411,8 +411,8 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.supplier}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.kategori}</td>
                                                 <td style={columnStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
@@ -474,8 +474,8 @@ class ListProduct extends Component{
                                                 <td style={columnStyle}>{v.kd_brg}</td>
                                                 <td style={columnStyle}>{v.nm_brg}</td>
                                                 <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.supplier}</td>
+                                                <td style={columnStyle}>{v.subdept}</td>
                                                 <td style={columnStyle}>{v.kategori}</td>
                                                 <td style={columnStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
                                                 <td style={columnStyle}>{v.stock_min}</td>
