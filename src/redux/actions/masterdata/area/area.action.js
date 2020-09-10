@@ -42,7 +42,7 @@ export const FetchAreaAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         
-        axios.get(HEADERS.URL+`area?page=1&perpage=100`)
+        axios.get(HEADERS.URL+`area?page=1&perpage=999`)
             .then(function(response){
                 const data = response.data;
                 

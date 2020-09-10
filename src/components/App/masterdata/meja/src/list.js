@@ -3,7 +3,7 @@ import connect from "react-redux/es/connect/connect";
 import {deleteMeja, FetchMeja} from "redux/actions/masterdata/meja/meja.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq from "helper";
-// import FormMeja from "components/App/modals/masterdata/meja/form_meja";
+import FormMeja from "components/App/modals/masterdata/area/form_meja";
 import Swal from "sweetalert2";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
@@ -42,15 +42,13 @@ class ListMeja extends Component{
         }else{
             this.setState({
                 detail:{
-                    "kode":this.props.data.data[i].kode,
                     "nama":this.props.data.data[i].nama,
-                    "alamat":this.props.data.data[i].alamat,
-                    "kota":this.props.data.data[i].kota,
-                    "telp":this.props.data.data[i].telp,
-                    "penanggung_jawab":this.props.data.data[i].penanggung_jawab,
-                    "no_penanggung_jawab":this.props.data.data[i].no_penanggung_jawab,
-                    "status":this.props.data.data[i].status,
-                    "email":this.props.data.data[i].email,
+                    "kapasitas":this.props.data.data[i].kapasitas,
+                    "area":this.props.data.data[i].area,
+                    "height":this.props.data.data[i].height,
+                    "width":this.props.data.data[i].width,
+                    "bentuk":this.props.data.data[i].bentuk,
+                    "id":this.props.data.data[i].id_meja,
                 }
             })
         }
@@ -73,6 +71,7 @@ class ListMeja extends Component{
 
     }
     render(){
+        console.log("dddddddddd",this.props);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,per_page,current_page,data} = this.props.data;
         return (
@@ -152,7 +151,7 @@ class ListMeja extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
-                {/* <FormMeja token={this.props.token} detail={this.state.detail}/> */}
+                <FormMeja token={this.props.token} detail={this.state.detail} area={this.props.area}/>
             </div>
         )
     }

@@ -3,9 +3,10 @@ import connect from "react-redux/es/connect/connect";
 import {deleteArea, FetchArea} from "redux/actions/masterdata/area/area.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import Paginationq from "helper";
-// import FormArea from "components/App/modals/masterdata/area/form_area";
+import FormArea from "components/App/modals/masterdata/area/form_area";
 import Swal from "sweetalert2";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import Default from 'assets/default.png';
 
 class ListArea extends Component{
     constructor(props){
@@ -13,8 +14,15 @@ class ListArea extends Component{
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.state={
-            detail:{}
+            detail:{},
+            lokasi_data:[]
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            lokasi_data:nextProps.auth.user.lokasi
+        })
     }
     handlePageChange(pageNumber){
         localStorage.setItem("page_customer",pageNumber);
@@ -40,17 +48,13 @@ class ListArea extends Component{
         if(i===null){
             this.setState({detail:undefined});
         }else{
+            console.log("ccccccccccccc",this.props.data)
             this.setState({
                 detail:{
-                    "kode":this.props.data.data[i].kode,
+                    "lokasi":this.props.data.data[i].lokasi,
                     "nama":this.props.data.data[i].nama,
-                    "alamat":this.props.data.data[i].alamat,
-                    "kota":this.props.data.data[i].kota,
-                    "telp":this.props.data.data[i].telp,
-                    "penanggung_jawab":this.props.data.data[i].penanggung_jawab,
-                    "no_penanggung_jawab":this.props.data.data[i].no_penanggung_jawab,
-                    "status":this.props.data.data[i].status,
-                    "email":this.props.data.data[i].email,
+                    "gambar":this.props.data.data[i].gambar,
+                    "id":this.props.data.data[i].id_area,
                 }
             })
         }
@@ -74,6 +78,8 @@ class ListArea extends Component{
     }
     render(){
         const {total,per_page,current_page,data} = this.props.data;
+        let getImg = Default;
+        console.log("ooooooooooo",this.state.lokasi_data);
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -100,15 +106,17 @@ class ListArea extends Component{
                         (
                             typeof data === 'object' ?
                                 data.map((v,i)=>{
+                                    let getLok = this.state.lokasi_data.filter(item => item.kode === v.lokasi);
+                                    console.log("kkkkkkkkkkk",getLok);
                                     return(
                                         <div className="col-sm-6 col-xl-3" key={i}>
                                             <div className="single-gallery--item mb-50">
                                                 <div className="gallery-thumb">
-                                                <img src={v.gambar} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src="https://via.placeholder.com/300x200"}} />
+                                                <img src={v.gambar === null?'error':v.gambar} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src=`${getImg}`}} />
                                                 </div>
                                                 <div className="gallery-text-area">
-                                                <h6 className="text-white font-16 mb-0">{v.nama}</h6>
-                                                <p className="text-white mb-10">{v.lokasi}</p>
+                                                <h6 className="text-white font-16 mb-0">Area : {v.nama}</h6>
+                                                <p className="text-white mb-10">Lokasi : {getLok[0]===undefined?'':getLok[0].nama}</p>
                                                     <div className="btn-group">
                                                         <UncontrolledButtonDropdown>
                                                         <DropdownToggle caret>
@@ -137,7 +145,7 @@ class ListArea extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
-                {/* <FormArea token={this.props.token} detail={this.state.detail}/> */}
+                <FormArea token={this.props.token} detail={this.state.detail}/>
             </div>
         )
     }
