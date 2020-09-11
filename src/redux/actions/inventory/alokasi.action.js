@@ -143,8 +143,11 @@ export const storeAlokasi = (data,param) => {
                     localStorage.removeItem('lk');
                     localStorage.removeItem('ambil_data');
                     localStorage.removeItem('nota');
-                    localStorage.removeItem('catatan');;
-                    window.location.reload(false);
+                    localStorage.removeItem('catatan');
+                    console.log(result.dismiss);
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {
                     const win = window.open(data.result.nota, '_blank');

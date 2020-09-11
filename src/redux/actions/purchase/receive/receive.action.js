@@ -106,7 +106,9 @@ export const storeReceive= (data,param) => {
                     localStorage.removeItem('ambil_data');
                     localStorage.removeItem('nota');
                     localStorage.removeItem('catatan');
-                    // window.location.reload(false);
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {
                     const win = window.open(data.result.nota, '_blank');
@@ -198,7 +200,7 @@ export const updateReceive= (data,kode) => {
 export const FetchReport = (page = 1,where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url=`receive/report?page=${page}`;
+        let url=`receive/report?page=${page==='NaN'||page===NaN?1:page}`;
         if(where!==''){
             url+=`&${where}`
         }
