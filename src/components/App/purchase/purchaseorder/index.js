@@ -12,17 +12,7 @@ import StickyBox from "react-sticky-box";
 import imgDefault from 'assets/default.png'
 import {toRp,lengthBrg,ToastQ} from "helper";
 const table='purchase_order'
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
+
 
 class PurchaseOrder extends Component{
 
@@ -68,7 +58,6 @@ class PurchaseOrder extends Component{
         this.HandleCommonInputChange = this.HandleCommonInputChange.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
-
     componentDidMount(){
         this.props.dispatch(FetchSupplierAll())
         this.getData();
@@ -88,7 +77,6 @@ class PurchaseOrder extends Component{
 
         }
     }
-
     getProps(param){
         let perpage=this.state.perpage;
         if(param.barang.length === perpage){
@@ -118,7 +106,6 @@ class PurchaseOrder extends Component{
 
         }
     }
-
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps)
 
@@ -126,15 +113,12 @@ class PurchaseOrder extends Component{
     componentWillMount(){
         this.getProps(this.props);
     }
-
-
     componentWillUnmount(){
         this.props.dispatch(setProductbrg({status:'',msg:'',result:{data:[]}}));
         destroy(table);
         localStorage.removeItem('sp');
         localStorage.removeItem('lk');
     }
-
     HandleChangeLokasi(lk){
         let err = Object.assign({}, this.state.error, {
             location: ""
@@ -152,7 +136,6 @@ class PurchaseOrder extends Component{
         destroy(table)
         this.getData();
     }
-
     HandleChangeSupplier(sp) {
         let err = Object.assign({}, this.state.error, {
             supplier: ""
@@ -169,8 +152,6 @@ class PurchaseOrder extends Component{
         destroy(table)
         this.getData();
     }
-
-
     handleChange(e,errs=true){
         const column = e.target.name;
         const val = e.target.value;
@@ -186,7 +167,6 @@ class PurchaseOrder extends Component{
             });
         }
     }
-
     HandleChangeInput(e,id){
         const column = e.target.name;
         const val = e.target.value;
@@ -194,7 +174,7 @@ class PurchaseOrder extends Component{
         const cek = cekData('barcode', id, table);
         cek.then(res => {
             if (res === undefined) {
-                Toast.fire({
+                ToastQ.fire({
                     icon: 'error',
                     title: `not found.`
                 })
@@ -209,7 +189,7 @@ class PurchaseOrder extends Component{
                     }
                 })
                 update(table, final)
-                Toast.fire({
+                ToastQ.fire({
                     icon: 'success',
                     title: `${column} has been changed.`
                 })
@@ -218,7 +198,6 @@ class PurchaseOrder extends Component{
         })
 
     }
-
     HandleCommonInputChange(e,errs=true){
         const column = e.target.name;
         const val = e.target.value;
@@ -234,7 +213,6 @@ class PurchaseOrder extends Component{
             });
         }
     }
-
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
@@ -245,7 +223,7 @@ class PurchaseOrder extends Component{
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
                 if (res === undefined) {
-                    Toast.fire({
+                    ToastQ.fire({
                         icon: 'error',
                         title: `not found.`
                     })
@@ -275,7 +253,7 @@ class PurchaseOrder extends Component{
                         tambahan: res.tambahan
                     }
                     update(table, final)
-                    Toast.fire({
+                    ToastQ.fire({
                         icon: 'success',
                         title: `${column} has been changed.`
                     })
@@ -285,19 +263,16 @@ class PurchaseOrder extends Component{
         }
 
     }
-
     setTglOrder(date) {
         this.setState({
             tgl_order: date
         });
     };
-
     setTglEx(date) {
         this.setState({
             tgl_kirim: date
         });
     };
-
     HandleRemove(e, id){
         e.preventDefault()
         Swal.fire({
@@ -323,7 +298,6 @@ class PurchaseOrder extends Component{
             }
         })
     }
-
     HandleAddBrg(e,item,index) {
         e.preventDefault();
         const finaldt = {
@@ -368,7 +342,6 @@ class PurchaseOrder extends Component{
             this.getData();
         })
     }
-
     HandleReset(e){
         e.preventDefault();
         Swal.fire({
@@ -388,7 +361,6 @@ class PurchaseOrder extends Component{
             }
         })
     }
-
     HandleSubmit(e){
         e.preventDefault();
 
@@ -493,7 +465,6 @@ class PurchaseOrder extends Component{
         }
 
     }
-
     autoSetQty(kode,data){
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
@@ -535,7 +506,6 @@ class PurchaseOrder extends Component{
             return true
         })
     }
-
     HandleSearch(){
         if (this.state.supplier === "" || this.state.lokasi === "") {
             Swal.fire(
@@ -570,7 +540,6 @@ class PurchaseOrder extends Component{
             })
         });
     }
-
     handleLoadMore(){
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
@@ -585,7 +554,6 @@ class PurchaseOrder extends Component{
             });
         }
     }
-
     render() {
         let opSupplier=[];
         if(this.props.supplier!==[]){

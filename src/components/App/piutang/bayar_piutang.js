@@ -13,7 +13,7 @@ class BayarPiutang extends Component{
     constructor(props) {
         super(props);
         this.state={
-            tgl: new Date(),
+            tgl: moment(new Date()).format("yyyy-MM-DD"),
             no_trx : "",
             location:"",
             jenis_trx_data:[],
@@ -35,7 +35,6 @@ class BayarPiutang extends Component{
             }
         }
         this.handleChange = this.handleChange.bind(this);
-        this.handleChangeTgl = this.handleChangeTgl.bind(this);
         this.HandleChangeJenisTrx = this.HandleChangeJenisTrx.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -78,11 +77,7 @@ class BayarPiutang extends Component{
     componentWillMount(){
         this.getProps(this.props);
     }
-    handleChangeTgl(date) {
-        this.setState({
-            tgl: date
-        });
-    };
+
     handleChange(e){
         let column = e.target.name;
         let val = e.target.value;
@@ -232,18 +227,8 @@ class BayarPiutang extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label font-12">Tanggal</label>
-                                    <div className="input-group">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text">
-                                              <i className="fa fa-calendar" />
-                                            </span>
-                                        </div>
-                                        <DatePicker
-                                            className="form-control"
-                                            selected={this.state.tgl}
-                                            onChange={this.handleChangeTgl}
-                                        />
-                                    </div>
+                                    <input type="date" name={"tgl"} className="form-control" value={this.state.tgl} onChange={this.handleChange}/>
+
                                 </div>
 
                             </div>
