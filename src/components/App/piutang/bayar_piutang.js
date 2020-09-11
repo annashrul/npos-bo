@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
 import Layout from "../Layout";
-import DatePicker from "react-datepicker";
 import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
 import {FetchPiutang, storePiutang} from "redux/actions/piutang/piutang.action";

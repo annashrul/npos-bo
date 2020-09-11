@@ -200,7 +200,7 @@ export const updateReceive= (data,kode) => {
 export const FetchReport = (page = 1,where='') => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url=`receive/report?page=${page==='NaN'||page===NaN?1:page}`;
+        let url=`receive/report?page=${page==='NaN'||isNaN(page)?1:page}`;
         if(where!==''){
             url+=`&${where}`
         }
