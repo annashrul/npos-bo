@@ -49,14 +49,14 @@ export const FetchCodeProduksi = (lokasi)=>{
     }
 }
 
-export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>{
-    
+export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db,perpage='')=>{
     return (dispatch) => {
-        dispatch(setLoadingbrg(true));
+        dispatch(setLoading(true));
         let url = `barang/get?page=${page}&kategori=4`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        
+        if(perpage!=='') url+=`&perpage=${perpage}`;
+        console.log("URL",url);
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
@@ -75,7 +75,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>
 
             }).catch(function(error){
             
-            dispatch(setLoadingbrg(false));
+            dispatch(setLoading(false));
 
             Swal.fire({
                 title: 'failed',
@@ -87,7 +87,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db)=>
 }
 export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
     return (dispatch) => {
-        dispatch(setLoadingbrg(true));
+        dispatch(setLoading(true));
         let url = `barang/get?page=${page}&kategori=2`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;

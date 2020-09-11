@@ -257,7 +257,7 @@ class FormUserList extends Component{
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserList"} size="lg">
 
-                <ModalHeader toggle={this.toggle}>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?`Update User List`:`Add User List`}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?`Ubah User List`:`Tambah User List`}</ModalHeader>
 
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>

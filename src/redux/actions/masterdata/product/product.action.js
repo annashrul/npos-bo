@@ -162,7 +162,6 @@ export const deleteProduct = (id) => {
 }
 
 export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,perpage='')=>{
-    
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}`;

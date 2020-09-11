@@ -7,8 +7,6 @@ import {FetchCheck} from 'redux/actions/site.action'
 import {FetchSupplierAll} from 'redux/actions/masterdata/supplier/supplier.action'
 import {FetchNota,storeReceive} from 'redux/actions/purchase/receive/receive.action'
 import {FetchPoReport,FetchPoData,setPoData} from 'redux/actions/purchase/purchase_order/po.action'
-
-import { Scrollbars } from "react-custom-scrollbars";
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
@@ -16,19 +14,10 @@ import {updateReceive} from "redux/actions/purchase/receive/receive.action";
 import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
 import {withRouter} from "react-router-dom"
-
+import StickyBox from "react-sticky-box";
+import imgDefault from 'assets/default.png'
+import {toRp,lengthBrg,ToastQ} from "helper";
 const table='receive';
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
 
 class Receive extends Component{
     constructor(props) {
@@ -64,6 +53,7 @@ class Receive extends Component{
             data_nota:[],
             ambil_data:1,
             ambil_nota:'',
+            perpage:5,
             error:{
                 location:"",
                 supplier:"",
@@ -83,6 +73,7 @@ class Receive extends Component{
         this.HandleSearch = this.HandleSearch.bind(this);
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
+        this.handleLoadMore = this.handleLoadMore.bind(this);
     }
     async fetchDataEdit(){
         const url = HEADERS.URL + `receive/ambil_data/${this.props.match.params.slug}`;
@@ -95,7 +86,6 @@ class Receive extends Component{
                 }
             })
     }
-
     componentWillMount(){
         if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
             destroy(table);
@@ -122,7 +112,7 @@ class Receive extends Component{
                     return null;
                 });
                 this.getData();
-                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty));
+                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty,5));
                 this.setState({
                     location:res.master.lokasi,
                     catatan:res.master.catatan,
@@ -148,7 +138,6 @@ class Receive extends Component{
 
         }
     }
-
     componentDidMount() {
         this.props.dispatch(FetchSupplierAll())
         this.getData()
@@ -189,11 +178,16 @@ class Receive extends Component{
             })
         }
         if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk !== undefined && localStorage.lk !== '') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty,5))
         }
     }
-
     componentWillReceiveProps = (nextProps) => {
+        let perpage=this.state.perpage;
+        if(nextProps.barang.length === perpage){
+            this.setState({
+                perpage:perpage+5
+            });
+        }
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
@@ -281,7 +275,6 @@ class Receive extends Component{
             })
         }
     }
-
     componentWillUnmount() {
         this.props.dispatch(setProductbrg({status:'',msg:'',result:{data:[]}}));
         destroy(table);
@@ -300,7 +293,6 @@ class Receive extends Component{
         }
 
     }
-
     HandleChangeNota(nota){
         this.props.dispatch(setPoData([]))
         this.setState({
@@ -324,7 +316,6 @@ class Receive extends Component{
         localStorage.removeItem('catatan');
         this.getData()
     }
-
     HandleChangeLokasi(lk) {
         let err = Object.assign({}, this.state.error, {
             location: ""
@@ -337,13 +328,12 @@ class Receive extends Component{
         localStorage.setItem('lk', lk.value);
         this.props.dispatch(FetchNota(lk.value))
         if (this.state.supplier !== "") {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty,5))
         }
         destroy(table)
         this.getData()
 
     }
-
     HandleChangeSupplier(sp) {
         let err = Object.assign({}, this.state.error, {
             supplier: ""
@@ -355,12 +345,11 @@ class Receive extends Component{
         localStorage.setItem('sp', sp.value);
 
         if (this.state.location !== "") {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty,5))
         }
         destroy(table)
         this.getData()
     }
-
     HandleCommonInputChange(e,errs=true,st=0){
         const column = e.target.name;
         const val = e.target.value;
@@ -408,7 +397,6 @@ class Receive extends Component{
             });
         }
     }
-
     HandleChangeInput(e,id){
         const column = e.target.name;
         const val = e.target.value;
@@ -416,7 +404,7 @@ class Receive extends Component{
         const cek = cekData('barcode', id, table);
         cek.then(res => {
             if (res === undefined) {
-                Toast.fire({
+                ToastQ.fire({
                     icon: 'error',
                     title: `not found.`
                 })
@@ -431,7 +419,7 @@ class Receive extends Component{
                     }
                 })
                 update(table, final)
-                Toast.fire({
+                ToastQ.fire({
                     icon: 'success',
                     title: `${column} has been changed.`
                 })
@@ -440,7 +428,6 @@ class Receive extends Component{
         })
 
     }
-
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
@@ -452,7 +439,7 @@ class Receive extends Component{
             const cek = cekData('barcode', barcode, table);
             cek.then(res => {
                 if (res === undefined) {
-                    Toast.fire({
+                    ToastQ.fire({
                         icon: 'error',
                         title: `not found.`
                     })
@@ -483,7 +470,7 @@ class Receive extends Component{
                         tambahan: res.tambahan
                     }
                     update(table, final)
-                    Toast.fire({
+                    ToastQ.fire({
                         icon: 'success',
                         title: `${column} has been changed.`
                     })
@@ -493,13 +480,11 @@ class Receive extends Component{
         }
 
     }
-
     setTanggal(date) {
         this.setState({
             tanggal: date
         });
     };
-
     HandleRemove(e, id){
         e.preventDefault()
         Swal.fire({
@@ -522,7 +507,6 @@ class Receive extends Component{
             }
         })
     }
-
     HandleAddBrg(e,item) {
         e.preventDefault();
         const finaldt = {
@@ -568,7 +552,6 @@ class Receive extends Component{
             this.getData()
         })
     }
-
     HandleReset(e){
         e.preventDefault();
         Swal.fire({
@@ -591,7 +574,6 @@ class Receive extends Component{
             }
         })
     }
-
     HandleSubmit(e){
         e.preventDefault();
 
@@ -716,7 +698,6 @@ class Receive extends Component{
         }
 
     }
-
     autoSetQty(kode, data) {
         const cek = cekData('kd_brg', kode, table);
         return cek.then(res => {
@@ -761,7 +742,6 @@ class Receive extends Component{
             return true
         })
     }
-
     HandleSearch() {
         if (this.state.supplier === "" || this.state.lokasi === "") {
             Swal.fire(
@@ -771,12 +751,11 @@ class Receive extends Component{
             )
         } else {
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
+            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
 
         }
     }
-
     getData(){
         const data = get(table);
         data.then(res => {
@@ -799,7 +778,20 @@ class Receive extends Component{
             return null;
         });
     }
-
+    handleLoadMore(){
+        let perpage = parseInt(this.props.paginBrg.per_page,10);
+        let lengthBrg = parseInt(this.props.barang.length,10);
+        if(perpage===lengthBrg || perpage<lengthBrg){
+            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+        }
+        else{
+            Swal.fire({
+                title: 'Perhatian',
+                icon: 'warning',
+                text: 'barang sudah habis',
+            });
+        }
+    }
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let opSupplier=[];
@@ -813,148 +805,131 @@ class Receive extends Component{
             })
         }
         let subtotal = 0;
-        // let grandtotal = 0;
-        //  let grandtotal = this.state.grandtotal;
+
         return (
             <Layout page="Receive Pembelian">
-                <div className="row align-items-center">
-                    <div className="col-6">
-                        <div className="dashboard-header-title mb-3">
-                            <h5 className="mb-0 font-weight-bold">Receive Pembelian   </h5>
-                            {/* <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p> */}
-                        </div>
+                <div className="card">
+                    <div className="card-header">
+                        <h4>Receive Pembelian</h4>
                     </div>
-                    {/* Dashboard Info Area */}
-                    <div className="col-6">
-                        <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row" style={{marginTop:'20px'}}>
-                    {/* LEFT SIDE */}
-                    <div className="col-lg-5 col-md-4 col-xl-3 box-margin">
-                        {/* AMBIL DATA */}
-                        <div className="card mb-3" style={{height: "auto"}}>
-                            <div className="card-body">
-                                <div className="chat-area">
-                                    <div className="chat-header-text d-flex border-none mb-10">
-                                        <div className="chat-about">
-                                            <div className="chat-with font-13">Ambil Data</div>
+                    <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
+                            <div className="card">
+                                <div className="card-body">
+                                    <div className="chat-area">
+                                        <div className="chat-header-text d-flex border-none mb-10">
+                                            <div className="chat-about">
+                                                <div className="chat-with font-13">Ambil Data</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="chat-search">
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <div className="input-group input-group-sm">
-                                                        <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1} selected={parseInt(this.state.ambil_data,10) === 1}>Pembelian Langsung</option>
-                                                            <option value={2} selected={parseInt(this.state.ambil_data,10)===2}>Purchase Order</option>
-                                                            <option value={3} selected={parseInt(this.state.ambil_data,10)===3}>Pre-Receive</option>
-                                                        </select>
+                                        <div className="chat-search">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                                <option value={1} selected={parseInt(this.state.ambil_data,10) === 1}>Pembelian Langsung</option>
+                                                                <option value={2} selected={parseInt(this.state.ambil_data,10)===2}>Purchase Order</option>
+                                                                <option value={3} selected={parseInt(this.state.ambil_data,10)===3}>Pre-Receive</option>
+                                                            </select>
+                                                        </div>
+                                                        <small
+                                                            id="passwordHelpBlock"
+                                                            className="form-text text-muted"
+                                                        >
+                                                            {parseInt(this.state.ambil_data,10)===1?'Pembelian langsung.':(parseInt(this.state.ambil_data,10)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
+                                                        </small>
                                                     </div>
-                                                    <small
-                                                        id="passwordHelpBlock"
-                                                        className="form-text text-muted"
-                                                    >
-                                                        {parseInt(this.state.ambil_data,10)===1?'Pembelian langsung.':(parseInt(this.state.ambil_data,10)===2?'Ambil data pembelian dari PO.':'Ambil data pembelian dari Pre-Receive.')}
-                                                    </small>
                                                 </div>
-                                            </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
-                                                <div className="form-group">
-                                                    <Select
-                                                        options={this.state.data_nota}
-                                                        placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===2?'PO':'Pre-Receive')}
-                                                        onChange={this.HandleChangeNota}
-                                                        value = {
-                                                            this.state.data_nota.find(op => {
-                                                                return op.value === this.state.ambil_nota
-                                                            })
-                                                        }
+                                                <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
+                                                    <div className="form-group">
+                                                        <Select
+                                                            options={this.state.data_nota}
+                                                            placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===2?'PO':'Pre-Receive')}
+                                                            onChange={this.HandleChangeNota}
+                                                            value = {
+                                                                this.state.data_nota.find(op => {
+                                                                    return op.value === this.state.ambil_nota
+                                                                })
+                                                            }
 
-                                                    />
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
-                            </div>
-                        </div>
-                        {/* List barang */}
-                        <div className="card" style={{height: "auto"}}>
-                            <div className="card-body">
-                                <div className="chat-area">
-                                    <div className="chat-header-text d-flex border-none mb-10">
-                                        <div className="chat-about">
-                                            <div className="chat-with font-18">Pilih Barang</div>
-                                        </div>
-                                    </div>
-                                    <div className="chat-search">
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <div className="input-group input-group-sm">
-                                                        <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1}>Kode Barang</option>
-                                                            <option value={2}>Barcode</option>
-                                                            <option value={3}>Deskripsi</option>
-                                                        </select>
-                                                    </div>
-                                                    <small
-                                                        id="passwordHelpBlock"
-                                                        className="form-text text-muted"
-                                                    >
-                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
-                                                    </small>
-                                                </div>
+                                <div className="card-body">
+                                    <div className="chat-area">
+                                        <div className="chat-header-text d-flex border-none mb-10">
+                                            <div className="chat-about">
+                                                <div className="chat-with font-18">Pilih Barang</div>
                                             </div>
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <div className="input-group input-group-sm">
-                                                        <input
-                                                            autoFocus
-                                                            type="text"
-                                                            id="chat-search"
-                                                            name="search"
-                                                            className="form-control form-control-sm"
-                                                            value={this.state.search}
-                                                            placeholder="Search"
-                                                            onChange={(e)=>this.HandleCommonInputChange(e,false)}
-                                                            onKeyPress = {
-                                                                event => {
-                                                                    if (event.key === 'Enter') {
-                                                                        this.HandleSearch();
+                                        </div>
+                                        <div className="chat-search">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                                <option value={1}>Kode Barang</option>
+                                                                <option value={2}>Barcode</option>
+                                                                <option value={3}>Deskripsi</option>
+                                                            </select>
+                                                        </div>
+                                                        <small
+                                                            id="passwordHelpBlock"
+                                                            className="form-text text-muted"
+                                                        >
+                                                            Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <input
+                                                                autoFocus
+                                                                type="text"
+                                                                id="chat-search"
+                                                                name="search"
+                                                                className="form-control form-control-sm"
+                                                                value={this.state.search}
+                                                                placeholder="Search"
+                                                                onChange={(e)=>this.HandleCommonInputChange(e,false)}
+                                                                onKeyPress = {
+                                                                    event => {
+                                                                        if (event.key === 'Enter') {
+                                                                            this.HandleSearch();
 
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        />
-                                                        <span className="input-group-append">
-                                  <button
-                                      type="button"
-                                      style={{zIndex:0}}
-                                      className="btn btn-primary"
-                                      onClick = {
-                                          event => {
-                                              event.preventDefault();
-                                              this.HandleSearch();
-                                          }
-                                      }
-                                  >
-                                    <i className="fa fa-search" />
-                                  </button>
-                                </span>
+                                                            />
+                                                            <span className="input-group-append">
+                                                              <button
+                                                                  type="button"
+                                                                  style={{zIndex:0}}
+                                                                  className="btn btn-primary"
+                                                                  onClick = {
+                                                                      event => {
+                                                                          event.preventDefault();
+                                                                          this.HandleSearch();
+                                                                      }
+                                                                  }
+                                                              >
+                                                                <i className="fa fa-search" />
+                                                              </button>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {/*end chat-search*/}
-                                    <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
-                                        <div className="people-list">
+                                        {/*end chat-search*/}
+                                        <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
                                                     {
@@ -975,10 +950,10 @@ class Receive extends Component{
                                                                         nm_brg:i.nm_brg,
                                                                         tambahan:i.tambahan
                                                                     })}>
-                                                                        <img src={i.gambar} alt="avatar" />
+                                                                        <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                         <div className="about">
-                                                                            <div className="name">{i.nm_brg}</div>
-                                                                            <div className="status" style={{fontStyle:'italic'}}>{i.supplier}</div>
+                                                                            <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
+                                                                            <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.supplier}</small></div>
                                                                         </div>
                                                                     </li>
                                                                 )
@@ -992,332 +967,340 @@ class Receive extends Component{
                                                 </ul>
                                             </div>
                                         </div>
-                                    </Scrollbars>
+                                        <hr/>
+                                        <div className="form-group">
+                                            <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-7 col-md-8 col-xl-9 box-margin" style={{zoom:"80%"}}>
-                        <div className="card" style={{height: "auto"}}>
-                            <div className="container" style={{ marginTop: "20px" }}>
-                                {/* HEADER FORM */}
-                                <form className=''>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label className="control-label font-12">
-                                                    No. Transaksi
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    readOnly
-                                                    className="form-control"
-                                                    id="nota"
-                                                    value={this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null?this.state.no_faktur_beli:this.props.nota}
-                                                />
+                        </StickyBox>
+                        <div style={{width:"75%",zoom:"85%"}}>
+                            <div className="card">
+                                <div className="card-body">
+                                    <form className=''>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label className="control-label font-12">
+                                                        No. Transaksi
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        readOnly
+                                                        className="form-control"
+                                                        id="nota"
+                                                        value={this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null?this.state.no_faktur_beli:this.props.nota}
+                                                    />
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-md-8">
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Tanggal Order
+                                                            </label>
+                                                            <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e)=>this.HandleCommonInputChange(e,true)}/>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Penerima
+                                                            </label>
+
+                                                            <input
+                                                                type="text"
+                                                                id="chat-search"
+                                                                name="penerima"
+                                                                className="form-control"
+                                                                onChange={(e)=>this.HandleCommonInputChange(e,true)}
+                                                                value={this.state.penerima}
+                                                            />
+                                                            <div className="invalid-feedback" style={this.state.error.penerima!==""?{display:'block'}:{display:'none'}}>
+                                                                {this.state.error.penerima}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-4">
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Jenis Transaksi
+                                                            </label>
+                                                            <div className="custom-control custom-radio">
+                                                                <input
+                                                                    type="radio"
+                                                                    id="customRadio1"
+                                                                    name="jenis_trx"
+                                                                    onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                    value="Tunai"
+                                                                    className="custom-control-input"
+                                                                    checked={this.state.jenis_trx==='Tunai'}
+                                                                />
+                                                                <label
+                                                                    className="custom-control-label"
+                                                                    htmlFor="customRadio1"
+                                                                >
+                                                                    Tunai
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <div className="custom-control custom-radio">
+                                                                <input
+                                                                    type="radio"
+                                                                    id="customRadio2"
+                                                                    name="jenis_trx"
+                                                                    onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                    value="Kredit"
+                                                                    className="custom-control-input"
+                                                                    checked={this.state.jenis_trx==='Kredit'}
+
+                                                                />
+                                                                <label
+                                                                    className="custom-control-label"
+                                                                    htmlFor="customRadio2"
+                                                                >
+                                                                    Kredit
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <div className="custom-control custom-radio">
+                                                                <input
+                                                                    type="radio"
+                                                                    id="customRadio3"
+                                                                    name="jenis_trx"
+                                                                    onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                    value="Konsinyasi"
+                                                                    className="custom-control-input"
+                                                                    checked={this.state.jenis_trx==='Konsinyasi'}
+
+                                                                />
+                                                                <label
+                                                                    className="custom-control-label"
+                                                                    htmlFor="customRadio3"
+                                                                >
+                                                                    Konsinyasi
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="row">
-                                                <div className="col-md-8">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Tanggal Order
-                                                        </label>
-                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e)=>this.HandleCommonInputChange(e,true)}/>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Penerima
-                                                        </label>
-
-                                                        <input
-                                                            type="text"
-                                                            id="chat-search"
-                                                            name="penerima"
-                                                            className="form-control"
-                                                            onChange={(e)=>this.HandleCommonInputChange(e,true)}
-                                                            value={this.state.penerima}
-                                                        />
-                                                        <div className="invalid-feedback" style={this.state.error.penerima!==""?{display:'block'}:{display:'none'}}>
-                                                            {this.state.error.penerima}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-4">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Jenis Transaksi
-                                                        </label>
-                                                        <div className="custom-control custom-radio">
-                                                            <input
-                                                                type="radio"
-                                                                id="customRadio1"
-                                                                name="jenis_trx"
-                                                                onChange={(e=>this.HandleCommonInputChange(e))}
-                                                                value="Tunai"
-                                                                className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Tunai'}
-                                                            />
-                                                            <label
-                                                                className="custom-control-label"
-                                                                htmlFor="customRadio1"
-                                                            >
-                                                                Tunai
+                                            <div className="col-md-6">
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Lokasi
                                                             </label>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <div className="custom-control custom-radio">
-                                                            <input
-                                                                type="radio"
-                                                                id="customRadio2"
-                                                                name="jenis_trx"
-                                                                onChange={(e=>this.HandleCommonInputChange(e))}
-                                                                value="Kredit"
-                                                                className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Kredit'}
+                                                            <Select
+                                                                options={this.state.location_data}
+                                                                placeholder = "Pilih Lokasi"
+                                                                onChange={this.HandleChangeLokasi}
+                                                                value = {
+                                                                    this.state.location_data.find(op => {
+                                                                        return op.value === this.state.location
+                                                                    })
+                                                                }
 
                                                             />
-                                                            <label
-                                                                className="custom-control-label"
-                                                                htmlFor="customRadio2"
-                                                            >
-                                                                Kredit
-                                                            </label>
+                                                            <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
+                                                                {this.state.error.location}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <div className="custom-control custom-radio">
-                                                            <input
-                                                                type="radio"
-                                                                id="customRadio3"
-                                                                name="jenis_trx"
-                                                                onChange={(e=>this.HandleCommonInputChange(e))}
-                                                                value="Konsinyasi"
-                                                                className="custom-control-input"
-                                                                checked={this.state.jenis_trx==='Konsinyasi'}
-
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Supplier
+                                                            </label>
+                                                            <Select
+                                                                options={opSupplier}
+                                                                placeholder="Pilih Supplier"
+                                                                onChange={this.HandleChangeSupplier}
+                                                                value = {
+                                                                    opSupplier.find(op => {
+                                                                        return op.value === this.state.supplier
+                                                                    })
+                                                                }
                                                             />
-                                                            <label
-                                                                className="custom-control-label"
-                                                                htmlFor="customRadio3"
-                                                            >
-                                                                Konsinyasi
+                                                            <div className="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
+                                                                {this.state.error.supplier}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Nota Supplier
                                                             </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Lokasi
-                                                        </label>
-                                                        <Select
-                                                            options={this.state.location_data}
-                                                            placeholder = "Pilih Lokasi"
-                                                            onChange={this.HandleChangeLokasi}
-                                                            value = {
-                                                                this.state.location_data.find(op => {
-                                                                    return op.value === this.state.location
-                                                                })
-                                                            }
 
-                                                        />
-                                                        <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
-                                                            {this.state.error.location}
+                                                            <input
+                                                                type="text"
+                                                                id="chat-search"
+                                                                name="notasupplier"
+                                                                className="form-control"
+                                                                onChange={(e)=>this.HandleCommonInputChange(e)}
+                                                                value={this.state.notasupplier}
+                                                            />
+                                                            <div className="invalid-feedback" style={this.state.error.notasupplier!==""?{display:'block'}:{display:'none'}}>
+                                                                {this.state.error.notasupplier}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Supplier
-                                                        </label>
-                                                        <Select
-                                                            options={opSupplier}
-                                                            placeholder="Pilih Supplier"
-                                                            onChange={this.HandleChangeSupplier}
-                                                            value = {
-                                                                opSupplier.find(op => {
-                                                                    return op.value === this.state.supplier
-                                                                })
-                                                            }
-                                                        />
-                                                        <div className="invalid-feedback" style={this.state.error.supplier!==""?{display:'block'}:{display:'none'}}>
-                                                            {this.state.error.supplier}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Nota Supplier
-                                                        </label>
-
-                                                        <input
-                                                            type="text"
-                                                            id="chat-search"
-                                                            name="notasupplier"
-                                                            className="form-control"
-                                                            onChange={(e)=>this.HandleCommonInputChange(e)}
-                                                            value={this.state.notasupplier}
-                                                        />
-                                                        <div className="invalid-feedback" style={this.state.error.notasupplier!==""?{display:'block'}:{display:'none'}}>
-                                                            {this.state.error.notasupplier}
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Catatan
-                                                        </label>
-                                                        <textarea
-                                                            className="form-control"
-                                                            id="exampleTextarea1"
-                                                            rows={3}
-                                                            onChange={(e=>this.HandleCommonInputChange(e))}
-                                                            name="catatan"
-                                                            value={this.state.catatan}
-                                                        />
-                                                        <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
-                                                            {this.state.error.catatan}
-                                                        </div>
-                                                        {/* {
+                                                        <div className="form-group">
+                                                            <label className="control-label font-12">
+                                                                Catatan
+                                                            </label>
+                                                            <textarea
+                                                                className="form-control"
+                                                                id="exampleTextarea1"
+                                                                rows={3}
+                                                                onChange={(e=>this.HandleCommonInputChange(e))}
+                                                                name="catatan"
+                                                                value={this.state.catatan}
+                                                            />
+                                                            <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
+                                                                {this.state.error.catatan}
+                                                            </div>
+                                                            {/* {
                                   this.state.error.catatan!==""?(
                                     <div className="invalid-feedback">
                                       {this.state.error.catatan}
                                     </div>
                                   ):""
                                 } */}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div className="card-body">
-                                <div style={{overflowX:'auto'}}>
-                                    <table className="table table-hover table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th style={columnStyle}>#</th>
-                                            <th style={columnStyle}>Nama barang</th>
-                                            <th style={columnStyle}>barcode</th>
-                                            <th style={columnStyle}>satuan</th>
-                                            <th style={columnStyle}>harga beli</th>
-                                            <th style={columnStyle}>diskon</th>
-                                            <th style={columnStyle}>ppn</th>
-                                            <th style={columnStyle}>stock</th>
-                                            <th style={columnStyle}>qty</th>
-                                            <th style={columnStyle}>bonus</th>
-                                            <th style={columnStyle}>Subtotal</th>
-                                        </tr>
-                                        </thead>
+                                    </form>
+                                    <div style={{overflowX:'auto'}}>
+                                        <table className="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th style={columnStyle}>#</th>
+                                                <th style={columnStyle}>Nama barang</th>
+                                                <th style={columnStyle}>barcode</th>
+                                                <th style={columnStyle}>satuan</th>
+                                                <th style={columnStyle}>harga beli</th>
+                                                <th style={columnStyle}>diskon</th>
+                                                <th style={columnStyle}>ppn</th>
+                                                <th style={columnStyle}>stock</th>
+                                                <th style={columnStyle}>qty</th>
+                                                <th style={columnStyle}>bonus</th>
+                                                <th style={columnStyle}>Subtotal</th>
+                                            </tr>
+                                            </thead>
 
-                                        <tbody>
-                                        {
-                                            this.state.databrg.map((item,index)=>{
-                                                let disc1=0;
-                                                let disc2=0;
-                                                let ppn=0;
-                                                if(item.diskon!==0){
-                                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
-                                                    disc2=disc1;
-                                                    if(item.diskon2!==0){
-                                                        disc2 = disc1 * (parseFloat(item.diskon2) / 100);
+                                            <tbody>
+                                            {
+                                                this.state.databrg.map((item,index)=>{
+                                                    let disc1=0;
+                                                    let disc2=0;
+                                                    let ppn=0;
+                                                    if(item.diskon!==0){
+                                                        disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
+                                                        disc2=disc1;
+                                                        if(item.diskon2!==0){
+                                                            disc2 = disc1 * (parseFloat(item.diskon2) / 100);
+                                                        }
                                                     }
-                                                }
-                                          
-
-                                                if(item.ppn!==0){
-                                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
-                                                }
-                                                subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
-                                                // 
-                                                return (
-                                                    <tr key={index} >
-                                                        <td style={columnStyle}>
-                                                            <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
-                                                        </td>
-                                                        <td style={columnStyle}>{item.nm_brg}</td>
-                                                        <td style={columnStyle}>{item.barcode}</td>
-                                                        <td style={columnStyle}>
-                                                            <select name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)} className="form-control" style={{width:"100px"}}>
-                                                                {
-                                                                    item.tambahan.map(i=>{
-                                                                        return(
-                                                                            <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </select>
-                                                        </td>
-                                                        <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
-                                                        <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='diskon' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
-                                                        <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='ppn' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
-                                                        <td style={columnStyle}>{item.stock}</td>
-                                                        <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
-                                                        <td style={columnStyle}><input style={{width:"100px"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
-                                                        <td style={columnStyle}>{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
-                                                    </tr>
-                                                )
-                                            })
-
-                                        }
-                                        </tbody>
-                                    </table>
 
 
-                                </div>
-                                <hr/>
-                                <div className='row'>
-                                    <div className="col-md-7">
-                                        <div className="dashboard-btn-group d-flex align-items-center">
-                                            <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                            <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
-                                        </div>
+                                                    if(item.ppn!==0){
+                                                        ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
+                                                    }
+                                                    subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
+                                                    //
+                                                    return (
+                                                        <tr key={index} >
+                                                            <td style={columnStyle}>
+                                                                <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
+                                                            </td>
+                                                            <td style={{verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"}}>{item.nm_brg}</td>
+                                                            <td style={{verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"}}>{item.barcode}</td>
+                                                            <td style={columnStyle}>
+                                                                <select name='satuan' onChange={(e)=>this.HandleChangeInputValue(e,index,item.barcode,item.tambahan)} className="form-control" style={{width:"100px"}}>
+                                                                    {
+                                                                        item.tambahan.map(i=>{
+                                                                            return(
+                                                                                <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </select>
+                                                            </td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/>
+                                                            </td>
+                                                            <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='diskon' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
+                                                            <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='ppn' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={item.stock}/>
+                                                            </td>
+                                                            <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
+                                                            <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty))}/>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+
+                                            }
+                                            </tbody>
+                                        </table>
+
+
                                     </div>
-                                    <div className="col-md-5">
-                                        <div className="pull-right">
-                                            <form className="form_head">
-                                                <div className="row" style={{marginBottom: '3px'}}>
-                                                    <label className="col-sm-4">Sub Total</label>
-                                                    <div className="col-sm-8">
-                                                        <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={subtotal} readOnly />
-                                                    </div>
-                                                </div>
-                                                <div className="row" style={{marginBottom: '3px'}}>
-                                                    <label className="col-sm-4">Discount</label>
-                                                    <div className="col-sm-3">
-                                                        <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,subtotal)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
-                                                    </div>
-                                                    <div className="col-sm-5">
-                                                        <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,subtotal)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
-                                                    </div>
-                                                </div>
-                                                <div className="row" style={{marginBottom: '3px'}}>
-                                                    <label className="col-sm-4">Pajak %</label>
-                                                    <div className="col-sm-3">
-                                                        <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
-                                                    </div>
-                                                </div>
-                                                <div className="row" style={{marginBottom: '3px'}}>
-                                                    <label className="col-sm-4">Grand Total</label>
-                                                    <div className="col-sm-8">
-
-                                                        <input type="text" name="grand_total" className="form-control text-right" readOnly value={(subtotal - (subtotal * (parseFloat(this.state.discount_persen) / 100))) + (subtotal * (parseFloat(this.state.pajak) / 100))} />
-                                                    </div>
-                                                </div>
-                                            </form>
+                                    <hr/>
+                                    <div className='row'>
+                                        <div className="col-md-7">
+                                            <div className="dashboard-btn-group d-flex align-items-center">
+                                                <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                                <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div className="col-md-5">
+                                            <div className="pull-right">
+                                                <form className="form_head">
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Sub Total</label>
+                                                        <div className="col-sm-8">
+                                                            <input style={{textAlign:"right"}} type="text" id="sub_total" name="sub_total" className="form-control text-right" value={toRp(subtotal)} readOnly />
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Discount</label>
+                                                        <div className="col-sm-3">
+                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,subtotal)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
+                                                        </div>
+                                                        <div className="col-sm-5">
+                                                            <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,subtotal)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Pajak %</label>
+                                                        <div className="col-sm-3">
+                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row" style={{marginBottom: '3px'}}>
+                                                        <label className="col-sm-4">Grand Total</label>
+                                                        <div className="col-sm-8">
 
+                                                            <input style={{textAlign:"right"}} type="text" name="grand_total" className="form-control text-right" readOnly value={toRp((subtotal - (subtotal * (parseFloat(this.state.discount_persen) / 100))) + (subtotal * (parseFloat(this.state.pajak) / 100)))} />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </Layout>
         );
     }
@@ -1335,6 +1318,7 @@ const mapStateToPropsCreateItem = (state) => ({
     po_data: state.poReducer.po_data,
     checkNotaPem: state.siteReducer.check,
     dataEdit:state.receiveReducer.receive_data,
+    paginBrg:state.productReducer.pagin_brg,
 
 });
 

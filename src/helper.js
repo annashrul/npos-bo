@@ -100,7 +100,13 @@ export const toNominal= (val1,val2) => {
 export const toRp = (angka) => {
     // return Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(txt);
     // var number_string = angka.toString().replace(/[^,\d]/g, ''),
-    var number_string = (angka===''||angka===undefined)? String(0.0) : angka.toString(),
+    let numbers=0;
+    if(parseFloat(angka)<0){
+        numbers = angka.toString().replace('-', '');
+    }else{
+        numbers=angka;
+    }
+    var number_string = (numbers===''||numbers===undefined)? String(0.0) : numbers.toString(),
         split = number_string.split('.'),
         sisa = split[0].length % 3,
         rupiah = split[0].substr(0, sisa),
@@ -113,6 +119,7 @@ export const toRp = (angka) => {
     }
 
     rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    rupiah = (parseFloat(angka) < 0) ? "-" + rupiah:rupiah;
     return rupiah;
 };
 export const ToastQ = Swal.mixin({
@@ -157,6 +164,18 @@ export const kassa = (param='')=>{
     );
     return data;
 };
+
+export const lengthBrg = (str)=>{
+    let txt = str.length>15?`${str.substr(0,15)} ...`:str;
+    return txt.toLowerCase();
+}
+export const CapitalizeEachWord=(str)=>{
+    let splitStr = str.toLowerCase().split(' ');
+    for (let i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+}
 
 
 class Paginationq extends Component{

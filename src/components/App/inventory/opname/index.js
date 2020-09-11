@@ -5,9 +5,12 @@ import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.action";
-import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
 import {storeOpname} from "../../../../redux/actions/inventory/opname.action";
+import StickyBox from "react-sticky-box";
+import imgDefault from 'assets/default.png'
+import {toRp,lengthBrg,ToastQ} from "helper";
+
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -15,7 +18,7 @@ const Toast = Swal.mixin({
     timer: 1000,
     timerProgressBar: true,
     onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseenter', Swal.stopTimer);
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
@@ -34,6 +37,7 @@ class TrxOpname extends Component{
             searchby:"",
             search:"",
             userid:0,
+            perpage:5,
             error:{
                 location:"",
                 catatan:""
@@ -48,6 +52,7 @@ class TrxOpname extends Component{
         this.HandleReset=this.HandleReset.bind(this);
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
+        this.handleLoadMore=this.handleLoadMore.bind(this);
 
     }
     componentDidMount(){
@@ -58,10 +63,16 @@ class TrxOpname extends Component{
 
         }
         if (localStorage.location_opname!==undefined&&localStorage.location_opname!=='') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_opname, null, this.autoSetQty));
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.location_opname, null, this.autoSetQty,5));
         }
     }
     getProps(param){
+        let perpage=this.state.perpage;
+        if(param.barang.length === perpage){
+            this.setState({
+                perpage:perpage+5
+            });
+        }
         if (param.auth.user) {
             let lk = [];
             let loc = param.auth.user.lokasi;
@@ -104,7 +115,7 @@ class TrxOpname extends Component{
             error: err
         })
         localStorage.setItem('location_opname', lk.value);
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty));
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty,5));
         destroy(table);
         this.getData()
     }
@@ -133,14 +144,14 @@ class TrxOpname extends Component{
         }else{
 
             if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
-                this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty,5));
             }
             if(parseInt(this.state.searchby,10)===2){
-                this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty,5));
 
             }
             if(parseInt(this.state.searchby,10)===3){
-                this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
+                this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty,5));
 
             }
             this.setState({search: ''});
@@ -393,7 +404,7 @@ class TrxOpname extends Component{
             return true
         })
     }
-    
+
     getData() {
         const data = get(table);
         data.then(res => {
@@ -411,7 +422,20 @@ class TrxOpname extends Component{
             return null;
         });
     }
-
+    handleLoadMore(){
+        let perpage = parseInt(this.props.paginBrg.per_page,10);
+        let lengthBrg = parseInt(this.props.barang.length,10);
+        if(perpage===lengthBrg || perpage<lengthBrg){
+            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty,this.state.perpage));
+        }
+        else{
+            Swal.fire({
+                title: 'Perhatian',
+                icon: 'warning',
+                text: 'barang sudah habis',
+            });
+        }
+    }
     render() {
         return (
             <Layout page="Opname">
@@ -419,8 +443,8 @@ class TrxOpname extends Component{
                     <div className="card-header">
                         <h4>Opname</h4>
                     </div>
-                    <div className="row">
-                        <div className="col-md-3">
+                    <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%",marginRight:"10px"  }}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
@@ -472,61 +496,64 @@ class TrxOpname extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
-                                        <div className="people-list">
-                                            <div id="chat_user_2">
-                                                <ul className="chat-list list-unstyled">
-                                                    {
-                                                        this.props.barang.length!==0?
-                                                            this.props.barang.map((i,inx)=>{
-                                                                return(
-                                                                    <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
-                                                                        barcode:i.barcode,
-                                                                        harga_beli:i.harga_beli,
-                                                                        satuan:i.satuan,
-                                                                        hrg_jual:i.hrg_jual,
-                                                                        kd_brg:i.kd_brg,
-                                                                        nm_brg:i.nm_brg,
-                                                                        kel_brg:i.kel_brg,
-                                                                        kategori:i.kategori,
-                                                                        stock_min:i.stock_min,
-                                                                        supplier:i.supplier,
-                                                                        subdept:i.subdept,
-                                                                        deskripsi:i.deskripsi,
-                                                                        jenis:i.jenis,
-                                                                        kcp:i.kcp,
-                                                                        poin:i.poin,
-                                                                        group1:i.group1,
-                                                                        group2:i.group2,
-                                                                        stock:i.stock,
-                                                                        qty_fisik:0,
-                                                                    })}>
-                                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar" />
-                                                                        <div className="about">
-                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.nm_brg}</small></div>
-                                                                            <div className="status" style={{color: 'red',fontWeight:"bold"}}><small>{i.nm_brg}</small></div>
-                                                                        </div>
-                                                                    </li>
-                                                                )
-                                                            }):(
-                                                                <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                        <div id="chat_user_2">
+                                            <ul className="chat-list list-unstyled">
+                                                {
+                                                    this.props.barang.length!==0?
+                                                        this.props.barang.map((i,inx)=>{
+                                                            return(
+                                                                <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                    barcode:i.barcode,
+                                                                    harga_beli:i.harga_beli,
+                                                                    satuan:i.satuan,
+                                                                    hrg_jual:i.hrg_jual,
+                                                                    kd_brg:i.kd_brg,
+                                                                    nm_brg:i.nm_brg,
+                                                                    kel_brg:i.kel_brg,
+                                                                    kategori:i.kategori,
+                                                                    stock_min:i.stock_min,
+                                                                    supplier:i.supplier,
+                                                                    subdept:i.subdept,
+                                                                    deskripsi:i.deskripsi,
+                                                                    jenis:i.jenis,
+                                                                    kcp:i.kcp,
+                                                                    poin:i.poin,
+                                                                    group1:i.group1,
+                                                                    group2:i.group2,
+                                                                    stock:i.stock,
+                                                                    qty_fisik:0,
+                                                                })}>
+                                                                    <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                    <div className="about">
+                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
+                                                                        <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
+                                                                    </div>
+
+                                                                </li>
                                                             )
+                                                        }):(
+                                                            <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                                        )
 
-                                                    }
+                                                }
 
 
-                                                </ul>
-                                            </div>
+                                            </ul>
                                         </div>
-                                    </Scrollbars>
+                                    </div>
+                                    <hr/>
+                                    <div className="form-group">
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-md-9">
+                        </StickyBox>
+                        <div style={{width:"80%"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-3">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Tanggal Order
@@ -534,7 +561,7 @@ class TrxOpname extends Component{
                                                 <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e) => this.HandleCommonInputChange(e)}/>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-3">
 
                                             <div className="form-group">
                                                 <label className="control-label font-12">
@@ -558,55 +585,57 @@ class TrxOpname extends Component{
                                             </div>
 
                                         </div>
-                                        <div className="table-responsive">
-                                            <table className="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Kode</th>
-                                                    <th>barcode</th>
-                                                    <th>Nama</th>
-                                                    <th>Satuan</th>
-                                                    <th>Stock Sistem</th>
-                                                    <th>Stock Fisik</th>
-                                                </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                {
-                                                    this.state.databrg.map((item, index) => {
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td>
-                                                                    <a href="about:blank" className='btn btn-danger btn-sm'
-                                                                       onClick={(e) => this.HandleRemove(e, item.id)}><i
-                                                                        className='fa fa-trash'/></a>
-                                                                </td>
-                                                                <td>{item.kd_brg}</td>
-                                                                <td>{item.barcode}</td>
-                                                                <td>{item.nm_brg}</td>
-                                                                <td>{item.satuan}</td>
-                                                                <td><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
-                                                                <td><input type='text' name='qty_fisik' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_fisik} className="form-control"/></td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                                </tbody>
-                                            </table>
-
-                                        </div>
                                     </div>
-                                </div>
-                                <div className="card-header">
-                                    <div className="dashboard-btn-group d-flex align-items-center">
-                                        <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
-                                        <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                    <div className="table-responsive">
+                                        <table className="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Kode</th>
+                                                <th>barcode</th>
+                                                <th>Nama</th>
+                                                <th>Satuan</th>
+                                                <th>Stock Sistem</th>
+                                                <th>Stock Fisik</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            {
+                                                this.state.databrg.map((item, index) => {
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                <a href="about:blank" className='btn btn-danger btn-sm'
+                                                                   onClick={(e) => this.HandleRemove(e, item.id)}><i
+                                                                    className='fa fa-trash'/></a>
+                                                            </td>
+                                                            <td>{item.kd_brg}</td>
+                                                            <td>{item.barcode}</td>
+                                                            <td>{item.nm_brg}</td>
+                                                            <td>{item.satuan}</td>
+                                                            <td><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
+                                                            <td><input type='text' name='qty_fisik' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_fisik} className="form-control"/></td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div className="card-header">
+                                        <div className="dashboard-btn-group d-flex align-items-center">
+                                            <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
+                                            <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
+
                 </div>
             </Layout>
         );
@@ -617,7 +646,8 @@ class TrxOpname extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
-    loadingbrg: state.productReducer.isLoadingBrg
+    loadingbrg: state.productReducer.isLoadingBrg,
+    paginBrg:state.productReducer.pagin_brg,
 });
 
 export default connect(mapStateToPropsCreateItem)(TrxOpname);

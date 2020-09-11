@@ -6,14 +6,16 @@ import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.a
 import {FetchCheck} from 'redux/actions/site.action'
 import {FetchNota,storeAlokasi} from 'redux/actions/inventory/alokasi.action'
 import {FetchDnReport,FetchDnData,setDnData} from 'redux/actions/inventory/dn.action'
-
-import { Scrollbars } from "react-custom-scrollbars";
+import StickyBox from "react-sticky-box";
+import {lengthBrg,ToastQ} from "helper";
+import imgDefault from 'assets/default.png';
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import {
     withRouter
 } from 'react-router-dom';
+import {toRp} from "../../../../helper";
 
 const table='alokasi'
 const Toast = Swal.mixin({
@@ -54,6 +56,7 @@ class Alokasi extends Component{
             ambil_nota:'',
             jenis_trx:'Mutasi',
             jenis_trx_data:[],
+            perpage:5,
             error:{
                 location:"",
                 location2: "",
@@ -73,6 +76,7 @@ class Alokasi extends Component{
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.HandleChangeJenisTrx= this.HandleChangeJenisTrx.bind(this);
+        this.handleLoadMore= this.handleLoadMore.bind(this);
     }
 
     getProps(param){
@@ -132,7 +136,7 @@ class Alokasi extends Component{
             let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
 
             this.props.dispatch(FetchNota(localStorage.lk, prefix))
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,5))
 
             this.setState({
                 location: localStorage.lk
@@ -147,6 +151,12 @@ class Alokasi extends Component{
 
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
+        let perpage=this.state.perpage;
+        if(this.props.barang.length === perpage){
+            this.setState({
+                perpage:perpage+5
+            });
+        }
         if (nextProps.auth.user) {
             let lk = []
             let loc = nextProps.auth.user.lokasi;
@@ -268,7 +278,7 @@ class Alokasi extends Component{
         localStorage.setItem('lk', lk.value);
         let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
         this.props.dispatch(FetchNota(lk.value, prefix))
-        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty))
+        this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty,5))
         destroy(table)
         this.getData()
 
@@ -655,7 +665,7 @@ class Alokasi extends Component{
             )
         } else {
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty));
+            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
 
         }
@@ -687,6 +697,20 @@ class Alokasi extends Component{
         });
     }
 
+    handleLoadMore(){
+        let perpage = parseInt(this.props.paginBrg.per_page,10);
+        let lengthBrg = parseInt(this.props.barang.length,10);
+        if(perpage===lengthBrg || perpage<lengthBrg){
+            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+        }
+        else{
+            Swal.fire({
+                title: 'Perhatian',
+                icon: 'warning',
+                text: 'barang sudah habis',
+            });
+        }
+    }
     render() {
         // if(this.props.isLoading){
         //   return <Preloader/>
@@ -699,143 +723,124 @@ class Alokasi extends Component{
 
         return (
             <Layout page="Alokasi">
-                <div className="row align-items-center">
-                    <div className="col-6">
-                        <div className="dashboard-header-title mb-3">
-                            <h5 className="mb-0 font-weight-bold">Alokasi</h5>
-                            {/* <p className="mb-0 font-weight-bold">Welcome to Motrila Dashboard.</p> */}
-                        </div>
+                <div className="card">
+                    <div className="card-header">
+                        <h5>Alokasi</h5>
                     </div>
-                    {/* Dashboard Info Area */}
-                    <div className="col-6">
-                        <div className="dashboard-infor-mation d-flex flex-wrap align-items-center mb-3">
-
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row" style={{marginTop:'20px'}}>
-                    {/* LEFT SIDE */}
-                    <div className="col-lg-5 col-md-4 col-xl-3 box-margin">
-                        {/* AMBIL DATA */}
-                        <div className="card mb-3" style={{height: "auto"}}>
-                            <div className="card-body">
-                                <div className="chat-area">
-                                    <div className="chat-header-text d-flex border-none mb-10">
-                                        <div className="chat-about">
-                                            <div className="chat-with font-13">Ambil Data</div>
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%",marginRight:"10px" }}>
+                                    <div className="chat-area">
+                                        <div className="chat-header-text d-flex border-none mb-10">
+                                            <div className="chat-about">
+                                                <div className="chat-with font-13">Ambil Data</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="chat-search">
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <div className="input-group input-group-sm">
-                                                        <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1} selected={this.state.ambil_data===1}>Langsung</option>
-                                                            <option value={2} selected={this.state.ambil_data===2}>Delivery Note</option>
-                                                        </select>
+                                        <div className="chat-search">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                                <option value={1} selected={this.state.ambil_data===1}>Langsung</option>
+                                                                <option value={2} selected={this.state.ambil_data===2}>Delivery Note</option>
+                                                            </select>
+                                                        </div>
+                                                        <small
+                                                            id="passwordHelpBlock"
+                                                            className="form-text text-muted"
+                                                        >
+                                                            {parseInt(this.state.ambil_data,10)===1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
+                                                        </small>
                                                     </div>
-                                                    <small
-                                                        id="passwordHelpBlock"
-                                                        className="form-text text-muted"
-                                                    >
-                                                        {parseInt(this.state.ambil_data,10)===1?this.state.jenis_trx+' langsung.':'Ambil data pembelian dari Delivery Note.'}
-                                                    </small>
                                                 </div>
-                                            </div>
-                                            <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
-                                                <div className="form-group">
-                                                    <Select
-                                                        options={this.state.data_nota}
-                                                        placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===2?'DN':'')}
-                                                        onChange={this.HandleChangeNota}
-                                                        value = {
-                                                            this.state.data_nota.find(op => {
-                                                                return op.value === this.state.ambil_nota
-                                                            })
-                                                        }
+                                                <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
+                                                    <div className="form-group">
+                                                        <Select
+                                                            options={this.state.data_nota}
+                                                            placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===2?'DN':'')}
+                                                            onChange={this.HandleChangeNota}
+                                                            value = {
+                                                                this.state.data_nota.find(op => {
+                                                                    return op.value === this.state.ambil_nota
+                                                                })
+                                                            }
 
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* List barang */}
-                        <div className="card" style={{height: "auto"}}>
-                            <div className="card-body">
-                                <div className="chat-area">
-                                    <div className="chat-header-text d-flex border-none mb-10">
-                                        <div className="chat-about">
-                                            <div className="chat-with font-18">Pilih Barang</div>
-                                        </div>
-                                    </div>
-                                    <div className="chat-search">
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <div className="input-group input-group-sm">
-                                                        <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1}>Kode Barang</option>
-                                                            <option value={2}>Barcode</option>
-                                                            <option value={3}>Deskripsi</option>
-                                                        </select>
+                                                        />
                                                     </div>
-                                                    <small
-                                                        id="passwordHelpBlock"
-                                                        className="form-text text-muted"
-                                                    >
-                                                        Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
-                                                    </small>
                                                 </div>
                                             </div>
-                                            <div className="col-md-12">
-                                                <div className="form-group">
-                                                    <div className="input-group input-group-sm">
-                                                        <input
-                                                            autoFocus
-                                                            type="text"
-                                                            id="chat-search"
-                                                            name="search"
-                                                            className="form-control form-control-sm"
-                                                            value={this.state.search}
-                                                            placeholder="Search"
-                                                            onChange={(e)=>this.HandleCommonInputChange(e,false)}
-                                                            onKeyPress = {
-                                                                event => {
-                                                                    if (event.key === 'Enter') {
-                                                                        this.HandleSearch();
+                                        </div>
+                                    </div>
+                                    <div className="chat-area">
+                                        <div className="chat-header-text d-flex border-none mb-10">
+                                            <div className="chat-about">
+                                                <div className="chat-with font-18">Pilih Barang</div>
+                                            </div>
+                                        </div>
+                                        <div className="chat-search">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <select name='searchby' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                                <option value={1}>Kode Barang</option>
+                                                                <option value={2}>Barcode</option>
+                                                                <option value={3}>Deskripsi</option>
+                                                            </select>
+                                                        </div>
+                                                        <small
+                                                            id="passwordHelpBlock"
+                                                            className="form-text text-muted"
+                                                        >
+                                                            Cari berdasarkan {parseInt(this.state.searchby,10)===1?'Kode Barang':(parseInt(this.state.searchby,10)===2?'Barcode':'Deskripsi')}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <div className="form-group">
+                                                        <div className="input-group input-group-sm">
+                                                            <input
+                                                                autoFocus
+                                                                type="text"
+                                                                id="chat-search"
+                                                                name="search"
+                                                                className="form-control form-control-sm"
+                                                                value={this.state.search}
+                                                                placeholder="Search"
+                                                                onChange={(e)=>this.HandleCommonInputChange(e,false)}
+                                                                onKeyPress = {
+                                                                    event => {
+                                                                        if (event.key === 'Enter') {
+                                                                            this.HandleSearch();
 
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        />
-                                                        <span className="input-group-append">
-                                  <button
-                                      type="button"
-                                      style={{zIndex:0}}
-                                      className="btn btn-primary"
-                                      onClick = {
-                                          event => {
-                                              event.preventDefault();
-                                              this.HandleSearch();
-                                          }
-                                      }
-                                  >
-                                    <i className="fa fa-search" />
-                                  </button>
-                                </span>
+                                                            />
+                                                            <span className="input-group-append">
+                                                              <button
+                                                                  type="button"
+                                                                  style={{zIndex:0}}
+                                                                  className="btn btn-primary"
+                                                                  onClick = {
+                                                                      event => {
+                                                                          event.preventDefault();
+                                                                          this.HandleSearch();
+                                                                      }
+                                                                  }
+                                                              >
+                                                                <i className="fa fa-search" />
+                                                              </button>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {/*end chat-search*/}
-                                    <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
-                                        <div className="people-list">
+                                        {/*end chat-search*/}
+                                        <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
                                                     {
@@ -853,11 +858,12 @@ class Alokasi extends Component{
                                                                         qty:1,
                                                                         tambahan:i.tambahan,
                                                                     })}>
-                                                                        <img src={i.gambar} alt="avatar" />
+                                                                        <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                         <div className="about">
-                                                                            <div className="name">{i.nm_brg}</div>
-                                                                            <div className="status" style={{fontStyle:'italic'}}>{i.supplier}</div>
+                                                                            <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
+                                                                            <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.supplier}</small></div>
                                                                         </div>
+
                                                                     </li>
                                                                 )
                                                             }):(
@@ -870,107 +876,68 @@ class Alokasi extends Component{
                                                 </ul>
                                             </div>
                                         </div>
-                                    </Scrollbars>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-7 col-md-8 col-xl-9 box-margin">
-                        <div className="card" style={{height: "auto"}}>
-                            <div className="container" style={{ marginTop: "20px" }}>
-                                {/* HEADER FORM */}
-                                <form className=''>
-                                    <div className="row">
-                                        <div className="col-md-4">
+                                        <hr/>
+                                        <div className="form-group">
+                                            <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                        </div>
+                                    </div>
+                                </StickyBox>
+                                {/*START RIGHT*/}
+                                <div style={{width:"80%"}}>
+                                    <div className="card-header" style={{zoom:"85%"}}>
+                                        <form className=''>
                                             <div className="row">
-                                                <div className="col-md-12">
+                                                <div className="col-md-2">
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            No. Transkasi
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            readOnly
-                                                            className="form-control"
-                                                            id="nota"
-                                                            style={{fontWeight:'bolder'}}
-                                                            value={this.props.nota}
-                                                        />
+                                                        <label className="control-label font-12">No. Transkasi</label>
+                                                        <input type="text" readOnly className="form-control" id="nota" style={{fontWeight:'bolder'}} value={this.props.nota}/>
                                                     </div>
+                                                </div>
+                                                <div className="col-md-2">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Tanggal Order</label>
                                                         <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))}/>
                                                     </div>
-
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="row">
-                                                <div className="col-md-6">
+                                                <div className="col-md-2">
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Lokasi Asal
-                                                        </label>
-                                                        <Select
-                                                            options={this.state.location_data}
-                                                            placeholder = "Pilih Lokasi Asal"
-                                                            onChange={this.HandleChangeLokasi}
-                                                            value = {
-                                                                this.state.location_data.find(op => {
-                                                                    return op.value === this.state.location
-                                                                })
-                                                            }
-
-                                                        />
+                                                        <label className="control-label font-12">Lokasi Asal</label>
+                                                        <Select options={this.state.location_data} placeholder = "==== Pilih ====" onChange={this.HandleChangeLokasi} value = {this.state.location_data.find(op => {return op.value === this.state.location})}/>
                                                         <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location}
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div className="col-md-2">
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Lokasi Tujuan
-                                                        </label>
+                                                        <label className="control-label font-12">Lokasi Tujuan</label>
                                                         <Select
-                                                            options={this.state.location_data.filter(
-                                                                option => option.value !== this.state.location
-                                                            )}
-                                                            placeholder="Pilih Lokasi Tujuan"
+                                                            options={this.state.location_data.filter(option => option.value !== this.state.location)}
+                                                            placeholder="==== Pilih ===="
                                                             onChange={this.HandleChangeLokasi2}
-                                                            value = {
-                                                                this.state.location_data.find(op => {
-                                                                    return op.value === this.state.location2
-                                                                })
-                                                            }
+                                                            value = {this.state.location_data.find(op => {return op.value === this.state.location2})}
                                                         />
                                                         <div className="invalid-feedback" style={this.state.error.location2!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location2}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6">
+                                                <div className="col-md-2">
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Jenis Transaksi
+                                                        <label className="control-label font-12">Jenis Transaksi
                                                         </label>
                                                         <Select
                                                             options={this.state.jenis_trx_data}
                                                             placeholder="Pilih Jenis Transaksi"
                                                             onChange={this.HandleChangeJenisTrx}
-                                                            value={
-                                                                this.state.jenis_trx_data.find(op => {
-                                                                    return op.value === this.state.jenis_trx
-                                                                })
-                                                            }
-
+                                                            value={this.state.jenis_trx_data.find(op => {return op.value === this.state.jenis_trx})}
                                                         />
 
                                                     </div>
+                                                </div>
+                                                <div className="col-md-2">
                                                     <div className="form-group">
-                                                        <label className="control-label font-12">
-                                                            Catatan
-                                                        </label>
+                                                        <label className="control-label font-12">Catatan</label>
                                                         <input type="text" name={"catatan"} className={"form-control"} value={this.state.catatan} onChange={(e=>this.HandleCommonInputChange(e))}/>
                                                         <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.catatan}
@@ -978,17 +945,13 @@ class Alokasi extends Component{
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                </form>
-                            </div>
-                            <div className="card-body">
-                                <div id="tableContainer">
-                                    <div style={{overflowX:'auto',zoom:'85%'}}>
-
-                                        <table className="table table-hover table-bordered">
+                                    <div style={{overflowX:'auto',zoom:'85%',marginTop:'10px'}}>
+                                        <table className="table table-hover">
                                             <thead >
                                             <tr>
+                                                <th style={columnStyle}>No</th>
                                                 <th style={columnStyle}>#</th>
                                                 <th style={columnStyle}>Nama</th>
                                                 <th style={columnStyle}>Barcode</th>
@@ -1007,6 +970,7 @@ class Alokasi extends Component{
                                                     subtotal+=this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty);
                                                     return (
                                                         <tr key={index} >
+                                                            <td style={columnStyle}>{index+1}</td>
                                                             <td style={columnStyle}>
                                                                 <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e)=>this.HandleRemove(e,item.id)}><i className='fa fa-trash'/></a>
                                                             </td>
@@ -1021,16 +985,24 @@ class Alokasi extends Component{
                                                                     })
                                                                 }
                                                             </select></td>
-                                                            <td style={columnStyle}>{item.harga_beli}</td>
-                                                            <td style={columnStyle}>{item.hrg_jual}</td>
-                                                            <td style={columnStyle}>{item.stock}</td>
                                                             <td style={columnStyle}>
-                                                                <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'center'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
+                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={toRp(item.harga_beli)}/>
+                                                            </td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={toRp(item.hrg_jual)}/>
+                                                            </td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={item.stock}/>
+                                                            </td>
+                                                            <td style={columnStyle}>
+                                                                <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'right'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
                                                                 <div className="invalid-feedback" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
-                                                            <td style={columnStyle}>{this.state.jenis_trx.toLowerCase()!=='transaksi'?parseInt(item.harga_beli,10)*parseFloat(item.qty):parseInt(item.hrg_jual,10)*parseFloat(item.qty)}</td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={this.state.jenis_trx.toLowerCase()!=='transaksi'?toRp(parseInt(item.harga_beli,10)*parseFloat(item.qty)):toRp(parseInt(item.hrg_jual,10)*parseFloat(item.qty))}/>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 })
@@ -1054,7 +1026,7 @@ class Alokasi extends Component{
                                                     <div className="row" style={{marginBottom: '3px'}}>
                                                         <label className="col-sm-4">Sub Total</label>
                                                         <div className="col-sm-8">
-                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={subtotal} readOnly />
+                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={toRp(subtotal)} readOnly />
                                                         </div>
                                                     </div>
                                                 </form>
@@ -1067,6 +1039,8 @@ class Alokasi extends Component{
                         </div>
                     </div>
                 </div>
+
+
             </Layout>
         );
     }
@@ -1076,6 +1050,7 @@ class Alokasi extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
+    paginBrg:state.productReducer.pagin_brg,
     nota: state.alokasiReducer.code,
     supplier: state.supplierReducer.dataSupllier,
     isLoading:state.alokasiReducer.isLoading,

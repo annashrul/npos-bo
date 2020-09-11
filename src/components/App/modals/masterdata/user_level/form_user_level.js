@@ -70,7 +70,7 @@ class FormUserLevel extends Component{
                 {id: 38, value: "0", isChecked: false,label:''},
                 {id: 39, value: "0", isChecked: false,label:''},
             ],
-            penjualan       : [
+            transaksi       : [
                 {id: 40, value: "0", isChecked: false,label:'Penjualan Barang'},
                 {id: 41, value: "0", isChecked: false,label:'Transaksi Kas'},
                 {id: 42, value: "0", isChecked: false,label:''},
@@ -142,7 +142,7 @@ class FormUserLevel extends Component{
             ],
             lvl             : "",
             access          : [],
-            array_modul     : ['setting','masterdata','produksi','inventory','pembelian','penjualan','pembayaran','report','cetak_barcode'],
+            array_modul     : ['setting','masterdata','produksi','inventory','pembelian','transaksi','pembayaran','report','cetak_barcode'],
             error           : {
                 lvl:""
             }
@@ -198,7 +198,7 @@ class FormUserLevel extends Component{
                 {id: 38, value: "0", isChecked: false,label:''},
                 {id: 39, value: "0", isChecked: false,label:''},
             ],
-            penjualan       : [
+            transaksi       : [
                 {id: 40, value: "0", isChecked: false,label:'Penjualan Barang'},
                 {id: 41, value: "0", isChecked: false,label:'Transaksi Kas'},
                 {id: 42, value: "0", isChecked: false,label:''},
@@ -275,28 +275,6 @@ class FormUserLevel extends Component{
             }
         })
     }
-    toggle = (e) => {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.clearState();
-    };
-    handleLoopAccess(moduls=[],nextProps=[]){
-        if(nextProps!==null){
-            moduls.forEach(modul=>{
-                for(let i=0;i<nextProps.length;i++){
-                    if(modul.id === nextProps[i].id){
-                        // if(nextProps[i].value==="1"){
-                        //     modul.isChecked = true;
-                        // }
-                        modul.isChecked = nextProps[i].isChecked;
-                        modul.value = nextProps[i].value;
-                    }
-                }
-            });
-            return moduls;
-        }
-    }
     getProps(param){
         if (param.detail !== undefined && param.detail !== []) {
             let array=[];
@@ -314,22 +292,54 @@ class FormUserLevel extends Component{
             this.clearState();
         }
     }
-
-
     componentWillReceiveProps(nextProps) {
         this.getProps(nextProps);
     }
     componentWillMount(){
         this.getProps(this.props);
     }
+    toggle = (e) => {
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.clearState();
+    };
+    handleLoopAccess(moduls=[],nextProps=[]){
+        if(nextProps!==null){
+            moduls.forEach(modul=>{
+                for(let i=0;i<nextProps.length;i++){
+                    if(modul.id === nextProps[i].id){
+                        modul.isChecked = nextProps[i].isChecked;
+                        modul.value = nextProps[i].value;
+                    }
+                }
+            });
+            return moduls;
+        }
+    }
+    handleAllChecked = (event,param) => {
+        let moduls = this.state[param];
+        moduls.forEach(modul => {
+            modul.isChecked = event.target.checked;
+            modul.value = modul.label!==''?modul.isChecked === false ? "0":"1":"0";
+        });
+        this.setState({param: moduls});
+    };
+    handleCheckChieldElement = (event,param) => {
+        let moduls = this.state[param];
+        moduls.forEach(modul => {
+            if (modul.label === event.target.getAttribute("id")){
+                modul.isChecked =  event.target.checked;
+                modul.value = modul.label!==''? modul.isChecked === false ? "0":"1":"0";
+            }
+        });
+        this.setState({param: moduls});
+    };
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
         let err = Object.assign({}, this.state.error, {[event.target.name]: ""});
         this.setState({error: err});
     };
-    
-
-
     handleSubmit(e){
         e.preventDefault();
         let form        = e.target;
@@ -366,24 +376,7 @@ class FormUserLevel extends Component{
 
 
     }
-    handleAllChecked = (event,param) => {
-        let moduls = this.state[param];
-        moduls.forEach(modul => {
-            modul.isChecked = event.target.checked;
-            modul.value = modul.label!==''?modul.isChecked === false ? "0":"1":"0";
-        });
-        this.setState({param: moduls});
-    };
-    handleCheckChieldElement = (event,param) => {
-        let moduls = this.state[param];
-        moduls.forEach(modul => {
-            if (modul.label === event.target.getAttribute("id")){
-                modul.isChecked =  event.target.checked;
-                modul.value = modul.label!==''? modul.isChecked === false ? "0":"1":"0";
-            }
-        });
-        this.setState({param: moduls});
-    };
+
 
     render(){
         const {array_modul} = this.state;
@@ -395,7 +388,7 @@ class FormUserLevel extends Component{
                         <div className="row">
                             <div className="col-12">
                                 <div className="form-group">
-                                    <label>Name</label>
+                                    <label>Nama User Level</label>
                                     <input type="text" className="form-control" name="lvl" value={this.state.lvl}  onChange={(e)=>this.handleChange(e)} />
                                     <div className="invalid-feedback"
                                          style={this.state.error.lvl !== "" ? {display: 'block'} : {display: 'none'}}>

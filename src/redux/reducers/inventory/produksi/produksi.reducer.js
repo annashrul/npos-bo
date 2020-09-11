@@ -32,7 +32,7 @@ export const produksiReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 statusBahan: action.data.status,
                 msgBahan: action.data.msg,
-                dataBahan: action.data.result.data,
+                dataBahan: action.data.result,
             });
         case PRODUKSI.SUCCESS_PAKET:
             return Object.assign({}, state, {
