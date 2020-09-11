@@ -101,7 +101,6 @@ class TrxAdjustment extends Component{
     };
     HandleChangeLokasi(lk){
         // let index = lk.nativeEvent.target.selectedIndex;
-        
         let err = Object.assign({}, this.state.error, {
             location: ""
         });

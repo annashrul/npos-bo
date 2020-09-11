@@ -159,7 +159,7 @@ class Receive extends Component{
         }
 
         if (localStorage.ambil_data !== undefined && localStorage.ambil_data !== '') {
-            if (localStorage.ambil_data === 2) {
+            if (parseInt(localStorage.ambil_data,10) === 2) {
                 this.props.dispatch(FetchPoReport(1, 1000))
             }
             this.setState({
@@ -172,9 +172,9 @@ class Receive extends Component{
             this.setState({
                 ambil_nota: localStorage.nota
             })
-            // this.props.dispatch(FetchPoData(localStorage.nota));
-            // destroy(table)
-            // this.getData()
+            this.props.dispatch(FetchPoData(localStorage.nota));
+            destroy(table)
+            this.getData()
         }
 
         if (localStorage.lk !== undefined && localStorage.lk !== '') {
@@ -391,7 +391,7 @@ class Receive extends Component{
         }
 
         if (column === 'ambil_data') {
-            if(val===2){
+            if (parseInt(val,10) === 2) {
                 this.props.dispatch(FetchPoReport(1, 1000))
             }
             localStorage.setItem('ambil_data',val);
@@ -850,9 +850,9 @@ class Receive extends Component{
                                                 <div className="form-group">
                                                     <div className="input-group input-group-sm">
                                                         <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
-                                                            <option value={1} selected={this.state.ambil_data === 1}>Pembelian Langsung</option>
-                                                            <option value={2} selected={this.state.ambil_data===2}>Purchase Order</option>
-                                                            <option value={3} selected={this.state.ambil_data===3}>Pre-Receive</option>
+                                                            <option value={1} selected={parseInt(this.state.ambil_data,10) === 1}>Pembelian Langsung</option>
+                                                            <option value={2} selected={parseInt(this.state.ambil_data,10)===2}>Purchase Order</option>
+                                                            <option value={3} selected={parseInt(this.state.ambil_data,10)===3}>Pre-Receive</option>
                                                         </select>
                                                     </div>
                                                     <small
