@@ -5,23 +5,13 @@ import Layout from "../../Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
 import {FetchBrg} from "redux/actions/masterdata/product/product.action";
-import {Scrollbars} from "react-custom-scrollbars";
 import moment from "moment";
 import {FetchCodeAdjustment, storeAdjusment} from "redux/actions/adjustment/adjustment.action";
-import {
-    withRouter
-} from 'react-router-dom';
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
+import {withRouter} from 'react-router-dom';
+import StickyBox from "react-sticky-box";
+import {lengthBrg,ToastQ} from "helper";
+import imgDefault from 'assets/default.png'
+import {toRp} from "../../../../helper";
 
 const table='adjusment';
 class TrxAdjustment extends Component{
@@ -284,7 +274,7 @@ class TrxAdjustment extends Component{
         const cek = cekData('barcode', id, table);
         cek.then(res => {
             if (res === undefined) {
-                Toast.fire({
+                ToastQ.fire({
                     icon: 'error',
                     title: `not found.`
                 })
@@ -299,7 +289,7 @@ class TrxAdjustment extends Component{
                     }
                 })
                 update(table, final);
-                Toast.fire({
+                ToastQ.fire({
                     icon: 'success',
                     title: `${column} has been changed.`
                 })
@@ -490,10 +480,11 @@ class TrxAdjustment extends Component{
                     <div className="card-header">
                         <h4>Adjusment</h4>
                     </div>
-                    <div className="row">
-                        <div className="col-md-3">
-                            <div className="card">
-                                <div className="card-body">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                {/*START LEFT*/}
+                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%",marginRight:"10px"  }}>
                                     <div className="form-group">
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
@@ -531,82 +522,79 @@ class TrxAdjustment extends Component{
                                                 }
                                             />
                                             <span className="input-group-append">
-                                              <button type="button" className="btn btn-primary"
-                                                  onClick={
-                                                      event => {
-                                                          event.preventDefault();
-                                                          this.HandleSearch();
-                                                      }
-                                                  }>
-                                                <i className="fa fa-search"/>
-                                              </button>
-                                            </span>
+                                                          <button type="button" className="btn btn-primary"
+                                                                  onClick={
+                                                                      event => {
+                                                                          event.preventDefault();
+                                                                          this.HandleSearch();
+                                                                      }
+                                                                  }>
+                                                            <i className="fa fa-search"/>
+                                                          </button>
+                                                        </span>
                                         </div>
                                     </div>
-                                    <Scrollbars style={{ width: "100%", height: "300px", maxHeight:'100%' }}>
-                                        <div className="people-list">
-                                            <div id="chat_user_2">
-                                                <ul className="chat-list list-unstyled">
-                                                    {
-                                                        this.props.barang.length!==0?
-                                                            this.props.barang.map((i,inx)=>{
-                                                                return(
-                                                                    <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
-                                                                        barcode:i.barcode,
-                                                                        harga_beli:i.harga_beli,
-                                                                        satuan:i.satuan,
-                                                                        hrg_jual:i.hrg_jual,
-                                                                        kd_brg:i.kd_brg,
-                                                                        nm_brg:i.nm_brg,
-                                                                        kel_brg:i.kel_brg,
-                                                                        kategori:i.kategori,
-                                                                        stock_min:i.stock_min,
-                                                                        supplier:i.supplier,
-                                                                        subdept:i.subdept,
-                                                                        deskripsi:i.deskripsi,
-                                                                        jenis:i.jenis,
-                                                                        kcp:i.kcp,
-                                                                        poin:i.poin,
-                                                                        group1:i.group1,
-                                                                        group2:i.group2,
-                                                                        stock:i.stock,
-                                                                        qty_adjust:0,
-                                                                        status:'tambah',
-                                                                        saldo_stock:i.stock,
-                                                                        tambahan:[]
-                                                                    })}>
-                                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png" alt="avatar" />
-                                                                        <div className="about">
-                                                                            <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                            <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
+                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                        <div id="chat_user_2">
+                                            <ul className="chat-list list-unstyled">
+                                                {
+                                                    this.props.barang.length!==0?
+                                                        this.props.barang.map((i,inx)=>{
+                                                            return(
+                                                                <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                    barcode:i.barcode,
+                                                                    harga_beli:i.harga_beli,
+                                                                    satuan:i.satuan,
+                                                                    hrg_jual:i.hrg_jual,
+                                                                    kd_brg:i.kd_brg,
+                                                                    nm_brg:i.nm_brg,
+                                                                    kel_brg:i.kel_brg,
+                                                                    kategori:i.kategori,
+                                                                    stock_min:i.stock_min,
+                                                                    supplier:i.supplier,
+                                                                    subdept:i.subdept,
+                                                                    deskripsi:i.deskripsi,
+                                                                    jenis:i.jenis,
+                                                                    kcp:i.kcp,
+                                                                    poin:i.poin,
+                                                                    group1:i.group1,
+                                                                    group2:i.group2,
+                                                                    stock:i.stock,
+                                                                    qty_adjust:0,
+                                                                    status:'tambah',
+                                                                    saldo_stock:i.stock,
+                                                                    tambahan:[]
+                                                                })}>
+                                                                    <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                    <div className="about">
+                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
+                                                                        <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
+                                                                    </div>
 
-                                                                        </div>
-                                                                    </li>
-                                                                )
-                                                            }):(
-                                                                <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                                                </li>
                                                             )
+                                                        }):(
+                                                            <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                                        )
 
-                                                    }
+                                                }
 
 
-                                                </ul>
-                                            </div>
+                                            </ul>
                                         </div>
-                                    </Scrollbars>
-                                    <div className="form-group">
-                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'Tunggu Sebentar':'tampilkan lebih banyak'}</button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-9">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
+                                    <hr/>
+                                    <div className="form-group">
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                    </div>
+                                </StickyBox>
+                                {/*END LEFT*/}
+                                {/*START RIGHT*/}
+                                <div style={{width:"80%"}}>
+                                    <div className="card-header" style={{zoom:"85%"}}>
+                                        <form className=''>
                                             <div className="row">
-                                                <div className="col-md-6">
+                                                <div className="col-md-3">
                                                     <div className="form-group">
                                                         <label htmlFor="">Kode Adjusment</label>
                                                         <input
@@ -619,7 +607,7 @@ class TrxAdjustment extends Component{
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6">
+                                                <div className="col-md-3">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">
                                                             Tanggal Order
@@ -627,125 +615,120 @@ class TrxAdjustment extends Component{
                                                         <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div className="col-md-3">
+                                                    <div className="form-group">
+                                                        <label className="control-label font-12">
+                                                            Lokasi
+                                                        </label>
+                                                        <Select
+                                                            options={this.state.location_data}
+                                                            placeholder="Pilih Lokasi"
+                                                            onChange={this.HandleChangeLokasi}
+                                                            value={
+                                                                this.state.location_data.find(op => {
+                                                                    return op.value === this.state.location
+                                                                })
+                                                            }
 
-                                            <div className="form-group">
-                                                <label className="control-label font-12">
-                                                    Lokasi
-                                                </label>
-                                                <Select
-                                                    options={this.state.location_data}
-                                                    placeholder="Pilih Lokasi"
-                                                    onChange={this.HandleChangeLokasi}
-                                                    value={
-                                                        this.state.location_data.find(op => {
-                                                            return op.value === this.state.location
-                                                        })
-                                                    }
+                                                        />
+                                                        <div className="invalid-feedback"
+                                                             style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                            {this.state.error.location}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-3">
+                                                    <div className="form-group">
+                                                        <label className="control-label font-12">
+                                                            Catatan
+                                                        </label>
+                                                        <input type="text" name={"catatan"} className="form-control" defaultValue={this.state.catatan} onChange={(e => this.HandleCommonInputChange(e))}/>
+                                                        <div className="invalid-feedback"
+                                                             style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                            {this.state.error.catatan}
+                                                        </div>
 
-                                                />
-                                                <div className="invalid-feedback"
-                                                     style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                    {this.state.error.location}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="col-md-6">
-
-                                            <div className="form-group">
-                                                <label className="control-label font-12">
-                                                    Catatan
-                                                </label>
-                                                <textarea
-                                                    style={{height: "119px"}}
-                                                    className="form-control"
-                                                    id="exampleTextarea1"
-                                                    rows={3}
-                                                    defaultValue={this.state.catatan}
-                                                    onChange={(e => this.HandleCommonInputChange(e))}
-                                                    name="catatan"
-                                                />
-                                                <div className="invalid-feedback"
-                                                     style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>
-                                                    {this.state.error.catatan}
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div className="table-responsive" style={{overflowX: "auto",zoom:"80%"}}>
-                                            <table className="table table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th style={columnStyle}>#</th>
-                                                    <th style={columnStyle}>Kode</th>
-                                                    <th style={columnStyle}>barcode</th>
-                                                    <th style={columnStyle}>Nama</th>
-                                                    <th style={columnStyle}>Satuan</th>
-                                                    <th style={columnStyle}>Harga Beli</th>
-                                                    <th style={columnStyle}>Stock Sistem</th>
-                                                    <th style={columnStyle}>Jenis</th>
-                                                    <th style={columnStyle}>Stock Adjust</th>
-                                                    <th style={columnStyle}>Saldo Stock</th>
-                                                </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                {
-                                                    this.state.databrg.map((item, index) => {
-                                                        let saldo_stock = item.saldo_stock;
-                                                        if(item.status === 'kurang'){
-                                                            saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
-                                                        }
-                                                        if(item.status === 'tambah' || item.status===''){
-                                                            saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
-                                                        }
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td style={columnStyle}>
-                                                                    <a href="about:blank" className='btn btn-danger btn-sm'
-                                                                       onClick={(e) => this.HandleRemove(e, item.id)}><i
-                                                                        className='fa fa-trash'/></a>
-                                                                </td>
-                                                                <td style={columnStyle}>{item.kd_brg}</td>
-                                                                <td style={columnStyle}>{item.barcode}</td>
-                                                                <td style={columnStyle}>{item.nm_brg}</td>
-                                                                <td style={columnStyle}>{item.satuan}</td>
-
-                                                                <td style={columnStyle}><input readOnly={true} type='text' name='harga_beli' value={item.harga_beli} className="form-control"/></td>
-                                                                <td style={columnStyle}><input readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
-                                                                <td style={columnStyle}>
-                                                                    <select style={{width:"120px"}} name='status' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].status} defaultValue={this.state.brgval[index].status} className="form-control">
-                                                                        <option value="tambah">Tambah</option>
-                                                                        <option value="kurang">Kurang</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td style={columnStyle}>
-                                                                    <input type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/>
-                                                                    {
-                                                                        parseFloat(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
-                                                                    }
-                                                                </td>
-                                                                <td style={{textAlign:"right"}}>{saldo_stock}</td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                                </tbody>
-                                            </table>
-
-                                        </div>
+                                        </form>
                                     </div>
-                                </div>
-                                <div className="card-header">
+                                    <div style={{overflowX: "auto",zoom:"80%",marginTop:'10px'}}>
+                                        <table className="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th style={columnStyle}>No</th>
+                                                <th style={columnStyle}>#</th>
+                                                <th style={columnStyle}>Kode</th>
+                                                <th style={columnStyle}>barcode</th>
+                                                <th style={columnStyle}>Nama</th>
+                                                <th style={columnStyle}>Satuan</th>
+                                                <th style={columnStyle}>Harga Beli</th>
+                                                <th style={columnStyle}>Stock Sistem</th>
+                                                <th style={columnStyle}>Jenis</th>
+                                                <th style={columnStyle}>Stock Adjust</th>
+                                                <th style={columnStyle}>Saldo Stock</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            {
+                                                this.state.databrg.map((item, index) => {
+                                                    let saldo_stock = item.saldo_stock;
+                                                    if(item.status === 'kurang'){
+                                                        saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
+                                                    }
+                                                    if(item.status === 'tambah' || item.status===''){
+                                                        saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
+                                                    }
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td style={columnStyle}>{index+1}</td>
+                                                            <td style={columnStyle}>
+                                                                <a href="about:blank" className='btn btn-danger btn-sm'
+                                                                   onClick={(e) => this.HandleRemove(e, item.id)}><i
+                                                                    className='fa fa-trash'/></a>
+                                                            </td>
+                                                            <td style={columnStyle}>{item.kd_brg}</td>
+                                                            <td style={columnStyle}>{item.barcode}</td>
+                                                            <td style={columnStyle}>{item.nm_brg}</td>
+                                                            <td style={columnStyle}>{item.satuan}</td>
+
+                                                            <td style={columnStyle}><input style={{textAlign:"right"}} readOnly={true} type='text' name='harga_beli' value={toRp(item.harga_beli)} className="form-control"/></td>
+                                                            <td style={columnStyle}><input style={{textAlign:"right"}} readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
+                                                            <td style={columnStyle}>
+                                                                <select style={{width:"120px"}} name='status' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].status} defaultValue={this.state.brgval[index].status} className="form-control">
+                                                                    <option value="tambah">Tambah</option>
+                                                                    <option value="kurang">Kurang</option>
+                                                                </select>
+                                                            </td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{textAlign:"right"}} type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/>
+                                                                {
+                                                                    parseFloat(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
+                                                                }
+                                                            </td>
+                                                            <td style={columnStyle}>
+                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={saldo_stock}/>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                            </tbody>
+                                        </table>
+
+                                    </div>
                                     <div className="dashboard-btn-group d-flex align-items-center">
                                         <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
                                         <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                     </div>
                                 </div>
+                                {/*END RIGHT*/}
                             </div>
                         </div>
                     </div>
+
                 </div>
             </Layout>
         );
@@ -757,8 +740,8 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    nota:state.adjustmentReducer.get_code,
     paginBrg:state.productReducer.pagin_brg,
+    nota:state.adjustmentReducer.get_code,
 });
 
 export default withRouter(connect(mapStateToPropsCreateItem)(TrxAdjustment));

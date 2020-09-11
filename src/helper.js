@@ -158,6 +158,10 @@ export const kassa = (param='')=>{
     return data;
 };
 
+export const lengthBrg = (str)=>{
+    let txt = str.length>15?`${str.substr(0,15)} ...`:str;
+    return txt.toLowerCase();
+}
 
 class Paginationq extends Component{
     // constructor(props){
