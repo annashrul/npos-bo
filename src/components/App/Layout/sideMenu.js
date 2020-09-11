@@ -824,8 +824,8 @@ class SideMenu extends Component {
                         <a href="!#" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Transaksi</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true
                         ?"block" : "none"}}>
-                            <li className={path==='/sale'?"active":''} style={this.state.penjualan_barang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Penjualan Barang</Link></li>
-                            <li className={path==='/cash_trx'?"active":''} style={this.state.cash_trx==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash_trx" style={{width:'fit-content'}}> <i className="fa fa-shopping-cart" />Transaksi Kas</Link></li>
+                            <li className={path==='/sale'?"active":''} style={this.state.penjualan_barang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-bag" />Penjualan Barang</Link></li>
+                            <li className={path==='/cash_trx'?"active":''} style={this.state.cash_trx==="0"?{"display":"none"}:{"display":"block"}}><Link to="/cash_trx" style={{width:'fit-content'}}> <i className="fa fa-archive" />Transaksi Kas</Link></li>
                         </ul>
                     </li>
                     {/* TRANSAKSI MODUL END */}
@@ -886,7 +886,7 @@ class SideMenu extends Component {
                                 path==='/report/dn'?" active menu-open" : "")} style={modul_report_inventory===true?{display:'block'}:{display:'none'}}>
                                 <a href="!#" onClick={(e) => this.changeMenu(e,'report_inventory')}><i className="zmdi zmdi-widgets"/>Inventory <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportInventory===true?"block" : "none"}}>
-                                    <li className={path==='/report/inventory'?"active":''} style={this.state.r_stock==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/inventory" style={{width:'fit-content'}}> <i className="ti-server" />Stock</Link></li>
+                                    <li className={path==='/report/inventory'?"active":''} style={this.state.r_stock==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/inventory" style={{width:'fit-content'}}> <i className="zmdi zmdi-chart" />Stock</Link></li>
                                     <li className={path==='/report/adjustment'?"active":''} style={this.state.r_adjusment==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment</Link></li>
                                     <li className={path==='/report/alokasi'?"active":''} style={this.state.r_alokasi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/alokasi" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi</Link></li>
                                     <li className={path==='/report/dn'?"active":''} style={this.state.r_delivery_note==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/dn" style={{width:'fit-content'}}> <i className="fa fa-sticky-note" />Delivery Note</Link></li>
