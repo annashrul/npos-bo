@@ -134,7 +134,7 @@ class BayarPiutang extends Component{
         }
         else if(this.state.nota_pembelian===''){
             err = Object.assign({}, err, {
-                nota_pembelian:"Nota Pembelian Tidak Boleh Kosong"
+                nota_pembelian:"Nota Penjualan Tidak Boleh Kosong"
             });
             this.setState({error: err,})
             
@@ -273,7 +273,7 @@ class BayarPiutang extends Component{
                             </div>
                             <div className="col-md-3">
                                 <div className="form-group">
-                                    <label className="control-label font-12">Nota Pembelian</label>
+                                    <label className="control-label font-12">Nota Penjualan</label>
                                     <div className="input-group">
                                         <input type="text" className="form-control" name="nota_pembelian" value={this.state.nota_pembelian} onChange={this.handleChange}
                                                onKeyPress = {
