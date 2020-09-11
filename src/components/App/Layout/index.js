@@ -5,6 +5,7 @@ import Header from '../Layout/header'
 import SideMenu from '../Layout/sideMenu'
 import {connect} from 'react-redux'
 import FreeScrollbar from 'react-free-scrollbar';
+import Default from 'assets/default.png';
 
 class Layout extends Component {
     constructor(props){
@@ -54,7 +55,7 @@ class Layout extends Component {
                 <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
                     {/* Desktop Logo */}
                     <div className="ecaps-logo">
-                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo} alt="Desktop Logo" style={{maxHeight:'50px'}} /> <img className="small-logo" src={this.props.auth.user.fav_icon} alt="Mobile Logo" /></Link>
+                        <Link to="/" style={{backgroundColor:'#242939'}}><img className="desktop-logo" src={this.props.auth.user.logo} onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}}  alt="Desktop Logo" style={{maxHeight:'50px'}} /> <img className="small-logo" src={this.props.auth.user.fav_icon} onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}} alt="Mobile Logo" /></Link>
                     </div>
                     {/* Side Nav */}
                     <div className="slimScrollDiv" style={{position: "relative", width: "auto", height: "100%"}}>

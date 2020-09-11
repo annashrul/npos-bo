@@ -6,7 +6,7 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import FormBank from "components/App/modals/masterdata/bank/form_bank";
 import Swal from "sweetalert2";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
-import Noimage from 'assets/default.png';
+import Default from 'assets/default.png';
 
 class ListBank extends Component{
     constructor(props){
@@ -111,7 +111,7 @@ class ListBank extends Component{
                                             <div className="card">
                                                 <div className="social-widget">
                                                     <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
-                                                        <img src={v.foto==='-'?Noimage:v.foto} style={{height:"120px"}} alt=""/>
+                                                        <img src={v.foto === null?'error':v.foto} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}} style={{height:"120px"}}/>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-8 text-left">
