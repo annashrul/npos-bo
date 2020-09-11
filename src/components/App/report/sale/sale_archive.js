@@ -492,8 +492,8 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{v.kd_trx}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
                                                                     <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
+                                                                    <td style={columnStyle}>{v.customer}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={columnStyle}>{v.kd_kasir}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
