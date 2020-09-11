@@ -120,7 +120,6 @@ class ListLocation extends Component{
                             <th className="text-black" style={columnStyle} rowSpan="2">Name</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">Serial</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">Category</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">DC</th>
                             <th className="text-black" style={columnStyle} rowSpan="2">City</th>
                         </tr>
                         </thead>
@@ -147,7 +146,6 @@ class ListLocation extends Component{
                                                 <td style={columnStyle}>{v.nama_toko}</td>
                                                 <td style={columnStyle}>{v.serial?v.serial:'-'}</td>
                                                 <td style={columnStyle}>{v.lokasi_ktg?v.lokasi_ktg:'-'}</td>
-                                                <td style={columnStyle}>{v.dc?v.dc:'-'}</td>
                                                 <td style={columnStyle}>{v.kota?v.kota:'-'}</td>
                                             </tr>
                                         )

@@ -14,7 +14,7 @@ class FormLocation extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.state = {
-            kode:'', dc:'', serial:'', ket:'-', footer1:'-', footer2:'-', footer3:'-', footer4:'-',
+            kode:'', dc:'-', serial:'', ket:'-', footer1:'-', footer2:'-', footer3:'-', footer4:'-',
             kota:'', email:'', web:'-', nama_toko:'', phone:'0', lokasi_ktg:0, logo:'-', jam_buka:'', jam_tutup:'',
             alamat:'', lat:'0', lng:'0', status:'1', status_show:'1',nama:''
         };
@@ -71,7 +71,6 @@ class FormLocation extends Component{
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
         parseData['nama'] = this.state.nama_toko;
-        parseData['dc'] = this.state.dc;
         parseData['lokasi_ktg'] = this.state.lokasi_ktg;
         parseData['status'] = this.state.status;
         parseData['status_show'] = this.state.status_show;
@@ -114,24 +113,6 @@ class FormLocation extends Component{
                                 <div className="form-group">
                                     <label>Name</label>
                                     <input type="text" className="form-control" name="nama_toko" value={this.state.nama_toko} onChange={this.handleChange}  />
-                                </div>
-                                <div className="form-group">
-                                    <label>DC</label>
-                                    <select id="inputState" className="form-control" name="dc" defaultValue={this.state.dc} value={this.state.dc} onChange={this.handleChange} required>
-                                        <option value="">Choose DC</option>
-                                        {
-                                            (
-                                                typeof this.props.dataLocation.data === 'object' ?
-                                                    this.props.dataLocation.data.map((v,i)=>{
-                                                        return(
-                                                            <option key={i} value={v.kode}>{v.nama_toko}</option>
-                                                        )
-                                                    })
-                                                    : <option value="">No Option</option>
-                                            )
-                                        }
-
-                                    </select>
                                 </div>
                                 <div className="form-group">
                                     <label>Location Category</label>

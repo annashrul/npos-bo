@@ -4,9 +4,8 @@ import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
-import Paginationq from "helper";
 import Preloader from "Preloader";
-import {rangeDate, toRp} from "helper";
+import Paginationq,{rangeDate, toRp, CapitalizeEachWord} from "helper";
 import {FetchReportSale} from "redux/actions/sale/sale.action";
 import Swal from "sweetalert2";
 import {
@@ -397,7 +396,8 @@ class SaleArchive extends Component{
                                                     typeof data==='object'? data.length>0?
 
                                                         data.map((v,i)=>{
-                                                            omset_per = omset_per + parseInt(v.omset,10);
+                                                            console.log("object", v.omset);
+                                                            omset_per+= parseFloat(v.omset);
                                                             dis_item_per = dis_item_per + parseInt(v.diskon_item,10);
                                                             dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);
                                                             dis_rp_per = dis_rp_per + parseInt(v.dis_rp,10);
@@ -432,7 +432,7 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
                                                                     <td style={columnStyle}>{v.customer}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.omset))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                                     <td style={{textAlign:"right"}}>{v.dis_persen}</td>
@@ -442,14 +442,14 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
                                                                     <td style={columnStyle}>{v.kas_lain}</td>
                                                                     <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gt,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
                                                                     <td style={columnStyle}>{v.kartu}</td>
-                                                                    <td style={columnStyle}>{v.status}</td>
+                                                                    <td style={columnStyle}>{CapitalizeEachWord(v.status)}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.jenis_trx}</td>
                                                                 </tr>
@@ -482,9 +482,9 @@ class SaleArchive extends Component{
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="7">TOTAL</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_item)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_rp)}</td>
-                                            <td style={{textAlign:"right"}}>{dis_persen}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_item.toFixed(2))}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_rp.toFixed(2))}</td>
+                                            <td style={{textAlign:"right"}}>{dis_persen.toFixed(2)}</td>
                                             <td colSpan="4"></td>
                                             <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>
                                             <td colSpan="1"></td>
