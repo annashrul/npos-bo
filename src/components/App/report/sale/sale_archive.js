@@ -133,6 +133,11 @@ class SaleArchive extends Component{
                 endDate: localStorage.date_to_sale_report
             })
         }
+        if (localStorage.status_sale_report !== undefined && localStorage.status_sale_report !== null) {
+            this.setState({
+                endDate: localStorage.status_sale_report
+            })
+        }
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
