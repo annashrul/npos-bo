@@ -414,9 +414,6 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
-                                       <div className="col-6 col-xs-6 col-md-2"></div>
-                                       <div className="col-6 col-xs-6 col-md-2"></div>
-                                       <div className="col-6 col-xs-6 col-md-2"></div>
                                        <div className="col-6 col-xs-6 col-md-2">
                                            <div className="form-group">
                                                <label className="control-label font-12">
@@ -457,18 +454,20 @@ class ReceiveReport extends Component{
                                                <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
                                            </div>
                                        </div>
-                                        <div className="col-6 col-xs-6 col-md-3">
-                                            <div className="form-group">
-                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                                    <i className="fa fa-search"/>
-                                                </button>
-                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                                    <i className="fa fa-print"></i> Export
-                                                </button>
-                                            </div>
-
-                                        </div>
                                    </div>
+                               </div>
+                               <div className="col-md-2 text-right">
+                                    <div className="col-6 col-xs-6 col-md-12">
+                                        <div className="form-group">
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                <i className="fa fa-search"/>
+                                            </button>
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                <i className="fa fa-print"></i> Export
+                                            </button>
+                                        </div>
+
+                                    </div>
                                </div>
 
 
