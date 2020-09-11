@@ -27,6 +27,8 @@ class SaleArchive extends Component{
             where_data:"",
             type_data:[],
             type:"",
+            status_data:[],
+            status:"",
             location_data:[],
             location:"",
             any_sale_report:"",
@@ -35,6 +37,7 @@ class SaleArchive extends Component{
         }
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.HandleChangeType = this.HandleChangeType.bind(this);
+        this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -59,10 +62,27 @@ class SaleArchive extends Component{
             });
             return null;
         });
-
         this.setState({
             type_data: data_type,
         });
+
+        let status = [
+            {kode:"",value: "Semua Status"},
+            {kode:"0",value: "Belum Lunas"},
+            {kode:"1",value: "Lunas"}
+        ];
+        let data_status=[];
+        status.map((i) => {
+            data_status.push({
+                value: i.kode,
+                label: i.value
+            });
+            return null;
+        });
+        this.setState({
+            status_data: data_status,
+        });
+
         if (nextProps.auth.user) {
             let lk = [{
                 value: "",
@@ -124,6 +144,12 @@ class SaleArchive extends Component{
         });
         localStorage.setItem('type_sale_report', type.value);
     }
+    HandleChangeStatus(status) {
+        this.setState({
+            status: status.value,
+        });
+        localStorage.setItem('status_sale_report', status.value);
+    }
     HandleChangeLokasi(lk) {
         this.setState({
             location: lk.value,
@@ -150,6 +176,7 @@ class SaleArchive extends Component{
         let dateFrom=localStorage.getItem("date_from_sale_report");
         let dateTo=localStorage.getItem("date_to_sale_report");
         let tipe=localStorage.getItem("type_sale_report");
+        let status=localStorage.getItem("status_sale_report");
         let lokasi=localStorage.getItem("location_sale_report");
         let any=localStorage.getItem("any_sale_report");
         if(dateFrom!==undefined&&dateFrom!==null){
@@ -159,6 +186,9 @@ class SaleArchive extends Component{
         }
         if(tipe!==undefined&&tipe!==null&&tipe!==''){
             if(where!==''){where+='&'}where+=`type=${tipe}`
+        }
+        if(status!==undefined&&status!==null&&status!==''){
+            if(where!==''){where+='&'}where+=`status=${status}`
         }
         if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
             if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
@@ -244,176 +274,84 @@ class SaleArchive extends Component{
                         <h5>Laporan Arsip Penjualan</h5>
                     </div>
                     <div className="card-body">
-                        <div className="row">
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label htmlFor=""> Periode </label>
-                                    <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                        <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
-                                    </DateRangePicker>
-                                </div>
-                            </div>
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Lokasi
-                                    </label>
-                                    <Select
-                                        options={this.state.location_data}
-                                        placeholder="Pilih Lokasi"
-                                        onChange={this.HandleChangeLokasi}
-                                        value={
-                                            this.state.location_data.find(op => {
-                                                return op.value === this.state.location
-                                            })
-                                        }
+                                    <div className="row" style={{zoom:"100%"}}>
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label className="control-label font-12" htmlFor=""> Periode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
+                                                <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                                                    <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
+                                                </DateRangePicker>
+                                            </div>
+                                        </div>
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    Lokasi
+                                                </label>
+                                                <Select
+                                                    options={this.state.location_data}
+                                                    placeholder="Pilih Lokasi"
+                                                    onChange={this.HandleChangeLokasi}
+                                                    value={
+                                                        this.state.location_data.find(op => {
+                                                            return op.value === this.state.location
+                                                        })
+                                                    }
 
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Tipe Transaksi
-                                    </label>
-                                    <Select
-                                        options={this.state.type_data}
-                                        placeholder="Pilih Tipe Transaksi"
-                                        onChange={this.HandleChangeType}
-                                        value={
-                                            this.state.type_data.find(op => {
-                                                return op.value === this.state.type
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label htmlFor="">Cari</label>
-                                    <input type="text" name="any_sale_report" className="form-control" value={this.state.any_sale_report} placeholder="Kode/Kasir/Customer" onChange={(e)=>this.handleChange(e)}/>
-                                </div>
-                            </div>
-                            <div className="col-6 col-xs-6 col-md-3">
-                                <div className="form-group">
-                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                        <i className="fa fa-search"/>
-                                    </button>
-                                    <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                        <i className="fa fa-print"></i> Export
-                                    </button>
-                                    {/* <ReactHTMLTableToExcel
-                                        className="btn btn-primary btnBrg"
-                                        table="report_sale_to_excel"
-                                        filename="laporan_penjualan"
-                                        sheet="barang"
-                                        buttonText="export excel">
-                                    </ReactHTMLTableToExcel> */}
-                                </div>
-
-                            </div>
-                            <div className="col-md-12">
-                                {/*DATA EXCEL*/}
-                                <table className="table table-hover"  id="report_sale_to_excel" style={{display:"none"}}>
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={23}>{this.state.startDate} - {this.state.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={23}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                    </tr>
-
-                                    <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
-                                        <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>Peritem(%)</th>
-                                        <th className="text-black" style={columnStyle}>Total(rp)</th>
-                                        <th className="text-black" style={columnStyle}>Total(%)</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        <tbody>
-                                        {
-                                            typeof this.props.saleReportExcel.data==='object'? this.props.saleReportExcel.data.length>0?
-                                                this.props.saleReportExcel.data.map((v,i)=>{
-                                                    return (
-                                                        <tr key={i}>
-                                                            <td style={columnStyle}>{v.kd_trx}</td>
-                                                            <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
-                                                            <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
-                                                            <td style={columnStyle}>{v.nama}</td>
-                                                            <td style={columnStyle}>{v.kd_kasir}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                            <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
-                                                            <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
-                                                            <td style={columnStyle}>{v.kas_lain}</td>
-                                                            <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
-                                                            <td style={columnStyle}>{v.kartu}</td>
-                                                            <td style={columnStyle}>{v.status}</td>
-                                                            <td style={columnStyle}>{v.lokasi}</td>
-                                                            <td style={columnStyle}>{v.jenis_trx}</td>
-                                                        </tr>
-                                                    );
-                                                }) : "No data." : "No data."
-                                        }
-                                        </tbody>
-                                    }
-                                    <tfoot>
-                                    <tr>
-                                        <td colSpan="5">TOTAL</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.omset)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_item)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_rp)}</td>
-                                        <td style={{textAlign:"right"}}>{this.props.totalPenjualanExcel.dis_persen}</td>
-                                        <td colSpan="4"/>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.kas_lain)}</td>
-                                        <td colSpan="1"/>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.gt)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.rounding)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.bayar)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.change)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.jml_kartu)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.charge)}</td>
-                                        <td colSpan="4"/>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                                {/*END DATA EXCEL*/}
-                                {/* <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}> */}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    Tipe Transaksi
+                                                </label>
+                                                <Select
+                                                    options={this.state.type_data}
+                                                    placeholder="Pilih Tipe Transaksi"
+                                                    onChange={this.HandleChangeType}
+                                                    value={
+                                                        this.state.type_data.find(op => {
+                                                            return op.value === this.state.type
+                                                        })
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    Status
+                                                </label>
+                                                <Select
+                                                    options={this.state.status_data}
+                                                    placeholder="Pilih Status Transaksi"
+                                                    onChange={this.HandleChangeStatus}
+                                                    value={
+                                                        this.state.status_data.find(op => {
+                                                            return op.value === this.state.status
+                                                        })
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label htmlFor="">Cari</label>
+                                                <input type="text" name="any_sale_report" className="form-control" value={this.state.any_sale_report} placeholder="Kode/Kasir/Customer" onChange={(e)=>this.handleChange(e)}/>
+                                            </div>
+                                        </div>
+                                        <div className="col-6 col-xs-6 col-md-2 text-right">
+                                            <div className="form-group">
+                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                    <i className="fa fa-search"/>
+                                                </button>
+                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                    <i className="fa fa-print"></i> Export
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <div style={{overflowX: "auto",zoom:"85%"}}>
 
                                     <table className="table table-hover table-bordered">
@@ -570,8 +508,6 @@ class SaleArchive extends Component{
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                 </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <DetailSaleReport detailSale={this.props.detailSale}/>

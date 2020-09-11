@@ -353,6 +353,7 @@ class ReceiveReport extends Component{
             // to,
             data
         } = this.props.data;
+        let tot_beli = 0;
         return (
             <Layout page="Laporan Pembelian">
                 <div className="col-12 box-margin" style={{zoom:"80%"}}>
@@ -501,6 +502,7 @@ class ReceiveReport extends Component{
                                                 (
                                                     typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
+                                                            tot_beli = tot_beli+parseInt(v.total_beli,10);
                                                             return(
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
@@ -562,7 +564,12 @@ class ReceiveReport extends Component{
                                             </tbody>
                                         ) : <Preloader/>
                                     }
-
+                                    <tfoot>
+                                    <tr style={{backgroundColor:"#EEEEEE"}}>
+                                        <td colSpan="15">TOTAL PERPAGE</td>
+                                        <td style={{textAlign:"right"}}>{toRp(tot_beli)}</td>
+                                    </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>

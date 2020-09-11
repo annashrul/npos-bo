@@ -13,7 +13,22 @@ class ListSales extends Component{
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.state={
-            detail:{}
+            detail:{},
+            lokasi_data:[]
+        }
+    }
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            lokasi_data:nextProps.auth.user.lokasi
+        })
+        localStorage.setItem('location_sales_data', JSON.stringify(nextProps.auth.user.lokasi));
+    }
+    componentDidMount(){
+        if(localStorage.location_sales_data!==undefined&&localStorage.location_sales_data!==''){
+            
+            this.setState({
+                lokasi_data:JSON.parse(localStorage.location_sales_data)
+            })
         }
     }
     handlePageChange(pageNumber){
@@ -45,6 +60,7 @@ class ListSales extends Component{
                     "nama":this.props.data.data[i].nama,
                     "status":this.props.data.data[i].status,
                     "kode":this.props.data.data[i].kode,
+                    "lokasi":this.props.data.data[i].lokasi,
                 }
             })
         }
@@ -96,6 +112,7 @@ class ListSales extends Component{
                         <tr>
                             <th className="text-black" style={columnStyle}>#</th>
                             <th className="text-black" style={columnStyle}>Name</th>
+                            <th className="text-black" style={columnStyle}>Location</th>
                             <th className="text-black" style={columnStyle}>Status</th>
                             {/* <th className="text-black" style={columnStyle}>KODE</th> */}
                         </tr>
@@ -105,6 +122,7 @@ class ListSales extends Component{
                             (
                                 typeof data === 'object' ?
                                     data.map((v,i)=>{
+                                        let getLok = this.state.lokasi_data.filter(item => item.kode === v.lokasi);
                                         return(
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}
@@ -121,6 +139,7 @@ class ListSales extends Component{
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.nama}</td>
+                                                <td style={columnStyle}>{getLok[0]===undefined?'':getLok[0].nama}</td>
                                                 <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
                                                 {/* <td style={columnStyle}>{v.kode}</td> */}
                                             </tr>

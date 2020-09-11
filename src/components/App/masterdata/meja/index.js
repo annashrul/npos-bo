@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import {FetchMeja} from "redux/actions/masterdata/meja/meja.action";
+import {FetchAreaAll} from "redux/actions/masterdata/area/area.action";
 import Preloader from "Preloader";
 import ListMeja from "./src/list";
 
@@ -14,6 +15,7 @@ class Meja extends Component{
         let any = localStorage.getItem("any_meja");
         let page = localStorage.getItem("page_meja");
         this.props.dispatch(FetchMeja(page?page:1,any?any:''));
+        this.props.dispatch(FetchAreaAll());
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
@@ -40,6 +42,7 @@ class Meja extends Component{
                             {
                                 !this.props.isLoading ? (  <ListMeja
                                     data={this.props.meja}
+                                    area={this.props.area}
                                     pagin={this.handlePagin}
                                     search={this.handleSearch}
                                     token={this.state.token}
@@ -54,7 +57,9 @@ class Meja extends Component{
 }
 
 const mapStateToProps = (state) => {
+    
     return {
+        area:state.areaReducer.dataArea,
         meja:state.mejaReducer.data,
         isLoading: state.mejaReducer.isLoading,
         auth: state.auth

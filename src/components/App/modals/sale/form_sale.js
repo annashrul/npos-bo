@@ -41,6 +41,7 @@ class FormSale extends Component{
     }
 
     handleChange = (event) => {
+        
         this.setState({ [event.target.name]: event.target.value });
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
@@ -72,22 +73,33 @@ class FormSale extends Component{
 
             }
         }
+        if(event.target.value.toLowerCase() === 'kredit'){
+            this.setState({
+                change:0,
+                tunai:0,
+            });
+            Object.assign(this.props.master,{
+                change:0,
+                tunai:0,
+                jenis_trx:event.target.value
+            });
+        }
     }
 
     toggle = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.setState({})
     };
     handleSetTunai(e){
-        e.preventDefault();
+        // e.preventDefault();
         this.setState({
             tunai: this.state.gt
         })
     }
     handleSubmit(e){
-        e.preventDefault();
+        // e.preventDefault();
         let err = this.state.error;
         if (this.state.jenis_trx.toLowerCase() === 'kredit'){
             let parsedata = {};
@@ -149,7 +161,7 @@ class FormSale extends Component{
                             </div>
                             <div className="form-group">
                                 <label htmlFor="">{this.state.jenis_trx==='Kredit'?'Jumlah DP':'Jumlah Uang'}</label>
-                                <input type="text" name="tunai" id="tunai" className="form-control" value={this.state.tunai} onChange={this.handleChange}/>
+                                <input type="text" name="tunai" id="tunai" className="form-control" value={this.state.tunai} onKeyUp={this.handleChange} onChange={this.handleChange}/>
                                 <div className="invalid-feedback"
                                      style={this.state.error.tunai !== "" || this.state.error.tunai !== "0" ? {display: 'block'} : {display: 'none'}}>
                                     {this.state.error.tunai}

@@ -902,6 +902,7 @@ class Sale extends Component{
                                                 <th style={columnStyle}>disc 1 (%)</th>
                                                 <th style={columnStyle}>disc 2 (%)</th>
                                                 <th style={columnStyle}>ppn</th>
+                                                <th style={columnStyle}>stock</th>
                                                 <th style={columnStyle}>qty</th>
                                                 <th style={columnStyle}>Subtotal</th>
                                             </tr>
@@ -969,11 +970,15 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].ppn}/>
                                                             </td>
+                                                            <td style={columnStyle}>{item.stock}</td>
                                                             <td><input type='text' name='qty'
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        className="form-control"
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].qty}/>
+                                                                <div className="invalid-feedback text-center" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
+                                                                    Qty Melebihi Stock.
+                                                                </div>
                                                             </td>
                                                             <td style={{textAlign:"right"}}>{toRp((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
 
@@ -984,7 +989,7 @@ class Sale extends Component{
                                             </tbody>
                                             <tfoot>
                                             <tr style={{background: '#eee'}}>
-                                                <td colSpan='9' style={{textAlign: 'right !important'}}>Total
+                                                <td colSpan='10' style={{textAlign: 'right !important'}}>Total
                                                 </td>
                                                 <td colSpan='1' style={{textAlign:"right"}}>{toRp(totalsub)}</td>
                                             </tr>
