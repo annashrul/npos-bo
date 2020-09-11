@@ -240,7 +240,7 @@ class AdjustmentReport extends Component{
                                     <div className="row">
                                         <div className="col-6 col-xs-6 col-md-2">
                                             <div className="form-group">
-                                                <label htmlFor=""> Periode </label>
+                                                <label htmlFor=""> Periode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
                                                 <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
                                                     <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>

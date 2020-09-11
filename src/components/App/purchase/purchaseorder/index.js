@@ -41,6 +41,7 @@ class PurchaseOrder extends Component{
             qty:0,
             location_data:[],
             location:"",
+            location_val:"",
             supplier:"",
             catatan:"",
             jenis_trx:"Tunai",
@@ -140,6 +141,7 @@ class PurchaseOrder extends Component{
         });
         this.setState({
             location:lk.value,
+        location_val: lk.label,
             error: err
         })
         localStorage.setItem('lk', lk.value);
@@ -475,7 +477,14 @@ class PurchaseOrder extends Component{
                                 sub_total: subtotal,
                                 detail: detail
                             };
-                            this.props.dispatch(storePo(data_final));
+                            let parsedata = {};
+                            parsedata['detail'] = data_final;
+                            parsedata['master'] = this.state.databrg;
+                            parsedata['nota'] = this.props.nota;
+                            parsedata['logo'] = this.props.auth.user.logo;
+                            parsedata['user'] = this.props.auth.user.username;
+                            parsedata['lokasi_beli'] = this.state.location_val;
+                            this.props.dispatch(storePo(parsedata,(arr)=>this.props.history.push(arr)));
                         }
                         return null;
                     })

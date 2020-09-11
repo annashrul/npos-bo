@@ -353,6 +353,7 @@ class ReceiveReport extends Component{
             // to,
             data
         } = this.props.data;
+        let tot_beli = 0;
         return (
             <Layout page="Laporan Pembelian">
                 <div className="col-12 box-margin" style={{zoom:"80%"}}>
@@ -413,9 +414,6 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
-                                       <div className="col-6 col-xs-6 col-md-2"></div>
-                                       <div className="col-6 col-xs-6 col-md-2"></div>
-                                       <div className="col-6 col-xs-6 col-md-2"></div>
                                        <div className="col-6 col-xs-6 col-md-2">
                                            <div className="form-group">
                                                <label className="control-label font-12">
@@ -456,18 +454,20 @@ class ReceiveReport extends Component{
                                                <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
                                            </div>
                                        </div>
-                                        <div className="col-6 col-xs-6 col-md-3">
-                                            <div className="form-group">
-                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                                    <i className="fa fa-search"/>
-                                                </button>
-                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                                    <i className="fa fa-print"></i> Export
-                                                </button>
-                                            </div>
-
-                                        </div>
                                    </div>
+                               </div>
+                               <div className="col-md-2 text-right">
+                                    <div className="col-6 col-xs-6 col-md-12">
+                                        <div className="form-group">
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                <i className="fa fa-search"/>
+                                            </button>
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                <i className="fa fa-print"></i> Export
+                                            </button>
+                                        </div>
+
+                                    </div>
                                </div>
 
 
@@ -501,6 +501,7 @@ class ReceiveReport extends Component{
                                                 (
                                                     typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
+                                                            tot_beli = tot_beli+parseInt(v.total_beli,10);
                                                             return(
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
@@ -562,7 +563,12 @@ class ReceiveReport extends Component{
                                             </tbody>
                                         ) : <Preloader/>
                                     }
-
+                                    <tfoot>
+                                    <tr style={{backgroundColor:"#EEEEEE"}}>
+                                        <td colSpan="15">TOTAL PERPAGE</td>
+                                        <td style={{textAlign:"right"}}>{toRp(tot_beli)}</td>
+                                    </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>

@@ -32,7 +32,6 @@ class DetailLocationModal extends Component{
             web:this.props.dataDetailLocation.web,
             phone:this.props.dataDetailLocation.phone,
             lokasi_ktg:this.props.dataDetailLocation.lokasi_ktg,
-            dc:this.props.dataDetailLocation.dc,
             status:this.props.dataDetailLocation.status,
             alamat:this.props.dataDetailLocation.alamat,
         })
@@ -71,8 +70,6 @@ class DetailLocationModal extends Component{
                             <tr>
                                 <th className="text-black">Category</th>
                                 <th className="text-black">: {this.state.lokasi_ktg}</th>
-                                <th className="text-black">DC</th>
-                                <th className="text-black">: {this.state.dc}</th>
                                 <th className="text-black">Status</th>
                                 <th className="text-black">: {this.state.status==='0'?'In Active':'Active'}</th>
                             </tr>
