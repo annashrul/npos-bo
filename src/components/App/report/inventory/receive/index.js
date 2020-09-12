@@ -146,10 +146,9 @@ class ReceiveReport extends Component{
             return null;
         });
         let status = [
-            {kode:"",value: "Semua"},
-            {kode:"0",value: "0"},
-            {kode:"1",value: "1"},
-            {kode:"2",value: "2"},
+            {kode:"",value: "Semua Status"},
+            {kode:"0",value: "Belum Lunas"},
+            {kode:"1",value: "Lunas"},
         ];
         let data_status=[];
         status.map((i) => {
@@ -185,7 +184,7 @@ class ReceiveReport extends Component{
             }
         }
     
-        // localStorage.setItem('status_receive_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_receive_report)
+        localStorage.setItem('status_receive_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_receive_report)
         localStorage.setItem('sort_receive_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_receive_report)
         localStorage.setItem('filter_receive_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_receive_report)
     
@@ -431,7 +430,7 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
-                                       <div className="col-6 col-xs-6 col-md-2">
+                                       <div className="col-6 col-xs-6 col-md-1">
                                            <div className="form-group">
                                                <label className="control-label font-12">
                                                    Sort
@@ -448,7 +447,24 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
-                                       <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    Status
+                                                </label>
+                                                <Select
+                                                    options={this.state.status_data}
+                                                    placeholder="Pilih Status Transaksi"
+                                                    onChange={this.HandleChangeStatus}
+                                                    value={
+                                                        this.state.status_data.find(op => {
+                                                            return op.value === this.state.status
+                                                        })
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                       <div className="col-6 col-xs-6 col-md-1">
                                            <div className="form-group">
                                                <label htmlFor="">Cari</label>
                                                <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>

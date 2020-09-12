@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import Preloader from "Preloader";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import ListDepartment from "./list_department";
 import ListSubDepartment from "./list_sub_department";
 import {FetchDepartment} from "redux/actions/masterdata/department/department.action";
@@ -32,24 +33,34 @@ class Department extends Component{
         this.props.dispatch(FetchDepartment());
         this.props.dispatch(FetchSubDepartment());
     }
+    handleSelect = (index) => {
+        this.setState({selectedIndex: index}, () => {
+            
+        })
+    };
     render(){
         return (
             <Layout page="Department">
                 <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-12 col-ld-6 col-md-6 col-sm-12 col-xs-12">
+                            <Tabs>
+                                <TabList>
+                                    <Tab onClick={() =>this.handleSelect(0)}>Department</Tab>
+                                    <Tab onClick={() =>this.handleSelect(1)}>Sub Department</Tab>
+                                </TabList>
+                                <TabPanel>
                                     {
                                         !this.props.isLoading ? (  <ListDepartment token={this.state.token} data={this.props.department}/> ) : <Preloader/>
                                     }
-                                </div>
-                                <div className="col-12 col-ld-6 col-md-6 col-sm-12 col-xs-12">
+
+                                </TabPanel>
+                                <TabPanel>
                                     {
                                         !this.props.isLoading1 ? (  <ListSubDepartment token={this.state.token} data={this.props.subDepartment}/> ) : <Preloader/>
                                     }
-                                </div>
-                            </div>
+                                </TabPanel>
+                            </Tabs>
                         </div>
                     </div>
                 </div>

@@ -108,7 +108,7 @@ export default class Adjust3ply extends Component {
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Barcode</td>
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
-                            <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual1</td>
+                            {/* <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual1</td> */}
                             <td style={{width: '40%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock</td>
                         </tr>
                         </thead>
@@ -128,8 +128,8 @@ export default class Adjust3ply extends Component {
                                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
                                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
                                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                            <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
-                                            <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.hrg_jual}</td>
+                                            <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
+                                            {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.hrg_jual}</td> */}
                                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td>
                                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{saldo_stock}</td>
                                         </tr>
@@ -140,7 +140,7 @@ export default class Adjust3ply extends Component {
                         <tfoot>
                         <tr>
                             <td colSpan={4} style={{borderTop: '', borderWidth: 'thin',  paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-center" style={{borderTop: '', borderWidth: 'thin'}}>{data.subtotal}</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}}>{data.subtotal}</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} />
                         </tr>
                         </tfoot>

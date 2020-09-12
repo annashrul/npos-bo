@@ -90,7 +90,9 @@ export const storePacking = (data,param) => {
                     destroy('packing');
                     localStorage.removeItem('faktur_alokasi_packing');
                     localStorage.removeItem('penerima_packing');
-                    window.location.reload(false);
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 })
                 // document.getElementById("btnNotaPdf").addEventListener("click", () => {
                 //     const win = window.open(data.result.nota, '_blank');

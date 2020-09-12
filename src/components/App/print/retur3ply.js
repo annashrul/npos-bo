@@ -109,12 +109,12 @@ export default class Print3ply extends Component {
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
+                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.kondisi}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.ket}</td>
                                         {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td> */}
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_retur}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{total_retur}</td>
+                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{total_retur}</td>
 
                                     </tr>
                                 )
@@ -126,7 +126,7 @@ export default class Print3ply extends Component {
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={4}>TOTAL</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}}>{/*?=$tqty?*/}</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={3} />
-                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-center">{data.subtotal}</td>
+                            <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{data.subtotal}</td>
                         </tr>
                         </tfoot>
                     </table>

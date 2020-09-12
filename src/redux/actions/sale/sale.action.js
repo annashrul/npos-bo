@@ -122,7 +122,9 @@ export const storeSale = (data,param) => {
                     destroy('sale');
                     localStorage.removeItem('cs');
                     localStorage.removeItem('lk');
-                    window.location.reload(false);
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {
                     const win = window.open(data.result.nota, '_blank');

@@ -113,7 +113,7 @@ export default class Print3ply extends Component {
                                         <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
                                         <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
                                         <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                        <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
+                                        <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
                                         {/* <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.hrg_jual}</td> */}
                                         {/* <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.stock}</td> */}
                                         <td style={{borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{item.qty}</td>
@@ -127,7 +127,7 @@ export default class Print3ply extends Component {
                         <tfoot>
                         <tr>
                             <td colSpan={4} style={{borderTop: '', borderWidth: '',paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-center" style={{borderTop: '', borderWidth: ''}}>{data.subtotal}</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{data.subtotal}</td>
                             <td style={{borderTop: '', borderWidth: ''}} />
                         </tr>
                         </tfoot>
