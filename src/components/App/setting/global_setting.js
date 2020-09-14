@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import * as Swal from "sweetalert2";
 import moment from "moment";
+import {HEADERS} from "redux/actions/_constants";
 import {FetchSite, FetchFiles,storeSite, deleteFiles} from "redux/actions/site.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import connect from "react-redux/es/connect/connect";
@@ -187,8 +188,8 @@ class GlobalSetting extends Component{
                             <div className="card-header">
                                 <h4>Global Setting</h4>
                                 <TabList>
-                                    <Tab onClick={() =>this.handleSelect(0)}>Add</Tab>
-                                    <Tab onClick={() =>this.handleSelect(1)}>List</Tab>
+                                    <Tab onClick={() =>this.handleSelect(0)}>Billing</Tab>
+                                    <Tab onClick={() =>this.handleSelect(1)}>Recent Backup</Tab>
                                 </TabList>
                             </div>
                                 <TabPanel>
@@ -246,7 +247,7 @@ class GlobalSetting extends Component{
                                 <div className="card-body">
                                     <div className="bg-transparent d-flex align-items-center justify-content-between mb-20">
                                         <div className="widgets-card-title">
-                                            <h5 className="card-title mb-0">Recent files</h5>
+                                            <h5 className="card-title mb-0">List files</h5>
                                         </div>
                                     </div>
                                         {
@@ -255,13 +256,13 @@ class GlobalSetting extends Component{
                                                     return (
                                                         <div className="widget-download-file d-flex align-items-center justify-content-between mb-4" key={i}>
                                                             <div className="d-flex align-items-center mr-3">
-                                                                <button type="button" className="btn btn-danger btn-circle mr-3" onClick={(e) => this.handleDelete(e, v.fullpath)}><i className="fa fa-times"></i> </button>
+                                                                <button type="button" className="btn btn-danger btn-circle mr-3" onClick={(e) => this.handleDelete(e, v.fullpath)}><i className="fa fa-trash"></i> </button>
                                                             <div className="user-text-table">
                                                                 <h6 className="d-inline-block font-15 mb-0">{v.filename}</h6>
                                                                 <p className="mb-0">{v.size}</p>
                                                             </div>
                                                             </div>
-                                                            <a href={v.path} target="_blank" className="download-link badge badge-primary badge-pill" style={{padding:10+'px'}}>Download</a>
+                                                            <a href={HEADERS.URL+v.path} target="_blank" className="download-link badge badge-primary badge-pill" style={{padding:10+'px'}}>Download</a>
                                                         </div>
                                                     );
                                                 }) : "No data." : "No data."
