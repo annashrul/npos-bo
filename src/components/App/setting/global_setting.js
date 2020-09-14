@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import * as Swal from "sweetalert2";
 import moment from "moment";
+import Preloader from "Preloader";
 import {HEADERS} from "redux/actions/_constants";
 import {FetchSite, FetchFiles,storeSite, deleteFiles} from "redux/actions/site.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
@@ -250,7 +251,8 @@ class GlobalSetting extends Component{
                                             <h5 className="card-title mb-0">List files</h5>
                                         </div>
                                     </div>
-                                        {
+                                    {
+                                        !this.props.isLoading?(
                                             typeof this.props.files==='object'? this.props.files.length>0?
                                                 this.props.files.map((v,i)=>{
                                                     return (
@@ -266,7 +268,8 @@ class GlobalSetting extends Component{
                                                         </div>
                                                     );
                                                 }) : "No data." : "No data."
-                                        }
+                                        ):<Preloader/>
+                                    }
                                 </div>
                                 </TabPanel>
                         </div>
@@ -282,6 +285,7 @@ const mapStateToProps = (state) => {
     return {
         site: state.siteReducer.data,
         files: state.siteReducer.data_list,
+        isLoading: state.siteReducer.isLoading,
     }
 }
 export default connect(mapStateToProps)(GlobalSetting);
