@@ -37,6 +37,12 @@ export function setSite(data = []) {
         data
     }
 }
+export function setFiles(data = []) {
+    return {
+        type: SITE.SUCCESS_LIST,
+        data
+    }
+}
 export function setCheck(data = []) {
     return {
         type: SITE.SUCCESS_CHECK,
@@ -60,6 +66,59 @@ export const FetchSite = () => {
                 dispatch(setLoading(false));
             })
 
+    }
+}
+export const FetchFiles = () => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `site/files`)
+            .then(function (response) {
+                const data = response.data;
+                dispatch(setFiles(data));
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+            })
+
+    }
+}
+export const deleteFiles = (id,i) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `site/files/del`;
+        axios.get(url,id)
+            .then(function (response) {
+                const data = (response.data);
+                
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                
+                Swal.fire({
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response === undefined?'error!':error.response.data.msg,
+                });
+                if (error.response) {
+                    
+                }
+            })
     }
 }
 export const storeSite = (data) => {

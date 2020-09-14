@@ -5,6 +5,7 @@ import {
 const initialState = {
     isLoading: false,
     data: [],
+    data_list: [],
     msg:"",
     status:"",
     check:false,
@@ -18,6 +19,10 @@ export const siteReducer = (state = initialState, action) => {
         case SITE.SUCCESS:
             return Object.assign({}, state,{
                 data: action.data
+            });
+        case SITE.SUCCESS_LIST:
+            return Object.assign({}, state,{
+                data_list: action.data.result
             });
         case SITE.DOWNLOAD_TXT:
             return Object.assign({}, state,{
