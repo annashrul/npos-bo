@@ -407,9 +407,9 @@ const mapStateToProps = (state) => {
     
     return {
         transactionReport:state.transactionReducer.report,
-        isLoadingDetail: state.transactionReducer.isLoadingDetail,
+        isLoadingDetail: state.transactionReducer.isLoadingApproval,
         auth:state.auth,
-        isLoading: state.transactionReducer.isLoading,
+        isLoading: state.transactionReducer.isLoadingApproval,
         transactionDetail:state.transactionReducer.report_data,
         transactionReportExcel:state.transactionReducer.report_excel,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,

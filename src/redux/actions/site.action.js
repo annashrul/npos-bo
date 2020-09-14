@@ -43,6 +43,12 @@ export function setFiles(data = []) {
         data
     }
 }
+export function setTables(data = []) {
+    return {
+        type: SITE.SUCCESS_TABLES,
+        data
+    }
+}
 export function setCheck(data = []) {
     return {
         type: SITE.SUCCESS_CHECK,
@@ -84,11 +90,62 @@ export const FetchFiles = () => {
 
     }
 }
-export const deleteFiles = (id,i) => {
+export const FetchTables = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `site/files/del?path=`+i;
-        axios.get(url)
+        axios.get(HEADERS.URL + `site/tables`)
+            .then(function (response) {
+                const data = response.data;
+                dispatch(setTables(data));
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+            })
+
+    }
+}
+export const storeBackup = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `site/backup`;
+        axios.post(url,data)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+                dispatch(FetchFiles());
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                Swal.fire({
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response === undefined?'error!':error.response.data.msg,
+                });
+                if (error.response) {
+                }
+            })
+    }
+}
+export const deleteFiles = (id, i) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `site/files/del`;
+        axios.delete(url, { data: { path: i }})
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {

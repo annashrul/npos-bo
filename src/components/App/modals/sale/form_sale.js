@@ -41,7 +41,7 @@ class FormSale extends Component{
     }
 
     handleChange = (event) => {
-        console.log("kkkkkkkkkk",event.target);
+        
         this.setState({ [event.target.name]: event.target.value });
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
@@ -74,7 +74,7 @@ class FormSale extends Component{
             }
         }
         if(event.target.value === 'Kredit'){
-            console.log("kredit",true)
+            
             this.setState({
                 change:0,
                 tunai:0,
@@ -86,7 +86,7 @@ class FormSale extends Component{
             });
         }
         if(event.target.name.toLowerCase() === 'dp'){
-            console.log("dp",true)
+            
             this.setState({
                 change:0,
                 tunai:event.target.value,

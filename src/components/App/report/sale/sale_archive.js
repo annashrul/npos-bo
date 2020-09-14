@@ -401,7 +401,7 @@ class SaleArchive extends Component{
                                                     typeof data==='object'? data.length>0?
 
                                                         data.map((v,i)=>{
-                                                            console.log("object", v.omset);
+                                                            
                                                             omset_per+= parseFloat(v.omset);
                                                             dis_item_per = dis_item_per + parseInt(v.diskon_item,10);
                                                             dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);

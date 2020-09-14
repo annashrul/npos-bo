@@ -56,7 +56,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db,pe
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
         if(perpage!=='') url+=`&perpage=${perpage}`;
-        console.log("URL",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;

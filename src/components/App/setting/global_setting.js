@@ -3,11 +3,12 @@ import * as Swal from "sweetalert2";
 import moment from "moment";
 import Preloader from "Preloader";
 import {HEADERS} from "redux/actions/_constants";
-import {FetchSite, FetchFiles,storeSite, deleteFiles} from "redux/actions/site.action";
+import {FetchSite, FetchFiles,storeSite, deleteFiles, FetchTables} from "redux/actions/site.action";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {LOC_VERIF} from "../../../redux/actions/_constants";
-
+import {LOC_VERIF} from "redux/actions/_constants";
+import FormBackup from "../modals/setting/form_setting_backup"
 class GlobalSetting extends Component{
     constructor(props){
         super(props);
@@ -82,6 +83,13 @@ class GlobalSetting extends Component{
 
         })
     }
+    toggle(e){
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formBackup"));
+        this.props.dispatch(FetchTables());
+    };
 
     handleChange = (event) => {
         let column=event.target.name;
@@ -250,6 +258,7 @@ class GlobalSetting extends Component{
                                         <div className="widgets-card-title">
                                             <h5 className="card-title mb-0">List files</h5>
                                         </div>
+                                            <button type="button" class="btn btn-primary btn-circle" onClick={(e) => this.toggle(e)}><i class="fa fa-plus"></i> </button>
                                     </div>
                                     {
                                         !this.props.isLoading?(
@@ -264,7 +273,7 @@ class GlobalSetting extends Component{
                                                                 <p className="mb-0">{v.size}</p>
                                                             </div>
                                                             </div>
-                                                            <a href={HEADERS.URL+v.path} target="_blank" className="download-link badge badge-primary badge-pill" style={{padding:10+'px'}}>Download</a>
+                                                            <a href={HEADERS.URL+v.path} target="_blank" className="download-link badge badge-success badge-pill" style={{padding:10+'px'}}>Download</a>
                                                         </div>
                                                     );
                                                 }) : "No data." : "No data."
@@ -276,6 +285,7 @@ class GlobalSetting extends Component{
                             </Tabs>
                     ):""
                 }
+                <FormBackup/>
             </div>
         );
     }

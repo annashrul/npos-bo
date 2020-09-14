@@ -7,8 +7,8 @@ import Swal from "sweetalert2";
 import {
     BrowserView,
     MobileView,
-    isBrowser,
-    isMobile
+    // isBrowser,
+    // isMobile
 } from 'react-device-detect';
 import moment from "moment";
 import {FetchCodeAdjustment} from "redux/actions/adjustment/adjustment.action";
@@ -549,10 +549,10 @@ class Produksi extends Component{
         }
     }
     render() {
-        console.log("BrowserView",BrowserView);
-        console.log("MobileView",MobileView);
-        console.log("isBrowser",isBrowser);
-        console.log("isMobile",isMobile);
+        
+        
+        
+        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Produksi">

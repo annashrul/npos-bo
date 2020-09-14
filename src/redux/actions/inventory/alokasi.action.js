@@ -144,7 +144,7 @@ export const storeAlokasi = (data,param) => {
                     localStorage.removeItem('ambil_data');
                     localStorage.removeItem('nota');
                     localStorage.removeItem('catatan');
-                    console.log(result.dismiss);
+                    
                     if(result.dismiss === 'cancel'){
                         window.location.reload(false);
                     }
