@@ -87,11 +87,10 @@ export const FetchFiles = () => {
 export const deleteFiles = (id,i) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `site/files/del`;
-        axios.get(url,id)
+        const url = HEADERS.URL + `site/files/del?path=`+i;
+        axios.get(url)
             .then(function (response) {
                 const data = (response.data);
-                
                 if (data.status === 'success') {
                     Swal.fire({
                         title: 'Success',
@@ -106,17 +105,16 @@ export const deleteFiles = (id,i) => {
                     });
                 }
                 dispatch(setLoading(false));
+                dispatch(FetchFiles());
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
-                    
                 }
             })
     }
