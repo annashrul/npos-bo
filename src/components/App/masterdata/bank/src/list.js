@@ -85,13 +85,13 @@ class ListBank extends Component{
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
                     <div className="row">
-                        <div className="col-10 col-xs-10 col-md-3">
+                        <div className="col-8 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
                                 <input type="text" className="form-control" name="any" defaultValue={localStorage.getItem('any_bank')}/>
                             </div>
                         </div>
-                        <div className="col-2 col-xs-2 col-md-3">
+                        <div className="col-4 col-xs-2 col-md-3">
                             <div className="form-group">
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
                                 <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
@@ -107,7 +107,7 @@ class ListBank extends Component{
                             typeof data === 'object' ?
                                 data.map((v,i)=>{
                                     return(
-                                        <div className="col-xl-3 col-md-6 height-card box-margin" key={i}>
+                                        <div className="col-xl-3 col-md-6 mb-4" key={i}>
                                             <div className="card">
                                                 <div className="social-widget">
                                                     <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
@@ -123,7 +123,6 @@ class ListBank extends Component{
                                                             <div className="p-2">
                                                                 <div className="dashboard-dropdown">
                                                                     <div className="dropdown">
-                                                                      
                                                                     <UncontrolledButtonDropdown>
                                                                     <DropdownToggle caret>
                                                                         <i style={{color:'white '}} className="fa fa-sort-desc"/>

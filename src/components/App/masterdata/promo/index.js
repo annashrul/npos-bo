@@ -112,13 +112,13 @@ class Promo extends Component{
                         <div className="card-body">
                             <form onSubmit={this.handleSearch} noValidate>
                                 <div className="row">
-                                    <div className="col-10 col-xs-10 col-md-3">
+                                    <div className="col-8 col-xs-10 col-md-3">
                                         <div className="form-group">
                                             <label>Search</label>
                                             <input type="text" className="form-control" name="any" defaultValue={localStorage.getItem('any_promo')}/>
                                         </div>
                                     </div>
-                                    <div className="col-2 col-xs-2 col-md-3">
+                                    <div className="col-4 col-xs-2 col-md-3">
                                         <div className="form-group">
                                             <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"/></button>
                                             <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.handleAdd(e)} className="btn btn-primary"><i className="fa fa-plus"/></button>
@@ -137,7 +137,7 @@ class Promo extends Component{
                                                         data.map((v,i)=>{
                                                             let arrLok = v.lokasi.split(',');
                                                             return(
-<div className="col-xl-3 col-md-6 box-margin" key={i}>
+<div className="col-xl-3 col-md-6 mb-4" key={i}>
 <div className="card">
     <div className="social-widget">
         <div className={'bg-success p-3 text-center text-white font-30'}>
@@ -180,11 +180,11 @@ class Promo extends Component{
                         </tr>
                         <tr>
                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Mulai</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.daritgl).format("yyyy-MM-DD HH:mm:ss")}</th>
+                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.daritgl).format('YYYY-MM-DD HH:mm:ss')}</th>
                         </tr>
                         <tr>
                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Selesai</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.sampaitgl).format("yyyy-MM-DD HH:mm:ss")}</th>
+                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.sampaitgl).format('YYYY-MM-DD HH:mm:ss')}</th>
                         </tr>
                         <tr>
                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Member</th>

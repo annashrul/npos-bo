@@ -480,10 +480,14 @@ class FormPromo extends Component{
         for(let i=0;i<this.state.selectedOption.length;i++){
             lokasi.push(this.state.selectedOption[i].value);
         }
+        console.log("ccccccccccccccccc",moment(this.state.tgl_mulai).format('YYYY-MM-DD HH:mm:ss'));
+        console.log("ssssssssssssss",moment(this.state.tgl_selesai).format('YYYY-MM-DD HH:mm:ss'));
+        console.log("ccccccccccccccccc",this.state.tgl_mulai);
+        console.log("ssssssssssssss",this.state.tgl_selesai);
 
         parseData['category']=this.state.category;
-        parseData['daritgl']=moment(this.state.tgl_mulai).format("yyyy-MM-DD HH:mm:ss");
-        parseData['sampaitgl']=moment(this.state.tgl_selesai).format("yyyy-MM-DD HH:mm:ss");
+        parseData['daritgl']=moment(this.state.tgl_mulai).format('YYYY-MM-DD HH:mm:ss');
+        parseData['sampaitgl']=moment(this.state.tgl_selesai).format('YYYY-MM-DD HH:mm:ss');
         parseData['lokasi']=this.state.isCheckedLokasi===true?this.state.lokasi.toString():lokasi.toString();
         parseData['gambar']=this.state.gambar==='-'?'-':this.state.gambar.base64;
         parseData['member']=this.state.hanya_member?this.state.jenis_member:0;

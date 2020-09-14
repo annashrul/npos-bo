@@ -346,7 +346,7 @@ class PoReport extends Component{
                                     <div className="col-6 col-xs-6 col-md-2">
                                         <div className="form-group">
                                             <label>Cari</label>
-                                            <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                            <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                         </div>
                                     </div>
                                 </div>
