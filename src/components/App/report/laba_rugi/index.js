@@ -202,7 +202,7 @@ class ReportLabaRugi extends Component{
                                         alwaysShowCalendars={true}
                                         onEvent={this.handleEvent}
                                     >
-                                        <input type="text" id="date" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                        <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}  style={{padding: '10px',fontWeight:'bolder'}}/>
                                     </DateRangePicker>
                                 </div>
                             </div>

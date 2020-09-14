@@ -194,11 +194,11 @@ class GlobalSetting extends Component{
                     isShow===true?(
                             <Tabs>
                         <div className="card">
-                            <div className="card-header">
+                            <div className="card-header bg-transparent">
                                 <h4>Global Setting</h4>
                                 <TabList>
                                     <Tab onClick={() =>this.handleSelect(0)}>Billing</Tab>
-                                    <Tab onClick={() =>this.handleSelect(1)}>Recent Backup</Tab>
+                                    <Tab onClick={() =>this.handleSelect(1)}>Backup</Tab>
                                 </TabList>
                             </div>
                                 <TabPanel>

@@ -364,7 +364,6 @@ class ReceiveReport extends Component{
                                        <div className="col-6 col-xs-6 col-md-2">
                                            <div className="form-group">
                                                <label htmlFor=""> Periode </label>
-                                               <div className="customDatePickerWidth">
                                                    <DateRangePicker
                                                        ranges={rangeDate}
                                                        alwaysShowCalendars={true}
@@ -372,9 +371,8 @@ class ReceiveReport extends Component{
                                                        showDropdowns={true}
                                                        autoUpdateInput={true}
                                                    >
-                                                       <input type="text" id="date" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                       <input type="text" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                    </DateRangePicker>
-                                               </div>
                                            </div>
                                        </div>
                                        <div className="col-6 col-xs-6 col-md-2">
