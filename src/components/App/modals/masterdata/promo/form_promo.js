@@ -567,7 +567,7 @@ class FormPromo extends Component{
                         barcode:v.barcode,
                         diskon:toPersen(v.qty,v.harga),
                         diskon2:toPersen(v.qty2,v.harga),
-                        min_trx:0,
+                        min_trx:this.state.min_trx,
                         min_qty:0,
                         open_price:0,
                         hrg_jual:v.harga,
@@ -610,7 +610,7 @@ class FormPromo extends Component{
             this.state.barang_data.map((v,i)=>{
                 if(v.checked === true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:0, min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
                     })
                 }
                 return null;
@@ -618,7 +618,7 @@ class FormPromo extends Component{
             this.state.barang_data1.map((v,i)=>{
                 if(v.checked_bg===true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:0, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
                     })
                 }
                 return null;

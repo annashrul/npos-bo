@@ -124,9 +124,9 @@ class ListBank extends Component{
                                                                 <div className="dashboard-dropdown">
                                                                     <div className="dropdown">
                                                                     <UncontrolledButtonDropdown>
-                                                                    <DropdownToggle caret>
-                                                                        <i style={{color:'white '}} className="fa fa-sort-desc"/>
-                                                                    </DropdownToggle>
+                                                                        <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                                            <i className="zmdi zmdi-more-vert"></i>
+                                                                        </DropdownToggle>
                                                                     <DropdownMenu>
                                                                         <DropdownItem  onClick={(e)=>this.handleEdit(
                                                                                 e,v.id,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama
