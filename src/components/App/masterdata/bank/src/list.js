@@ -110,7 +110,8 @@ class ListBank extends Component{
                                         <div className="col-xl-3 col-md-6 mb-4" key={i}>
                                             <div className="card">
                                                 <div className="social-widget">
-                                                    <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
+                                                    <div className={`ribbon ribbon-${v.status==='1'?'success':'danger'}`}>{v.status==='1'?'Active':'Not Active'}</div>
+                                                    <div className='bg-light p-3 text-center text-white font-30'>
                                                         <img src={v.foto === null?'error':v.foto} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}} style={{height:"120px"}}/>
                                                     </div>
                                                     <div className="row">

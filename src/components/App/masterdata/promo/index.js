@@ -156,7 +156,7 @@ class Promo extends Component{
                                                                 <div className="col-xl-3 col-md-6 mb-4" key={i}>
                                                                 <div className="card">
                                                                     <div className="social-widget">
-                                                                        <div className={'bg-success p-3 text-center text-white font-30'}>
+                                                                        <div className={'bg-light p-3 text-center text-white font-30'}>
                                                                             <img src={v.gambar==='-'?Noimage:`${HEADERS.URL+v.gambar}`} style={{height:"120px"}} alt=""/>
                                                                         </div>
                                                                         <div className="row">

@@ -688,7 +688,7 @@ class FormPromo extends Component{
         // })
         
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" className={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? "custom-map-modal":""}>
                 <ModalHeader toggle={this.toggle}>
                     {isArrLength===0?"Tambah Promo":"Ubah Promo"}
                     {
