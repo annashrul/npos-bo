@@ -22,7 +22,7 @@ class DetailProduct extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduct"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduct"} size="lg" className="custom-map-modal">
                 <ModalHeader toggle={this.toggle}>Detail Barang</ModalHeader>
                 <ModalBody>
                     <table className="table">

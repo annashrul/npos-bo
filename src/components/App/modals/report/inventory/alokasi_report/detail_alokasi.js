@@ -23,7 +23,7 @@ class DetailAlokasi extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>
-                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAlokasi"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAlokasi"} size="lg" className="custom-map-modal">
                     <ModalHeader toggle={this.toggle}>Detail Alokasi</ModalHeader>
                     <ModalBody>
                         <div className="table-responsive" style={{overflowX: "auto"}}>

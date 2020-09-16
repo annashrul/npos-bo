@@ -104,7 +104,7 @@ class FormLocation extends Component{
         curr.setDate(curr.getDate() + 3);
         const date = curr.toISOString().substr(0, 10);
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formLocation"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formLocation"} size="lg" className="custom-map-modal">
                 <ModalHeader toggle={this.toggle}>{this.props.dataDetailLocation===undefined?"Add Location":"Update Location"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>

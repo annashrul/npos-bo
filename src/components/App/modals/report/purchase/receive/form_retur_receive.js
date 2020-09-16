@@ -140,7 +140,7 @@ class FormReturReceive extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formReturReceive"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formReturReceive"} size="lg" className="custom-map-modal">
                 <ModalHeader toggle={this.toggle}>{"Retur Pembelian"}</ModalHeader>
                 <ModalBody>
                     <table className="table">

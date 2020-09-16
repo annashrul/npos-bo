@@ -25,12 +25,15 @@ class Promo extends Component{
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.state={
-            detail:{}
+            detail:{},
+            lokasi_data:[],
+            kategori_data:[]
         }
 
         this.handlePagin=this.handlePagin.bind(this);
     }
     componentWillReceiveProps = (nextProps) => {
+        console.log("wwwwwwwwwww",nextProps)
         if (nextProps.auth.user) {
             let access = nextProps.auth.user.access;
             if(access!==undefined&&access!==null){
@@ -43,10 +46,15 @@ class Promo extends Component{
                 }
             }
         }
+        this.setState({
+            lokasi_data:nextProps.lokasi.data,
+            kategori_data:nextProps.promo_kategori
+        })
     }
     componentWillMount(){
         this.props.dispatch(FetchPromoKategori());
         this.props.dispatch(FetchPromo(1,''));
+        this.props.dispatch(FetchAllLocation());
     }
     handleAdd(e) {
         e.preventDefault();
@@ -136,83 +144,89 @@ class Promo extends Component{
                                                     typeof data === 'object' ?
                                                         data.map((v,i)=>{
                                                             let arrLok = v.lokasi.split(',');
+                                                            let kat = this.state.kategori_data===undefined?'':this.state.kategori_data.filter(item => item.kode === v.category);
+                                                            let val = this.state.lokasi_data===undefined?'':this.state.lokasi_data.filter(item => item.kode === v.lokasi);
+                                                            let val1 = this.state.lokasi_data===undefined?'':this.state.lokasi_data.filter(item => item.kode === arrLok[0]);
+                                                            let val2 = this.state.lokasi_data===undefined?'':this.state.lokasi_data.filter(item => item.kode === arrLok[1]);
+                                                            let val3 = this.state.lokasi_data===undefined?'':this.state.lokasi_data.filter(item => item.kode === arrLok[2]);
+                                                            let getVal1 = this.state.lokasi_data===undefined?'':val1[0]===undefined?'':val1[0].nama_toko
+                                                            let getVal2 = this.state.lokasi_data===undefined?'':val2[0]===undefined?'':val2[0].nama_toko
+                                                            let getVal3 = this.state.lokasi_data===undefined?'':val3[0]===undefined?'':val3[0].nama_toko
                                                             return(
-<div className="col-xl-3 col-md-6 mb-4" key={i}>
-<div className="card">
-    <div className="social-widget">
-        <div className={'bg-success p-3 text-center text-white font-30'}>
-            <img src={v.gambar==='-'?Noimage:`${HEADERS.URL+v.gambar}`} style={{height:"120px"}} alt=""/>
-        </div>
-        <div className="row">
-            <div className="col-8 text-left">
-                <div className="p-2">
-                    <p style={{fontSize:"12px"}}>{v.id_promo}</p>
-                </div>
-            </div>
-            <div className="col-4 text-center">
-                <div className="p-2">
-                    <div className="dashboard-dropdown">
-                        <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>
-                                <i style={{color:'white '}} className="fa fa-sort-desc"/>
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={(e)=>this.handleEdit(e,v.id_promo)}><i className="ti-pencil-alt"/> Edit</DropdownItem>
-                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledButtonDropdown>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div className="row">
-            <div className="col-12 text-left">
-                <div className="p-2">
-                    <table className="table" style={{padding:0,border:"none"}}>
-                        <thead>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Kategori</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>{v.category}</th>
-                        </tr>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Lokasi</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {arrLok.length > 3 ? `${arrLok[0]},${arrLok[1]},${arrLok[2]} ...` : v.lokasi}</th>
-                        </tr>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Mulai</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.daritgl).format('YYYY-MM-DD HH:mm:ss')}</th>
-                        </tr>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Selesai</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.sampaitgl).format('YYYY-MM-DD HH:mm:ss')}</th>
-                        </tr>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Member</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.member==='0'?'-':v.member}</th>
-                        </tr>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Periode</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==='1'?'Tanpa Periode':'-'}</th>
-                        </tr>
-                        <tr>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Catatan</th>
-                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan.length>20?`${v.keterangan.substring(0,20)} ...` : v.keterangan}</th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-</div>
-</div>
-)
-})
-: "No data." : <div className="col-md-12">
-<h1 className="text-center">No Data</h1>
-</div>
+                                                                <div className="col-xl-3 col-md-6 mb-4" key={i}>
+                                                                <div className="card">
+                                                                    <div className="social-widget">
+                                                                        <div className={'bg-light p-3 text-center text-white font-30'}>
+                                                                            <img src={v.gambar==='-'?Noimage:`${HEADERS.URL+v.gambar}`} style={{height:"120px"}} alt=""/>
+                                                                        </div>
+                                                                        <div className="row">
+                                                                            <div className="col-8 text-left">
+                                                                                <div className="p-2">
+                                                                                    <p style={{fontSize:"12px"}}>{v.id_promo}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="col-4 text-center">
+                                                                                <div className="p-2">
+                                                                                    <div className="dashboard-dropdown">
+                                                                                        <UncontrolledButtonDropdown>
+                                                                                                <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                                                                    <i className="zmdi zmdi-more-vert"></i>
+                                                                                                </DropdownToggle>
+                                                                                            <DropdownMenu>
+                                                                                                <DropdownItem onClick={(e)=>this.handleEdit(e,v.id_promo)}><i className="ti-pencil-alt"/> Edit</DropdownItem>
+                                                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                                                            </DropdownMenu>
+                                                                                        </UncontrolledButtonDropdown>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="row">
+                                                                            <div className="col-12 text-left">
+                                                                                <div className="p-2">
+                                                                                    <table className="table" style={{padding:0,border:"none"}}>
+                                                                                        <thead>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Kategori</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Promo {kat[0].title}</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Lokasi</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {arrLok.length >= 3 ? `${getVal1}, ${getVal2}, ${getVal3} ...` : arrLok.length >= 2 ? `${getVal1} & ${getVal2}` : this.state.lokasi_data===undefined?'':val[0]===undefined?'':val[0].nama_toko}</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Mulai</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.daritgl).format('YYYY-MM-DD HH:mm:ss')}</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Selesai</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.sampaitgl).format('YYYY-MM-DD HH:mm:ss')}</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Member</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.member==='0'?'-':v.member}</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Periode</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==='1'?'Tanpa Periode':'-'}</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Catatan</th>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan.length>20?`${v.keterangan.substring(0,20)} ...` : v.keterangan}</th>
+                                                                                        </tr>
+                                                                                        </thead>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })
+                                                : "No data." : <div className="col-md-12">
+                                            <h1 className="text-center">No Data</h1>
+                                            </div>
                                             )
                                         }
                                     </div>

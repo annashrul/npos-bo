@@ -106,7 +106,7 @@ class FormApprovalMutation extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formApprovalMutation"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formApprovalMutation"} size="lg" className="custom-map-modal">
                 <ModalHeader toggle={this.toggle}><p>{localStorage.getItem("kd_trx_mutasi")} <br/> <small style={{color:"red"}}>( Enter Atau Klik Button Approval Untuk Menyimpan Data )</small> </p></ModalHeader>
                 <ModalBody>
                     <table className="table table-hover">

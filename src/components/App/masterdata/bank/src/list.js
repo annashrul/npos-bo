@@ -110,7 +110,8 @@ class ListBank extends Component{
                                         <div className="col-xl-3 col-md-6 mb-4" key={i}>
                                             <div className="card">
                                                 <div className="social-widget">
-                                                    <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
+                                                    <div className={`ribbon ribbon-${v.status==='1'?'success':'danger'}`}>{v.status==='1'?'Active':'Not Active'}</div>
+                                                    <div className='bg-light p-3 text-center text-white font-30'>
                                                         <img src={v.foto === null?'error':v.foto} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}} style={{height:"120px"}}/>
                                                     </div>
                                                     <div className="row">
@@ -124,9 +125,9 @@ class ListBank extends Component{
                                                                 <div className="dashboard-dropdown">
                                                                     <div className="dropdown">
                                                                     <UncontrolledButtonDropdown>
-                                                                    <DropdownToggle caret>
-                                                                        <i style={{color:'white '}} className="fa fa-sort-desc"/>
-                                                                    </DropdownToggle>
+                                                                        <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                                            <i className="zmdi zmdi-more-vert"></i>
+                                                                        </DropdownToggle>
                                                                     <DropdownMenu>
                                                                         <DropdownItem  onClick={(e)=>this.handleEdit(
                                                                                 e,v.id,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama

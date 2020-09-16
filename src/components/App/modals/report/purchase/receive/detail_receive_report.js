@@ -45,7 +45,7 @@ class DetailReceiveReport extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center"};
 
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "receiveReportDetail"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "receiveReportDetail"} size="lg" className="custom-map-modal">
                 <ModalHeader toggle={this.toggle}>{"Detail Arsip Pembelian"}</ModalHeader>
                 <ModalBody>
                     <table className="table">
