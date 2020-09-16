@@ -44,37 +44,42 @@ class GlobalSetting extends Component{
     }
 
     componentWillMount(){
+        document.title = `Site Config`;
         this.getProps(this.props);
-        let count=1;
+        this.verifSwal()
+    }
+
+    verifSwal(){
+        let count = 1;
         Swal.fire({
-            title: '',
+            title: 'Verify Access',
             input: 'password',
             inputAttributes: {
                 autocapitalize: 'off'
             },
             showCancelButton: false,
-            confirmButtonText: 'Akses',
+            confirmButtonText: 'Check',
             showLoaderOnConfirm: true,
             closeOnClickOutside: false,
             allowOutsideClick: false,
             preConfirm: (login) => {
-                if(LOC_VERIF.password === btoa(login)){
+                if (LOC_VERIF.password === btoa(login)) {
                     this.props.dispatch(FetchSite());
                     this.props.dispatch(FetchFiles());
                     this.setState({
-                        isShow:true,
+                        isShow: true,
                     })
-                }else{
-                    if(count===3){
+                } else {
+                    if (count === 3) {
                         alert("Access Denied.")
                         window.location = "http://www.google.com";
                     }
                     count++;
                     Swal.showValidationMessage(
-                        `Password Salah`
+                        `Access Denied.`
                     )
                     this.setState({
-                        isShow:false,
+                        isShow: false,
                     })
                 }
             },
