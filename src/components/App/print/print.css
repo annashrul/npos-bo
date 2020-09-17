@@ -3,7 +3,7 @@ body {
 }
 #print_3ply{
     zoom:100% !important;
-    font-family: 'Courier New'
+   font-family: 'Josefin Sans', sans-serif;
 }
 #non-printable {
     height: auto;
@@ -13,7 +13,7 @@ body {
     display: block;
     min-height: 1px;
     display: flex;
-        justify-content: space-between;
+    justify-content: space-between;
 
 }
 .block-left,
@@ -99,10 +99,13 @@ body {
     padding: 1mm 1mm 1mm 1mm;
 }
 
-th,
-td {
-    font-size: 10px;
+#print_3ply th,
+#print_3ply td {
+    font-size: 16px !important;
     color: black;
+    font-family: 'Josefin Sans', sans-serif !important;
+
+
 }
 
 .borderTB {

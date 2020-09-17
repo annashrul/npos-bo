@@ -336,7 +336,7 @@ class Sale extends Component{
                                                     Jumlah
                                                 </label>
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     readOnly={false}
                                                     className="form-control"
                                                     id="jumlah"

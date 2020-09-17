@@ -57,7 +57,7 @@ import NotFound from "../common/notfound";
 import SaleReturReport from "../report/sale/sale_retur_archive";
 import Area from '../masterdata/area';
 import Meja from '../masterdata/meja';
-import GlobalSetting from "../setting/global_setting";
+import GlobalSetting from "../setting/global_setting/global_setting";
 import Print3ply from "../print/penjualan3ply";
 import Adjust3ply from "../print/adjust3ply";
 import Dn3ply from "../print/dn3ply";

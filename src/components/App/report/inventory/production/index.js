@@ -374,7 +374,6 @@ class ProductionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama Barang</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Operator</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama Toko</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Qty Estimasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Rata - rata HPP per QTY</th>
@@ -408,7 +407,6 @@ class ProductionReport extends Component{
                                                                     <td style={columnStyle}>{moment(v.tanggal).format("DD-MM-YYYY")}</td>
                                                                     <td style={columnStyle}>{v.nm_brg}</td>
                                                                     <td style={columnStyle}>{v.operator}</td>
-                                                                    <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.nama_toko}</td>
                                                                     <td style={columnStyle}>{v.qty_estimasi}</td>
                                                                     <td style={columnStyle}>{v.hpp}</td>

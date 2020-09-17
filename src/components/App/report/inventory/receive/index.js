@@ -465,7 +465,7 @@ class ReceiveReport extends Component{
                                        <div className="col-6 col-xs-6 col-md-1">
                                            <div className="form-group">
                                                <label htmlFor="">Cari</label>
-                                               <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
+                                               <input type="text" name="any_receive_report" className="form-control" style={{width:"100%"}} value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
                                            </div>
                                        </div>
                                    </div>

@@ -5,6 +5,7 @@ import {
 import axios from "axios"
 import {destroy} from "components/model/app.model";
 import * as Swal from "sweetalert2";
+import { ConsoleView } from "react-device-detect";
 
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));
@@ -37,9 +38,15 @@ export function setSite(data = []) {
         data
     }
 }
-export function setFiles(data = []) {
+export function setList(data = []) {
     return {
         type: SITE.SUCCESS_LIST,
+        data
+    }
+}
+export function setFolder(data = []) {
+    return {
+        type: SITE.SUCCESS_FOLDER,
         data
     }
 }
@@ -74,13 +81,33 @@ export const FetchSite = () => {
 
     }
 }
-export const FetchFiles = () => {
+export const FetchFolder = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `site/files`)
+        axios.get(HEADERS.URL + `site/folders`)
             .then(function (response) {
                 const data = response.data;
-                dispatch(setFiles(data));
+                dispatch(setFolder(data));
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+            })
+
+    }
+}
+export const FetchFiles = (path) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let where = '';
+        if(path!==undefined){
+            where +=`?path=${path}`;
+        }
+        axios.get(HEADERS.URL + `site/f iles`+where)
+            .then(function (response) {
+                const data = response.data;
+                dispatch(setList(data));
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -162,7 +189,46 @@ export const deleteFiles = (id, i) => {
                     });
                 }
                 dispatch(setLoading(false));
+                let path = localStorage.getItem('id_file_manager_val');
+                if(path !== undefined){
+                    dispatch(FetchFiles(path));
+                }
+                localStorage.removeItem('id_file_manager_val');
                 dispatch(FetchFiles());
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                Swal.fire({
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response === undefined?'error!':error.response.data.msg,
+                });
+                if (error.response) {
+                }
+            })
+    }
+}
+export const mergeStock = () => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `site/merge_stock`;
+        axios.post(url)
+            .then(function (response) {
+                const data = (response.data);
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
             })
             .catch(function (error) {
                 dispatch(setLoading(false));

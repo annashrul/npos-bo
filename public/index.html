@@ -31,79 +31,87 @@
 
 
   <style>
+    .custom-map-modal {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-   .custom-map-modal{
-     width: 100%;
-     height: 100%;
-     margin: 0;
-     padding: 0;
-   }
-   .custom-map-modal > .modal-content {
-     height: auto;
-     min-height: 100%;
-     width: 100%;
-     min-width: 1520px;
-     border-radius: 0;
-   }
+    .custom-map-modal>.modal-content {
+      height: auto;
+      min-height: 100%;
+      width: 100%;
+      min-width: 1520px;
+      border-radius: 0;
+    }
 
 
     .customDatePickerWidth,
-    .customDatePickerWidth > div.react-datepicker-wrapper,
-    .customDatePickerWidth > div > div.react-datepicker__input-container
-    .customDatePickerWidth > div > div.react-datepicker__input-container input {
+    .customDatePickerWidth>div.react-datepicker-wrapper,
+    .customDatePickerWidth>div>div.react-datepicker__input-container .customDatePickerWidth>div>div.react-datepicker__input-container input {
       width: 100%;
       height: 100%;
     }
-    .react-datepicker__input-container  {
+
+    .react-datepicker__input-container {
       width: inherit;
       height: inherit;
     }
+
     .react-datepicker__input-container input {
       width: inherit;
       height: 100%;
     }
-    #date{
-      width: 183px!important;
+
+    #date {
+      width: 183px !important;
 
     }
 
     .react-datepicker-wrapper {
       width: 100%;
     }
+
     .react-datepicker-wrapper,
     .react-datepicker__input-container,
     .react-datepicker__input-container input {
       display: block;
       width: 100%;
     }
-    .react-tabs__tab-list{
-      border-bottom: none!important;
+
+    .react-tabs__tab-list {
+      border-bottom: none !important;
     }
+
     .react-tabs__tab--selected {
       /*background: #fff;*/
-      border-color: white!important;
+      border-color: white !important;
       /*color: black;*/
-      color: #fff!important;
-      background-color: #1e88e5!important;
-      border-radius: 5px 5px 5px 5px!important;
+      color: #fff !important;
+      background-color: #1e88e5 !important;
+      border-radius: 5px 5px 5px 5px !important;
     }
+
     .react-tabs__tab {
-      display: inline-block!important;
-      border: 1px solid  #1e88e5!important;
+      display: inline-block !important;
+      border: 1px solid #1e88e5 !important;
       /*border-bottom: none!important;*/
-      bottom: -1px!important;
-      position: relative!important;
-      list-style: none!important;
-      padding: 6px 12px!important;
-      cursor: pointer!important;
-      border-radius: 5px 5px 5px 5px!important;
-      margin-right: 3px!important;
+      bottom: -1px !important;
+      position: relative !important;
+      list-style: none !important;
+      padding: 6px 12px !important;
+      cursor: pointer !important;
+      border-radius: 5px 5px 5px 5px !important;
+      margin-right: 3px !important;
     }
+
     .fade {
       transition: opacity .15s linear;
-      width: 100%!important;
-      height: 100%!important;
+      width: 100% !important;
+      height: 100% !important;
     }
+
     html,
     body,
     h1,
@@ -164,34 +172,42 @@
       border-radius: 0 0 2px 2px;
     }
 
-    .table-responsive{overflow: inherit !important;}
+    .table-responsive {
+      overflow: inherit !important;
+    }
 
     ::-webkit-scrollbar {
-        width: 8px;
+      width: 8px;
     }
+
     ::-webkit-scrollbar-button {
-        width: 8px;
-        height:5px;
+      width: 8px;
+      height: 5px;
     }
+
     ::-webkit-scrollbar-track {
-        background:#eee;
-        border: thin solid lightgray;
-        box-shadow: 0px 0px 3px #dfdfdf inset;
-        border-radius:10px;
+      background: #eee;
+      border: thin solid lightgray;
+      box-shadow: 0px 0px 3px #dfdfdf inset;
+      border-radius: 10px;
     }
+
     ::-webkit-scrollbar-thumb {
-        background:#999;
-        border: thin solid gray;
-        border-radius:10px;
+      background: #999;
+      border: thin solid gray;
+      border-radius: 10px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
-        background:#7d7d7d;
+      background: #7d7d7d;
     }
-    .react-bootstrap-daterangepicker-container{
-      display: unset!important;
+
+    .react-bootstrap-daterangepicker-container {
+      display: unset !important;
     }
   </style>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
+    async defer></script>
 
 </head>
 
@@ -199,7 +215,7 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
- 
+
 
   <div id="root"></div>
   <!--
@@ -217,7 +233,7 @@
   <input type='hidden' id="hellyeah" />
   <input type='hidden' id="coolyeah" />
   <script src="%PUBLIC_URL%/js/config.js"></script>
-  
+
 </body>
 
 </html>
