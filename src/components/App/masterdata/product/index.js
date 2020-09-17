@@ -103,12 +103,15 @@ class Product extends Component{
                 <div className="col-12 box-margin">
                     <div className="card">
                         <Tabs>
-                            <div className="card-body">
+                            <div className="card-body d-flex align-items-center justify-content-between">
                                 <TabList>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>Barang</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>Harga Barang</Tab>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Kelompok Barang</Tab>
                                 </TabList>
+                                <div>
+                                    <a href="upload" className="btn btn-outline-info"><i className="fa fa-upload"></i>&nbsp;UPLOAD</a>
+                                </div>
                             </div>
                             <div className="card-header" style={{"height":"5px","backgroundColor":"#f9fafb"}}></div>
                             <div className="card-body">

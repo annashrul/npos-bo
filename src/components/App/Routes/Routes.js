@@ -58,6 +58,7 @@ import SaleReturReport from "../report/sale/sale_retur_archive";
 import Area from '../masterdata/area';
 import Meja from '../masterdata/meja';
 import GlobalSetting from "../setting/global_setting/global_setting";
+import Upload from "../setting/upload/upload";
 import Print3ply from "../print/penjualan3ply";
 import Adjust3ply from "../print/adjust3ply";
 import Dn3ply from "../print/dn3ply";
@@ -168,6 +169,7 @@ const Routes = (
             {/* OTHERS SECTION START */}
             <PrivateRoute path="/cetak_barcode" exact strict component={CetakBarcode} />
             <PrivateRoute path="/receive/:slug" exact strict component={Receive} />
+            <PrivateRoute path="/upload" exact strict component={Upload} />
             {/* OTHERS SECTION END */}
             <Route component={NotFound}/>
 
