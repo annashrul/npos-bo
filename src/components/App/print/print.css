@@ -3,7 +3,7 @@ body {
 }
 #print_3ply{
     zoom:100% !important;
-    font-family: 'sans-serif'
+    font-family: 'Josefin Sans', sans-serif;
 }
 #non-printable {
     height: auto;
@@ -13,7 +13,7 @@ body {
     display: block;
     min-height: 1px;
     display: flex;
-        justify-content: space-between;
+    justify-content: space-between;
 
 }
 .block-left,
@@ -99,12 +99,16 @@ body {
     padding: 1mm 1mm 1mm 1mm;
 }
 
-th,
-td {
+/* th,
+td { */
+#print_3ply th,
+#print_3ply td {
     font-size: 13px!important;
     font-weight: lighter!important;
     font-family: 'system-ui'!important;
-    color: black;
+    color:black;
+
+
 }
 
 .borderTB {

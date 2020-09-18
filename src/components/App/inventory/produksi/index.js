@@ -544,7 +544,7 @@ class Produksi extends Component{
             Swal.fire({
                 title: 'Perhatian',
                 icon: 'warning',
-                text: 'barang sudah habis',
+                text: 'Tidak ada data.',
             });
         }
     }
@@ -686,7 +686,7 @@ class Produksi extends Component{
                                             </div>
                                             <div className="col-md-1">
                                                 <div className="form-group">
-                                                    <label className="control-label font-12">Qty</label>
+                                                    <label className="control-label font-12">Qty Est.</label>
                                                     <input type="text" name="qty_estimasi" className="form-control" value={this.state.qty_estimasi} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                     <div className="invalid-feedback"
                                                          style={this.state.error.qty_estimasi !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -879,7 +879,7 @@ class Produksi extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label className="control-label font-12">Qty</label>
+                                            <label className="control-label font-12">Qty Estimasi</label>
                                             <input type="text" name="qty_estimasi" className="form-control" value={this.state.qty_estimasi} onChange={(e => this.HandleCommonInputChange(e))}/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.qty_estimasi !== "" ? {display: 'block'} : {display: 'none'}}>

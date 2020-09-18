@@ -465,7 +465,7 @@ class ReceiveReport extends Component{
                                        <div className="col-6 col-xs-6 col-md-1">
                                            <div className="form-group">
                                                <label htmlFor="">Cari</label>
-                                               <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
+                                               <input type="text" name="any_receive_report" className="form-control" style={{width:"100%"}} value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
                                            </div>
                                        </div>
                                    </div>
@@ -502,8 +502,8 @@ class ReceiveReport extends Component{
                                         <th className="text-black" style={columnStyle}>Operator</th>
                                         <th className="text-black" style={columnStyle}>Lokasi</th>
                                         <th className="text-black" style={columnStyle}>Serial</th>
-                                        <th className="text-black" style={columnStyle}>Kontrabon</th>
-                                        <th className="text-black" style={columnStyle}>Jumlah Kontabon</th>
+                                        <th className="text-black" style={columnStyle}>Pembayaran ke-</th>
+                                        <th className="text-black" style={columnStyle}>Sisa Pembayaran</th>
                                         <th className="text-black" style={columnStyle}>Qty Beli</th>
                                         <th className="text-black" style={columnStyle}>Total Beli</th>
                                     </tr>
@@ -564,8 +564,8 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{v.operator}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.serial}</td>
-                                                                    <td style={columnStyle}>{v.kontabon}</td>
-                                                                    <td style={columnStyle}>{v.jumlah_kontrabon}</td>
+                                                                    <td style={columnStyle}>{v.jumlah_pembayaran}</td>
+                                                                    <td style={columnStyle}>{v.pelunasan.toLowerCase()==='lunas'?0:toRp(parseFloat(v.total_beli)-parseFloat(v.jumlah_bayar))}</td>
                                                                     <td style={columnStyle}>{v.qty_beli}</td>
                                                                     <td style={columnStyle}>{toRp(parseInt(v.total_beli,10))}</td>
                                                                 </tr>

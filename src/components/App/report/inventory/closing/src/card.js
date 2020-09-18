@@ -4,6 +4,7 @@ import { toRp } from 'helper';
 import connect from "react-redux/es/connect/connect";
 import Swal from "sweetalert2";
 import {reClosing} from "redux/actions/report/closing/closing.action";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 
 class Card extends Component {
     constructor(props) {
@@ -43,13 +44,14 @@ class Card extends Component {
                             </div>
                             <div className="col-2 text-right">
                                 <div className="dashboard-dropdown">
-                                    <div className="dropdown">
-                                        <button className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
-                                        <div className="dropdown-menu dropdown-menu-right"
-                                                aria-labelledby="dashboardDropdown50">
-                                            <a className="dropdown-item" href={null} onClick={(e)=>this.handleReclosing(e,item.id,item.tanggal)}><i className="fa fa-history"/>Reclosing</a>
-                                        </div>
-                                    </div>
+                                    <UncontrolledButtonDropdown>
+                                            <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                <i className="zmdi zmdi-more-vert"></i>
+                                            </DropdownToggle>
+                                            <DropdownMenu>
+                                                <DropdownItem onClick={(e)=>this.handleReclosing(e,item.id,item.tanggal)}><i className="fa fa-history"></i> Reclosing</DropdownItem>
+                                            </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
                                 </div>
                             </div>
                         </div>

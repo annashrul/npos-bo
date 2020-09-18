@@ -16,9 +16,10 @@ class GlobalSetting extends Component{
     }
 
     componentWillMount(){
+        document.title = `Site Config`;
         let count=1;
         Swal.fire({
-            title: '',
+            title: 'Verify Access',
             input: 'password',
             inputAttributes: {
                 autocapitalize: 'off'

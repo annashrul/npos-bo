@@ -440,7 +440,7 @@ class SaleArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{toRp(parseFloat(v.omset))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                                    <td style={{textAlign:"right"}}>{v.dis_persen}</td>
+                                                                    <td style={{textAlign:"right"}}>{parseFloat(v.dis_persen).toFixed(2)}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
