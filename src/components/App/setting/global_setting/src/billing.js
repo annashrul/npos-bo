@@ -37,7 +37,7 @@ class Billing extends Component{
     }
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
-        console.log("eeeeeeeeeee",nextProps)
+        
     }
     
     handleChange = (event) => {

@@ -9,6 +9,7 @@ import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_pr
 import ListGroupProduct from "./src/master_group_product/list";
 import ListPriceProduct from "./src/master_price_product/list";
 import ListProduct from "./src/master_product/list";
+import { Link } from 'react-router-dom';
 
 
 class Product extends Component{
@@ -110,7 +111,7 @@ class Product extends Component{
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(2)}>Kelompok Barang</Tab>
                                 </TabList>
                                 <div>
-                                    <a href="upload" className="btn btn-outline-info"><i className="fa fa-upload"></i>&nbsp;UPLOAD</a>
+                                    <Link to="upload" className="btn btn-outline-info"><i className="fa fa-upload"></i>&nbsp;IMPORT FROM CSV</Link>
                                 </div>
                             </div>
                             <div className="card-header" style={{"height":"5px","backgroundColor":"#f9fafb"}}></div>
