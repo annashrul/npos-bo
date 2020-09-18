@@ -3,7 +3,7 @@ body {
 }
 #print_3ply{
     zoom:100% !important;
-    font-family: 'Courier New'
+    font-family: 'sans-serif'
 }
 #non-printable {
     height: auto;
@@ -101,7 +101,9 @@ body {
 
 th,
 td {
-    font-size: 10px;
+    font-size: 13px!important;
+    font-weight: lighter!important;
+    font-family: 'system-ui'!important;
     color: black;
 }
 
