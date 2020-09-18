@@ -33,7 +33,7 @@ class Promo extends Component{
         this.handlePagin=this.handlePagin.bind(this);
     }
     componentWillReceiveProps = (nextProps) => {
-        console.log("wwwwwwwwwww",nextProps)
+        
         if (nextProps.auth.user) {
             let access = nextProps.auth.user.access;
             if(access!==undefined&&access!==null){

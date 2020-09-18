@@ -3,10 +3,6 @@ import connect from "react-redux/es/connect/connect";
 import * as Swal from "sweetalert2";
 import Preloader from "Preloader";
 import {deleteFiles, FetchFiles, FetchFolder} from "redux/actions/site.action";
-// import {HEADERS} from "redux/actions/_constants";
-// import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import FormBackup from "../../../modals/setting/form_setting_backup"
-import { stubTrue } from 'lodash';
 
 class FileManager extends Component{
     constructor(props){

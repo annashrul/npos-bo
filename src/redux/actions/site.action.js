@@ -5,7 +5,6 @@ import {
 import axios from "axios"
 import {destroy} from "components/model/app.model";
 import * as Swal from "sweetalert2";
-import { ConsoleView } from "react-device-detect";
 
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));
@@ -100,6 +99,7 @@ export const FetchFolder = () => {
 export const FetchFiles = (path) => {
     return (dispatch) => {
         dispatch(setLoading(true));
+        
         let where = '';
         if(path!==undefined){
             where +=`?path=${path}`;
@@ -313,3 +313,44 @@ export const storeCetakBarcode = (data) => {
     }
 }
 
+
+export const importTable = (data) => {
+    
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `site/pushTable`;
+        axios.post(url,data)
+            .then(function (response) {
+                const data = (response.data);
+                
+                if (data.status === 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        icon: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'failed',
+                        icon: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+                
+                Swal.fire({
+                    title: 'failed',
+                    icon: 'error',
+                    text: error.response.data.msg,
+                });
+                if (error.response) {
+                    
+                }
+            })
+
+        }
+    };
