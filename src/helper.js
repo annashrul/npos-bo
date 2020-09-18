@@ -148,7 +148,7 @@ export const statusQ = (lbl,txt) => {
 };
 
 export const getMargin = (hrg_jual,hrg_beli) => {
-    return ((parseInt(hrg_jual,10)-parseInt(hrg_beli,10))/parseInt(hrg_beli,10))*100;
+    return (((parseInt(hrg_jual,10)-parseInt(hrg_beli,10))/parseInt(hrg_beli,10))*100).toFixed(2);
 };
 
 export const kassa = (param='')=>{

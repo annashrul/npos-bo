@@ -43,7 +43,7 @@ class Login extends Component {
                     else{
                         Swal.fire({
                             title: 'Warning!',
-                            html: `<h6>Aplikasi ${parseInt(data.result.day,10)===0?"telah":"mendekati"} kedaluarsa.</h6><br/>
+                            html: `<h6>Aplikasi ${parseInt(data.result.day,10)<=0?"telah":"mendekati"} kedaluarsa.</h6><br/>
                                 <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
                                 <b>Jumlah:</b><br/>
                                 ${data.result.server_price}<br/>

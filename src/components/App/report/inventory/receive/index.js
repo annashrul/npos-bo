@@ -502,8 +502,8 @@ class ReceiveReport extends Component{
                                         <th className="text-black" style={columnStyle}>Operator</th>
                                         <th className="text-black" style={columnStyle}>Lokasi</th>
                                         <th className="text-black" style={columnStyle}>Serial</th>
-                                        <th className="text-black" style={columnStyle}>Kontrabon</th>
-                                        <th className="text-black" style={columnStyle}>Jumlah Kontabon</th>
+                                        <th className="text-black" style={columnStyle}>Pembayaran ke-</th>
+                                        <th className="text-black" style={columnStyle}>Sisa Pembayaran</th>
                                         <th className="text-black" style={columnStyle}>Qty Beli</th>
                                         <th className="text-black" style={columnStyle}>Total Beli</th>
                                     </tr>
@@ -564,8 +564,8 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{v.operator}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.serial}</td>
-                                                                    <td style={columnStyle}>{v.kontabon}</td>
-                                                                    <td style={columnStyle}>{v.jumlah_kontrabon}</td>
+                                                                    <td style={columnStyle}>{v.jumlah_pembayaran}</td>
+                                                                    <td style={columnStyle}>{v.pelunasan.toLowerCase()==='lunas'?0:toRp(parseFloat(v.total_beli)-parseFloat(v.jumlah_bayar))}</td>
                                                                     <td style={columnStyle}>{v.qty_beli}</td>
                                                                     <td style={columnStyle}>{toRp(parseInt(v.total_beli,10))}</td>
                                                                 </tr>

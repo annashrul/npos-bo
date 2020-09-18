@@ -104,7 +104,7 @@ export const FetchFiles = (path) => {
         if(path!==undefined){
             where +=`?path=${path}`;
         }
-        axios.get(HEADERS.URL + `site/f iles`+where)
+        axios.get(HEADERS.URL + `site/files`+where)
             .then(function (response) {
                 const data = response.data;
                 dispatch(setList(data));

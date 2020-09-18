@@ -136,7 +136,7 @@ class PiutangReport extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&search=${any}`
+            where+=`&q=${any}`
         }
         this.setState({
             where_data:where
