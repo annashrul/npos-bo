@@ -6,10 +6,22 @@ const initialState = {
     isLoading: false,
     data: [], msg:"", status:"",
     code:"-",data_trx:[],
+    report:[],
+    report_excel:[],
 };
 
 export const packingReducer = (state = initialState, action) => {
     switch (action.type) {
+        case PACKING.SUCCESS:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                report:action.data.result
+            });
+        case PACKING.SUCCESS_EXCEL:
+            return Object.assign({}, state, {
+                report_excel: action.data.result,
+            });
         case PACKING.GET_BARANG_SUCCESS:
             return Object.assign({}, state, {
                 status: action.data.status,

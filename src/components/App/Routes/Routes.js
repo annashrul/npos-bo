@@ -35,6 +35,7 @@ import AlokasiReport from '../report/inventory/alokasi'
 import DnReport from '../report/inventory/dn'
 import OpnameReport from '../report/inventory/opname'
 import ExpedisiReport from '../report/inventory/expedisi'
+import PackingReport from '../report/inventory/packing'
 import MutationReport from '../report/inventory/mutation'
 import TransactionReport from '../report/inventory/transaction'
 import ProductionReport from '../report/inventory/production'
@@ -145,6 +146,7 @@ const Routes = (
             <PrivateRoute path="/report/alokasi" exact strict component={AlokasiReport} />
             <PrivateRoute path="/report/dn" exact strict component={DnReport} />
             <PrivateRoute path="/report/opname" exact strict component={OpnameReport} />
+            <PrivateRoute path="/report/packing" exact strict component={PackingReport} />
             <PrivateRoute path="/report/expedisi" exact strict component={ExpedisiReport} />
             <PrivateRoute path="/report/mutation" exact strict component={MutationReport} />
             <PrivateRoute path="/report/alokasi_trx" exact strict component={TransactionReport} />
