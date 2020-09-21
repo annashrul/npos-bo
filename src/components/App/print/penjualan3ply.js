@@ -7,7 +7,8 @@ export default class Print3ply extends Component {
         this.state = {
             data:[],
             master:[],
-            nota:''
+            nota:'',
+            newLogo:''
         };
       }
       componentWillMount(){
@@ -27,6 +28,23 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data,nota}=this.state;
+        if(this.state.newLogo === ''){
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // console.log(reader.result);
+                    // logoBase64 = reader.result;
+                    this.setState({newLogo : reader.result});
+                };
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', localStorage.getItem('logos'));
+            xhr.responseType = 'blob';
+            xhr.send();
+
+            console.log(this.state.newLogo);
+        }
         let gt=0;
         return (
             <Layout>
@@ -34,7 +52,7 @@ export default class Print3ply extends Component {
                     <table style={{height: '10cm', position: 'relative'}} width="100%" cellSpacing={0} cellPadding={1}>
                         <thead>
                         <tr>
-                            <th colSpan={4} rowSpan={3} className="h1"><img className="img_head" alt="LOGO" src={localStorage.getItem('logos')} /></th>
+                            <th colSpan={4} rowSpan={3} className="h1"><img className="img_head" alt="LOGO" src={this.state.newLogo} /></th>
                             <th rowSpan={3} className="judul">NOTA PENJUALAN</th>
                             <th className="h2" colSpan={3}>Tgl Jual</th>
                             <th className="h2">: {master.tgl}</th>
