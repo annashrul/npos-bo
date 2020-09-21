@@ -146,10 +146,9 @@ class ReceiveReport extends Component{
             return null;
         });
         let status = [
-            {kode:"",value: "Semua"},
-            {kode:"0",value: "0"},
-            {kode:"1",value: "1"},
-            {kode:"2",value: "2"},
+            {kode:"",value: "Semua Status"},
+            {kode:"0",value: "Belum Lunas"},
+            {kode:"1",value: "Lunas"},
         ];
         let data_status=[];
         status.map((i) => {
@@ -185,7 +184,7 @@ class ReceiveReport extends Component{
             }
         }
     
-        // localStorage.setItem('status_receive_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_receive_report)
+        localStorage.setItem('status_receive_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_receive_report)
         localStorage.setItem('sort_receive_report',this.state.sort===''||this.state.sort===undefined?sort[0].kode:localStorage.sort_receive_report)
         localStorage.setItem('filter_receive_report',this.state.filter===''||this.state.filter===undefined?filter[0].kode:localStorage.filter_receive_report)
     
@@ -365,7 +364,6 @@ class ReceiveReport extends Component{
                                        <div className="col-6 col-xs-6 col-md-2">
                                            <div className="form-group">
                                                <label htmlFor=""> Periode </label>
-                                               <div className="customDatePickerWidth">
                                                    <DateRangePicker
                                                        ranges={rangeDate}
                                                        alwaysShowCalendars={true}
@@ -373,9 +371,8 @@ class ReceiveReport extends Component{
                                                        showDropdowns={true}
                                                        autoUpdateInput={true}
                                                    >
-                                                       <input type="text" id="date" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                       <input type="text" className="form-control" name="date_receive_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                    </DateRangePicker>
-                                               </div>
                                            </div>
                                        </div>
                                        <div className="col-6 col-xs-6 col-md-2">
@@ -431,7 +428,7 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
-                                       <div className="col-6 col-xs-6 col-md-2">
+                                       <div className="col-6 col-xs-6 col-md-1">
                                            <div className="form-group">
                                                <label className="control-label font-12">
                                                    Sort
@@ -448,10 +445,27 @@ class ReceiveReport extends Component{
                                                />
                                            </div>
                                        </div>
-                                       <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-6 col-xs-6 col-md-2">
+                                            <div className="form-group">
+                                                <label className="control-label font-12">
+                                                    Status
+                                                </label>
+                                                <Select
+                                                    options={this.state.status_data}
+                                                    placeholder="Pilih Status Transaksi"
+                                                    onChange={this.HandleChangeStatus}
+                                                    value={
+                                                        this.state.status_data.find(op => {
+                                                            return op.value === this.state.status
+                                                        })
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                       <div className="col-6 col-xs-6 col-md-1">
                                            <div className="form-group">
                                                <label htmlFor="">Cari</label>
-                                               <input type="text" name="any_receive_report" className="form-control" value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
+                                               <input type="text" name="any_receive_report" className="form-control" style={{width:"100%"}} value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
                                            </div>
                                        </div>
                                    </div>
@@ -488,8 +502,8 @@ class ReceiveReport extends Component{
                                         <th className="text-black" style={columnStyle}>Operator</th>
                                         <th className="text-black" style={columnStyle}>Lokasi</th>
                                         <th className="text-black" style={columnStyle}>Serial</th>
-                                        <th className="text-black" style={columnStyle}>Kontrabon</th>
-                                        <th className="text-black" style={columnStyle}>Jumlah Kontabon</th>
+                                        <th className="text-black" style={columnStyle}>Pembayaran ke-</th>
+                                        <th className="text-black" style={columnStyle}>Sisa Pembayaran</th>
                                         <th className="text-black" style={columnStyle}>Qty Beli</th>
                                         <th className="text-black" style={columnStyle}>Total Beli</th>
                                     </tr>
@@ -550,8 +564,8 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{v.operator}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.serial}</td>
-                                                                    <td style={columnStyle}>{v.kontabon}</td>
-                                                                    <td style={columnStyle}>{v.jumlah_kontrabon}</td>
+                                                                    <td style={columnStyle}>{v.jumlah_pembayaran}</td>
+                                                                    <td style={columnStyle}>{v.pelunasan.toLowerCase()==='lunas'?0:toRp(parseFloat(v.total_beli)-parseFloat(v.jumlah_bayar))}</td>
                                                                     <td style={columnStyle}>{v.qty_beli}</td>
                                                                     <td style={columnStyle}>{toRp(parseInt(v.total_beli,10))}</td>
                                                                 </tr>

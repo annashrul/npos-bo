@@ -114,7 +114,9 @@ export const storeHutang = (data,param) => {
                 }).then((result)=>{
                     localStorage.removeItem("nota_pembelian_hutang");
                     localStorage.removeItem("jenis_trx_hutang");
-                    window.location.reload();
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 });
                 // document.getElementById("btnNotaPdf").addEventListener("click", () => {
                 //     const win = window.open(data.result.nota, '_blank');

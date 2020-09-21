@@ -56,7 +56,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db,pe
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
         if(perpage!=='') url+=`&perpage=${perpage}`;
-        console.log("URL",url);
+        
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
@@ -123,7 +123,7 @@ export const storeProduksi = (data) => {
                     title: 'Transaksi berhasil.',
                     html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp,10)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem,10)}</td></tr></tbody></table>`,
                     icon: 'success',
-                    showCancelButton: true,
+                    showCancelButton: false,
                     cancelButtonColor: '#2196F3',
                     cancelButtonText: 'Oke!'
                 }).then((result) => {

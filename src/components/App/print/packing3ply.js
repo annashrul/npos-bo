@@ -112,7 +112,7 @@ export default class Print3ply extends Component {
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{parseInt(item.harga_beli,10)}</td>
+                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{parseInt(item.harga_beli,10)}</td>
                                         {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td> */}
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_alokasi}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_packing}</td>
@@ -126,7 +126,7 @@ export default class Print3ply extends Component {
                         <tfoot>
                         <tr>
                             <td colSpan={5} style={{borderTop: '', borderWidth: 'thin', paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-center" style={{borderTop: '', borderWidth: 'thin'}}>{subtotal}</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}}>{subtotal}</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} />
                         </tr>
                         </tfoot>

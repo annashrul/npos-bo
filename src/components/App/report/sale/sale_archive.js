@@ -133,6 +133,11 @@ class SaleArchive extends Component{
                 endDate: localStorage.date_to_sale_report
             })
         }
+        if (localStorage.status_sale_report !== undefined && localStorage.status_sale_report !== null) {
+            this.setState({
+                endDate: localStorage.status_sale_report
+            })
+        }
     }
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
@@ -278,7 +283,7 @@ class SaleArchive extends Component{
                                             <div className="form-group">
                                                 <label className="control-label font-12" htmlFor=""> Periode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
                                                 <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                                    <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
+                                                    <input type="text" className="form-control" name="date_sale_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -396,7 +401,7 @@ class SaleArchive extends Component{
                                                     typeof data==='object'? data.length>0?
 
                                                         data.map((v,i)=>{
-                                                            console.log("object", v.omset);
+                                                            
                                                             omset_per+= parseFloat(v.omset);
                                                             dis_item_per = dis_item_per + parseInt(v.diskon_item,10);
                                                             dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);
@@ -435,7 +440,7 @@ class SaleArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{toRp(parseFloat(v.omset))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                                    <td style={{textAlign:"right"}}>{v.dis_persen}</td>
+                                                                    <td style={{textAlign:"right"}}>{parseFloat(v.dis_persen).toFixed(2)}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>

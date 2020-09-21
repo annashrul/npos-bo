@@ -24,7 +24,7 @@ class CustomerPrice extends Component{
         let data=[];
         if(typeof nextProps.dataCustomerPrice.data==='object'){
             nextProps.dataCustomerPrice.data.map((v,i)=>{
-                data.push({"kd_cust":v.kd_cust,"nama":v.nama,"harga":v.harga});
+                data.push({"kd_cust":v.kd_cust,"nama":v.nama,"harga":v.harga,"satuan":v.satuan,"barcode":v.barcode});
                 return null;
             })
         }
@@ -46,7 +46,7 @@ class CustomerPrice extends Component{
         
         let data={};
         data['kd_cust'] = this.state.dataCustomer[i].kd_cust;
-        data['kd_brg'] = localStorage.getItem("kd_brg_price_customer");
+        data['barcode'] = this.state.dataCustomer[i].barcode;
         data['harga'] = this.state.dataCustomer[i].harga;
         
         this.props.dispatch(saveCustomerPrice(data));
@@ -78,6 +78,7 @@ class CustomerPrice extends Component{
 
     render(){
         const {total,per_page,current_page} = this.props.dataCustomerPrice;
+        console.log(this.state.dataCustomer)
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "CustomerPrice"} size="md">
@@ -96,6 +97,7 @@ class CustomerPrice extends Component{
                             <th>No</th>
                             <th>Customer</th>
                             <th>Harga</th>
+                            {/* <th>Satuan</th> */}
                         </tr>
                         </thead>
                         <tbody>
@@ -107,14 +109,20 @@ class CustomerPrice extends Component{
                                             <td>{i+1}</td>
                                             <td>{v.nama}</td>
                                             <td>
-                                                <input type="text" name="harga" className="form-control" value={v.harga} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {
-                                                    event => {
-                                                        if (event.key === 'Enter') {
-                                                            this.handleOnEnter(i);
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="harga" className="form-control" value={v.harga} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {
+                                                        event => {
+                                                            if (event.key === 'Enter') {
+                                                                this.handleOnEnter(i);
+                                                            }
                                                         }
-                                                    }
-                                                }/>
+                                                    }/>
+                                                    <div class="input-group-append">
+                                                    <span class="input-group-text">{v.satuan}</span>
+                                                    </div>
+                                                </div>
                                             </td>
+                                            {/* <td>{v.satuan}</td> */}
                                         </tr>
                                     )
                                 }) : <tr><td colSpan="3"><p className="text-center">tidak ada data</p></td></tr>

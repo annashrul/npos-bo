@@ -495,7 +495,7 @@ class ReturTanpaNota extends Component{
             Swal.fire({
                 title: 'Perhatian',
                 icon: 'warning',
-                text: 'barang sudah habis',
+                text: 'Tidak ada data.',
             });
         }
     }

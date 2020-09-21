@@ -114,7 +114,7 @@ export default class Adjust3ply extends Component {
                                             <td style={{paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
                                             <td style={{paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
  
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
+                                            <td style={{paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
                                             <td style={{paddingLeft: '5pt'}} className="text-center">{item.stock}</td>
                                             <td style={{paddingLeft: '5pt'}} className="text-center">{item.status}</td>
                                             <td style={{paddingLeft: '5pt'}} className="text-center">{item.qty_adjust}</td>

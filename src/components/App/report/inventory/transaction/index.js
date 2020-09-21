@@ -118,7 +118,7 @@ class TransactionReport extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&search=${any}`
+            where+=`&q=${any}`
         }
         this.setState({
             where_data:where
@@ -259,7 +259,7 @@ class TransactionReport extends Component{
                                                     alwaysShowCalendars={true}
                                                     onEvent={this.handleEvent}
                                                 >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
+                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -407,9 +407,9 @@ const mapStateToProps = (state) => {
     
     return {
         transactionReport:state.transactionReducer.report,
-        isLoadingDetail: state.transactionReducer.isLoadingDetail,
+        isLoadingDetail: state.transactionReducer.isLoadingApproval,
         auth:state.auth,
-        isLoading: state.transactionReducer.isLoading,
+        isLoading: state.transactionReducer.isLoadingApproval,
         transactionDetail:state.transactionReducer.report_data,
         transactionReportExcel:state.transactionReducer.report_excel,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,

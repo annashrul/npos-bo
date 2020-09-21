@@ -480,10 +480,14 @@ class FormPromo extends Component{
         for(let i=0;i<this.state.selectedOption.length;i++){
             lokasi.push(this.state.selectedOption[i].value);
         }
+        
+        
+        
+        
 
         parseData['category']=this.state.category;
-        parseData['daritgl']=moment(this.state.tgl_mulai).format("yyyy-MM-DD HH:mm:ss");
-        parseData['sampaitgl']=moment(this.state.tgl_selesai).format("yyyy-MM-DD HH:mm:ss");
+        parseData['daritgl']=moment(this.state.tgl_mulai).format('YYYY-MM-DD HH:mm:ss');
+        parseData['sampaitgl']=moment(this.state.tgl_selesai).format('YYYY-MM-DD HH:mm:ss');
         parseData['lokasi']=this.state.isCheckedLokasi===true?this.state.lokasi.toString():lokasi.toString();
         parseData['gambar']=this.state.gambar==='-'?'-':this.state.gambar.base64;
         parseData['member']=this.state.hanya_member?this.state.jenis_member:0;
@@ -563,7 +567,7 @@ class FormPromo extends Component{
                         barcode:v.barcode,
                         diskon:toPersen(v.qty,v.harga),
                         diskon2:toPersen(v.qty2,v.harga),
-                        min_trx:0,
+                        min_trx:this.state.min_trx,
                         min_qty:0,
                         open_price:0,
                         hrg_jual:v.harga,
@@ -606,7 +610,7 @@ class FormPromo extends Component{
             this.state.barang_data.map((v,i)=>{
                 if(v.checked === true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:0, min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
                     })
                 }
                 return null;
@@ -614,7 +618,7 @@ class FormPromo extends Component{
             this.state.barang_data1.map((v,i)=>{
                 if(v.checked_bg===true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:0, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
                     })
                 }
                 return null;
@@ -684,7 +688,7 @@ class FormPromo extends Component{
         // })
         
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" style={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? {maxWidth: '1600px', width: '100%'}:{}}>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPromo"}  size="lg" className={this.state.category==='brg'||this.state.category==='tm'||this.state.category==='bg'? "custom-map-modal":""}>
                 <ModalHeader toggle={this.toggle}>
                     {isArrLength===0?"Tambah Promo":"Ubah Promo"}
                     {

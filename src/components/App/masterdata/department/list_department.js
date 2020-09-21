@@ -73,10 +73,10 @@ class ListDepartment extends Component{
         } = this.props.data;
         return (
             <div className="row">
-               <div className="col-md-12">
+               <div className="col-md-6 offset-3">
                    <form onSubmit={this.handlesearch} noValidate>
                        <div className="row">
-                           <div className="col-8 col-xs-8 col-md-9">
+                           <div className="col-8 col-xs-8 col-md-6">
                                <div className="form-group">
                                    <label>Search Department</label>
                                    <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_department')}/>

@@ -117,7 +117,9 @@ export const storeExpedisi = (data,param) => {
                     localStorage.removeItem("lokasi1_expedisi");
                     localStorage.removeItem("lokasi2_expedisi");
                     localStorage.removeItem("search_expedisi");
-                    window.location.reload(false);
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 });
                 // document.getElementById("btnNotaPdf").addEventListener("click", () => {
                 //     const win = window.open(data.result.nota, '_blank');

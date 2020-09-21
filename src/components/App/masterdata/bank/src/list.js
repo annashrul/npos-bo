@@ -6,7 +6,7 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import FormBank from "components/App/modals/masterdata/bank/form_bank";
 import Swal from "sweetalert2";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
-import Noimage from 'assets/default.png';
+import Default from 'assets/default.png';
 
 class ListBank extends Component{
     constructor(props){
@@ -85,13 +85,13 @@ class ListBank extends Component{
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
                     <div className="row">
-                        <div className="col-10 col-xs-10 col-md-3">
+                        <div className="col-8 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
                                 <input type="text" className="form-control" name="any" defaultValue={localStorage.getItem('any_bank')}/>
                             </div>
                         </div>
-                        <div className="col-2 col-xs-2 col-md-3">
+                        <div className="col-4 col-xs-2 col-md-3">
                             <div className="form-group">
                                 <button style={{marginTop:"27px",marginRight:"2px"}} type="submit" className="btn btn-primary"><i className="fa fa-search"></i></button>
                                 <button style={{marginTop:"27px"}} type="button" onClick={(e)=>this.toggleModal(e)} className="btn btn-primary"><i className="fa fa-plus"></i></button>
@@ -107,11 +107,12 @@ class ListBank extends Component{
                             typeof data === 'object' ?
                                 data.map((v,i)=>{
                                     return(
-                                        <div className="col-xl-3 col-md-6 height-card box-margin" key={i}>
+                                        <div className="col-xl-3 col-md-6 mb-4" key={i}>
                                             <div className="card">
                                                 <div className="social-widget">
-                                                    <div className={v.status==='1'?'bg-success p-3 text-center text-white font-30':'bg-danger p-3 text-center text-white font-30'}>
-                                                        <img src={v.foto==='-'?Noimage:v.foto} style={{height:"120px"}} alt=""/>
+                                                    <div className={`ribbon ribbon-${v.status==='1'?'success':'danger'}`}>{v.status==='1'?'Active':'Not Active'}</div>
+                                                    <div className='bg-light p-3 text-center text-white font-30'>
+                                                        <img src={v.foto === null?'error':v.foto} alt="netindo" onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}} style={{height:"120px"}}/>
                                                     </div>
                                                     <div className="row">
                                                         <div className="col-8 text-left">
@@ -123,11 +124,10 @@ class ListBank extends Component{
                                                             <div className="p-2">
                                                                 <div className="dashboard-dropdown">
                                                                     <div className="dropdown">
-                                                                      
                                                                     <UncontrolledButtonDropdown>
-                                                                    <DropdownToggle caret>
-                                                                        <i style={{color:'white '}} className="fa fa-sort-desc"/>
-                                                                    </DropdownToggle>
+                                                                        <DropdownToggle caret style={{background:'transparent',border:'none'}}>
+                                                                            <i className="zmdi zmdi-more-vert"></i>
+                                                                        </DropdownToggle>
                                                                     <DropdownMenu>
                                                                         <DropdownItem  onClick={(e)=>this.handleEdit(
                                                                                 e,v.id,v.akun,v.charge_debit,v.charge_kredit,v.edc,v.foto,v.status,v.nama

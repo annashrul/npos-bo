@@ -119,7 +119,7 @@ class MutationReport extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&search=${any}`
+            where+=`&q=${any}`
         }
         this.setState({
             where_data:where
@@ -262,7 +262,7 @@ class MutationReport extends Component{
                                                     alwaysShowCalendars={true}
                                                     onEvent={this.handleEvent}
                                                 >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
+                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -342,49 +342,6 @@ class MutationReport extends Component{
                                 </div>
 
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_mutation_to_excel" style={{display:"none"}}>
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={7}>{this.state.startDate} - {this.state.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={7}>LAPORAN ALOKASI MUTASI</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Faktur</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Mutasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.mutationReportExcel.data==='object'? this.props.mutationReportExcel.data.length>0?
-                                            this.props.mutationReportExcel.data.map((v,i)=>{
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.lokasi_asal}</td>
-                                                        <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                                                        <td style={columnStyle}>{v.no_faktur_beli}</td>
-                                                        <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
-                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    </tbody>
-                                }
-                            </table>
-                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
@@ -465,9 +422,9 @@ const mapStateToProps = (state) => {
     
     return {
         mutationReport:state.mutationReducer.report,
-        isLoadingDetail: state.mutationReducer.isLoadingDetail,
+        isLoadingDetail: state.mutationReducer.isLoadingApproval,
         auth:state.auth,
-        isLoading: state.mutationReducer.isLoading,
+        isLoading: state.mutationReducer.isLoadingApproval,
         mutationDetail:state.mutationReducer.report_data,
         mutationReportExcel:state.mutationReducer.report_excel,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,

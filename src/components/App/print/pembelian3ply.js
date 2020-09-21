@@ -126,12 +126,12 @@ export default class Print3ply extends Component {
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.harga_beli}</td>
+                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.diskon}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.ppn}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_bonus}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
+                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
 
                                     </tr>
                                 )
@@ -142,11 +142,7 @@ export default class Print3ply extends Component {
                         <tr>
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={8}>TOTAL</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} />
-                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{data.sub_total}</td>
-                        </tr>
-                        <tr>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={9}>DISKON</td>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{data.sub_total/data.discount_harga}</td>
+                            <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{data.sub_total}</td>
                         </tr>
                         <tr>
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={9}>PPN</td>

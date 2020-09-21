@@ -12,7 +12,7 @@ import FormSale from "../../modals/sale/form_sale";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import imgDefault from 'assets/default.png'
-import {toRp,lengthBrg,ToastQ} from "helper";
+import {toRp,lengthBrg} from "helper";
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -622,7 +622,7 @@ class Sale extends Component{
             Swal.fire({
                 title: 'Perhatian',
                 icon: 'warning',
-                text: 'barang sudah habis',
+                text: 'Tidak ada data.',
             });
         }
     }

@@ -49,7 +49,9 @@ export const storeReturTanpaNota = (data,param) => {
                     localStorage.removeItem('grand_total');
                     localStorage.removeItem('sp');
                     localStorage.removeItem('lk');
-                    // window.location.reload(false);
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {
                     const win = window.open(data.result.nota, '_blank');

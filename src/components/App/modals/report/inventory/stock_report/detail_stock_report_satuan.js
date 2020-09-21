@@ -75,7 +75,7 @@ class DetailStockReportSatuan extends Component{
         let sumTotPrice4=0;
         return (
             <div>
-                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailStockReportSatuan"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
+                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailStockReportSatuan"} size="lg" className="custom-map-modal">
                     <ModalHeader toggle={this.toggle}>Detail Stock Report Satuan</ModalHeader>
                     <ModalBody>
                         <table className="table">

@@ -33,7 +33,7 @@ class PurchaseOrder extends Component{
             location:"",
             location_val:"",
             supplier:"",
-            catatan:"",
+            catatan:"-",
             jenis_trx:"Tunai",
             userid:0,
             searchby:1,
@@ -550,7 +550,7 @@ class PurchaseOrder extends Component{
             Swal.fire({
                 title: 'Perhatian',
                 icon: 'warning',
-                text: 'barang sudah habis',
+                text: 'Tidak ada data.',
             });
         }
     }
@@ -784,11 +784,15 @@ class PurchaseOrder extends Component{
                                                                 {this.state.error.supplier}
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <div className="col-md-5">
                                                         <div className="form-group">
                                                             <label className="control-label font-12">
                                                                 Catatan
                                                             </label>
-                                                            <input type="text" name={"catatan"} className="form-control" value={""} onChange={(e=>this.HandleCommonInputChange(e))}/>
+                                                            <textarea name={"catatan"} rows="6" className="form-control"  onChange={(e=>this.HandleCommonInputChange(e))}>
+                                                                {this.state.catatan}
+                                                            </textarea>
 
                                                             <div className="invalid-feedback" style={this.state.error.catatan!==""?{display:'block'}:{display:'none'}}>
                                                                 {this.state.error.catatan}

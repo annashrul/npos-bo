@@ -7,7 +7,7 @@ import {FetchCheck} from 'redux/actions/site.action'
 import {FetchNota,storeAlokasi} from 'redux/actions/inventory/alokasi.action'
 import {FetchDnReport,FetchDnData,setDnData} from 'redux/actions/inventory/dn.action'
 import StickyBox from "react-sticky-box";
-import {lengthBrg,ToastQ} from "helper";
+import {lengthBrg} from "helper";
 import imgDefault from 'assets/default.png';
 import Select from 'react-select'
 import Swal from 'sweetalert2'
@@ -707,7 +707,7 @@ class Alokasi extends Component{
             Swal.fire({
                 title: 'Perhatian',
                 icon: 'warning',
-                text: 'barang sudah habis',
+                text: 'Tidak ada data.',
             });
         }
     }

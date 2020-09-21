@@ -5,6 +5,9 @@ import {
 const initialState = {
     isLoading: false,
     data: [],
+    data_list: [],
+    data_folder: [],
+    data_tables: [],
     msg:"",
     status:"",
     check:false,
@@ -18,6 +21,18 @@ export const siteReducer = (state = initialState, action) => {
         case SITE.SUCCESS:
             return Object.assign({}, state,{
                 data: action.data
+            });
+        case SITE.SUCCESS_LIST:
+            return Object.assign({}, state,{
+                data_list: action.data.result
+            });
+        case SITE.SUCCESS_FOLDER:
+            return Object.assign({}, state,{
+                data_folder: action.data.result
+            });
+        case SITE.SUCCESS_TABLES:
+            return Object.assign({}, state,{
+                data_tables: action.data.result
             });
         case SITE.DOWNLOAD_TXT:
             return Object.assign({}, state,{

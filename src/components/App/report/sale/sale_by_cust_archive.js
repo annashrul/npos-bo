@@ -329,7 +329,7 @@ class SaleByCustArchive extends Component{
                                 <div className="form-group">
                                     <label htmlFor=""> Periode </label>
                                     <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                        <input type="text" className="form-control" name="date_sale_by_cust_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',width: '185px',fontWeight:'bolder'}}/>
+                                        <input type="text" className="form-control" name="date_sale_by_cust_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
                                     </DateRangePicker>
 
 

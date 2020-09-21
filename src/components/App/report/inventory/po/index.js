@@ -172,7 +172,7 @@ class PoReport extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            where+=`&search=${any}`
+            where+=`&q=${any}`
         }
         this.setState({
             where_data:where
@@ -282,7 +282,7 @@ class PoReport extends Component{
                                         <div className="form-group">
                                             <label htmlFor=""> Periode </label>
                                             <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                                <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',width: '185px',fontWeight:'bolder'}}/>
+                                                <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                             </DateRangePicker>
                                         </div>
                                     </div>
@@ -346,7 +346,7 @@ class PoReport extends Component{
                                     <div className="col-6 col-xs-6 col-md-2">
                                         <div className="form-group">
                                             <label>Cari</label>
-                                            <input className="form-control" type="text" style={{padding: '9px',width: '185px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                            <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                         </div>
                                     </div>
                                 </div>

@@ -16,6 +16,7 @@ import {
     DropdownItem,
     DropdownToggle
 } from 'reactstrap';
+import Default from 'assets/default.png';
 
 class Header extends Component {
   constructor(props) {
@@ -120,7 +121,7 @@ class Header extends Component {
           <div className="left-side-content-area d-flex align-items-center">
               {/* Mobile Logo */}
                 <div className="mobile-logo mr-3 mr-sm-4">
-                    <Link to={'./'} ><img src="/favicon.png" alt="Mobile Logo"/></Link>
+                    <Link to={'./'} ><img src="/favicon.png" onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}}  alt="Mobile Logo"/></Link>
                 </div>
               {/* <!-- Triggers --> */}
               <div className="ecaps-triggers mr-1 mr-sm-3">
@@ -153,13 +154,13 @@ class Header extends Component {
                 <li className="nav-item dropdown" style={{listStyleType:'none'}}>
                     <UncontrolledButtonDropdown nav inNavbar>
                                 <DropdownToggle caret inNavbar className="nohover">
-                                    <img src={this.props.auth.user.foto} alt=""/>
+                                    <img src={this.props.auth.user.foto} onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}}  alt=""/>
                                 </DropdownToggle>
                             <DropdownMenu right>
                                 <div className="user-profile-area">
                                     <div className="user-profile-heading">
                                         <div className="profile-img">
-                                            <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
+                                            <img className="chat-img mr-2" src={this.props.auth.user.foto} onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}}  alt=""/>
                                         </div>
                                         <div className="profile-text">
                                             <h6>{this.props.auth.user.username}</h6>
@@ -183,7 +184,7 @@ class Header extends Component {
                   <li className="nav-item dropdown">
                         <UncontrolledButtonDropdown nav inNavbar>
                                 <DropdownToggle caret inNavbar className="nohover">
-                                    <img src={this.props.auth.user.foto} alt=""/>
+                                    <img src={this.props.auth.user.foto} onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}}  alt=""/>
                                     <div className="user-name">
                                         <table>
                                             <tr>
@@ -206,7 +207,7 @@ class Header extends Component {
                                 <div className="user-profile-area">
                                     <div className="user-profile-heading">
                                         <div className="profile-img">
-                                            <img className="chat-img mr-2" src={this.props.auth.user.foto} alt=""/>
+                                            <img className="chat-img mr-2" src={this.props.auth.user.foto} onError={(e)=>{e.target.onerror = null; e.target.src=`${Default}`}}  alt=""/>
                                         </div>
                                         <div className="profile-text">
                                             <h6>{this.props.auth.user.username}</h6>
