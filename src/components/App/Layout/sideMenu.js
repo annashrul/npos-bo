@@ -20,6 +20,7 @@ class SideMenu extends Component {
             isReportInventory:false,
             isReportPembelian:false,
             isReportPembayaran:false,
+            isReportLog:false,
             isReportPenjualan:false,
             isTrxMutasi:false,
             isTrxOpname:false,
@@ -59,10 +60,12 @@ class SideMenu extends Component {
             modul_report_inventory:false,
             modul_report_pembelian:false,
             modul_report_pembayaran:false,
+            modul_report_log:false,
             r_closing:'',r_kas:'',r_laba_rugi:'',r_produksi:'',r_arsip_penjualan:'',r_arsip_retur_penjualan:'',r_penjualan_by_customer:'',
             r_stock:'',r_adjusment:'',r_alokasi:'',r_delivery_note:'',r_opname:'',r_mutasi:'',r_alokasi_trx:'',r_expedisi:'',
             r_purchase_order:'',r_receive:'',r_arsip_pembelian_by_supplier:'',
             r_hutang:'',r_piutang:'',
+            r_trx:'',r_act:'',
             //CETAK BARCODE
             modul_cetak_barcode:false,
             cetak_barcode:'',
@@ -103,7 +106,8 @@ class SideMenu extends Component {
                     isReportInventory:!this.state.isReportInventory,
                     isReportPembelian:false,
                     isReportPembayaran:false,
-                    isReportPenjualan:false
+                    isReportPenjualan:false,
+                    isReportLog:false
                 })
             }
             if(this.state.isReportPembelian === true) {
@@ -117,7 +121,8 @@ class SideMenu extends Component {
                     isReportInventory:false,
                     isReportPembelian:!this.state.isReportPembelian,
                     isReportPembayaran:false,
-                    isReportPenjualan:false
+                    isReportPenjualan:false,
+                    isReportLog:false
                 })
             }
             if(this.state.isReportPenjualan === true) {
@@ -131,7 +136,8 @@ class SideMenu extends Component {
                     isReportInventory:false,
                     isReportPembelian:false,
                     isReportPembayaran:false,
-                    isReportPenjualan:!this.state.isReportPenjualan
+                    isReportPenjualan:!this.state.isReportPenjualan,
+                    isReportLog:false
                 })
             }
             if(this.state.isReportPembayaran === true) {
@@ -145,6 +151,22 @@ class SideMenu extends Component {
                     isReportInventory:false,
                     isReportPembelian:false,
                     isReportPembayaran:!this.state.isReportPembayaran,
+                    isReportPenjualan:false,
+                    isReportLog:false
+                })
+            }
+            if(this.state.isReportLog === true) {
+                this.setState({
+                    isSetting:false,
+                    isMasterdata: false,
+                    isInventory: false,
+                    isReport: true,
+                    isReceive: false,
+                    isSale:false,
+                    isReportInventory:false,
+                    isReportPembelian:false,
+                    isReportPembayaran:false,
+                    isReportLog:!this.state.isReportLog,
                     isReportPenjualan:false
                 })
             }
@@ -162,7 +184,8 @@ class SideMenu extends Component {
                 isReportInventory:false,
                 isReportPenjualan:false,
                 isProduction:false,
-                isPaid:false
+                isPaid:false,
+                isReportLog:false
             });
 
             if(this.state.isTrxMutasi === true){
@@ -180,6 +203,7 @@ class SideMenu extends Component {
                     isTrxOpname:false,
                     isTrxPengiriman:false,
                     isTrxMutasi:!this.state.isTrxMutasi,
+                    isReportLog:false
                 })
             }
             if(this.state.isTrxOpname === true){
@@ -197,6 +221,7 @@ class SideMenu extends Component {
                     isTrxMutasi:false,
                     isTrxOpname:!this.state.isTrxOpname,
                     isTrxPengiriman:false,
+                    isReportLog:false
                 })
             }
             if(this.state.isTrxPengiriman === true){
@@ -214,6 +239,7 @@ class SideMenu extends Component {
                     isTrxMutasi:false,
                     isTrxOpname:false,
                     isTrxPengiriman:!this.state.isTrxPengiriman,
+                    isReportLog:false
                 })
             }
         }
@@ -229,6 +255,7 @@ class SideMenu extends Component {
                 isReportInventory:false,
                 isReportPembelian:false,
                 isReportPembayaran:false,
+                isReportLog:false,
                 isReportPenjualan:false,
                 isProduction:false,
                 isPaid:false
@@ -308,6 +335,12 @@ class SideMenu extends Component {
                 isInventory : false
             });
         }
+        if(param === 'report_log'){
+            this.setState({
+                isReportLog: !this.state.isReportLog,
+                // isInventory : false
+            });
+        }
         if(param === 'report_penjualan'){
             this.setState({
                 isReportPenjualan: !this.state.isReportPenjualan,
@@ -349,6 +382,7 @@ class SideMenu extends Component {
     getProps(param){
         if (param.auth.user) {
             let akses =param.auth.user.access;
+            console.log(akses)
             if(akses!==undefined&&akses!==null){
                 // SETTING
                 let pengaturan_umum                 = akses[0]['value']!==null?akses[0]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
@@ -407,6 +441,8 @@ class SideMenu extends Component {
                 let r_arsip_pembelian_by_supplier   = akses[87]['value']!==null?akses[87]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 let r_hutang                        = akses[88]['value']!==null?akses[88]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 let r_piutang                       = akses[89]['value']!==null?akses[89]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_trx                           = akses[88]['value']!==null?akses[88]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
+                let r_act                           = akses[89]['value']!==null?akses[89]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 //CETAK BARCODE
                 let cetak_barcode                   = akses[90]['value']!==null?akses[90]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 // start pengecekan apabila fitur bernilai 0
@@ -466,6 +502,9 @@ class SideMenu extends Component {
                 if(r_hutang!=='0'||r_piutang!=='0'){
                     this.setState({modul_report:true,modul_report_pembayaran:true});
                 }
+                if(r_trx!=='0'||r_act!=='0'){
+                    this.setState({modul_report:true,modul_report_log:true});
+                }
                 if(cetak_barcode!=='0'){
                     this.setState({modul_cetak_barcode:true});
                 }
@@ -494,7 +533,7 @@ class SideMenu extends Component {
                     r_arsip_retur_penjualan:r_arsip_retur_penjualan, r_penjualan_by_customer:r_penjualan_by_customer, r_stock:r_stock,
                     r_adjusment:r_adjusment, r_alokasi:r_alokasi, r_delivery_note:r_delivery_note, r_opname:r_opname, r_mutasi:r_mutasi,
                     r_alokasi_trx:r_alokasi_trx, r_expedisi:r_expedisi, r_purchase_order:r_purchase_order, r_receive:r_receive,
-                    r_arsip_pembelian_by_supplier:r_arsip_pembelian_by_supplier, r_hutang:r_hutang, r_piutang:r_piutang,
+                    r_arsip_pembelian_by_supplier:r_arsip_pembelian_by_supplier, r_hutang:r_hutang, r_piutang:r_piutang, r_trx:r_trx, r_act:r_act,
                     //CETAK BARCODE
                     cetak_barcode:cetak_barcode,
                 })
@@ -598,6 +637,7 @@ class SideMenu extends Component {
             path==='/report/dn' ||
             path==='/report/opname' ||
             path==='/report/expedisi' ||
+            path==='/report/packing' ||
             path==='/report/mutation' ||
             path==='/report/alokasi_trx' ||
             path==='/report/production' ||
@@ -607,7 +647,10 @@ class SideMenu extends Component {
             path==='/report/purchase_by_supplier'||
 
             path==='/report/hutang' ||
-            path==='/report/piutang'
+            path==='/report/piutang' ||
+
+            path==='/log/trx' ||
+            path==='/log/act'
             ){
             
             this.setState({
@@ -619,6 +662,7 @@ class SideMenu extends Component {
                 path==='/report/alokasi' || 
                 path==='/report/opname' || 
                 path==='/report/expedisi' || 
+                path==='/report/packing' || 
                 path==='/report/mutation' || 
                 path==='/report/alokasi_trx' ||
                 path==='/report/dn'){
@@ -651,6 +695,14 @@ class SideMenu extends Component {
                
                this.setState({
                    isReportPembayaran:true
+               })
+           } else if(
+               path==='/log/trx' ||
+               path==='/log/act'
+               ){
+               
+               this.setState({
+                   isReportLog:true
                })
            } 
         } else if(path==='/trx_produksi'||path==='/approval_produksi'){
@@ -711,8 +763,8 @@ class SideMenu extends Component {
             modul_pembelian,
             modul_penjualan,
             modul_pembayaran,
-            modul_report,modul_report_penjualan,modul_report_inventory,modul_report_pembelian,modul_report_pembayaran,
-            modul_cetak_barcode
+            modul_report,modul_report_penjualan,modul_report_inventory,modul_report_pembelian,modul_report_pembayaran,modul_report_log,
+            modul_cetak_barcode,
         } = this.state;
         return (
             <nav>
@@ -848,6 +900,7 @@ class SideMenu extends Component {
                         this.state.isReportPembelian===true || 
                         this.state.isReportPenjualan===true ||
                         this.state.isReportPembayaran===true ||
+                        this.state.isReportLog===true ||
                         path==='/report/cash'||
                         path==='/report/closing'
                         ?" active menu-open" : "")} style={modul_report===true?{display:'block'}:{display:'none'}}>
@@ -894,7 +947,7 @@ class SideMenu extends Component {
                                     <li className={path==='/report/opname'?"active":''} style={this.state.r_opname==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname</Link></li>
                                     <li className={path==='/report/mutation'?"active":''} style={this.state.r_mutasi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/mutation" style={{width:'fit-content'}}> <i className="zmdi zmdi-card" />Mutasi</Link></li>
                                     <li className={path==='/report/alokasi_trx'?"active":''} style={this.state.r_alokasi_trx==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/alokasi_trx" style={{width:'fit-content'}}> <i className="fa fa-money" />Alokasi Trx</Link></li>
-                                    <li className={path==='/report/packing'?"active":''} style={this.state.r_expedisi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/packing" style={{width:'fit-content'}}> <i className="fa fa-truck" />Packing</Link></li>
+                                    <li className={path==='/report/packing'?"active":''} style={this.state.r_expedisi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/packing" style={{width:'fit-content'}}> <i className="fa fa-codepen" />Packing</Link></li>
                                     <li className={path==='/report/expedisi'?"active":''} style={this.state.r_expedisi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/expedisi" style={{width:'fit-content'}}> <i className="fa fa-truck" />Ekspedisi</Link></li>
                                 </ul>
                             </li>
@@ -931,6 +984,21 @@ class SideMenu extends Component {
                                 </ul>
                             </li>
                             {/* SUBLAPORAN PEMBAYARAN MODUL END */}
+
+                            {/* SUBLAPORAN LOG MODUL START */}
+                            <li className={"treeview" + (this.state.isReportLog===true || 
+                                path==='/log/trx'|| 
+                                path==='/log/act'
+                                ?" active menu-open" : "")} style={modul_report_log===true?{display:'block'}:{display:'none'}}>
+
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_log')}><i className="fa fa-pencil"/>Log <i className="fa fa-angle-right"/></a>
+                                <ul className={"treeview-menu animate__animated" + (this.state.isReportLog===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportLog===true
+                        ?"block" : "none"}}>
+                                    <li className={path==='/log/trx'?"active":''} style={this.state.r_hutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/log/trx" style={{width:'fit-content'}}> <i className="fa fa-file-text" />Transaksi</Link></li>
+                                    <li className={path==='/log/act'?"active":''} style={this.state.r_piutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/log/act" style={{width:'fit-content'}}> <i className="fa fa-file-text" />Aktivitas</Link></li>
+                                </ul>
+                            </li>
+                            {/* SUBLAPORAN LOG MODUL END */}
                         </ul>
                     </li>
                     {/* LAPORAN MODUL END */}

@@ -1,13 +1,13 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchLogTrx} from "redux/actions/report/log/log.action";
+import {FetchLogAct} from "redux/actions/report/log/log_act.action";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
-class LogTrxReport extends Component{
+class LogActReport extends Component{
     constructor(props){
         super(props);
         this.handleSearch = this.handleSearch.bind(this);
@@ -22,29 +22,29 @@ class LogTrxReport extends Component{
         }
     }
     componentWillMount(){
-        let page=localStorage.page_log_trx_report;
+        let page=localStorage.page_log_act_report;
         this.handleParameter(page!==undefined&&page!==null?page:1);
     }
     componentDidMount(){
-        if (localStorage.any_log_trx_report !== undefined && localStorage.any_log_trx_report !== '') {
-            this.setState({any: localStorage.any_log_trx_report})
+        if (localStorage.any_log_act_report !== undefined && localStorage.any_log_act_report !== '') {
+            this.setState({any: localStorage.any_log_act_report})
         }
-        if (localStorage.date_from_log_trx_report !== undefined && localStorage.date_from_log_trx_report !== null) {
-            this.setState({startDate: localStorage.date_from_log_trx_report})
+        if (localStorage.date_from_log_act_report !== undefined && localStorage.date_from_log_act_report !== null) {
+            this.setState({startDate: localStorage.date_from_log_act_report})
         }
-        if (localStorage.date_to_log_trx_report !== undefined && localStorage.date_to_log_trx_report !== null) {
-            this.setState({endDate: localStorage.date_to_log_trx_report})
+        if (localStorage.date_to_log_act_report !== undefined && localStorage.date_to_log_act_report !== null) {
+            this.setState({endDate: localStorage.date_to_log_act_report})
         }
     }
     handlePageChange(pageNumber){
-        localStorage.setItem("page_log_trx_report",pageNumber);
-        this.props.dispatch(FetchLogTrx(pageNumber))
+        localStorage.setItem("page_log_act_report",pageNumber);
+        this.props.dispatch(FetchLogAct(pageNumber))
     }
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
         const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("date_from_log_trx_report",`${awal}`);
-        localStorage.setItem("date_to_log_trx_report",`${akhir}`);
+        localStorage.setItem("date_from_log_act_report",`${awal}`);
+        localStorage.setItem("date_to_log_act_report",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
@@ -52,13 +52,13 @@ class LogTrxReport extends Component{
     };
     handleSearch(e){
         e.preventDefault();
-        localStorage.setItem("any_log_trx_report",this.state.any);
+        localStorage.setItem("any_log_act_report",this.state.any);
         this.handleParameter(1);
     }
     handleParameter(pageNumber){
-        let dateFrom=localStorage.date_from_log_trx_report;
-        let dateTo=localStorage.date_to_log_trx_report;
-        let any = localStorage.any_log_trx_report;
+        let dateFrom=localStorage.date_from_log_act_report;
+        let dateTo=localStorage.date_to_log_act_report;
+        let any = localStorage.any_log_act_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -69,14 +69,15 @@ class LogTrxReport extends Component{
         this.setState({
             where_data:where
         })
-        this.props.dispatch(FetchLogTrx(pageNumber,where))
-        // this.props.dispatch(FetchLogTrxExcel(pageNumber,where))
+        this.props.dispatch(FetchLogAct(pageNumber,where))
+        // this.props.dispatch(FetchLogActExcel(pageNumber,where))
     }
     handleGet(e,data){
         e.preventDefault();
         
-        const arr_data = JSON.parse(data);
-
+        console.log(data)
+        const arr_data = [JSON.parse(data)];
+        console.log(arr_data)
         const keyName = arr_data.map((o) => {
                 return Object.keys(o)
             }).reduce((prev, curr) => {
@@ -101,9 +102,9 @@ class LogTrxReport extends Component{
             // from,
             // to,
             data
-        } = this.props.log_trxReport;
+        } = this.props.log_actReport;
         return (
-            <Layout page="Laporan LogTrx">
+            <Layout page="Laporan LogAct">
                 <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
@@ -147,7 +148,7 @@ class LogTrxReport extends Component{
                                 <div className="col-4">
                                     <div className="card">
                                         <div className="card-body">
-                                            <h4 className="card-title">LOG TRX</h4>
+                                            <h4 className="card-title">LOG ACT</h4>
                                             <div style={{position: 'relative', overflowX: 'auto', width: 'auto', height: 400}}>
                                                 <ul className="dashboard-active-timeline list-unstyled">
                                                     {
@@ -160,15 +161,15 @@ class LogTrxReport extends Component{
                                                                             const items = ['bg-primary','bg-info','bg-warning','bg-danger','bg-dark']
                                                                             let rand_bg = items[Math.floor(Math.random() * items.length)];
                                                                             return(
-                                                                                <a href="!#" onClick={(e)=>this.handleGet(e,v.detail_trx)}>
+                                                                                <a href="!#" onClick={(e)=>this.handleGet(e,v.detail)}>
                                                                                     <li className="d-flex align-items-center mb-15" key={i}>
                                                                                         <div className={"timeline-icon " +(rand_bg) +" mr-3"}>
-                                                                                            {(v.kd_trx).substring(0,2)}
+                                                                                            {(v.tabel).substring(0,2).toUpperCase()}
                                                                                         </div>
                                                                                         <div className="timeline-info">
                                                                                             <p className="font-weight-bold mb-0">{v.aksi}</p>
-                                                                                            <span>{v.transaksi} | {v.nama_user}</span>
-                                                                                            <p className="mb-0">{moment(v.tanggal).format('LLLL')}</p>
+                                                                                            <span>{v.tabel} | {v.nama}</span>
+                                                                                            <p className="mb-0">{moment(v.tgl).format('LLLL')}</p>
                                                                                         </div>
                                                                                     </li>
                                                                                 </a>
@@ -196,7 +197,7 @@ class LogTrxReport extends Component{
                                     </div>
                                 </div>
                                 <div className="col-8">
-                                    <h4 className="card-title">DETAIL TRX</h4>
+                                    <h4 className="card-title">DETAIL ACT</h4>
                                     <div className="table-responsive" ref={element => {
                                         if (element) element.style.setProperty('overflow-x', 'auto', 'important');
                                     }}>
@@ -251,8 +252,8 @@ class LogTrxReport extends Component{
                                 </div>
                                 </div>
                             </div>
-                            {/* <DetailLogTrx log_trxDetail={this.props.log_trxDetail}/> */}
-                            {/* <LogTrxReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} /> */}
+                            {/* <DetailLogAct log_actDetail={this.props.log_actDetail}/> */}
+                            {/* <LogActReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} /> */}
                         </div>
                     </div>
                 </div>
@@ -264,13 +265,13 @@ class LogTrxReport extends Component{
 const mapStateToProps = (state) => {
     
     return {
-        log_trxReport:state.log_trxReducer.report,
-        isLoadingDetail: state.log_trxReducer.isLoadingDetail,
-        log_trxReportExcel:state.log_trxReducer.report_excel,
+        log_actReport:state.log_actReducer.report,
+        isLoadingDetail: state.log_actReducer.isLoadingDetail,
+        log_actReportExcel:state.log_actReducer.report_excel,
         auth:state.auth,
-        isLoading: state.log_trxReducer.isLoading,
+        isLoading: state.log_actReducer.isLoading,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(LogTrxReport);
+export default connect(mapStateToProps)(LogActReport);
