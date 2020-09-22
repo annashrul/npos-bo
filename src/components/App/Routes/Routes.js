@@ -39,6 +39,7 @@ import PackingReport from '../report/inventory/packing'
 import MutationReport from '../report/inventory/mutation'
 import TransactionReport from '../report/inventory/transaction'
 import ProductionReport from '../report/inventory/production'
+import LogTrxReport from '../report/log/log_trx'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
@@ -160,6 +161,7 @@ const Routes = (
             <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
             <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
+            <PrivateRoute path="/log/trx" exact strict component={LogTrxReport} />
             {/* REPORT SECTION END */}
 
             {/* SETTINGS SECTION START */}

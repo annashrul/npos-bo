@@ -281,6 +281,18 @@ export const OPNAME = {
     FAILED_POSING:"SET_FAILED_POSTING"
 }
 /****************
+ LOG_TRX
+ *****************/
+export const LOG_TRX = {
+    LOADING: 'SET_LOG_TRX_LOADING',
+    SUCCESS: 'SET_LOG_TRX_SUCCESS',
+    SUCCESS_EXCEL: 'SET_LOG_TRX_SUCCESS_EXCEL',
+    FAILED: 'SET_LOG_TRX_FAILED',
+    DATA_POSTING:"SET_DATA_POSTING",
+    FAILED_POSING:"SET_FAILED_POSTING",
+    SUCCESS_TRX: 'SET_LOG_TRX_SUCCESS_TRX',
+}
+/****************
  EXPEDISI
  *****************/
 export const EXPEDISI = {
