@@ -111,7 +111,7 @@ export const FetchDnExcel = (page=1,where='', perpage=99999)=>{
 export const FetchDnData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `deliverynote/ambil_data/${nota}`)
+        axios.get(HEADERS.URL + `deliverynote/report/${nota}`)
             .then(function (response) {
                 const data = response.data
                 dispatch(setDnData(data))

@@ -24,7 +24,7 @@ class CustomerPrice extends Component{
         let data=[];
         if(typeof nextProps.dataCustomerPrice.data==='object'){
             nextProps.dataCustomerPrice.data.map((v,i)=>{
-                data.push({"kd_cust":v.kd_cust,"nama":v.nama,"harga":v.harga,"satuan":v.satuan,"barcode":v.barcode});
+                data.push({"kd_cust":v.kd_cust,"nama":v.nama,"harga":v.harga,"satuan":v.satuan,"barcode":v.barcode,"nama_toko":v.nama_toko});
                 return null;
             })
         }
@@ -78,7 +78,6 @@ class CustomerPrice extends Component{
 
     render(){
         const {total,per_page,current_page} = this.props.dataCustomerPrice;
-        console.log(this.state.dataCustomer)
 
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "CustomerPrice"} size="md">
@@ -95,6 +94,7 @@ class CustomerPrice extends Component{
                         <thead>
                         <tr>
                             <th>No</th>
+                            <th>Lokasi</th>
                             <th>Customer</th>
                             <th>Harga</th>
                             {/* <th>Satuan</th> */}
@@ -107,6 +107,7 @@ class CustomerPrice extends Component{
                                     return (
                                         <tr key={i}>
                                             <td>{i+1}</td>
+                                            <td>{v.nama_toko}</td>
                                             <td>{v.nama}</td>
                                             <td>
                                                 <div class="input-group">

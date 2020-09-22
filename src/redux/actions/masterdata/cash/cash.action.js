@@ -14,6 +14,14 @@ export function setCashFailed(data=[]){
 }
 
 
+export function successCashTrx(bool) {
+    return {
+        type: CASH.TRX_SUCCESS,
+        bool
+    }
+}
+
+
 export function setLoadingReport(load){
     return {type : CASH.LOADING_REPORT,load}
 }
@@ -134,7 +142,7 @@ export const StoreCashTrx = (data) => {
                         confirmButtonText: 'Tutup'
                     }).then((result) => {
                         if (result.value) {
-                            window.location.reload();
+                            dispatch(successCashTrx(true));
                         }
                     })
                 } else {

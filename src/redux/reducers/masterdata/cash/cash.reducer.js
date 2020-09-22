@@ -8,7 +8,8 @@ const initialState = {
     per_page:0,
     total:0,
     dataReport:[],
-    isLoadingReport:false
+    isLoadingReport:false,
+    isSuccessTrx:false
 };
 
 export const cashReducer = (state=initialState,action) => {
@@ -23,6 +24,10 @@ export const cashReducer = (state=initialState,action) => {
                 msg:action.data.msg,
                 dataReport:action.data.result
             });
+        case CASH.TRX_SUCCESS:
+            return Object.assign({},state,{
+                isSuccessTrx:action.bool
+            })
         case CASH.SUCCESS:
             return Object.assign({}, state,{
                 status:action.data.status,

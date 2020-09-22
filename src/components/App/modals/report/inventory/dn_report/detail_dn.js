@@ -20,6 +20,7 @@ class DetailDn extends Component{
     render(){
         
         const {data} = this.props.dnDetail;
+        console.log(data);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>
@@ -57,7 +58,7 @@ class DetailDn extends Component{
                                                                         "barcode": "123123123",
                                                                         "satuan": "Karton",
                                                                         "nm_brg": "seprit orange" */}
-                                                        <td style={{textAlign:"right"}}>{v.no_faktur_mutasi}</td>
+                                                        <td style={{textAlign:"right"}}>{v.no_delivery_note}</td>
                                                         <td style={{textAlign:"right"}}>{v.kd_brg}</td>
                                                         <td style={{textAlign:"right"}}>{v.nm_brg}</td>
                                                         <td style={{textAlign:"right"}}>{v.qty}</td>

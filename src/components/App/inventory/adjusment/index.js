@@ -178,7 +178,7 @@ class TrxAdjustment extends Component{
             qty_adjust:parseInt(item.qty_adjust,10)+1,
             status:item.status,
             saldo_stock:item.stock,
-            tambahan:[],
+            tambahan:item.tambahan,
         };
         const cek = cekData('kd_brg',item.kd_brg,table);
         cek.then(res => {
@@ -215,7 +215,7 @@ class TrxAdjustment extends Component{
                     qty_adjust:parseInt(res.qty_adjust,10)+1,
                     saldo_stock:saldo_stock,
                     status:res.status,
-                    tambahan:[],
+                    tambahan:res.tambahan,
                 })
             }
             this.getData()
@@ -267,6 +267,46 @@ class TrxAdjustment extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
+
+        if (column === 'satuan') {
+            const cek = cekData('barcode', barcode, table);
+            cek.then(res => {
+                if (res === undefined) {
+                    ToastQ.fire({
+                        icon: 'error',
+                        title: `not found.`
+                    })
+                } else {
+                    let newbrg = [];
+                    datas.map(i => {
+                        if (i.satuan === val) {
+                            newbrg = i;
+                            //
+                        }
+                        return null;
+                    })
+
+                    let final = {
+                        id: res.id,
+                        kd_brg: res.kd_brg,
+                        nm_brg: res.nm_brg,
+                        barcode: newbrg.barcode,
+                        satuan: newbrg.satuan,
+                        harga_beli: newbrg.harga_beli,
+                        hrg_jual: newbrg.harga,
+                        stock: newbrg.stock,
+                        qty: 1,
+                        tambahan: res.tambahan
+                    }
+                    update(table, final)
+                    ToastQ.fire({
+                        icon: 'success',
+                        title: `${column} has been changed.`
+                    })
+                }
+                this.getData()
+            })
+        }
     }
     HandleChangeInput(e,id){
         const column = e.target.name;
@@ -563,7 +603,7 @@ class TrxAdjustment extends Component{
                                                                     qty_adjust:0,
                                                                     status:'tambah',
                                                                     saldo_stock:i.stock,
-                                                                    tambahan:[]
+                                                                    tambahan:i.tambahan
                                                                 })}>
                                                                     <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                     <div className="about">
@@ -692,7 +732,15 @@ class TrxAdjustment extends Component{
                                                             <td style={columnStyle}>{item.kd_brg}</td>
                                                             <td style={columnStyle}>{item.barcode}</td>
                                                             <td style={columnStyle}>{item.nm_brg}</td>
-                                                            <td style={columnStyle}>{item.satuan}</td>
+                                                            <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} disabled={item.tambahan.length<=1?true:false} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                                                                {
+                                                                    item.tambahan.map(i => {
+                                                                        return (
+                                                                            <option value={i.satuan} selected={i.satuan === item.satuan}>{i.satuan}</option>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </select></td>
 
                                                             <td style={columnStyle}><input style={{textAlign:"right"}} readOnly={true} type='text' name='harga_beli' value={toRp(item.harga_beli)} className="form-control"/></td>
                                                             <td style={columnStyle}><input style={{textAlign:"right"}} readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
