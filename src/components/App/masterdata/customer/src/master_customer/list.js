@@ -27,7 +27,7 @@ class ListCustomer extends Component{
         this.toggleModal = this.toggleModal.bind(this);
         this.toggleModalEdit = this.toggleModalEdit.bind(this);
         this.state={
-            detail:{}
+            detail:{},
         }
     }
     handlePageChange(pageNumber){
@@ -113,6 +113,7 @@ class ListCustomer extends Component{
                             <th className="text-black" style={columnStyle}>Cust Type</th>
                             <th className="text-black" style={columnStyle}>Gender</th>
                             <th className="text-black" style={columnStyle}>Email</th>
+                            <th className="text-black" style={columnStyle}>Location</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -143,6 +144,7 @@ class ListCustomer extends Component{
                                                 <td style={columnStyle}>{v.cust_type}</td>
                                                 <td style={columnStyle}>{v.jenis_kelamin==='1'?'Male':'Female'}</td>
                                                 <td style={columnStyle}>{v.email}</td>
+                                                <td style={columnStyle}>{v.lokasi}</td>
                                             </tr>
                                         )
                                     })
@@ -175,6 +177,7 @@ class ListCustomer extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        auth:state.auth,
         dataCustomerEdit:state.customerReducer.edit,
         dataCustomerTypeAll:state.customerTypeReducer.all,
         isLoading: state.customerReducer.isLoading,

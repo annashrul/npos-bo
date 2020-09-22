@@ -14,17 +14,39 @@ class FormCustomer extends Component{
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.HandleChangeCustomer = this.HandleChangeCustomer.bind(this);
+        this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.state = {
             kd_cust:'', nama:'', alamat:'', status:'', tgl_ultah:'', tlp:'', cust_type:'',cust_type_data:[], password:'', register:'',
             foto:'-', jenis_kelamin:'', email:'', biografi:'', special_price:'', discount:'',
+            location_data:[],
+            location:"",
             error:{
                 kd_cust:'', nama:'', alamat:'', status:'', tgl_ultah:'', tlp:'', cust_type:'', password:'', register:'',
                 foto:'', jenis_kelamin:'', email:'', biografi:'', special_price:'', discount:'',
+                location:"",
             }
         };
     }
 
     getProps(param){
+        if (param.auth.user) {
+            let lk = [];
+            let loc = param.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                    return null;
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: param.auth.user.id
+                })
+            }
+        }
+        console.log(param.dataCustomerEdit)
         if(param.dataCustomerEdit!==undefined && param.dataCustomerEdit.length!==0){
             this.setState({
                 kd_cust:param.dataCustomerEdit.kd_cust,
@@ -42,6 +64,7 @@ class FormCustomer extends Component{
                 special_price:param.dataCustomerEdit.special_price,
                 jenis_kelamin:param.dataCustomerEdit.jenis_kelamin,
                 discount:param.dataCustomerEdit.discount,
+                location: param.dataCustomerEdit.lokasi,
             })
         }
         else{
@@ -81,7 +104,17 @@ class FormCustomer extends Component{
     componentWillReceiveProps(nextProps) {
         this.getProps(nextProps);
     }
-   
+
+    HandleChangeLokasi(lk){
+        let err = Object.assign({}, this.state.error, {
+            location: ""
+        });
+        this.setState({
+            location: lk,
+            error: err
+        })
+        localStorage.setItem('location_customer', lk);
+    }
 
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -122,7 +155,8 @@ class FormCustomer extends Component{
             email:'',
             biografi:'',
             special_price:'1',
-            discount:'0'
+            discount:'0',
+            location:'',
         })
     };
 
@@ -132,6 +166,7 @@ class FormCustomer extends Component{
         let data = new FormData(form);
         let parseData = stringifyFormData(data);
         parseData['nama'] = this.state.nama;
+        parseData['lokasi'] = this.state.location.value;
         parseData['alamat'] = this.state.alamat;
         parseData['status'] = this.state.status;
         parseData['tgl_ultah'] = this.state.tgl_ultah;
@@ -166,12 +201,16 @@ class FormCustomer extends Component{
             err = Object.assign({}, err, {email:"email tidak boleh kosong"});
             this.setState({error: err});
         }
-        else if( parseData['password']===''|| parseData['password']===undefined){
-            err = Object.assign({}, err, {password:"password tidak boleh kosong"});
-            this.setState({error: err});
-        }
+        // else if( parseData['password']===''|| parseData['password']===undefined){
+        //     err = Object.assign({}, err, {password:"password tidak boleh kosong"});
+        //     this.setState({error: err});
+        // }
         else if( parseData['tgl_ultah']===''|| parseData['tgl_ultah']===undefined){
             err = Object.assign({}, err, {tgl_ultah:"tanggal ulang tahun tidak boleh kosong"});
+            this.setState({error: err});
+        }
+        else if(this.state.location===''||this.state.location===undefined){
+            err = Object.assign({}, err, {status:"lokasi tidak boleh kosong"});
             this.setState({error: err});
         }
         else if( parseData['status']===''|| parseData['status']===undefined){
@@ -223,6 +262,23 @@ class FormCustomer extends Component{
                                     <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
                                     <div className="invalid-feedback" style={this.state.error.nama!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.nama}
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label>Lokasi</label>
+                                    <Select
+                                        options={this.state.location_data}
+                                        placeholder="Pilih Lokasi"
+                                        onChange={this.HandleChangeLokasi}
+                                        value={
+                                            this.state.location_data.find(lk => {
+                                                return lk.value === this.state.location
+                                            })
+                                        }
+                                    />
+                                    <div className="invalid-feedback"
+                                        style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
+                                        {this.state.error.location}
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -343,7 +399,9 @@ class FormCustomer extends Component{
 }
 
 const mapStateToProps = (state) => {
+    console.log("mapStateToProps",state.auth)
     return {
+        auth:state.auth,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }

@@ -125,26 +125,18 @@ class LogTrxReport extends Component{
                                             </div>
                                         </div>
                                         <div className="col-6 col-xs-6 col-md-2">
-                                        <div className="form-group">
-                                        <label htmlFor="" >Cari</label>
-                                        <div className="input-group">
-                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
-                                        <div className="input-group-append">
-                                            <button className="btn btn-primary" type="button" onClick={this.handleSearch}>
-                                                    <i className="fa fa-search"/>
-                                            </button>
-                                        </div>
-                                        </div>
-                                        </div>
-                                        </div>
-                                        {/* <div className="col-6 col-xs-6 col-md-2">
                                             <div className="form-group">
-                                                <label className="mr-5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                                <button className="btn btn-primary" onClick={this.handleSearch}>
-                                                    <i className="fa fa-search"/>
-                                                </button>
+                                                <label htmlFor="" >Cari</label>
+                                                <div className="input-group">
+                                                    <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                                    <div className="input-group-append">
+                                                        <button className="btn btn-primary" type="button" onClick={this.handleSearch}>
+                                                                <i className="fa fa-search"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                    </div> */}
+                                        </div>
                                 </div>
 
                                 </div>
@@ -165,7 +157,7 @@ class LogTrxReport extends Component{
                                                                 (
                                                                     typeof data === 'object' ? data.length>0?
                                                                         data.map((v,i)=>{
-                                                                            const items = ['bg-primary','bg-info','bg-warning','bg-danger','bg-light']
+                                                                            const items = ['bg-primary','bg-info','bg-warning','bg-danger','bg-dark']
                                                                             let rand_bg = items[Math.floor(Math.random() * items.length)];
                                                                             return(
                                                                                 <a href="!#" onClick={(e)=>this.handleGet(e,v.detail_trx)}>
