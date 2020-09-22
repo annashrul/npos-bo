@@ -12,6 +12,7 @@ export default class Print3ply extends Component {
             user:'',
             lokasi_asal:'',
             lokasi_tujuan:'',
+            newLogo:''
         };
       }
       componentWillMount(){
@@ -36,13 +37,30 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data,nota,logo,user,lokasi_asal,lokasi_tujuan}=this.state;
+        if(this.state.newLogo === ''){
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // console.log(reader.result);
+                    // logoBase64 = reader.result;
+                    this.setState({newLogo : reader.result});
+                };
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', logo);
+            xhr.responseType = 'blob';
+            xhr.send();
+
+            console.log(this.state.newLogo);
+        }
         return (
             <Layout>
                 <div  id="print_3ply">
                     <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                         <thead>
                         <tr>
-                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={logo} /></td>
+                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
                             <td colSpan={5} style={{textAlign: 'center'}}>Alokasi Barang ({nota})</td>
                         </tr>
                         </thead>

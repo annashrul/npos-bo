@@ -880,6 +880,7 @@ class SideMenu extends Component {
                                 path==='/report/inventory'|| path==='/report/adjustment'||
                                 path==='/report/alokasi'||
                                 path==='/report/opname'||
+                                path==='/report/packing'||
                                 path==='/report/expedisi'||
                                 path==='/report/mutation'||
                                 path==='/report/alokasi_trx'||
@@ -893,6 +894,7 @@ class SideMenu extends Component {
                                     <li className={path==='/report/opname'?"active":''} style={this.state.r_opname==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Opname</Link></li>
                                     <li className={path==='/report/mutation'?"active":''} style={this.state.r_mutasi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/mutation" style={{width:'fit-content'}}> <i className="zmdi zmdi-card" />Mutasi</Link></li>
                                     <li className={path==='/report/alokasi_trx'?"active":''} style={this.state.r_alokasi_trx==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/alokasi_trx" style={{width:'fit-content'}}> <i className="fa fa-money" />Alokasi Trx</Link></li>
+                                    <li className={path==='/report/packing'?"active":''} style={this.state.r_expedisi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/packing" style={{width:'fit-content'}}> <i className="fa fa-truck" />Packing</Link></li>
                                     <li className={path==='/report/expedisi'?"active":''} style={this.state.r_expedisi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/expedisi" style={{width:'fit-content'}}> <i className="fa fa-truck" />Ekspedisi</Link></li>
                                 </ul>
                             </li>

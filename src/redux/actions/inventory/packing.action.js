@@ -22,6 +22,14 @@ export function setCodePacking(data=[]){
     return {type:PACKING.GET_CODE,data}
 }
 
+export function setPacking(data=[]){
+    return {type:PACKING.SUCCESS,data}
+}
+
+export function setPackingExcel(data=[]){
+    return {type:PACKING.SUCCESS_EXCEL,data}
+}
+
 
 export const FetchCodePacking = ()=>{
     return (dispatch) => {
@@ -151,3 +159,42 @@ export const FetchBrgPackingTrx = (kode)=>{
     }
 }
 
+
+export const FetchPacking = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`packing/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
+        if(where!==''){
+            url+=where
+        }
+        
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setPacking(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
+    }
+}
+export const FetchPackingExcel = (page=1,where='',perpage=99999)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url=`packing/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
+        if(where!==''){
+            url+=where
+        }
+        
+        axios.get(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setPackingExcel(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
+    }
+}

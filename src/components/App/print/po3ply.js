@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Layout from './layout';
-
 export default class Print3ply extends Component {
       constructor(props) {
         super(props);
@@ -10,7 +9,8 @@ export default class Print3ply extends Component {
             logo:'',
             user:'',
             lokasi_beli:'',
-            nota:''
+            nota:'',
+            newLogo:''
         };
       }
       componentWillMount(){
@@ -34,13 +34,30 @@ export default class Print3ply extends Component {
 
       render() {
         const {master,data,nota,logo,user,lokasi_beli}=this.state;
+        if(this.state.newLogo === ''){
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // console.log(reader.result);
+                    // logoBase64 = reader.result;
+                    this.setState({newLogo : reader.result});
+                };
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', logo);
+            xhr.responseType = 'blob';
+            xhr.send();
+
+            console.log(this.state.newLogo);
+        }
         return (
             <Layout>
                 <div  id="print_3ply">
                     <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                         <thead>
                         <tr>
-                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={logo} /></td>
+                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
                             <td colSpan={5} style={{textAlign: 'center'}}>Laporan Arsip Purchase Order ({nota})</td>
                         </tr>
                         </thead>
@@ -57,33 +74,33 @@ export default class Print3ply extends Component {
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal Kirim</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">Tanggal Kirim</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{data.tgl_kirim}</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">{data.tgl_kirim}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Operator</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">Operator</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{user}</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">{user}</td>
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal Order</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">Tanggal Order</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{data.tgl_order}</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">{data.tgl_order}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Jenis Trx</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">Jenis Trx</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{data.jenis_transaksi}</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">{data.jenis_transaksi}</td>
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Lokasi</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">Lokasi</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{lokasi_beli}</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">{lokasi_beli}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Keterangan</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">Keterangan</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{data.catatan}</td>
+                            <td style={{fontSize: '10pt !important'}} className="text-left">{data.catatan}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -100,7 +117,7 @@ export default class Print3ply extends Component {
                             {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Stock %</td> */}
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">QTY</td>
                             {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Bonus</td> */}
-                            <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Subtotal</td>
+                            <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '15px', fontSize: '10pt !important'}} className="text-center">Subtotal</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -132,7 +149,7 @@ export default class Print3ply extends Component {
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.ppn}</td>
                                         <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty}</td>
                                         {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_bonus}</td> */}
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
+                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '15px'}} className="text-right">{((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty)}</td>
 
                                     </tr>
                                 )
@@ -143,7 +160,7 @@ export default class Print3ply extends Component {
                         <tr>
                             <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '15pt'}} colSpan={7}>TOTAL</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} />
-                            <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{data.sub_total}</td>
+                            <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '15px'}} className="text-right">{data.sub_total}</td>
                         </tr>
                         </tfoot>
                     </table>
