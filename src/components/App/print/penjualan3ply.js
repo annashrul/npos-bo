@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Layout from './layout';
+import {toRp} from 'helper';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -76,7 +77,7 @@ export default class Print3ply extends Component {
                         </tr>
                         </thead>
                     </table>
-                    <table width="100%">
+                    <table width="99%">
                         <thead>
                         <tr>
                             <th className="tengah">Banyaknya</th>
@@ -92,7 +93,13 @@ export default class Print3ply extends Component {
                                     data.map((item,key)=>{
                                         gt += item.subtotal;
                                         return(
-                                        <tr><td className="isi center">{item.qty} {item.satuan}</td><td className="isi">{item.sku}</td><td className="isi">{item.nm_brg}</td><td className="isi kanan">{item.price}</td><td className="isi kanan">{item.subtotal}</td>  </tr>
+                                        <tr>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.qty} {item.satuan}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.sku}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(item.price)}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(item.subtotal)}</td>
+                                        </tr>
                                         )
                                     })
                                 :""
@@ -100,9 +107,9 @@ export default class Print3ply extends Component {
                         
                         </tbody>
                         <tbody><tr>
-                            <th colSpan={3}>Tiga Ribu Rupiah </th>
+                            <th colSpan={3}> </th>
                             <th className="kanan">Total Rp</th>
-                            <th className="kanan">{gt}</th>
+                            <th style={{paddingRight: '5pt'}} className="text-right">{toRp(gt)}</th>
                         </tr>
                         </tbody></table>
                     <table width="100%" style={{marginTop: '0.5cm'}}>

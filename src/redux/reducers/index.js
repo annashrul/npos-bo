@@ -42,6 +42,8 @@ import {piutangReducer} from "./piutang/piutang.reducer";
 import {mutasiJualBeliReducer} from "./inventory/mutasi_jual_beli/mutasi_jual_beli.reducer";
 import {produksiReducer} from "./inventory/produksi/produksi.reducer";
 import {packingReducer} from "./inventory/packing/packing.reducer";
+import {log_trxReducer} from "./report/log/log.reducer";
+import {log_actReducer} from "./report/log/log_act.reducer";
 
 export default combineReducers({
     modalReducer,
@@ -86,6 +88,8 @@ export default combineReducers({
     transactionReducer,
     expedisiReducer,
     packingReducer,
+    log_trxReducer,
+    log_actReducer,
     auth: authReducer,
     errors : errorsReducer
 });

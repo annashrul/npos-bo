@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Layout from './layout';
+import {toRp} from 'helper';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -82,16 +83,6 @@ export default class Print3ply extends Component {
                         <td>:</td>
                         <td>{user}</td>
                         </tr>
-                        {/* <tr>
-                        <th />
-                        <td>Lokasi Dari-Ke</td>
-                        <td>:</td>
-                        <td>{data.lokasi_asal +' - '+data.lokasi_tujuan}</td>
-                        <td />
-                        <td>Status</td>
-                        <td>:</td>
-                        <td>{data.status}</td>
-                        </tr> */}
                         <tr>
                         <td />
                         <td>No Faktur</td>
@@ -105,7 +96,7 @@ export default class Print3ply extends Component {
                     </tbody>
                 </table>
 
-                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
+                    <table width="99%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                         <thead>
                         <tr>
                             <td style={{width: '5%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">No</td>
@@ -114,7 +105,6 @@ export default class Print3ply extends Component {
                             <td style={{width: '40%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Nama</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga Beli</td>
-                            {/* <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock Sistem</td> */}
                             <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Qty Alokasi</td>
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Qty Packing</td>
                         </tr>
@@ -125,16 +115,14 @@ export default class Print3ply extends Component {
                                 subtotal = subtotal+parseInt(item.harga_beli,10);
                                 return (
                                     <tr key={index}>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.kode_barang}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{parseInt(item.harga_beli,10)}</td>
-                                        {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td> */}
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_alokasi}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_packing}</td>
-                                        {/* <td style={columnStyle}>{item.qty_alokasi}</td> */}
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.kode_barang}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(parseInt(item.harga_beli,10))}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_alokasi}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_packing}</td>
 
                                     </tr>
                                 )
@@ -144,7 +132,7 @@ export default class Print3ply extends Component {
                         <tfoot>
                         <tr>
                             <td colSpan={5} style={{borderTop: '', borderWidth: 'thin', paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-right" style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}}>{subtotal}</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}}>{toRp(subtotal)}</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} />
                         </tr>
                         </tfoot>

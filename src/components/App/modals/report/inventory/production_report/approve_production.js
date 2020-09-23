@@ -11,13 +11,19 @@ class ApproveProduction extends Component{
         this.toggle = this.toggle.bind(this);
         this.HandleCommonInputChange = this.HandleCommonInputChange.bind(this);
         this.state = {
-            txtHpp: localStorage.getItem('hpp_for_approve'),
-            txtSisaApproval:localStorage.getItem('qty_for_approve'),
+            txtHpp: "",
+            txtSisaApproval:"",
             error:{
                 txtHpp:"",
                 txtSisaApproval:"",
             },
         }
+    }
+    componentDidMount(){
+        this.setState({
+            txtHpp: localStorage.getItem('hpp_for_approve'),
+            txtSisaApproval: localStorage.getItem('qty_for_approve')
+        })
     }
     toggle(e){
         e.preventDefault();
