@@ -51,7 +51,7 @@ export default class Adjust3ply extends Component {
             xhr.onload = () => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    // console.log(reader.result);
+                    // 
                     // logoBase64 = reader.result;
                     this.setState({newLogo : reader.result});
                 };
@@ -61,7 +61,7 @@ export default class Adjust3ply extends Component {
             xhr.responseType = 'blob';
             xhr.send();
 
-            console.log(this.state.newLogo);
+            
         }
         return (
             <Layout>
@@ -130,13 +130,6 @@ export default class Adjust3ply extends Component {
                         <tbody>
                             {
                                 master.map((item, index) => {
-                                    let saldo_stock = item.saldo_stock;
-                                    if(item.status === 'kurang'){
-                                        saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
-                                    }
-                                    if(item.status === 'tambah' || item.status===''){
-                                        saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
-                                    }
                                     return (
                                         <tr key={index}>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
