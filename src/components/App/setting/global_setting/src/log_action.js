@@ -9,20 +9,29 @@ import moment from "moment";
 class LogAction extends Component{
     constructor(props){
         super(props);
-        this.handleEvent = this.handleEvent.bind(this);
+        this.handleEventTrx = this.handleEventTrx.bind(this);
+        this.handleEventAct = this.handleEventAct.bind(this);
         this.state = {
-            startDate:moment(new Date()).format("yyyy-MM-DD"),
-            endDate:moment(new Date()).format("yyyy-MM-DD"),
+            startDateTrx:moment(new Date()).format("yyyy-MM-DD"),
+            endDateTrx:moment(new Date()).format("yyyy-MM-DD"),
+            startDateAct:moment(new Date()).format("yyyy-MM-DD"),
+            endDateAct:moment(new Date()).format("yyyy-MM-DD"),
         }
     }
-    handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
-        localStorage.setItem("date_from_log_clear_report",`${awal}`);
-        localStorage.setItem("date_to_log_clear_report",`${akhir}`);
+    handleEventTrx = (event, picker) => {
+        const awal = picker.startDateTrx.toISOString().substring(0,10);
+        const akhir = picker.endDateTrx.toISOString().substring(0,10);
         this.setState({
-            startDate:awal,
-            endDate:akhir
+            startDateTrx:awal,
+            endDateTrx:akhir
+        });
+    };
+    handleEventAct = (event, picker) => {
+        const awal = picker.startDateAct.toISOString().substring(0,10);
+        const akhir = picker.endDateAct.toISOString().substring(0,10);
+        this.setState({
+            startDateAct:awal,
+            endDateAct:akhir
         });
     };
 
@@ -66,21 +75,31 @@ class LogAction extends Component{
                     <div className="row">
                         <div className="col-6">
                             <div className="form-group">
+                                <label htmlFor="" className="control-label"> Periode Log Transaction </label>
+                                <DateRangePicker
+                                    style={{display:'unset'}}
+                                    ranges={rangeDate}
+                                    alwaysShowCalendars={true}
+                                    onEvent={this.handleEventTrx}
+                                >
+                                    <input type="text" className="form-control" value={`${this.state.startDateTrx} to ${this.state.endDateTrx}`} style={{padding: '10px',fontWeight:'bolder', fontSize:'x-large', textAlignLast:'center'}}/>
+                                </DateRangePicker>
+                            </div>
+                            <button className="btn btn-primary btn-block">CLEAR</button>
+                        </div>
+                        <div className="col-6">
+                            <div className="form-group">
                                 <label htmlFor="" className="control-label"> Periode Log Activity </label>
                                 <DateRangePicker
                                     style={{display:'unset'}}
                                     ranges={rangeDate}
                                     alwaysShowCalendars={true}
-                                    onEvent={this.handleEvent}
+                                    onEvent={this.handleEventAct}
                                 >
-                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                    <input type="text" className="form-control" value={`${this.state.startDateAct} to ${this.state.endDateAct}`} style={{padding: '10px',fontWeight:'bolder', fontSize:'x-large', textAlignLast:'center'}}/>
                                 </DateRangePicker>
                             </div>
-                            <br/>
-                            <button className="btn btn-primary btn-lg btn-block">CLEAR</button>
-                        </div>
-                        <div className="col-6">
-                            <button className="btn btn-primary btn-lg btn-block">CLEAR</button>
+                            <button className="btn btn-primary btn-block">CLEAR</button>
                         </div>
                     </div>
                     {/* <FormBackup/> */}
