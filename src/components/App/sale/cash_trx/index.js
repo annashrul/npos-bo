@@ -79,7 +79,15 @@ class Sale extends Component{
                 })
             }
         }
-
+        if (nextProps.isSuccessTrx){
+            this.setState({
+                jumlah: "",
+                keterangan: "",
+                jenis: "",
+                location: "",
+                kassa: "A",
+            })
+        }
     }
 
     componentWillUnmount(){
@@ -400,7 +408,8 @@ const mapStateToPropsCreateItem = (state) => {
     return {
     cash:state.cashReducer.data,
     isLoading: state.cashReducer.isLoading,
-    auth:state.auth
+    auth:state.auth,
+    isSuccessTrx: state.cashReducer.isSuccessTrx
 }};
 
 export default (connect(mapStateToPropsCreateItem)(Sale));

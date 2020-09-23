@@ -867,7 +867,7 @@ class DeliveryNote extends Component{
                                                             </td>
                                                             <td style={columnStyle}>{item.nm_brg}</td>
                                                             <td style={columnStyle}>{item.barcode}</td>
-                                                            <td style={columnStyle}><select className="form-control" name='satuan' style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
+                                                            <td style={columnStyle}><select className="form-control" name='satuan' disabled={item.tambahan.length<=1?true:false} style={{width:"100px"}} onChange={(e) => this.HandleChangeInputValue(e, index, item.barcode, item.tambahan)}>
                                                                 {
                                                                     item.tambahan.map(i => {
                                                                         return (

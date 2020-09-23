@@ -55,7 +55,11 @@ class Alokasi extends Component{
             ambil_data:1,
             ambil_nota:'',
             jenis_trx:'Mutasi',
-            jenis_trx_data:[],
+            jenis_trx_data:[
+            {value:"Alokasi",label:"Alokasi"},
+            {value:"Mutasi",label:"Mutasi"},
+            {value:"Transaksi",label:"Transaksi"},
+        ],
             perpage:5,
             error:{
                 location:"",
@@ -104,12 +108,6 @@ class Alokasi extends Component{
     }
 
     componentDidMount() {
-         let jt=[
-            {value:"Alokasi",label:"Alokasi"},
-            {value:"Mutasi",label:"Mutasi"},
-            {value:"Transaksi",label:"Transaksi"},
-        ];
-        this.setState({jenis_trx_data:jt});
         this.getData()
         if (localStorage.catatan !== undefined && localStorage.catatan !== '') {
             this.setState({
@@ -198,6 +196,7 @@ class Alokasi extends Component{
         if (nextProps.dn_data){
             if (nextProps.dn_data.master!==undefined){
                 if(this.props.dn_data===undefined){
+                    console.log(nextProps.dn_data);
                     let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
                     this.props.dispatch(FetchNota(nextProps.dn_data.master.kd_lokasi_1,prefix))
                     this.setState({
