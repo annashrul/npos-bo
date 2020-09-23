@@ -39,7 +39,7 @@ export default class Print3ply extends Component {
             xhr.onload = () => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    // console.log(reader.result);
+                    // 
                     // logoBase64 = reader.result;
                     this.setState({newLogo : reader.result});
                 };
@@ -49,7 +49,7 @@ export default class Print3ply extends Component {
             xhr.responseType = 'blob';
             xhr.send();
 
-            console.log(this.state.newLogo);
+            
         }
         let subtotal = 0;
         return (

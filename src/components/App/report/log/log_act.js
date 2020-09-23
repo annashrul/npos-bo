@@ -75,9 +75,9 @@ class LogActReport extends Component{
     handleGet(e,data){
         e.preventDefault();
         
-        console.log(data)
+        
         const arr_data = [JSON.parse(data)];
-        console.log(arr_data)
+        
         const keyName = arr_data.map((o) => {
                 return Object.keys(o)
             }).reduce((prev, curr) => {

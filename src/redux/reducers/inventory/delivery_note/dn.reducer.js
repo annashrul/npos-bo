@@ -34,8 +34,8 @@ export const dnReducer = (state = initialState, action) => {
                 report_excel: action.data.result,
             });
         case DN.DN_DATA:
-            console.group()
-            console.log(action.data);
+            
+            
             return Object.assign({}, state, {
                 dn_data: action.data.result
             });

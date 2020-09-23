@@ -20,7 +20,7 @@ class DetailDn extends Component{
     render(){
         
         const {data} = this.props.dnDetail;
-        console.log(data);
+        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>

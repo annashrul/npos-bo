@@ -46,7 +46,7 @@ class FormCustomer extends Component{
                 })
             }
         }
-        console.log(param.dataCustomerEdit)
+        
         if(param.dataCustomerEdit!==undefined && param.dataCustomerEdit.length!==0){
             this.setState({
                 kd_cust:param.dataCustomerEdit.kd_cust,
@@ -399,7 +399,7 @@ class FormCustomer extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log("mapStateToProps",state.auth)
+    
     return {
         auth:state.auth,
         isOpen: state.modalReducer,
