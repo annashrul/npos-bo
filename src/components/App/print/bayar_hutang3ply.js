@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Layout from './layout';
+import {toRp} from 'helper';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -121,7 +122,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Pembulatan</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{pembulatan}</td>
+                            <td style={{fontSize: '10pt !important'}}>{toRp(pembulatan)}</td>
                         </tr>
                         <tr>
                             <td />
@@ -131,7 +132,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Pembayaran</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{jumlah_bayar}</td>
+                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah_bayar)}</td>
                         </tr>
                         <tr>
                             <td />
@@ -141,7 +142,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Jumlah Hutang</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{jumlah_hutang}</td>
+                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah_hutang)}</td>
                         </tr>
                         <tr>
                             <td />

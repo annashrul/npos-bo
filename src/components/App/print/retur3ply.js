@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Layout from './layout';
+import {toRp} from 'helper';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -98,7 +99,7 @@ export default class Print3ply extends Component {
                         </tr>
                         </tbody>
                     </table>
-                    <table width="100%" style={{letterSpacing: 5, fontFamily: '"OpenSans-Regular", "Lucida Sans Typewriter", "Lucida Typewriter", "Arial", "Helvetica", "sans-serif"', fontSize: '9pt'}}>
+                    <table width="99%" style={{letterSpacing: 5, fontFamily: '"OpenSans-Regular", "Lucida Sans Typewriter", "Lucida Typewriter", "Arial", "Helvetica", "sans-serif"', fontSize: '9pt'}}>
                         <thead>
                         <tr>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">No</td>
@@ -108,7 +109,6 @@ export default class Print3ply extends Component {
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Harga Beli</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Kondisi</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Ket</td>
-                            {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}}>Stock</td> */}
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Qty Retur</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Nilai Retur</td>
                         </tr>
@@ -123,16 +123,15 @@ export default class Print3ply extends Component {
                                 total_stock = total_stock+parseInt(item.stock,10);
                                 return (
                                     <tr key={index}>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.kondisi}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.ket}</td>
-                                        {/* <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.stock}</td> */}
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.qty_retur}</td>
-                                        <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{total_retur}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.kondisi}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.ket}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_retur}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(total_retur)}</td>
 
                                     </tr>
                                 )
@@ -144,7 +143,7 @@ export default class Print3ply extends Component {
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={4}>TOTAL</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}}>{/*?=$tqty?*/}</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={3} />
-                            <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{data.subtotal}</td>
+                            <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(data.subtotal)}</td>
                         </tr>
                         </tfoot>
                     </table>

@@ -104,7 +104,7 @@ body {
 td { */
 #print_3ply th,
 #print_3ply td {
-    font-size: 13px!important;
+    font-size: 15px!important;
     font-weight: lighter!important;
     font-family: 'system-ui'!important;
     color:black;
@@ -144,12 +144,6 @@ td { */
 
 .detail>thead>tr>th {
     font-size: 8px;
-}
-
-@media print {
-    @page {
-        size: portrait;
-    }
 }
 
 .foot {

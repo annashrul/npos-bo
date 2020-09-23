@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Layout from './layout';
-
+import {toRp} from 'helper'
 export default class Adjust3ply extends Component {
       constructor(props) {
         super(props);
@@ -99,20 +99,18 @@ export default class Adjust3ply extends Component {
                             </tr>
                             </tbody>
                         </table>
-                        <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
+                        <table width="99%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                             <thead>
                             <tr>
-                                <td style={{width: '3%', paddingLeft: '5pt'}} className="text-center">No</td>
-                                {/* <td style={{width: '15%', paddingLeft: '5pt'}} className="text-center">Kode</td> */}
-                                <td style={{width: '15%', paddingLeft: '5pt'}} className="text-center">Barcode</td>
-                                <td style={{width: '30%', paddingLeft: '5pt'}} className="text-center">Nama</td>
-                                <td style={{width: '10%', paddingLeft: '5pt'}} className="text-center">Satuan</td>
-                                <td style={{width: '10%', paddingLeft: '5pt'}} className="text-center">Harga Beli</td>
-                                <td style={{width: '10%', paddingLeft: '5pt'}} className="text-center">Stock Sistem</td>
-                                <td style={{width: '10%', paddingLeft: '5pt'}} className="text-center">Jenis</td>
-                                <td style={{width: '10%', paddingLeft: '5pt'}} className="text-center">Stock Adjust</td>
-                                <td style={{width: '10%', paddingLeft: '5pt'}} className="text-center">Saldo Stock</td>
-                                <td style={{paddingLeft: '15pt'}} className="text-center"/>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '3%', paddingLeft: '5pt'}} className="text-center">No</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '15%', paddingLeft: '5pt'}} className="text-center">Barcode</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '30%', paddingLeft: '5pt'}} className="text-center">Nama</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Satuan</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Harga Beli</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Stock Sistem</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Jenis</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Stock Adjust</td>
+                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt', paddingRight: '15pt'}} className="text-center">Saldo Stock</td>
                             </tr>
                             </thead>
                             {
@@ -126,18 +124,15 @@ export default class Adjust3ply extends Component {
                                     }
                                     return (
                                         <tr key={index}>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{index+1}</td>
-                                            {/* <td style={{paddingLeft: '5pt'}} className="text-center">{item.kd_brg}</td> */}
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.barcode}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.nm_brg}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.satuan}</td>
- 
-                                            <td style={{paddingLeft: '5pt'}} className="text-right">{item.harga_beli}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.stock}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.status}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{item.qty_adjust}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center">{saldo_stock}</td>
-                                            <td style={{paddingLeft: '5pt'}} className="text-center" />
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.stock}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.status}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_adjust}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '15pt'}} className="text-right">{saldo_stock}</td>
                                         </tr>
                                     )
                                 })

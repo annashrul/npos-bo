@@ -7,6 +7,7 @@ import {LOC_VERIF} from "redux/actions/_constants";
 import Billing from "../../setting/global_setting/src/billing"
 import FileManager from "../../setting/global_setting/src/file_manager"
 import BackupList from "../../setting/global_setting/src/backup_list"
+import LogAction from "../../setting/global_setting/src/log_action"
 class GlobalSetting extends Component{
     constructor(props){
         super(props);
@@ -102,6 +103,7 @@ class GlobalSetting extends Component{
                                         <Tab onClick={() =>this.handleSelect(0)}>Billing</Tab>
                                         <Tab onClick={() =>this.handleSelect(1)}>Backup</Tab>
                                         <Tab onClick={() =>this.handleSelect(3)}>File Manager</Tab>
+                                        <Tab onClick={() =>this.handleSelect(4)}>Log</Tab>
                                     </TabList>
                                 </div>
                                 <div>
@@ -116,6 +118,9 @@ class GlobalSetting extends Component{
                                 </TabPanel>
                                 <TabPanel>
                                     <FileManager/>
+                                </TabPanel>
+                                <TabPanel>
+                                    <LogAction/>
                                 </TabPanel>
                         </div>
                             </Tabs>
