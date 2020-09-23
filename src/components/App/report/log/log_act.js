@@ -7,6 +7,7 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
+import { isArray } from 'lodash';
 class LogActReport extends Component{
     constructor(props){
         super(props);
@@ -74,10 +75,16 @@ class LogActReport extends Component{
     }
     handleGet(e,data){
         e.preventDefault();
-        
-        
-        const arr_data = [JSON.parse(data)];
-        
+
+        const arr_data = isArray(JSON.parse(data))?JSON.parse(data):[JSON.parse(data)];
+
+        arr_data.map((v,i)=>{
+            const not_allowed = ['id','password','kode','username','user_id','user_lvl'];
+            Object.keys(arr_data[i]).filter(key => not_allowed.includes(key))
+            .forEach(key => delete arr_data[i][key]);
+            return null
+        })
+
         const keyName = arr_data.map((o) => {
                 return Object.keys(o)
             }).reduce((prev, curr) => {
@@ -85,11 +92,13 @@ class LogActReport extends Component{
             }).filter((col, i, array) => {
                 return array.indexOf(col) === i
             });
-        
+
         this.setState({
             keyName_:keyName,
             valData_:arr_data
         })
+        console.log("raw",[JSON.parse(data)])
+        console.log("manipulated",arr_data)
     }
 
 

@@ -77,6 +77,13 @@ class LogTrxReport extends Component{
         
         const arr_data = JSON.parse(data);
 
+        arr_data.map((v,i)=>{
+            const not_allowed = ['id','password'];
+            Object.keys(arr_data[i]).filter(key => not_allowed.includes(key))
+            .forEach(key => delete arr_data[i][key]);
+            return null
+        })
+
         const keyName = arr_data.map((o) => {
                 return Object.keys(o)
             }).reduce((prev, curr) => {
@@ -89,6 +96,8 @@ class LogTrxReport extends Component{
             keyName_:keyName,
             valData_:arr_data
         })
+        console.log("raw",JSON.parse(data))
+        console.log("manipulated",arr_data)
     }
 
 
@@ -102,6 +111,8 @@ class LogTrxReport extends Component{
             // to,
             data
         } = this.props.log_trxReport;
+
+        console.log(JSON.stringify(this.state.valData_))
         return (
             <Layout page="Laporan LogTrx">
                 <div className="col-12 box-margin">

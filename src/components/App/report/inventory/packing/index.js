@@ -357,49 +357,6 @@ class PackingReport extends Component{
                                 </div>
 
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_packing_to_excel" style={{display:"none"}}>
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={7}>{this.state.startDate} - {this.state.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={7}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                    </tr>
-
-                                    <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kode Packing.</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Pengirim</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Operator</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    </tr>
-                                    <tr></tr>
-                                    </thead>
-                                    {
-                                        <tbody>
-                                        {
-                                            typeof this.props.packingReportExcel.data==='object'? this.props.packingReportExcel.data.length>0?
-                                                this.props.packingReportExcel.data.map((v,i)=>{
-                                                    return (
-                                                        <tr key={i}>
-                                                            <td style={columnStyle}>{v.kd_packing}</td>
-                                                            <td style={columnStyle}>{moment(v.tgl_packing).format("DD-MM-YYYY")}</td>
-                                                            <td style={columnStyle}>{v.pengirim}</td>
-                                                            <td style={columnStyle}>{v.nama_lokasi_asal}</td>
-                                                            <td style={columnStyle}>{v.nama_lokasi_tujuan}</td>
-                                                            <td style={columnStyle}>{v.nama_operator}</td>
-                                                            <td style={columnStyle}>{v.status==='0'?statusQ('danger','Belum Packing'):(v.status==='1'?statusQ('warning','Sudah Packing'):"")}</td>
-                                                        </tr>
-                                                    );
-                                                }) : "No data." : "No data."
-                                        }
-                                        </tbody>
-                                    }
-                                </table>
-                                {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
