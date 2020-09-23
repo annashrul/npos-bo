@@ -79,7 +79,7 @@ class LogActReport extends Component{
         const arr_data = isArray(JSON.parse(data))?JSON.parse(data):[JSON.parse(data)];
 
         arr_data.map((v,i)=>{
-            const not_allowed = ['id','password','kode','username','user_id','user_lvl'];
+            const not_allowed = ['id','password','password_otorisasi','kode','username','user_id','user_lvl'];
             Object.keys(arr_data[i]).filter(key => not_allowed.includes(key))
             .forEach(key => delete arr_data[i][key]);
             return null
@@ -97,8 +97,8 @@ class LogActReport extends Component{
             keyName_:keyName,
             valData_:arr_data
         })
-        console.log("raw",[JSON.parse(data)])
-        console.log("manipulated",arr_data)
+        
+        
     }
 
 
@@ -218,7 +218,7 @@ class LogActReport extends Component{
                                                         typeof this.state.keyName_ === 'object' ? this.state.keyName_.length>0?
                                                             this.state.keyName_.map((v,i)=>{
                                                                 return(
-                                                                    <th className="text-black" style={columnStyle} rowSpan="2" key={i}>{v}</th>
+                                                                    <th className="text-black" style={columnStyle} rowSpan="2" key={i}>{v.split('_').map(f=>{ return f.toUpperCase(); }).join(' ')}</th>
                                                                 )
                                                             })
                                                             : "No data." : "No data."
