@@ -385,6 +385,7 @@ class ProductionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama Toko</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Qty Estimasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Rata - rata HPP per QTY</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Amount</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
@@ -418,6 +419,7 @@ class ProductionReport extends Component{
                                                                     <td style={columnStyle}>{v.nama_toko}</td>
                                                                     <td style={columnStyle}>{v.qty_estimasi}</td>
                                                                     <td style={columnStyle}>{v.hpp}</td>
+                                                                    <td style={columnStyle}>{(parseInt(v.hpp,10)*parseInt(v.qty_estimasi,10))}</td>
                                                                     <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Approved'):"")}</td>
                                                                     <td style={columnStyle}>{v.keterangan}</td>
 

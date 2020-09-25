@@ -89,11 +89,44 @@ export const rangeDate = {
 export const toMoney = (angka) => {
     return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
+// export const toCurrency = (angka) => {
+//     return isEmpty(angka)?'':angka.toString().replace(/,|\D/g,'').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+// }
 export const toCurrency = (angka) => {
-    return isEmpty(angka)?'':angka.toString().replace(/,|\D/g,'').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    let numbers=0;
+    if(parseFloat(angka)<0){
+        numbers = angka.toString().replace('-', '');
+        
+    }else{
+        numbers=angka;
+        
+    }
+    var number_string = (numbers===''||numbers===undefined)? String(0.0) : numbers.toString().replace(/,|\D/g,''),
+        split = number_string.split('.'),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan koma jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+        var separator = sisa ? ',' : '';
+        rupiah += separator + ribuan.join(',');
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    rupiah = (parseFloat(angka) < 0) ? "-" + rupiah:rupiah;
+    // console.log("ooooooooooooooooooooooooooop",parseFloat(angka))
+    // if(parseFloat(angka)===0||isNaN(parseFloat(angka))){
+    //     console.log("true ")
+    //     return;
+    // } else {
+    //     console.log("false")
+    //     return rupiah;
+    // }
+    return rupiah;
 }
 export const rmComma = (angka) => {
-    return parseInt(angka.toString().replace(/,/g,''),10);
+    return parseInt(isEmpty(angka)?'':angka.toString().replace(/,/g,''),10);
 }
 export const toPersen= (val1,val2) => {
     let con =  (parseFloat(val1)/parseInt(val2,10))*100;

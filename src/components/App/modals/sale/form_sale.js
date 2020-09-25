@@ -46,6 +46,10 @@ class FormSale extends Component{
         this.setState({ [event.target.name]: event.target.value });
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
+            if(tunai<0){
+                console.log("bayar kurang");
+                tunai = 0;
+            }
             this.setState({
                 change:parseInt(rmComma(tunai),10)-this.state.gt
             });
@@ -58,7 +62,7 @@ class FormSale extends Component{
             });
         }
         if(event.target.name==='jenis_trx'){
-            if(event.target.value === "TRANSFER"){
+            if(event.target.value === "Transfer"){
                 this.setState({isTransfer:true});
                 let bank = this.state.bank.split("-");
                 
@@ -163,11 +167,11 @@ class FormSale extends Component{
                 <ModalBody>
                     <div className="row">
                         <div className="col-md-6">
-                            <button className="btn btn-success" onClick={(event)=>this.handleSetTunai(event)} data-toggle="tooltip" title="Masukan total ke jumlah uang.">TOTAL: <b>{this.state.gt}</b></button>
+                            <button className="btn btn-success" onClick={(event)=>this.handleSetTunai(event)} data-toggle="tooltip" title="Masukan total ke jumlah uang.">TOTAL: <b>{toCurrency(this.state.gt)}</b></button>
 
                         </div>
                         <div className="col-md-6" style={{textAlign:"right"}}>
-                            <button className="btn btn-primary" onClick={this.handleSubmit}>Simpan</button>
+                            <button className="btn btn-primary" onClick={this.handleSubmit} style={parseInt(this.state.change,10)>=0?{display:''}:{display:'none'}}>Simpan</button>
                         </div>
                     </div>
                     <hr/>
@@ -183,7 +187,7 @@ class FormSale extends Component{
                             </div>
                             <div className="form-group">
                                 <label htmlFor="">{this.state.jenis_trx==='Kredit'?'Jumlah DP':'Jumlah Uang'}</label>
-                                <input type="text" name={this.state.jenis_trx==='Kredit'?'dp':'tunai'} id={this.state.jenis_trx==='Kredit'?'dp':'tunai'} className="form-control" value={toCurrency(this.state.tunai)} onKeyUp={this.handleChange} onChange={this.handleChange}/>
+                                <input type="text" name={this.state.jenis_trx==='Kredit'?'dp':'tunai'} id={this.state.jenis_trx==='Kredit'?'dp':'tunai'} className="form-control" value={toCurrency(this.state.tunai)} onFocus={function(e){e.currentTarget.select()}} onKeyUp={this.handleChange} onChange={this.handleChange}/>
                                 <div className="invalid-feedback"
                                      style={this.state.error.tunai !== "" || this.state.error.tunai !== "0" ? {display: 'block'} : {display: 'none'}}>
                                     {this.state.error.tunai}
@@ -215,6 +219,9 @@ class FormSale extends Component{
                             <div className="form-group" style={{display:this.state.jenis_trx==='Kredit'?'none':'block'}}>
                                 <label htmlFor="">Kembalian</label>
                                 <input readOnly type="text" name="change" id="change" className="form-control" value={toCurrency(this.state.change)} onChange={this.handleChange}/>
+                                <div className="invalid-feedback text-center" style={parseInt(this.state.change,10)<0?{display:'block'}:{display:'none'}}>
+                                    Kembalian Masih (Minus)
+                                </div>
                             </div>
                         </div>
                     </div>
