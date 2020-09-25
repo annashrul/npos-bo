@@ -88,6 +88,12 @@ export const rangeDate = {
 export const toMoney = (angka) => {
     return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
+export const toCurrency = (angka) => {
+    return angka.toString().replace(/,/g,'').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+export const rmComma = (angka) => {
+    return parseInt(angka.toString().replace(/,/g,''),10);
+}
 export const toPersen= (val1,val2) => {
     let con =  (parseFloat(val1)/parseInt(val2,10))*100;
     return con.toFixed(2);

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper'
+import Barcode from 'react-barcode'
 export default class Adjust3ply extends Component {
       constructor(props) {
         super(props);
@@ -13,6 +14,8 @@ export default class Adjust3ply extends Component {
             logo:'',
             lokasi_val:'',
             keterangan:'',
+            alamat:'',
+            site_title:'',
             newLogo:''
         };
       }
@@ -28,6 +31,8 @@ export default class Adjust3ply extends Component {
               tgl: getData.tgl,
               keterangan: getData.keterangan,
               lokasi_val: getData.lokasi_val,
+              site_title: getData.site_title,
+              alamat: getData.alamat,
           })
       }
 
@@ -38,7 +43,7 @@ export default class Adjust3ply extends Component {
       }
 
       render() {
-        const {master,nota,user,tgl,lokasi_val,keterangan,logo}=this.state;
+        const {master,nota,user,tgl,lokasi_val,keterangan,logo,alamat,site_title}=this.state;
         
         if(this.state.newLogo === ''){
             const xhr = new XMLHttpRequest();
@@ -65,11 +70,21 @@ export default class Adjust3ply extends Component {
                         <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                             <thead>
                             <tr>
-                                <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                                <td colSpan={5} style={{textAlign: 'center'}}>Adjustment Stock ({nota})</td>
+                                <td colSpan={3} style={{textAlign: 'center'}}></td>
+                                <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={nota}/> </td>
+                            </tr>
+                            <tr>
+                                <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
+                                <td colSpan={5} style={{textAlign: 'center'}}><strong>{site_title}</strong></td>
+                            </tr>
+                            <tr>
+                                <td colSpan={5} style={{textAlign: 'center'}}>{alamat}</td>
+                            </tr>
+                            <tr>
+                                <td colSpan={5} style={{textAlign: 'center', bordeColor: 'black',borderBottom: 'solid', borderWidth: 'thin'}}>Adjustment Stock ({nota})</td>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="mt-2">
                             <tr>
                                 <td width="2%" />
                                 <td width="20%" />

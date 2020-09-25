@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
+import { rmComma } from '../../../helper';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -116,7 +117,7 @@ export default class Print3ply extends Component {
                         <tbody>
                         {
                             master.map((item, index) => {
-                                let total_retur=parseInt(item.qty_retur,10)*parseInt(item.harga_beli,10);
+                                let total_retur=parseInt(item.qty_retur,10)*parseInt(rmComma(item.harga_beli),10);
                                 grand_total = grand_total + total_retur;
                                 localStorage.setItem("grand_total",grand_total);
                                 qty_retur = qty_retur+parseInt(item.qty_retur,10);
@@ -127,7 +128,7 @@ export default class Print3ply extends Component {
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
-                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(rmComma(item.harga_beli))}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.kondisi}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.ket}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_retur}</td>

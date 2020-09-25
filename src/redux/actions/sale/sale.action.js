@@ -106,7 +106,7 @@ export const storeSale = (data,param) => {
         dispatch(setLoading(true))
         const rawdata=data;
         const url = HEADERS.URL + `pos/checkout`;
-        axios.post(url, data)
+        axios.post(url, data.parsedata)
             .then(function (response) {
                 const data = (response.data)
                 Swal.fire({

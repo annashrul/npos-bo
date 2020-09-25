@@ -4,7 +4,7 @@ import Layout from "components/App/Layout"
 import Select from 'react-select'
 import Swal from 'sweetalert2'
 import {FetchCash, StoreCashTrx} from "redux/actions/masterdata/cash/cash.action";
-import {kassa} from "../../../../helper";
+import {kassa,toCurrency,rmComma} from "../../../../helper";
 
 class Sale extends Component{
 
@@ -97,9 +97,15 @@ class Sale extends Component{
         // e.preventDefault();
         const column = e.target.name;
         const val = e.target.value;
-        this.setState({
-            [column]: val
-        });
+        if(column==='jumlah'){
+            this.setState({
+                jumlah: (val.replace(/,/g,'').replace(/\D/,''))
+            });
+        } else {
+            this.setState({
+                [column]: val
+            });
+        }
         if(column==='kategori'){
             this.setState({
                jumlah : '',
@@ -222,7 +228,7 @@ class Sale extends Component{
         }else{
             let data = {
                 "kd_kasir": this.state.userid,
-                "jumlah": this.state.jumlah,
+                "jumlah": rmComma(this.state.jumlah),
                 "keterangan": this.state.keterangan,
                 "lokasi": this.state.location.value,
                 "kassa": this.state.kassa.value,
@@ -344,13 +350,13 @@ class Sale extends Component{
                                                     Jumlah
                                                 </label>
                                                 <input
-                                                    type="number"
+                                                    type="text"
                                                     readOnly={false}
                                                     className="form-control"
                                                     id="jumlah"
                                                     name="jumlah"
                                                     onChange={(e) => this.HandleInput(e)}
-                                                    value={this.state.jumlah}
+                                                    value={toCurrency(this.state.jumlah)}
                                                 />
                                                 <div className="invalid-feedback"
                                                         style={this.state.error.jumlah !== "" ? {display: 'block'} : {display: 'none'}}>

@@ -6,6 +6,7 @@ import connect from "react-redux/es/connect/connect";
 import {FetchBank} from "redux/actions/masterdata/bank/bank.action";
 import Preloader from "../../../../Preloader";
 import {storeSale} from "../../../../redux/actions/sale/sale.action";
+import {toCurrency,rmComma} from 'helper';
 import {
     withRouter
 } from 'react-router-dom';
@@ -46,10 +47,10 @@ class FormSale extends Component{
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
             this.setState({
-                change:parseInt(tunai,10)-this.state.gt
+                change:parseInt(rmComma(tunai),10)-this.state.gt
             });
             Object.assign(this.props.master,{
-                tunai:this.state.tunai,
+                tunai:rmComma(this.state.tunai),
                 change:this.state.change,
                 jenis_trx:this.state.jenis_trx,
                 pemilik_kartu:"-",
@@ -62,7 +63,7 @@ class FormSale extends Component{
                 let bank = this.state.bank.split("-");
                 
                 Object.assign(this.props.master,{
-                    tunai:this.state.tunai,
+                    tunai:rmComma(this.state.tunai),
                     change:this.state.change,
                     jenis_trx:event.target.value,
                     pemilik_kartu:bank[1],
@@ -81,7 +82,7 @@ class FormSale extends Component{
             });
             Object.assign(this.props.master,{
                 change:0,
-                tunai:this.state.tunai,
+                tunai:rmComma(this.state.tunai),
                 jenis_trx:event.target.value
             });
         }
@@ -93,7 +94,7 @@ class FormSale extends Component{
             });
             Object.assign(this.props.master,{
                 change:0,
-                tunai:this.state.tunai,
+                tunai:rmComma(this.state.tunai),
             });
         }
     }
@@ -112,6 +113,7 @@ class FormSale extends Component{
     }
     handleSubmit(e){
         e.preventDefault();
+        console.log("propsssssssssssssssssssssssssssssssssssssssss",this.props.lokasi.alamat)
         let err = this.state.error;
         if (this.state.jenis_trx.toLowerCase() === 'kredit'){
             let parsedata = {};
@@ -120,10 +122,14 @@ class FormSale extends Component{
             parsedata['join'] = [];
             parsedata['detail'] = this.props.detail;
 
+            let newparse = {};
+            newparse['parsedata'] = parsedata;
+            newparse['alamat'] = this.props.lokasi.alamat;
+            newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
 
-            this.props.dispatch(storeSale(parsedata, (arr) => this.props.history.push(arr)));
+            this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
         }else{ 
-            if(parseFloat(this.state.tunai)<this.state.gt){
+            if(parseFloat(this.state.tunai.toString().replace(/,/g,''))<this.state.gt){
                 err = Object.assign({}, err, {
                     tunai:"Jumlah uang tidak boleh kurang dari total pembayaran"
                 });
@@ -137,8 +143,12 @@ class FormSale extends Component{
                 parsedata['join'] = [];
                 parsedata['detail']=this.props.detail;
 
+                let newparse = {};
+                newparse['parsedata'] = parsedata;
+                newparse['alamat'] = this.props.lokasi.alamat;
+                newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
 
-                this.props.dispatch(storeSale(parsedata,(arr)=>this.props.history.push(arr)));
+                this.props.dispatch(storeSale(newparse,(arr)=>this.props.history.push(arr)));
             }
         }
     }
@@ -173,7 +183,7 @@ class FormSale extends Component{
                             </div>
                             <div className="form-group">
                                 <label htmlFor="">{this.state.jenis_trx==='Kredit'?'Jumlah DP':'Jumlah Uang'}</label>
-                                <input type="text" name={this.state.jenis_trx==='Kredit'?'dp':'tunai'} id={this.state.jenis_trx==='Kredit'?'dp':'tunai'} className="form-control" value={this.state.tunai} onKeyUp={this.handleChange} onChange={this.handleChange}/>
+                                <input type="text" name={this.state.jenis_trx==='Kredit'?'dp':'tunai'} id={this.state.jenis_trx==='Kredit'?'dp':'tunai'} className="form-control" value={toCurrency(this.state.tunai)} onKeyUp={this.handleChange} onChange={this.handleChange}/>
                                 <div className="invalid-feedback"
                                      style={this.state.error.tunai !== "" || this.state.error.tunai !== "0" ? {display: 'block'} : {display: 'none'}}>
                                     {this.state.error.tunai}
@@ -204,7 +214,7 @@ class FormSale extends Component{
                             {/*END TRANSFER*/}
                             <div className="form-group" style={{display:this.state.jenis_trx==='Kredit'?'none':'block'}}>
                                 <label htmlFor="">Kembalian</label>
-                                <input readOnly type="text" name="change" id="change" className="form-control" value={this.state.change} onChange={this.handleChange}/>
+                                <input readOnly type="text" name="change" id="change" className="form-control" value={toCurrency(this.state.change)} onChange={this.handleChange}/>
                             </div>
                         </div>
                     </div>
@@ -217,6 +227,7 @@ class FormSale extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        auth:state.auth,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
         bank:state.bankReducer.data,

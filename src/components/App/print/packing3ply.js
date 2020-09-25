@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
+import Barcode from 'react-barcode';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -57,6 +58,10 @@ export default class Print3ply extends Component {
                 <div  id="print_3ply">
                 <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                     <thead>
+                        <tr>
+                            <td colSpan={3} style={{textAlign: 'center'}}></td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={nota}/> </td>
+                        </tr>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
                             <td colSpan={5} style={{textAlign: 'center'}}>Packing Alokasi ({nota})</td>

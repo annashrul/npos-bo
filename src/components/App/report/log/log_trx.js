@@ -7,6 +7,7 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
+import { isArray } from 'lodash';
 class LogTrxReport extends Component{
     constructor(props){
         super(props);
@@ -75,7 +76,7 @@ class LogTrxReport extends Component{
     handleGet(e,data){
         e.preventDefault();
         
-        const arr_data = JSON.parse(data);
+        const arr_data = isArray(JSON.parse(data))?JSON.parse(data):[JSON.parse(data)];
 
         arr_data.map((v,i)=>{
             const not_allowed = ['id','password'];

@@ -11,6 +11,7 @@ import moment from "moment";
 import Paginationq,{toPersen} from "helper";
 import {FetchBrg2,FetchBrg1, setPromoDetail, updatePromo} from "redux/actions/masterdata/promo/promo.action";
 import FileBase64 from 'react-file-base64';
+import { rmComma, toCurrency } from '../../../../../helper';
 
 class FormPromo extends Component{
     constructor(props){
@@ -567,7 +568,7 @@ class FormPromo extends Component{
                         barcode:v.barcode,
                         diskon:toPersen(v.qty,v.harga),
                         diskon2:toPersen(v.qty2,v.harga),
-                        min_trx:this.state.min_trx,
+                        min_trx:rmComma(this.state.min_trx),
                         min_qty:0,
                         open_price:0,
                         hrg_jual:v.harga,
@@ -579,7 +580,7 @@ class FormPromo extends Component{
             if(this.state.category==='tm'){
                 if(v.checked === true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:0, open_price:v.qty, hrg_jual:v.harga, bonus:0, isbuy:0
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:rmComma(this.state.min_trx), min_qty:0, open_price:v.qty, hrg_jual:v.harga, bonus:0, isbuy:0
                     })
                 }
             }
@@ -592,7 +593,7 @@ class FormPromo extends Component{
                 return;
             }
             detail.push({
-                barcode:this.state.kel_brg, diskon:this.state.diskon1, diskon2:this.state.diskon2, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
+                barcode:this.state.kel_brg, diskon:this.state.diskon1, diskon2:this.state.diskon2, min_trx:rmComma(this.state.min_trx), min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
             })
 
         }
@@ -603,14 +604,14 @@ class FormPromo extends Component{
                 return;
             }
             detail.push({
-                barcode:this.state.supplier, diskon:this.state.diskon1, diskon2:this.state.diskon1, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
+                barcode:this.state.supplier, diskon:this.state.diskon1, diskon2:this.state.diskon1, min_trx:rmComma(this.state.min_trx), min_qty:0, open_price:0, hrg_jual:0, bonus:0, isbuy:0
             })
         }
         if(this.state.category==='bg'){
             this.state.barang_data.map((v,i)=>{
                 if(v.checked === true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:rmComma(this.state.min_trx), min_qty:v.qty, open_price:0, hrg_jual:v.harga, bonus:0, isbuy:1
                     })
                 }
                 return null;
@@ -618,7 +619,7 @@ class FormPromo extends Component{
             this.state.barang_data1.map((v,i)=>{
                 if(v.checked_bg===true){
                     detail.push({
-                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:this.state.min_trx, min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
+                        barcode:v.barcode, diskon:0, diskon2:0, min_trx:rmComma(this.state.min_trx), min_qty:0, open_price:0, hrg_jual:v.harga, bonus:v.qty_bg, isbuy:0
                     })
                 }
                 return null;
@@ -787,7 +788,7 @@ class FormPromo extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label>Minimal Transaksi</label>
-                                        <input type="text" name="min_trx" className="form-control" value={this.state.min_trx} onChange={this.handleChange}/>
+                                        <input type="text" name="min_trx" className="form-control" value={toCurrency(this.state.min_trx)} onChange={this.handleChange}/>
                                         <div className="invalid-feedback"
                                              style={this.state.error.min_trx !== "" ? {display: 'block'} : {display: 'none'}}>
                                             {this.state.error.min_trx}
