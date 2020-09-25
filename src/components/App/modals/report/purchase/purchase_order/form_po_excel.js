@@ -48,7 +48,7 @@ class PoReportExcel extends Component{
         '<div style="text-align:center>'+
         '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN ALOKASI MUTASI TRX</center></h3>'+
+        '<h3 style="text-align:center"><center>LAPORAN PO</center></h3>'+
         '</div>';
         
         const headers = [[

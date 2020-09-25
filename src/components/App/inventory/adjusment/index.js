@@ -340,6 +340,7 @@ class TrxAdjustment extends Component{
     }
     HandleSubmit(e){
         e.preventDefault();
+        console.log("propssssssssssssssssssss",this.props)
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
             if(this.state.catatan===""){
@@ -408,6 +409,8 @@ class TrxAdjustment extends Component{
                             data['logo'] = this.props.auth.user.logo;
                             data['user'] = this.props.auth.user.username;
                             data['lokasi_val'] = this.state.location_val;
+                            data['alamat'] = this.props.auth.user.alamat;
+                            data['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
                             this.props.dispatch(storeAdjusment(data,(arr)=>this.props.history.push(arr)));
                         }
                     })

@@ -11,8 +11,9 @@ import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
+import {FetchDetailLocation} from "redux/actions/masterdata/location/location.action";
 import imgDefault from 'assets/default.png'
-import {toRp,lengthBrg} from "helper";
+import {toRp,lengthBrg,toCurrency,rmComma} from "helper";
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -149,6 +150,7 @@ class Sale extends Component{
         })
         localStorage.setItem('lk', lk.value);
         this.props.dispatch(FetchNotaSale(lk.value));
+        this.props.dispatch(FetchDetailLocation(lk.value));
         if (this.state.customer!==""){
             // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.customer, this.autoSetQty))
             // let where=`lokasi=${lk.value}&customer=${this.state.customer}&q=010000013`;
@@ -191,11 +193,11 @@ class Sale extends Component{
             else this.setState({[column]: val});
 
             if (column === 'discount_persen'){
-                this.setState({ 'discount_harga': (st*(val/100)) });
+                this.setState({ 'discount_harga': (st*(rmComma(val)/100)) });
             }
         } else if (column === 'discount_harga') {
-            const disper = (val/st) * 100;
-            this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:val });
+            const disper = (rmComma(val)/st) * 100;
+            this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:rmComma(val) });
         }else{
             this.setState({
                 [column]: val
@@ -442,7 +444,7 @@ class Sale extends Component{
                         let disc1 = 0;
                         let disc2 = 0;
                         let ppn = 0;
-                        let hrg=parseInt(item.harga,10);
+                        let hrg=parseInt(rmComma(item.harga),10);
                         let ppnInt=parseInt(item.ppn,10);
                         let disc_rp=parseInt(item.diskon_nominal,10);
                         let disc_per=parseInt(item.diskon_persen,10);
@@ -468,14 +470,14 @@ class Sale extends Component{
                         detail.push({
                             kode_trx:this.props.nota,
                             subtotal:(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10),
-                            price:item.harga,
+                            price:rmComma(item.harga),
                             qty:item.qty,
                             kategori:item.kategori,
                             tax:item.ppn,
                             services:item.services,
                             sku:item.barcode,
-                            open_price:item.harga===item.harga_old?0:item.harga,
-                            hrg_beli:item.hrg_beli,
+                            open_price:rmComma(item.harga)===rmComma(item.harga_old)?0:rmComma(item.harga),
+                            hrg_beli:rmComma(item.hrg_beli),
                             diskon:0,
                             nm_brg: item.nm_brg,
                             satuan: item.satuan
@@ -497,7 +499,7 @@ class Sale extends Component{
                         "no_kartu": "0",
                         "optional_note": "",
                         "id_hold": "-",
-                        "diskon": this.state.discount_harga,
+                        "diskon": rmComma(this.state.discount_harga),
                         "compliment_rp": "0",
                         "jml_kartu": 0,
                         "charge": 0,
@@ -807,7 +809,7 @@ class Sale extends Component{
                                                     let disc1 = 0;
                                                     let disc2 = 0;
                                                     let ppn = 0;
-                                                    let hrg=parseInt(item.harga,10);
+                                                    let hrg=parseInt(rmComma(item.harga),10);
                                                     let ppnInt=parseInt(item.ppn,10);
                                                     let disc_rp=parseInt(item.diskon_nominal,10);
                                                     let disc_per=parseInt(item.diskon_persen,10);
@@ -845,7 +847,7 @@ class Sale extends Component{
                                                             <td><input type='text' className="form-control" name='harga'
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                       value={this.state.brgval[index].harga}/>
+                                                                       value={toCurrency(this.state.brgval[index].harga)}/>
                                                             </td>
                                                             <td><input type='text' name='diskon_persen'  className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
@@ -873,7 +875,7 @@ class Sale extends Component{
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
-                                                            <td style={{textAlign:"right"}}>{toRp((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
+                                                            <td style={{textAlign:"right"}}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
 
                                                         </tr>
                                                     )
@@ -903,7 +905,7 @@ class Sale extends Component{
                                                     <div className="row" style={{marginBottom: '3px'}}>
                                                         <label className="col-sm-4">Sub Total</label>
                                                         <div className="col-sm-8">
-                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={totalsub} readOnly />
+                                                            <input type="text" id="sub_total" name="sub_total" className="form-control text-right" value={toCurrency(totalsub)} readOnly />
                                                         </div>
                                                     </div>
                                                     <div className="row" style={{marginBottom: '3px'}}>
@@ -912,7 +914,7 @@ class Sale extends Component{
                                                             <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,totalsub)}  name="discount_persen"  min="0" max="100"className="form-control" placeholder="%" value={this.state.discount_persen}/>
                                                         </div>
                                                         <div className="col-sm-5">
-                                                            <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,totalsub)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={this.state.discount_harga}/>
+                                                            <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,totalsub)} name="discount_harga" className="form-control text-right" placeholder="Rp" value={toCurrency(this.state.discount_harga)}/>
                                                         </div>
                                                     </div>
                                                     <div className="row" style={{marginBottom: '3px'}}>
@@ -925,7 +927,7 @@ class Sale extends Component{
                                                         <label className="col-sm-4">Grand Total</label>
                                                         <div className="col-sm-8">
 
-                                                            <input type="text" name="grand_total" className="form-control text-right" readOnly value={(totalsub - (totalsub * (parseFloat(this.state.discount_persen) / 100))) + (totalsub * (parseFloat(this.state.pajak) / 100))} />
+                                                            <input type="text" name="grand_total" className="form-control text-right" readOnly value={toCurrency((totalsub - (totalsub * (parseFloat(this.state.discount_persen) / 100))) + (totalsub * (parseFloat(this.state.pajak) / 100)))} />
                                                         </div>
                                                     </div>
                                                 </form>
@@ -941,7 +943,7 @@ class Sale extends Component{
 
 
 
-                <FormSale master={this.state.master} detail={this.state.detail} subtotal={totalsub}/>
+                <FormSale master={this.state.master} detail={this.state.detail} subtotal={totalsub} lokasi={this.props.dataDetailLocation}/>
             </Layout>
         );
     }
@@ -955,6 +957,7 @@ const mapStateToPropsCreateItem = (state) => ({
     nota: state.saleReducer.code,
     customer: state.customerReducer.all,
     auth:state.auth,
+    dataDetailLocation:state.locationReducer.detail,
 });
 
 export default (connect(mapStateToPropsCreateItem)(Sale));

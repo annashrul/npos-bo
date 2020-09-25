@@ -4,12 +4,13 @@ import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
 import {FetchHutang, storeHutang} from "redux/actions/hutang/hutang.action";
 import moment from "moment";
-import {toRp} from "helper";
+import {toRp,toCurrency} from "helper";
 import Swal from "sweetalert2";
 import Preloader from "Preloader";
 import {
     withRouter
 } from 'react-router-dom';
+import { rmComma } from '../../../helper';
 
 class BayarHutang extends Component{
     constructor(props) {
@@ -87,10 +88,17 @@ class BayarHutang extends Component{
         if(column==='nota_pembelian'){
             localStorage.setItem("nota_pembelian_hutang",val);
         }
-        this.setState({
-            [column]: val,
-            error: err
-        });
+        if(column === 'jumlah_bayar'){
+            this.setState({
+                [column]: val.replace(/,/g,'').replace(/\D/,''),
+                error: err
+            });
+        } else {
+            this.setState({
+                [column]: val,
+                error: err
+            });
+        }
 
     }
 
@@ -154,7 +162,7 @@ class BayarHutang extends Component{
                     let data={};
                     data['bank'] = '-';
                     data['cara_byr'] = this.state.jenis_trx;
-                    data['jumlah_bayar'] = this.state.jumlah_bayar;
+                    data['jumlah_bayar'] = rmComma(this.state.jumlah_bayar);
                     data['jumlah_hutang'] = parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10);
                     data['ket'] = this.state.catatan;
                     data['lokasi'] = this.props.getHutang.lokasi;
@@ -298,7 +306,7 @@ class BayarHutang extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Yang Telah Dibayar</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.jumlah_bayar!==undefined?this.props.getHutang.jumlah_bayar:"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.jumlah_bayar!==undefined?toCurrency(this.props.getHutang.jumlah_bayar):"0"}/>
                                     </div>
                                 </div>
                                 <div className="col-md-3">
@@ -308,7 +316,7 @@ class BayarHutang extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Bayar</label>
-                                        <input type="text" name="jumlah_bayar" className="form-control" value={this.state.jumlah_bayar} onChange={this.handleChange}/>
+                                        <input type="text" name="jumlah_bayar" className="form-control" value={toCurrency(this.state.jumlah_bayar)} onChange={this.handleChange}/>
                                         <div className="invalid-feedback"
                                              style={this.state.error.jumlah_bayar !== "" ? {display: 'block'} : {display: 'none'}}>
                                             {this.state.error.jumlah_bayar}

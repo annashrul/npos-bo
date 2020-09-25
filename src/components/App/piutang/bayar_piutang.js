@@ -7,6 +7,7 @@ import moment from "moment";
 import {toRp} from "helper";
 import Swal from "sweetalert2";
 import Preloader from "Preloader";
+import { rmComma, toCurrency } from '../../../helper';
 
 class BayarPiutang extends Component{
     constructor(props) {
@@ -86,10 +87,17 @@ class BayarPiutang extends Component{
         if(column==='nota_pembelian'){
             localStorage.setItem("nota_pembelian_piutang",val);
         }
-        this.setState({
-            [column]: val,
-            error: err
-        });
+        if(column === 'jumlah_bayar'){
+            this.setState({
+                [column]: val.replace(/,/g,'').replace(/\D/,''),
+                error: err
+            });
+        } else {
+            this.setState({
+                [column]: val,
+                error: err
+            });
+        }
 
     }
 
@@ -331,7 +339,7 @@ class BayarPiutang extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Yang Telah Dibayar</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.jumlah_telah_bayar!==undefined?this.props.getPiutang.jumlah_telah_bayar:"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.jumlah_telah_bayar!==undefined?rmComma(this.props.getPiutang.jumlah_telah_bayar):"0"}/>
                                     </div>
                                 </div>
                                 <div className="col-md-3">
@@ -341,7 +349,7 @@ class BayarPiutang extends Component{
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Bayar</label>
-                                        <input type="text" name="jumlah_bayar" className="form-control" value={this.state.jumlah_bayar} onChange={this.handleChange}/>
+                                        <input type="text" name="jumlah_bayar" className="form-control" value={toCurrency(this.state.jumlah_bayar)} onChange={this.handleChange}/>
                                         <div className="invalid-feedback"
                                              style={this.state.error.jumlah_bayar !== "" ? {display: 'block'} : {display: 'none'}}>
                                             {this.state.error.jumlah_bayar}

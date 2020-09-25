@@ -196,7 +196,7 @@ class Alokasi extends Component{
         if (nextProps.dn_data){
             if (nextProps.dn_data.master!==undefined){
                 if(this.props.dn_data===undefined){
-                    console.log(nextProps.dn_data);
+                    
                     let prefix = this.state.jenis_trx.toLowerCase() === 'alokasi' ? 'MC' : (this.state.jenis_trx.toLowerCase() === 'mutasi' ? 'MU' : 'TR');
                     this.props.dispatch(FetchNota(nextProps.dn_data.master.kd_lokasi_1,prefix))
                     this.setState({

@@ -5,6 +5,7 @@ import connect from "react-redux/es/connect/connect";
 import {ModalToggle} from "redux/actions/modal.action";
 import {saveCustomerPrice,FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
 import Paginationq from "helper";
+import { rmComma, toCurrency } from '../../../../../helper';
 
 class CustomerPrice extends Component{
     constructor(props){
@@ -47,7 +48,7 @@ class CustomerPrice extends Component{
         let data={};
         data['kd_cust'] = this.state.dataCustomer[i].kd_cust;
         data['barcode'] = this.state.dataCustomer[i].barcode;
-        data['harga'] = this.state.dataCustomer[i].harga;
+        data['harga'] = rmComma(this.state.dataCustomer[i].harga);
         
         this.props.dispatch(saveCustomerPrice(data));
 
@@ -111,7 +112,7 @@ class CustomerPrice extends Component{
                                             <td>{v.nama}</td>
                                             <td>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="harga" className="form-control" value={v.harga} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {
+                                                    <input type="text" class="form-control" name="harga" className="form-control" value={toCurrency(v.harga)} onChange={(e)=>this.handleChange(e,i)}  onKeyPress = {
                                                         event => {
                                                             if (event.key === 'Enter') {
                                                                 this.handleOnEnter(i);

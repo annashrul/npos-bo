@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
+import Barcode from 'react-barcode';
 
 export default class Adjust3ply extends Component {
       constructor(props) {
@@ -51,7 +52,7 @@ export default class Adjust3ply extends Component {
             xhr.onload = () => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    // console.log(reader.result);
+                    // 
                     // logoBase64 = reader.result;
                     this.setState({newLogo : reader.result});
                 };
@@ -61,13 +62,17 @@ export default class Adjust3ply extends Component {
             xhr.responseType = 'blob';
             xhr.send();
 
-            console.log(this.state.newLogo);
+            
         }
         return (
             <Layout>
                 <div  id="print_3ply">
                     <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                         <thead>
+                        <tr>
+                            <td colSpan={3} style={{textAlign: 'center'}}></td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={nota}/> </td>
+                        </tr>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
                             <td colSpan={5} style={{textAlign: 'center'}}>Delivery Note ({nota})</td>
@@ -130,13 +135,6 @@ export default class Adjust3ply extends Component {
                         <tbody>
                             {
                                 master.map((item, index) => {
-                                    let saldo_stock = item.saldo_stock;
-                                    if(item.status === 'kurang'){
-                                        saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
-                                    }
-                                    if(item.status === 'tambah' || item.status===''){
-                                        saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
-                                    }
                                     return (
                                         <tr key={index}>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>

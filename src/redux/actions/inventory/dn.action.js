@@ -28,6 +28,13 @@ export function setDnData(data = []) {
         data
     }
 }
+
+export function setDnDetail(data = []) {
+    return {
+        type: DN.DN_DETAIL,
+        data
+    }
+}
 export function setReport(data = []) {
     return {
         type: DN.REPORT_SUCCESS,
@@ -111,10 +118,27 @@ export const FetchDnExcel = (page=1,where='', perpage=99999)=>{
 export const FetchDnData = (nota) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `deliverynote/report/${nota}`)
+        axios.get(HEADERS.URL + `deliverynote/ambil_data/${nota}`)
             .then(function (response) {
                 const data = response.data
                 dispatch(setDnData(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                
+            })
+
+    }
+}
+
+export const FetchDnDetail = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `deliverynote/report/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setDnDetail(data))
                 dispatch(setLoading(false));
             })
             .catch(function (error) {

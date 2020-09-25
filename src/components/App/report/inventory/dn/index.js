@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchDn, FetchDnExcel, FetchDnData} from "redux/actions/inventory/dn.action";
+import {FetchDn, FetchDnExcel, FetchDnDetail} from "redux/actions/inventory/dn.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailDn from "components/App/modals/report/inventory/dn_report/detail_dn";
@@ -77,7 +77,7 @@ class DnReport extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailDn"));
-        this.props.dispatch(FetchDnData(code))
+        this.props.dispatch(FetchDnDetail(code))
     };
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
@@ -487,7 +487,7 @@ const mapStateToProps = (state) => {
         isLoadingDetail: state.dnReducer.isLoadingDetail,
         auth:state.auth,
         isLoading: state.dnReducer.isLoading,
-        dnDetail:state.dnReducer.dn_data,
+        dnDetail:state.dnReducer.dn_detail,
         dnReportExcel:state.dnReducer.report_excel,
         isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,

@@ -9,6 +9,7 @@ const initialState = {
     status:"",
     code:"-",
     dn_data:[],
+    dn_detail:[],
     report:[],
     report_excel:[],
     report_data:[]
@@ -33,10 +34,14 @@ export const dnReducer = (state = initialState, action) => {
                 report_excel: action.data.result,
             });
         case DN.DN_DATA:
-            console.group()
-            console.log(action.data);
+            
+            
             return Object.assign({}, state, {
                 dn_data: action.data.result
+            });
+        case DN.DN_DETAIL:
+            return Object.assign({}, state, {
+                dn_detail: action.data.result
             });
         case DN.SUCCESS_CODE:
             return Object.assign({}, state, {

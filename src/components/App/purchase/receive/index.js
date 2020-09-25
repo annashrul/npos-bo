@@ -17,6 +17,7 @@ import {withRouter} from "react-router-dom"
 import StickyBox from "react-sticky-box";
 import imgDefault from 'assets/default.png'
 import {toRp,lengthBrg,ToastQ} from "helper";
+import { rmComma, toCurrency } from '../../../../helper';
 const table='receive';
 
 class Receive extends Component{
@@ -251,7 +252,7 @@ class Receive extends Component{
                             diskon3: item.disc3,
                             diskon4: item.disc4,
                             ppn: item.ppn,
-                            harga_beli: item.harga_beli,
+                            harga_beli: rmComma(item.harga_beli),
                             qty: item.jumlah_beli,
                             qty_bonus: 0,
                             stock: item.stock,
@@ -518,7 +519,7 @@ class Receive extends Component{
             diskon3:0,
             diskon4:0,
             ppn:item.ppn,
-            harga_beli:item.harga_beli,
+            harga_beli:rmComma(item.harga_beli),
             qty:item.qty,
             qty_bonus: item.qty_bonus,
             stock:item.stock,
@@ -637,16 +638,16 @@ class Receive extends Component{
                                 let disc2 = 0;
                                 let ppn = 0;
                                 if (item.diskon !== 0) {
-                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
+                                    disc1 = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.diskon) / 100);
                                     disc2 = disc1;
                                     if (item.diskon2 !== 0) {
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
                                     }
                                 }
                                 if (item.ppn !== 0) {
-                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
+                                    ppn = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.ppn) / 100);
                                 }
-                                subtotal += ((parseInt(item.harga_beli,10) - disc2) + ppn) * parseFloat(item.qty);
+                                subtotal += ((parseInt(rmComma(item.harga_beli),10) - disc2) + ppn) * parseFloat(item.qty);
                                 detail.push({
                                     kd_brg: item.kd_brg,
                                     barcode: item.barcode,
@@ -656,7 +657,7 @@ class Receive extends Component{
                                     diskon3: item.diskon3,
                                     diskon4: item.diskon4,
                                     ppn: item.ppn,
-                                    harga_beli: item.harga_beli,
+                                    harga_beli: rmComma(item.harga_beli),
                                     qty: item.qty,
                                     qty_bonus: item.qty_bonus
                                 })
@@ -1197,7 +1198,7 @@ class Receive extends Component{
                                                     let disc2=0;
                                                     let ppn=0;
                                                     if(item.diskon!==0){
-                                                        disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
+                                                        disc1 = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.diskon) / 100);
                                                         disc2=disc1;
                                                         if(item.diskon2!==0){
                                                             disc2 = disc1 * (parseFloat(item.diskon2) / 100);
@@ -1206,9 +1207,9 @@ class Receive extends Component{
 
 
                                                     if(item.ppn!==0){
-                                                        ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
+                                                        ppn = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.ppn) / 100);
                                                     }
-                                                    subtotal+=((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty);
+                                                    subtotal+=((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty);
                                                     //
                                                     return (
                                                         <tr key={index} >
@@ -1229,7 +1230,7 @@ class Receive extends Component{
                                                                 </select>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga_beli)}/>
                                                             </td>
                                                             <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='diskon' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
                                                             <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='ppn' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
@@ -1239,7 +1240,7 @@ class Receive extends Component{
                                                             <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
                                                             <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
                                                             <td style={columnStyle}>
-                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty))}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty))}/>
                                                             </td>
                                                         </tr>
                                                     )

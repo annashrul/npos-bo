@@ -103,7 +103,7 @@ class GlobalSetting extends Component{
                                         <Tab onClick={() =>this.handleSelect(0)}>Billing</Tab>
                                         <Tab onClick={() =>this.handleSelect(1)}>Backup</Tab>
                                         <Tab onClick={() =>this.handleSelect(3)}>File Manager</Tab>
-                                        <Tab onClick={() =>this.handleSelect(4)}>Log</Tab>
+                                        <Tab onClick={() =>this.handleSelect(4)}>Log Cleaner</Tab>
                                     </TabList>
                                 </div>
                                 <div>

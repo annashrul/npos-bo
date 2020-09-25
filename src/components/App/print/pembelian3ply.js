@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
+import { rmComma } from '../../../helper';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -40,7 +41,7 @@ export default class Print3ply extends Component {
             xhr.onload = () => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    // console.log(reader.result);
+                    // 
                     // logoBase64 = reader.result;
                     this.setState({newLogo : reader.result});
                 };
@@ -50,7 +51,7 @@ export default class Print3ply extends Component {
             xhr.responseType = 'blob';
             xhr.send();
 
-            console.log(this.state.newLogo);
+            
         }
         return (
             <Layout>
@@ -117,7 +118,7 @@ export default class Print3ply extends Component {
                                 let disc2=0;
                                 let ppn=0;
                                 if(item.diskon!==0){
-                                    disc1 = parseInt(item.harga_beli,10) * (parseFloat(item.diskon) / 100);
+                                    disc1 = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.diskon) / 100);
                                     disc2=disc1;
                                     if(item.diskon2!==0){
                                         disc2 = disc1 * (parseFloat(item.diskon2) / 100);
@@ -126,7 +127,7 @@ export default class Print3ply extends Component {
                           
 
                                 if(item.ppn!==0){
-                                    ppn = parseInt(item.harga_beli,10) * (parseFloat(item.ppn) / 100);
+                                    ppn = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.ppn) / 100);
                                 }
                                 return (
                                     <tr key={index}>
@@ -134,12 +135,12 @@ export default class Print3ply extends Component {
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
-                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(rmComma(item.harga_beli))}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.diskon}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.ppn}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_bonus}</td>
-                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(((parseInt(item.harga_beli,10)-disc2)+ppn)*parseFloat(item.qty))}</td>
+                                        <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty))}</td>
 
                                     </tr>
                                 )

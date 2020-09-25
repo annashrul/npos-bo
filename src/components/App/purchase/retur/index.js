@@ -13,6 +13,7 @@ import moment from "moment";
 import {storeReturTanpaNota} from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import {withRouter} from 'react-router-dom';
 import imgDefault from 'assets/default.png'
+import { rmComma, toCurrency } from '../../../../helper';
 
 const table='retur_tanpa_nota';
 
@@ -277,7 +278,7 @@ class ReturTanpaNota extends Component{
             kondisi:item.kondisi,
             stock:item.stock,
             ppn:item.ppn,
-            harga_beli:item.harga_beli,
+            harga_beli:rmComma(item.harga_beli),
             ket:item.ket,
             qty_retur:item.qty_retur,
             tambahan:item.tambahan
@@ -389,7 +390,7 @@ class ReturTanpaNota extends Component{
                                     "barcode": item.barcode,
                                     "satuan": item.satuan,
                                     "qty": item.qty_retur,
-                                    "harga_beli": item.harga_beli,
+                                    "harga_beli": rmComma(item.harga_beli),
                                     "keterangan": item.keterangan,
                                     "kondisi": item.kondisi,
                                 })
@@ -699,7 +700,7 @@ class ReturTanpaNota extends Component{
                                             <tbody>
                                             {
                                                 this.state.databrg.map((item, index) => {
-                                                    let total_retur=parseInt(item.qty_retur,10)*parseInt(item.harga_beli,10);
+                                                    let total_retur=parseInt(item.qty_retur,10)*parseInt(rmComma(item.harga_beli),10);
                                                     grand_total = grand_total + total_retur;
                                                     localStorage.setItem("grand_total",grand_total);
                                                     qty_retur = qty_retur+parseInt(item.qty_retur,10);
@@ -725,7 +726,7 @@ class ReturTanpaNota extends Component{
                                                                     }
                                                                 </select>
                                                             </td>
-                                                            <td style={columnStyle}><input className="form-control" style={{width:"100px",textAlign:"right"}} type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].harga_beli}/></td>
+                                                            <td style={columnStyle}><input className="form-control" style={{width:"100px",textAlign:"right"}} type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga_beli)}/></td>
                                                             <td style={columnStyle}>
                                                                 <select className="form-control" style={{width:"140px"}} name='kondisi' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].kondisi} defaultValue={this.state.brgval[index].kondisi}>
                                                                     <option value="">Pilih Kondisi</option>
