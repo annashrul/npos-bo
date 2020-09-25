@@ -4,6 +4,7 @@ import Pagination from "react-js-pagination";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { isEmpty } from "lodash";
 
 
 export const stringifyFormData = (fd) => {
@@ -89,7 +90,7 @@ export const toMoney = (angka) => {
     return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
 export const toCurrency = (angka) => {
-    return angka.toString().replace(/,/g,'').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return isEmpty(angka)?'':angka.toString().replace(/,|\D/g,'').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 export const rmComma = (angka) => {
     return parseInt(angka.toString().replace(/,/g,''),10);

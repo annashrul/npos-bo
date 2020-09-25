@@ -13,16 +13,19 @@ class ApproveProduction extends Component{
         this.state = {
             txtHpp: "",
             txtSisaApproval:"",
+            txtKdTrx:"",
             error:{
                 txtHpp:"",
                 txtSisaApproval:"",
             },
         }
     }
-    componentDidMount(){
+    UNSAFE_componentWillReceiveProps(nextProps){
+        console.log("componentDidMount",nextProps)
         this.setState({
-            txtHpp: localStorage.getItem('hpp_for_approve'),
-            txtSisaApproval: localStorage.getItem('qty_for_approve')
+            txtHpp: parseInt(nextProps.hpp,10),
+            txtSisaApproval: nextProps.qty,
+            txtKdTrx: nextProps.code
         })
     }
     toggle(e){
@@ -81,9 +84,9 @@ class ApproveProduction extends Component{
             }).then((result) => {
                 if (result.value) {
                     let data={};
-                    data['hpp'] = this.state.txtHp;
+                    data['hpp'] = this.state.txtHpp;
                     data['sisa_approval'] = this.state.txtSisaApproval;
-                    data['kd_trx'] = localStorage.getItem('code_for_approve');
+                    data['kd_trx'] = this.state.txtKdTrx;
                     this.props.dispatch(storeApproval(data));
                 }
             })

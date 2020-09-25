@@ -38,6 +38,9 @@ class ProductionReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            code:'code',
+            hpp:'hpp',
+            qty:'qty'
         }
     }
     componentWillMount(){
@@ -83,9 +86,14 @@ class ProductionReport extends Component{
     };
     approve(e,code,hpp,qty){
         e.preventDefault();
-        localStorage.setItem("code_for_approve",code);
-        localStorage.setItem("hpp_for_approve",hpp);
-        localStorage.setItem("qty_for_approve",qty);
+        // localStorage.setItem("code_for_approve",code);
+        // localStorage.setItem("hpp_for_approve",hpp);
+        // localStorage.setItem("qty_for_approve",qty);
+        this.setState({
+            code:code,
+            hpp:hpp,
+            qty:qty
+        })
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("approveProduction"));
@@ -435,7 +443,7 @@ class ProductionReport extends Component{
                             </div>
                             <DetailProduction productionDetail={this.props.productionDetail}/>
                             <ProductionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
-                            <ApproveProduction/>
+                            <ApproveProduction  code={this.state.code} hpp={this.state.hpp} qty={this.state.qty} />
                         </div>
                     </div>
                 </div>
