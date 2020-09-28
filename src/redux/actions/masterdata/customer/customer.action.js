@@ -42,11 +42,15 @@ export const FetchCustomer = (page=1,q)=>{
         })
     }
 }
-export const FetchCustomerAll = ()=>{
+export const FetchCustomerAll = (lok)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
 
-        axios.get(HEADERS.URL+`customer?page=1&perpage=999&isbo=true`)
+        let w = '';
+        if(lok !== ''){
+            w+=`&lokasi=${lok}`;
+        }
+        axios.get(HEADERS.URL+`customer?page=1&perpage=999&isbo=true${w}`)
             .then(function(response){
                 const data = response.data;
                 
