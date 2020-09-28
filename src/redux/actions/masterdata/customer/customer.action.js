@@ -46,7 +46,7 @@ export const FetchCustomerAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
 
-        axios.get(HEADERS.URL+`customer?page=1&perpage=100`)
+        axios.get(HEADERS.URL+`customer?page=1&perpage=999&isbo=true`)
             .then(function(response){
                 const data = response.data;
                 
