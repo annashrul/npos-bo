@@ -428,6 +428,7 @@ class SaleArchive extends Component{
                                                                                 <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</DropdownItem>
                                                                                 <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
                                                                                 <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                                <DropdownItem href={`../print3ply/${v.kd_trx}`}>3ply</DropdownItem>
                                                                             </DropdownMenu>
                                                                             </UncontrolledButtonDropdown>
                                                                         </div>

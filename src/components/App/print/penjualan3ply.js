@@ -166,14 +166,14 @@ class Print3ply extends Component {
                             {
                                 data.length>0?
                                     data.map((item,key)=>{
-                                        gt += item.subtotal;
+                                        gt += parseInt(item.subtotal,10);
                                         return(
                                         <tr>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.qty} {item.satuan}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{parseInt(item.qty,10)} {item.satuan}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.sku}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(item.price)}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(item.subtotal)}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(parseInt(item.hrg_jual,10))}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(parseInt(item.subtotal,10))}</td>
                                         </tr>
                                         )
                                     })
