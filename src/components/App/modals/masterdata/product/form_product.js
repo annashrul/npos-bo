@@ -828,7 +828,7 @@ class FormProduct extends Component{
                 }
             }
             
-            console.log(index)
+            
             for(let i=1;i<this.state.barangSku.length;i++){
                 if(parseInt(this.state.barangSku[i].konversi,10)<=0 || this.state.barangSku[i].konversi === ''){
                     alert(`Konversi Qty pada barcode ${this.state.barangSku[i].barcode} tidak boleh kosong atau kurang dari = 0`);
@@ -1815,10 +1815,6 @@ class FormProduct extends Component{
                     "harga3"    : parseInt(isNaN(rmComma(stateBrgHrg[hrgJual3]))?0:rmComma(stateBrgHrg[hrgJual3]),10),
                     "harga4"    : parseInt(isNaN(rmComma(stateBrgHrg[hrgJual4]))?0:rmComma(stateBrgHrg[hrgJual4]),10),
                 });
-                console.log(rmComma(stateBrgHrg[hrgJual1]))
-                console.log(rmComma(stateBrgHrg[hrgJual2]))
-                console.log(rmComma(stateBrgHrg[hrgJual3]))
-                console.log(rmComma(stateBrgHrg[hrgJual4]))
             }
         }
 
