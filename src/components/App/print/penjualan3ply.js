@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import Layout from './layout';
+import connect from "react-redux/es/connect/connect";
 import {toRp} from 'helper';
 import Barcode from 'react-barcode'
-
-export default class Print3ply extends Component {
+import {FetchReportDetailSale} from "redux/actions/sale/sale.action";
+import { isEmpty } from 'lodash';
+import moment from 'moment'
+class Print3ply extends Component {
       constructor(props) {
         super(props);
         this.state = {
@@ -11,20 +14,37 @@ export default class Print3ply extends Component {
             master:[],
             nota:'',
             alamat:'',
-            site_title:'',
+            lokasi:'',
             newLogo:''
         };
+
+        this.props.dispatch(FetchReportDetailSale(this.props.match.params.id));
       }
-      componentWillMount(){
-          const getData = this.props.location.state.data;
-          console.log(getData)
-          this.setState({
-              data: getData.parsedata.detail,
-              master: getData.parsedata.master,
-              nota: this.props.location.state.nota,
-              site_title: getData.site_title,
-              alamat: getData.alamat,
-          })
+      UNSAFE_componentWillMount(){
+          console.log("UNSAFE_componentWillMountcomponentWillMount")
+      }
+
+
+
+      UNSAFE_componentWillReceiveProps(nextProps){
+        const getData = nextProps.detailSale;
+        console.log("UNSAFE_componentWillReceiveProps",getData)
+        this.setState({
+            data: isEmpty(getData)?[]:getData.detail,
+            master: getData,
+            nota: getData.kd_trx,
+            lokasi: getData.lokasi,
+            alamat: getData.alamat,
+        })
+      }
+
+      componentDidUpdate(){
+          console.log("DidUpdate")
+      }
+
+      componentDidMount(){
+        // this.props.dispatch(FetchReportDetailSale(this.props.match.params.id));
+        console.log("componentDidMount",this.state.master)
       }
 
       getLogo(){
@@ -34,7 +54,7 @@ export default class Print3ply extends Component {
       }
 
       render() {
-        const {master,data,nota,alamat,site_title}=this.state;
+        const {master,data,nota,alamat,lokasi}=this.state;
         if(this.state.newLogo === ''){
             const xhr = new XMLHttpRequest();
             xhr.onload = () => {
@@ -49,10 +69,9 @@ export default class Print3ply extends Component {
             xhr.open('GET', localStorage.getItem('logos'));
             xhr.responseType = 'blob';
             xhr.send();
-
-            
         }
         let gt=0;
+        console.log(data)
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -64,7 +83,7 @@ export default class Print3ply extends Component {
                         </tr>
                         <tr>
                             <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} style={{textAlign: 'center'}}><strong>{site_title}</strong></td>
+                            <td colSpan={5} style={{textAlign: 'center'}}><strong>{lokasi}</strong></td>
                         </tr>
                         <tr>
                             <td colSpan={5} style={{textAlign: 'center'}}>{alamat}</td>
@@ -108,7 +127,7 @@ export default class Print3ply extends Component {
                                 <td />
                                 <td>Tanggal</td>
                                 <td>:</td>
-                                <td>{master.tgl}</td>
+                                <td>{moment(master.tgl).format('YYYY-MM-DD')}</td>
                                 <td>Kode Trx</td>
                                 <td>:</td>
                                 <td>{nota}</td>
@@ -117,19 +136,19 @@ export default class Print3ply extends Component {
                                 <th />
                                 <td>Customer</td>
                                 <td>:</td>
-                                <td>{master.kd_cust}</td>
-                                <td>Keterangan</td>
+                                <td>{master.customer}</td>
+                                <td>Operator</td>
                                 <td>:</td>
-                                <td>{master.optional_note}</td>
+                                <td>{master.operator}</td>
                             </tr>
                             <tr>
                                 <th />
                                 <td>Jenis Trx</td>
                                 <td>:</td>
                                 <td>{master.jenis_trx}</td>
-                                <td/>
-                                <td/>
-                                <td/>
+                                <td>Keterangan</td>
+                                <td>:</td>
+                                <td>{master.keterangan}</td>
                             </tr>
                             </tbody>
                     </table>
@@ -188,3 +207,12 @@ export default class Print3ply extends Component {
         );
       }
     }
+    const mapStateToProps = (state) => {
+        return {
+            detailSale:state.saleReducer.dataDetail,
+            isLoadingDetail: state.saleReducer.isLoadingDetail,
+            auth: state.auth
+        }
+    }
+    
+    export default connect(mapStateToProps)(Print3ply)

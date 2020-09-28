@@ -96,11 +96,11 @@ class ApprovalMutasi extends Component{
                             <div className="col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12">
-                                        Lokasi
+                                        Lokasi Tujuan
                                     </label>
                                     <Select
                                         options={this.state.location_data}
-                                        placeholder="Pilih Lokasi Asal"
+                                        placeholder="Pilih Lokasi Tujuan"
                                         onChange={this.HandleChangeLokasi}
                                         value={
                                             this.state.location_data.find(op => {
@@ -114,7 +114,7 @@ class ApprovalMutasi extends Component{
                             <div className="col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12">
-                                        Kode Transaksi
+                                        No Faktur Mutasi
                                     </label>
                                     <input type="text" name="kd_trx" value={this.state.kd_trx} className="form-control" style={{height:"38px"}}
                                            onChange={this.handleChange}
@@ -135,7 +135,8 @@ class ApprovalMutasi extends Component{
                                         <tr>
                                             <th className="text-black" style={columnStyle}>No Faktur Mutasi</th>
                                             <th className="text-black" style={columnStyle}>Tanggal</th>
-                                            <th className="text-black" style={columnStyle}>Lokasi</th>
+                                            <th className="text-black" style={columnStyle}>Lokasi Tujuan</th>
+                                            <th className="text-black" style={columnStyle}>Lokasi Asal</th>
                                             <th className="text-black" style={columnStyle}>Total Item</th>
                                             <th className="text-black" style={columnStyle}>Total Approval</th>
                                             <th className="text-black" style={columnStyle}>#</th>
@@ -151,6 +152,7 @@ class ApprovalMutasi extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{v.no_faktur_mutasi}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl_mutasi).format("yyyy-MM-DD")}</td>
+                                                                    <td style={columnStyle}>{v.nama}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
                                                                     <td style={columnStyle}>{v.total_qty}</td>
                                                                     <td style={columnStyle}>{v.total_approval}</td>

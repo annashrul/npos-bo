@@ -38,6 +38,9 @@ class ProductionReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            code:'code',
+            hpp:'hpp',
+            qty:'qty'
         }
     }
     componentWillMount(){
@@ -83,9 +86,14 @@ class ProductionReport extends Component{
     };
     approve(e,code,hpp,qty){
         e.preventDefault();
-        localStorage.setItem("code_for_approve",code);
-        localStorage.setItem("hpp_for_approve",hpp);
-        localStorage.setItem("qty_for_approve",qty);
+        // localStorage.setItem("code_for_approve",code);
+        // localStorage.setItem("hpp_for_approve",hpp);
+        // localStorage.setItem("qty_for_approve",qty);
+        this.setState({
+            code:code,
+            hpp:hpp,
+            qty:qty
+        })
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("approveProduction"));
@@ -377,6 +385,7 @@ class ProductionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Nama Toko</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Qty Estimasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Rata - rata HPP per QTY</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Amount</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
@@ -410,6 +419,7 @@ class ProductionReport extends Component{
                                                                     <td style={columnStyle}>{v.nama_toko}</td>
                                                                     <td style={columnStyle}>{v.qty_estimasi}</td>
                                                                     <td style={columnStyle}>{v.hpp}</td>
+                                                                    <td style={columnStyle}>{(parseInt(v.hpp,10)*parseInt(v.qty_estimasi,10))}</td>
                                                                     <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Approved'):"")}</td>
                                                                     <td style={columnStyle}>{v.keterangan}</td>
 
@@ -435,7 +445,7 @@ class ProductionReport extends Component{
                             </div>
                             <DetailProduction productionDetail={this.props.productionDetail}/>
                             <ProductionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
-                            <ApproveProduction/>
+                            <ApproveProduction  code={this.state.code} hpp={this.state.hpp} qty={this.state.qty} />
                         </div>
                     </div>
                 </div>

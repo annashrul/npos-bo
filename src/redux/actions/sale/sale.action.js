@@ -134,7 +134,7 @@ export const storeSale = (data,param) => {
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: '/print3ply',
+                        pathname: '/print3ply/TBO2009250004',
                         state: {
                             data: rawdata,
                             nota: data.result.kode
