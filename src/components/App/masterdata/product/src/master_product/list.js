@@ -145,7 +145,56 @@ class ListProduct extends Component{
     }
 
     handlePageChange(pageNumber){
-        this.props.dispatch(FetchProduct(pageNumber));
+        let column = localStorage.getItem('column_search');
+        let where='';
+        let que = 'any_master';
+        let kode=this.state.any_kode_barang;
+        let nama=this.state.any_nama_barang;
+        let kelompok=this.state.any_kelompok_barang;
+        let supplier=this.state.any_supplier_barang;
+        let subdept=this.state.any_subdept_barang;
+        let kategori=this.state.any_kategori_barang;
+        if(kode!==''||nama!==''||kelompok!==''||supplier!==''||subdept!==''||kategori!==''){
+            if(column==='any_kode_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=kd_brg&q=${kode}`;
+                localStorage.setItem(`${que}_kode_barang`,kode);
+            }
+            if(column==='any_nama_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=nm_brg&q=${nama}`;
+                localStorage.setItem(`${que}_nama_barang`,nama);
+            }
+            if(column==='any_kelompok_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=kel_brg&q=${kelompok}`;
+                localStorage.setItem(`${que}_kelompok_barang`,kelompok);
+            }
+            if(column==='any_supplier_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=supplier&q=${supplier}`;
+                localStorage.setItem(`${que}_supplier_barang`,supplier);
+            }
+            if(column==='any_subdept_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=subdept&q=${subdept}`;
+                localStorage.setItem(`${que}_subdept_barang`,subdept);
+            }
+            if(column==='any_kategori_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=kategori&q=${kategori}`;
+                localStorage.setItem(`${que}_kategori_barang`,kategori);
+            }
+                this.props.dispatch(FetchProduct(pageNumber,where));
+            }else{
+                localStorage.removeItem(`${que}_kode_barang`);
+                localStorage.removeItem(`${que}_nama_barang`);
+                localStorage.removeItem(`${que}_kelompok_barang`);
+                localStorage.removeItem(`${que}_supplier_barang`);
+                localStorage.removeItem(`${que}_subdept_barang`);
+                localStorage.removeItem(`${que}_kategori_barang`);
+                this.props.dispatch(FetchProduct(pageNumber,''));
+            }
     }
     handleDelete = (e,kode) => {
         e.preventDefault();
@@ -210,6 +259,7 @@ class ListProduct extends Component{
         this.props.dispatch(FetchProduct(1,where));
     }
     handleEnter(column){
+        localStorage.setItem('column_search',`${column}`);
         let where='';
         let que = 'any_master';
         let kode=this.state.any_kode_barang;
@@ -249,6 +299,7 @@ class ListProduct extends Component{
                 where+=`searchby=kategori&q=${kategori}`;
                 localStorage.setItem(`${que}_kategori_barang`,kategori);
             }
+            console.log("cccccccccccccccccccccccc",where)
             this.props.dispatch(FetchProduct(1,where));
         }else{
             localStorage.removeItem(`${que}_kode_barang`);
