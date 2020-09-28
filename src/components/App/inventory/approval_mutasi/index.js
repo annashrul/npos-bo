@@ -152,8 +152,8 @@ class ApprovalMutasi extends Component{
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}>{v.no_faktur_mutasi}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl_mutasi).format("yyyy-MM-DD")}</td>
-                                                                    <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={columnStyle}>{v.nama}</td>
+                                                                    <td style={columnStyle}>{v.nama_asal}</td>
+                                                                    <td style={columnStyle}>{v.nama_tujuan}</td>
                                                                     <td style={columnStyle}>{v.total_qty}</td>
                                                                     <td style={columnStyle}>{v.total_approval}</td>
                                                                     <td style={columnStyle}>
