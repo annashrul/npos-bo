@@ -12,6 +12,7 @@ import Select from "react-select";
 import FileBase64 from "react-file-base64";
 import moment from "moment";
 import { rmComma, toCurrency } from '../../../../../helper';
+import {isNaN} from 'lodash'
 
 class FormProduct extends Component{
     constructor(props){
@@ -1806,14 +1807,18 @@ class FormProduct extends Component{
                 barangHarga.push({
                     "lokasi"    : stateBrgHrg.lokasi,
                     "barcode"   : barcode[sku],
-                    "harga_beli": rmComma(stateBrgHrg[hrgbeli]),
+                    "harga_beli": parseInt(isNaN(rmComma(stateBrgHrg[hrgbeli]))?0:rmComma(stateBrgHrg[hrgbeli]),10),
                     "ppn"       : stateBrgHrg[ppn],
                     "service"   : stateBrgHrg[service],
-                    "harga"     : rmComma(stateBrgHrg[hrgJual1]),
-                    "harga2"    : rmComma(stateBrgHrg[hrgJual2]),
-                    "harga3"    : rmComma(stateBrgHrg[hrgJual3]),
-                    "harga4"    : rmComma(stateBrgHrg[hrgJual4]),
+                    "harga"     : parseInt(isNaN(rmComma(stateBrgHrg[hrgJual1]))?0:rmComma(stateBrgHrg[hrgJual1]),10),
+                    "harga2"    : parseInt(isNaN(rmComma(stateBrgHrg[hrgJual2]))?0:rmComma(stateBrgHrg[hrgJual2]),10),
+                    "harga3"    : parseInt(isNaN(rmComma(stateBrgHrg[hrgJual3]))?0:rmComma(stateBrgHrg[hrgJual3]),10),
+                    "harga4"    : parseInt(isNaN(rmComma(stateBrgHrg[hrgJual4]))?0:rmComma(stateBrgHrg[hrgJual4]),10),
                 });
+                console.log(rmComma(stateBrgHrg[hrgJual1]))
+                console.log(rmComma(stateBrgHrg[hrgJual2]))
+                console.log(rmComma(stateBrgHrg[hrgJual3]))
+                console.log(rmComma(stateBrgHrg[hrgJual4]))
             }
         }
 
