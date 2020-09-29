@@ -50,7 +50,7 @@ export const FetchCustomerAll = (lok)=>{
         if(lok !== ''){
             w+=`&lokasi=${lok}`;
         }
-        axios.get(HEADERS.URL+`customer?page=1&perpage=999&isbo=true${w}`)
+        axios.get(HEADERS.URL+`customer?page=1&perpage=999${w}`)
             .then(function(response){
                 const data = response.data;
                 

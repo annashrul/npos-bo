@@ -102,6 +102,25 @@ class Sale extends Component{
             }
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=5`,'sale',this.autoSetQty));
         }
+
+        const nextProps = this.props;
+        if (nextProps.auth.user) {
+            let lk = []
+            let loc = nextProps.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                    return true;
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: nextProps.auth.user.id
+                })
+            }
+        }
     }
     componentWillReceiveProps = (nextProps) => {
         let perpage=this.state.perpage;
@@ -344,7 +363,7 @@ class Sale extends Component{
             harga4: item.harga4,
             stock: item.stock,
             diskon_persen: item.diskon_persen,
-            diskon_nominal: item.diskon_nominal,
+            diskon_nominal: 0,
             ppn: item.ppn,
             qty: item.qty,
             hrg_beli:item.hrg_beli,
@@ -369,7 +388,7 @@ class Sale extends Component{
                     harga4: res.harga4,
                     stock: res.stock,
                     diskon_persen: res.diskon_persen,
-                    diskon_nominal: res.diskon_nominal,
+                    diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
                     tambahan: []
@@ -798,7 +817,7 @@ class Sale extends Component{
                                                 <th style={columnStyle}>satuan</th>
                                                 <th style={columnStyle}>harga</th>
                                                 <th style={columnStyle}>disc 1 (%)</th>
-                                                <th style={columnStyle}>disc 2 (%)</th>
+                                                {/* <th style={columnStyle}>disc 2 (%)</th> */}
                                                 <th style={columnStyle}>ppn</th>
                                                 <th style={columnStyle}>stock</th>
                                                 <th style={columnStyle}>qty</th>
@@ -857,12 +876,12 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_persen}/>
                                                             </td>
-                                                            <td><input type='text' name='diskon_nominal'
+                                                            {/* <td><input type='text' name='diskon_nominal'
                                                                        className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_nominal}/>
-                                                            </td>
+                                                            </td> */}
                                                             <td><input type='text' name='ppn'  className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
@@ -887,7 +906,7 @@ class Sale extends Component{
                                             </tbody>
                                             <tfoot>
                                             <tr style={{background: '#eee'}}>
-                                                <td colSpan='10' style={{textAlign: 'right !important'}}>Total
+                                                <td colSpan='9' style={{textAlign: 'right !important'}}>Total
                                                 </td>
                                                 <td colSpan='1' style={{textAlign:"right"}}>{toRp(totalsub)}</td>
                                             </tr>

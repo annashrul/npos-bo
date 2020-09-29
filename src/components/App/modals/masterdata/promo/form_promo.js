@@ -8,7 +8,7 @@ import Select from "react-select";
 import {FetchCustomerType} from "redux/actions/masterdata/customer_type/customer_type.action";
 import {toRp} from "helper";
 import moment from "moment";
-import Paginationq,{toPersen} from "helper";
+import Paginationq from "helper";
 import {FetchBrg2,FetchBrg1, setPromoDetail, updatePromo} from "redux/actions/masterdata/promo/promo.action";
 import FileBase64 from 'react-file-base64';
 import { rmComma, toCurrency } from '../../../../../helper';
@@ -566,8 +566,8 @@ class FormPromo extends Component{
                 if(v.checked === true){
                     detail.push({
                         barcode:v.barcode,
-                        diskon:toPersen(v.qty,v.harga),
-                        diskon2:toPersen(v.qty2,v.harga),
+                        diskon:v.qty,
+                        diskon2:v.qty2,
                         min_trx:rmComma(this.state.min_trx),
                         min_qty:0,
                         open_price:0,

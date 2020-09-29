@@ -139,7 +139,7 @@ class ListSales extends Component{
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.nama}</td>
-                                                <td style={columnStyle}>{getLok[0]===undefined?'':getLok[0].nama}</td>
+                                                <td style={columnStyle}>{getLok[0]===undefined?'Location Not Found!':getLok[0].nama}</td>
                                                 <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
                                                 {/* <td style={columnStyle}>{v.kode}</td> */}
                                             </tr>
