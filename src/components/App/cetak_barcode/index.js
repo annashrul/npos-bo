@@ -442,7 +442,7 @@ class CetakBarcode extends Component{
         const element = document.createElement("a");
         const file = new Blob([data], {type: 'text/plain'});
         element.href = URL.createObjectURL(file);
-        element.download = `barcode_barang_${this.dateOnlyCode()}${this.intRand(2)}.txt`;
+        element.download = `barcode_barang.txt`;
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
         // 
