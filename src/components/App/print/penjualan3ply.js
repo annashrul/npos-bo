@@ -7,7 +7,7 @@ import {FetchReportDetailSale} from "redux/actions/sale/sale.action";
 import { isEmpty } from 'lodash';
 import moment from 'moment'
 class Print3ply extends Component {
-      constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             data:[],
@@ -19,16 +19,13 @@ class Print3ply extends Component {
         };
 
         this.props.dispatch(FetchReportDetailSale(this.props.match.params.id));
-      }
-      UNSAFE_componentWillMount(){
-          console.log("UNSAFE_componentWillMountcomponentWillMount")
-      }
+    }
 
 
 
       UNSAFE_componentWillReceiveProps(nextProps){
         const getData = nextProps.detailSale;
-        console.log("UNSAFE_componentWillReceiveProps",getData)
+        
         this.setState({
             data: isEmpty(getData)?[]:getData.detail,
             master: getData,
@@ -36,32 +33,21 @@ class Print3ply extends Component {
             lokasi: getData.lokasi,
             alamat: getData.alamat,
         })
-      }
+    }
 
-      componentDidUpdate(){
-          console.log("DidUpdate")
-      }
+    getLogo(){
+        const simg = document.getElementsByClassName('selected__img');
+        const src = simg[0].src;
+        return src
+    }
 
-      componentDidMount(){
-        // this.props.dispatch(FetchReportDetailSale(this.props.match.params.id));
-        console.log("componentDidMount",this.state.master)
-      }
-
-      getLogo(){
-          const simg = document.getElementsByClassName('selected__img');
-          const src = simg[0].src;
-          return src
-      }
-
-      render() {
+    render() {
         const {master,data,nota,alamat,lokasi}=this.state;
         if(this.state.newLogo === ''){
             const xhr = new XMLHttpRequest();
             xhr.onload = () => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    // 
-                    // logoBase64 = reader.result;
                     this.setState({newLogo : reader.result});
                 };
                 reader.readAsDataURL(xhr.response);
@@ -71,7 +57,7 @@ class Print3ply extends Component {
             xhr.send();
         }
         let gt=0;
-        console.log(data)
+        
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -91,27 +77,6 @@ class Print3ply extends Component {
                         <tr>
                             <td colSpan={5} style={{textAlign: 'center', bordeColor: 'black',borderBottom: 'solid', borderWidth: 'thin'}}>NOTA PENJUALAN</td>
                         </tr>
-                        {/* <tr>
-                            <th className="h2" colSpan={3}>Tgl Jual</th>
-                            <th className="h2">: {master.tgl}</th>
-                        </tr>
-                        <tr>
-                            <th className="h2" colSpan={3}>Kode Trx.</th>
-                            <th className="h2">: {nota}</th>
-                        </tr>
-                        <tr>
-                            <th className="h2" colSpan={3}>Customer</th>
-                            <th className="h2">: {master.kd_cust}</th>
-                        </tr>
-                        <tr>
-                            <th colSpan={2} className="h3">Jenis Trx.</th>
-                            <th className="h3" colSpan={3}>: {master.jenis_trx}</th>
-                            <th rowSpan={2} colSpan={4} className="h3" />
-                        </tr>
-                        <tr>
-                            <th colSpan={2} className="h3" style={{borderTopColor: 'transparent'}}>Keterangan</th>
-                            <th className="h3" colSpan={4} style={{borderTopColor: 'transparent'}}>: {master.optional_note}</th>
-                        </tr> */}
                         </thead>
                         <tbody className="mt-2">
                             <tr>

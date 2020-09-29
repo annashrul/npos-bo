@@ -340,7 +340,7 @@ class TrxAdjustment extends Component{
     }
     HandleSubmit(e){
         e.preventDefault();
-        console.log("propssssssssssssssssssss",this.props)
+        
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
             if(this.state.catatan===""){

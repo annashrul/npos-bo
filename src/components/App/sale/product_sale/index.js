@@ -350,7 +350,7 @@ class Sale extends Component{
     }
     HandleAddBrg(e,item,index) {
         e.preventDefault();
-        console.log("HandleAddBrg",item)
+        
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg: item.nm_brg,
