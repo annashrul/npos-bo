@@ -45,7 +45,7 @@ class Sale extends Component{
             qty:0,
             location_data:[],
             location:"",
-            customer:"",
+            customer:"1000001",
             catatan:"-",
             jenis_trx:"Tunai",
             userid:0,
@@ -629,7 +629,10 @@ class Sale extends Component{
         }
     }
     render() {
-        let opCustomer=[];
+        let opCustomer=[{
+            value: '1000001',
+            label: 'UMUM'
+        }];
         if(this.props.customer!==[]){
             this.props.customer.map(i=>{
                 opCustomer.push({
