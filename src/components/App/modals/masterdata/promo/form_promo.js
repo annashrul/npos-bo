@@ -8,7 +8,7 @@ import Select from "react-select";
 import {FetchCustomerType} from "redux/actions/masterdata/customer_type/customer_type.action";
 import {toRp} from "helper";
 import moment from "moment";
-import Paginationq,{toPersen} from "helper";
+import Paginationq from "helper";
 import {FetchBrg2,FetchBrg1, setPromoDetail, updatePromo} from "redux/actions/masterdata/promo/promo.action";
 import FileBase64 from 'react-file-base64';
 import { rmComma, toCurrency } from '../../../../../helper';
