@@ -159,7 +159,7 @@ export const toRp = (angka) => {
     }else{
         numbers=angka;
     }
-    var number_string = (numbers===''||numbers===undefined)? String(0.0) : numbers.toString(),
+    var number_string = (numbers===''||numbers===undefined||numbers===null)? String(0.0) : numbers.toString(),
         split = number_string.split('.'),
         sisa = split[0].length % 3,
         rupiah = split[0].substr(0, sisa),

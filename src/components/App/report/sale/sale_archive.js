@@ -488,9 +488,9 @@ class SaleArchive extends Component{
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="7">TOTAL</td>
                                             <td style={{textAlign:"right"}}>{toRp(omset)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_item.toFixed(2))}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_rp.toFixed(2))}</td>
-                                            <td style={{textAlign:"right"}}>{dis_persen.toFixed(2)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_item===null?0:dis_item.toFixed(2))}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(dis_rp===null?0:dis_rp.toFixed(2))}</td>
+                                            <td style={{textAlign:"right"}}>{dis_persen===null?0:dis_persen.toFixed(2)}</td>
                                             <td colSpan="4"></td>
                                             <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>
                                             <td colSpan="1"></td>

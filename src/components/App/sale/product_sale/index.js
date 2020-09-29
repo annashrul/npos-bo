@@ -45,7 +45,7 @@ class Sale extends Component{
             qty:0,
             location_data:[],
             location:"",
-            customer:"",
+            customer:"1000001",
             catatan:"-",
             jenis_trx:"Tunai",
             userid:0,
@@ -77,7 +77,6 @@ class Sale extends Component{
     }
 
     componentDidMount(){
-        this.props.dispatch(FetchCustomerAll());
         this.getData();
         
         
@@ -151,6 +150,7 @@ class Sale extends Component{
         localStorage.setItem('lk', lk.value);
         this.props.dispatch(FetchNotaSale(lk.value));
         this.props.dispatch(FetchDetailLocation(lk.value));
+        this.props.dispatch(FetchCustomerAll(lk.value));
         if (this.state.customer!==""){
             // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.customer, this.autoSetQty))
             // let where=`lokasi=${lk.value}&customer=${this.state.customer}&q=010000013`;
@@ -629,7 +629,10 @@ class Sale extends Component{
         }
     }
     render() {
-        let opCustomer=[];
+        let opCustomer=[{
+            value: '1000001',
+            label: 'UMUM'
+        }];
         if(this.props.customer!==[]){
             this.props.customer.map(i=>{
                 opCustomer.push({
