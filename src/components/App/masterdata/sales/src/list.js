@@ -30,7 +30,6 @@ class ListSales extends Component{
                 lokasi_data:JSON.parse(localStorage.location_sales_data)
             })
         }
-        
     }
     handlePageChange(pageNumber){
         localStorage.setItem("page_sales",pageNumber);
@@ -86,7 +85,6 @@ class ListSales extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total,per_page,current_page,data} = this.props.data;
-        
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -125,7 +123,6 @@ class ListSales extends Component{
                                 typeof data === 'object' ?
                                     data.map((v,i)=>{
                                         let getLok = this.state.lokasi_data.filter(item => item.kode === v.lokasi);
-                                        
                                         return(
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}

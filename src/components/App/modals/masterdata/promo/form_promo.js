@@ -566,8 +566,8 @@ class FormPromo extends Component{
                 if(v.checked === true){
                     detail.push({
                         barcode:v.barcode,
-                        diskon:toPersen(v.qty,v.harga),
-                        diskon2:toPersen(v.qty2,v.harga),
+                        diskon:v.qty,
+                        diskon2:v.qty2,
                         min_trx:rmComma(this.state.min_trx),
                         min_qty:0,
                         open_price:0,

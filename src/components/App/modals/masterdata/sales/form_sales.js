@@ -36,8 +36,6 @@ class FormSales extends Component{
         }
     }
     componentWillReceiveProps(nextProps) {
-        this.getProps(nextProps)
-        
         if (nextProps.auth.user) {
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
@@ -53,12 +51,23 @@ class FormSales extends Component{
                     location_data: lk,
                     userid: nextProps.auth.user.id
                 })
+                localStorage.setItem('location_sales_data_form', JSON.stringify(lk));
             }
         }
+        
+        this.getProps(nextProps)
     }
-    componentWillMount(){
+    componentDidMount(){
+        if(localStorage.location_sales_data_form!==undefined&&localStorage.location_sales_data_form!==''){
+            
+            this.setState({
+                lokasi_data:JSON.parse(localStorage.location_sales_data_form)
+            })
+        }
         this.getProps(this.props);
     }
+    // componentWillMount(){
+    // }
 
     HandleChangeLokasi(lk){
         let err = Object.assign({}, this.state.error, {
@@ -120,6 +129,7 @@ class FormSales extends Component{
     }
 
     render(){
+        const lok_val = this.state.location;
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSales"} size="md">
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Tambah Sales":"Ubah Sales"}</ModalHeader>
@@ -139,7 +149,7 @@ class FormSales extends Component{
                                 options={this.state.location_data}
                                 placeholder="Pilih Lokasi"
                                 onChange={this.HandleChangeLokasi}
-                                value={this.state.location}
+                                value={lok_val}
                             />
                             <div className="invalid-feedback"
                                  style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>

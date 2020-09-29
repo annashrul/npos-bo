@@ -102,6 +102,25 @@ class Sale extends Component{
             }
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=5`,'sale',this.autoSetQty));
         }
+
+        const nextProps = this.props;
+        if (nextProps.auth.user) {
+            let lk = []
+            let loc = nextProps.auth.user.lokasi;
+            if(loc!==undefined){
+                loc.map((i) => {
+                    lk.push({
+                        value: i.kode,
+                        label: i.nama
+                    });
+                    return true;
+                })
+                this.setState({
+                    location_data: lk,
+                    userid: nextProps.auth.user.id
+                })
+            }
+        }
     }
     componentWillReceiveProps = (nextProps) => {
         let perpage=this.state.perpage;
