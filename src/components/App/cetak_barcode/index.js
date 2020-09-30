@@ -67,6 +67,7 @@ class CetakBarcode extends Component{
             userid:0,
             ambil_data:1,
             price_tag:false,
+            all_product:false,
             error:{
                 location:"",
             },
@@ -82,6 +83,7 @@ class CetakBarcode extends Component{
         this.HandleSubmit=this.HandleSubmit.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.handleChecked = this.handleChecked.bind(this);
+        this.handleCheckedAllProduct = this.handleCheckedAllProduct.bind(this);
 
     }
     getProps(param){
@@ -149,6 +151,12 @@ class CetakBarcode extends Component{
 
     componentWillMount(){
         this.getProps(this.props);
+        localStorage.removeItem("all_product");
+        localStorage.removeItem("price_tag");
+    }
+    componentWillUnmount(){
+        localStorage.removeItem("all_product");
+        localStorage.removeItem("price_tag");
     }
 
     HandleChangeLokasi(lk){
@@ -316,6 +324,45 @@ class CetakBarcode extends Component{
         this.setState({
             [column]: event.target.checked,
         });
+    }
+    handleCheckedAllProduct(event){
+        let column=event.target.name;
+        // let value=event.target.name;
+        if(this.state.location!==''){
+            localStorage.setItem("all_product",event.target.checked);
+            this.setState({
+                [column]: event.target.checked,
+            });
+            if(event.target.checked===false){
+                destroy(table);
+            } else {
+                let total_data = parseInt(this.props.pagin_barang.per_page*this.props.pagin_barang.last_page,10);
+                this.props.dispatch(FetchBrgSame(1, 'barcode', '', this.state.location, null, this.autoSetQty,total_data));
+                destroy(table)
+                const param = this.props;
+                if (param.barang){
+                    param.barang.map(item=>{
+                        const datas = {
+                            title: item.nm_brg,
+                            barcode: item.barcode,
+                            harga_jual: item.harga,
+                            qty: 0
+                        };
+                        store(table, datas)
+                        this.getData();
+                        return null;
+                    })
+                }
+            }
+        } else {
+            Swal.fire(
+                'Error!',
+                'Lokasi belum dipilih!',
+                'error'
+            )
+        }
+        console.log("handleCheckedAllProduct",this.props);
+        console.log("total data",parseInt(this.props.pagin_barang.per_page*this.props.pagin_barang.last_page,10));
 
     }
     HandleChangeInput(e,id){
@@ -550,6 +597,17 @@ class CetakBarcode extends Component{
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <div className="d-flex">
+                                        <div className="form-group mr-5">
+                                            <label>Semua Barang</label><br/>
+                                            <label htmlFor="inputState" className="col-form-label"><input name="all_product" type="checkbox" checked={localStorage.all_product==="true"?true:false} onChange={this.handleCheckedAllProduct}/>{this.state.all_product!==true? ' Tidak':' Ya'}</label>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Price Tag</label><br/>
+                                            <label htmlFor="inputState" className="col-form-label"><input name="price_tag" type="checkbox" checked={localStorage.price_tag==="true"?true:false} onChange={this.handleChecked}/>{this.state.price_tag!==true? ' Non-Active':' Active'}</label>
+                                        </div>
+                                    </div>
                                     <div className="form-group">
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
@@ -635,7 +693,7 @@ class CetakBarcode extends Component{
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-10">
+                                        <div className="col-md-12">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Lokasi
@@ -657,12 +715,8 @@ class CetakBarcode extends Component{
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-2">
-                                            <div className="form-group">
-                                                <label>Price Tag</label><br/>
-                                                <label htmlFor="inputState" className="col-form-label"><input name="price_tag" type="checkbox" checked={localStorage.price_tag==="true"?true:false} onChange={this.handleChecked}/>{this.state.price_tag!==true? ' Non-Active':' Active'}</label>
-                                            </div>
-                                        </div>
+                                        {/* <div className="col-md-2">
+                                        </div> */}
 
                                         <div className="table-responsive" style={{overflowX: "auto",zoom:"80%"}}>
                                             <table className="table table-hover">
@@ -722,6 +776,7 @@ class CetakBarcode extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
+    pagin_barang: state.productReducer.pagin_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
     get_link:state.siteReducer.get_link,
     isLoading:state.receiveReducer.isLoading,
