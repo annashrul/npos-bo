@@ -140,7 +140,7 @@ class Header extends Component {
                     isShowNotif?(
                         <li className={`full-screen-mode ml-1 animate__animated animate__bounceInRight`} style={{marginTop:"14px",cursor:"pointer"}} onClick={this.handleNotif}>
                             <div className="alert alert-warning" style={{backgroundColor:"#ffeb3b",border:'none'}} role="alert">
-                                <p><i className="fa fa-warning"/> Aplikasi kedaluarsa {isDay} hari lagi. </p>
+                                <p style={{marginBottom:'0'}}><i className="fa fa-warning"/> Aplikasi kedaluarsa {isDay} hari lagi. </p>
                             </div>
                         </li>
                     ):""
