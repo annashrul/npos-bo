@@ -47,7 +47,7 @@ class FormSale extends Component{
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
             if(tunai<0){
-                console.log("bayar kurang");
+                
                 tunai = 0;
             }
             this.setState({
@@ -117,7 +117,7 @@ class FormSale extends Component{
     }
     handleSubmit(e){
         e.preventDefault();
-        console.log("propsssssssssssssssssssssssssssssssssssssssss",this.props.lokasi.alamat)
+        
         let err = this.state.error;
         if (this.state.jenis_trx.toLowerCase() === 'kredit'){
             let parsedata = {};

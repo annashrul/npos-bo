@@ -171,13 +171,12 @@ class Sale extends Component{
         this.props.dispatch(FetchDetailLocation(lk.value));
         this.props.dispatch(FetchCustomerAll(lk.value));
         if (this.state.customer!==""){
-            // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.customer, this.autoSetQty))
-            // let where=`lokasi=${lk.value}&customer=${this.state.customer}&q=010000013`;
             let where=``;
-            if(this.state.location!==''){
+            
+            if(lk.value!=='' || this.state.location!==''){
                 if(where!==''){where+='&';}where+=`lokasi=${lk.value}`
             }
-            if(this.state.customer!==''){
+            if(this.state.customer!=='' && this.state.customer!=='1000001'){
                 if(where!==''){where+='&';}where+=`customer=${this.state.customer}`
             }
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=5`,'sale',this.autoSetQty));
@@ -197,7 +196,14 @@ class Sale extends Component{
         localStorage.setItem('cs', cs.value);
 
         if (this.state.location !== "") {
-            let where=`lokasi=${this.state.location}&customer=${cs.value}`;
+            let where=``;
+            if(where!==''){where+='&';}where+=`lokasi=${this.state.location}`
+
+            if(this.state.customer!==''){
+                if(cs.value!=='1000001'){
+                    if(where!==''){where+='&';}where+=`customer=${cs.value}`
+                }
+            }
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=5`,'sale',this.autoSetQty));
         }
         destroy(table);
@@ -350,7 +356,7 @@ class Sale extends Component{
     }
     HandleAddBrg(e,item,index) {
         e.preventDefault();
-        console.log("HandleAddBrg",item)
+        
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg: item.nm_brg,

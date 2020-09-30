@@ -18,6 +18,7 @@ import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {HEADERS} from 'redux/actions/_constants'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 class SaleArchive extends Component{
     constructor(props){
@@ -428,7 +429,7 @@ class SaleArchive extends Component{
                                                                                 <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</DropdownItem>
                                                                                 <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
                                                                                 <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
-                                                                                <DropdownItem href={`../print3ply/${v.kd_trx}`}>3ply</DropdownItem>
+                                                                                <Link to={`../print3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                             </DropdownMenu>
                                                                             </UncontrolledButtonDropdown>
                                                                         </div>

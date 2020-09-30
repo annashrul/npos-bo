@@ -21,7 +21,7 @@ class ApproveProduction extends Component{
         }
     }
     UNSAFE_componentWillReceiveProps(nextProps){
-        console.log("componentDidMount",nextProps)
+        
         this.setState({
             txtHpp: parseInt(nextProps.hpp,10),
             txtSisaApproval: nextProps.qty,

@@ -37,7 +37,6 @@ class Billing extends Component{
     }
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
-        
     }
     
     handleChange = (event) => {
@@ -50,7 +49,7 @@ class Billing extends Component{
                 this.setState({isChecked:true})
             }else{
                 //dropdown
-                this.setState({isChecked:false})
+                this.setState({isChecked:false,tanggal_tempo_select:'-'})
             }
         }
     }
@@ -66,7 +65,8 @@ class Billing extends Component{
             };
         }else{
             parsedata = {
-                tanggal_tempo: this.state.isChecked === true ? moment(this.state.tanggal_tempo_picker).format('yyyy-MM-DD') : this.state.tanggal_tempo_select,
+                // tanggal_tempo: this.state.isChecked === true ? moment(this.state.tanggal_tempo_picker).format('yyyy-MM-DD') : this.state.tanggal_tempo_select,
+                tanggal_tempo: this.state.tanggal_tempo_select,
                 server_price: this.state.harga_server,
                 acc_name: this.state.acc_name,
                 acc_number: this.state.acc_number,
@@ -107,6 +107,8 @@ class Billing extends Component{
     }
 
     render(){
+        
+        console.log(this.state)
         return (
             !this.props.isLoading?(
                 <div>
@@ -118,7 +120,7 @@ class Billing extends Component{
                             <label htmlFor="inputState" className="col-form-label"><input type="checkbox" name="checkboxTgl" checked={this.state.isChecked} onChange={this.handleChange}/> Pilih { this.state.isChecked!==true?'Datepicker':'Dropdown'}</label>
                             {
                                 this.state.isChecked===true?(
-                                    <input type="date" name={"tanggal_tempo_picker"} className="form-control" value={this.state.tanggal_tempo_picker} onChange={this.handleChange}/>
+                                    <input type="date" name={"tanggal_tempo_select"} min={moment(new Date()).add(1,'days').format("yyyy-MM-DD")} className="form-control" value={this.state.tanggal_tempo_select} onChange={this.handleChange}/>
                                 ):(
                                     <select name="tanggal_tempo_select" className="form-control" value={this.state.tanggal_tempo_select} defaultValue={this.state.tanggal_tempo_select} onChange={this.handleChange}>
                                         <option value="-">==== Pilih ====</option>

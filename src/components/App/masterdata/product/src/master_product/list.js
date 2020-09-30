@@ -299,7 +299,7 @@ class ListProduct extends Component{
                 where+=`searchby=kategori&q=${kategori}`;
                 localStorage.setItem(`${que}_kategori_barang`,kategori);
             }
-            console.log("cccccccccccccccccccccccc",where)
+            
             this.props.dispatch(FetchProduct(1,where));
         }else{
             localStorage.removeItem(`${que}_kode_barang`);

@@ -1,0 +1,25 @@
+.label_colom {
+    position: absolute;
+    left: 0;
+    top: 0;
+    /* set these so Chrome doesn't return 'auto' from getComputedStyle */
+    background: transparent;
+    border: 0px solid rgba(0, 0, 0, 0.5);
+}
+#pricetag {
+    font-family: "IBM Plex Sans", sans-serif;
+    height: 842px;
+    width: 595px;
+    /* to centre page on screen*/
+}
+.priceTagColumn{
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+/* Clear floats after the columns */
+.priceTagRow {
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}

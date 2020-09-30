@@ -5,10 +5,15 @@ import Select from "react-select";
 import Swal from "sweetalert2";
 import {Scrollbars} from "react-custom-scrollbars";
 import {FetchBrgSame} from "redux/actions/masterdata/product/product.action";
+import {FetchReport} from "redux/actions/purchase/receive/receive.action";
 import Layout from "../Layout";
 import ModalCetakBarcode from "../modals/modal_cetak_barcode";
 import moment from "moment";
-import {toRp} from "../../../helper";
+import {toRp} from "helper";
+import AsyncSelect from 'react-select/async';
+import {FetchReceiveData,setPoData} from 'redux/actions/purchase/receive/receive.action'
+import axios from 'axios';
+import {HEADERS} from 'redux/actions/_constants'
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -20,7 +25,33 @@ const Toast = Swal.mixin({
         toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
 })
+const filterColors = (inputValue) => {
+    let search = 'receive/report?page=1&perpage=40';
+    if (inputValue !== '') search = 'receive/report?page=1&perpage=40&q='+inputValue;
+    return axios.get(HEADERS.URL + search)
+        .then(function (response) {
+            const data = response.data
+            let options=[]
+            data.result.data.map((i) => {
+                options.push({
+                    value: i.no_faktur_beli,
+                    label: i.no_faktur_beli
+                });
+                return null;
+            })
+            return options;
 
+        })
+        .catch(function (error) {
+            return [];
+        })
+};
+const loadOptions = (inputValue,callback) => {
+    const results = filterColors(inputValue);
+    results.then(res=>{
+        callback(res)
+    })
+};
 const table='cetak_barcode';
 class CetakBarcode extends Component{
     constructor(props) {
@@ -34,6 +65,7 @@ class CetakBarcode extends Component{
             searchby:"",
             search:"",
             userid:0,
+            ambil_data:1,
             error:{
                 location:"",
             },
@@ -47,6 +79,7 @@ class CetakBarcode extends Component{
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
         this.HandleSubmit=this.HandleSubmit.bind(this);
+        this.HandleChangeNota = this.HandleChangeNota.bind(this);
 
     }
     getProps(param){
@@ -69,6 +102,33 @@ class CetakBarcode extends Component{
         }
         if(param.barang.length>0){
             this.getData();
+        }
+
+        if (param.receive_data){
+            if (param.receive_data.master!==undefined){
+                if(this.props.receive_data===undefined){
+                    this.setState({
+                        location: param.receive_data.master.lokasi,
+                        catatan: param.receive_data.master.catatan,
+                        no_faktur_beli: param.receive_data.master.no_faktur_beli
+                    })
+                    localStorage.setItem('lk', param.receive_data.master.lokasi)
+                    localStorage.setItem('catatan', param.receive_data.master.catatan)
+
+                    param.receive_data.detail.map(item=>{
+                        const datas = {
+                            title: item.nm_brg,
+                            barcode: item.barcode,
+                            harga_jual: item.harga,
+                            qty: item.qty
+                        };
+                        store(table, datas)
+                        this.getData();
+                        return null;
+                    })
+                }
+
+            }
         }
     }
     componentDidMount(){
@@ -116,6 +176,40 @@ class CetakBarcode extends Component{
                 error: err
             });
         }
+
+        
+        if (column === 'ambil_data') {
+            if(parseInt(val,10)===2){
+                this.props.dispatch(FetchReport(1, '&perpage=999'));
+            }
+
+            localStorage.setItem('ambil_data',val);
+            destroy(table)
+            this.getData()
+        }
+    }
+    HandleChangeNota(nota){
+        this.props.dispatch(setPoData([]))
+        this.setState({
+            ambil_nota: nota.value,
+            error: {
+                location: "",
+                supplier: "",
+                catatan: "",
+                notasupplier: "",
+                penerima: ""
+            }
+        })
+
+
+
+        localStorage.setItem('nota', nota.value);
+        this.props.dispatch(FetchReceiveData(nota.value));
+        destroy(table)
+        localStorage.removeItem('sp');
+        localStorage.removeItem('lk');
+        localStorage.removeItem('catatan');
+        this.getData()
     }
     HandleSearch(){
         if (this.state.location === "") {
@@ -265,12 +359,12 @@ class CetakBarcode extends Component{
                 if (res.length===0){
                     Swal.fire(
                         'Error!',
-                        'Pilih barang untuk melanjutkan Adjusment.',
+                        'Pilih barang untuk melanjutkan Menyimpan Barcode.',
                         'error'
                     )
                 }else{
                     Swal.fire({
-                        title: 'Simpan Adjusment?',
+                        title: 'Simpan Barcode?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
                         showCancelButton: true,
@@ -301,9 +395,6 @@ class CetakBarcode extends Component{
                             })
                             parseData['data'] = detail;
                             this.downloadTxtFile(barcode);
-                            // this.props.dispatch(ModalToggle(true));
-                            // this.props.dispatch(ModalType("modal_cetak_barcode"));
-
                             Swal.fire({
                                 title: 'Apakah Anda Akan Membuka Aplikasi Pencetak Barcode?',
                                 text: "buka dan import file txt, dan masukan ke aplikasi pencetak barcode ini",
@@ -315,7 +406,6 @@ class CetakBarcode extends Component{
                                 cancelButtonText: 'Tidak!'
                             }).then((result) => {
                                 if (result.value) {
-                                    // window.location.reload();
                                     localStorage.removeItem('lk');
                                     destroy('cetak_barcode');
                                     this.getData();
@@ -410,7 +500,43 @@ class CetakBarcode extends Component{
                         <div className="col-md-3">
                             <div className="card">
                                 <div className="card-body">
-                                    <div className="form-group">
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <div className="form-group">
+                                                <label className="control-label font-12">{parseInt(this.state.ambil_data,10)===1?'Data langsung.':'Ambil data dari Pembelian.'}</label>
+                                                <div className="input-group input-group-sm">
+                                                    <select name='ambil_data' className="form-control form-control-sm" onChange={(e)=>this.HandleCommonInputChange(e,false)}>
+                                                        <option value={1} selected={this.state.ambil_data === 1}>Langsung</option>
+                                                        <option value={2} selected={this.state.ambil_data===2}>Pembelian</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===1?{display:'none'}:{display:'block'}}>
+                                            <div className="form-group">
+                                                <label className="control-label font-12">Nota Pembelian</label>
+                                                <AsyncSelect
+                                                    placeholder ={"Pilih Nota "+(parseInt(this.state.ambil_data,10)===1?'':'Pembelian')}
+                                                    onChange={this.HandleChangeNota}
+                                                    value = {{
+                                                        label: this.state.ambil_nota,
+                                                        value: this.state.ambil_nota
+                                                    }}
+                                                    cacheOptions
+                                                    loadOptions={loadOptions}
+                                                    defaultOptions
+                                                    filterOptions = {
+                                                        (options, filter, currentValues) => {
+                                                            return options;
+                                                        }
+                                                    }
+
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="form-group" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
                                             <select name='searchby' className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
@@ -427,7 +553,7 @@ class CetakBarcode extends Component{
                                             berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
-                                    <div className="form-group">
+                                    <div className="form-group" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
                                         <div className="input-group input-group-sm">
                                             <input
                                                 autoFocus
@@ -447,20 +573,20 @@ class CetakBarcode extends Component{
                                                 }
                                             />
                                             <span className="input-group-append">
-                                              <button type="button" className="btn btn-primary"
-                                                      onClick={
-                                                          event => {
-                                                              event.preventDefault();
-                                                              this.HandleSearch();
-                                                          }
-                                                      }>
-                                                <i className="fa fa-search"/>
-                                              </button>
+                                                <button type="button" className="btn btn-primary"
+                                                        onClick={
+                                                            event => {
+                                                                event.preventDefault();
+                                                                this.HandleSearch();
+                                                            }
+                                                        }>
+                                                    <i className="fa fa-search"/>
+                                                </button>
                                             </span>
                                         </div>
                                     </div>
                                     <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
-                                        <div className="people-list">
+                                        <div className="people-list" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
                                                     {
@@ -483,10 +609,7 @@ class CetakBarcode extends Component{
                                                             }):(
                                                                 <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
                                                             )
-
                                                     }
-
-
                                                 </ul>
                                             </div>
                                         </div>
@@ -498,7 +621,7 @@ class CetakBarcode extends Component{
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-12">
+                                        <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Lokasi
@@ -580,7 +703,9 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
-    get_link:state.siteReducer.get_link
+    get_link:state.siteReducer.get_link,
+    isLoading:state.receiveReducer.isLoading,
+    receive_data: state.receiveReducer.receive_data,
 });
 
 export default connect(mapStateToPropsCreateItem)(CetakBarcode);
