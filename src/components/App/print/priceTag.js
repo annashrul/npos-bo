@@ -57,21 +57,21 @@ export default class Adjust3ply extends Component {
                     for(let i=0;i<20;i++){
 
                         pricetags.push(
-                            <div style={{position: 'relative', float: 'left', width: '5cm', height: '3.5cm', margin: '0mm 10mm 6mm 2mm', border: '0px solid', borderColor: '#0000ff #0000ff #0000ff #0000ff'}}>
+                            <div style={{position: 'relative', float: 'left', width: '6.25cm', height: '3.3cm', padding: '0mm 10mm 6mm 2mm', border: '2px solid', borderColor: '#00000'}}>
                             {/*#0000ff #ff9900 #ff9900 #0000ff*/}
-                            <div className="label_colom" draggable="true" id="dragme" style={{width: '63mm', marginTop: '1mm', fontSize: '16px', color: 'black'}}>
+                            <div className="label_colom" draggable="true" id="dragme" style={{width: '60mm', marginTop: '1mm', marginLeft:'2mm', fontSize: '16px', color: 'black'}}>
                                 <b>INDOMILK SUSU KENTAL MANIS COKLAT 370G</b>
                             </div>
-                            <div className="label_colom" draggable="true" id="dragme" style={{marginLeft: '1mm', marginTop: '15mm', color: 'black'}}>
+                            <div className="label_colom" draggable="true" id="dragme" style={{marginLeft: '2mm', marginTop: '14mm', color: 'black'}}>
                             <QRCode value="hey" size={60}/>
                             </div>
-                            <div className="label_colom" draggable="true" id="dragme" style={{width: '56mm', marginLeft: '2mm', marginTop: '18mm', fontSize: '8pt', color: 'black'}}>
+                            <div className="label_colom" draggable="true" id="dragme" style={{width: '56mm', marginLeft: '2mm', marginTop: '16mm', fontSize: '8pt', color: 'black'}}>
                                 <b style={{float: 'right'}}>8992702000063</b>
                             </div>
-                                <div className="label_colom" draggable="true" id="dragme" style={{width: '28mm', marginTop: '20mm', fontSize: '14pt', color: 'black'}}>
+                                <div className="label_colom" draggable="true" id="dragme" style={{width: '28mm', marginTop: '19mm', fontSize: '14pt', color: 'black'}}>
                                 <b style={{float: 'right'}}>Rp.</b>
                             </div>
-                                <div className="label_colom" draggable="true" id="dragme" style={{width: '59mm', marginTop: '20mm', fontSize: '25pt', color: 'black'}}>
+                                <div className="label_colom" draggable="true" id="dragme" style={{width: '59mm', marginTop: '19mm', fontSize: '25pt', color: 'black'}}>
                                 <b style={{float: 'right'}}>100.000</b>
                             </div>
                             {/* <div className="label_colom" draggable="true" id="dragme" style={{width: '72mm', marginTop: '9mm', fontSize: '0px', fontWeight: 'bold', color: 'black'}}>
