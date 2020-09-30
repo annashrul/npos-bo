@@ -66,6 +66,7 @@ class CetakBarcode extends Component{
             search:"",
             userid:0,
             ambil_data:1,
+            price_tag:false,
             error:{
                 location:"",
             },
@@ -80,6 +81,7 @@ class CetakBarcode extends Component{
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
         this.HandleSubmit=this.HandleSubmit.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
+        this.handleChecked = this.handleChecked.bind(this);
 
     }
     getProps(param){
@@ -305,6 +307,16 @@ class CetakBarcode extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
+        console.log(column)
+    }
+    handleChecked(event){
+        localStorage.setItem("price_tag",event.target.checked);
+        let column=event.target.name;
+        // let value=event.target.name;
+        this.setState({
+            [column]: event.target.checked,
+        });
+
     }
     HandleChangeInput(e,id){
         const column = e.target.name;
@@ -374,11 +386,12 @@ class CetakBarcode extends Component{
                         cancelButtonText: 'Tidak!'
                     }).then((result) => {
                         if (result.value) {
+                            
                             let detail = [];
                             let parseData={};
                             let barcode = 'barcode, title, harga_jual\n';
                             res.map(item => {
-                                for(let i=0;i<parseInt(item.qty,10);i++){
+                                for(let i=0;i<parseInt(this.state.price_tag?1:item.qty,10);i++){
                                     barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
                                     barcode +='\n'
                                 }
@@ -386,7 +399,7 @@ class CetakBarcode extends Component{
                                     "barcode": item.barcode,
                                     "title": item.title,
                                     "harga_jual": item.harga_jual,
-                                    "qty": item.qty,
+                                    "qty": this.state.price_tag?1:item.qty,
                                 })
                                 return null;
                             });
@@ -490,6 +503,7 @@ class CetakBarcode extends Component{
 
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        console.log(this.state.price_tag)
         return (
             <Layout page="Cetak Barcode">
                 <div className="card">
@@ -536,7 +550,7 @@ class CetakBarcode extends Component{
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="form-group" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
+                                    <div className="form-group">
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
                                             <select name='searchby' className="form-control form-control-sm" onChange={(e) => this.HandleCommonInputChange(e, false)}>
@@ -553,7 +567,7 @@ class CetakBarcode extends Component{
                                             berdasarkan {parseInt(this.state.searchby,10) === 1 ? 'Kode Barang' : (parseInt(this.state.searchby,10) === 2 ? 'Barcode' : 'Deskripsi')}
                                         </small>
                                     </div>
-                                    <div className="form-group" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
+                                    <div className="form-group">
                                         <div className="input-group input-group-sm">
                                             <input
                                                 autoFocus
@@ -586,7 +600,7 @@ class CetakBarcode extends Component{
                                         </div>
                                     </div>
                                     <Scrollbars style={{ width: "100%", height: "500px", maxHeight:'100%' }}>
-                                        <div className="people-list" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
+                                        <div className="people-list">
                                             <div id="chat_user_2">
                                                 <ul className="chat-list list-unstyled">
                                                     {
@@ -621,7 +635,7 @@ class CetakBarcode extends Component{
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-12" style={parseInt(this.state.ambil_data,10)===2?{display:'none'}:{display:'block'}}>
+                                        <div className="col-md-10">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Lokasi
@@ -641,6 +655,12 @@ class CetakBarcode extends Component{
                                                      style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
                                                     {this.state.error.location}
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-2">
+                                            <div className="form-group">
+                                                <label>Price Tag</label><br/>
+                                                <label htmlFor="inputState" className="col-form-label"><input name="price_tag" type="checkbox" checked={localStorage.price_tag==="true"?true:false} onChange={this.handleChecked}/>{this.state.price_tag!==true? ' Non-Active':' Active'}</label>
                                             </div>
                                         </div>
 
@@ -670,7 +690,7 @@ class CetakBarcode extends Component{
                                                                 <td style={columnStyle}>{item.title}</td>
                                                                 <td style={columnStyle}>{item.harga_jual}</td>
                                                                 <td style={columnStyle}>
-                                                                    <input type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty}  className="form-control"/>
+                                                                    <input readOnly={this.state.price_tag} type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.price_tag!==true?this.state.brgval[index].qty:1}  className="form-control"/>
                                                                 </td>
                                                             </tr>
                                                         )
