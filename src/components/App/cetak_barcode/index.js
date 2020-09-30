@@ -398,6 +398,7 @@ class CetakBarcode extends Component{
     HandleSubmit(e){
         e.preventDefault();
         if(this.state.price_tag){
+            console.log("kkkkkkkkkkkkkkkkkkkkkkkkk",get(table));
                 Swal.fire({
                     title: 'Information.',
                     icon: 'info',
@@ -416,9 +417,9 @@ class CetakBarcode extends Component{
                 document.getElementById("btnPriceTag").addEventListener("click", () => {
                     this.props.history.push({
                         pathname: '/priceTag',
-                        // state: {
-                        //     data: get(table)
-                        // }
+                        state: {
+                            data: this.state.databrg
+                        }
                     })
                     Swal.closeModal();
                     return false;
@@ -773,7 +774,7 @@ class CetakBarcode extends Component{
                                                                 <td style={columnStyle}>{item.title}</td>
                                                                 <td style={columnStyle}>{item.harga_jual}</td>
                                                                 <td style={columnStyle}>
-                                                                    <input readOnly={this.state.price_tag} type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.price_tag!==true?this.state.brgval[index].qty:1}  className="form-control"/>
+                                                                    <input readOnly={this.state.price_tag} type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.price_tag!==true?this.state.brgval[index].qty:''}  className="form-control"/>
                                                                 </td>
                                                             </tr>
                                                         )
