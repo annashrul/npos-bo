@@ -31,9 +31,13 @@ export function setPackingExcel(data=[]){
 }
 
 
-export const FetchCodePacking = ()=>{
+export const FetchCodePacking = (lokasi)=>{
     return (dispatch) => {
-        axios.get(HEADERS.URL+`packing/getcode`)
+        let where = ''
+        if(lokasi!==''){
+            where += `?lokasi=${lokasi}`;
+        }
+        axios.get(HEADERS.URL+`packing/getcode${where}`)
             .then(function(response){
                 const data = response.data;
                 
