@@ -1,7 +1,6 @@
 import {PRODUCT, HEADERS} from "../../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
-import {isNaN} from 'lodash'
 
 export function setLoadingbrg(load){
     return {type : PRODUCT.LOADING_BRG,load}

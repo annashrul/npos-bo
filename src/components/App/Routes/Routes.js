@@ -89,7 +89,7 @@ const Routes = (
             <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
             <Route path="/retur3ply" exact strict component={Retur3ply} />
             <Route path="/po3ply" exact strict component={Po3ply} />
-            <Route path="/pricetag/print" exact strict component={priceTagPrint} />
+            <Route path="/priceTag" exact strict component={priceTagPrint} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}

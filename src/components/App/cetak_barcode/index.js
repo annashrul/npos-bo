@@ -397,92 +397,121 @@ class CetakBarcode extends Component{
     }
     HandleSubmit(e){
         e.preventDefault();
-        let err = this.state.error;
-        if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
-            if(this.state.catatan===""){
-                err = Object.assign({}, err, {
-                    catatan:"Catatan tidak boleh kosong."
-                });
-            }
-            if (this.state.location === "") {
-                err = Object.assign({}, err, {
-                    location: "Lokasi tidak boleh kosong."
-                });
-            }
-            this.setState({
-                error: err
-            })
-        }else{
-            const data = get(table);
-            data.then(res => {
-                if (res.length===0){
-                    Swal.fire(
-                        'Error!',
-                        'Pilih barang untuk melanjutkan Menyimpan Barcode.',
-                        'error'
-                    )
-                }else{
-                    Swal.fire({
-                        title: 'Simpan Barcode?',
-                        text: "Pastikan data yang anda masukan sudah benar!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Simpan!',
-                        cancelButtonText: 'Tidak!'
-                    }).then((result) => {
-                        if (result.value) {
-                            
-                            let detail = [];
-                            let parseData={};
-                            let barcode = 'barcode, title, harga_jual\n';
-                            res.map(item => {
-                                for(let i=0;i<parseInt(this.state.price_tag?1:item.qty,10);i++){
-                                    barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
-                                    barcode +='\n'
-                                }
-                                detail.push({
-                                    "barcode": item.barcode,
-                                    "title": item.title,
-                                    "harga_jual": item.harga_jual,
-                                    "qty": this.state.price_tag?1:item.qty,
-                                })
-                                return null;
-                            });
-                            this.setState({
-                                data_barcode:barcode
-                            })
-                            parseData['data'] = detail;
-                            this.downloadTxtFile(barcode);
-                            Swal.fire({
-                                title: 'Apakah Anda Akan Membuka Aplikasi Pencetak Barcode?',
-                                text: "buka dan import file txt, dan masukan ke aplikasi pencetak barcode ini",
-                                icon: 'success',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ya, Simpan!',
-                                cancelButtonText: 'Tidak!'
-                            }).then((result) => {
-                                if (result.value) {
-                                    localStorage.removeItem('lk');
-                                    destroy('cetak_barcode');
-                                    this.getData();
-                                    const win = window.open("NetindoAppBartend:",'_blank');
-                                    if (win != null) {
-                                        win.focus();
-                                    }
-                                }else{
-                                    window.location.reload();
-                                    localStorage.removeItem('lk');
-                                    destroy('cetak_barcode');
-                                }
-                            })
-                        }
+        if(this.state.price_tag){
+                Swal.fire({
+                    title: 'Information.',
+                    icon: 'info',
+                    html: "Data Price Tag Berhasil Diolah!" +
+                        "<br><br>" +
+                        '<button type="button" role="button" tabindex="0" id="btnPriceTag" class="btn btn-info">Print Price Tag?</button>',
+                    showCancelButton: true,
+                    showConfirmButton:false
+                }).then((result) => {
+                    // destroy('adjusment');
+                    // localStorage.removeItem("lk");
+                    // if(result.dismiss === 'cancel'){
+                    //     window.location.reload(false);
+                    // }
+                })
+                document.getElementById("btnPriceTag").addEventListener("click", () => {
+                    this.props.history.push({
+                        pathname: '/priceTag',
+                        // state: {
+                        //     data: get(table)
+                        // }
                     })
+                    Swal.closeModal();
+                    return false;
+                });
+
+        } else {
+            let err = this.state.error;
+            if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
+                if(this.state.catatan===""){
+                    err = Object.assign({}, err, {
+                        catatan:"Catatan tidak boleh kosong."
+                    });
                 }
-            })
+                if (this.state.location === "") {
+                    err = Object.assign({}, err, {
+                        location: "Lokasi tidak boleh kosong."
+                    });
+                }
+                this.setState({
+                    error: err
+                })
+            }else{
+                const data = get(table);
+                data.then(res => {
+                    if (res.length===0){
+                        Swal.fire(
+                            'Error!',
+                            'Pilih barang untuk melanjutkan Menyimpan Barcode.',
+                            'error'
+                        )
+                    }else{
+                        Swal.fire({
+                            title: 'Simpan Barcode?',
+                            text: "Pastikan data yang anda masukan sudah benar!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Simpan!',
+                            cancelButtonText: 'Tidak!'
+                        }).then((result) => {
+                            if (result.value) {
+                                
+                                let detail = [];
+                                let parseData={};
+                                let barcode = 'barcode, title, harga_jual\n';
+                                res.map(item => {
+                                    for(let i=0;i<parseInt(this.state.price_tag?1:item.qty,10);i++){
+                                        barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
+                                        barcode +='\n'
+                                    }
+                                    detail.push({
+                                        "barcode": item.barcode,
+                                        "title": item.title,
+                                        "harga_jual": item.harga_jual,
+                                        "qty": this.state.price_tag?1:item.qty,
+                                    })
+                                    return null;
+                                });
+                                this.setState({
+                                    data_barcode:barcode
+                                })
+                                parseData['data'] = detail;
+                                this.downloadTxtFile(barcode);
+                                Swal.fire({
+                                    title: 'Apakah Anda Akan Membuka Aplikasi Pencetak Barcode?',
+                                    text: "buka dan import file txt, dan masukan ke aplikasi pencetak barcode ini",
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ya, Simpan!',
+                                    cancelButtonText: 'Tidak!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        localStorage.removeItem('lk');
+                                        destroy('cetak_barcode');
+                                        this.getData();
+                                        const win = window.open("NetindoAppBartend:",'_blank');
+                                        if (win != null) {
+                                            win.focus();
+                                        }
+                                    }else{
+                                        window.location.reload();
+                                        localStorage.removeItem('lk');
+                                        destroy('cetak_barcode');
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
         }
 
     }
