@@ -29,23 +29,23 @@ export default class Adjust3ply extends Component {
 
       render() {
         
-        if(this.state.newLogo === ''){
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    // 
-                    // logoBase64 = reader.result;
-                    this.setState({newLogo : reader.result});
-                };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', logo);
-            xhr.responseType = 'blob';
-            xhr.send();
+        // if(this.state.newLogo === ''){
+        //     const xhr = new XMLHttpRequest();
+        //     xhr.onload = () => {
+        //         const reader = new FileReader();
+        //         reader.onloadend = () => {
+        //             // 
+        //             // logoBase64 = reader.result;
+        //             this.setState({newLogo : reader.result});
+        //         };
+        //         reader.readAsDataURL(xhr.response);
+        //     };
+        //     xhr.open('GET', logo);
+        //     xhr.responseType = 'blob';
+        //     xhr.send();
 
             
-        }
+        // }
         
         
         return (
