@@ -376,7 +376,7 @@ class CetakBarcode extends Component{
                     )
                 }else{
                     Swal.fire({
-                        title: 'Simpan Barcode?',
+                        title: 'Proses Barcode?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
                         showCancelButton: true,
@@ -389,7 +389,7 @@ class CetakBarcode extends Component{
                             
                             let detail = [];
                             let parseData={};
-                            let barcode = 'barcode, title, harga_jual\n';
+                            let barcode = '';
                             res.map(item => {
                                 for(let i=0;i<parseInt(this.state.price_tag?1:item.qty,10);i++){
                                     barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
@@ -409,13 +409,13 @@ class CetakBarcode extends Component{
                             parseData['data'] = detail;
                             this.downloadTxtFile(barcode);
                             Swal.fire({
-                                title: 'Apakah Anda Akan Membuka Aplikasi Pencetak Barcode?',
-                                text: "buka dan import file txt, dan masukan ke aplikasi pencetak barcode ini",
+                                title: 'Buka Aplikasi Bartender?',
+                                text: "buka dan import file txt, dan masukan ke aplikasi bartender.",
                                 icon: 'success',
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ya, Simpan!',
+                                confirmButtonText: 'Buka Bartender.',
                                 cancelButtonText: 'Tidak!'
                             }).then((result) => {
                                 if (result.value) {
