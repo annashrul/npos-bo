@@ -315,7 +315,7 @@ class CetakBarcode extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-        console.log(column)
+        
     }
     handleChecked(event){
         localStorage.setItem("price_tag",event.target.checked);
@@ -361,8 +361,8 @@ class CetakBarcode extends Component{
                 'error'
             )
         }
-        console.log("handleCheckedAllProduct",this.props);
-        console.log("total data",parseInt(this.props.pagin_barang.per_page*this.props.pagin_barang.last_page,10));
+        
+        
 
     }
     HandleChangeInput(e,id){
@@ -398,7 +398,7 @@ class CetakBarcode extends Component{
     HandleSubmit(e){
         e.preventDefault();
         if(this.state.price_tag){
-            console.log("kkkkkkkkkkkkkkkkkkkkkkkkk",get(table));
+            
                 Swal.fire({
                     title: 'Information.',
                     icon: 'info',
@@ -582,7 +582,7 @@ class CetakBarcode extends Component{
 
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        console.log(this.state.price_tag)
+        
         return (
             <Layout page="Cetak Barcode">
                 <div className="card">
