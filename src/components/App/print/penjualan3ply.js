@@ -124,6 +124,7 @@ class Print3ply extends Component {
                             <th className="tengah">KODE BARANG</th>
                             <th className="tengah">NAMA BARANG</th>
                             <th className="tengah">HARGA @ Rp</th>
+                            <th className="tengah">Pajak</th>
                             <th className="tengah">Jumlah</th>
                         </tr>
                         </thead>
@@ -138,6 +139,7 @@ class Print3ply extends Component {
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.sku}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(parseInt(item.hrg_jual,10))}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.tax}%</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(parseInt(item.subtotal,10))}</td>
                                         </tr>
                                         )
@@ -147,7 +149,7 @@ class Print3ply extends Component {
                         
                         </tbody>
                         <tbody><tr>
-                            <th colSpan={3}> </th>
+                            <th colSpan={4}> </th>
                             <th className="kanan">Total Rp</th>
                             <th style={{paddingRight: '5pt'}} className="text-right">{toRp(gt)}</th>
                         </tr>
