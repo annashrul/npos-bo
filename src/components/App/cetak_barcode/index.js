@@ -422,6 +422,8 @@ class CetakBarcode extends Component{
                         }
                     })
                     Swal.closeModal();
+                    localStorage.removeItem('lk');
+                    destroy('cetak_barcode');
                     return false;
                 });
 
