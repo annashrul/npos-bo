@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import QRCode from 'react-qr-code';
 import "components/App/print/pricetag.css"
-import { get } from 'lodash';
 import { toCurrency } from '../../../helper';
 export default class Adjust3ply extends Component {
       constructor(props) {
