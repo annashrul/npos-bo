@@ -329,7 +329,8 @@ class Receive extends Component{
         localStorage.setItem('lk', lk.value);
         this.props.dispatch(FetchNota(lk.value))
         if (this.state.supplier !== "") {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty,5))
+            // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty,5))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty,5))
         }
         destroy(table)
         this.getData()
@@ -346,7 +347,8 @@ class Receive extends Component{
         localStorage.setItem('sp', sp.value);
 
         if (this.state.location !== "") {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty,5))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty, 5))
+            // this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty, 5))
         }
         destroy(table)
         this.getData()

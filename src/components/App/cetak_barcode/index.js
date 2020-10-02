@@ -67,6 +67,7 @@ class CetakBarcode extends Component{
             userid:0,
             ambil_data:1,
             price_tag:false,
+            all_product:false,
             error:{
                 location:"",
             },
@@ -82,6 +83,7 @@ class CetakBarcode extends Component{
         this.HandleSubmit=this.HandleSubmit.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.handleChecked = this.handleChecked.bind(this);
+        this.handleCheckedAllProduct = this.handleCheckedAllProduct.bind(this);
 
     }
     getProps(param){
@@ -149,6 +151,12 @@ class CetakBarcode extends Component{
 
     componentWillMount(){
         this.getProps(this.props);
+        localStorage.removeItem("all_product");
+        localStorage.removeItem("price_tag");
+    }
+    componentWillUnmount(){
+        localStorage.removeItem("all_product");
+        localStorage.removeItem("price_tag");
     }
 
     HandleChangeLokasi(lk){
@@ -316,6 +324,43 @@ class CetakBarcode extends Component{
         this.setState({
             [column]: event.target.checked,
         });
+    }
+    handleCheckedAllProduct(event){
+        let column=event.target.name;
+        // let value=event.target.name;
+        if(this.state.location!==''){
+            localStorage.setItem("all_product",event.target.checked);
+            this.setState({
+                [column]: event.target.checked,
+            });
+            if(event.target.checked===false){
+                destroy(table);
+            } else {
+                let total_data = parseInt(this.props.pagin_barang.per_page*this.props.pagin_barang.last_page,10);
+                this.props.dispatch(FetchBrgSame(1, 'barcode', '', this.state.location, null, this.autoSetQty,total_data));
+                destroy(table)
+                const param = this.props;
+                if (param.barang){
+                    param.barang.map(item=>{
+                        const datas = {
+                            title: item.nm_brg,
+                            barcode: item.barcode,
+                            harga_jual: item.harga,
+                            qty: 0
+                        };
+                        store(table, datas)
+                        this.getData();
+                        return null;
+                    })
+                }
+            }
+        } else {
+            Swal.fire(
+                'Error!',
+                'Lokasi belum dipilih!',
+                'error'
+            )
+        }
 
     }
     HandleChangeInput(e,id){
@@ -350,92 +395,121 @@ class CetakBarcode extends Component{
     }
     HandleSubmit(e){
         e.preventDefault();
-        let err = this.state.error;
-        if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
-            if(this.state.catatan===""){
-                err = Object.assign({}, err, {
-                    catatan:"Catatan tidak boleh kosong."
-                });
-            }
-            if (this.state.location === "") {
-                err = Object.assign({}, err, {
-                    location: "Lokasi tidak boleh kosong."
-                });
-            }
-            this.setState({
-                error: err
-            })
-        }else{
-            const data = get(table);
-            data.then(res => {
-                if (res.length===0){
-                    Swal.fire(
-                        'Error!',
-                        'Pilih barang untuk melanjutkan Menyimpan Barcode.',
-                        'error'
-                    )
-                }else{
-                    Swal.fire({
-                        title: 'Proses Barcode?',
-                        text: "Pastikan data yang anda masukan sudah benar!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Simpan!',
-                        cancelButtonText: 'Tidak!'
-                    }).then((result) => {
-                        if (result.value) {
-                            
-                            let detail = [];
-                            let parseData={};
-                            let barcode = '';
-                            res.map(item => {
-                                for(let i=0;i<parseInt(this.state.price_tag?1:item.qty,10);i++){
-                                    barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
-                                    barcode +='\n'
-                                }
-                                detail.push({
-                                    "barcode": item.barcode,
-                                    "title": item.title,
-                                    "harga_jual": item.harga_jual,
-                                    "qty": this.state.price_tag?1:item.qty,
-                                })
-                                return null;
-                            });
-                            this.setState({
-                                data_barcode:barcode
-                            })
-                            parseData['data'] = detail;
-                            this.downloadTxtFile(barcode);
-                            Swal.fire({
-                                title: 'Buka Aplikasi Bartender?',
-                                text: "buka dan import file txt, dan masukan ke aplikasi bartender.",
-                                icon: 'success',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Buka Bartender.',
-                                cancelButtonText: 'Tidak!'
-                            }).then((result) => {
-                                if (result.value) {
-                                    localStorage.removeItem('lk');
-                                    destroy('cetak_barcode');
-                                    this.getData();
-                                    const win = window.open("NetindoAppBartend:",'_blank');
-                                    if (win != null) {
-                                        win.focus();
-                                    }
-                                }else{
-                                    window.location.reload();
-                                    localStorage.removeItem('lk');
-                                    destroy('cetak_barcode');
-                                }
-                            })
+        if(this.state.price_tag){
+                Swal.fire({
+                    title: 'Information.',
+                    icon: 'info',
+                    html: "Data Price Tag Berhasil Diolah!" +
+                        "<br><br>" +
+                        '<button type="button" role="button" tabindex="0" id="btnPriceTag" class="btn btn-info">Print Price Tag?</button>',
+                    showCancelButton: true,
+                    showConfirmButton:false
+                }).then((result) => {
+                    // destroy('adjusment');
+                    // localStorage.removeItem("lk");
+                    // if(result.dismiss === 'cancel'){
+                    //     window.location.reload(false);
+                    // }
+                })
+                document.getElementById("btnPriceTag").addEventListener("click", () => {
+                    this.props.history.push({
+                        pathname: '/priceTag',
+                        state: {
+                            data: this.state.databrg
                         }
                     })
+                    Swal.closeModal();
+                    return false;
+                });
+
+        } else {
+            let err = this.state.error;
+            if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
+                if(this.state.catatan===""){
+                    err = Object.assign({}, err, {
+                        catatan:"Catatan tidak boleh kosong."
+                    });
                 }
-            })
+                if (this.state.location === "") {
+                    err = Object.assign({}, err, {
+                        location: "Lokasi tidak boleh kosong."
+                    });
+                }
+                this.setState({
+                    error: err
+                })
+            }else{
+                const data = get(table);
+                data.then(res => {
+                    if (res.length===0){
+                        Swal.fire(
+                            'Error!',
+                            'Pilih barang untuk melanjutkan Menyimpan Barcode.',
+                            'error'
+                        )
+                    }else{
+                        Swal.fire({
+                            title: 'Simpan Barcode?',
+                            text: "Pastikan data yang anda masukan sudah benar!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Simpan!',
+                            cancelButtonText: 'Tidak!'
+                        }).then((result) => {
+                            if (result.value) {
+                                
+                                let detail = [];
+                                let parseData={};
+                                let barcode = '';
+                                res.map(item => {
+                                    for(let i=0;i<parseInt(this.state.price_tag?1:item.qty,10);i++){
+                                        barcode += item.barcode + ', ' + item.title + ', '+toRp(item.harga_jual)
+                                        barcode +='\n'
+                                    }
+                                    detail.push({
+                                        "barcode": item.barcode,
+                                        "title": item.title,
+                                        "harga_jual": item.harga_jual,
+                                        "qty": this.state.price_tag?1:item.qty,
+                                    })
+                                    return null;
+                                });
+                                this.setState({
+                                    data_barcode:barcode
+                                })
+                                parseData['data'] = detail;
+                                this.downloadTxtFile(barcode);
+                                Swal.fire({
+                                    title: 'Buka batender?',
+                                    text: "buka dan import file txt, dan masukan ke aplikasi bartender.",
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Buka Bartender!',
+                                    cancelButtonText: 'Tidak!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        localStorage.removeItem('lk');
+                                        destroy('cetak_barcode');
+                                        this.getData();
+                                        const win = window.open("NetindoAppBartend:",'_blank');
+                                        if (win != null) {
+                                            win.focus();
+                                        }
+                                    }else{
+                                        window.location.reload();
+                                        localStorage.removeItem('lk');
+                                        destroy('cetak_barcode');
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
         }
 
     }
@@ -550,6 +624,17 @@ class CetakBarcode extends Component{
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <div className="d-flex">
+                                        <div className="form-group mr-5">
+                                            <label>Semua Barang</label><br/>
+                                            <label htmlFor="inputState" className="col-form-label"><input name="all_product" type="checkbox" checked={localStorage.all_product==="true"?true:false} onChange={this.handleCheckedAllProduct}/>{this.state.all_product!==true? ' Tidak':' Ya'}</label>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Price Tag</label><br/>
+                                            <label htmlFor="inputState" className="col-form-label"><input name="price_tag" type="checkbox" checked={localStorage.price_tag==="true"?true:false} onChange={this.handleChecked}/>{this.state.price_tag!==true? ' Non-Active':' Active'}</label>
+                                        </div>
+                                    </div>
                                     <div className="form-group">
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
@@ -635,7 +720,7 @@ class CetakBarcode extends Component{
                             <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-10">
+                                        <div className="col-md-12">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Lokasi
@@ -657,12 +742,8 @@ class CetakBarcode extends Component{
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-2">
-                                            <div className="form-group">
-                                                <label>Price Tag</label><br/>
-                                                <label htmlFor="inputState" className="col-form-label"><input name="price_tag" type="checkbox" checked={localStorage.price_tag==="true"?true:false} onChange={this.handleChecked}/>{this.state.price_tag!==true? ' Non-Active':' Active'}</label>
-                                            </div>
-                                        </div>
+                                        {/* <div className="col-md-2">
+                                        </div> */}
 
                                         <div className="table-responsive" style={{overflowX: "auto",zoom:"80%"}}>
                                             <table className="table table-hover">
@@ -690,7 +771,7 @@ class CetakBarcode extends Component{
                                                                 <td style={columnStyle}>{item.title}</td>
                                                                 <td style={columnStyle}>{item.harga_jual}</td>
                                                                 <td style={columnStyle}>
-                                                                    <input readOnly={this.state.price_tag} type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.price_tag!==true?this.state.brgval[index].qty:1}  className="form-control"/>
+                                                                    <input readOnly={this.state.price_tag} type='text' name='qty' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.price_tag!==true?this.state.brgval[index].qty:''}  className="form-control"/>
                                                                 </td>
                                                             </tr>
                                                         )
@@ -722,6 +803,7 @@ class CetakBarcode extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     barang: state.productReducer.result_brg,
+    pagin_barang: state.productReducer.pagin_brg,
     loadingbrg: state.productReducer.isLoadingBrg,
     get_link:state.siteReducer.get_link,
     isLoading:state.receiveReducer.isLoading,

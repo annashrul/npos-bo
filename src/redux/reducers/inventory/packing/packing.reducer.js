@@ -33,6 +33,7 @@ export const packingReducer = (state = initialState, action) => {
                 data_trx: action.data.result,
             });
         case PACKING.GET_CODE:
+            console.log("codeeeeeeeeeeeeeeee",action.data.result)
             return Object.assign({}, state, {
                 code: action.data.result
             });

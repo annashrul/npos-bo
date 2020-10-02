@@ -88,7 +88,6 @@ class TrxPacking extends Component{
         this.setState({
             no_packing:this.props.code
         })
-
     }
     componentDidMount(){
         this.getData();
@@ -103,14 +102,25 @@ class TrxPacking extends Component{
                 penerima: localStorage.penerima_packing
             })
         }
+        
+        
+        this.props.dispatch(FetchAlokasi(1,'&status=0&perpage=1000'));
     }
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
+        
+        if(nextProps.barang.length!==0){
+            
+            nextProps.dispatch(FetchCodePacking(nextProps.barang.length===0?'':nextProps.barang.master.kd_lokasi_1));
+            this.setState({
+                no_packing:nextProps.code
+            })
+        }
+        
     }
     componentWillMount(){
         this.getProps(this.props);
-        this.props.dispatch(FetchCodePacking());
-        this.props.dispatch(FetchAlokasi(1,'&status=0&perpage=1000'));
+        // this.props.dispatch(FetchCodePacking());
     }
     handleChangeFakturAlokasi(lk){
         destroy(table);
@@ -123,7 +133,12 @@ class TrxPacking extends Component{
             error: err
         });
         this.props.dispatch(FetchBrgPacking(lk.value,this.autoSetQty));
+        for(let i=0;i>this.props.barang.length;i++){
 
+        }
+
+        
+        // this.props.dispatch(FetchCodePacking());
         localStorage.setItem('faktur_alokasi_packing', lk.value);
     }
     HandleCommonInputChange(e,errs=true,st=0){
@@ -319,12 +334,14 @@ class TrxPacking extends Component{
                                 })
                                 return null;
                             });
+                            data['detail'] = detail;
                             let parsedata={};
                             parsedata['detail'] = data;
                             parsedata['master'] = this.state.databrg;
                             parsedata['nota'] = this.props.code;
                             parsedata['logo'] = this.props.auth.user.logo;
                             parsedata['user'] = this.props.auth.user.username;
+                            
                             this.props.dispatch(storePacking(parsedata,(arr)=>this.props.history.push(arr)));
                         }
                     })
