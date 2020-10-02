@@ -95,11 +95,11 @@ export const FetchNotaHutang = (lokasi) => {
 export const storeHutang = (data,param) => {
     return (dispatch) => {
         dispatch(setLoadingPost(true));
-        const rawdata=data;
         const url = HEADERS.URL + `hutang/bayar`;
         axios.post(url, data)
             .then(function (response) {
                 // const data = (response.data);
+                console.log(response)
 
                 dispatch(setLoadingPost(false));
                 Swal.fire({
@@ -126,11 +126,7 @@ export const storeHutang = (data,param) => {
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: '/bayar_hutang3ply',
-                        state: {
-                            data: rawdata,
-                            nota: data.nota_beli
-                        }
+                        pathname: `/bayar_hutang3ply/${response.data.result.insertId}`,
                     })
                     Swal.closeModal();
                     return false;

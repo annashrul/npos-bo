@@ -1,8 +1,12 @@
 import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
+import connect from "react-redux/es/connect/connect";
+import {FetchHutangReport} from "redux/actions/hutang/hutang.action";
+import moment from 'moment'
+import Barcode from 'react-barcode';
 
-export default class Print3ply extends Component {
+class Print3ply extends Component {
       constructor(props) {
         super(props);
         this.state = {
@@ -11,13 +15,42 @@ export default class Print3ply extends Component {
             nota:'',
             newLogo:''
         };
+
+        // let any = 'BH-2010020001-1';
+        let any = this.props.match.params.id;
+        let where='';
+        if(any!==undefined&&any!==null&&any!==''){
+            where+=`&q=${any}`
+        }
+        this.setState({
+            where_data:where
+        })
+        this.props.dispatch(FetchHutangReport(1,where))
       }
-      componentWillMount(){
-          const getData = this.props.location.state.data;
-          
+      UNSAFE_componentWillReceiveProps(nextProps){
+          let getData = nextProps.hutangReport.length!==0?nextProps.hutangReport.data[0]:0
+          if(getData!==0 && nextProps.auth.user.logo!==undefined){
+              if(this.state.newLogo === ''){
+                const xhr = new XMLHttpRequest();
+                xhr.onload = () => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        // 
+                        // logoBase64 = reader.result;
+                        this.setState({newLogo : reader.result});
+                    };
+                    reader.readAsDataURL(xhr.response);
+                };
+                xhr.open('GET', nextProps.auth.user.logo!==undefined?nextProps.auth.user.logo:'');
+                xhr.responseType = 'blob';
+                xhr.send();
+            }
+          }
           this.setState({
               data: getData,
           })
+          console.log(nextProps.auth.user.logo)
+          console.log(getData)
       }
 
       getLogo(){
@@ -27,60 +60,32 @@ export default class Print3ply extends Component {
       }
 
       render() {
-        // bank: "-"
-        // cara_byr: "Tunai"
-        // jumlah_bayar: "1000"
-        // jumlah_hutang: 8000
-        // ket: "-"
-        // lokasi: "LK/0001"
-        // nogiro: 0
-        // nota_beli: "BL-2008130001-1"
-        // pembulatan: 0
-        // tanggal: "2020-09-07"
-        // tanggal_cair: "2020-09-07"
-        // tgl_jatuh_tempo: "2020-08-13"
-        // userid: "1"
         const {
-            bank,
+            nm_bank,
             cara_byr,
             jumlah_bayar,
             jumlah_hutang,
             ket,
             nogiro,
-            nota_beli,
+            fak_beli,
             pembulatan,
-            tanggal,
-            tanggal_cair,
+            tgl_byr,
+            tgl_cair_giro,
             tgl_jatuh_tempo,
-            user,
-            logo
+            kasir
         }=this.state.data;
-        
-        if(this.state.newLogo === ''){
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    // 
-                    // logoBase64 = reader.result;
-                    this.setState({newLogo : reader.result});
-                };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', logo);
-            xhr.responseType = 'blob';
-            xhr.send();
-
-            
-        }
         return (
             <Layout>
                 <div  id="print_3ply">
                     <table width="100%" cellSpacing={0} cellPadding={1} style={{letterSpacing: 5, fontFamily: '"Courier New"', marginBottom: 10, fontSize: '20pt'}}>
                         <thead>
                         <tr>
-                            <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} className="text-center">Nota Bayar Hutang</td>
+                            <td colSpan={3} style={{textAlign: 'center'}}></td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={this.props.match.params.id}/> </td>
+                        </tr>
+                        <tr>
+                            <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
+                            <td colSpan={5} className="text-center">Nota Bayar Hutang ({this.props.match.params.id})</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -98,11 +103,11 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Tanggal</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{tanggal}</td>
+                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_byr).format("YYYY-MM-DD")}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Operator</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{user}</td>
+                            <td style={{fontSize: '10pt !important'}}>{kasir}</td>
                         </tr>
                         <tr>
                             <td />
@@ -118,7 +123,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Tanggal Jatuh Tempo</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{tgl_jatuh_tempo}</td>
+                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_jatuh_tempo).format("YYYY-MM-DD")}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Pembulatan</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
@@ -128,7 +133,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Tanggal Cair Giro</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{tanggal_cair}</td>
+                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_cair_giro).format("YYYY-MM-DD")}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Pembayaran</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
@@ -138,7 +143,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Nota Pembelian</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{nota_beli}</td>
+                            <td style={{fontSize: '10pt !important'}}>{fak_beli}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Jumlah Hutang</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
@@ -148,7 +153,7 @@ export default class Print3ply extends Component {
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Bank</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{bank}</td>
+                            <td style={{fontSize: '10pt !important'}}>{nm_bank}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Keterangan</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
@@ -183,3 +188,12 @@ export default class Print3ply extends Component {
         );
       }
     }
+    const mapStateToProps = (state) => {
+        
+        return {
+            hutangReport:state.hutangReducer.data_report,
+            auth:state.auth,
+            isLoading: state.hutangReducer.isLoading,
+        }
+    }
+    export default connect(mapStateToProps)(Print3ply);

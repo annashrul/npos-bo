@@ -18,10 +18,14 @@ class DetailAdjustmentReport extends Component{
     };
 
     render(){
-        const {data} = this.props.detail;
+        const {detail} = this.props.detail;
         // let totAdjustmentIn=0;
         // let totAdjustmentOut=0;
         // let totQty=0;
+        
+        
+        
+        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAdjustment"} size="lg">
@@ -42,8 +46,8 @@ class DetailAdjustmentReport extends Component{
                             <tbody>
                             {
                                 (
-                                    typeof data === 'object' ? data.length > 0 ?
-                                        data.map((v,i)=>{
+                                    detail!==undefined?typeof [detail] === 'object' ? [detail].length >= 0 ?
+                                        [detail].map((v,i)=>{
 
                                             return (
                                                 <tr key={i}>
@@ -55,7 +59,7 @@ class DetailAdjustmentReport extends Component{
                                                     <td style={columnStyle}>{v.stock_terakhir}</td>
                                                 </tr>
                                             )
-                                        }) : <tr><td>Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
+                                        }) : <tr><td>Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
                             }
                             </tbody>
                             <tfoot>
