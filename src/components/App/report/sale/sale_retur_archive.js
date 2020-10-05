@@ -65,7 +65,7 @@ class SaleReturReport extends Component{
     }
     handlePageChange(pageNumber){
         localStorage.setItem("page_sale_retur_report",pageNumber);
-        this.props.dispatch(FetchSaleReturReport(pageNumber))
+        this.props.dispatch(FetchSaleReturReport(pageNumber, this.state.where_data!==undefined?this.state.where_data:''))
     }
     handleEvent = (event, picker) => {
         const awal = picker.startDate._d.toISOString().substring(0,10);
