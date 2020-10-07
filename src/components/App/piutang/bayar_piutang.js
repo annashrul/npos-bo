@@ -34,11 +34,11 @@ class BayarPiutang extends Component{
                 jumlah_bayar:"",
             }
         }
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange   = this.handleChange.bind(this);
         this.HandleChangeJenisTrx = this.HandleChangeJenisTrx.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleSave = this.handleSave.bind(this);
+        this.handleSearch   = this.handleSearch.bind(this);
+        this.handleCancel   = this.handleCancel.bind(this);
+        this.handleSave     = this.handleSave.bind(this);
     }
 
     getProps(param){
