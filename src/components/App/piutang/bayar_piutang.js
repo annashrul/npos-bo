@@ -192,7 +192,7 @@ class BayarPiutang extends Component{
                     data['userid'] = this.state.userid;
                     data['jumlah_sudah_bayar'] = this.props.getPiutang.jumlah_telah_bayar;
                     
-                    this.props.dispatch(storePiutang(data));
+                    this.props.dispatch(storePiutang(data,(arr)=>this.props.history.push(arr)));
                 }
             })
         }
