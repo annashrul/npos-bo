@@ -103,13 +103,6 @@ class Adjust3ply extends Component {
                             </thead>
                             {
                                 detail!==undefined?(detail.isArray?detail:[detail]).map((item, index) => {
-                                    let saldo_stock = item.saldo_stock;
-                                    if(item.status === 'kurang'){
-                                        saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
-                                    }
-                                    if(item.status === 'tambah' || item.status===''){
-                                        saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
-                                    }
                                     return (
                                         <tr key={index}>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>

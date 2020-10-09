@@ -390,7 +390,7 @@ class PackingReport extends Component{
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
                                                                                     {/* <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem> */}
-                                                                                    {/* <Link to={`../packing3ply/${v.kd_packing}`}><DropdownItem>3ply</DropdownItem></Link> */}
+                                                                                    <Link to={`../packing3ply/${v.kd_packing}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>

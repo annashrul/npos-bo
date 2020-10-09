@@ -6,6 +6,7 @@ const initialState = {
     isLoading: false,
     data: [], msg:"", status:"",
     code:"-",data_trx:[],
+    packing_detail:[],
     report:[],
     report_excel:[],
 };
@@ -32,8 +33,11 @@ export const packingReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 data_trx: action.data.result,
             });
+        case PACKING.SUCCESS_DETAIL:
+            return Object.assign({}, state, {
+                packing_detail: action.data.result
+            });
         case PACKING.GET_CODE:
-            console.log("codeeeeeeeeeeeeeeee",action.data.result)
             return Object.assign({}, state, {
                 code: action.data.result
             });

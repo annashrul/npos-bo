@@ -84,7 +84,7 @@ const Routes = (
             <Route path="/adjust3ply/:id" exact strict component={Adjust3ply} />
             <Route path="/dn3ply/:id" exact strict component={Dn3ply} />
             <Route path="/alokasi3ply/:id" exact strict component={Alokasi3ply} />
-            <Route path="/packing3ply" exact strict component={Packing3ply} /> {/*ok*/}
+            <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
             <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
             <Route path="/bayar_hutang3ply/:id" exact strict component={BayarHutang3ply} />
             <Route path="/bayar_piutang3ply/:id" exact strict component={BayarPiutang3ply} />

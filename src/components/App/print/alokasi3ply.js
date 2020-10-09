@@ -37,9 +37,7 @@ class Print3ply extends Component {
         })
     }
     render() {
-        const {detail,total,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi
-            ,jenis_trx, status
-            ,no_faktur_beli}=this.state.data;
+        const {detail,total,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi,no_faktur_beli}=this.state.data;
         return (
             <Layout>
                 <div  id="print_3ply">
