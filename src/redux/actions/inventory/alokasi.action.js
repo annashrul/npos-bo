@@ -117,7 +117,6 @@ export const FetchNota = (lokasi, prefix) => {
 export const storeAlokasi = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const rawdata=data;
         const url = HEADERS.URL + `alokasi`;
         axios.post(url, data.detail)
             .then(function (response) {
@@ -157,11 +156,7 @@ export const storeAlokasi = (data,param) => {
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: '/alokasi3ply',
-                        state: {
-                            data: rawdata,
-                            nota: data.result.kode
-                        }
+                        pathname: `/alokasi3ply/${response.data.result.insertId}`
                     })
                     Swal.closeModal();
                     return false;

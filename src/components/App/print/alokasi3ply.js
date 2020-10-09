@@ -1,61 +1,45 @@
 import React, {Component} from 'react'
+import {FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
+import connect from "react-redux/es/connect/connect";
 import Layout from './layout';
 import {toRp} from 'helper';
 import Barcode from 'react-barcode';
-
-export default class Print3ply extends Component {
-      constructor(props) {
+import moment from 'moment'
+class Print3ply extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             data:[],
-            master:[],
-            nota:'',
-            logo:'',
-            user:'',
-            lokasi_asal:'',
-            lokasi_tujuan:'',
             newLogo:''
         };
-      }
-      componentWillMount(){
-          const getData = this.props.location.state.data;
-          
-          this.setState({
-              data: getData.detail,
-              master: getData.master,
-              nota: getData.nota,
-              logo: getData.logo,
-              user: getData.user,
-              lokasi_asal: getData.lokasi_asal,
-              lokasi_tujuan: getData.lokasi_tujuan,
-          })
-      }
-
-      getLogo(){
-          const simg = document.getElementsByClassName('selected__img');
-          const src = simg[0].src;
-          return src
-      }
-
-      render() {
-        const {master,data,nota,logo,user,lokasi_asal,lokasi_tujuan}=this.state;
-        if(this.state.newLogo === ''){
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    // 
-                    // logoBase64 = reader.result;
-                    this.setState({newLogo : reader.result});
+        this.props.dispatch(FetchAlokasiDetail(1,this.props.match.params.id,'','',''))
+    }
+    
+    UNSAFE_componentWillReceiveProps(nextProps){
+        let getData = nextProps.alokasiDetail.length!==0?nextProps.alokasiDetail:0
+        if(getData!==0 && nextProps.auth.user.logo!==undefined){
+            if(this.state.newLogo === ''){
+                const xhr = new XMLHttpRequest();
+                xhr.onload = () => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        this.setState({newLogo : reader.result});
+                    };
+                    reader.readAsDataURL(xhr.response);
                 };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', logo);
-            xhr.responseType = 'blob';
-            xhr.send();
-
-            
+                xhr.open('GET', nextProps.auth.user.logo!==undefined?nextProps.auth.user.logo:'');
+                xhr.responseType = 'blob';
+                xhr.send();
+            }
         }
+        this.setState({
+            data: getData,
+        })
+    }
+    render() {
+        const {detail,total,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi
+            ,jenis_trx, status
+            ,no_faktur_beli}=this.state.data;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -63,11 +47,11 @@ export default class Print3ply extends Component {
                         <thead>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}></td>
-                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={nota}/> </td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={this.props.match.params.id}/> </td>
                         </tr>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} style={{textAlign: 'center'}}>Alokasi Barang ({nota})</td>
+                            <td colSpan={5} style={{textAlign: 'center'}}>Alokasi Barang ({this.props.match.params.id})</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,11 +69,11 @@ export default class Print3ply extends Component {
                             <td />
                             <td>Tanggal</td>
                             <td>:</td>
-                            <td>{data.tgl_mutasi}</td>
+                            <td>{moment(tgl_mutasi).format('YYYY-MM-DD')}</td>
                             <td />
-                            <td>EDP</td>
+                            <td>Operator</td>
                             <td>:</td>
-                            <td>{user}</td>
+                            <td>{operator}</td>
                         </tr>
                         <tr>
                             <th />
@@ -97,9 +81,9 @@ export default class Print3ply extends Component {
                             <td>:</td>
                             <td>{lokasi_asal}</td>
                             <td />
-                            <td>Jenis Transaksi</td>
+                            <td>No Faktur Beli</td>
                             <td>:</td>
-                            <td>{data.jenis_trx}</td>
+                            <td>{no_faktur_beli}</td>
                         </tr>
                         <tr>
                             <th />
@@ -107,9 +91,9 @@ export default class Print3ply extends Component {
                             <td>:</td>
                             <td>{lokasi_tujuan}</td>
                             <td />
-                            <td>No Delivery Note</td>
+                            <td>Keterangan</td>
                             <td>:</td>
-                            <td>{data.kode_delivery_note}</td>
+                            <td>{keterangan}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -117,34 +101,36 @@ export default class Print3ply extends Component {
                         <thead>
                         <tr>
                             <td style={{width: '5%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">No</td>
-                            <td style={{width: '15%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Nama</td>
+                            <td style={{width: '25%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Nama</td>
                             <td style={{width: '15%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Barcode</td>
-                            <td style={{width: '40%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Satuan</td>
-                            <td style={{width: '10%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
+                            <td style={{width: '10%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Satuan</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Qty</td>
+                            <td style={{width: '20%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
+                            <td style={{width: '20%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Amount</td>
                         </tr>
                         </thead>
                         <tbody>
                         {
-                            master.map((item,index)=>{
+                            detail!==undefined?detail.data.map((item,index)=>{
                                 return (
                                     <tr key={index} >
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
-                                        <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{item.qty}</td>
+                                        <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_beli)}</td>
+                                        <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_beli*item.qty)}</td>
                                     </tr>
                                 )
-                            })
+                            }):"no data"
 
                         }
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colSpan={4} style={{borderTop: '', borderWidth: '',paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{toRp(data.subtotal)}</td>
+                            <td colSpan={6} style={{borderTop: '', borderWidth: '',paddingLeft: '25pt'}}>TOTAL</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{toRp(total)}</td>
                             <td style={{borderTop: '', borderWidth: ''}} />
                         </tr>
                         </tfoot>
@@ -178,3 +164,11 @@ export default class Print3ply extends Component {
         );
       }
     }
+
+const mapStateToProps = (state) => {
+    return {
+        auth:state.auth,
+        alokasiDetail:state.alokasiReducer.alokasi_data,
+    }
+}
+export default connect(mapStateToProps)(Print3ply);
