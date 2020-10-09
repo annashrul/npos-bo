@@ -1,69 +1,44 @@
 import React, {Component} from 'react'
 import Layout from './layout';
+import connect from "react-redux/es/connect/connect";
 import {toRp} from 'helper';
 import Barcode from 'react-barcode';
+import {FetchDnDetail} from "redux/actions/inventory/dn.action";
 
-export default class Adjust3ply extends Component {
+class Adjust3ply extends Component {
       constructor(props) {
         super(props);
         this.state = {
             data:[],
-            master:[],
-            nota:'',
-            kd_kasir:'',
-            tgl:'',
-            lokasi:'',
-            keterangan:'',
-            logo:'',
-            user:'',
-            lokasi_asal:'',
-            lokasi_tujuan:'',
             newLogo:''
         };
-      }
-      componentWillMount(){
-          const getData = this.props.location.state.data;
-          
-          this.setState({
-              data: getData.detail,
-              master: getData.master,
-              nota: getData.nota,
-              kd_kasir: getData.kd_kasir,
-              tgl: getData.tgl,
-              lokasi: getData.lokasi,
-              keterangan: getData.keterangan,
-              logo: getData.logo,
-              user: getData.user,
-              lokasi_asal: getData.lokasi_asal,
-              lokasi_tujuan: getData.lokasi_tujuan,
-          })
-      }
-
-      getLogo(){
-          const simg = document.getElementsByClassName('selected__img');
-          const src = simg[0].src;
-          return src
-      }
-
-      render() {
-        const {master,data,nota,logo,user,lokasi_asal,lokasi_tujuan}=this.state;
-        if(this.state.newLogo === ''){
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    // 
-                    // logoBase64 = reader.result;
-                    this.setState({newLogo : reader.result});
+        this.props.dispatch(FetchDnDetail(this.props.match.params.id))
+    }
+    
+    UNSAFE_componentWillReceiveProps(nextProps){
+        let getData = nextProps.dnDetail.length!==0?nextProps.dnDetail:0
+        if(getData!==0 && nextProps.auth.user.logo!==undefined){
+            if(this.state.newLogo === ''){
+                const xhr = new XMLHttpRequest();
+                xhr.onload = () => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        this.setState({newLogo : reader.result});
+                    };
+                    reader.readAsDataURL(xhr.response);
                 };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', logo);
-            xhr.responseType = 'blob';
-            xhr.send();
-
-            
+                xhr.open('GET', nextProps.auth.user.logo!==undefined?nextProps.auth.user.logo:'');
+                xhr.responseType = 'blob';
+                xhr.send();
+            }
         }
+        this.setState({
+            data: getData,
+        })
+    }
+    render() {
+        const {detail,tanggal,no_faktur_beli,operator,lokasi_asal,lokasi_tujuan,total,keterangan}=this.state.data;
+        console.log(detail!==undefined?(detail.data.isArray?detail.data:detail.data):'')
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -71,11 +46,11 @@ export default class Adjust3ply extends Component {
                         <thead>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}></td>
-                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={nota}/> </td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={this.props.match.params.id}/> </td>
                         </tr>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} style={{textAlign: 'center'}}>Delivery Note ({nota})</td>
+                            <td colSpan={5} style={{textAlign: 'center'}}>Delivery Note ({this.props.match.params.id})</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -93,11 +68,11 @@ export default class Adjust3ply extends Component {
                             <td />
                             <td>Tanggal</td>
                             <td>:</td>
-                            <td>{data.tanggal}</td>
+                            <td>{tanggal}</td>
                             <td />
                             <td>Operator</td>
                             <td>:</td>
-                            <td>{user}</td>
+                            <td>{operator}</td>
                         </tr>
                         <tr>
                             <th />
@@ -107,7 +82,7 @@ export default class Adjust3ply extends Component {
                             <td />
                             <td>Kode Pembelian</td>
                             <td>:</td>
-                            <td>{data.kode_pembelian}</td>
+                            <td>{no_faktur_beli}</td>
                         </tr>
                         <tr>
                             <th />
@@ -117,7 +92,7 @@ export default class Adjust3ply extends Component {
                             <td />
                             <td>Keterangan</td>
                             <td>:</td>
-                            <td>{data.catatan}</td>
+                            <td>{keterangan}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -127,31 +102,35 @@ export default class Adjust3ply extends Component {
                             <td style={{width: '5%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">No</td>
                             <td style={{width: '35%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Nama</td>
                             <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Barcode</td>
-                            <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
-                            <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
-                            <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock</td>
+                            <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Satuan</td>
+                            <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Stock</td>
+                            <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga beli</td>
+                            {/* <td style={{width: '10%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Harga jual</td> */}
+                            <td style={{width: '15%', borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">Amount</td>
                         </tr>
                         </thead>
                         <tbody>
                             {
-                                master.map((item, index) => {
+                                detail!==undefined?detail.data.map((item, index) => {
                                     return (
                                         <tr key={index}>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.stock}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_beli)}</td>
+                                            {/* <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_jual)}</td> */}
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_beli*item.qty)}</td>
                                         </tr>
                                     )
-                                })
+                                }):"no data"
                             }
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colSpan={4} style={{borderTop: '', borderWidth: 'thin',  paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-right" style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}}>{toRp(data.subtotal)}</td>
+                            <td colSpan={6} style={{borderTop: '', borderWidth: 'thin',  paddingLeft: '25pt'}}>TOTAL</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}}>{toRp(total)}</td>
                             <td style={{borderTop: '', borderWidth: 'thin'}} />
                         </tr>
                         </tfoot>
@@ -184,3 +163,12 @@ export default class Adjust3ply extends Component {
         );
       }
     }
+    
+const mapStateToProps = (state) => {
+    
+    return {
+        auth:state.auth,
+        dnDetail:state.dnReducer.dn_detail,
+    }
+}
+export default connect(mapStateToProps)(Adjust3ply);

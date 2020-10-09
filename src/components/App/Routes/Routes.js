@@ -82,7 +82,7 @@ const Routes = (
             <Route path="/config" exact strict component={GlobalSetting} />
             <Route path="/print3ply/:id" exact strict component={Print3ply} />
             <Route path="/adjust3ply/:id" exact strict component={Adjust3ply} />
-            <Route path="/dn3ply" exact strict component={Dn3ply} /> {/*ok*/}
+            <Route path="/dn3ply/:id" exact strict component={Dn3ply} /> {/*ok*/}
             <Route path="/alokasi3ply" exact strict component={Alokasi3ply} /> {/*ok*/}
             <Route path="/packing3ply" exact strict component={Packing3ply} /> {/*ok*/}
             <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />

@@ -13,6 +13,7 @@ import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import {statusQ} from "helper";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { Link } from 'react-router-dom';
 class DnReport extends Component{
     constructor(props){
         super(props);
@@ -435,6 +436,7 @@ class DnReport extends Component{
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
                                                                                     <DropdownItem onClick={(e)=>this.toggle(e,v.no_delivery_note,'','')}>Detail</DropdownItem>
+                                                                                    <Link to={`../dn3ply/${v.no_delivery_note}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>
