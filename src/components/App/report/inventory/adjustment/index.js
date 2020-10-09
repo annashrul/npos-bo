@@ -15,6 +15,7 @@ import {HEADERS} from "redux/actions/_constants";
 import {FetchAdjustmentExcel} from "redux/actions/adjustment/adjustment.action";
 import AdjustmentReportExcel from 'components/App/modals/report/inventory/adjustment_report/form_adjustment_excel'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 
 class AdjustmentReport extends Component{
@@ -337,6 +338,7 @@ class AdjustmentReport extends Component{
                                                                                 <DropdownItem onClick={(e)=>this.toggleModalDet(e,v.kd_trx)}>Detail</DropdownItem>
                                                                                 <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
                                                                                 <DropdownItem href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                                <Link to={`../adjust3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                             </DropdownMenu>
                                                                             </UncontrolledButtonDropdown>
                                                                         </div>

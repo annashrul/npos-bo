@@ -102,7 +102,7 @@ class ReceiveReport extends Component{
         let type = [
             {kode:"",value: "Semua Tipe"},
             {kode:"Tunai",value: "Tunai"},
-            {kode:"Non Tunai",value: "Non Tunai"},
+            {kode:"Kredit",value: "Kredit"},
         ];
         let data_type=[];
         type.map((i) => {
@@ -126,16 +126,7 @@ class ReceiveReport extends Component{
         });
         let filter = [
             {kode:"no_faktur_beli",value: "No. Faktur Beli"},
-            {kode:"tgl_beli",value: "Tanggal Beli"},
-            {kode:"disc",value: "Diskon"},
-            {kode:"nama_penerima",value: "Nama Penerima"},
-            {kode:"status",value: "Status"},
-            {kode:"type",value: "Tipe"},
-            {kode:"operator",value: "Operator"},
-            {kode:"lokasi",value: "Lokasi"},
-            {kode:"jumlah_kontrabon",value: "Jumlah Kontrabon"},
-            {kode:"qty_beli",value: "QTY Beli"},
-            {kode:"total_beli",value: "Total Beli"},
+            {kode:"nama_penerima",value: "Nama Penerima"}
         ];
         let data_filter=[];
         filter.map((i) => {
@@ -219,7 +210,7 @@ class ReceiveReport extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            if(where!==''){where+='&'}where+=`search=${any}`
+            if(where!==''){where+='&'}where+=`q=${any}`
         }
         this.setState({
             where_data:where

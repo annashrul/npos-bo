@@ -22,9 +22,6 @@ class Print3ply extends Component {
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`
         }
-        this.setState({
-            where_data:where
-        })
         this.props.dispatch(FetchPiutangReport(1,where))
       }
       UNSAFE_componentWillReceiveProps(nextProps){
