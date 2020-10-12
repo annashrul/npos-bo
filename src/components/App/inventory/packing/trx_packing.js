@@ -85,6 +85,7 @@ class TrxPacking extends Component{
         }
         // typeof param.barang.detail === 'object' ? param.barang.detail.length > 0 ? this.getData() : "" : "";
 
+
         this.setState({
             no_packing:this.props.code
         })
@@ -102,8 +103,6 @@ class TrxPacking extends Component{
                 penerima: localStorage.penerima_packing
             })
         }
-        
-        
         this.props.dispatch(FetchAlokasi(1,'&status=0&perpage=1000'));
     }
     componentWillReceiveProps = (nextProps) => {
@@ -115,12 +114,48 @@ class TrxPacking extends Component{
             this.setState({
                 no_packing:nextProps.code
             })
+            
+            const data = this.props;
+            console.log(this.state)
+            if(this.state.faktur_alokasi!==''){
+                console.log("faktu ada")
+                if (data.barang.detail){
+                    destroy(table)
+                    data.barang.detail.map(item=>{
+                        const datas = {
+                            barcode: item.barcode,
+                            harga_beli: item.harga_beli,
+                            harga_jual: item.harga_jual,
+                            kode_barang: item.kode_barang,
+                            nm_brg: item.nm_brg,
+                            qty_alokasi: item.qty,
+                            qty_packing: item.qty,
+                            satuan: item.satuan,
+                            stock: item.stock,
+                            tambahan: item.tambahan,
+                        };
+                        store(table, datas)
+                        this.getData();
+                        return null;
+                    })
+                }
+            } else {
+                console.log("faktu tidak ada")
+                destroy(table)
+            }
         }
         
     }
     componentWillMount(){
         this.getProps(this.props);
         // this.props.dispatch(FetchCodePacking());
+    }
+
+    componentWillUnmount(){
+        console.log("componentWillUnmount")
+        destroy(table);
+        this.setState({faktur_alokasi:'',no_packing:'',faktur_alokasi_data:[]})
+        localStorage.removeItem('faktur_alokasi_packing')
     }
     handleChangeFakturAlokasi(lk){
         destroy(table);
@@ -133,10 +168,30 @@ class TrxPacking extends Component{
             error: err
         });
         this.props.dispatch(FetchBrgPacking(lk.value,this.autoSetQty));
-        for(let i=0;i>this.props.barang.length;i++){
+        // for(let i=0;i>this.props.barang.length;i++){
 
+        // }
+        const param = this.props;
+        if (param.barang.detail){
+            destroy(table)
+            param.barang.detail.map(item=>{
+                const datas = {
+                    barcode: item.barcode,
+                    harga_beli: item.harga_beli,
+                    harga_jual: item.harga_jual,
+                    kode_barang: item.kode_barang,
+                    nm_brg: item.nm_brg,
+                    qty_alokasi: item.qty,
+                    qty_packing: item.qty,
+                    satuan: item.satuan,
+                    stock: item.stock,
+                    tambahan: item.tambahan,
+                };
+                store(table, datas)
+                this.getData();
+                return null;
+            })
         }
-
         
         // this.props.dispatch(FetchCodePacking());
         localStorage.setItem('faktur_alokasi_packing', lk.value);
@@ -343,6 +398,10 @@ class TrxPacking extends Component{
                             parsedata['user'] = this.props.auth.user.username;
                             
                             this.props.dispatch(storePacking(parsedata,(arr)=>this.props.history.push(arr)));
+                            
+                            destroy(table);
+                            this.setState({faktur_alokasi:''})
+                            localStorage.removeItem('faktur_alokasi_packing')
                         }
                     })
 

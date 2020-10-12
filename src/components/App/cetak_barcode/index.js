@@ -315,7 +315,7 @@ class CetakBarcode extends Component{
         let brgval = [...this.state.brgval];
         brgval[i] = {...brgval[i], [column]: val};
         this.setState({ brgval });
-        console.log(column)
+        
     }
     handleChecked(event){
         localStorage.setItem("price_tag",event.target.checked);
@@ -419,6 +419,8 @@ class CetakBarcode extends Component{
                         }
                     })
                     Swal.closeModal();
+                    localStorage.removeItem('lk');
+                    destroy('cetak_barcode');
                     return false;
                 });
 
@@ -577,7 +579,7 @@ class CetakBarcode extends Component{
 
     render() {
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-        console.log(this.state.price_tag)
+        
         return (
             <Layout page="Cetak Barcode">
                 <div className="card">

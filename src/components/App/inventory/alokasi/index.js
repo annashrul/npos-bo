@@ -54,6 +54,7 @@ class Alokasi extends Component{
             data_nota:[],
             ambil_data:1,
             ambil_nota:'',
+            nota_trx:'-',
             jenis_trx:'Mutasi',
             jenis_trx_data:[
             {value:"Alokasi",label:"Alokasi"},
@@ -97,7 +98,8 @@ class Alokasi extends Component{
                 })
                 this.setState({
                     location_data: lk,
-                    userid: param.auth.user.id
+                    userid: param.auth.user.id,
+                    nota_trx:this.props.nota===''?'-':this.props.nota
                 })
             }
         }
@@ -236,6 +238,7 @@ class Alokasi extends Component{
     componentWillUnmount() {
         this.props.dispatch(setProductbrg({status:'',msg:'',result:{data:[]}}));
         destroy(table);
+        this.setState({nota_trx:'-'})
         localStorage.removeItem('sp');
         localStorage.removeItem('lk');
         localStorage.removeItem('ambil_data');
@@ -298,6 +301,11 @@ class Alokasi extends Component{
         this.setState({
             jenis_trx: sp.value,
         });
+        if(this.state.location!==''){
+            let prefix = sp.value.toLowerCase()==='alokasi'?'MC':(sp.value.toLowerCase()==='mutasi'?'MU':'TR');
+            this.props.dispatch(FetchNota(this.state.location, prefix))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,5))
+        }
     }
 
     HandleCommonInputChange(e,errs=true,st=0){
@@ -597,6 +605,7 @@ class Alokasi extends Component{
                             parsedata['lokasi_tujuan'] = this.state.location2_val;
                             if(err_stock===''){
                                 this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
+                                this.setState({nota_trx:'-'})
                             }else{
                                 Swal.fire({
                                     title: `Anda yakin akan melanjutkan transaksi?`,
@@ -610,6 +619,7 @@ class Alokasi extends Component{
                                 }).then((result) => {
                                     if (result.value) {
                                         this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
+                                        this.setState({nota_trx:'-'})
                                     }
                                 })
                             }
@@ -889,13 +899,26 @@ class Alokasi extends Component{
                                                 <div className="col-md-2">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">No. Transkasi</label>
-                                                        <input type="text" readOnly className="form-control" id="nota" style={{fontWeight:'bolder'}} value={this.props.nota}/>
+                                                        <input type="text" readOnly className="form-control" id="nota" style={{fontWeight:'bolder'}} value={this.state.nota_trx}/>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-2">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Tanggal Order</label>
                                                         <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))}/>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <div className="form-group">
+                                                        <label className="control-label font-12">Jenis Transaksi
+                                                        </label>
+                                                        <Select
+                                                            options={this.state.jenis_trx_data}
+                                                            placeholder="Pilih Jenis Transaksi"
+                                                            onChange={this.HandleChangeJenisTrx}
+                                                            value={this.state.jenis_trx_data.find(op => {return op.value === this.state.jenis_trx})}
+                                                        />
+
                                                     </div>
                                                 </div>
                                                 <div className="col-md-2">
@@ -919,19 +942,6 @@ class Alokasi extends Component{
                                                         <div className="invalid-feedback" style={this.state.error.location2!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location2}
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <div className="form-group">
-                                                        <label className="control-label font-12">Jenis Transaksi
-                                                        </label>
-                                                        <Select
-                                                            options={this.state.jenis_trx_data}
-                                                            placeholder="Pilih Jenis Transaksi"
-                                                            onChange={this.HandleChangeJenisTrx}
-                                                            value={this.state.jenis_trx_data.find(op => {return op.value === this.state.jenis_trx})}
-                                                        />
-
                                                     </div>
                                                 </div>
                                                 <div className="col-md-2">

@@ -624,6 +624,9 @@ class Sale extends Component{
             res.map((i) => {
                 brg.push({
                     harga: i.harga,
+                    harga2: i.harga2,
+                    harga3: i.harga3,
+                    harga4: i.harga4,
                     diskon_persen: i.diskon_persen,
                     diskon_nominal: i.diskon_nominal,
                     ppn: i.ppn,
@@ -669,7 +672,7 @@ class Sale extends Component{
         }
         let totalsub=0;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-
+        console.log(this.state.databrg)
         return (
             <Layout page="Penjualan Barang">
                 <div className="card">
@@ -872,10 +875,19 @@ class Sale extends Component{
                                                             <td style={columnStyle}>{item.nm_brg}</td>
                                                             <td style={columnStyle}>{item.barcode}</td>
                                                             <td style={columnStyle}>{item.satuan}</td>
-                                                            <td><input type='text' className="form-control" name='harga'
+                                                            <td>
+                                                                <select className="form-control" name='harga' style={{marginRight: '20px'}}
+                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}>
+                                                                    <option value={this.state.brgval[index].harga} style={{display:this.state.brgval[index].harga===''||this.state.brgval[index].harga==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga)}</option>
+                                                                    <option value={this.state.brgval[index].harga2} style={{display:this.state.brgval[index].harga2===''||this.state.brgval[index].harga2==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga2)}</option>
+                                                                    <option value={this.state.brgval[index].harga3} style={{display:this.state.brgval[index].harga3===''||this.state.brgval[index].harga3==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga3)}</option>
+                                                                    <option value={this.state.brgval[index].harga4} style={{display:this.state.brgval[index].harga4===''||this.state.brgval[index].harga4==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga4)}</option>
+                                                                </select>
+                                                                {/* <input type='text' className="form-control" name='harga'
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                       value={toCurrency(this.state.brgval[index].harga)}/>
+                                                                       value={toCurrency(this.state.brgval[index].harga)}/> */}
                                                             </td>
                                                             <td><input type='text' name='diskon_persen'  className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
