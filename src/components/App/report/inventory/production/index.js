@@ -14,6 +14,7 @@ import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import {statusQ} from "helper";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { toCurrency } from '../../../../../helper';
 class ProductionReport extends Component{
     constructor(props){
         super(props);
@@ -418,8 +419,8 @@ class ProductionReport extends Component{
                                                                     <td style={columnStyle}>{v.operator}</td>
                                                                     <td style={columnStyle}>{v.nama_toko}</td>
                                                                     <td style={columnStyle}>{v.qty_estimasi}</td>
-                                                                    <td style={columnStyle}>{v.hpp}</td>
-                                                                    <td style={columnStyle}>{(parseInt(v.hpp,10)*parseInt(v.qty_estimasi,10))}</td>
+                                                                    <td style={columnStyle}>{toCurrency(v.hpp)}</td>
+                                                                    <td style={columnStyle}>{toCurrency(parseInt(v.hpp,10)*parseInt(v.qty_estimasi,10))}</td>
                                                                     <td style={columnStyle}>{v.status===0?statusQ('info','Not Approved'):(v.status===1?statusQ('success','Approved'):"")}</td>
                                                                     <td style={columnStyle}>{v.keterangan}</td>
 

@@ -170,7 +170,6 @@ export const FetchNota = (lokasi) => {
 export const storeDN = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const rawdata=data;
         const url = HEADERS.URL + `deliverynote`;
         axios.post(url, data.detail)
             .then(function (response) {
@@ -209,11 +208,7 @@ export const storeDN = (data,param) => {
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: '/dn3ply',
-                        state: {
-                            data: rawdata,
-                            nota: data.result.kode
-                        }
+                        pathname: `/dn3ply/${response.data.result.insertId}`
                     })
                     Swal.closeModal();
                     return false;

@@ -11,6 +11,8 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import {statusQ} from "helper";
+import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import { Link } from 'react-router-dom';
 class PackingReport extends Component{
     constructor(props){
         super(props);
@@ -361,7 +363,7 @@ class PackingReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
+                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Packing.</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Pengirim</th>
@@ -380,17 +382,19 @@ class PackingReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
-                                                                    {/* <td style={columnStyle}>Example split danger button */}
-                                                                        {/* <div className="btn-group">
-                                                                            <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                Action
-                                                                            </button>
-                                                                            <div className="dropdown-menu"> */}
-                                                                                {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleEdit(e,v.kd_brg)}>Export</a> */}
-                                                                                {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.toggle(e,v.no_delivery_note,'','')}>Detail</a>
-                                                                            </div>
+                                                                    <td style={columnStyle}>
+                                                                        <div className="btn-group">
+                                                                            <UncontrolledButtonDropdown>
+                                                                                <DropdownToggle caret>
+                                                                                    Aksi
+                                                                                </DropdownToggle>
+                                                                                <DropdownMenu>
+                                                                                    {/* <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem> */}
+                                                                                    <Link to={`../packing3ply/${v.kd_packing}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                </DropdownMenu>
+                                                                                </UncontrolledButtonDropdown>
                                                                         </div>
-                                                                    </td> */}
+                                                                    </td>
                                                                     <td style={columnStyle}>{v.kd_packing}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl_packing).format("DD-MM-YYYY")}</td>
                                                                     <td style={columnStyle}>{v.pengirim}</td>

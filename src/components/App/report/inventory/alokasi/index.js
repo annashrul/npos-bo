@@ -13,6 +13,7 @@ import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import {statusQ} from "helper";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { Link } from 'react-router-dom';
 class AlokasiReport extends Component{
     constructor(props){
         super(props);
@@ -393,6 +394,7 @@ class AlokasiReport extends Component{
                                                                             </DropdownToggle>
                                                                             <DropdownMenu>
                                                                                 <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
+                                                                                <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                             </DropdownMenu>
                                                                         </UncontrolledButtonDropdown>
                                                                     </div>

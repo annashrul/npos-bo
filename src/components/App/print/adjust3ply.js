@@ -1,69 +1,43 @@
 import React, {Component} from 'react'
+import connect from "react-redux/es/connect/connect";
 import Layout from './layout';
 import {toRp} from 'helper'
 import Barcode from 'react-barcode'
-export default class Adjust3ply extends Component {
+import {FetchAdjustmentDetail} from "redux/actions/adjustment/adjustment.action";
+import moment from 'moment'
+class Adjust3ply extends Component {
       constructor(props) {
         super(props);
         this.state = {
             data:[],
-            master:[],
-            nota:'',
-            user:'',
-            tgl:'',
-            logo:'',
-            lokasi_val:'',
-            keterangan:'',
-            alamat:'',
-            site_title:'',
             newLogo:''
         };
+        this.props.dispatch(FetchAdjustmentDetail(1,this.props.match.params.id));
       }
-      componentWillMount(){
-          const getData = this.props.location.state.data;
-          
-          this.setState({
-              data: getData.detail,
-              master: getData.master,
-              nota: getData.nota,
-              user: getData.user,
-              logo: getData.logo,
-              tgl: getData.tgl,
-              keterangan: getData.keterangan,
-              lokasi_val: getData.lokasi_val,
-              site_title: getData.site_title,
-              alamat: getData.alamat,
-          })
-      }
-
-      getLogo(){
-          const simg = document.getElementsByClassName('selected__img');
-          const src = simg[0].src;
-          return src
-      }
-
-      render() {
-        const {master,nota,user,tgl,lokasi_val,keterangan,logo,alamat,site_title}=this.state;
-        
-        if(this.state.newLogo === ''){
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    // 
-                    // logoBase64 = reader.result;
-                    this.setState({newLogo : reader.result});
+    UNSAFE_componentWillReceiveProps(nextProps){
+        let getData = nextProps.adjustmentDetailSatuan.length!==0?nextProps.adjustmentDetailSatuan:0
+        if(getData!==0 && nextProps.auth.user.logo!==undefined){
+            if(this.state.newLogo === ''){
+                const xhr = new XMLHttpRequest();
+                xhr.onload = () => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        this.setState({newLogo : reader.result});
+                    };
+                    reader.readAsDataURL(xhr.response);
                 };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', logo);
-            xhr.responseType = 'blob';
-            xhr.send();
-
-            
+                xhr.open('GET', nextProps.auth.user.logo!==undefined?nextProps.auth.user.logo:'');
+                xhr.responseType = 'blob';
+                xhr.send();
+            }
         }
-        
-        
+        this.setState({
+            data: getData,
+        })
+    }
+
+    render() {
+        const {detail,kd_trx,operator,tgl,lokasi,keterangan,alamat,site_title}=this.state.data;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -71,7 +45,7 @@ export default class Adjust3ply extends Component {
                             <thead>
                             <tr>
                                 <td colSpan={3} style={{textAlign: 'center'}}></td>
-                                <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={nota}/> </td>
+                                <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={this.props.match.params.id}/> </td>
                             </tr>
                             <tr>
                                 <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
@@ -81,7 +55,7 @@ export default class Adjust3ply extends Component {
                                 <td colSpan={5} style={{textAlign: 'center'}}>{alamat}</td>
                             </tr>
                             <tr>
-                                <td colSpan={5} style={{textAlign: 'center', bordeColor: 'black',borderBottom: 'solid', borderWidth: 'thin'}}>Adjustment Stock ({nota})</td>
+                                <td colSpan={5} style={{textAlign: 'center', bordeColor: 'black',borderBottom: 'solid', borderWidth: 'thin'}}>Adjustment Stock ({kd_trx})</td>
                             </tr>
                             </thead>
                             <tbody className="mt-2">
@@ -98,16 +72,16 @@ export default class Adjust3ply extends Component {
                                 <td />
                                 <td>Tanggal</td>
                                 <td>:</td>
-                                <td>{tgl}</td>
+                                <td>{moment(tgl).format('YYYY-MM-DD')}</td>
                                 <td>Operator</td>
                                 <td>:</td>
-                                <td>{user}</td>
+                                <td>{operator}</td>
                             </tr>
                             <tr>
                                 <th />
                                 <td>Lokasi</td>
                                 <td>:</td>
-                                <td>{lokasi_val}</td>
+                                <td>{lokasi}</td>
                                 <td>Keterangan</td>
                                 <td>:</td>
                                 <td>{keterangan}</td>
@@ -125,32 +99,23 @@ export default class Adjust3ply extends Component {
                                 <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Stock Sistem</td>
                                 <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Jenis</td>
                                 <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt'}} className="text-center">Stock Adjust</td>
-                                <td style={{borderBottom: 'solid', borderWidth: 'thin', width: '10%', paddingLeft: '5pt', paddingRight: '15pt'}} className="text-center">Saldo Stock</td>
                             </tr>
                             </thead>
                             {
-                                master.map((item, index) => {
-                                    let saldo_stock = item.saldo_stock;
-                                    if(item.status === 'kurang'){
-                                        saldo_stock=parseInt(item.stock,10)-parseInt(item.qty_adjust,10);
-                                    }
-                                    if(item.status === 'tambah' || item.status===''){
-                                        saldo_stock=parseInt(item.stock,10)+parseInt(item.qty_adjust,10)
-                                    }
+                                detail!==undefined?(detail.isArray?detail:[detail]).map((item, index) => {
                                     return (
                                         <tr key={index}>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.brcd_brg}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(item.harga_beli)}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.stock}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.status}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_adjust}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '15pt'}} className="text-right">{saldo_stock}</td>
                                         </tr>
                                     )
-                                })
+                                }) : "no data"
                             }
                             <tbody>
                             </tbody>
@@ -179,3 +144,12 @@ export default class Adjust3ply extends Component {
         );
       }
     }
+    
+const mapStateToProps = (state) => {
+    return {
+        auth:state.auth,
+        adjustmentDetailSatuan:state.adjustmentReducer.dataDetailTransaksi
+    }
+}
+
+export default connect(mapStateToProps)(Adjust3ply)

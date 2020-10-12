@@ -26,6 +26,10 @@ export function setPacking(data=[]){
     return {type:PACKING.SUCCESS,data}
 }
 
+export function setPackingDetail(data=[]){
+    return {type:PACKING.SUCCESS_DETAIL,data}
+}
+
 export function setPackingExcel(data=[]){
     return {type:PACKING.SUCCESS_EXCEL,data}
 }
@@ -84,7 +88,6 @@ export const FetchBrgPacking = (kode,db)=>{
 export const storePacking = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const rawdata=data;
         const url = HEADERS.URL + `packing`;
         axios.post(url, data.detail)
             .then(function (response) {
@@ -114,11 +117,7 @@ export const storePacking = (data,param) => {
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: '/packing3ply',
-                        state: {
-                            data: rawdata,
-                            nota: data.result.kode
-                        }
+                        pathname: `/packing3ply/${response.data.result.insertId}`
                     })
                     Swal.closeModal();
                     return false;
@@ -200,5 +199,23 @@ export const FetchPackingExcel = (page=1,where='',perpage=99999)=>{
             }).catch(function(error){
             
         })
+    }
+}
+
+
+export const FetchPackingDetail = (nota) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `packing/report/${nota}`)
+            .then(function (response) {
+                const data = response.data
+                dispatch(setPackingDetail(data))
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                
+            })
+
     }
 }

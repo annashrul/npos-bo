@@ -14,6 +14,7 @@ import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import Swal from 'sweetalert2'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 class HutangReport extends Component{
     constructor(props){
@@ -414,6 +415,7 @@ class HutangReport extends Component{
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
                                                                                     <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_nota)}>Delete</DropdownItem>
+                                                                                    <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>

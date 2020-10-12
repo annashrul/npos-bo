@@ -34,11 +34,11 @@ class BayarPiutang extends Component{
                 jumlah_bayar:"",
             }
         }
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange   = this.handleChange.bind(this);
         this.HandleChangeJenisTrx = this.HandleChangeJenisTrx.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleSave = this.handleSave.bind(this);
+        this.handleSearch   = this.handleSearch.bind(this);
+        this.handleCancel   = this.handleCancel.bind(this);
+        this.handleSave     = this.handleSave.bind(this);
     }
 
     getProps(param){
@@ -192,7 +192,7 @@ class BayarPiutang extends Component{
                     data['userid'] = this.state.userid;
                     data['jumlah_sudah_bayar'] = this.props.getPiutang.jumlah_telah_bayar;
                     
-                    this.props.dispatch(storePiutang(data));
+                    this.props.dispatch(storePiutang(data,(arr)=>this.props.history.push(arr)));
                 }
             })
         }

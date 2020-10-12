@@ -103,6 +103,9 @@ class SaleArchive extends Component{
             }
         }
     }
+    componentWillUnmount(){
+        localStorage.clear();
+    }
     componentWillMount(){
         let page=localStorage.getItem("pageNumber_sale_report");
         this.checkingParameter(page===undefined&&page===null?1:page);
@@ -113,7 +116,6 @@ class SaleArchive extends Component{
                 location: localStorage.location_sale_report
             })
         }
-
         if (localStorage.type_sale_report !== undefined && localStorage.type_sale_report !== '') {
             this.setState({
                 type: localStorage.type_sale_report
@@ -121,7 +123,7 @@ class SaleArchive extends Component{
         }
         if (localStorage.any_sale_report !== undefined && localStorage.any_sale_report !== '') {
             this.setState({
-                any: localStorage.any_sale_report
+                any_sale_report: localStorage.any_sale_report
             })
         }
         if (localStorage.date_from_sale_report !== undefined && localStorage.date_from_sale_report !== null) {
@@ -180,10 +182,10 @@ class SaleArchive extends Component{
         let where='';
         let dateFrom=localStorage.getItem("date_from_sale_report");
         let dateTo=localStorage.getItem("date_to_sale_report");
-        let tipe=localStorage.getItem("type_sale_report");
-        let status=localStorage.getItem("status_sale_report");
+        let tipe=this.state.type===''?localStorage.getItem("type_sale_report"):this.state.type;
+        let status=this.state.status===''?localStorage.getItem("status_sale_report"):this.state.status;
         let lokasi=localStorage.getItem("location_sale_report");
-        let any=localStorage.getItem("any_sale_report");
+        let any=this.state.any_sale_report===''?localStorage.getItem("any_sale_report"):this.state.any_sale_report;
         if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }else{

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
 import connect from "react-redux/es/connect/connect";
-import {FetchHutangReport} from "redux/actions/hutang/hutang.action";
+import {FetchPiutangReport} from "redux/actions/piutang/piutang.action";
 import moment from 'moment'
 import Barcode from 'react-barcode';
 
@@ -22,13 +22,10 @@ class Print3ply extends Component {
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`
         }
-        this.setState({
-            where_data:where
-        })
-        this.props.dispatch(FetchHutangReport(1,where))
+        this.props.dispatch(FetchPiutangReport(1,where))
       }
       UNSAFE_componentWillReceiveProps(nextProps){
-          let getData = nextProps.hutangReport.length!==0?nextProps.hutangReport.data[0]:0
+          let getData = nextProps.piutangReport.length!==0?nextProps.piutangReport.data[0]:0
           if(getData!==0 && nextProps.auth.user.logo!==undefined){
               if(this.state.newLogo === ''){
                 const xhr = new XMLHttpRequest();
@@ -63,16 +60,16 @@ class Print3ply extends Component {
         const {
             nm_bank,
             cara_byr,
-            jumlah_bayar,
-            jumlah_hutang,
+            jumlah,
             ket,
             nogiro,
-            fak_beli,
+            fak_jual,
             pembulatan,
             tgl_byr,
             tgl_cair_giro,
             tgl_jatuh_tempo,
-            kasir
+            kasir,
+            nama
         }=this.state.data;
         return (
             <Layout>
@@ -85,7 +82,7 @@ class Print3ply extends Component {
                         </tr>
                         <tr>
                             <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} className="text-center">Nota Bayar Hutang ({this.props.match.params.id})</td>
+                            <td colSpan={5} className="text-center">Nota Bayar Piutang ({this.props.match.params.id})</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -98,6 +95,26 @@ class Print3ply extends Component {
                             <td width="12%" />
                             <td width="2%" />
                             <td width="25%" />
+                        </tr>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Nama Customer</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{nama}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Pembayaran</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah)}</td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Nota Pembelian</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{fak_jual}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Bank</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{nm_bank}</td>
                         </tr>
                         <tr>
                             <td />
@@ -115,7 +132,7 @@ class Print3ply extends Component {
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{nogiro}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Jenis Pembayaran</td>
+                            <td style={{fontSize: '10pt !important'}}>Jenis Pemb.</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{cara_byr}</td>
                         </tr>
@@ -134,26 +151,6 @@ class Print3ply extends Component {
                             <td style={{fontSize: '10pt !important'}}>Tanggal Cair Giro</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{moment(tgl_cair_giro).format("YYYY-MM-DD")}</td>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Pembayaran</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah_bayar)}</td>
-                        </tr>
-                        <tr>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Nota Pembelian</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{fak_beli}</td>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Jumlah Hutang</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah_hutang)}</td>
-                        </tr>
-                        <tr>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Bank</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{nm_bank}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Keterangan</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
@@ -191,9 +188,9 @@ class Print3ply extends Component {
     const mapStateToProps = (state) => {
         
         return {
-            hutangReport:state.hutangReducer.data_report,
+            piutangReport:state.piutangReducer.data_report,
             auth:state.auth,
-            isLoading: state.hutangReducer.isLoading,
+            isLoading: state.piutangReducer.isLoading,
         }
     }
     export default connect(mapStateToProps)(Print3ply);

@@ -3,6 +3,7 @@ import {ModalBody, ModalHeader} from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalToggle} from "redux/actions/modal.action";
+import { toCurrency } from '../../../../../../helper';
 class DetailProduction extends Component{
     constructor(props){
         super(props);
@@ -22,7 +23,7 @@ class DetailProduction extends Component{
         const {data} = this.props.productionDetail;
         
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let t_harga_beli = 0;
+        let t_amount = 0;
         return (
             <div>
                 <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailProduction"} size="lg" style={{maxWidth: '1600px', width: '100%'}}>
@@ -39,6 +40,7 @@ class DetailProduction extends Component{
                                     <th className="text-black" style={columnStyle}>Type</th>
                                     <th className="text-black" style={columnStyle}>Qty</th>
                                     <th className="text-black" style={columnStyle}>Buy Price</th>
+                                    <th className="text-black" style={columnStyle}>Amount</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -46,7 +48,7 @@ class DetailProduction extends Component{
                                     (
                                         typeof data === 'object' ? data.length > 0 ?
                                             data.map((v,i)=>{
-                                                t_harga_beli +=parseFloat(v.harga_beli);
+                                                t_amount +=parseFloat(v.harga_beli*v.qty);
                                                 return (
                                                     <tr key={i}>
                                                         <td style={{textAlign:"right"}}>{v.kd_produksi}</td>
@@ -55,7 +57,8 @@ class DetailProduction extends Component{
                                                         <td style={{textAlign:"right"}}>{v.barcode}</td>
                                                         <td style={{textAlign:"right"}}>{v.satuan}</td>
                                                         <td style={{textAlign:"right"}}>{v.qty}</td>
-                                                        <td style={{textAlign:"right"}}>{v.harga_beli}</td>
+                                                        <td style={{textAlign:"right"}}>{toCurrency(v.harga_beli)}</td>
+                                                        <td style={{textAlign:"right"}}>{toCurrency(v.harga_beli*v.qty)}</td>
                                                     </tr>
                                                 )
                                             }) : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
@@ -63,8 +66,8 @@ class DetailProduction extends Component{
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colSpan="6">Total</td>
-                                        <td style={{textAlign:"right"}}>{t_harga_beli}</td>
+                                        <td colSpan="7">Total</td>
+                                        <td style={{textAlign:"right"}}>{toCurrency(t_amount)}</td>
                                     </tr>
                                 </tfoot>
                             </table>

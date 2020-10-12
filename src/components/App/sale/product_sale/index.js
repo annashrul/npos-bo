@@ -522,7 +522,6 @@ class Sale extends Component{
                         "compliment": "-",
                         "kd_kasir": this.state.userid,
                         "no_kartu": "0",
-                        "optional_note": "",
                         "id_hold": "-",
                         "diskon": rmComma(this.state.discount_harga),
                         "compliment_rp": "0",
@@ -543,7 +542,8 @@ class Sale extends Component{
                         "lokasi": this.state.location,
                         "kassa": "A",
                         "jns_kartu": "Debit",
-                        "status": "LUNAS"
+                        "status": "LUNAS",
+                        "optional_note":this.state.catatan
                     };
                     this.setState({
                         master:master,

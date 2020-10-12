@@ -334,7 +334,7 @@ class ListProduct extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formProduct"));
-        this.props.dispatch(FetchGroupProduct(1,''));
+        this.props.dispatch(FetchGroupProduct(1,'','1000'));
         this.props.dispatch(FetchLocation());
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
@@ -346,7 +346,7 @@ class ListProduct extends Component{
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formProduct"));
-        this.props.dispatch(FetchGroupProduct(1,''));
+        this.props.dispatch(FetchGroupProduct(1,'','1000'));
         this.props.dispatch(FetchLocation());
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
@@ -388,7 +388,6 @@ class ListProduct extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <div>
-
                 <form onSubmit={this.handlesearch} noValidate>
                     <div className="row">
                         <div className="col-6 col-xs-6 col-md-2">
@@ -564,7 +563,7 @@ class ListProduct extends Component{
                     />
                 </div>
                 <FormProduct
-                    data={this.props.group}
+                    data={this.props.groupProduct}
                     dataLocation={this.props.location}
                     dataSupplier={this.props.supplier}
                     dataSubDept={this.props.subDept}
@@ -588,7 +587,8 @@ const mapStateToProps = (state) => {
         productEdit:state.productReducer.dataEdit,
         productDetail:state.productReducer.dataDetail,
         customerPrice:state.customerReducer.dataPrice,
-        productCode:state.productReducer.productCode
+        productCode:state.productReducer.productCode,
+        groupProduct:state.groupProductReducer.data,
     }
 }
 

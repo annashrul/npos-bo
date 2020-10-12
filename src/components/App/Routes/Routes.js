@@ -69,6 +69,7 @@ import Alokasi3ply from "../print/alokasi3ply";
 import Packing3ply from "../print/packing3ply";
 import Expedisi3ply from "../print/expedisi3ply";
 import BayarHutang3ply from "../print/bayar_hutang3ply";
+import BayarPiutang3ply from "../print/bayar_piutang3ply";
 import Pembelian3ply from "../print/pembelian3ply";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
@@ -80,12 +81,13 @@ const Routes = (
             <Route path="/login" exact strict component={Login} />
             <Route path="/config" exact strict component={GlobalSetting} />
             <Route path="/print3ply/:id" exact strict component={Print3ply} />
-            <Route path="/adjust3ply" exact strict component={Adjust3ply} />
-            <Route path="/dn3ply" exact strict component={Dn3ply} />
-            <Route path="/alokasi3ply" exact strict component={Alokasi3ply} />
-            <Route path="/packing3ply" exact strict component={Packing3ply} />
+            <Route path="/adjust3ply/:id" exact strict component={Adjust3ply} />
+            <Route path="/dn3ply/:id" exact strict component={Dn3ply} />
+            <Route path="/alokasi3ply/:id" exact strict component={Alokasi3ply} />
+            <Route path="/packing3ply/:id" exact strict component={Packing3ply} />
             <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
-            <Route path="/bayar_hutang3ply" exact strict component={BayarHutang3ply} />
+            <Route path="/bayar_hutang3ply/:id" exact strict component={BayarHutang3ply} />
+            <Route path="/bayar_piutang3ply/:id" exact strict component={BayarPiutang3ply} />
             <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
             <Route path="/retur3ply" exact strict component={Retur3ply} />
             <Route path="/po3ply" exact strict component={Po3ply} />

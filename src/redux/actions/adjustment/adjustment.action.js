@@ -83,7 +83,6 @@ export const FetchAdjustmentAll = ()=>{
 export const storeAdjusment = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const rawdata=data;
         const url = HEADERS.URL + `adjustment`;
         axios.post(url, data)
             .then(function (response) {
@@ -118,11 +117,7 @@ export const storeAdjusment = (data,param) => {
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: '/adjust3ply',
-                        state: {
-                            data: rawdata,
-                            nota: data.result.kode
-                        }
+                        pathname: `/adjust3ply/${response.data.result.insertId}`
                     })
                     Swal.closeModal();
                     return false;

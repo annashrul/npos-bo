@@ -239,7 +239,7 @@ class SaleByCustArchive extends Component{
             }
         }
         if(any!==undefined&&any!==null&&any!==''){
-            if(where!==''){where+='&'}where+=`search=${any}`
+            if(where!==''){where+='&'}where+=`q=${any}`
         }
         this.setState({
             where_data:where

@@ -92,24 +92,57 @@ export const FetchNotaPiutang = (lokasi) => {
     }
 }
 
-export const storePiutang = (data) => {
+export const storePiutang = (data,param) => {
     return (dispatch) => {
         dispatch(setLoadingPost(true));
         const url = HEADERS.URL + `piutang/bayar`;
         axios.post(url, data)
             .then(function (response) {
                 // const data = (response.data);
+                
+                console.log(response)
 
                 dispatch(setLoadingPost(false));
                 Swal.fire({
-                    title: 'Success',
-                    type: 'success',
-                    text:"Transaksi Berhasil",
+                    title: 'Transaksi berhasil.',
+                    type: 'info',
+                    html: `Data telah disimpan!` +
+                        "<br><br>" +
+                        // '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+                    showCancelButton: true,
+                    showConfirmButton: false
                 }).then((result)=>{
                     localStorage.removeItem("nota_pembelian_piutang");
                     localStorage.removeItem("jenis_trx_piutang");
-                    window.location.reload();
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
                 });
+                // document.getElementById("btnNotaPdf").addEventListener("click", () => {
+                //     const win = window.open(data.result.nota, '_blank');
+                //     if (win != null) {
+                //         win.focus();
+                //     }
+                // });
+                document.getElementById("btnNota3ply").addEventListener("click", () => {
+                    param({
+                        pathname: `/bayar_piutang3ply/${response.data.result.insertId}`,
+                    })
+                    Swal.closeModal();
+                    return false;
+                });
+
+                // dispatch(setLoadingPost(false));
+                // Swal.fire({
+                //     title: 'Success',
+                //     type: 'success',
+                //     text:"Transaksi Berhasil",
+                // }).then((result)=>{
+                //     localStorage.removeItem("nota_pembelian_piutang");
+                //     localStorage.removeItem("jenis_trx_piutang");
+                //     window.location.reload();
+                // });
             })
             .catch(function (error) {
                 dispatch(setLoadingPost(false));
