@@ -214,13 +214,14 @@ class InventoryReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {per_page,last_page,current_page,data,total} = this.props.stockReport;
-        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total_stock;
+        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir,total_stock_penjualan} = this.props.total_stock;
 
         let total_dn_per=0;
         let total_first_stock_per=0;
         let total_last_stock_per=0;
         let total_stock_in_per=0;
         let total_stock_out_per=0;
+        let total_stock_penjualan_per=0;
         return (
             <Layout page="Laporan Stock">
                 <div className="col-12">
@@ -347,6 +348,7 @@ class InventoryReport extends Component{
                                                             total_last_stock_per = total_last_stock_per + stok_akhir;
                                                             total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
                                                             total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
+                                                            total_stock_penjualan_per = total_stock_penjualan_per+parseInt(v.stock_penjualan,10);
                                                             
                                                             return(
                                                                 <tr key={i}>
@@ -393,6 +395,7 @@ class InventoryReport extends Component{
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_penjualan_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_last_stock_per}</th>
                                     </tr>
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
@@ -401,6 +404,7 @@ class InventoryReport extends Component{
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_keluar===undefined?0:total_stock_keluar}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_penjualan===undefined?0:total_stock_penjualan}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_akhir===undefined?0:total_stock_akhir}</th>
                                     </tr>
                                     </tfoot>
