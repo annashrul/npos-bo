@@ -44,6 +44,7 @@ import LogActReport from '../report/log/log_act'
 import Closing from '../report/inventory/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
+import SaleByProductArchive from '../report/sale/sale_by_product_archive'
 import Sale from '../sale/product_sale'
 import CashTrx from '../sale/cash_trx'
 import Company from "../setting/company";
@@ -164,6 +165,7 @@ const Routes = (
             <PrivateRoute path="/report/piutang" exact strict component={PiutangReport} />
             <PrivateRoute path="/report/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
+            <PrivateRoute path="/report/sale_by_product_archive" exact strict component={SaleByProductArchive} />
             <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
             <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
             <PrivateRoute path="/log/trx" exact strict component={LogTrxReport} />
