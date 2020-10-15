@@ -19,6 +19,12 @@ export const piutangReducer = (state=initialState,action) => {
                 msg:action.data.msg,
                 data_report:action.data.result
             });
+        case PIUTANG.SUCCESS_KARTU_PIUTANG:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                data_kartu_piutang:action.data.result
+            });
         case PIUTANG.SUCCESS_EXCEL:
             return Object.assign({}, state,{
                 status:action.data.status,

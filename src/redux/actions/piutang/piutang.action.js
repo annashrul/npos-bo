@@ -42,6 +42,9 @@ export function setFailed(data = []) {
 export function setPiutangReport(data=[]){
     return {type:PIUTANG.SUCCESS_REPORT,data}
 }
+export function setKartuPiutang(data=[]){
+    return {type:PIUTANG.SUCCESS_KARTU_PIUTANG,data}
+}
 
 export function setPiutangReportExcel(data=[]){
     return {type:PIUTANG.SUCCESS_EXCEL,data}
@@ -240,5 +243,25 @@ export const DeletePiutangReport = (id)=>{
                     
                 }
             })
+    }
+}
+
+export const FetchKartuPiutang = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `piutang/kartu_piutang?page=${page}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setKartuPiutang(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
     }
 }
