@@ -13,7 +13,8 @@ import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import {FetchDetailLocation} from "redux/actions/masterdata/location/location.action";
 import imgDefault from 'assets/default.png'
-import {toRp,lengthBrg,toCurrency,rmComma} from "helper";
+import {toRp,toCurrency,rmComma} from "helper";
+import Spinner from 'Spinner'
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -680,7 +681,7 @@ class Sale extends Component{
                         <h4>Penjualan Barang</h4>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%",marginRight:"10px"  }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
@@ -709,47 +710,54 @@ class Sale extends Component{
                                         </div>
                                     </div>
                                     <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
-                                        <div id="chat_user_2">
-                                            <ul className="chat-list list-unstyled">
-                                                {
-                                                    this.props.barang.length !== 0 ?
-                                                        this.props.barang.map((i, inx) => {
-                                                            return (
-                                                                <li className="clearfix" key={inx}
-                                                                    onClick={(e) => this.HandleAddBrg(e, {
-                                                                        kd_brg: i.kd_brg,
-                                                                        nm_brg: i.nm_brg,
-                                                                        barcode: i.barcode,
-                                                                        satuan: i.satuan,
-                                                                        harga_old:i.harga,
-                                                                        harga: i.harga,
-                                                                        harga2: i.harga2,
-                                                                        harga3: i.harga3,
-                                                                        harga4: i.harga4,
-                                                                        stock: i.stock,
-                                                                        diskon_persen: i.diskon_persen,
-                                                                        diskon_nominal: i.diskon_nominal,
-                                                                        ppn: i.ppn,
-                                                                        qty: 1,
-                                                                        hrg_beli:i.hrg_beli,
-                                                                        kategori:i.kategori,
-                                                                        services:i.service,
-                                                                        tambahan: []
-                                                                    })}>
-                                                                    <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
-                                                                    <div className="about">
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{toRp(i.harga)}</small></div>
-                                                                    </div>
-                                                                </li>
-                                                            )
-                                                        })
-                                                        : (
-                                                            <div style={{textAlign: 'center', fontSize: "11px", fontStyle: "italic"}}>Barang tidak ditemukan.</div>
-                                                        )
-                                                }
-                                            </ul>
-                                        </div>
+                                            {
+                                                !this.props.loadingbrg?
+                                                    <div id="chat_user_2">
+                                                        <ul className="chat-list list-unstyled">
+                                                            {
+                                                                this.props.barang.length !== 0 ?
+                                                                    this.props.barang.map((i, inx) => {
+                                                                        return (
+                                                                            <li className="clearfix" key={inx}
+                                                                                onClick={(e) => this.HandleAddBrg(e, {
+                                                                                    kd_brg: i.kd_brg,
+                                                                                    nm_brg: i.nm_brg,
+                                                                                    barcode: i.barcode,
+                                                                                    satuan: i.satuan,
+                                                                                    harga_old:i.harga,
+                                                                                    harga: i.harga,
+                                                                                    harga2: i.harga2,
+                                                                                    harga3: i.harga3,
+                                                                                    harga4: i.harga4,
+                                                                                    stock: i.stock,
+                                                                                    diskon_persen: i.diskon_persen,
+                                                                                    diskon_nominal: i.diskon_nominal,
+                                                                                    ppn: i.ppn,
+                                                                                    qty: 1,
+                                                                                    hrg_beli:i.hrg_beli,
+                                                                                    kategori:i.kategori,
+                                                                                    services:i.service,
+                                                                                    tambahan: []
+                                                                                })}>
+                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                <div className="about">
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
+                                                                                    wordBreak:"break-all",
+                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: 'black',
+                                                                                    fontWeight:"bold"}}><small>{toRp(i.harga)}</small></div>
+                                                                                </div>
+                                                                            </li>
+                                                                        )
+                                                                    })
+                                                                    : (
+                                                                        <div style={{textAlign: 'center', fontSize: "11px", fontStyle: "italic"}}>Barang tidak ditemukan.</div>
+                                                                    )
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                :<Spinner/>
+                                            }
                                     </div>
                                     <hr/>
                                     <div className="form-group">
@@ -759,7 +767,7 @@ class Sale extends Component{
 
                             </div>
                         </StickyBox>
-                        <div style={{width:"80%",zoom:'85%'}}>
+                        <div style={{width:"75%",zoom:'85%'}}>
                             <div className="card">
                                 <div className="card-body">
                                     <form className=''>

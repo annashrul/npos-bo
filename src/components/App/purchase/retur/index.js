@@ -7,13 +7,14 @@ import {FetchBrg} from "redux/actions/masterdata/product/product.action";
 import {setProductbrg} from "redux/actions/masterdata/product/product.action";
 import {store,get, update,destroy,cekData,del} from "components/model/app.model";
 import StickyBox from "react-sticky-box";
-import {toRp,lengthBrg,ToastQ} from "helper";
+import {toRp,ToastQ} from "helper";
 import Select from "react-select";
 import moment from "moment";
 import {storeReturTanpaNota} from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import {withRouter} from 'react-router-dom';
 import imgDefault from 'assets/default.png'
 import { rmComma, toCurrency } from '../../../../helper';
+import Spinner from 'Spinner'
 
 const table='retur_tanpa_nota';
 
@@ -522,7 +523,7 @@ class ReturTanpaNota extends Component{
                         <h5>Retur Tanpa Nota</h5>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%" }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%" }}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
@@ -551,47 +552,54 @@ class ReturTanpaNota extends Component{
                                         </div>
                                     </div>
                                     <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
-                                        <div id="chat_user_2">
-                                            <ul className="chat-list list-unstyled">
-                                                {
-                                                    this.props.barang.length !== 0 ?
-                                                        this.props.barang.map((i, inx) => {
-                                                            return (
-                                                                <li className="clearfix" key={inx}
-                                                                    onClick={(e) => this.HandleAddBrg(e, {
-                                                                        kd_brg: i.kd_brg,
-                                                                        nm_brg:i.nm_brg,
-                                                                        barcode:i.barcode,
-                                                                        satuan:i.satuan,
-                                                                        deskripsi:i.deskripsi,
-                                                                        kondisi:i.kondisi,
-                                                                        stock:i.stock,
-                                                                        ppn:i.ppn,
-                                                                        harga_beli:i.harga_beli,
-                                                                        ket:'-',
-                                                                        qty_retur:1,
-                                                                        tambahan:i.tambahan
-                                                                    })}>
-                                                                    <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
-                                                                    <div className="about">
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
-                                                                    </div>
-                                                                </li>
-                                                            )
-                                                        }) : (
-                                                            <div style={{
-                                                                textAlign: 'center',
-                                                                fontSize: "11px",
-                                                                fontStyle: "italic"
-                                                            }}>Barang tidak ditemukan.</div>
-                                                        )
+                                            {
+                                                !this.props.loadingbrg?
+                                                    <div id="chat_user_2">
+                                                        <ul className="chat-list list-unstyled">
+                                                            {
+                                                                this.props.barang.length !== 0 ?
+                                                                    this.props.barang.map((i, inx) => {
+                                                                        return (
+                                                                            <li className="clearfix" key={inx}
+                                                                                onClick={(e) => this.HandleAddBrg(e, {
+                                                                                    kd_brg: i.kd_brg,
+                                                                                    nm_brg:i.nm_brg,
+                                                                                    barcode:i.barcode,
+                                                                                    satuan:i.satuan,
+                                                                                    deskripsi:i.deskripsi,
+                                                                                    kondisi:i.kondisi,
+                                                                                    stock:i.stock,
+                                                                                    ppn:i.ppn,
+                                                                                    harga_beli:i.harga_beli,
+                                                                                    ket:'-',
+                                                                                    qty_retur:1,
+                                                                                    tambahan:i.tambahan
+                                                                                })}>
+                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                <div className="about">
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
+                                                                                    wordBreak:"break-all",
+                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: 'black',
+                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                </div>
+                                                                            </li>
+                                                                        )
+                                                                    }) : (
+                                                                        <div style={{
+                                                                            textAlign: 'center',
+                                                                            fontSize: "11px",
+                                                                            fontStyle: "italic"
+                                                                        }}>Barang tidak ditemukan.</div>
+                                                                    )
 
-                                                }
+                                                            }
 
 
-                                            </ul>
-                                        </div>
+                                                        </ul>
+                                                    </div>
+                                                    :<Spinner/>
+                                            }
                                     </div>
                                     <hr/>
                                     <div className="form-group">
@@ -600,7 +608,7 @@ class ReturTanpaNota extends Component{
                                 </div>
                             </div>
                         </StickyBox>
-                        <div style={{width:"80%",zoom:"85%"}}>
+                        <div style={{width:"75%",zoom:"85%"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <form className=''>
