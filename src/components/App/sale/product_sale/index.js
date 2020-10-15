@@ -832,10 +832,10 @@ class Sale extends Component{
                                                 <th style={columnStyle}>barang</th>
                                                 <th style={columnStyle}>barcode</th>
                                                 <th style={columnStyle}>satuan</th>
-                                                <th style={columnStyle}>harga</th>
-                                                <th style={columnStyle}>disc 1 (%)</th>
+                                                <th style={columnStyle} width='20%'>harga</th>
+                                                <th style={columnStyle} width='10%'>disc 1 (%)</th>
                                                 {/* <th style={columnStyle}>disc 2 (%)</th> */}
-                                                <th style={columnStyle}>ppn</th>
+                                                <th style={columnStyle} width='10%'>ppn</th>
                                                 <th style={columnStyle}>stock</th>
                                                 <th style={columnStyle}>qty</th>
                                                 <th style={columnStyle}>Subtotal</th>

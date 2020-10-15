@@ -869,22 +869,22 @@ class PurchaseOrder extends Component{
                                                                 </select>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type='text' name='harga_beli' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga_beli)}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} type='text' name='harga_beli' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga_beli)}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type='text' name='diskon' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} type='text' name='diskon' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type='text' name='ppn' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} type='text' name='ppn' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly className="form-control" type="text" value={item.stock}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} readOnly className="form-control" type="text" value={item.stock}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}}  type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
+                                                                <input style={{width:"100px",textAlign:"right"}}  type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty))}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty))}/>
                                                             </td>
                                                         </tr>
                                                     )
