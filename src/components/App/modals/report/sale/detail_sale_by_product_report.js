@@ -116,65 +116,22 @@ class DetailSaleByProductReport extends Component{
                             </div>
                         </div>
                     </div>
-                        <table className="table table-hover table-bordered" style={{marginTop: "-30px"}}>
-                            <thead className="bg-light">
-                                <tr style={{visibility:"hidden"}}>
-                                    <th width="20"/>
-                                    <th width="5"/>
-                                    <th width="20"/>
-                                    <th width="10"/>{/* separator */}
-                                    <th width="20"/>
-                                    <th width="5"/>
-                                    <th width="20"/>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Nama Barang</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.nm_brg}</th>
-                                    <th/>
-                                    <th className="text-black" style={columnStyle}>Deskripsi</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.deskripsi}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Qty</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{parseInt(this.props.detail.qty_jual,10)}</th>
-                                    <th/>
-                                    <th className="text-black" style={columnStyle}>Gross Sale</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{toRp(parseInt(this.props.detail.gross_sales,10))}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Satuan</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.satuan}</th>
-                                    <th/>
-                                    <th className="text-black" style={columnStyle}>Tax</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.tax}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Store</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.toko}</th>
-                                    <th/>
-                                    <th className="text-black" style={columnStyle}>Diskon Item</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.diskon_item}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Date</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{moment(this.props.detail.tgl).format('YYYY-MM-DD')}</th>
-                                    <th/>
-                                    <th className="text-black" style={columnStyle}>Service</th>
-                                    <th className="text-black" style={columnStyle}>:</th>
-                                    <th className="text-black" style={columnStyle}>{this.props.detail.service}</th>
-                                </tr>
-                            </thead>
-                        </table>
-
+                    <table className="table" >
+                        <tbody className="bg-transparent no-border" style={{border:"none"}}>
+                            <tr>
+                                <th className="text-black" style={columnStyle}>Nama Barang</th>
+                                <th className="text-black" style={columnStyle}>Qty</th>
+                                <th className="text-black" style={columnStyle}>Gross Sale</th>
+                                <th className="text-black" style={columnStyle}>Store</th>
+                            </tr>
+                            <tr>
+                                <th className="text-black" style={columnStyle}>{this.props.detail.nm_brg}</th>
+                                <th className="text-black" style={columnStyle}>{parseInt(this.props.detail.qty_jual,10)+" "+this.props.detail.satuan}</th>
+                                <th className="text-black" style={columnStyle}>{toRp(parseInt(this.props.detail.gross_sales,10))}</th>
+                                <th className="text-black" style={columnStyle}>{this.props.detail.toko}</th>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div style={{overflowX: "auto"}}>
                         <table className="table table-hover table-bordered">
                             <thead className="bg-light">
@@ -244,6 +201,21 @@ class DetailSaleByProductReport extends Component{
                                 <thead className="bg-light">
                                     <tr>
                                         <th colSpan={8} className="text-center">Laporan Product Detail</th>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>Nama Barang</th>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>Qty</th>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>Gross Sale</th>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>Store</th>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>{this.props.detail.nm_brg}</th>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>{parseInt(this.props.detail.qty_jual,10)+" "+this.props.detail.satuan}</th>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>{toRp(parseInt(this.props.detail.gross_sales,10))}</th>
+                                        <th colSpan={2} className="text-black" style={columnStyle}>{this.props.detail.toko}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={8}></th>
                                     </tr>
                                     <tr>
                                         <th className="text-black" style={columnStyle}>Kd Trx</th>
