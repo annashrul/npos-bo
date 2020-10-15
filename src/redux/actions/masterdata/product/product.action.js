@@ -167,7 +167,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
         let url = `barang/get?page=${page}`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        if(supplier===null) url+=`&supplier=2`;
+        if(supplier!==null) url+=`&supplier=${supplier}`;
         // if(supplier!==null) url+=`&supplier=${supplier}`;
         if(perpage!=='') url+=`&perpage=${perpage}`;
         
@@ -325,8 +325,6 @@ export const FetchProductDetail = (kode)=>{
         })
     }
 }
-
-
 
 export const FetchProductCode = ()=>{
     return (dispatch) => {
