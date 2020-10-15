@@ -9,7 +9,7 @@ import moment from "moment";
 import {FetchCodeAdjustment, storeAdjusment} from "redux/actions/adjustment/adjustment.action";
 import {withRouter} from 'react-router-dom';
 import StickyBox from "react-sticky-box";
-import {lengthBrg,ToastQ} from "helper";
+import {ToastQ} from "helper";
 import imgDefault from 'assets/default.png'
 import {toRp} from "../../../../helper";
 
@@ -527,7 +527,7 @@ class TrxAdjustment extends Component{
                         <div className="row">
                             <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
                                 {/*START LEFT*/}
-                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"20%",marginRight:"10px"  }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"23%",marginRight:"10px"  }}>
                                     <div className="form-group">
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
@@ -610,8 +610,11 @@ class TrxAdjustment extends Component{
                                                                 })}>
                                                                     <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                     <div className="about">
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.barcode}</small></div>
+                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",
+                                                                            wordBreak:"break-all",
+                                                                            fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                            <div className="status" style={{color: 'black',
+                                                                            fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
                                                                     </div>
 
                                                                 </li>
@@ -633,7 +636,7 @@ class TrxAdjustment extends Component{
                                 </StickyBox>
                                 {/*END LEFT*/}
                                 {/*START RIGHT*/}
-                                <div style={{width:"80%"}}>
+                                <div style={{width:"77%"}}>
                                     <div className="card-header" style={{zoom:"85%"}}>
                                         <form className=''>
                                             <div className="row">

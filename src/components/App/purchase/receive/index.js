@@ -16,7 +16,7 @@ import {HEADERS} from "redux/actions/_constants";
 import {withRouter} from "react-router-dom"
 import StickyBox from "react-sticky-box";
 import imgDefault from 'assets/default.png'
-import {toRp,lengthBrg,ToastQ} from "helper";
+import {toRp,ToastQ} from "helper";
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'
 const table='receive';
@@ -965,19 +965,20 @@ class Receive extends Component{
                                                                                 
                                                                                 <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.supplier}</small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
+                                                                                    wordBreak:"break-all",
+                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: 'black',
+                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
                                                                                 </div>
                                                                             </li>
                                                                             </abbr>
                                                                         )
-                                                                    }):(
-                                                                        <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
-                                                                    )
-
+                                                                    })
+                                                                :(
+                                                                    <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                                                )
                                                             }
-
-
                                                         </ul>
                                                     </div>
                                                     :<Spinner/>

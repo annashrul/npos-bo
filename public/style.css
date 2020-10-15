@@ -7295,6 +7295,7 @@ Main Components
 
 .people-list .about {
   float: left;
+  width:80%;
   padding-left: 8px;
 }
 
