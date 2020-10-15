@@ -47,6 +47,7 @@ class SaleByProductArchive extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            detail:{}
         }
     }
 
@@ -250,19 +251,35 @@ class SaleByProductArchive extends Component{
         this.setState({
             where_data:where
         })
-        localStorage.setItem("where_sale_by_product_report",pageNumber);
+        localStorage.setItem("where_sale_by_product_report",where);
         this.props.dispatch(FetchReportSaleByProduct(pageNumber===null?1:pageNumber,where));
         // this.props.dispatch(FetchReportSaleByProductExcel(pageNumber===null?1:pageNumber,where));
     }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_sale_by_product_report",pageNumber);
+        
         this.checkingParameter(pageNumber);
     }
-    handleDetail(e,kode){
+    handleDetail(e,kode,kd_brg,nm_brg,deskripsi,satuan,qty_jual,gross_sales,diskon_item,tax,service,toko,tgl){
         e.preventDefault();
         localStorage.setItem("kode_sale_by_product_report",kode);
         let dateFrom=localStorage.getItem("date_from_sale_by_product_report");
         let dateTo=localStorage.getItem("date_to_sale_by_product_report");
+        this.setState({
+                detail:{
+                "kd_brg":kd_brg,
+                "nm_brg":nm_brg,
+                "deskripsi":deskripsi,
+                "satuan":satuan,
+                "qty_jual":qty_jual,
+                "gross_sales":gross_sales,
+                "diskon_item":diskon_item,
+                "tax":tax,
+                "service":service,
+                "toko":toko,
+                "tgl":tgl
+            }
+        });
 
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
@@ -288,7 +305,7 @@ class SaleByProductArchive extends Component{
         });
         localStorage.setItem('status_sale_by_product_report', st.value);
     }
-    toggleModal(e,total,perpage) {
+    toggleModal(e,total) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         // let range = total*perpage;
@@ -448,7 +465,7 @@ class SaleByProductArchive extends Component{
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Item</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Tax</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Service</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Location</th>
+                                            {/* <th className="text-black" rowSpan="2" style={columnStyle}>Location</th> */}
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Store</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Date</th>
                                         </tr>
@@ -469,7 +486,7 @@ class SaleByProductArchive extends Component{
                                                                                 Aksi
                                                                             </DropdownToggle>
                                                                             <DropdownMenu>
-                                                                                <DropdownItem onClick={(e)=>this.handleDetail(e,btoa(v.barcode))}>Detail</DropdownItem>
+                                                                                <DropdownItem onClick={(e)=>this.handleDetail(e,btoa(v.barcode),v.kd_brg,v.nm_brg,v.deskripsi,v.satuan,v.qty_jual,v.gross_sales,v.diskon_item,v.tax,v.service,v.toko,v.tgl)}>Detail</DropdownItem>
                                                                                 {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
                                                                                 {/* <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem> */}
                                                                                 {/* <Link to={`../print3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link> */}
@@ -487,7 +504,7 @@ class SaleByProductArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{v.diskon_item}</td>
                                                                     <td style={{textAlign:"right"}}>{v.tax}</td>
                                                                     <td style={{textAlign:"right"}}>{v.service}</td>
-                                                                    <td style={columnStyle}>{v.lokasi}</td>
+                                                                    {/* <td style={columnStyle}>{v.lokasi}</td> */}
                                                                     <td style={columnStyle}>{v.toko}</td>
                                                                     <td style={columnStyle}>{moment(v.tgl).format('YYYY-MM-DD')}</td>
                                                                 </tr>
@@ -515,7 +532,7 @@ class SaleByProductArchive extends Component{
                         </div>
                     </div>
                 </div>
-                <DetailSaleByProductReport detailSaleByProduct={this.props.detailSaleByProduct } startDate={localStorage.getItem("date_from_sale_by_product_report")===null?this.state.startDate:localStorage.getItem("date_from_sale_by_product_report")} endDate={localStorage.getItem("date_to_sale_by_product_report")===null?this.state.endDate:localStorage.getItem("date_to_sale_by_product_report")}/>
+                <DetailSaleByProductReport detailSaleByProduct={this.props.detailSaleByProduct } detail={this.state.detail} startDate={localStorage.getItem("date_from_sale_by_product_report")===null?this.state.startDate:localStorage.getItem("date_from_sale_by_product_report")} endDate={localStorage.getItem("date_to_sale_by_product_report")===null?this.state.endDate:localStorage.getItem("date_to_sale_by_product_report")}/>
             </Layout>
         );
     }

@@ -69,9 +69,9 @@ export const FetchReportSaleByProduct = (page=1,where='') => {
 
     return (dispatch) => {
         dispatch(setLoadingReport(true));
-        if(page === 'NaN'||page===''||page===undefined||!isNaN(page)){
-            page = 1;
-        }
+        // if(page === 'NaN'||page===''||page===undefined||!isNaN(page)){
+        //     page = 1;
+        // }
         let url=`report/penjualan/barang?page=${page}`;
         if(where!==''){
             url+=`&${where}`;

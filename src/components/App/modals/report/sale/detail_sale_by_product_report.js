@@ -2,11 +2,12 @@ import React,{Component} from 'react';
 import WrapperModal from "../../_wrapper.modal";
 import {ModalBody, ModalHeader} from "reactstrap";
 import {ModalToggle} from "redux/actions/modal.action";
-import DateRangePicker from "react-bootstrap-daterangepicker";import {
+// import DateRangePicker from "react-bootstrap-daterangepicker";
+import {
     FetchReportDetailSaleByProduct
 } from "redux/actions/sale/sale_by_product.action";
 import connect from "react-redux/es/connect/connect";
-import {rangeDate} from "helper";
+// import {rangeDate} from "helper";
 import Paginationq from "helper";
 import moment from "moment";
 import {toRp} from "../../../../../helper";
@@ -35,7 +36,7 @@ class DetailSaleByProductReport extends Component{
         })
     }
     // componentWillReceiveProps(nextprops){
-    //     console.log(nextprops)
+    //     
     //     this.setState({
     //         startDate:nextprops.startDate,
     //         endDate:nextprops.endDate,
@@ -96,25 +97,84 @@ class DetailSaleByProductReport extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailSaleByProductReport"} size={this.state.isExport===false?'lg':'sm'}>
-                <ModalHeader toggle={this.toggle}>{this.state.isExport===false?'Detail Penjualan By Barabg':'Export Data'}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>{this.state.isExport===false?`Detail Penjualan By Barang (${this.props.detail.kd_brg})`:'Export Data'}</ModalHeader>
                 <ModalBody hidden={this.state.isExport===true}>
                     <div className="row">
-                        <div className="col-6 col-xs-6 col-md-3">
+                        {/* <div className="col-6 col-xs-6 col-md-3">
                             <div className="form-group">
                                 <label htmlFor=""> Periode </label>
                                 <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
                                     <input type="text" className="form-control" name="date_sale_by_product_report_detail" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
                                 </DateRangePicker>
                             </div>
-                        </div>
-                        <div className="col-6 col-xs-6 col-md-2">
-                            <div className="form-group">
-                                <button style={{marginTop:"31px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleExport(e,(last_page*per_page)))}>
+                        </div> */}
+                        <div className="col-6 col-xs-6 col-md-12">
+                            <div className="form-group text-right">
+                                <button style={{marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleExport(e,(last_page*per_page)))}>
                                     <i className="fa fa-print"></i> Export
                                 </button>
                             </div>
                         </div>
                     </div>
+                        <table className="table table-hover table-bordered" style={{marginTop: "-30px"}}>
+                            <thead className="bg-light">
+                                <tr style={{visibility:"hidden"}}>
+                                    <th width="20"/>
+                                    <th width="5"/>
+                                    <th width="20"/>
+                                    <th width="10"/>{/* separator */}
+                                    <th width="20"/>
+                                    <th width="5"/>
+                                    <th width="20"/>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Nama Barang</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.nm_brg}</th>
+                                    <th/>
+                                    <th className="text-black" style={columnStyle}>Deskripsi</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.deskripsi}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Qty</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{parseInt(this.props.detail.qty_jual,10)}</th>
+                                    <th/>
+                                    <th className="text-black" style={columnStyle}>Gross Sale</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{toRp(parseInt(this.props.detail.gross_sales,10))}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Satuan</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.satuan}</th>
+                                    <th/>
+                                    <th className="text-black" style={columnStyle}>Tax</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.tax}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Store</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.toko}</th>
+                                    <th/>
+                                    <th className="text-black" style={columnStyle}>Diskon Item</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.diskon_item}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Date</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{moment(this.props.detail.tgl).format('YYYY-MM-DD')}</th>
+                                    <th/>
+                                    <th className="text-black" style={columnStyle}>Service</th>
+                                    <th className="text-black" style={columnStyle}>:</th>
+                                    <th className="text-black" style={columnStyle}>{this.props.detail.service}</th>
+                                </tr>
+                            </thead>
+                        </table>
+
                     <div style={{overflowX: "auto"}}>
                         <table className="table table-hover table-bordered">
                             <thead className="bg-light">
@@ -225,7 +285,6 @@ class DetailSaleByProductReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
