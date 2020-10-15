@@ -944,7 +944,8 @@ class Receive extends Component{
                                                         this.props.barang.length!==0?
                                                             this.props.barang.map((i,inx)=>{
                                                                 return(
-                                                                    <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                    <abbr title={i.nm_brg} key={inx} >
+                                                                    <li className="clearfix"onClick={(e)=>this.HandleAddBrg(e,{
                                                                         kd_brg:i.kd_brg,
                                                                         barcode:i.barcode,
                                                                         satuan:i.satuan,
@@ -958,12 +959,14 @@ class Receive extends Component{
                                                                         nm_brg:i.nm_brg,
                                                                         tambahan:i.tambahan
                                                                     })}>
+                                                                        
                                                                         <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                         <div className="about">
                                                                             <div className="status" style={{color: 'black',fontWeight:"bold",fontSize:"12px"}}>{lengthBrg(i.nm_brg)}</div>
                                                                             <div className="status" style={{color: 'black',fontWeight:"bold"}}><small>{i.supplier}</small></div>
                                                                         </div>
                                                                     </li>
+                                                                    </abbr>
                                                                 )
                                                             }):(
                                                                 <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>

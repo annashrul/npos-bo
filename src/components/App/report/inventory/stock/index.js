@@ -136,7 +136,7 @@ class InventoryReport extends Component{
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
                 lk.push({
-                    value: '-',
+                    value: '',
                     label: 'Semua Lokasi'
                 });
                 loc.map((i) => {
@@ -179,9 +179,9 @@ class InventoryReport extends Component{
         let search_by=localStorage.search_by_stock_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
-            where+=`&dateFrom=${dateFrom}&dateTo=${dateTo}`;
+            where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
         }
-        if(lokasi!==undefined&&lokasi!==null){
+        if(lokasi!==''&&lokasi!==undefined&&lokasi!==null){
             where+=`&lokasi=${lokasi}`;
         }
         if(status!==undefined&&status!==null&&status!==''){
@@ -214,13 +214,14 @@ class InventoryReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {per_page,last_page,current_page,data,total} = this.props.stockReport;
-        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total_stock;
+        const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir,total_stock_penjualan} = this.props.total_stock;
 
         let total_dn_per=0;
         let total_first_stock_per=0;
         let total_last_stock_per=0;
         let total_stock_in_per=0;
         let total_stock_out_per=0;
+        let total_stock_penjualan_per=0;
         return (
             <Layout page="Laporan Stock">
                 <div className="col-12">
@@ -309,87 +310,6 @@ class InventoryReport extends Component{
 
                                 </div>
                             </div>
-                            {/*DATA EXCEL*/}
-                            <table className="table table-hover"  id="report_stock_to_excel" style={{display:"none"}}>
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={12}>{this.state.startDate} - {this.state.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={12}>LAPORAN STOCK</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Barang</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Barcode</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Satuan</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Supplier</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Sub Dept</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kelompok</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Delivery Note</th>
-                                    <th className="text-black" colSpan="4" style={columnStyle}>Stok</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" rowSpan="1" style={columnStyle}>Awal</th>
-                                    <th className="text-black" rowSpan="1" style={columnStyle}>Masuk</th>
-                                    <th className="text-black" rowSpan="1" style={columnStyle}>Keluar</th>
-                                    <th className="text-black" rowSpan="1" style={columnStyle}>Akhir</th>
-                                </tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.stockReportExcel.data==='object'? this.props.stockReportExcel.data.length>0?
-                                            this.props.stockReportExcel.data.map((v,i)=>{
-                                                const stok_akhir = (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk) - parseFloat(v.stock_keluar));
-                                                total_dn_per = total_dn_per+parseInt(v.delivery_note,10);
-                                                total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal,10);
-                                                total_last_stock_per = total_last_stock_per+parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar);
-                                                total_last_stock_per = total_last_stock_per + stok_akhir;
-                                                total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
-                                                total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.kd_brg}</td>
-                                                        <td style={columnStyle}>{v.barcode}</td>
-                                                        <td style={columnStyle}>{v.satuan}</td>
-                                                        <td style={columnStyle}>{v.nm_brg}</td>
-                                                        <td style={columnStyle}>{v.supplier}</td>
-                                                        <td style={columnStyle}>{v.sub_dept}</td>
-                                                        <td style={columnStyle}>{v.nama_kel}</td>
-                                                        <td style={columnStyle}>{v.delivery_note}</td>
-                                                        <td style={columnStyle}>{v.stock_awal}</td>
-                                                        <td style={columnStyle}>{v.stock_masuk}</td>
-                                                        <td style={columnStyle}>{v.stock_keluar}</td>
-                                                        {/* <td style={columnStyle}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td> */}
-                                                        <td style={columnStyle}>{stok_akhir}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    <tfoot>
-                                    <tr style={{fontWeight:"bold"}}>
-                                        <th colSpan="7">TOTAL PERPAGE</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_dn_per}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_last_stock_per}</th>
-                                    </tr>
-                                    <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
-                                        <th colSpan="7">TOTAL</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_dn!==undefined?total_dn:'0'}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_keluar===undefined?0:total_stock_keluar}</th>
-                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_akhir===undefined?0:total_stock_akhir}</th>
-                                    </tr>
-                                    </tfoot>
-                                    </tbody>
-                                }
-                            </table>
-                            {/*END DATA EXCEL*/}
                             <div className="table-responsive" style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                                     <thead className="bg-light">
@@ -402,13 +322,14 @@ class InventoryReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Supplier</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Sub Dept</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kelompok</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Delivery Note</th>
-                                        <th className="text-black" style={columnStyle} colSpan="4">Stok</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">DN</th>
+                                        <th className="text-black" style={columnStyle} colSpan="5">Stok</th>
                                     </tr>
                                     <tr>
                                         <th className="text-black" style={columnStyle} rowSpan="1">Awal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="1">Masuk</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="1">Keluar</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">In</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Out</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Sale</th>
                                         <th className="text-black" style={columnStyle} rowSpan="1">Akhir</th>
                                     </tr>
                                     <tr></tr>
@@ -427,6 +348,7 @@ class InventoryReport extends Component{
                                                             total_last_stock_per = total_last_stock_per + stok_akhir;
                                                             total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
                                                             total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
+                                                            total_stock_penjualan_per = total_stock_penjualan_per+parseInt(v.stock_penjualan,10);
                                                             
                                                             return(
                                                                 <tr key={i}>
@@ -454,7 +376,8 @@ class InventoryReport extends Component{
                                                                     <td style={{textAlign:"right"}}>{v.stock_awal}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
-                                                                    <td style={{textAlign:"right"}}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td>
+                                                                    <td style={{textAlign:"right"}}>{v.stock_penjualan}</td>
+                                                                    <td style={{textAlign:"right"}}>{(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan))}</td>
 
                                                                 </tr>
                                                             )
@@ -472,6 +395,7 @@ class InventoryReport extends Component{
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_penjualan_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_last_stock_per}</th>
                                     </tr>
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
@@ -480,6 +404,7 @@ class InventoryReport extends Component{
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_keluar===undefined?0:total_stock_keluar}</th>
+                                        <th colSpan="1" style={{textAlign:"right"}}>{total_stock_penjualan===undefined?0:total_stock_penjualan}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_akhir===undefined?0:total_stock_akhir}</th>
                                     </tr>
                                     </tfoot>

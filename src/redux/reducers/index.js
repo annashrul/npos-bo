@@ -31,6 +31,7 @@ import {dnReducer} from "./inventory/delivery_note/dn.reducer";
 import {alokasiReducer} from './inventory/alokasi/alokasi.reducer'
 import {saleReducer} from "./sale/sale.reducer";
 import {sale_by_custReducer} from "./sale/sale_by_cust.reducer";
+import {sale_by_productReducer} from "./sale/sale_by_product.reducer";
 import {mutationReducer} from "./inventory/mutation/mutation.reducer";
 import {transactionReducer} from "./inventory/transaction/transaction.reducer";
 import {closingReducer} from "./report/closing/closing.reducer";
@@ -78,6 +79,7 @@ export default combineReducers({
     alokasiReducer,
     saleReducer,
     sale_by_custReducer,
+    sale_by_productReducer,
     mutationReducer,
     mutasiJualBeliReducer,
     closingReducer,

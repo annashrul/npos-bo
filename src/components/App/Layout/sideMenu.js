@@ -630,6 +630,7 @@ class SideMenu extends Component {
             path==='/report/sale_archive'|| 
             path==='/report/sale_retur_archive'|| 
             path==='/report/sale_by_cust_archive'|| 
+            path==='/report/sale_by_product_archive'|| 
             path==='/report/closing' ||
             path==='/report/inventory'||
             path==='/report/adjustment'|| 
@@ -682,7 +683,8 @@ class SideMenu extends Component {
            } else if(
                path==='/report/sale_archive' ||
                path==='/report/sale_retur_archive' ||
-               path==='/report/sale_by_cust_archive'
+               path==='/report/sale_by_cust_archive' ||
+               path==='/report/sale_by_product_archive'
                ){
                
                this.setState({
@@ -916,7 +918,8 @@ class SideMenu extends Component {
                             <li className={"treeview" + (this.state.isReportPenjualan===true || 
                                 path==='/report/sale_archive' || 
                                 path==='/report/sale_retur_archive' || 
-                                path==='/report/sale_by_cust_archive' 
+                                path==='/report/sale_by_cust_archive' ||
+                                path==='/report/sale_by_product_archive' 
                                 ?" active menu-open" : "")} style={modul_report_penjualan===true?{display:'block'}:{display:'none'}}>
                                 <a href="!#" onClick={(e) => this.changeMenu(e,'report_penjualan')}><i className="fa fa-list-alt"/>Penjualan <i className="fa fa-angle-right"/></a>
 
@@ -924,6 +927,7 @@ class SideMenu extends Component {
                                     <li className={path==='/report/sale_archive'?"active":''} style={this.state.r_arsip_penjualan==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
                                     <li className={path==='/report/sale_retur_archive'?"active":''} style={this.state.r_arsip_retur_penjualan==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/sale_retur_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Retur Penjualan</Link></li>
                                     <li className={path==='/report/sale_by_cust_archive'?"active":''} style={this.state.r_penjualan_by_customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/sale_by_cust_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Cust.</Link></li>
+                                    <li className={path==='/report/sale_by_product_archive'?"active":''} style={this.state.r_penjualan_by_customer==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/sale_by_product_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-assignment-check" />Penjualan by Barang</Link></li>
                                 </ul>
                             </li>
                             {/* SUBLAPORAN TRANSAKSI MODUL END */}
