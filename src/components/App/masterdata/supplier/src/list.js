@@ -73,7 +73,10 @@ class ListSupplier extends Component{
 
     }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
+        // const noWrap = {whiteSpace: "nowrap"};
         const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
@@ -100,16 +103,16 @@ class ListSupplier extends Component{
                     <table className="table table-hover table-bordered">
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle}>#</th>
-                            <th className="text-black" style={columnStyle}>Code</th>
-                            <th className="text-black" style={columnStyle}>Name</th>
-                            <th className="text-black" style={columnStyle}>Address</th>
-                            <th className="text-black" style={columnStyle}>City</th>
-                            <th className="text-black" style={columnStyle}>Phone</th>
-                            <th className="text-black" style={columnStyle}>responsible</th>
-                            <th className="text-black" style={columnStyle}>responsible No</th>
-                            <th className="text-black" style={columnStyle}>Status</th>
-                            <th className="text-black" style={columnStyle}>Email</th>
+                            <th className="text-black" style={centerStyle}>#</th>
+                            <th className="text-black" style={centerStyle}>Code</th>
+                            <th className="text-black" style={centerStyle}>Name</th>
+                            <th className="text-black" style={centerStyle}>Address</th>
+                            <th className="text-black" style={centerStyle}>City</th>
+                            <th className="text-black" style={centerStyle}>Phone</th>
+                            <th className="text-black" style={centerStyle}>responsible</th>
+                            <th className="text-black" style={centerStyle}>responsible No</th>
+                            <th className="text-black" style={centerStyle}>Status</th>
+                            <th className="text-black" style={centerStyle}>Email</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -119,7 +122,7 @@ class ListSupplier extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}>{/* Example split danger button */}
+                                                <td style={centerStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
                                                             <UncontrolledButtonDropdown>
                                                             <DropdownToggle caret>
@@ -132,15 +135,15 @@ class ListSupplier extends Component{
                                                             </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
-                                                <td style={columnStyle}>{v.kode}</td>
-                                                <td style={columnStyle}>{v.nama}</td>
-                                                <td style={columnStyle}>{v.alamat}</td>
-                                                <td style={columnStyle}>{v.kota}</td>
-                                                <td style={columnStyle}>{v.telp}</td>
-                                                <td style={columnStyle}>{v.penanggung_jawab}</td>
-                                                <td style={columnStyle}>{v.no_penanggung_jawab}</td>
-                                                <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
-                                                <td style={columnStyle}>{v.email}</td>
+                                                <td style={leftStyle}>{v.kode}</td>
+                                                <td style={leftStyle}>{v.nama}</td>
+                                                <td style={leftStyle}>{v.alamat}</td>
+                                                <td style={leftStyle}>{v.kota}</td>
+                                                <td style={rightStyle}>{v.telp}</td>
+                                                <td style={leftStyle}>{v.penanggung_jawab}</td>
+                                                <td style={rightStyle}>{v.no_penanggung_jawab}</td>
+                                                <td style={centerStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
+                                                <td style={leftStyle}>{v.email}</td>
                                             </tr>
                                         )
                                     })

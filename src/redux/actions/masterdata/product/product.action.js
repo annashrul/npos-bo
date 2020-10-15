@@ -167,8 +167,8 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
         let url = `barang/get?page=${page}`;
         if(q!=='') url+=`&q=${q}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        if(supplier===null) url+=`&supplier=2`;
-        // if(supplier!==null) url+=`&supplier=${supplier}`;
+        // if(supplier===null) url+=`&supplier=2`;
+        if(supplier!==null) url+=`&supplier=${supplier}`;
         if(perpage!=='') url+=`&perpage=${perpage}`;
         
         axios.get(HEADERS.URL+`${url}`)
@@ -328,21 +328,21 @@ export const FetchProductDetail = (kode)=>{
 
 
 
-export const FetchProductCode = ()=>{
-    return (dispatch) => {
-        // dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`barang/code`)
-            .then(function(response){
-                const data = response.data;
-                dispatch(setProductCode(data));
-                // dispatch(setLoading(false));
-            }).catch(function(error){
+// export const FetchProductCode = ()=>{
+//     return (dispatch) => {
+//         // dispatch(setLoading(true));
+//         axios.get(HEADERS.URL+`barang/code`)
+//             .then(function(response){
+//                 const data = response.data;
+//                 dispatch(setProductCode(data));
+//                 // dispatch(setLoading(false));
+//             }).catch(function(error){
             
-            dispatch(setLoading(false));
+//             dispatch(setLoading(false));
 
-        })
-    }
-}
+//         })
+//     }
+// }
 
 export const FetchProductSale = (page=1,where,param='',db)=>{
     return (dispatch) => {
