@@ -24,7 +24,6 @@ export default class Adjust3ply extends Component {
         this.setState({
             data: getData,
         })
-        console.log(getData)
     }
 
       getLogo(){
@@ -86,8 +85,8 @@ export default class Adjust3ply extends Component {
                             </div>
                         )
                     }
-                                                                                                                                return pricetags;
-                                                                                                        })()
+                    return pricetags;
+                    })()
                 }
             </table>
             </div>

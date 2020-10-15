@@ -327,9 +327,9 @@ class InventoryReport extends Component{
                                     </tr>
                                     <tr>
                                         <th className="text-black" style={columnStyle} rowSpan="1">Awal</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="1">Masuk</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="1">Keluar</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="1">Penjualan</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">In</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Out</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="1">Sale</th>
                                         <th className="text-black" style={columnStyle} rowSpan="1">Akhir</th>
                                     </tr>
                                     <tr></tr>
@@ -377,7 +377,7 @@ class InventoryReport extends Component{
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_penjualan}</td>
-                                                                    <td style={{textAlign:"right"}}>{parseFloat(v.stock_awal)+parseFloat(v.stock_masuk)-parseFloat(v.stock_keluar)}</td>
+                                                                    <td style={{textAlign:"right"}}>{(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan))}</td>
 
                                                                 </tr>
                                                             )
