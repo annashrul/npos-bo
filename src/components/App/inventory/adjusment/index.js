@@ -12,6 +12,7 @@ import StickyBox from "react-sticky-box";
 import {ToastQ} from "helper";
 import imgDefault from 'assets/default.png'
 import {toRp} from "../../../../helper";
+import Spinner from 'Spinner'
 
 const table='adjusment';
 class TrxAdjustment extends Component{
@@ -161,7 +162,7 @@ class TrxAdjustment extends Component{
             harga_beli:item.harga_beli,
             satuan:item.satuan,
             hrg_jual:item.hrg_jual,
-            kd_brg:item.kd_brg,day
+            kd_brg:item.kd_brg,
             nm_brg:item.nm_brg,
             kel_brg:item.kel_brg,
             kategori:item.kategori,
@@ -592,60 +593,64 @@ class TrxAdjustment extends Component{
                                         </div>
                                     </div>
                                     <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
-                                        <div id="chat_user_2">
-                                            <ul className="chat-list list-unstyled">
-                                                {
-                                                    this.props.barang.length!==0?
-                                                        this.props.barang.map((i,inx)=>{
-                                                            return(
-                                                                <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
-                                                                    barcode:i.barcode,
-                                                                    harga_beli:i.harga_beli,
-                                                                    satuan:i.satuan,
-                                                                    hrg_jual:i.hrg_jual,
-                                                                    kd_brg:i.kd_brg,
-                                                                    nm_brg:i.nm_brg,
-                                                                    kel_brg:i.kel_brg,
-                                                                    kategori:i.kategori,
-                                                                    stock_min:i.stock_min,
-                                                                    supplier:i.supplier,
-                                                                    subdept:i.subdept,
-                                                                    deskripsi:i.deskripsi,
-                                                                    jenis:i.jenis,
-                                                                    kcp:i.kcp,
-                                                                    poin:i.poin,
-                                                                    group1:i.group1,
-                                                                    group2:i.group2,
-                                                                    stock:i.stock,
-                                                                    qty_adjust:1,
-                                                                    status:'tambah',
-                                                                    saldo_stock:i.stock,
-                                                                    tambahan:i.tambahan
-                                                                })}>
-                                                                    <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
-                                                                    <div className="about">
-                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                            wordBreak:"break-all",
-                                                                            fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                            <div className="status" style={{color: 'black',
-                                                                            fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
-                                                                    </div>
+                                            {
+                                                !this.props.loadingbrg?
+                                                    <div id="chat_user_2">
+                                                        <ul className="chat-list list-unstyled">
+                                                            {
+                                                                this.props.barang.length!==0?
+                                                                    this.props.barang.map((i,inx)=>{
+                                                                        return(
+                                                                            <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                                barcode:i.barcode,
+                                                                                harga_beli:i.harga_beli,
+                                                                                satuan:i.satuan,
+                                                                                hrg_jual:i.hrg_jual,
+                                                                                kd_brg:i.kd_brg,
+                                                                                nm_brg:i.nm_brg,
+                                                                                kel_brg:i.kel_brg,
+                                                                                kategori:i.kategori,
+                                                                                stock_min:i.stock_min,
+                                                                                supplier:i.supplier,
+                                                                                subdept:i.subdept,
+                                                                                deskripsi:i.deskripsi,
+                                                                                jenis:i.jenis,
+                                                                                kcp:i.kcp,
+                                                                                poin:i.poin,
+                                                                                group1:i.group1,
+                                                                                group2:i.group2,
+                                                                                stock:i.stock,
+                                                                                qty_adjust:1,
+                                                                                status:'tambah',
+                                                                                saldo_stock:i.stock,
+                                                                                tambahan:i.tambahan
+                                                                            })}>
+                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                <div className="about">
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
+                                                                                        wordBreak:"break-all",
+                                                                                        fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                        <div className="status" style={{color: 'black',
+                                                                                        fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                </div>
 
-                                                                </li>
-                                                            )
-                                                        }):(
-                                                            <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
-                                                        )
+                                                                            </li>
+                                                                        )
+                                                                    }):(
+                                                                        <div style={{textAlign:'center',fontSize:"11px",fontStyle:"italic"}}>Barang tidak ditemukan.</div>
+                                                                    )
 
-                                                }
+                                                            }
 
 
-                                            </ul>
-                                        </div>
+                                                        </ul>
+                                                    </div>
+                                                    :<Spinner/>
+                                            }
                                     </div>
                                     <hr/>
                                     <div className="form-group">
-                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'Tampilkan lebih banyak'}</button>
                                     </div>
                                 </StickyBox>
                                 {/*END LEFT*/}

@@ -326,21 +326,23 @@ export const FetchProductDetail = (kode)=>{
     }
 }
 
-export const FetchProductCode = ()=>{
-    return (dispatch) => {
-        // dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`barang/code`)
-            .then(function(response){
-                const data = response.data;
-                dispatch(setProductCode(data));
-                // dispatch(setLoading(false));
-            }).catch(function(error){
-            
-            dispatch(setLoading(false));
 
-        })
-    }
-}
+
+// export const FetchProductCode = ()=>{
+//     return (dispatch) => {
+//         // dispatch(setLoading(true));
+//         axios.get(HEADERS.URL+`barang/code`)
+//             .then(function(response){
+//                 const data = response.data;
+//                 dispatch(setProductCode(data));
+//                 // dispatch(setLoading(false));
+//             }).catch(function(error){
+            
+//             dispatch(setLoading(false));
+
+//         })
+//     }
+// }
 
 export const FetchProductSale = (page=1,where,param='',db)=>{
     return (dispatch) => {

@@ -80,7 +80,9 @@ class ListCustomer extends Component{
 
     }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         const {total,per_page,current_page,data} = this.props.data;
         return (
             <div>
@@ -104,16 +106,16 @@ class ListCustomer extends Component{
                     <table className="table table-hover table-bordered">
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle}>#</th>
-                            <th className="text-black" style={columnStyle}>Code</th>
-                            <th className="text-black" style={columnStyle}>Name</th>
-                            <th className="text-black" style={columnStyle}>Address</th>
-                            <th className="text-black" style={columnStyle}>Status</th>
-                            <th className="text-black" style={columnStyle}>Handphone</th>
-                            <th className="text-black" style={columnStyle}>Cust Type</th>
-                            <th className="text-black" style={columnStyle}>Gender</th>
-                            <th className="text-black" style={columnStyle}>Email</th>
-                            <th className="text-black" style={columnStyle}>Location</th>
+                            <th className="text-black" style={centerStyle}>#</th>
+                            <th className="text-black" style={centerStyle}>Code</th>
+                            <th className="text-black" style={centerStyle}>Name</th>
+                            <th className="text-black" style={centerStyle}>Address</th>
+                            <th className="text-black" style={centerStyle}>Status</th>
+                            <th className="text-black" style={centerStyle}>Handphone</th>
+                            <th className="text-black" style={centerStyle}>Cust Type</th>
+                            <th className="text-black" style={centerStyle}>Gender</th>
+                            <th className="text-black" style={centerStyle}>Email</th>
+                            <th className="text-black" style={centerStyle}>Location</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -123,7 +125,7 @@ class ListCustomer extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}>
+                                                <td style={centerStyle}>
                                                     <div className="btn-group">
                                                             <UncontrolledButtonDropdown>
                                                             <DropdownToggle caret>
@@ -136,15 +138,15 @@ class ListCustomer extends Component{
                                                             </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
-                                                <td style={columnStyle}>{v.kd_cust}</td>
-                                                <td style={columnStyle}>{v.nama}</td>
-                                                <td style={columnStyle}>{v.alamat}</td>
-                                                <td style={columnStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
-                                                <td style={columnStyle}>{v.tlp}</td>
-                                                <td style={columnStyle}>{v.cust_type}</td>
-                                                <td style={columnStyle}>{v.jenis_kelamin==='1'?'Male':'Female'}</td>
-                                                <td style={columnStyle}>{v.email}</td>
-                                                <td style={columnStyle}>{v.lokasi}</td>
+                                                <td style={leftStyle}>{v.kd_cust}</td>
+                                                <td style={leftStyle}>{v.nama}</td>
+                                                <td style={leftStyle}>{v.alamat}</td>
+                                                <td style={centerStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
+                                                <td style={rightStyle}>{v.tlp}</td>
+                                                <td style={leftStyle}>{v.cust_type}</td>
+                                                <td style={leftStyle}>{v.jenis_kelamin==='1'?'Male':'Female'}</td>
+                                                <td style={leftStyle}>{v.email}</td>
+                                                <td style={leftStyle}>{v.lokasi}</td>
                                             </tr>
                                         )
                                     })

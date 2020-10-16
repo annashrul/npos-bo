@@ -20,7 +20,7 @@ import {
 import DetailProduct from "components/App/modals/masterdata/product/detail_product";
 import {FetchCustomerPrice} from "redux/actions/masterdata/customer/customer.action";
 import CustomerPrice from "components/App/modals/masterdata/customer/customer_price";
-import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
+// import {FetchProductCode} from "redux/actions/masterdata/product/product.action";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from "moment";
@@ -339,7 +339,7 @@ class ListProduct extends Component{
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
         this.props.dispatch(setProductEdit([]));
-        this.props.dispatch(FetchProductCode());
+        // this.props.dispatch(FetchProductCode());
     }
     handleEdit = (e,kode) => {
         e.preventDefault();
@@ -351,7 +351,7 @@ class ListProduct extends Component{
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
         this.props.dispatch(FetchProductEdit(kode));
-        this.props.dispatch(FetchProductCode());
+        // this.props.dispatch(FetchProductCode());
 
     };
     exportPDF = () => {
@@ -385,7 +385,9 @@ class ListProduct extends Component{
         const loc_delete = this.handleDelete;
         const loc_edit = this.handleEdit;
         const {total,per_page,current_page,data} = this.props.data;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right"};
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -439,15 +441,15 @@ class ListProduct extends Component{
                     <table className="table table-hover"  id="emp" style={{display:"none"}}>
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle}>Code</th>
-                            <th className="text-black" style={columnStyle}>Name</th>
-                            <th className="text-black" style={columnStyle}>Group</th>
-                            <th className="text-black" style={columnStyle}>Supplier</th>
-                            <th className="text-black" style={columnStyle}>Sub Dept</th>
-                            <th className="text-black" style={columnStyle}>Purchase Price</th>
-                            <th className="text-black" style={columnStyle}>Category</th>
-                            <th className="text-black" style={columnStyle}>Stock Min</th>
-                            <th className="text-black" style={columnStyle}>Product Type</th>
+                            <th className="text-black" style={centerStyle}>Code</th>
+                            <th className="text-black" style={centerStyle}>Name</th>
+                            <th className="text-black" style={centerStyle}>Group</th>
+                            <th className="text-black" style={centerStyle}>Supplier</th>
+                            <th className="text-black" style={centerStyle}>Sub Dept</th>
+                            <th className="text-black" style={centerStyle}>Purchase Price</th>
+                            <th className="text-black" style={centerStyle}>Category</th>
+                            <th className="text-black" style={centerStyle}>Stock Min</th>
+                            <th className="text-black" style={centerStyle}>Product Type</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -458,14 +460,14 @@ class ListProduct extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}>{v.kd_brg}</td>
-                                                <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.supplier}</td>
-                                                <td style={columnStyle}>{v.subdept}</td>
-                                                <td style={columnStyle}>{v.kategori}</td>
-                                                <td style={columnStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
-                                                <td style={columnStyle}>{v.stock_min}</td>
+                                                <td style={centerStyle}>{v.kd_brg}</td>
+                                                <td style={centerStyle}>{v.nm_brg}</td>
+                                                <td style={centerStyle}>{v.kel_brg}</td>
+                                                <td style={centerStyle}>{v.supplier}</td>
+                                                <td style={centerStyle}>{v.subdept}</td>
+                                                <td style={centerStyle}>{v.kategori}</td>
+                                                <td style={centerStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
+                                                <td style={centerStyle}>{v.stock_min}</td>
                                             </tr>
                                         )
                                     })
@@ -485,31 +487,31 @@ class ListProduct extends Component{
                     <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle} colSpan={1}/>
-                            <th className="text-black" style={columnStyle}>Kode Barang</th>
-                            <th className="text-black" style={columnStyle}>Nama Barang</th>
-                            <th className="text-black" style={columnStyle}>Kelompok</th>
-                            <th className="text-black" style={columnStyle}>Supplier</th>
-                            <th className="text-black" style={columnStyle}>Sub Dept</th>
-                            <th className="text-black" style={columnStyle}>Kategori</th>
-                            <th className="text-black" style={columnStyle} colSpan={3}/>
+                            <th className="text-black" style={centerStyle} colSpan={1}/>
+                            <th className="text-black" style={centerStyle}>Kode Barang</th>
+                            <th className="text-black" style={centerStyle}>Nama Barang</th>
+                            <th className="text-black" style={centerStyle}>Kelompok</th>
+                            <th className="text-black" style={centerStyle}>Supplier</th>
+                            <th className="text-black" style={centerStyle}>Sub Dept</th>
+                            <th className="text-black" style={centerStyle}>Kategori</th>
+                            <th className="text-black" style={centerStyle} colSpan={3}/>
                         </tr>
                         <tr>
-                            <td className="text-black" style={columnStyle}>No</td>
+                            <td className="text-black" style={centerStyle}>No</td>
                             <td><input name="any_kode_barang" value={this.state.any_kode_barang} onChange={this.handleChange} onKeyPress={
                                 event=>{
                                     // event.preventDefault();
                                     if(event.key==='Enter'){this.handleEnter('any_kode_barang');}
                                 }
-                            } style={{width:"150px"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
-                            <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
-                            <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kelompok"/></td>
-                            <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Supplier"/></td>
-                            <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
-                            <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{width:"150px"}} type="text" className="form-control" placeholder="Kategori"/></td>
-                            <td className="text-black" style={columnStyle}>Jenis</td>
-                            <td className="text-black" style={columnStyle}>Stock Min</td>
-                            <td className="text-black" style={columnStyle}>#</td>
+                            } style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
+                            <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
+                            <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Kelompok"/></td>
+                            <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Supplier"/></td>
+                            <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
+                            <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Kategori"/></td>
+                            <td className="text-black" style={centerStyle}>Jenis</td>
+                            <td className="text-black" style={centerStyle}>Stock Min</td>
+                            <td className="text-black" style={centerStyle}>#</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -520,16 +522,16 @@ class ListProduct extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
-                                                <td style={columnStyle}>{v.kd_brg}</td>
-                                                <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={columnStyle}>{v.kel_brg}</td>
-                                                <td style={columnStyle}>{v.supplier}</td>
-                                                <td style={columnStyle}>{v.subdept}</td>
-                                                <td style={columnStyle}>{v.kategori}</td>
-                                                <td style={columnStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
-                                                <td style={columnStyle}>{v.stock_min}</td>
-                                                <td style={columnStyle}>
+                                                <td style={centerStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+                                                <td style={leftStyle}>{v.kd_brg}</td>
+                                                <td style={leftStyle}>{v.nm_brg}</td>
+                                                <td style={leftStyle}>{v.kel_brg}</td>
+                                                <td style={leftStyle}>{v.supplier}</td>
+                                                <td style={leftStyle}>{v.subdept}</td>
+                                                <td style={leftStyle}>{v.kategori}</td>
+                                                <td style={centerStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
+                                                <td style={rightStyle}>{v.stock_min}</td>
+                                                <td style={centerStyle}>
                                                     <div className="btn-group mb-2 mr-2">
                                                         <UncontrolledButtonDropdown>
                                                         <DropdownToggle caret>
