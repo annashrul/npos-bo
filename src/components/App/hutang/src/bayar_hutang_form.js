@@ -2,43 +2,44 @@ import React,{Component} from 'react';
 // import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
-import {FetchPiutang, storePiutang} from "redux/actions/piutang/piutang.action";
+import {FetchHutang, storeHutang} from "redux/actions/hutang/hutang.action";
 import moment from "moment";
-import {toRp} from "helper";
+import {toRp,toCurrency} from "helper";
 import Swal from "sweetalert2";
 import Preloader from "Preloader";
-import { rmComma, toCurrency } from 'helper';
+import {
+    withRouter
+} from 'react-router-dom';
+import { rmComma } from '../../../../helper';
 
-class BayarPiutangForm extends Component{
+class BayarHutang extends Component{
     constructor(props) {
         super(props);
         this.state={
-            tgl: moment(new Date()).format("yyyy-MM-DD"),
+            tgl:moment( new Date()).format("yyyy-MM-DD"),
             no_trx : "",
             location:"",
+            location_val:"",
             jenis_trx_data:[],
             jenis_trx:"",
             nota_pembelian:"",
-            nama:"",
-            tempo:"",
+            nama_supplier:"",
+            jatuh_tempo:"",
             catatan:"-",
-            jumlah_telah_bayar:"",
             jumlah_bayar:"",
             userid:0,
             error:{
                 location:"",
                 jenis_trx:"",
-                nota_pembelian:"",
                 catatan:"",
-                jumlah_telah_bayar: "",
-                jumlah_bayar:"",
+                jumlah_bayar: ""
             }
         }
-        this.handleChange   = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.HandleChangeJenisTrx = this.HandleChangeJenisTrx.bind(this);
-        this.handleSearch   = this.handleSearch.bind(this);
-        this.handleCancel   = this.handleCancel.bind(this);
-        this.handleSave     = this.handleSave.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleSave = this.handleSave.bind(this);
     }
 
     getProps(param){
@@ -58,11 +59,18 @@ class BayarPiutangForm extends Component{
     }
 
     componentDidMount(){
-        if (localStorage.jenis_trx_piutang !== undefined && localStorage.jenis_trx_piutang !== '') {
+        if (localStorage.jenis_trx_hutang !== undefined && localStorage.jenis_trx_hutang !== '') {
             this.setState({
-                jenis_trx: localStorage.jenis_trx_piutang
+                jenis_trx: localStorage.jenis_trx_hutang
             });
         }
+        if (localStorage.nota_pembelian_hutang !== undefined && localStorage.nota_pembelian_hutang !== '') {
+            this.setState({
+                nota_pembelian: localStorage.nota_pembelian_hutang
+            });
+            this.props.dispatch(FetchHutang(localStorage.nota_pembelian_hutang));
+        }
+
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -79,7 +87,7 @@ class BayarPiutangForm extends Component{
             [column]: ""
         });
         if(column==='nota_pembelian'){
-            localStorage.setItem("nota_pembelian_piutang",val);
+            localStorage.setItem("nota_pembelian_hutang",val);
         }
         if(column === 'jumlah_bayar'){
             this.setState({
@@ -101,7 +109,7 @@ class BayarPiutangForm extends Component{
             jenis_trx: jenis.value,
             error: err
         });
-        localStorage.setItem('jenis_trx_piutang', jenis.value);
+        localStorage.setItem('jenis_trx_hutang', jenis.value);
     }
     handleSearch(e){
         let err = this.state.error;
@@ -111,7 +119,7 @@ class BayarPiutangForm extends Component{
             });
         }
         else{
-            this.props.dispatch(FetchPiutang(this.state.nota_pembelian));
+            this.props.dispatch(FetchHutang(this.state.nota_pembelian));
             
         }
         this.setState({
@@ -125,42 +133,24 @@ class BayarPiutangForm extends Component{
             err = Object.assign({}, err, {
                 jenis_trx:"Jenis Pembayaran Tidak Boleh Kosong"
             });
-            this.setState({error: err,})
-            
         }
         else if(this.state.nota_pembelian===''){
             err = Object.assign({}, err, {
-                nota_pembelian:"Nota Penjualan Tidak Boleh Kosong"
+                nota_pembelian:"Nota Pembelian Tidak Boleh Kosong"
             });
-            this.setState({error: err,})
-            
         }
         else if(this.state.catatan===''){
             err = Object.assign({}, err, {
                 catatan:"Keterangan Tidak Boleh Kosong"
             });
-            this.setState({error: err,})
-            
         }
-
-        else if(this.state.jumlah_bayar===''||this.state.jumlah_bayar==='0' || parseInt(this.state.jumlah_bayar,10)===0){
+        else if(this.state.jumlah_bayar===''||this.state.jumlah_bayar==='0'){
             err = Object.assign({}, err, {
                 jumlah_bayar:"Jumlah Bayar Tidak Boleh Kosong"
             });
-            this.setState({error: err,})
-        }
-        else if(parseInt(this.state.jumlah_bayar,10)>(parseInt(this.props.getPiutang.gt,10)-parseInt(this.props.getPiutang.jumlah_telah_bayar,10))){
-            err = Object.assign({}, err, {
-                jumlah_bayar:"Jumlah Bayar Tidak Boleh Lebih Dari Jumlah Piutang"
-            });
-            this.setState({
-                error: err,
-                jumlah_bayar:0
-            })
-        }
-        else{
+        }else{
             Swal.fire({
-                title: 'Simpan Piutang?',
+                title: 'Simpan Hutang?',
                 text: "Pastikan data yang anda masukan sudah benar!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -171,27 +161,31 @@ class BayarPiutangForm extends Component{
             }).then((result) => {
                 if (result.value) {
                     let data={};
-                    data['nota_jual'] = this.state.nota_pembelian;;
-                    data['tanggal'] = moment(this.state.tgl).format("yyyy-MM-DD");
-                    data['jumlah'] = this.state.jumlah_bayar;
-                    data['jumlah_piutang'] = parseInt(this.props.getPiutang.gt,10);
-                    data['tgl_jatuh_tempo'] = moment(this.props.getPiutang.tempo).format("yyyy-MM-DD");
-                    data['lokasi'] = this.props.getPiutang.lokasi===undefined||this.props.getPiutang.lokasi===''||this.props.getPiutang.lokasi===null?'LK/0001':this.props.getPiutang.lokasi;
-                    data['cara_byr'] = this.state.jenis_trx;
                     data['bank'] = '-';
-                    data['pembulatan'] = 0;
-                    data['nogiro'] = 0;
-                    data['tanggal_cair'] = moment(new Date()).format("yyyy-MM-DD");
+                    data['cara_byr'] = this.state.jenis_trx;
+                    data['jumlah_bayar'] = rmComma(this.state.jumlah_bayar);
+                    data['jumlah_hutang'] = parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10);
                     data['ket'] = this.state.catatan;
+                    data['lokasi'] = this.props.getHutang.lokasi;
+                    data['nogiro'] = 0;
+                    data['nota_beli'] = this.state.nota_pembelian;
+                    data['pembulatan'] = 0;
+                    data['tanggal'] = moment(this.state.tgl).format("yyyy-MM-DD");
+                    data['tanggal_cair'] = moment(new Date()).format("yyyy-MM-DD");
+                    data['tgl_jatuh_tempo'] = moment(this.props.getHutang.tgl_jatuh_tempo).format("yyyy-MM-DD");
                     data['userid'] = this.state.userid;
-                    data['jumlah_sudah_bayar'] = this.props.getPiutang.jumlah_telah_bayar;
-                    
-                    this.props.dispatch(storePiutang(data,(arr)=>this.props.history.push(arr)));
+                    data['logo'] = this.props.auth.user.logo;
+                    data['user'] = this.props.auth.user.username;
+                    data['lokasi_val'] = this.state.location_val;
+                    this.props.dispatch(storeHutang(data,(arr)=>this.props.history.push(arr)));
                 }
             })
+
+
         }
-
-
+        this.setState({
+            error: err
+        })
     }
     handleCancel(e){
         e.preventDefault();
@@ -205,8 +199,8 @@ class BayarPiutangForm extends Component{
             confirmButtonText: 'Yes!'
         }).then((result) => {
             if (result.value) {
-                localStorage.removeItem("nota_pembelian_piutang");
-                localStorage.removeItem("jenis_trx_piutang");
+                localStorage.removeItem("nota_pembelian_hutang");
+                localStorage.removeItem("jenis_trx_hutang");
                 window.location.reload();
             }
         })
@@ -214,30 +208,27 @@ class BayarPiutangForm extends Component{
     }
     render(){
         return (
-            // <Layout page="Bayar Piutang">
-                !this.props.isLoading?
+            // <Layout page="Bayar Hutang">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Bayar Piutang</h4>
+                        <h4>Bayar Hutang</h4>
                     </div>
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-3">
                                 <div className="form-group">
-                                    <label className="control-label font-12">No. Bayar Piutang</label>
+                                    <label className="control-label font-12">No. Bayar Hutang</label>
                                     <input  readOnly={true} type="text" className="form-control" value={this.props.nota}/>
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label font-12">Tanggal</label>
                                     <input type="date" name={"tgl"} className="form-control" value={this.state.tgl} onChange={this.handleChange}/>
-
                                 </div>
-
                             </div>
                             <div className="col-md-3">
                                 <div className="form-group">
-                                    <label className="control-label font-12">Lokasi Piutang</label>
-                                    <input readOnly={true} type="text" name="lokasi" className="form-control" value={this.props.getPiutang.lokasi!==undefined?this.props.getPiutang.lokasi:"-"}/>
+                                    <label className="control-label font-12">Lokasi Hutang</label>
+                                    <input readOnly={true} type="text" name="lokasi" className="form-control" value={this.props.getHutang.nama_toko!==undefined?this.props.getHutang.nama_toko:"-"}/>
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label font-12">Jenis Pembayaran</label>
@@ -260,13 +251,13 @@ class BayarPiutangForm extends Component{
                             </div>
                             <div className="col-md-3">
                                 <div className="form-group">
-                                    <label className="control-label font-12">Nota Penjualan</label>
+                                    <label className="control-label font-12">Nota Pembelian</label>
                                     <div className="input-group">
-                                        <input type="text" className="form-control" name="nota_pembelian" readOnly={true} value={this.state.nota_pembelian} onChange={this.handleChange}
+                                        <input type="text" className="form-control" name="nota_pembelian" value={this.state.nota_pembelian} onChange={this.handleChange}
                                                onKeyPress = {
                                                    event => {
                                                        if (event.key === 'Enter') {
-                                                           this.handleSearch()
+                                                           this.handleSearch();
 
                                                        }
                                                    }
@@ -286,14 +277,14 @@ class BayarPiutangForm extends Component{
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label className="control-label font-12">Nama</label>
-                                    <input readOnly={true} type="text" className="form-control" name="nama" value={this.props.getPiutang.nama!==undefined?this.props.getPiutang.nama:this.state.nama}/>
+                                    <label className="control-label font-12">Nama Supplier</label>
+                                    <input readOnly={true} type="text" className="form-control" name="nama_supplier" value={this.props.getHutang.supplier!==undefined?this.props.getHutang.supplier:this.state.nama_supplier}/>
                                 </div>
                             </div>
                             <div className="col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12">Jatuh Tempo</label>
-                                    <input readOnly={true} type="text" className="form-control" name="tempo" value={this.props.getPiutang.tempo!==undefined?moment(this.props.getPiutang.tempo).format("yyyy-MM-DD"):this.state.tempo}/>
+                                    <input readOnly={true} type="text" className="form-control" name="jatuh_tempo" value={this.props.getHutang.tgl_jatuh_tempo!==undefined?moment(this.props.getHutang.tgl_jatuh_tempo).format("yyyy-MM-DD"):this.state.jatuh_tempo}/>
                                 </div>
                                 <div className="form-group">
                                     <label className="control-label font-12">Keterangan</label>
@@ -304,24 +295,6 @@ class BayarPiutangForm extends Component{
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">DP</label>
-                                    <input readOnly={true} type="text" className="form-control" name="dp" value={this.props.getPiutang.dp!==undefined?this.props.getPiutang.dp:this.state.dp}/>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">Jumlah Kartu</label>
-                                    <input readOnly={true} type="text" className="form-control" name="jml_kartu" value={this.props.getPiutang.jml_kartu!==undefined?this.props.getPiutang.jml_kartu:this.state.jml_kartu}/>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">Kas Lain</label>
-                                    <input readOnly={true} type="text" className="form-control" name="kas_lain" value={this.props.getPiutang.kas_lain!==undefined?this.props.getPiutang.kas_lain:this.state.kas_lain}/>
-                                </div>
-                            </div>
 
                         </div>
                         <hr/>
@@ -329,18 +302,18 @@ class BayarPiutangForm extends Component{
                             this.props.isLoadingPost?<Preloader/>:  <div className="row">
                                 <div className="col-md-3">
                                     <div className="form-group">
-                                        <label className="control-label font-12">Jumlah Piutang</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.gt!==undefined?toRp(parseInt(this.props.getPiutang.gt,10)):"0"}/>
+                                        <label className="control-label font-12">Jumlah Hutang</label>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian,10)):"0"}/>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Yang Telah Dibayar</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.jumlah_telah_bayar!==undefined?rmComma(this.props.getPiutang.jumlah_telah_bayar):"0"}/>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.jumlah_bayar!==undefined?toCurrency(this.props.getHutang.jumlah_bayar):"0"}/>
                                     </div>
                                 </div>
                                 <div className="col-md-3">
                                     <div className="form-group">
-                                        <label className="control-label font-12">Sisa Piutang</label>
-                                        <input readOnly={true} type="text" className="form-control" value={this.props.getPiutang.gt!==undefined?toRp(parseInt(this.props.getPiutang.gt,10)-parseInt(this.props.getPiutang.jumlah_telah_bayar,10)):"0"}/>
+                                        <label className="control-label font-12">Sisa Hutang</label>
+                                        <input readOnly={true} type="text" className="form-control" value={this.props.getHutang.nilai_pembelian!==undefined?toRp(parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10)):"0"}/>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Bayar</label>
@@ -349,15 +322,15 @@ class BayarPiutangForm extends Component{
                                              style={this.state.error.jumlah_bayar !== "" ? {display: 'block'} : {display: 'none'}}>
                                             {this.state.error.jumlah_bayar}
                                         </div>
-                                        {/*{*/}
-                                            {/*parseInt(this.state.jumlah_bayar)>(parseInt(this.props.getPiutang.gt)-parseInt(this.props.getPiutang.jumlah_telah_bayar))?<small style={{color:"red",fontWeight:"bold"}}>jumlah bayar tidak boleh lebih dari sisa piutang</small>:""*/}
-                                        {/*}*/}
+                                        {
+                                            this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10)) ? <small style={{fontWeight:"bold",color:"red"}}>Jumlah Bayar Melebihi Hutang</small>:""
+                                        }
                                     </div>
                                 </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <div className="pull-right" style={{alignSelf: "flex-end"}}>
-                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} >Simpan</button>
+                                            <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10))?true:false}>Simpan</button>
                                             <button className="btn btn-danger btn-sm" style={{marginTop:"29px",marginLeft:"5px"}} onClick={this.props.action(false)}>Kembali</button>
                                         </div>
 
@@ -369,18 +342,17 @@ class BayarPiutangForm extends Component{
 
                     </div>
                 </div>
-                : <Preloader/>
-            // </Layout>
+            // {/* </Layout> */}
         );
     }
 
 }
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
-    nota:state.piutangReducer.get_code,
-    getPiutang:state.piutangReducer.data,
-    isLoading:state.piutangReducer.isLoading,
-    isLoadingPost:state.piutangReducer.isLoadingPost
+    nota:state.hutangReducer.get_code,
+    getHutang:state.hutangReducer.data,
+    isLoading:state.hutangReducer.isLoading,
+    isLoadingPost:state.hutangReducer.isLoadingPost
 });
 
-export default connect(mapStateToPropsCreateItem)(BayarPiutangForm);
+export default withRouter(connect(mapStateToPropsCreateItem)(BayarHutang));
