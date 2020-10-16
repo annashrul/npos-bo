@@ -54,7 +54,7 @@ class BayarHutang extends Component{
     }
     handlePageChange(pageNumber) {
         let any = localStorage.getItem("any_kartu_hutang");
-        this.props.dispatch(FetchKartuHutang(pageNumber,any===undefined&&any===null&&any===''?1:"&supplier="+any))
+        this.props.dispatch(FetchKartuHutang(pageNumber,any===undefined||any===null||any===''?'':"&supplier="+any))
     }
     
     update(value){
@@ -97,7 +97,7 @@ class BayarHutang extends Component{
                                         data!==undefined? data.map((v,i)=>{
                                             return(
                                                 <div className="accordion" key={i}>
-                                                    <div className="card">
+                                                    <div className="card mb-2">
                                                     <button className="btn btn-link btn-block text-left" onClick={(e)=>this.toggle(e,i)}>
                                                         <div className="card-header d-flex align-items-center justify-content-between" style={{borderBottom:'none'}}>
                                                         <h5 className="mb-0">
@@ -105,10 +105,10 @@ class BayarHutang extends Component{
                                                             {v.nama} | Sisa : Rp. {toRp(parseInt(v.sisa_hutang,10))}
                                                             {/* </button> */}
                                                         </h5>
-                                                        <h5><i className={this.state.isOpen&&this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
+                                                        <h5><i className={this.state.isOpen||this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
                                                         </div>
                                                     </button>
-                                                        <Collapse isOpen={this.state.isOpen&&this.state.indexOpen===i}>
+                                                        <Collapse isOpen={this.state.isOpen||this.state.indexOpen===i}>
                                                             <Card>
                                                             <CardBody style={{minHeight:'min-content',maxHeight:'400px',overflowX:'auto'}}>
                                                                 {

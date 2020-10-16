@@ -96,7 +96,7 @@ class BayarPiutang extends Component{
                                         data!==undefined? data.length > 0 ? data.map((v,i)=>{
                                             return(
                                                 <div className="accordion" key={i}>
-                                                    <div className="card">
+                                                    <div className="card mb-2">
                                                     <button className="btn btn-link btn-block text-left" onClick={(e)=>this.toggle(e,i)}>
                                                         <div className="card-header d-flex align-items-center justify-content-between" style={{borderBottom:'none'}}>
                                                         <h5 className="mb-0">

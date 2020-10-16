@@ -6,7 +6,7 @@ import {FetchHutang, storeHutang} from "redux/actions/hutang/hutang.action";
 import moment from "moment";
 import {toRp,toCurrency} from "helper";
 import Swal from "sweetalert2";
-import Preloader from "Preloader";
+import Spinner from "Spinner";
 import {
     withRouter
 } from 'react-router-dom';
@@ -208,7 +208,7 @@ class BayarHutang extends Component{
     }
     render(){
         return (
-            // <Layout page="Bayar Hutang">
+            !this.props.isLoading?
                 <div className="card">
                     <div className="card-header">
                         <h4>Bayar Hutang</h4>
@@ -299,7 +299,7 @@ class BayarHutang extends Component{
                         </div>
                         <hr/>
                         {
-                            this.props.isLoadingPost?<Preloader/>:  <div className="row">
+                            this.props.isLoadingPost?<Spinner/>:  <div className="row">
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Hutang</label>
@@ -342,7 +342,7 @@ class BayarHutang extends Component{
 
                     </div>
                 </div>
-            // {/* </Layout> */}
+                : <Spinner spinnerLabel={"Menyiapkan data "+this.state.nota_pembelian}/>
         );
     }
 

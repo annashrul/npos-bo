@@ -6,7 +6,7 @@ import {FetchPiutang, storePiutang} from "redux/actions/piutang/piutang.action";
 import moment from "moment";
 import {toRp} from "helper";
 import Swal from "sweetalert2";
-import Preloader from "Preloader";
+import Spinner from "Spinner";
 import { rmComma, toCurrency } from 'helper';
 
 class BayarPiutangForm extends Component{
@@ -326,7 +326,7 @@ class BayarPiutangForm extends Component{
                         </div>
                         <hr/>
                         {
-                            this.props.isLoadingPost?<Preloader/>:  <div className="row">
+                            this.props.isLoadingPost?<Spinner/>:  <div className="row">
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <label className="control-label font-12">Jumlah Piutang</label>
@@ -369,8 +369,7 @@ class BayarPiutangForm extends Component{
 
                     </div>
                 </div>
-                : <Preloader/>
-            // </Layout>
+                : <Spinner spinnerLabel={"Menyiapkan data "+this.state.nota_pembelian}/>
         );
     }
 
