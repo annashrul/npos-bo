@@ -8,6 +8,7 @@ const initialState = {
     data:[],
     data_kartu_piutang:[],
     data_report:[],
+    data_report_detail:[],
     report_excel:[],
     get_code:'-'
 };
@@ -19,6 +20,12 @@ export const piutangReducer = (state=initialState,action) => {
                 status:action.data.status,
                 msg:action.data.msg,
                 data_report:action.data.result
+            });
+        case PIUTANG.SUCCESS_REPORT_DETAIL:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                data_report_detail:action.data.result
             });
         case PIUTANG.SUCCESS_KARTU_PIUTANG:
             return Object.assign({}, state,{

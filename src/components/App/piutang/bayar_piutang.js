@@ -156,7 +156,7 @@ class BayarPiutang extends Component{
                             </div>
                     </CardBody>
                     <CardBody hidden={!this.state.isPay}>
-                        <BayarPiutangForm data={this.state.data} action={this.update.bind(this)} />
+                        <BayarPiutangForm data={this.state.data} action={this.update.bind(this)} history={this.props.history}/>
                     </CardBody>
                 </Card>
             </Layout>

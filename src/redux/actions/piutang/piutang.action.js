@@ -42,6 +42,9 @@ export function setFailed(data = []) {
 export function setPiutangReport(data=[]){
     return {type:PIUTANG.SUCCESS_REPORT,data}
 }
+export function setPiutangReportDetail(data=[]){
+    return {type:PIUTANG.SUCCESS_REPORT_DETAIL,data}
+}
 export function setKartuPiutang(data=[]){
     return {type:PIUTANG.SUCCESS_KARTU_PIUTANG,data}
 }
@@ -78,8 +81,8 @@ export const FetchPiutang = (nota) => {
 export const FetchNotaPiutang = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        // axios.get(HEADERS.URL + `piutang/getcode?lokasi=${lokasi}`)
-        axios.get(HEADERS.URL + `piutang/getcode?lokasi=LK/0001`)
+        axios.get(HEADERS.URL + `piutang/getcode?lokasi=${lokasi}`)
+        // axios.get(HEADERS.URL + `piutang/getcode?lokasi=LK/0001`)
             .then(function (response) {
                 const data = response.data;
                 dispatch(setCode(data));
@@ -130,7 +133,7 @@ export const storePiutang = (data,param) => {
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: `/bayar_piutang3ply/${response.data.result.insertId}`,
+                        pathname: `/bayar_piutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
                     })
                     Swal.closeModal();
                     return false;
@@ -178,6 +181,25 @@ export const FetchPiutangReport = (page=1,where='')=>{
                 const data = response.data;
                 
                 dispatch(setPiutangReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
+    }
+}
+export const FetchPiutangReportDetail = (page=1,where='',id=null)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `piutang/report/${id}?page=${page}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setPiutangReportDetail(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             
