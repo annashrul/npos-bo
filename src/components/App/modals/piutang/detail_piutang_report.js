@@ -21,9 +21,12 @@ class DetailSaleByProductReport extends Component{
         this.state={
             startDate:'',
             endDate:'',
+            any:'',
             isExport:false,
         }
         this.toggle = this.toggle.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
 
     }
@@ -59,6 +62,12 @@ class DetailSaleByProductReport extends Component{
             isExport:!this.state.isExport
         })
     };
+    
+    handleSearch(e){
+        e.preventDefault();
+        localStorage.setItem("any_piutang_report_detail",this.state.any);
+        this.checkingParameter(1);
+    }
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_sale_by_product_report_detail",pageNumber);
         this.checkingParameter(pageNumber);
@@ -75,6 +84,9 @@ class DetailSaleByProductReport extends Component{
         
         this.props.dispatch(FetchPiutangReportDetail(1,'',''));
     }
+    handleChange(event){
+        this.setState({ [event.target.name]: event.target.value });
+    }
     handleExport(e,total){
         e.preventDefault();
         this.setState({isExport:true});
@@ -86,7 +98,13 @@ class DetailSaleByProductReport extends Component{
     }
     checkingParameter(pageNumber){
 
-        this.props.dispatch(FetchPiutangReportDetail(pageNumber,'',this.props.detail.id));
+        let any = localStorage.any_piutang_report_detail;
+
+        let where='';
+        if(any!==undefined&&any!==null&&any!==''){
+            where+=`&q=${any}`
+        }
+        this.props.dispatch(FetchPiutangReportDetail(pageNumber,where,this.props.detail.id));
     }
 
     render(){
@@ -99,23 +117,21 @@ class DetailSaleByProductReport extends Component{
                     {
                         !this.props.isLoading?
                 <ModalBody hidden={this.state.isExport===true}>
-                    {/* <div className="row">
-                        <div className="col-6 col-xs-6 col-md-3">
+                    <div className="row">
+                        <div className="col-6 col-xs-6 col-md-2">
                             <div className="form-group">
-                                <label htmlFor=""> Periode </label>
-                                <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                    <input type="text" className="form-control" name="date_sale_by_product_report_detail" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
-                                </DateRangePicker>
+                                <label>Cari</label>
+                                <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                             </div>
                         </div>
-                        <div className="col-6 col-xs-6 col-md-12">
-                            <div className="form-group text-right">
-                                <button style={{marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleExport(e,(last_page*per_page)))}>
-                                    <i className="fa fa-print"></i> Export
+                        <div className="col-6 col-xs-6 col-md-3">
+                            <div className="form-group">
+                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                    <i className="fa fa-search"/>
                                 </button>
                             </div>
                         </div>
-                    </div> */}
+                    </div>
                     <table className="table" >
                         <tbody className="bg-transparent no-border" style={{border:"none"}}>
                             <tr>
