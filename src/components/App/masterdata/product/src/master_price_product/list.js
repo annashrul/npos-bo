@@ -59,7 +59,9 @@ class ListPriceProduct extends Component{
     };
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         const {
             total,
             // last_page,
@@ -90,20 +92,20 @@ class ListPriceProduct extends Component{
                     <table className="table table-hover table-bordered">
                         <thead className="bg-light">
                         <tr>
-                            <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Kode</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th>
-                            <th className="text-black" style={columnStyle} colSpan="4">Harga Jual</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">PPN</th>
-                            <th className="text-black" style={columnStyle} rowSpan="2">Servis</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">#</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">Kode</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">Barcode</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">Nama</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">Lokasi</th>
+                            <th className="text-black" style={centerStyle} colSpan="4">Harga Jual</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">PPN</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">Servis</th>
                         </tr>
                         <tr>
-                            <td className="text-black" style={columnStyle}>1</td>
-                            <td className="text-black" style={columnStyle}>2</td>
-                            <td className="text-black" style={columnStyle}>3</td>
-                            <td className="text-black" style={columnStyle}>4</td>
+                            <td className="text-black" style={centerStyle}>1</td>
+                            <td className="text-black" style={centerStyle}>2</td>
+                            <td className="text-black" style={centerStyle}>3</td>
+                            <td className="text-black" style={centerStyle}>4</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -113,7 +115,7 @@ class ListPriceProduct extends Component{
                                     data.map((v,i)=>{
                                         return(
                                             <tr key={i}>
-                                                <td style={columnStyle}>{/* Example split danger button */}
+                                                <td style={centerStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
                                                         <button className="btn btn-primary btn-sm" type="button"  onClick={(e)=>this.handleEdit(
                                                             e,v.id,v.harga,v.ppn,v.service,v.harga2,v.harga3,v.harga4
@@ -123,16 +125,16 @@ class ListPriceProduct extends Component{
 
                                                     </div>
                                                 </td>
-                                                <td style={columnStyle}>{v.kd_brg}</td>
-                                                <td style={columnStyle}>{v.barcode?v.barcode:'-'}</td>
-                                                <td style={columnStyle}>{v.nm_brg?v.nm_brg:'-'}</td>
-                                                <td style={columnStyle}>{v.nama_toko?v.nama_toko:'-'}</td>
-                                                <td style={columnStyle}>{toRp(v.harga)}</td>
-                                                <td style={columnStyle}>{toRp(v.harga2)}</td>
-                                                <td style={columnStyle}>{toRp(v.harga3)}</td>
-                                                <td style={columnStyle}>{toRp(v.harga4)}</td>
-                                                <td style={columnStyle}>{v.ppn}</td>
-                                                <td style={columnStyle}>{v.service}</td>
+                                                <td style={leftStyle}>{v.kd_brg}</td>
+                                                <td style={leftStyle}>{v.barcode?v.barcode:'-'}</td>
+                                                <td style={leftStyle}>{v.nm_brg?v.nm_brg:'-'}</td>
+                                                <td style={leftStyle}>{v.nama_toko?v.nama_toko:'-'}</td>
+                                                <td style={rightStyle}>{toRp(v.harga)}</td>
+                                                <td style={rightStyle}>{toRp(v.harga2)}</td>
+                                                <td style={rightStyle}>{toRp(v.harga3)}</td>
+                                                <td style={rightStyle}>{toRp(v.harga4)}</td>
+                                                <td style={rightStyle}>{v.ppn}</td>
+                                                <td style={rightStyle}>{v.service}</td>
                                             </tr>
                                         )
                                     })

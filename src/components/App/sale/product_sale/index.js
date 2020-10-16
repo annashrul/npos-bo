@@ -672,7 +672,9 @@ class Sale extends Component{
             })
         }
         let totalsub=0;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         console.log(this.state.databrg)
         return (
             <Layout page="Penjualan Barang">
@@ -828,17 +830,17 @@ class Sale extends Component{
                                         <table className="table table-hover">
                                             <thead>
                                             <tr>
-                                                <th style={columnStyle}>#</th>
-                                                <th style={columnStyle}>barang</th>
-                                                <th style={columnStyle}>barcode</th>
-                                                <th style={columnStyle}>satuan</th>
-                                                <th style={columnStyle} width='20%'>harga</th>
-                                                <th style={columnStyle} width='10%'>disc 1 (%)</th>
-                                                {/* <th style={columnStyle}>disc 2 (%)</th> */}
-                                                <th style={columnStyle} width='10%'>ppn</th>
-                                                <th style={columnStyle}>stock</th>
-                                                <th style={columnStyle}>qty</th>
-                                                <th style={columnStyle}>Subtotal</th>
+                                                <th style={centerStyle}>#</th>
+                                                <th style={centerStyle}>barang</th>
+                                                <th style={centerStyle}>barcode</th>
+                                                <th style={centerStyle}>satuan</th>
+                                                <th style={centerStyle}>harga</th>
+                                                <th style={centerStyle}>disc 1 (%)</th>
+                                                {/* <th style={centerStyle}>disc 2 (%)</th> */}
+                                                <th style={centerStyle}>ppn</th>
+                                                <th style={centerStyle}>stock</th>
+                                                <th style={centerStyle}>qty</th>
+                                                <th style={centerStyle}>Subtotal</th>
                                             </tr>
                                             </thead>
 
@@ -877,14 +879,14 @@ class Sale extends Component{
 
                                                     return (
                                                         <tr key={index}>
-                                                            <td style={columnStyle}>
+                                                            <td style={centerStyle}>
                                                                 <a href="about:blank" className='btn btn-danger btn-sm' onClick={(e) => this.HandleRemove(e, item.id)}><i className='fa fa-trash'/></a>
                                                             </td>
-                                                            <td style={columnStyle}>{item.nm_brg}</td>
-                                                            <td style={columnStyle}>{item.barcode}</td>
-                                                            <td style={columnStyle}>{item.satuan}</td>
+                                                            <td style={leftStyle}>{item.nm_brg}</td>
+                                                            <td style={leftStyle}>{item.barcode}</td>
+                                                            <td style={leftStyle}>{item.satuan}</td>
                                                             <td>
-                                                                <select className="form-control" name='harga' style={{marginRight: '20px'}}
+                                                                <select className="form-control" name='harga' style={{minWidth:"100px",maxWidth:"max-content"}}
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}>
                                                                     <option value={this.state.brgval[index].harga} style={{display:this.state.brgval[index].harga===''||this.state.brgval[index].harga==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga)}</option>
@@ -897,7 +899,7 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={toCurrency(this.state.brgval[index].harga)}/> */}
                                                             </td>
-                                                            <td><input type='text' name='diskon_persen'  className="form-control"
+                                                            <td><input type='text' name='diskon_persen' style={{minWidth:"50px",maxWidth:"max-content"}} className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_persen}/>
@@ -908,13 +910,13 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_nominal}/>
                                                             </td> */}
-                                                            <td><input type='text' name='ppn'  className="form-control"
+                                                            <td><input type='text' name='ppn' style={{minWidth:"50px",maxWidth:"max-content"}}  className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].ppn}/>
                                                             </td>
-                                                            <td style={columnStyle}>{item.stock}</td>
-                                                            <td><input type='text' name='qty'
+                                                            <td style={rightStyle}>{item.stock}</td>
+                                                            <td><input type='text' name='qty' style={{minWidth:"50px",maxWidth:"max-content"}}
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        className="form-control"
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
@@ -923,7 +925,7 @@ class Sale extends Component{
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
-                                                            <td style={{textAlign:"right"}}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
+                                                            <td style={rightStyle}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
 
                                                         </tr>
                                                     )
@@ -932,9 +934,9 @@ class Sale extends Component{
                                             </tbody>
                                             <tfoot>
                                             <tr style={{background: '#eee'}}>
-                                                <td colSpan='9' style={{textAlign: 'right !important'}}>Total
+                                                <td colSpan='9' style={rightStyle}>Total
                                                 </td>
-                                                <td colSpan='1' style={{textAlign:"right"}}>{toRp(totalsub)}</td>
+                                                <td colSpan='1' style={rightStyle}>{toRp(totalsub)}</td>
                                             </tr>
                                             </tfoot>
                                         </table>
