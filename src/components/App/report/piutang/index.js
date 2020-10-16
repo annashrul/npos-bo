@@ -45,7 +45,7 @@ class PiutangReport extends Component{
             search_by:"kd_trx",
             search_by_data:[
                 {value: "kd_trx", label:'Kode Trx'},
-                {value: "nama", label:'Nama'},
+                {value: "nama", label:'Customer'},
             ],
         }
     }
@@ -446,7 +446,7 @@ class PiutangReport extends Component{
                                         <th className="text-black" style={ centerStyle} rowSpan="2">#</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Kode trx</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Nama Toko</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nama</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Customer</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Piutang</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Telah Dibayar</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
