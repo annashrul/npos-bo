@@ -44,6 +44,10 @@ export function setHutangReport(data=[]){
     return {type:HUTANG.SUCCESS_REPORT,data}
 }
 
+export function setKartuHutang(data=[]){
+    return {type:HUTANG.SUCCESS_KARTU_HUTANG,data}
+}
+
 export function setHutangReportExcel(data=[]){
     return {type:HUTANG.SUCCESS_EXCEL,data}
 }
@@ -231,3 +235,23 @@ export const DeleteHutangReport = (id)=>{
     }
 }
 
+
+export const FetchKartuHutang = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `hutang/kartu_hutang?page=${page}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setKartuHutang(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
+    }
+}

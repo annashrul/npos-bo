@@ -6,6 +6,7 @@ const initialState = {
     status:"",
     msg:"",
     data:[],
+    data_kartu_hutang:[],
     data_report:[],
     report_excel:[],
     get_code:'-'
@@ -19,6 +20,12 @@ export const hutangReducer = (state=initialState,action) => {
                 status:action.data.status,
                 msg:action.data.msg,
                 data_report:action.data.result
+            });
+        case HUTANG.SUCCESS_KARTU_HUTANG:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                data_kartu_hutang:action.data.result
             });
         case HUTANG.SUCCESS_EXCEL:
             

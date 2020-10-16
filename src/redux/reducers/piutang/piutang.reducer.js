@@ -6,6 +6,7 @@ const initialState = {
     status:"",
     msg:"",
     data:[],
+    data_kartu_piutang:[],
     data_report:[],
     report_excel:[],
     get_code:'-'

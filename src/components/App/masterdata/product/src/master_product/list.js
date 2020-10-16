@@ -387,7 +387,7 @@ class ListProduct extends Component{
         const {total,per_page,current_page,data} = this.props.data;
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left"};
-        const rightStyle = {verticalAlign: "middle", textAlign: "right"};
+        // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         return (
             <div>
                 <form onSubmit={this.handlesearch} noValidate>
@@ -436,7 +436,7 @@ class ListProduct extends Component{
                     </div>
 
                 </form>
-                <div className="table-responsive" style={{overflowX: "auto"}}>
+                <div style={{overflowX: "auto"}}>
                     {/*DATA EXCEL*/}
                     <table className="table table-hover"  id="emp" style={{display:"none"}}>
                         <thead className="bg-light">
@@ -448,7 +448,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={centerStyle}>Sub Dept</th>
                             <th className="text-black" style={centerStyle}>Purchase Price</th>
                             <th className="text-black" style={centerStyle}>Category</th>
-                            <th className="text-black" style={centerStyle}>Stock Min</th>
+                            <th className="text-black" style={centerStyle}>Stock<br/>Min</th>
                             <th className="text-black" style={centerStyle}>Product Type</th>
                         </tr>
                         </thead>
@@ -490,10 +490,10 @@ class ListProduct extends Component{
                             <th className="text-black" style={centerStyle} colSpan={1}/>
                             <th className="text-black" style={centerStyle}>Kode Barang</th>
                             <th className="text-black" style={centerStyle}>Nama Barang</th>
-                            <th className="text-black" style={centerStyle}>Kelompok</th>
-                            <th className="text-black" style={centerStyle}>Supplier</th>
-                            <th className="text-black" style={centerStyle}>Sub Dept</th>
-                            <th className="text-black" style={centerStyle}>Kategori</th>
+                            <th className="text-black" width="10%" style={centerStyle}>Kelompok</th>
+                            <th className="text-black" width="10%" style={centerStyle}>Supplier</th>
+                            <th className="text-black" width="10%" style={centerStyle}>Sub Dept</th>
+                            <th className="text-black" width="10%" style={centerStyle}>Kategori</th>
                             <th className="text-black" style={centerStyle} colSpan={3}/>
                         </tr>
                         <tr>
@@ -505,12 +505,12 @@ class ListProduct extends Component{
                                 }
                             } style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Kode Barang"/></td>
                             <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
-                            <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Kelompok"/></td>
-                            <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Supplier"/></td>
-                            <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
-                            <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Kategori"/></td>
+                            <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Kelompok"/></td>
+                            <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Supplier"/></td>
+                            <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
+                            <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Kategori"/></td>
                             <td className="text-black" style={centerStyle}>Jenis</td>
-                            <td className="text-black" style={centerStyle}>Stock Min</td>
+                            <td className="text-black" style={centerStyle}>Stock<br/>Min</td>
                             <td className="text-black" style={centerStyle}>#</td>
                         </tr>
                         </thead>
@@ -530,7 +530,7 @@ class ListProduct extends Component{
                                                 <td style={leftStyle}>{v.subdept}</td>
                                                 <td style={leftStyle}>{v.kategori}</td>
                                                 <td style={centerStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
-                                                <td style={rightStyle}>{v.stock_min}</td>
+                                                <td style={centerStyle}>{v.stock_min}</td>
                                                 <td style={centerStyle}>
                                                     <div className="btn-group mb-2 mr-2">
                                                         <UncontrolledButtonDropdown>
