@@ -10,6 +10,7 @@ import {toCurrency,rmComma} from 'helper';
 import {
     withRouter
 } from 'react-router-dom';
+import moment from 'moment'
 class FormSale extends Component{
     constructor(props){
         super(props);
@@ -20,11 +21,13 @@ class FormSale extends Component{
             error:{
                 tunai:"",
                 bank:"",
+                tanggal_tempo:"",
             },
             gt:0,
             kode_trx:'',
             jenis_trx:"Tunai",
             tunai:0,
+            tanggal_tempo:'',
             change:0,
             bank:''
         };
@@ -44,6 +47,8 @@ class FormSale extends Component{
     handleChange = (event) => {
         
         this.setState({ [event.target.name]: event.target.value });
+        console.log(event.target.name)
+        console.log(event.target.value)
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
             if(tunai<0){
@@ -87,7 +92,7 @@ class FormSale extends Component{
             Object.assign(this.props.master,{
                 change:0,
                 tunai:rmComma(this.state.tunai),
-                jenis_trx:event.target.value
+                jenis_trx:event.target.value,
             });
         }
         if(event.target.name.toLowerCase() === 'dp'){
@@ -99,6 +104,11 @@ class FormSale extends Component{
             Object.assign(this.props.master,{
                 change:0,
                 tunai:rmComma(this.state.tunai),
+            });
+        }
+        if(event.target.name === 'tanggal_tempo'){
+            Object.assign(this.props.master,{
+                tempo:event.target.value,
             });
         }
     }
@@ -120,18 +130,33 @@ class FormSale extends Component{
         
         let err = this.state.error;
         if (this.state.jenis_trx.toLowerCase() === 'kredit'){
-            let parsedata = {};
-            parsedata['master'] = this.props.master;
-            parsedata['split'] = [];
-            parsedata['join'] = [];
-            parsedata['detail'] = this.props.detail;
-
-            let newparse = {};
-            newparse['parsedata'] = parsedata;
-            newparse['alamat'] = this.props.lokasi.alamat;
-            newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
-
-            this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
+            if(parseFloat(this.state.tunai.toString().replace(/,/g,''))<0){
+                err = Object.assign({}, err, {
+                    tunai:"Nominal masih kosong!"
+                });
+                this.setState({
+                    error: err
+                })
+            } else if(this.state.tanggal_tempo===""){
+                err = Object.assign({}, err, {
+                    tanggal_tempo:"Tanggal masih kosong!"
+                });
+                this.setState({
+                    error: err
+                })
+            } else {
+                let parsedata = {};
+                parsedata['master'] = this.props.master;
+                parsedata['split'] = [];
+                parsedata['join'] = [];
+                parsedata['detail'] = this.props.detail;
+    
+                let newparse = {};
+                newparse['parsedata'] = parsedata;
+                newparse['alamat'] = this.props.lokasi.alamat;
+                newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
+                this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
+            }
         }else{ 
             if(parseFloat(this.state.tunai.toString().replace(/,/g,''))<this.state.gt){
                 err = Object.assign({}, err, {
@@ -191,6 +216,14 @@ class FormSale extends Component{
                                 <div className="invalid-feedback"
                                      style={this.state.error.tunai !== "" || this.state.error.tunai !== "0" ? {display: 'block'} : {display: 'none'}}>
                                     {this.state.error.tunai}
+                                </div>
+                            </div>
+                            <div className="form-group" style={{display:this.state.jenis_trx==='Kredit'?'':'none'}}>
+                                <label htmlFor="">Tanggal Tempo</label>
+                                <input type="date" name={"tanggal_tempo"} min={moment(new Date()).add(1,'days').format("yyyy-MM-DD")} className="form-control" value={this.state.tanggal_tempo} onChange={this.handleChange}/>
+                                <div className="invalid-feedback"
+                                     style={this.state.error.tanggal_tempo !== "" || this.state.error.tanggal_tempo !== "0" ? {display: 'block'} : {display: 'none'}}>
+                                    {this.state.error.tanggal_tempo}
                                 </div>
                             </div>
                             {/*TRANSFER*/}
