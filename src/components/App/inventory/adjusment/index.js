@@ -161,7 +161,7 @@ class TrxAdjustment extends Component{
             harga_beli:item.harga_beli,
             satuan:item.satuan,
             hrg_jual:item.hrg_jual,
-            kd_brg:item.kd_brg,
+            kd_brg:item.kd_brg,day
             nm_brg:item.nm_brg,
             kel_brg:item.kel_brg,
             kategori:item.kategori,
@@ -328,6 +328,18 @@ class TrxAdjustment extends Component{
                         final[column]=val
                     }
                 })
+                if (column === 'qty_adjust'){
+                    let saldo_stock = res.stock;
+                    console.log(val);
+                    console.log(val);
+                    if (res.status === 'kurang') {
+                        saldo_stock = parseInt(res.stock, 10) - parseInt(val, 10);
+                    }
+                    if (res.status === 'tambah' || res.status === '' || res.status === undefined) {
+                        saldo_stock = parseInt(res.stock, 10) + parseInt(val, 10)
+                    }
+                    final[saldo_stock]=saldo_stock;
+                }
                 update(table, final);
                 ToastQ.fire({
                     icon: 'success',
@@ -446,7 +458,8 @@ class TrxAdjustment extends Component{
                     stock:data[0].stock,
                     qty_adjust:0,
                     saldo_stock:data[0].stock,
-                    tambahan:[]
+                    status:"tambah",
+                    tambahan: data[0].tambahan
                 })
             } else {
                 let saldo_stock = res.stock;
@@ -478,7 +491,8 @@ class TrxAdjustment extends Component{
                     stock:res.stock,
                     saldo_stock:saldo_stock,
                     qty_adjust:parseFloat(res.qty_adjust) + 1,
-                    tambahan: []
+                    status:res.status,
+                    tambahan: res.tambahan
                 })
             }
             return true
@@ -603,7 +617,7 @@ class TrxAdjustment extends Component{
                                                                     group1:i.group1,
                                                                     group2:i.group2,
                                                                     stock:i.stock,
-                                                                    qty_adjust:0,
+                                                                    qty_adjust:1,
                                                                     status:'tambah',
                                                                     saldo_stock:i.stock,
                                                                     tambahan:i.tambahan

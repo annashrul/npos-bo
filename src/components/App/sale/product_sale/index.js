@@ -375,7 +375,7 @@ class Sale extends Component{
             hrg_beli:item.hrg_beli,
             kategori:item.kategori,
             services:item.services,
-            tambahan: []
+            tambahan: item.tambahan
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
@@ -397,7 +397,7 @@ class Sale extends Component{
                     diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
-                    tambahan: []
+                    tambahan: res.tambahan
                 })
             }
 
@@ -579,7 +579,7 @@ class Sale extends Component{
                     hrg_beli:data[0].hrg_beli,
                     kategori:data[0].kategori,
                     services:data[0].service,
-                    tambahan: []
+                    tambahan: data[0].tambahan
                 })
             } else {
                 update(table, {
@@ -734,7 +734,7 @@ class Sale extends Component{
                                                                         hrg_beli:i.hrg_beli,
                                                                         kategori:i.kategori,
                                                                         services:i.service,
-                                                                        tambahan: []
+                                                                        tambahan: i.tambahan
                                                                     })}>
                                                                     <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
                                                                     <div className="about">

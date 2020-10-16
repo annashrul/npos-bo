@@ -87,6 +87,10 @@ class Receive extends Component{
                 }
             })
     }
+    getConfigSupplier() {
+        const config = document.getElementById("supplier").value;
+        return parseInt(config,10);
+    }
     componentWillMount(){
         if(this.props.match.params.slug!==undefined&&this.props.match.params.slug!==null){
             destroy(table);
@@ -113,8 +117,11 @@ class Receive extends Component{
                     return null;
                 });
                 this.getData();
-                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty,5));
-                // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,5));
+                if (this.getConfigSupplier() === 0) {
+                    this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,5));
+                }else{
+                    this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty,5));
+                }
                 this.setState({
                     location:res.master.lokasi,
                     catatan:res.master.catatan,
@@ -180,8 +187,11 @@ class Receive extends Component{
             })
         }
         if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk !== undefined && localStorage.lk !== '') {
-            // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty, 5))
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty, 5))
+            if(this.getConfigSupplier===0){
+                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty, 5))
+            }else{
+                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty, 5))
+            }
         }
     }
     componentWillReceiveProps = (nextProps) => {
@@ -331,8 +341,11 @@ class Receive extends Component{
         localStorage.setItem('lk', lk.value);
         this.props.dispatch(FetchNota(lk.value))
         if (this.state.supplier !== "") {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty,5))
-            // this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty,5))
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty,5))
+            }else{
+                this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty,5))
+            }
         }
         destroy(table)
         this.getData()
@@ -349,8 +362,11 @@ class Receive extends Component{
         localStorage.setItem('sp', sp.value);
 
         if (this.state.location !== "") {
-            // this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty, 5))
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty, 5))
+            if (this.getConfigSupplier() === 0) {
+            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty, 5))
+            }else{
+                this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty, 5))
+            }
         }
         destroy(table)
         this.getData()
@@ -756,8 +772,11 @@ class Receive extends Component{
             )
         } else {
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty, 5));
-            // this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, null, this.autoSetQty, 5));
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, null, this.autoSetQty, 5));
+            }else{
+                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty, 5));
+            }
             this.setState({search: ''});
 
         }
@@ -788,9 +807,12 @@ class Receive extends Component{
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
-            // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, null, this.autoSetQty, this.state.perpage));
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, null, this.autoSetQty, this.state.perpage));
+            }else{
+                this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
 
+            }
         }
         else{
             Swal.fire({
