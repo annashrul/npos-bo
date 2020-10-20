@@ -8,6 +8,7 @@ const initialState = {
     data:[],
     data_kartu_hutang:[],
     data_report:[],
+    data_report_detail:[],
     report_excel:[],
     get_code:'-'
 };
@@ -15,11 +16,16 @@ const initialState = {
 export const hutangReducer = (state=initialState,action) => {
     switch (action.type) {
         case HUTANG.SUCCESS_REPORT:
-            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data_report:action.data.result
+            });
+        case HUTANG.SUCCESS_REPORT_DETAIL:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                data_report_detail:action.data.result
             });
         case HUTANG.SUCCESS_KARTU_HUTANG:
             return Object.assign({}, state,{
@@ -28,7 +34,6 @@ export const hutangReducer = (state=initialState,action) => {
                 data_kartu_hutang:action.data.result
             });
         case HUTANG.SUCCESS_EXCEL:
-            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
@@ -39,13 +44,11 @@ export const hutangReducer = (state=initialState,action) => {
                 get_code: action.data.result
             });
         case HUTANG.SUCCESS:
-            
             return Object.assign({}, state,{
                 status:action.data.status,
                 msg:action.data.msg,
                 data:action.data.result,
             });
-
         case HUTANG.FAILED:
             return Object.assign({}, state, {
                 status:action.data.status,

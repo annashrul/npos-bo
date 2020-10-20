@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchHutangReport, FetchHutangReportExcel, DeleteHutangReport} from "redux/actions/hutang/hutang.action";
+import {FetchHutangReport, FetchHutangReportExcel, DeleteHutangReport, FetchHutangReportDetail} from "redux/actions/hutang/hutang.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 // import DetailHutang from "components/App/modals/report/inventory/hutang_report/detail_hutang";
@@ -14,8 +14,9 @@ import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import Swal from 'sweetalert2'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
-import { Link } from 'react-router-dom';
-
+// import { Link } from 'react-router-dom';
+import { statusQ, toRp } from '../../../../helper';
+import DetailHutang from '../../modals/hutang/detail_hutang_report'
 class HutangReport extends Component{
     constructor(props){
         super(props);
@@ -26,7 +27,9 @@ class HutangReport extends Component{
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
         this.state={
+            detail:{},
             where_data:"",
             any:"",
             location:"",
@@ -39,6 +42,11 @@ class HutangReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            search_by:"no_faktur_beli",
+            search_by_data:[
+                {value: "no_faktur_beli", label:'Kode Trx'},
+                {value: "nama", label:'Customer'},
+            ],
         }
     }
     componentWillMount(){
@@ -66,6 +74,11 @@ class HutangReport extends Component{
         }
         if (localStorage.status_hutang_report !== undefined && localStorage.status_hutang_report !== null) {
             this.setState({status: localStorage.status_hutang_report})
+        }
+        if (localStorage.search_by_hutang_report !== undefined && localStorage.search_by_hutang_report !== null) {
+            this.setState({
+                search_by: localStorage.search_by_hutang_report
+            })
         }
     }
     handlePageChange(pageNumber){
@@ -96,6 +109,31 @@ class HutangReport extends Component{
         localStorage.setItem("any_hutang_report",this.state.any);
         this.handleParameter(1);
     }
+    HandleChangeSearchBy(sb) {
+        this.setState({
+            search_by: sb.value
+        })
+        localStorage.setItem('search_by_hutang_report', sb.value);
+    }
+    handleDetail(e,id, nama_toko, supplier, jml_hutang, nilai_pembelian, status, tempo){
+        e.preventDefault();
+        this.setState({
+            detail:
+                {
+                    "id":id,
+                    "nama_toko":nama_toko,
+                    "supplier":supplier,
+                    "jml_hutang":jml_hutang,
+                    "nilai_pembelian":nilai_pembelian,
+                    "status":status,
+                    "tempo":tempo,
+                }
+        })
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("detailHutangReportDetail"));
+        this.props.dispatch(FetchHutangReportDetail(1,'',id));
+    }
     handleDelete(e,kode){
         e.preventDefault();
         Swal.fire({
@@ -119,9 +157,10 @@ class HutangReport extends Component{
         let dateTo=localStorage.date_to_hutang_report;
         let lokasi = localStorage.location_hutang_report;
         let any = localStorage.any_hutang_report;
-        let sort=localStorage.sort_hutang_report;
-        let filter=localStorage.filter_hutang_report;
+        // let sort=localStorage.sort_hutang_report;
+        // let filter=localStorage.filter_hutang_report;
         let status=localStorage.status_hutang_report;
+        let search_by=localStorage.search_by_hutang_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -132,18 +171,21 @@ class HutangReport extends Component{
         if(status!==undefined&&status!==null&&status!==''){
             where+=`&status=${status}`;
         }
-        if(filter!==undefined&&filter!==null&&filter!==''){
-            if(sort!==undefined&&sort!==null&&sort!==''){
-                where+=`&sort=${filter}|${sort}`;
-            }
+        if(search_by!==undefined&&search_by!==null&&search_by!==''){
+            where+=`&searchby=${search_by}`;
         }
+        // if(filter!==undefined&&filter!==null&&filter!==''){
+        //     if(sort!==undefined&&sort!==null&&sort!==''){
+        //         where+=`&sort=${filter}|${sort}`;
+        //     }
+        // }
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`
         }
         this.setState({
             where_data:where
         })
-        localStorage.setItem("where_hutang_report",where);
+        localStorage.setItem("where_hutang_report",pageNumber);
         this.props.dispatch(FetchHutangReport(pageNumber,where))
         // this.props.dispatch(FetchHutangReportExcel(pageNumber,where))
     }
@@ -162,14 +204,15 @@ class HutangReport extends Component{
         });
         let filter = [
             {kode:"no_nota",value: "No Nota"},
-            {kode:"fak_beli",value: "Faktur Beli"},
+            {kode:"fak_jual",value: "Faktur Jual"},
             {kode:"tgl_byr",value: "Tanggal Bayar"},
             {kode:"cara_byr",value: "Cara Bayar"},
             {kode:"jumlah",value: "Jumlah"},
             {kode:"nm_bank",value: "Nama Bank"},
             {kode:"tgl_jatuh_tempo",value: "Jatuh Tempo"},
-            {kode:"tgl_cair_giro",value: "Tanggal Cair Giro"},
+            {kode:"tgl_cair_giro",value: "tanggal Cair Giro"},
             {kode:"nama",value: "Nama"},
+            {kode:"kd_cust",value: "Kode Cust."},
         ];
         let data_filter=[];
         filter.map((i) => {
@@ -255,11 +298,13 @@ class HutangReport extends Component{
         // let range = total*perpage;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formHutangExcel"));
-        this.props.dispatch(FetchHutangReportExcel(1,this.state.where_data,total));
+        this.props.dispatch(FetchHutangReportExcel(this.state.where_data,total));
     }
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         const {
             per_page,
             last_page,
@@ -269,6 +314,7 @@ class HutangReport extends Component{
             data,
             // total
         } = this.props.hutangReport;
+        
         return (
             <Layout page="Laporan Hutang">
                 <div className="col-12 box-margin">
@@ -289,7 +335,7 @@ class HutangReport extends Component{
                                     </div>
                                 </div>
 
-                                {/* <div className="col-6 col-xs-6 col-md-2">
+                                <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label htmlFor="">Lokasi</label>
                                         <Select
@@ -304,7 +350,7 @@ class HutangReport extends Component{
                                         />
                                     </div>
                                 </div>
-                                <div className="col-6 col-xs-6 col-md-2">
+                                {/*<div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
                                             Status
@@ -324,7 +370,7 @@ class HutangReport extends Component{
                                 <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2"></div> */}
-                                <div className="col-6 col-xs-6 col-md-2">
+                                {/* <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
                                             Filter
@@ -357,6 +403,22 @@ class HutangReport extends Component{
                                             }
                                         />
                                     </div>
+                                </div> */}
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label htmlFor="exampleFormControlSelect1">Search By</label>
+                                        <Select
+                                            options={this.state.search_by_data}
+                                            onChange={this.HandleChangeSearchBy}
+                                            placeholder="Pilih Kolom"
+                                            value = {
+                                                this.state.search_by_data.find(op => {
+                                                    return op.value === this.state.search_by
+                                                })
+                                            }
+                                        />
+
+                                    </div>
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
@@ -381,21 +443,13 @@ class HutangReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No Nota</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Faktur Beli</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Bayar</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Cara Bayar</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Jumlah</th>
-                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">kasir</th> */}
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Nama Bank</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Jatuh Tempo</th>
-                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">nonota</th> */}
-                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">bulat</th> */}
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No Giro</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Cair Giro</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">#</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Kode trx</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nama Toko</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Supplier</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nilai Pembelian</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tempo</th>
                                     </tr>
                                     </thead>
                                     {
@@ -407,33 +461,26 @@ class HutangReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
-                                                                    <td style={columnStyle}>
+                                                                    <td style={ centerStyle}>
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>
                                                                                 <DropdownToggle caret>
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_nota)}>Delete</DropdownItem>
-                                                                                    <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tempo)}>Detail</DropdownItem>
+                                                                                    {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_faktur_beli)}>Delete</DropdownItem> */}
+                                                                                    {/* <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
-                                                                    <td style={columnStyle}>{v.no_nota}</td>
-                                                                    <td style={columnStyle}>{v.fak_beli}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_byr).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.cara_byr}</td>
-                                                                    <td style={columnStyle}>{v.jumlah}</td>
-                                                                    {/* <td style={columnStyle}>{v.kasir}</td> */}
-                                                                    <td style={columnStyle}>{v.nm_bank}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_jatuh_tempo).format("DD-MM-YYYY")}</td>
-                                                                    {/* <td style={columnStyle}>{v.nonota}</td> */}
-                                                                    {/* <td style={columnStyle}>{v.bulat}</td> */}
-                                                                    <td style={columnStyle}>{v.nogiro}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_cair_giro).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={columnStyle}>{v.ket}</td>
+                                                                    <td style={ leftStyle}>{v.no_faktur_beli}</td>
+                                                                    <td style={ leftStyle}>{v.nama_toko}</td>
+                                                                    <td style={ leftStyle}>{v.supplier}</td>
+                                                                    <td style={ rightStyle}>{toRp(parseInt(v.nilai_pembelian,10))}</td>
+                                                                    <td style={ centerStyle}>{statusQ(v.status==='LUNAS'?'success':'danger',v.status)}</td>
+                                                                    <td style={ centerStyle}>{moment(v.tempo).format('YYYY-MM-DD')}</td>
 
                                                                 </tr>
                                                             )
@@ -455,7 +502,7 @@ class HutangReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            {/* <DetailHutang hutangDetail={this.props.hutangDetail}/> */}
+                            <DetailHutang detail={this.state.detail}/>
                             <HutangReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                             {/* <ApproveHutang/> */}
                         </div>
