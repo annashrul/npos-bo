@@ -161,7 +161,7 @@ class DetailSaleByProductReport extends Component{
                                 <th className="text-black" style={centerStyle}>#</th>
                                 <th className="text-black" style={centerStyle}>No Nota</th>
                                 {/* <th className="text-black" style={centerStyle}>Kode Cust</th> */}
-                                <th className="text-black" style={centerStyle}>Faktur Jual</th>
+                                <th className="text-black" style={centerStyle}>Faktur Beli</th>
                                 <th className="text-black" style={centerStyle}>Nama</th>
                                 {/* <th className="text-black" style={centerStyle}>Kasir</th> */}
                                 <th className="text-black" style={centerStyle}>Bulat</th>
@@ -169,10 +169,10 @@ class DetailSaleByProductReport extends Component{
                                 <th className="text-black" style={centerStyle}>Jumlah</th>
                                 {/* <th className="text-black" style={centerStyle}>Nama Bank</th>
                                 <th className="text-black" style={centerStyle}>No Giro</th> */}
-                                <th className="text-black" style={centerStyle}>Operator</th>
+                                <th className="text-black" style={centerStyle}>Kasir</th>
                                 <th className="text-black" style={centerStyle}>Tanggal Bayar</th>
                                 {/* <th className="text-black" style={centerStyle}>Tanggal Cair Giru</th> */}
-                                <th className="text-black" style={centerStyle}>Tanggal Jatuh Tempo</th>
+                                <th className="text-black" style={centerStyle}>Tanggal Cair Giro</th>
                                 <th className="text-black" style={centerStyle}>Ket</th>
                             </tr>
                             </thead>
@@ -197,7 +197,7 @@ class DetailSaleByProductReport extends Component{
                                                 </td>
                                                 <td style={centerStyle}>{v.no_nota}</td>
                                                 {/* <td style={centerStyle}>{v.kd_cust}</td> */}
-                                                <td style={centerStyle}>{v.fak_jual}</td>
+                                                <td style={centerStyle}>{v.fak_beli}</td>
                                                 <td style={centerStyle}>{v.nama}</td>
                                                 {/* <td style={centerStyle}>{v.kasir}</td> */}
                                                 <td style={centerStyle}>{v.bulat}</td>
@@ -205,10 +205,10 @@ class DetailSaleByProductReport extends Component{
                                                 <td style={centerStyle}>{toRp(parseInt(v.jumlah,10))}</td>
                                                 {/* <td style={centerStyle}>{v.nm_bank}</td>
                                                 <td style={centerStyle}>{v.nogiro}</td> */}
-                                                <td style={centerStyle}>{v.operator}</td>
+                                                <td style={centerStyle}>{v.kasir}</td>
                                                 <td style={centerStyle}>{moment(v.tgl_byr).format('YYYY-MM-DD')}</td>
                                                 {/* <td style={centerStyle}>{moment(v.tgl_cair_giro).format('YYYY-MM-DD')}</td> */}
-                                                <td style={centerStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
+                                                <td style={centerStyle}>{moment(v.tgl_cair_giro).format('YYYY-MM-DD')}</td>
                                                 <td style={centerStyle}>{v.ket}</td>
                                             </tr>
                                         );
