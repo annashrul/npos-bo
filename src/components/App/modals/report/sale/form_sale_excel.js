@@ -166,7 +166,7 @@ class SaleReportExcel extends Component{
         let data = body.concat(footer);
 
         // let data = this.props.saleReportExcel.data;
-        console.log(data)
+        
         let ws = XLSX.utils.json_to_sheet(data, {skipHeader:true});
         // let ws = XLSX.utils.json_to_sheet(data, {header:header,skipHeader:true});
         let merge = [
@@ -187,17 +187,17 @@ class SaleReportExcel extends Component{
                 vertical: 'center',
             }
         };
-        console.log(ws['A1'])
+        
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
         let exportFileName = `Laporan_Penjualan_${moment(new Date()).format('YYYYMMDDHHMMss')}.xlsx`;
         XLSX.writeFile(wb, exportFileName, {type:'file', bookType:"xlsx"});
 
         this.toggle(e);
-      }
+    }
     render(){
         // const columnStyle = {verticalAlign: "middle", textAlign: "center"};
-        console.log(this.props.isLoadingReport)
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleExcel"}</ModalHeader> */}
@@ -250,7 +250,7 @@ class SaleReportExcel extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
+    
     return {
         saleReportExcel:state.saleReducer.report_excel,
         isLoadingReport: state.saleReducer.isLoadingReport,

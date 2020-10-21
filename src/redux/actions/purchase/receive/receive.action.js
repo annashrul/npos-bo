@@ -59,6 +59,9 @@ export function setPOFailed(data = []) {
 export function setReportDetail(data=[]){
     return {type:RECEIVE.RECEIVE_REPORT_DETAIL,data}
 }
+export function setReportExcel(data=[]){
+    return {type:RECEIVE.RECEIVE_REPORT_EXCEL,data}
+}
 export const FetchNota = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -259,7 +262,7 @@ export const FetchReportExcel = (page=1,where='',perpage='') => {
             .then(function(response){
                 const data = response.data;
                 
-                dispatch(setPO(data));
+                dispatch(setReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             

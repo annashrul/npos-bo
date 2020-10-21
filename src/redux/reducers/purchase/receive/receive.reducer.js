@@ -8,6 +8,7 @@ const initialState = {
     data: [],
     dataReceiveReportDetail: [],
     receiveReport: [],
+    receiveReportExcel: [],
     receiveReportDetail: [],
     msg:"",
     status:"",
@@ -43,6 +44,12 @@ export const receiveReducer = (state = initialState, action) => {
                 status:action.data.status,
                 msg:action.data.msg,
                 dataReceiveReportDetail:action.data.result
+            });
+        case RECEIVE.RECEIVE_REPORT_EXCEL:
+            return Object.assign({}, state,{
+                status:action.data.status,
+                msg:action.data.msg,
+                receiveReportExcel:action.data.result
             });
         case RECEIVE.FAILED:
             return Object.assign({}, state, {
