@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchPiutangReport, FetchPiutangReportExcel, DeletePiutangReport} from "redux/actions/piutang/piutang.action";
+import {FetchPiutangReport, FetchPiutangReportExcel, DeletePiutangReport, FetchPiutangReportDetail} from "redux/actions/piutang/piutang.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 // import DetailPiutang from "components/App/modals/report/inventory/piutang_report/detail_piutang";
@@ -14,7 +14,9 @@ import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import Swal from 'sweetalert2'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { statusQ, toRp } from '../../../../helper';
+import DetailPiutang from '../../modals/piutang/detail_piutang_report'
 class PiutangReport extends Component{
     constructor(props){
         super(props);
@@ -25,7 +27,9 @@ class PiutangReport extends Component{
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
         this.state={
+            detail:{},
             where_data:"",
             any:"",
             location:"",
@@ -38,6 +42,11 @@ class PiutangReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            search_by:"kd_trx",
+            search_by_data:[
+                {value: "kd_trx", label:'Kode Trx'},
+                {value: "nama", label:'Customer'},
+            ],
         }
     }
     componentWillMount(){
@@ -65,6 +74,11 @@ class PiutangReport extends Component{
         }
         if (localStorage.status_piutang_report !== undefined && localStorage.status_piutang_report !== null) {
             this.setState({status: localStorage.status_piutang_report})
+        }
+        if (localStorage.search_by_piutang_report !== undefined && localStorage.search_by_piutang_report !== null) {
+            this.setState({
+                search_by: localStorage.search_by_piutang_report
+            })
         }
     }
     handlePageChange(pageNumber){
@@ -95,6 +109,31 @@ class PiutangReport extends Component{
         localStorage.setItem("any_piutang_report",this.state.any);
         this.handleParameter(1);
     }
+    HandleChangeSearchBy(sb) {
+        this.setState({
+            search_by: sb.value
+        })
+        localStorage.setItem('search_by_piutang_report', sb.value);
+    }
+    handleDetail(e,id, nama_toko, nama, jml_piutang, jumlah_telah_bayar, status, tempo){
+        e.preventDefault();
+        this.setState({
+            detail:
+                {
+                    "id":id,
+                    "nama_toko":nama_toko,
+                    "nama":nama,
+                    "jml_piutang":jml_piutang,
+                    "jumlah_telah_bayar":jumlah_telah_bayar,
+                    "status":status,
+                    "tempo":tempo,
+                }
+        })
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("detailPiutangReportDetail"));
+        this.props.dispatch(FetchPiutangReportDetail(1,'',id));
+    }
     handleDelete(e,kode){
         e.preventDefault();
         Swal.fire({
@@ -118,9 +157,10 @@ class PiutangReport extends Component{
         let dateTo=localStorage.date_to_piutang_report;
         let lokasi = localStorage.location_piutang_report;
         let any = localStorage.any_piutang_report;
-        let sort=localStorage.sort_piutang_report;
-        let filter=localStorage.filter_piutang_report;
+        // let sort=localStorage.sort_piutang_report;
+        // let filter=localStorage.filter_piutang_report;
         let status=localStorage.status_piutang_report;
+        let search_by=localStorage.search_by_piutang_report;
         let where='';
         if(dateFrom!==undefined&&dateFrom!==null){
             where+=`&datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -131,11 +171,14 @@ class PiutangReport extends Component{
         if(status!==undefined&&status!==null&&status!==''){
             where+=`&status=${status}`;
         }
-        if(filter!==undefined&&filter!==null&&filter!==''){
-            if(sort!==undefined&&sort!==null&&sort!==''){
-                where+=`&sort=${filter}|${sort}`;
-            }
+        if(search_by!==undefined&&search_by!==null&&search_by!==''){
+            where+=`&searchby=${search_by}`;
         }
+        // if(filter!==undefined&&filter!==null&&filter!==''){
+        //     if(sort!==undefined&&sort!==null&&sort!==''){
+        //         where+=`&sort=${filter}|${sort}`;
+        //     }
+        // }
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`
         }
@@ -259,7 +302,9 @@ class PiutangReport extends Component{
     }
 
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         const {
             per_page,
             last_page,
@@ -290,7 +335,7 @@ class PiutangReport extends Component{
                                     </div>
                                 </div>
 
-                                {/* <div className="col-6 col-xs-6 col-md-2">
+                                <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label htmlFor="">Lokasi</label>
                                         <Select
@@ -305,7 +350,7 @@ class PiutangReport extends Component{
                                         />
                                     </div>
                                 </div>
-                                <div className="col-6 col-xs-6 col-md-2">
+                                {/*<div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
                                             Status
@@ -325,7 +370,7 @@ class PiutangReport extends Component{
                                 <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2"></div>
                                 <div className="col-6 col-xs-6 col-md-2"></div> */}
-                                <div className="col-6 col-xs-6 col-md-2">
+                                {/* <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label className="control-label font-12">
                                             Filter
@@ -358,6 +403,22 @@ class PiutangReport extends Component{
                                             }
                                         />
                                     </div>
+                                </div> */}
+                                <div className="col-6 col-xs-6 col-md-2">
+                                    <div className="form-group">
+                                        <label htmlFor="exampleFormControlSelect1">Search By</label>
+                                        <Select
+                                            options={this.state.search_by_data}
+                                            onChange={this.HandleChangeSearchBy}
+                                            placeholder="Pilih Kolom"
+                                            value = {
+                                                this.state.search_by_data.find(op => {
+                                                    return op.value === this.state.search_by
+                                                })
+                                            }
+                                        />
+
+                                    </div>
                                 </div>
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
@@ -382,21 +443,14 @@ class PiutangReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No Nota</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Faktur Jual</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Bayar</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Cara Bayar</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Jumlah</th>
-                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">kasir</th> */}
-                                        <th className="text-black" style={columnStyle} rowSpan="2">nama Bank</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Jatuh Tempo</th>
-                                        {/* <th className="text-black" style={columnStyle} rowSpan="2">bulat</th> */}
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No Giro</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Cair Giro</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Nama</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">kode Cust.</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">#</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Kode trx</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nama Toko</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Customer</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Piutang</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Telah Dibayar</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tempo</th>
                                     </tr>
                                     </thead>
                                     {
@@ -408,33 +462,27 @@ class PiutangReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
-                                                                    <td style={columnStyle}>
+                                                                    <td style={ centerStyle}>
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>
                                                                                 <DropdownToggle caret>
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_nota)}>Delete</DropdownItem>
-                                                                                    <Link to={`../bayar_piutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx,v.nama_toko,v.nama,v.jml_piutang,v.jumlah_telah_bayar,v.status,v.tempo)}>Detail</DropdownItem>
+                                                                                    {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
+                                                                                    {/* <Link to={`../bayar_piutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
-                                                                    <td style={columnStyle}>{v.no_nota}</td>
-                                                                    <td style={columnStyle}>{v.fak_jual}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_byr).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.cara_byr}</td>
-                                                                    <td style={columnStyle}>{v.jumlah}</td>
-                                                                    {/* <td style={columnStyle}>{v.kasir}</td> */}
-                                                                    <td style={columnStyle}>{v.nm_bank}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_jatuh_tempo).format("DD-MM-YYYY")}</td>
-                                                                    {/* <td style={columnStyle}>{v.bulat}</td> */}
-                                                                    <td style={columnStyle}>{v.nogiro}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_cair_giro).format("DD-MM-YYYY")}</td>
-                                                                    <td style={columnStyle}>{v.nama}</td>
-                                                                    <td style={columnStyle}>{v.kd_cust}</td>
-                                                                    <td style={columnStyle}>{v.ket}</td>
+                                                                    <td style={ leftStyle}>{v.kd_trx}</td>
+                                                                    <td style={ leftStyle}>{v.nama_toko}</td>
+                                                                    <td style={ leftStyle}>{v.nama}</td>
+                                                                    <td style={ rightStyle}>{toRp(parseInt(v.jml_piutang,10))}</td>
+                                                                    <td style={ rightStyle}>{toRp(parseInt(v.jumlah_telah_bayar,10))}</td>
+                                                                    <td style={ centerStyle}>{statusQ(v.status==='LUNAS'?'success':'danger',v.status)}</td>
+                                                                    <td style={ centerStyle}>{moment(v.tempo).format('YYYY-MM-DD')}</td>
 
                                                                 </tr>
                                                             )
@@ -456,7 +504,7 @@ class PiutangReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            {/* <DetailPiutang piutangDetail={this.props.piutangDetail}/> */}
+                            <DetailPiutang detail={this.state.detail}/>
                             <PiutangReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                             {/* <ApprovePiutang/> */}
                         </div>

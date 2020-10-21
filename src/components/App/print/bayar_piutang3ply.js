@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
 import connect from "react-redux/es/connect/connect";
-import {FetchPiutangReport} from "redux/actions/piutang/piutang.action";
+import {FetchPiutangReportDetail} from "redux/actions/piutang/piutang.action";
 import moment from 'moment'
 import Barcode from 'react-barcode';
 
@@ -17,15 +17,17 @@ class Print3ply extends Component {
         };
 
         // let any = 'BH-2010020001-1';
-        let any = this.props.match.params.id;
+        let get = String(this.props.match.params.id).split('|');
+        let any = get[0];
+        let kode = get[1];
         let where='';
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`
         }
-        this.props.dispatch(FetchPiutangReport(1,where))
+        this.props.dispatch(FetchPiutangReportDetail(1,where,kode))
       }
       UNSAFE_componentWillReceiveProps(nextProps){
-          let getData = nextProps.piutangReport.length!==0?nextProps.piutangReport.data[0]:0
+          let getData = nextProps.piutangReportDetail.length!==0?nextProps.piutangReportDetail.data[0]:0
           if(getData!==0 && nextProps.auth.user.logo!==undefined){
               if(this.state.newLogo === ''){
                 const xhr = new XMLHttpRequest();
@@ -58,18 +60,16 @@ class Print3ply extends Component {
 
       render() {
         const {
-            nm_bank,
+            no_nota,
+            fak_jual,
+            nama,
+            bulat,
             cara_byr,
             jumlah,
-            ket,
-            nogiro,
-            fak_jual,
-            pembulatan,
+            operator,
             tgl_byr,
-            tgl_cair_giro,
             tgl_jatuh_tempo,
-            kasir,
-            nama
+            ket
         }=this.state.data;
         return (
             <Layout>
@@ -78,11 +78,11 @@ class Print3ply extends Component {
                         <thead>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}></td>
-                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={this.props.match.params.id}/> </td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={String(this.props.match.params.id).split('|')[0]}/> </td>
                         </tr>
                         <tr>
                             <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} className="text-center">Nota Bayar Piutang ({this.props.match.params.id})</td>
+                            <td colSpan={5} className="text-center">Nota Bayar Piutang ({String(this.props.match.params.id).split('|')[0]})</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -98,43 +98,43 @@ class Print3ply extends Component {
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Nama Customer</td>
+                            <td style={{fontSize: '10pt !important'}}>No Nota</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{no_nota}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Faktur Jual</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{fak_jual}</td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Nama</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{nama}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Pembayaran</td>
+                            <td style={{fontSize: '10pt !important'}}>Bulat</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah)}</td>
+                            <td style={{fontSize: '10pt !important'}}>{bulat}</td>
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Nota Pembelian</td>
+                            <td style={{fontSize: '10pt !important'}}>Cara Bayar</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{fak_jual}</td>
+                            <td style={{fontSize: '10pt !important'}}>{cara_byr}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Bank</td>
+                            <td style={{fontSize: '10pt !important'}}>Jumlah</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{nm_bank}</td>
+                            <td style={{fontSize: '10pt !important'}}>{toRp(parseInt(jumlah,10))}</td>
                         </tr>
                         <tr>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_byr).format("YYYY-MM-DD")}</td>
                             <td />
                             <td style={{fontSize: '10pt !important'}}>Operator</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{kasir}</td>
-                        </tr>
-                        <tr>
+                            <td style={{fontSize: '10pt !important'}}>{operator}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>No. Giro</td>
+                            <td style={{fontSize: '10pt !important'}}>Tanggal Bayar</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{nogiro}</td>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Jenis Pemb.</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{cara_byr}</td>
+                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_byr).format("YYYY-MM-DD")}</td>
                         </tr>
                         <tr>
                             <td />
@@ -142,17 +142,7 @@ class Print3ply extends Component {
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{moment(tgl_jatuh_tempo).format("YYYY-MM-DD")}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Pembulatan</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(pembulatan)}</td>
-                        </tr>
-                        <tr>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal Cair Giro</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_cair_giro).format("YYYY-MM-DD")}</td>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Keterangan</td>
+                            <td style={{fontSize: '10pt !important'}}>Ket</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{ket}</td>
                         </tr>
@@ -188,7 +178,7 @@ class Print3ply extends Component {
     const mapStateToProps = (state) => {
         
         return {
-            piutangReport:state.piutangReducer.data_report,
+            piutangReportDetail:state.piutangReducer.data_report_detail,
             auth:state.auth,
             isLoading: state.piutangReducer.isLoading,
         }

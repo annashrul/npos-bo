@@ -9,6 +9,7 @@ import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import imgExcel from 'assets/xls.png';
 import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
+import { toRp } from '../../../../helper';
 
 class PiutangReportExcel extends Component{
     constructor(props){
@@ -51,32 +52,22 @@ class PiutangReportExcel extends Component{
         '</div>';
         
         const headers = [[
-            "No Nota",
-            "Faktur Jual",
-            "Tanggal Bayar",
-            "Cara Bayar",
-            "Jumlah",
-            "Nama Bank",
-            "Jatuh Tempo",
-            "No Giro",
-            "Tanggal Cair Giro",
+            "Kode trx",
+            "Nama Toko",
             "Nama",
-            "Kode Cust.",
-            "Keterangan",
+            "Jumlah Piutang",
+            "Jumlah Telah Dibayar",
+            "Status",
+            "Tempo",
         ]];
         let data = typeof this.props.piutangReportExcel.data === 'object'?this.props.piutangReportExcel.data.map(v=> [
-           v.no_nota,
-           v.fak_jual,
-           moment(v.tgl_byr).format("DD-MM-YYYY"),
-           v.cara_byr,
-           v.jumlah,
-           v.nm_bank,
-           moment(v.tgl_jatuh_tempo).format("DD-MM-YYYY"),
-           v.nogiro,
-           moment(v.tgl_cair_giro).format("DD-MM-YYYY"),
+           v.kd_trx,
+           v.nama_toko,
            v.nama,
-           v.kd_cust,
-           v.ket,
+           toRp(parseInt(v.jml_piutang,10)),
+           toRp(parseInt(v.jumlah_telah_bayar,10)),
+           v.status,
+           moment(v.tempo).format('YYYY-MM-DD'),
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
@@ -143,25 +134,20 @@ class PiutangReportExcel extends Component{
                         <table className="table table-hover table-bordered table-responsive"  id="laporan_piutang" style={{display:this.state.view === false?'none':'inline-table'}}>
                             <thead className="bg-light">
                                 <tr>
-                                    <th className="text-black" colSpan={12}>{this.props.startDate} - {this.props.startDate}</th>
+                                    <th className="text-black" colSpan={7}>{this.props.startDate} - {this.props.startDate}</th>
                                 </tr>
                                 <tr>
-                                    <th className="text-black" colSpan={12}>LAPORAN PIUTANG</th>
+                                    <th className="text-black" colSpan={7}>LAPORAN PIUTANG</th>
                                 </tr>
 
                                 <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No Nota</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Faktur Jual</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Bayar</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Cara Bayar</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jumlah</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Bank</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jatuh Tempo</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No Giro</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Cair Giro</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode trx</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Nama Toko</th>
                                     <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Cust.</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jumlah Piutang</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Jumlah Telah Dibayar</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tempo</th>
                                 </tr>
                                 <tr></tr>
                                 </thead>
@@ -174,18 +160,13 @@ class PiutangReportExcel extends Component{
                                                 // t_qty +=parseFloat(v.qty_estimasi);
                                                 return (
                                                     <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_nota}</td>
-                                                        <td style={columnStyle}>{v.fak_jual}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_byr).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.cara_byr}</td>
-                                                        <td style={columnStyle}>{v.jumlah}</td>
-                                                        <td style={columnStyle}>{v.nm_bank}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_jatuh_tempo).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.nogiro}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_cair_giro).format("DD-MM-YYYY")}</td>
+                                                        <td style={columnStyle}>{v.kd_trx}</td>
+                                                        <td style={columnStyle}>{v.nama_toko}</td>
                                                         <td style={columnStyle}>{v.nama}</td>
-                                                        <td style={columnStyle}>{v.kd_cust}</td>
-                                                        <td style={columnStyle}>{v.ket}</td>
+                                                        <td style={columnStyle}>{toRp(parseInt(v.jml_piutang,10))}</td>
+                                                        <td style={columnStyle}>{toRp(parseInt(v.jumlah_telah_bayar,10))}</td>
+                                                        <td style={columnStyle}>{v.status}</td>
+                                                        <td style={columnStyle}>{moment(v.tempo).format('YYYY-MM-DD')}</td>
                                                     </tr>
                                                 );
                                             }) : "No data." : "No data."

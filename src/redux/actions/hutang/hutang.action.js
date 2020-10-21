@@ -39,11 +39,12 @@ export function setFailed(data = []) {
     }
 }
 
-
 export function setHutangReport(data=[]){
     return {type:HUTANG.SUCCESS_REPORT,data}
 }
-
+export function setHutangReportDetail(data=[]){
+    return {type:HUTANG.SUCCESS_REPORT_DETAIL,data}
+}
 export function setKartuHutang(data=[]){
     return {type:HUTANG.SUCCESS_KARTU_HUTANG,data}
 }
@@ -81,6 +82,7 @@ export const FetchNotaHutang = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         axios.get(HEADERS.URL + `hutang/getcode?lokasi=${lokasi}`)
+        // axios.get(HEADERS.URL + `hutang/getcode?lokasi=LK/0001`)
             .then(function (response) {
                 const data = response.data;
                 dispatch(setCode(data));
@@ -103,6 +105,7 @@ export const storeHutang = (data,param) => {
         axios.post(url, data)
             .then(function (response) {
                 // const data = (response.data);
+                
                 console.log(response)
 
                 dispatch(setLoadingPost(false));
@@ -130,11 +133,22 @@ export const storeHutang = (data,param) => {
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     param({
-                        pathname: `/bayar_hutang3ply/${response.data.result.insertId}`,
+                        pathname: `/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
                     })
                     Swal.closeModal();
                     return false;
                 });
+
+                // dispatch(setLoadingPost(false));
+                // Swal.fire({
+                //     title: 'Success',
+                //     type: 'success',
+                //     text:"Transaksi Berhasil",
+                // }).then((result)=>{
+                //     localStorage.removeItem("nota_pembelian_hutang");
+                //     localStorage.removeItem("jenis_trx_hutang");
+                //     window.location.reload();
+                // });
             })
             .catch(function (error) {
                 dispatch(setLoadingPost(false));
@@ -167,6 +181,25 @@ export const FetchHutangReport = (page=1,where='')=>{
                 const data = response.data;
                 
                 dispatch(setHutangReport(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
+    }
+}
+export const FetchHutangReportDetail = (page=1,where='',id=null)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `hutang/report/${id}?page=${page}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setHutangReportDetail(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             
@@ -234,7 +267,6 @@ export const DeleteHutangReport = (id)=>{
             })
     }
 }
-
 
 export const FetchKartuHutang = (page=1,where='')=>{
     return (dispatch) => {

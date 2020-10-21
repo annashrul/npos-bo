@@ -34,6 +34,7 @@ class BayarHutang extends Component{
             isOpen:!this.state.isOpen,
             indexOpen:index
         })
+        console.log(index)
     }
     handleBayar(e,kode){
         e.preventDefault();
@@ -105,10 +106,10 @@ class BayarHutang extends Component{
                                                             {v.nama} | Sisa : Rp. {toRp(parseInt(v.sisa_hutang,10))}
                                                             {/* </button> */}
                                                         </h5>
-                                                        <h5><i className={this.state.isOpen||this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
+                                                        <h5><i className={this.state.isOpen&&this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
                                                         </div>
                                                     </button>
-                                                        <Collapse isOpen={this.state.isOpen||this.state.indexOpen===i}>
+                                                        <Collapse isOpen={this.state.isOpen&&this.state.indexOpen===i}>
                                                             <Card>
                                                             <CardBody style={{minHeight:'min-content',maxHeight:'400px',overflowX:'auto'}}>
                                                                 {

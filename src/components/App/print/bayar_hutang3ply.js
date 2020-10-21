@@ -16,8 +16,9 @@ class Print3ply extends Component {
             newLogo:''
         };
 
-        // let any = 'BH-2010020001-1';
-        let any = this.props.match.params.id;
+        let get = String(this.props.match.params.id).split('|');
+        let any = get[0];
+        let kode = get[1];
         let where='';
         if(any!==undefined&&any!==null&&any!==''){
             where+=`&q=${any}`
@@ -25,7 +26,7 @@ class Print3ply extends Component {
         this.setState({
             where_data:where
         })
-        this.props.dispatch(FetchHutangReport(1,where))
+        this.props.dispatch(FetchHutangReport(1,where,kode))
       }
       UNSAFE_componentWillReceiveProps(nextProps){
           let getData = nextProps.hutangReport.length!==0?nextProps.hutangReport.data[0]:0
@@ -81,11 +82,11 @@ class Print3ply extends Component {
                         <thead>
                         <tr>
                             <td colSpan={3} style={{textAlign: 'center'}}></td>
-                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={this.props.match.params.id}/> </td>
+                            <td colSpan={5} style={{textAlign: 'right'}}><Barcode width={2} height={25} format={'CODE128'} displayValue={false} value={String(this.props.match.params.id).split('|')[0]}/> </td>
                         </tr>
                         <tr>
                             <td rowSpan={3} colSpan={3} style={{textAlign: 'center'}}><img className="img_head" style={{padding:'10px'}} alt="LOGO" src={this.state.newLogo} /></td>
-                            <td colSpan={5} className="text-center">Nota Bayar Hutang ({this.props.match.params.id})</td>
+                            <td colSpan={5} className="text-center">Nota Bayar Hutang ({String(this.props.match.params.id).split('|')[0]})</td>
                         </tr>
                         </thead>
                         <tbody>
