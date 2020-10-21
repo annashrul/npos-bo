@@ -4,10 +4,13 @@ import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalBody} from "reactstrap";
 import {toRp,to_pdf} from "helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+// import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import imgExcel from 'assets/xls.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
+import Spinner from '../../../../../../Spinner';
+import moment from "moment";
+import XLSX from 'xlsx'
 
 class StockReportExcel extends Component{
     constructor(props){
@@ -78,6 +81,83 @@ class StockReportExcel extends Component{
         );
         this.toggle(e);
       }
+      printDocumentXLsx = (e) => {
+        e.preventDefault();
+
+        let header = [
+                        ['LAPORAN STOCK'],
+                        ['PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+''],
+                        [''],
+                        [
+                            'Kode Barang',
+                            'Barcode',
+                            'Satuan',
+                            'Nama',
+                            'Supplier',
+                            'Sub Dept',
+                            'Kelompok',
+                            'DN',
+                            'Stock Awal',
+                            'Stock In',
+                            'Stock Out',
+                            'Stock Sale',
+                            'Stock Akhir',
+                        ]
+                    ]
+        let footer = [
+                        // ['TOTAL','','','','',toRp(this.props.totalPenjualanExcel.omset),toRp(this.props.totalPenjualanExcel.dis_item),toRp(this.props.totalPenjualanExcel.dis_rp),this.props.totalPenjualanExcel.dis_persen,'','','','',toRp(this.props.totalPenjualanExcel.kas_lain),'',toRp(this.props.totalPenjualanExcel.gt),toRp(this.props.totalPenjualanExcel.rounding),toRp(this.props.totalPenjualanExcel.bayar),toRp(this.props.totalPenjualanExcel.change),toRp(this.props.totalPenjualanExcel.jml_kartu),toRp(this.props.totalPenjualanExcel.charge),'','','','']
+                    ]
+        // Kd Trx	Tanggal	Jam	Customer	Kasir	Omset	Diskon			HPP	Hrg Jual	Profit	Reg.Member	Trx Lain	Keterangan	Grand Total	Rounding	Tunai	Change	Transfer	Charge	Nama Kartu	Status	Lokasi	Jenis Trx
+                        // Peritem(%)	Total(rp)	Total(%)	
+                        															
+
+        let raw = typeof this.props.stockReportExcel.data === 'object'?this.props.stockReportExcel.data.map(v=> [
+            v.kd_brg,
+            v.barcode,
+            v.satuan,
+            v.nm_brg,
+            v.supplier,
+            v.sub_dept,
+            v.nama_kel,
+            v.delivery_note,
+            v.stock_awal,
+            v.stock_masuk,
+            v.stock_keluar,
+            v.stock_penjualan,
+            (parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)),
+        ]):'';
+
+        let body = header.concat(raw);
+
+        let data = footer===undefined||footer===[]?body:body.concat(footer);
+
+        // let data = this.props.saleReportExcel.data;
+        
+        let ws = XLSX.utils.json_to_sheet(data, {skipHeader:true});
+        // let ws = XLSX.utils.json_to_sheet(data, {header:header,skipHeader:true});
+        let merge = [
+                {s: {r:0, c:0},e: {r:0, c:14}},
+                {s: {r:1, c:0},e: {r:1, c:14}},
+            ];
+        if(!ws['!merges']) ws['!merges'] = [];
+        ws['!merges'] = merge;
+        ws['!ref'] = XLSX.utils.encode_range({
+            s: { c: 0, r: 0 },
+            e: { c: 14, r: 1 + data.length + 1}
+        });
+        ws["A1"].s = {
+            alignment: {
+                vertical: 'center',
+            }
+        };
+        
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+        let exportFileName = `Laporan_Stock_${moment(new Date()).format('YYYYMMDDHHMMss')}.xlsx`;
+        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:"xlsx"});
+
+        this.toggle(e);
+    }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {total_dn,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir} = this.props.total_stock;
@@ -91,6 +171,7 @@ class StockReportExcel extends Component{
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formStockExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update StockExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
+                    {!this.props.isLoading?
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
                         <h3 className="text-center">Manage Export</h3>
@@ -98,19 +179,19 @@ class StockReportExcel extends Component{
                             {/* <div className="col-4">
                                 <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
                             </div> */}
-                            {/* <div className="col-6">
+                            <div className="col-6 offset-3">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src={imgPdf} alt=""></img>
+                                        <img src={imgExcel} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>
-                            </div> */}
-                            <div className="col-6 offset-3">
+                            </div>
+                            {/* <div className="col-6 offset-3">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
                                         <img src={imgExcel} alt=""></img>
@@ -127,7 +208,7 @@ class StockReportExcel extends Component{
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         {/* <div className="row mt-4">
                             <div className="col-12">
@@ -214,7 +295,8 @@ class StockReportExcel extends Component{
                                     </tbody>
                                 }
                             </table>
-                    </ModalBody>
+                    </ModalBody> : <Spinner/>
+                    }
                 </form>
             </WrapperModal>
         );
@@ -223,6 +305,7 @@ class StockReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        isLoading:state.stockReportReducer.isLoading,
         stockReportExcel:state.stockReportReducer.report_excel,
         total_stock:state.stockReportReducer.total_stock,
         isOpen: state.modalReducer,
