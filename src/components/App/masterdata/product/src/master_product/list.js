@@ -250,7 +250,8 @@ class ListProduct extends Component{
         localStorage.setItem("endDateProduct",`${dateTo}`);
         
         let where='';
-        if(this.state.semua_periode===false){
+        console.log("lohhhhhhhhhhh",this.state.semua_periode)
+        if(this.state.semua_periode===false||this.state.semua_periode==='false'){
             if(dateFrom!==null&&dateTo!==null){
                 if(where!==''){where+='&';}
                 where+=`datefrom=${dateFrom}&dateto=${dateTo}`;

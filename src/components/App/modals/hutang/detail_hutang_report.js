@@ -113,7 +113,7 @@ class DetailSaleByProductReport extends Component{
         const centerStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailHutangReportDetail"} size={this.state.isExport===false?'xl':'sm'}>
-                <ModalHeader toggle={this.toggle}>Detail Hutang</ModalHeader>
+                <ModalHeader toggle={this.toggle}>Daftar Pembayaran Hutang</ModalHeader>
                     {
                         !this.props.isLoading?
                 <ModalBody hidden={this.state.isExport===true}>

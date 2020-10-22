@@ -469,7 +469,7 @@ class PiutangReport extends Component{
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx,v.nama_toko,v.nama,v.jml_piutang,v.jumlah_telah_bayar,v.status,v.tempo)}>Detail</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx,v.nama_toko,v.nama,v.jml_piutang,v.jumlah_telah_bayar,v.status,v.tempo)}>Detail Pembayaran</DropdownItem>
                                                                                     {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
                                                                                     {/* <Link to={`../bayar_piutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>

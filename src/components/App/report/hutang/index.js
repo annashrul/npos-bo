@@ -476,7 +476,7 @@ class HutangReport extends Component{
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tempo)}>Detail</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tempo)}>Detail Pembayaran</DropdownItem>
                                                                                     {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_faktur_beli)}>Delete</DropdownItem> */}
                                                                                     {/* <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>
