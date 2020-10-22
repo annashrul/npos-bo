@@ -115,20 +115,28 @@ class HutangReport extends Component{
         })
         localStorage.setItem('search_by_hutang_report', sb.value);
     }
-    handleDetail(e,id, nama_toko, supplier, jml_hutang, nilai_pembelian, status, tempo){
+    handleDetail(e,id, no_faktur_beli=0, nama_toko=0, supplier=0, nilai_pembelian=0, status=0, tempo=0){
         e.preventDefault();
         this.setState({
             detail:
                 {
                     "id":id,
+                    "no_faktur_beli":no_faktur_beli,
                     "nama_toko":nama_toko,
                     "supplier":supplier,
-                    "jml_hutang":jml_hutang,
                     "nilai_pembelian":nilai_pembelian,
                     "status":status,
                     "tempo":tempo,
                 }
-        })
+        });
+        console.log("id",id);
+        console.log("no_faktur_beli",no_faktur_beli);
+        console.log("nama_toko",nama_toko);
+        console.log("supplier",supplier);
+        console.log("nilai_pembelian",nilai_pembelian);
+        console.log("status",status);
+        console.log("tempo",tempo);
+        // console.log(this.state.detail)
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailHutangReportDetail"));

@@ -13,6 +13,28 @@ export const stringifyFormData = (fd) => {
     }
     return data;
 }
+
+export const myPdf = (filename,title='',header=[],body=[],footer=[],orientation='portrait',unit='in',format=[],fontSize=10,ml=10,mt=10,mr=10,mb=10)=>{
+    const doc = jsPDF(orientation, unit, format);
+    doc.setFontSize(fontSize);
+    let content = {
+        headStyles:{backgroundColor:[0,0,0,0]},
+        footStyles:{},
+        bodyStyles:{lineWidth: 0.2, lineColor: [33, 33, 33], marginBottom:mb},
+        // theme:'grid',
+        startY: 100,
+        head: header,
+        body: body,
+        foot:footer,
+        margin: {bottom: mb, top: mt}
+    };
+    doc.fromHTML(title, ml, mr, {'align':'center' });
+    // doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    addFooters(doc);
+    return doc.save(filename+"report.pdf");
+
+}
 export const to_pdf = (filename,title='',header=[],body=[],footer=[])=>{
     const doc = jsPDF('portrait', 'pt', 'A4');
     const marginLeft = 40;

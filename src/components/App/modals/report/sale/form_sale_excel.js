@@ -7,10 +7,11 @@ import moment from "moment";
 import {toRp} from "helper";
 // import ReactHTMLTableToExcel from "react-html-table-to-excel";
 // // import jsPDF from 'jspdf';
-import imgExcel from 'assets/xls.png';
+import imgExcel from 'assets/xlsx.png';
+import imgCsv from 'assets/csv.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
-import {to_pdf_l} from "helper";
+import {myPdf} from "helper";
 import XLSX from 'xlsx'
 import Spinner from '../../../../../Spinner';
 
@@ -55,14 +56,14 @@ class SaleReportExcel extends Component{
         '<h3 align="center"><center>LOKASI : '+(this.props.location===''?'SEMUA LOKASI':this.props.location)+'</center></h3>';
         const headers = [[
             "Kd Trx",
-            "Tanggal Trx",
+            "Tanggal",
             "Jam",
             "Customer",
             "Kasir",
             "Omset",
-            "Disk. Peritem(%)",
-            "Disk. Total(rp)",
-            "Disk. Total(%)",
+            "Diskon Item",
+            "Diskon Total (rp)",
+            "Diskon Total (%)",
             "HPP",
             "Hrg Jual",
             "Profit",
@@ -81,12 +82,11 @@ class SaleReportExcel extends Component{
             "Jenis Trx",
         ]];
         let data = typeof this.props.saleReportExcel.data === 'object'?this.props.saleReportExcel.data.map(v=> [
-            moment(v.tgl).format("yyyy-MM-DD"),
             v.kd_trx,
             moment(v.tgl).format("yyyy/MM/DD"),
             moment(v.jam).format("hh:mm:ss"),
+            v.customer,
             v.nama,
-            v.kd_kasir,
             toRp(parseInt(v.omset,10)),
             toRp(parseInt(v.diskon_item,10)),
             toRp(v.dis_rp),
@@ -109,23 +109,57 @@ class SaleReportExcel extends Component{
             v.jenis_trx,
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
-        to_pdf_l(
-            "sale_",
-            stringHtml,
-            headers,
-            data,
-            // footer
+        // hint filename,title='',header=[],body=[],footer=[],orientation='portrait',unit='in',format=[],fontSize=10,ml=10,mt=10,mr=10,mb=10
+        myPdf(
+            "sale_", //filname
+            stringHtml, //title
+            headers, //header
+            data, //data body
+            [],// footer //footer
+            "landscape", //orientation
+            "mm", // unit
+            "legal", //format
+            5, //fontSize
+            10, //marginLeft
+            10, //marginTop
+            1, //marginRight
+            1, //marginBottom
         );
         this.toggle(e);
       }
-    printDocumentXLsx = (e) => {
+    printDocumentXLsx = (e,param) => {
         e.preventDefault();
 
         let header = [
                         ['LAPORAN PENJUALAN'],
                         ['PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+''],
                         [''],
-                        ['Kd Trx','Tanggal','Jam','Customer','Kasir','Omset','Diskon Item','Diskon Total (rp)','Diskon Total (%)','HPP','Hrg Jual','Profit','Reg.Member','Trx Lain','Keterangan','Grand Total','Rounding','Tunai','Change','Transfer','Charge','Nama Kartu','Status','Lokasi','Jenis Trx']
+                        [
+                            'Kd Trx',
+                            'Tanggal',
+                            'Jam',
+                            'Customer',
+                            'Kasir',
+                            'Omset',
+                            'Diskon Item',
+                            'Diskon Total (rp)',
+                            'Diskon Total (%)',
+                            'HPP',
+                            'Hrg Jual',
+                            'Profit',
+                            'Reg.Member',
+                            'Trx Lain',
+                            'Keterangan',
+                            'Grand Total',
+                            'Rounding',
+                            'Tunai',
+                            'Change',
+                            'Transfer',
+                            'Charge',
+                            'Nama Kartu',
+                            'Status',
+                            'Lokasi',
+                            'Jenis Trx']
                     ]
         let footer = [
                         ['TOTAL','','','','',toRp(this.props.totalPenjualanExcel.omset),toRp(this.props.totalPenjualanExcel.dis_item),toRp(this.props.totalPenjualanExcel.dis_rp),this.props.totalPenjualanExcel.dis_persen,'','','','',toRp(this.props.totalPenjualanExcel.kas_lain),'',toRp(this.props.totalPenjualanExcel.gt),toRp(this.props.totalPenjualanExcel.rounding),toRp(this.props.totalPenjualanExcel.bayar),toRp(this.props.totalPenjualanExcel.change),toRp(this.props.totalPenjualanExcel.jml_kartu),toRp(this.props.totalPenjualanExcel.charge),'','','','']
@@ -190,8 +224,8 @@ class SaleReportExcel extends Component{
         
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-        let exportFileName = `Laporan_Penjualan_${moment(new Date()).format('YYYYMMDDHHMMss')}.xlsx`;
-        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:"xlsx"});
+        let exportFileName = `Laporan_Penjualan_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param==='csv'?`csv`:`xlsx`}`;
+        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:param==='csv'?"csv":"xlsx"});
 
         this.toggle(e);
     }
@@ -210,14 +244,38 @@ class SaleReportExcel extends Component{
                             {/* <div className="col-4">
                                 <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
                             </div> */}
-                            <div className="col-6 offset-3">
+                            <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
                                         <img src={imgExcel} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'xlsx'))}><i className="fa fa-print"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div className="col-4">
+                                <div className="single-gallery--item">
+                                    <div className="gallery-thumb">
+                                        <img src={imgPdf} alt=""></img>
+                                    </div>
+                                    <div className="gallery-text-area">
+                                        <div className="gallery-icon">
+                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e,))}><i className="fa fa-print"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> */}
+                            <div className="col-6">
+                                <div className="single-gallery--item">
+                                    <div className="gallery-thumb">
+                                        <img src={imgCsv} alt=""></img>
+                                    </div>
+                                    <div className="gallery-text-area">
+                                        <div className="gallery-icon">
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'csv'))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>

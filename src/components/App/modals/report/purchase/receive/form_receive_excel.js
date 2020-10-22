@@ -8,7 +8,8 @@ import moment from "moment";
 import {to_pdf} from "helper";
 // import ReactHTMLTableToExcel from "react-html-table-to-excel";
 // import jsPDF from 'jspdf';
-import imgExcel from 'assets/xls.png';
+import imgExcel from 'assets/xlsx.png';
+import imgCsv from 'assets/csv.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 import XLSX from 'xlsx'
@@ -100,7 +101,7 @@ class ReceiveReportExcel extends Component{
         );
         this.toggle(e);
       }
-      printDocumentXLsx = (e) => {
+      printDocumentXLsx = (e,param) => {
         e.preventDefault();
 
         let header = [
@@ -176,8 +177,8 @@ class ReceiveReportExcel extends Component{
         
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-        let exportFileName = `Laporan_Receive_Pembelian_${moment(new Date()).format('YYYYMMDDHHMMss')}.xlsx`;
-        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:"xlsx"});
+        let exportFileName = `Laporan_Receive_Pembelian_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param==='csv'?`csv`:`xlsx`}`;
+        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:param==='csv'?"csv":"xlsx"});
 
         this.toggle(e);
     }
@@ -196,14 +197,26 @@ class ReceiveReportExcel extends Component{
                             {/* <div className="col-4">
                                 <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
                             </div> */}
-                            <div className="col-6 offset-3">
+                            <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
                                         <img src={imgExcel} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocumentXLsx(e))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocumentXLsx(e,'xlsx'))}><i className="fa fa-print"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <div className="single-gallery--item">
+                                    <div className="gallery-thumb">
+                                        <img src={imgCsv} alt=""></img>
+                                    </div>
+                                    <div className="gallery-text-area">
+                                        <div className="gallery-icon">
+                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocumentXLsx(e,'csv'))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>

@@ -108,7 +108,7 @@ class DetailSaleByProductReport extends Component{
     }
 
     render(){
-        
+        console.log(this.props.detail)
         const {data,last_page, per_page,current_page} = this.props.hutangReportDetail;
         const centerStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
@@ -136,19 +136,19 @@ class DetailSaleByProductReport extends Component{
                         <tbody className="bg-transparent no-border" style={{border:"none"}}>
                             <tr>
                                 {/* <th className="text-black" style={centerStyle}>id</th> */}
+                                <th className="text-black" style={centerStyle}>No Faktur Beli</th>
                                 <th className="text-black" style={centerStyle}>Nama Toko</th>
-                                <th className="text-black" style={centerStyle}>Nama</th>
-                                <th className="text-black" style={centerStyle}>Jumlah Hutang</th>
-                                <th className="text-black" style={centerStyle}>Jumlah Telah DIbayar</th>
+                                <th className="text-black" style={centerStyle}>Supplier</th>
+                                <th className="text-black" style={centerStyle}>Nilai Pembelian</th>
                                 <th className="text-black" style={centerStyle}>Status</th>
                                 <th className="text-black" style={centerStyle}>Tempo</th>
                             </tr>
                             <tr>
                                 {/* <th className="text-black" style={centerStyle}>{this.props.detail.id}</th> */}
+                                <th className="text-black" style={centerStyle}>{this.props.detail.no_faktur_beli}</th>
                                 <th className="text-black" style={centerStyle}>{this.props.detail.nama_toko}</th>
-                                <th className="text-black" style={centerStyle}>{this.props.detail.nama}</th>
-                                <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.jml_hutang,10))}</th>
-                                <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.jumlah_telah_bayar,10))}</th>
+                                <th className="text-black" style={centerStyle}>{this.props.detail.supplier}</th>
+                                <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.nilai_pembelian,10))}</th>
                                 <th className="text-black" style={centerStyle}>{this.props.detail.status}</th>
                                 <th className="text-black" style={centerStyle}>{moment(this.props.detail.tempo).format('YYYY-MM-DD')}</th>
                             </tr>
