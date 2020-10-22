@@ -116,9 +116,9 @@ class TrxPacking extends Component{
             })
             
             const data = this.props;
-            console.log(this.state)
+            
             if(this.state.faktur_alokasi!==''){
-                console.log("faktu ada")
+                
                 if (data.barang.detail){
                     destroy(table)
                     data.barang.detail.map(item=>{
@@ -140,7 +140,7 @@ class TrxPacking extends Component{
                     })
                 }
             } else {
-                console.log("faktu tidak ada")
+                
                 destroy(table)
             }
         }
@@ -152,7 +152,7 @@ class TrxPacking extends Component{
     }
 
     componentWillUnmount(){
-        console.log("componentWillUnmount")
+        
         destroy(table);
         this.setState({faktur_alokasi:'',no_packing:'',faktur_alokasi_data:[]})
         localStorage.removeItem('faktur_alokasi_packing')

@@ -73,8 +73,8 @@ class DetailSaleByProductReport extends Component{
         this.checkingParameter(pageNumber);
     }    
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_sale_by_product_report_detail",`${awal}`);
         localStorage.setItem("date_to_sale_by_product_report_detail",`${akhir}`);
         this.setState({
@@ -109,11 +109,16 @@ class DetailSaleByProductReport extends Component{
 
     render(){
         
+        
+        
+        
+        
+        
         const {data,last_page, per_page,current_page} = this.props.hutangReportDetail;
         const centerStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailHutangReportDetail"} size={this.state.isExport===false?'xl':'sm'}>
-                <ModalHeader toggle={this.toggle}>Detail Hutang</ModalHeader>
+                <ModalHeader toggle={this.toggle}>Daftar Pembayaran Hutang</ModalHeader>
                     {
                         !this.props.isLoading?
                 <ModalBody hidden={this.state.isExport===true}>
@@ -136,19 +141,19 @@ class DetailSaleByProductReport extends Component{
                         <tbody className="bg-transparent no-border" style={{border:"none"}}>
                             <tr>
                                 {/* <th className="text-black" style={centerStyle}>id</th> */}
+                                <th className="text-black" style={centerStyle}>No Faktur Beli</th>
                                 <th className="text-black" style={centerStyle}>Nama Toko</th>
-                                <th className="text-black" style={centerStyle}>Nama</th>
-                                <th className="text-black" style={centerStyle}>Jumlah Hutang</th>
-                                <th className="text-black" style={centerStyle}>Jumlah Telah DIbayar</th>
+                                <th className="text-black" style={centerStyle}>Supplier</th>
+                                <th className="text-black" style={centerStyle}>Nilai Pembelian</th>
                                 <th className="text-black" style={centerStyle}>Status</th>
                                 <th className="text-black" style={centerStyle}>Tempo</th>
                             </tr>
                             <tr>
                                 {/* <th className="text-black" style={centerStyle}>{this.props.detail.id}</th> */}
+                                <th className="text-black" style={centerStyle}>{this.props.detail.id}</th>
                                 <th className="text-black" style={centerStyle}>{this.props.detail.nama_toko}</th>
-                                <th className="text-black" style={centerStyle}>{this.props.detail.nama}</th>
-                                <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.jml_hutang,10))}</th>
-                                <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.jumlah_telah_bayar,10))}</th>
+                                <th className="text-black" style={centerStyle}>{this.props.detail.supplier}</th>
+                                <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.nilai_pembelian,10))}</th>
                                 <th className="text-black" style={centerStyle}>{this.props.detail.status}</th>
                                 <th className="text-black" style={centerStyle}>{moment(this.props.detail.tempo).format('YYYY-MM-DD')}</th>
                             </tr>
@@ -161,7 +166,7 @@ class DetailSaleByProductReport extends Component{
                                 <th className="text-black" style={centerStyle}>#</th>
                                 <th className="text-black" style={centerStyle}>No Nota</th>
                                 {/* <th className="text-black" style={centerStyle}>Kode Cust</th> */}
-                                <th className="text-black" style={centerStyle}>Faktur Jual</th>
+                                <th className="text-black" style={centerStyle}>Faktur Beli</th>
                                 <th className="text-black" style={centerStyle}>Nama</th>
                                 {/* <th className="text-black" style={centerStyle}>Kasir</th> */}
                                 <th className="text-black" style={centerStyle}>Bulat</th>
@@ -169,10 +174,10 @@ class DetailSaleByProductReport extends Component{
                                 <th className="text-black" style={centerStyle}>Jumlah</th>
                                 {/* <th className="text-black" style={centerStyle}>Nama Bank</th>
                                 <th className="text-black" style={centerStyle}>No Giro</th> */}
-                                <th className="text-black" style={centerStyle}>Operator</th>
+                                <th className="text-black" style={centerStyle}>Kasir</th>
                                 <th className="text-black" style={centerStyle}>Tanggal Bayar</th>
                                 {/* <th className="text-black" style={centerStyle}>Tanggal Cair Giru</th> */}
-                                <th className="text-black" style={centerStyle}>Tanggal Jatuh Tempo</th>
+                                <th className="text-black" style={centerStyle}>Tanggal Cair Giro</th>
                                 <th className="text-black" style={centerStyle}>Ket</th>
                             </tr>
                             </thead>
@@ -197,7 +202,7 @@ class DetailSaleByProductReport extends Component{
                                                 </td>
                                                 <td style={centerStyle}>{v.no_nota}</td>
                                                 {/* <td style={centerStyle}>{v.kd_cust}</td> */}
-                                                <td style={centerStyle}>{v.fak_jual}</td>
+                                                <td style={centerStyle}>{v.fak_beli}</td>
                                                 <td style={centerStyle}>{v.nama}</td>
                                                 {/* <td style={centerStyle}>{v.kasir}</td> */}
                                                 <td style={centerStyle}>{v.bulat}</td>
@@ -205,10 +210,10 @@ class DetailSaleByProductReport extends Component{
                                                 <td style={centerStyle}>{toRp(parseInt(v.jumlah,10))}</td>
                                                 {/* <td style={centerStyle}>{v.nm_bank}</td>
                                                 <td style={centerStyle}>{v.nogiro}</td> */}
-                                                <td style={centerStyle}>{v.operator}</td>
+                                                <td style={centerStyle}>{v.kasir}</td>
                                                 <td style={centerStyle}>{moment(v.tgl_byr).format('YYYY-MM-DD')}</td>
                                                 {/* <td style={centerStyle}>{moment(v.tgl_cair_giro).format('YYYY-MM-DD')}</td> */}
-                                                <td style={centerStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
+                                                <td style={centerStyle}>{moment(v.tgl_cair_giro).format('YYYY-MM-DD')}</td>
                                                 <td style={centerStyle}>{v.ket}</td>
                                             </tr>
                                         );

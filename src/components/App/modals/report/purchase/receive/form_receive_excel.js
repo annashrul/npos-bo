@@ -4,13 +4,18 @@ import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import {ModalBody} from "reactstrap";
 import moment from "moment";
-import Preloader from "Preloader";
+// import Preloader from "Preloader";
 import {to_pdf} from "helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+// import ReactHTMLTableToExcel from "react-html-table-to-excel";
 // import jsPDF from 'jspdf';
-import imgExcel from 'assets/xls.png';
+import imgExcel from 'assets/xlsx.png';
+import imgCsv from 'assets/csv.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
+import XLSX from 'xlsx'
+// import Spinner from '../../../../../../Spinner';
+import { toRp } from '../../../../../../helper';
+import MyProgressbar from '../../../../../../myProgressbar';
 
 class ReceiveReportExcel extends Component{
     constructor(props){
@@ -96,13 +101,95 @@ class ReceiveReportExcel extends Component{
         );
         this.toggle(e);
       }
+      printDocumentXLsx = (e,param) => {
+        e.preventDefault();
+
+        let header = [
+                        ['LAPORAN RECEIVE PEMBELIAN'],
+                        ['PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+''],
+                        [''],
+                        [
+                            'No Faktur',
+                            'Tanggal',
+                            'Penerima',
+                            'Tipe',
+                            'Pelunasan',
+                            'Diskon',
+                            'PPN',
+                            'Supplier',
+                            'Operator',
+                            'Lokasi',
+                            'Serial',
+                            'Pembayaran ke-',
+                            'Sisa Pembayaran',
+                            'Qty Beli',
+                            'Total Beli',
+                        ]
+                    ]
+        let footer = [
+                        // ['TOTAL','','','','',toRp(this.props.totalPenjualanExcel.omset),toRp(this.props.totalPenjualanExcel.dis_item),toRp(this.props.totalPenjualanExcel.dis_rp),this.props.totalPenjualanExcel.dis_persen,'','','','',toRp(this.props.totalPenjualanExcel.kas_lain),'',toRp(this.props.totalPenjualanExcel.gt),toRp(this.props.totalPenjualanExcel.rounding),toRp(this.props.totalPenjualanExcel.bayar),toRp(this.props.totalPenjualanExcel.change),toRp(this.props.totalPenjualanExcel.jml_kartu),toRp(this.props.totalPenjualanExcel.charge),'','','','']
+                    ]
+        // Kd Trx	Tanggal	Jam	Customer	Kasir	Omset	Diskon			HPP	Hrg Jual	Profit	Reg.Member	Trx Lain	Keterangan	Grand Total	Rounding	Tunai	Change	Transfer	Charge	Nama Kartu	Status	Lokasi	Jenis Trx
+                        // Peritem(%)	Total(rp)	Total(%)	
+                        															
+
+        let raw = typeof this.props.receiveReportExcel.data === 'object'?this.props.receiveReportExcel.data.map(v=> [
+            v.no_faktur_beli,
+            moment(v.tgl_beli).format("YYYY-MM-DD"),
+            v.nama_penerima,
+            v.type,
+            v.pelunasan,
+            v.disc,
+            v.ppn,
+            v.supplier,
+            v.operator,
+            v.lokasi,
+            v.serial,
+            v.jumlah_pembayaran,
+            v.pelunasan.toLowerCase()==='lunas'?0:toRp(parseFloat(v.total_beli)-parseFloat(v.jumlah_bayar)),
+            v.qty_beli,
+            toRp(parseInt(v.total_beli,10)),
+        ]):'';
+
+        let body = header.concat(raw);
+
+        let data = footer===undefined||footer===[]?body:body.concat(footer);
+
+        // let data = this.props.saleReportExcel.data;
+        
+        let ws = XLSX.utils.json_to_sheet(data, {skipHeader:true});
+        // let ws = XLSX.utils.json_to_sheet(data, {header:header,skipHeader:true});
+        let merge = [
+                {s: {r:0, c:0},e: {r:0, c:14}},
+                {s: {r:1, c:0},e: {r:1, c:14}},
+            ];
+        if(!ws['!merges']) ws['!merges'] = [];
+        ws['!merges'] = merge;
+        ws['!ref'] = XLSX.utils.encode_range({
+            s: { c: 0, r: 0 },
+            e: { c: 14, r: 1 + data.length + 1}
+        });
+        ws["A1"].s = {
+            alignment: {
+                vertical: 'center',
+            }
+        };
+        
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+        let exportFileName = `Laporan_Receive_Pembelian_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param==='csv'?`csv`:`xlsx`}`;
+        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:param==='csv'?"csv":"xlsx"});
+
+        this.toggle(e);
+    }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        const {data} = this.props.data;
+        // const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        // const {data} = this.props.data;
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formReceiveExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update ReceiveExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
+                    {!this.props.isLoading?
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
                         <h3 className="text-center">Manage Export</h3>
@@ -110,19 +197,31 @@ class ReceiveReportExcel extends Component{
                             {/* <div className="col-4">
                                 <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
                             </div> */}
-                            {/* <div className="col-6">
+                            <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src={imgPdf} alt=""></img>
+                                        <img src={imgExcel} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'xlsx'))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>
-                            </div> */}
-                            <div className="col-6 offset-3">
+                            </div>
+                            <div className="col-6">
+                                <div className="single-gallery--item">
+                                    <div className="gallery-thumb">
+                                        <img src={imgCsv} alt=""></img>
+                                    </div>
+                                    <div className="gallery-text-area">
+                                        <div className="gallery-icon">
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'csv'))}><i className="fa fa-print"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div className="col-6 offset-3">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
                                         <img src={imgExcel} alt=""></img>
@@ -139,7 +238,7 @@ class ReceiveReportExcel extends Component{
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         {/* <div className="row mt-4">
                             <div className="col-12">
@@ -147,69 +246,10 @@ class ReceiveReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_receive" style={{display:this.state.view === false?'none':'inline-table'}}>
-                            <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={15}>{this.props.startDate} - {this.props.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={15}>{this.props.location===''?'SEMUA LOKASI':this.props.location}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>No Faktur</th>
-                                        <th className="text-black" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" style={columnStyle}>Penerima</th>
-                                        <th className="text-black" style={columnStyle}>Tipe</th>
-                                        <th className="text-black" style={columnStyle}>Pelunasan</th>
-                                        <th className="text-black" style={columnStyle}>Diskon</th>
-                                        <th className="text-black" style={columnStyle}>PPN</th>
-                                        <th className="text-black" style={columnStyle}>Supplier</th>
-                                        <th className="text-black" style={columnStyle}>Operator</th>
-                                        <th className="text-black" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" style={columnStyle}>Serial</th>
-                                        <th className="text-black" style={columnStyle}>Kontrabon</th>
-                                        <th className="text-black" style={columnStyle}>Jumlah Kontabon</th>
-                                        <th className="text-black" style={columnStyle}>Qty Beli</th>
-                                        <th className="text-black" style={columnStyle}>Total Beli</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        !this.props.isLoading ? (
-                                            <tbody>
-                                            {
-                                                (
-                                                    typeof data === 'object' ? data.length>0?
-                                                        data.map((v,i)=>{
-                                                            return(
-                                                                <tr key={i}>
-
-                                                                    <td style={columnStyle}>{v.no_faktur_beli}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_beli).format("YYYY-MM-DD")}</td>
-                                                                    <td style={columnStyle}>{v.nama_penerima}</td>
-                                                                    <td style={columnStyle}>{v.type}</td>
-                                                                    <td style={columnStyle}>{v.pelunasan}</td>
-                                                                    <td style={columnStyle}>{v.disc}</td>
-                                                                    <td style={columnStyle}>{v.ppn}</td>
-                                                                    <td style={columnStyle}>{v.supplier}</td>
-                                                                    <td style={columnStyle}>{v.operator}</td>
-                                                                    <td style={columnStyle}>{v.lokasi}</td>
-                                                                    <td style={columnStyle}>{v.serial}</td>
-                                                                    <td style={columnStyle}>{v.kontabon}</td>
-                                                                    <td style={columnStyle}>{v.jumlah_kontrabon}</td>
-                                                                    <td style={columnStyle}>{v.qty_beli}</td>
-                                                                    <td style={columnStyle}>{v.total_beli}</td>
-                                                                </tr>
-                                                            )
-                                                        })
-                                                        : "No data.":"No data."
-                                                )
-                                            }
-                                            </tbody>
-                                        ) : <Preloader/>
-                                    }
-
-                                </table>
-                    </ModalBody>
+                    </ModalBody> : 
+                    <MyProgressbar myprogressbarLabel={`Sedang memuat data ${this.props.persenDl}%`} myprogressbarPersen={this.props.persenDl+'%'}/>
+                    // <Spinner spinnerLabel={`Sedang memuat data ${this.props.persenDl}%`}/>
+                    }
                 </form>
             </WrapperModal>
         );
@@ -217,9 +257,12 @@ class ReceiveReportExcel extends Component{
 }
 
 const mapStateToProps = (state) => {
+    
     return {
         data:state.receiveReducer.data,
-        receiveReportDetail:state.receiveReducer.dataReceiveReportDetail,
+        isLoading: state.receiveReducer.isLoading,
+        persenDl: state.receiveReducer.persenDl,
+        receiveReportExcel:state.receiveReducer.receiveReportExcel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }

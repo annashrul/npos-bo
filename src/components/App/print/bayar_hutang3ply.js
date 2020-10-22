@@ -50,8 +50,8 @@ class Print3ply extends Component {
           this.setState({
               data: getData,
           })
-          console.log(nextProps.auth.user.logo)
-          console.log(getData)
+          
+          
       }
 
       getLogo(){
@@ -62,18 +62,16 @@ class Print3ply extends Component {
 
       render() {
         const {
-            nm_bank,
+            no_nota,
+            fak_jual,
+            nama,
+            bulat,
             cara_byr,
-            jumlah_bayar,
-            jumlah_hutang,
-            ket,
-            nogiro,
-            fak_beli,
-            pembulatan,
+            jumlah,
+            kasir,
             tgl_byr,
             tgl_cair_giro,
-            tgl_jatuh_tempo,
-            kasir
+            ket
         }=this.state.data;
         return (
             <Layout>
@@ -102,61 +100,51 @@ class Print3ply extends Component {
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal</td>
+                            <td style={{fontSize: '10pt !important'}}>No Nota</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_byr).format("YYYY-MM-DD")}</td>
+                            <td style={{fontSize: '10pt !important'}}>{no_nota}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Operator</td>
+                            <td style={{fontSize: '10pt !important'}}>Faktur Jual</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{kasir}</td>
+                            <td style={{fontSize: '10pt !important'}}>{fak_jual}</td>
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>No. Giro</td>
+                            <td style={{fontSize: '10pt !important'}}>Nama</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{nogiro}</td>
+                            <td style={{fontSize: '10pt !important'}}>{nama}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Jenis Pembayaran</td>
+                            <td style={{fontSize: '10pt !important'}}>Bulat</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{bulat}</td>
+                        </tr>
+                        <tr>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Cara Bayar</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{cara_byr}</td>
+                            <td />
+                            <td style={{fontSize: '10pt !important'}}>Jumlah</td>
+                            <td style={{fontSize: '10pt !important'}}>:</td>
+                            <td style={{fontSize: '10pt !important'}}>{toRp(parseInt(jumlah,10))}</td>
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal Jatuh Tempo</td>
+                            <td style={{fontSize: '10pt !important'}}>Kasir</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_jatuh_tempo).format("YYYY-MM-DD")}</td>
+                            <td style={{fontSize: '10pt !important'}}>{kasir}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Pembulatan</td>
+                            <td style={{fontSize: '10pt !important'}}>Tgl. Pembayaran</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(pembulatan)}</td>
+                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_byr).format('YYYY-MM-DD')}</td>
                         </tr>
                         <tr>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Tanggal Cair Giro</td>
+                            <td style={{fontSize: '10pt !important'}}>Tgl Cair Giro</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_cair_giro).format("YYYY-MM-DD")}</td>
+                            <td style={{fontSize: '10pt !important'}}>{moment(tgl_cair_giro).format('YYYY-MM-DD')}</td>
                             <td />
-                            <td style={{fontSize: '10pt !important'}}>Pembayaran</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah_bayar)}</td>
-                        </tr>
-                        <tr>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Nota Pembelian</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{fak_beli}</td>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Jumlah Hutang</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{toRp(jumlah_hutang)}</td>
-                        </tr>
-                        <tr>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Bank</td>
-                            <td style={{fontSize: '10pt !important'}}>:</td>
-                            <td style={{fontSize: '10pt !important'}}>{nm_bank}</td>
-                            <td />
-                            <td style={{fontSize: '10pt !important'}}>Keterangan</td>
+                            <td style={{fontSize: '10pt !important'}}>Ket</td>
                             <td style={{fontSize: '10pt !important'}}>:</td>
                             <td style={{fontSize: '10pt !important'}}>{ket}</td>
                         </tr>

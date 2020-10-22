@@ -66,8 +66,8 @@ class BayarPiutang extends Component{
     render(){
 
         const {last_page,current_page,per_page,data,total_piutang} = this.props.getKartuPiutang===undefined?{'last_page':'','per_page':'','current_page':'','data':[],'total_piutang':''}:this.props.getKartuPiutang;
-        // console.log(data===undefined?'':data);
-        console.log(this.props.getKartuPiutang);
+        // 
+        
         return (
             <Layout page="Bayar Piutang">
                 <Card>

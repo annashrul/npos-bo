@@ -5,12 +5,15 @@ import WrapperModal from "../../_wrapper.modal";
 import {ModalBody} from "reactstrap";
 import moment from "moment";
 import {toRp} from "helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+// import ReactHTMLTableToExcel from "react-html-table-to-excel";
 // // import jsPDF from 'jspdf';
-import imgExcel from 'assets/xls.png';
+import imgExcel from 'assets/xlsx.png';
+import imgCsv from 'assets/csv.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
-import {to_pdf_l} from "helper";
+import {myPdf} from "helper";
+import XLSX from 'xlsx'
+import Spinner from '../../../../../Spinner';
 
 
 class SaleReportExcel extends Component{
@@ -53,14 +56,14 @@ class SaleReportExcel extends Component{
         '<h3 align="center"><center>LOKASI : '+(this.props.location===''?'SEMUA LOKASI':this.props.location)+'</center></h3>';
         const headers = [[
             "Kd Trx",
-            "Tanggal Trx",
+            "Tanggal",
             "Jam",
             "Customer",
             "Kasir",
             "Omset",
-            "Disk. Peritem(%)",
-            "Disk. Total(rp)",
-            "Disk. Total(%)",
+            "Diskon Item",
+            "Diskon Total (rp)",
+            "Diskon Total (%)",
             "HPP",
             "Hrg Jual",
             "Profit",
@@ -79,12 +82,11 @@ class SaleReportExcel extends Component{
             "Jenis Trx",
         ]];
         let data = typeof this.props.saleReportExcel.data === 'object'?this.props.saleReportExcel.data.map(v=> [
-            moment(v.tgl).format("yyyy-MM-DD"),
             v.kd_trx,
             moment(v.tgl).format("yyyy/MM/DD"),
             moment(v.jam).format("hh:mm:ss"),
+            v.customer,
             v.nama,
-            v.kd_kasir,
             toRp(parseInt(v.omset,10)),
             toRp(parseInt(v.diskon_item,10)),
             toRp(v.dis_rp),
@@ -107,21 +109,134 @@ class SaleReportExcel extends Component{
             v.jenis_trx,
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
-        to_pdf_l(
-            "sale_",
-            stringHtml,
-            headers,
-            data,
-            // footer
+        // hint filename,title='',header=[],body=[],footer=[],orientation='portrait',unit='in',format=[],fontSize=10,ml=10,mt=10,mr=10,mb=10
+        myPdf(
+            "sale_", //filname
+            stringHtml, //title
+            headers, //header
+            data, //data body
+            [],// footer //footer
+            "landscape", //orientation
+            "mm", // unit
+            "legal", //format
+            5, //fontSize
+            10, //marginLeft
+            10, //marginTop
+            1, //marginRight
+            1, //marginBottom
         );
         this.toggle(e);
       }
+    printDocumentXLsx = (e,param) => {
+        e.preventDefault();
+
+        let header = [
+                        ['LAPORAN PENJUALAN'],
+                        ['PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+''],
+                        [''],
+                        [
+                            'Kd Trx',
+                            'Tanggal',
+                            'Jam',
+                            'Customer',
+                            'Kasir',
+                            'Omset',
+                            'Diskon Item',
+                            'Diskon Total (rp)',
+                            'Diskon Total (%)',
+                            'HPP',
+                            'Hrg Jual',
+                            'Profit',
+                            'Reg.Member',
+                            'Trx Lain',
+                            'Keterangan',
+                            'Grand Total',
+                            'Rounding',
+                            'Tunai',
+                            'Change',
+                            'Transfer',
+                            'Charge',
+                            'Nama Kartu',
+                            'Status',
+                            'Lokasi',
+                            'Jenis Trx']
+                    ]
+        let footer = [
+                        ['TOTAL','','','','',toRp(this.props.totalPenjualanExcel.omset),toRp(this.props.totalPenjualanExcel.dis_item),toRp(this.props.totalPenjualanExcel.dis_rp),this.props.totalPenjualanExcel.dis_persen,'','','','',toRp(this.props.totalPenjualanExcel.kas_lain),'',toRp(this.props.totalPenjualanExcel.gt),toRp(this.props.totalPenjualanExcel.rounding),toRp(this.props.totalPenjualanExcel.bayar),toRp(this.props.totalPenjualanExcel.change),toRp(this.props.totalPenjualanExcel.jml_kartu),toRp(this.props.totalPenjualanExcel.charge),'','','','']
+                    ]
+        // Kd Trx	Tanggal	Jam	Customer	Kasir	Omset	Diskon			HPP	Hrg Jual	Profit	Reg.Member	Trx Lain	Keterangan	Grand Total	Rounding	Tunai	Change	Transfer	Charge	Nama Kartu	Status	Lokasi	Jenis Trx
+						// Peritem(%)	Total(rp)	Total(%)																
+
+        let raw = typeof this.props.saleReportExcel.data === 'object'?this.props.saleReportExcel.data.map(v=> [
+            v.kd_trx,
+            moment(v.tgl).format("yyyy/MM/DD"),
+            moment(v.jam).format("hh:mm:ss"),
+            v.customer,
+            v.nama,
+            toRp(parseInt(v.omset,10)),
+            toRp(parseInt(v.diskon_item,10)),
+            toRp(v.dis_rp),
+            v.dis_persen,
+            toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10)),
+            toRp(parseInt(v.hrg_jual,10)),
+            toRp(parseInt(v.profit,10)),
+            v.regmember?v.regmember:"-",
+            v.kas_lain,
+            v.ket_kas_lain,
+            toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10)),
+            toRp(parseInt(v.rounding,10)),
+            toRp(parseInt(v.bayar,10)),
+            toRp(parseInt(v.change,10)),
+            toRp(parseInt(v.jml_kartu,10)),
+            toRp(parseInt(v.charge,10)),
+            v.kartu,
+            v.status,
+            v.lokasi,
+            v.jenis_trx,
+        ]):'';
+
+        let body = header.concat(raw);
+
+        let data = body.concat(footer);
+
+        // let data = this.props.saleReportExcel.data;
+        
+        let ws = XLSX.utils.json_to_sheet(data, {skipHeader:true});
+        // let ws = XLSX.utils.json_to_sheet(data, {header:header,skipHeader:true});
+        let merge = [
+                {s: {r:0, c:0},e: {r:0, c:24}},
+                {s: {r:1, c:0},e: {r:1, c:24}},
+                {s: {r:data.length-1, c:0},e: {r:data.length-1, c:4}},
+                {s: {r:data.length-1, c:9},e: {r:data.length-1, c: 12}},
+                {s: {r:data.length-1, c:21},e: {r:data.length-1, c: 24}},
+            ];
+        if(!ws['!merges']) ws['!merges'] = [];
+        ws['!merges'] = merge;
+        ws['!ref'] = XLSX.utils.encode_range({
+            s: { c: 0, r: 0 },
+            e: { c: 24, r: 1 + data.length + 1}
+        });
+        ws["A1"].s = {
+            alignment: {
+                vertical: 'center',
+            }
+        };
+        
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+        let exportFileName = `Laporan_Penjualan_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param==='csv'?`csv`:`xlsx`}`;
+        XLSX.writeFile(wb, exportFileName, {type:'file', bookType:param==='csv'?"csv":"xlsx"});
+
+        this.toggle(e);
+    }
     render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center"};
+        // const columnStyle = {verticalAlign: "middle", textAlign: "center"};
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
+                    { !this.props.isLoadingReport?
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
                         <h3 className="text-center">Manage Export</h3>
@@ -129,19 +244,43 @@ class SaleReportExcel extends Component{
                             {/* <div className="col-4">
                                 <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
                             </div> */}
-                            {/* <div className="col-6">
+                            <div className="col-6">
+                                <div className="single-gallery--item">
+                                    <div className="gallery-thumb">
+                                        <img src={imgExcel} alt=""></img>
+                                    </div>
+                                    <div className="gallery-text-area">
+                                        <div className="gallery-icon">
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'xlsx'))}><i className="fa fa-print"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div className="col-4">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
                                         <img src={imgPdf} alt=""></img>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e,))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>
                             </div> */}
-                            <div className="col-6 offset-3">
+                            <div className="col-6">
+                                <div className="single-gallery--item">
+                                    <div className="gallery-thumb">
+                                        <img src={imgCsv} alt=""></img>
+                                    </div>
+                                    <div className="gallery-text-area">
+                                        <div className="gallery-icon">
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'csv'))}><i className="fa fa-print"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div className="col-6 offset-3">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
                                         <img src={imgExcel} alt=""></img>
@@ -158,113 +297,10 @@ class SaleReportExcel extends Component{
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
-                        {/* <div className="row mt-4">
-                            <div className="col-12">
-                                <button type="button" className="btn btn-info float-right">CLOSE</button>
-                            </div>
-                        </div> */}
-                        {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_sale" style={{display:this.state.view === false?'none':'inline-table'}}>
-                        <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={25}>{this.props.startDate} - {this.props.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={25}>{this.props.location===''?'SEMUA LOKASI':this.props.location}</th>
-                                    </tr>
-
-                                    <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kd Trx</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
-                                        <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Hrg Jual</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Reg.Member</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Trx Lain</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Jenis Trx</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>Peritem(%)</th>
-                                        <th className="text-black" style={columnStyle}>Total(rp)</th>
-                                        <th className="text-black" style={columnStyle}>Total(%)</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        <tbody>
-                                        {
-                                            typeof this.props.saleReportExcel.data==='object'? this.props.saleReportExcel.data.length>0?
-                                                this.props.saleReportExcel.data.map((v,i)=>{
-                                                    return (
-                                                        <tr key={i}>
-                                                            <td style={columnStyle}>{v.kd_trx}</td>
-                                                            <td style={columnStyle}>{moment(v.tgl).format("yyyy/MM/DD")}</td>
-                                                            <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
-                                                            <td style={columnStyle}>{v.nama}</td>
-                                                            <td style={columnStyle}>{v.kd_kasir}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                            <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
-                                                            <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
-                                                            <td style={columnStyle}>{v.kas_lain}</td>
-                                                            <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.omset-v.diskon_item-v.dis_rp-v.kas_lain,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
-                                                            <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
-                                                            <td style={columnStyle}>{v.kartu}</td>
-                                                            <td style={columnStyle}>{v.status}</td>
-                                                            <td style={columnStyle}>{v.lokasi}</td>
-                                                            <td style={columnStyle}>{v.jenis_trx}</td>
-                                                        </tr>
-                                                    );
-                                                }) : "No data." : "No data."
-                                        }
-                                        </tbody>
-                                    }
-                                    <tfoot>
-                                    <tr>
-                                        <td colSpan="5">TOTAL</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.omset)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_item)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.dis_rp)}</td>
-                                        <td style={{textAlign:"right"}}>{this.props.totalPenjualanExcel.dis_persen}</td>
-                                        <td colSpan="4"/>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.kas_lain)}</td>
-                                        <td colSpan="1"/>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.gt)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.rounding)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.bayar)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.change)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.jml_kartu)}</td>
-                                        <td style={{textAlign:"right"}}>{toRp(this.props.totalPenjualanExcel.charge)}</td>
-                                        <td colSpan="4"/>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                    </ModalBody>
+                    </ModalBody> : <Spinner spinnerLabel={"Sedang memuat data ..."}/>
+                    }
                 </form>
             </WrapperModal>
         );
@@ -272,8 +308,10 @@ class SaleReportExcel extends Component{
 }
 
 const mapStateToProps = (state) => {
+    
     return {
         saleReportExcel:state.saleReducer.report_excel,
+        isLoadingReport: state.saleReducer.isLoadingReport,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }

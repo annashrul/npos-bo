@@ -95,8 +95,8 @@ class PiutangReport extends Component{
         this.props.dispatch(ModalType("approvePiutang"));
     };
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_piutang_report",`${awal}`);
         localStorage.setItem("date_to_piutang_report",`${akhir}`);
         this.setState({
@@ -469,7 +469,7 @@ class PiutangReport extends Component{
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx,v.nama_toko,v.nama,v.jml_piutang,v.jumlah_telah_bayar,v.status,v.tempo)}>Detail</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx,v.nama_toko,v.nama,v.jml_piutang,v.jumlah_telah_bayar,v.status,v.tempo)}>Detail Pembayaran</DropdownItem>
                                                                                     {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
                                                                                     {/* <Link to={`../bayar_piutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>

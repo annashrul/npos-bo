@@ -12,6 +12,7 @@
     "dom-to-image": "^2.6.0",
     "dz-daterangepicker-material": "^1.0.9",
     "fw-simple-html2pdf": "^2.1.2",
+    "js-xlsx": "^0.8.22",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.5.6",
     "jwt-decode": "^2.2.0",
@@ -51,9 +52,11 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-react-session": "^2.6.1",
     "redux-thunk": "^2.2.0",
+    "sheetjs-style": "^0.15.6",
     "socket.io-client": "^1.7.4",
     "sweetalert2": "^9.15.3",
-    "xlsx": "^0.16.8"
+    "xlsx": "^0.16.8",
+    "xlsx-style": "^0.8.13"
   },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",

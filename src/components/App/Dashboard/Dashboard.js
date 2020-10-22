@@ -356,8 +356,8 @@ class Dashboard extends Component {
 
     handleEvent = (event, picker) => {
         // end:  2020-07-02T16:59:59.999Z
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         this.setState({
             startDate:awal,
             endDate:akhir

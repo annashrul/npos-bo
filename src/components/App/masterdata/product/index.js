@@ -10,6 +10,7 @@ import ListGroupProduct from "./src/master_group_product/list";
 import ListPriceProduct from "./src/master_price_product/list";
 import ListProduct from "./src/master_product/list";
 import { Link } from 'react-router-dom';
+import moment from 'moment'
 
 
 class Product extends Component{
@@ -85,8 +86,13 @@ class Product extends Component{
         if(localStorage.semuaPeriode==='false'){
             if(dateFrom!==undefined&&dateFrom!==null&&dateFrom!==''){
                 if(where!==''){where+='&';}
-                where+=`dateFrom=${dateFrom}&dateTo=${dateTo}`;
+                where+=`datefrom=${dateFrom}&dateto=${dateTo}`;
             }
+        }
+        
+        if(localStorage.semuaPeriode===undefined){ 
+            if(where!==''){where+='&';}
+            where+=`datefrom=${moment(new Date()).format('YYYY-MM-DD')}&dateto=${moment(new Date()).format('YYYY-MM-DD')}`;
         }
 
         this.props.dispatch(FetchProduct(1,where));

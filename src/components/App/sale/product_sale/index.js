@@ -675,7 +675,7 @@ class Sale extends Component{
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left"};
         const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
-        console.log(this.state.databrg)
+        
         return (
             <Layout page="Penjualan Barang">
                 <div className="card">

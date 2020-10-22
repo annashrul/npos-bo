@@ -38,7 +38,7 @@ class Adjust3ply extends Component {
     }
     render() {
         const {detail,tanggal,no_faktur_beli,operator,lokasi_asal,lokasi_tujuan,total,keterangan}=this.state.data;
-        console.log(detail!==undefined?(detail.data.isArray?detail.data:detail.data):'')
+        
         return (
             <Layout>
                 <div  id="print_3ply">

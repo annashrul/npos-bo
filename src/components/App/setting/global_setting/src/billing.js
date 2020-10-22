@@ -108,7 +108,7 @@ class Billing extends Component{
 
     render(){
         
-        console.log(this.state)
+        
         return (
             !this.props.isLoading?(
                 <div>

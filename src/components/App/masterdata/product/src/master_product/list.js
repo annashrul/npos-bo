@@ -250,7 +250,8 @@ class ListProduct extends Component{
         localStorage.setItem("endDateProduct",`${dateTo}`);
         
         let where='';
-        if(this.state.semua_periode===false){
+        
+        if(this.state.semua_periode===false||this.state.semua_periode==='false'){
             if(dateFrom!==null&&dateTo!==null){
                 if(where!==''){where+='&';}
                 where+=`datefrom=${dateFrom}&dateto=${dateTo}`;
@@ -372,8 +373,8 @@ class ListProduct extends Component{
         );
     }
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_master_product",`${awal}`);
         localStorage.setItem("date_to_master_product",`${akhir}`);
         this.setState({

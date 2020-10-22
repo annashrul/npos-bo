@@ -188,6 +188,7 @@ export const FetchReportSale = (page=1,where='') => {
 }
 export const FetchReportSaleExcel = (where='',perpage='') => {
     return (dispatch) => {
+        dispatch(setLoadingReport(true));
         let url=`report/arsip_penjualan?page=1&perpage=${perpage}`;
         if(where!==''){
             url+=`&${where}`;
@@ -196,6 +197,7 @@ export const FetchReportSaleExcel = (where='',perpage='') => {
             .then(function (response) {
                 const data = response.data
                 
+                dispatch(setLoadingReport(false));
                 dispatch(setReportExcel(data))
             })
             .catch(function (error) {

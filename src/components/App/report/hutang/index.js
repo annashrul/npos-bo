@@ -95,8 +95,8 @@ class HutangReport extends Component{
         this.props.dispatch(ModalType("approveHutang"));
     };
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_hutang_report",`${awal}`);
         localStorage.setItem("date_to_hutang_report",`${akhir}`);
         this.setState({
@@ -115,7 +115,7 @@ class HutangReport extends Component{
         })
         localStorage.setItem('search_by_hutang_report', sb.value);
     }
-    handleDetail(e,id, nama_toko, supplier, jml_hutang, nilai_pembelian, status, tempo){
+    handleDetail(e,id, nama_toko=0, supplier=0, nilai_pembelian=0, status=0, tempo=0){
         e.preventDefault();
         this.setState({
             detail:
@@ -123,12 +123,18 @@ class HutangReport extends Component{
                     "id":id,
                     "nama_toko":nama_toko,
                     "supplier":supplier,
-                    "jml_hutang":jml_hutang,
                     "nilai_pembelian":nilai_pembelian,
                     "status":status,
                     "tempo":tempo,
                 }
-        })
+        });
+        
+        
+        
+        
+        
+        
+        // 
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailHutangReportDetail"));
@@ -468,7 +474,7 @@ class HutangReport extends Component{
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tempo)}>Detail</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tempo)}>Detail Pembayaran</DropdownItem>
                                                                                     {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_faktur_beli)}>Delete</DropdownItem> */}
                                                                                     {/* <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>
