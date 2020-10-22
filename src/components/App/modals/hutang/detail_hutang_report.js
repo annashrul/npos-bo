@@ -108,7 +108,12 @@ class DetailSaleByProductReport extends Component{
     }
 
     render(){
-        console.log(this.props.detail)
+        
+        
+        
+        
+        
+        
         const {data,last_page, per_page,current_page} = this.props.hutangReportDetail;
         const centerStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
@@ -145,7 +150,7 @@ class DetailSaleByProductReport extends Component{
                             </tr>
                             <tr>
                                 {/* <th className="text-black" style={centerStyle}>{this.props.detail.id}</th> */}
-                                <th className="text-black" style={centerStyle}>{this.props.detail.no_faktur_beli}</th>
+                                <th className="text-black" style={centerStyle}>{this.props.detail.id}</th>
                                 <th className="text-black" style={centerStyle}>{this.props.detail.nama_toko}</th>
                                 <th className="text-black" style={centerStyle}>{this.props.detail.supplier}</th>
                                 <th className="text-black" style={centerStyle}>{toRp(parseInt(this.props.detail.nilai_pembelian,10))}</th>

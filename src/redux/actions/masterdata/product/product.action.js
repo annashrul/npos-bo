@@ -205,9 +205,9 @@ export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,
         dispatch(setLoadingbrg(true));
         let url = `barang?page=${page}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
-        console.log(perpage)
+        
         if(perpage!==undefined){
-            console.log("undf")
+            
         }
         if(perpage!==undefined) url+=`&perpage=${perpage}`;
         // if(perpage!==null||perpage!==''||perpage!==undefined||perpage!=='undefined'||isNaN(perpage)) url+=`&perpage=${perpage}`;

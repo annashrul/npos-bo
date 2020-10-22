@@ -89,7 +89,7 @@ class Product extends Component{
                 where+=`datefrom=${dateFrom}&dateto=${dateTo}`;
             }
         }
-        console.log("logggggggg",localStorage.semuaPeriode)
+        
         if(localStorage.semuaPeriode===undefined){ 
             if(where!==''){where+='&';}
             where+=`datefrom=${moment(new Date()).format('YYYY-MM-DD')}&dateto=${moment(new Date()).format('YYYY-MM-DD')}`;

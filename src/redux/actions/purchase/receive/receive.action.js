@@ -43,6 +43,12 @@ export function setCode(data = []) {
         data
     }
 }
+export function setPersen(data = []) {
+    return {
+        type: RECEIVE.SUCCESS_PERSEN,
+        data
+    }
+}
 export function setNewest(dataNew = []) {
     return {
         type: RECEIVE.SUCCESS_NEWEST,
@@ -258,15 +264,21 @@ export const FetchReportExcel = (page=1,where='',perpage='') => {
             url+=`&${where}`
         }
         
-        axios.get(HEADERS.URL+`${url}`)
+        axios.get(HEADERS.URL+`${url}`, {
+            onDownloadProgress: progressEvent => {
+                const total = parseFloat(progressEvent.total);
+                const current = parseFloat(progressEvent.loaded);
+                let percentCompleted = Math.floor(current / total * 100)
+                dispatch(setPersen(percentCompleted));
+            }
+        })
             .then(function(response){
                 const data = response.data;
-                console.log('Content-Length',response.headers.get('Content-Length'));
-                
                 dispatch(setReportExcel(data));
                 dispatch(setLoading(false));
+                dispatch(setPersen(0));
             }).catch(function(error){
-                console.log("receive catch",error)
+                
             
         })
 

@@ -5,6 +5,7 @@ import {
 const initialState = {
     isLoading: false,
     isLoadingReportDetail: false,
+    persenDl: 0,
     data: [],
     dataReceiveReportDetail: [],
     receiveReport: [],
@@ -32,6 +33,10 @@ export const receiveReducer = (state = initialState, action) => {
         case RECEIVE.SUCCESS_CODE:
             return Object.assign({}, state, {
                 code: action.data.result
+            });
+        case RECEIVE.SUCCESS_PERSEN:
+            return Object.assign({}, state, {
+                persenDl: action.data
             });
         // case RECEIVE.RECEIVE_DATA:
         //     return Object.assign({}, state, {

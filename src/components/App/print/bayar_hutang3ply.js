@@ -50,8 +50,8 @@ class Print3ply extends Component {
           this.setState({
               data: getData,
           })
-          console.log(nextProps.auth.user.logo)
-          console.log(getData)
+          
+          
       }
 
       getLogo(){

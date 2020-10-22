@@ -34,7 +34,7 @@ class BayarHutang extends Component{
             isOpen:!this.state.isOpen,
             indexOpen:index
         })
-        console.log(index)
+        
     }
     handleBayar(e,kode){
         e.preventDefault();
@@ -68,8 +68,8 @@ class BayarHutang extends Component{
     render(){
 
         const {last_page,current_page,per_page,data,total_hutang} = this.props.getKartuHutang===undefined?{'last_page':'','per_page':'','current_page':'','data':[],'total_hutang':''}:this.props.getKartuHutang;
-        // console.log(data===undefined?'':data);
-        console.log(this.props.getKartuHutang);
+        // 
+        
         return (
             <Layout page="Bayar Hutang">
                 <Card>

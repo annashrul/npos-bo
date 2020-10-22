@@ -13,9 +13,9 @@ import imgCsv from 'assets/csv.png';
 // import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
 import XLSX from 'xlsx'
-import Spinner from '../../../../../../Spinner';
+// import Spinner from '../../../../../../Spinner';
 import { toRp } from '../../../../../../helper';
-// import Spinner from '../../../../Spinner';
+import MyProgressbar from '../../../../../../myProgressbar';
 
 class ReceiveReportExcel extends Component{
     constructor(props){
@@ -246,7 +246,9 @@ class ReceiveReportExcel extends Component{
                             </div>
                         </div> */}
                         {/* <hr></hr> */}
-                    </ModalBody> : <Spinner spinnerLabel={"Sedang memuat data ..."}/>
+                    </ModalBody> : 
+                    <MyProgressbar myprogressbarLabel={`Sedang memuat data ${this.props.persenDl}%`} myprogressbarPersen={this.props.persenDl+'%'}/>
+                    // <Spinner spinnerLabel={`Sedang memuat data ${this.props.persenDl}%`}/>
                     }
                 </form>
             </WrapperModal>
@@ -259,6 +261,7 @@ const mapStateToProps = (state) => {
     return {
         data:state.receiveReducer.data,
         isLoading: state.receiveReducer.isLoading,
+        persenDl: state.receiveReducer.persenDl,
         receiveReportExcel:state.receiveReducer.receiveReportExcel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

@@ -47,8 +47,8 @@ class FormSale extends Component{
     handleChange = (event) => {
         
         this.setState({ [event.target.name]: event.target.value });
-        console.log(event.target.name)
-        console.log(event.target.value)
+        
+        
         if(event.target.name === 'tunai'){
             let tunai=event.target.value;
             if(tunai<0){

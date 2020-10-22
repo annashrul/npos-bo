@@ -106,7 +106,7 @@ export const storePiutang = (data,param) => {
             .then(function (response) {
                 // const data = (response.data);
                 
-                console.log(response)
+                
 
                 dispatch(setLoadingPost(false));
                 Swal.fire({

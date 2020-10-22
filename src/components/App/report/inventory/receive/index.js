@@ -264,8 +264,8 @@ class ReceiveReport extends Component{
             startDate:awal,
             endDate:akhir
         });
-        console.log("event",event);
-        console.log("picker",picker);
+        
+        
     };
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_receive_report",pageNumber);
