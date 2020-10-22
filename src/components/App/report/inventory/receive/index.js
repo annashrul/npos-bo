@@ -256,14 +256,16 @@ class ReceiveReport extends Component{
         localStorage.setItem('location_receive_report', lk.value);
     }
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_receive_report",`${awal}`);
         localStorage.setItem("date_to_receive_report",`${akhir}`);
         this.setState({
             startDate:awal,
             endDate:akhir
         });
+        console.log("event",event);
+        console.log("picker",picker);
     };
     handlePageChange(pageNumber){
         localStorage.setItem("pageNumber_receive_report",pageNumber);

@@ -195,8 +195,8 @@ class SaleByCustArchive extends Component{
         localStorage.setItem('location_sale_by_cust_report', lk.value);
     }
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_sale_by_cust_report",`${awal}`);
         localStorage.setItem("date_to_sale_by_cust_report",`${akhir}`);
         this.setState({

@@ -261,10 +261,12 @@ export const FetchReportExcel = (page=1,where='',perpage='') => {
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
+                console.log('Content-Length',response.headers.get('Content-Length'));
                 
                 dispatch(setReportExcel(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
+                console.log("receive catch",error)
             
         })
 

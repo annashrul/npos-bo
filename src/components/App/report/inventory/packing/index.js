@@ -80,8 +80,8 @@ class PackingReport extends Component{
         // this.props.dispatch(FetchPackingData(code))
     };
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_packing_report",`${awal}`);
         localStorage.setItem("date_to_packing_report",`${akhir}`);
         this.setState({

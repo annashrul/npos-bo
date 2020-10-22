@@ -204,7 +204,7 @@ class ReceiveReportExcel extends Component{
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocumentXLsx(e,'xlsx'))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'xlsx'))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@ class ReceiveReportExcel extends Component{
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocumentXLsx(e,'csv'))}><i className="fa fa-print"></i></button>
+                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e,'csv'))}><i className="fa fa-print"></i></button>
                                         </div>
                                     </div>
                                 </div>

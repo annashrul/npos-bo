@@ -95,8 +95,8 @@ class HutangReport extends Component{
         this.props.dispatch(ModalType("approveHutang"));
     };
     handleEvent = (event, picker) => {
-        const awal = picker.startDate._d.toISOString().substring(0,10);
-        const akhir = picker.endDate._d.toISOString().substring(0,10);
+        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
+        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
         localStorage.setItem("date_from_hutang_report",`${awal}`);
         localStorage.setItem("date_to_hutang_report",`${akhir}`);
         this.setState({
