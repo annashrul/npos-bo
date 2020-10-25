@@ -95,10 +95,10 @@ export const addFooters = doc => {
 var date = new Date();
 date.setDate(date.getDate());
 export const rangeDate = {
-    'Hari Ini'          : [date.setDate(date.getDate()+1), moment()],
-    'Kemarin'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate()-1)],
-    '7 Hari Terakhir'   : [moment().subtract(6, 'days'), moment()],
-    '30 Hari Terakhir'  : [moment().subtract(29, 'days'), moment()],
+    'Hari Ini'          : [date.setDate(date.getDate()), moment()],
+    'Kemarin'           : [date.setDate(date.getDate()-1), date.setDate(date.getDate())],
+    '7 Hari Terakhir'   : [moment().subtract(7, 'days'), moment()],
+    '30 Hari Terakhir'  : [moment().subtract(30, 'days'), moment()],
     'Minggu Ini'        : [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
     'Minggu Lalu'       : [moment().subtract(1, 'weeks').startOf('isoWeek'), moment().subtract(1, 'weeks').endOf('isoWeek')],
     'Bulan Ini'         : [moment().startOf('month'), moment().endOf('month')],
