@@ -72,6 +72,7 @@ class DeliveryNote extends Component{
             ambil_data:1,
             ambil_nota:'',
             perpage:5,
+            scrollPage:0,
             error:{
                 location:"",
                 location2: "",
@@ -91,8 +92,10 @@ class DeliveryNote extends Component{
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
+        this.handleLoad = this.handleLoad.bind(this);
     }
     getProps(param){
+        localStorage.setItem("perpageDN",this.state.perpage);
         if (param.auth.user) {
             let lk = []
             let loc = param.auth.user.lokasi;
@@ -179,7 +182,7 @@ class DeliveryNote extends Component{
 
         if (localStorage.lk !== undefined && localStorage.lk !== '') {
             this.props.dispatch(FetchNota(localStorage.lk))
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,5))
+            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,localStorage.perpageDN))
 
             this.setState({
                 location: localStorage.lk
@@ -622,6 +625,7 @@ class DeliveryNote extends Component{
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
             this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
         }
         else{
             Swal.fire({
@@ -631,7 +635,21 @@ class DeliveryNote extends Component{
             });
         }
     }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView(false,{behavior: 'smooth'})
+        }
+    }
+
+    handleLoad(e){
+        console.log(e.height);
+    }
+
     render() {
+        if(!this.props.loadingbrg)this.handleScroll();
+        console.log("LOCAL PERPAGE",localStorage.perpageDN);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let subtotal = 0;
         return (
@@ -644,7 +662,7 @@ class DeliveryNote extends Component{
                         <div className="row">
                             <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
                                 {/*START LEFT*/}
-                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={{zoom:"80%",width:"25%",marginRight:"10px"  }}>
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="form-group">
@@ -754,7 +772,7 @@ class DeliveryNote extends Component{
                                                                     this.props.barang.length!==0?
                                                                         this.props.barang.map((i,inx)=>{
                                                                             return(
-                                                                                <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                     kd_brg:i.kd_brg,
                                                                                     nm_brg:i.nm_brg,
                                                                                     barcode:i.barcode,
@@ -843,7 +861,7 @@ class DeliveryNote extends Component{
                                             </div>
                                         </form>
                                     </div>
-                                    <div style={{overflowX: 'auto',zoom:'85%',marginTop:"10px"}}>
+                                    <div style={{overflowX: 'auto',zoom:'80%',marginTop:"10px"}}>
                                         <table className="table table-hover">
                                             <thead>
                                             <tr>

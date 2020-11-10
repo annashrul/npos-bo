@@ -12,9 +12,11 @@ import StickyBox from "react-sticky-box";
 import {ToastQ} from "helper";
 import imgDefault from 'assets/default.png'
 import {toRp} from "../../../../helper";
-import Spinner from 'Spinner'
+import Spinner from 'Spinner';
 
 const table='adjusment';
+
+
 class TrxAdjustment extends Component{
     constructor(props) {
         super(props);
@@ -30,6 +32,7 @@ class TrxAdjustment extends Component{
             search:"",
             userid:0,
             perpage:5,
+            scrollPage:0,
             error:{
                 location:"",
                 catatan:""
@@ -45,6 +48,7 @@ class TrxAdjustment extends Component{
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
         this.handleLoadMore=this.handleLoadMore.bind(this);
+
 
     }
     getProps(param){
@@ -70,6 +74,7 @@ class TrxAdjustment extends Component{
         }
     }
     componentDidMount(){
+
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.setState({
                 location:localStorage.lk
@@ -81,6 +86,7 @@ class TrxAdjustment extends Component{
             this.props.dispatch(FetchCodeAdjustment(localStorage.lk));
         }
     }
+
     componentWillReceiveProps = (nextProps) => {
         let perpage=this.state.perpage;
         if(this.props.barang.length === perpage){
@@ -502,11 +508,14 @@ class TrxAdjustment extends Component{
             })
         });
     }
+
+
     handleLoadMore(){
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
             this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
         }
         else{
             Swal.fire({
@@ -516,7 +525,17 @@ class TrxAdjustment extends Component{
             });
         }
     }
+
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView(false,{behavior: 'smooth'})
+        }
+    }
+
     render() {
+        if(!this.props.loadingbrg)this.handleScroll();
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Adjusment">
@@ -526,7 +545,11 @@ class TrxAdjustment extends Component{
                     </div>
                     <div className="card-body">
                         <div className="row">
+
+
                             <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
+
+
                                 {/*START LEFT*/}
                                 <StickyBox offsetTop={100} offsetBottom={20} style={{width:"23%",marginRight:"10px"  }}>
                                     <div className="form-group">
@@ -587,7 +610,7 @@ class TrxAdjustment extends Component{
                                                                 this.props.barang.length!==0?
                                                                     this.props.barang.map((i,inx)=>{
                                                                         return(
-                                                                            <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                 barcode:i.barcode,
                                                                                 harga_beli:i.harga_beli,
                                                                                 satuan:i.satuan,
@@ -615,8 +638,8 @@ class TrxAdjustment extends Component{
                                                                                 <div className="about">
                                                                                     <div className="status" style={{color: 'black',fontWeight:"bold",
                                                                                         wordBreak:"break-all",
-                                                                                        fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                        <div className="status" style={{color: 'black',
+                                                                                        fontSize:"10px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: 'black',
                                                                                         fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
                                                                                 </div>
 
@@ -628,10 +651,10 @@ class TrxAdjustment extends Component{
 
                                                             }
 
-
                                                         </ul>
                                                     </div>
-                                                    :<Spinner/>
+
+                                                :<Spinner/>
                                             }
                                     </div>
                                     <hr/>
@@ -778,6 +801,7 @@ class TrxAdjustment extends Component{
                                         </table>
 
                                     </div>
+                                    <hr/>
                                     <div className="dashboard-btn-group d-flex align-items-center">
                                         <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
                                         <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>

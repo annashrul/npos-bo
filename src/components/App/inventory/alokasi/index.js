@@ -900,7 +900,7 @@ class Alokasi extends Component{
                                 </StickyBox>
                                 {/*START RIGHT*/}
                                 <div style={{width:"75%"}}>
-                                    <div className="card-header" style={{zoom:"85%"}}>
+                                    <div className="card-header" style={{zoom:"80%"}}>
                                         <form className=''>
                                             <div className="row">
                                                 <div className="col-md-2">
