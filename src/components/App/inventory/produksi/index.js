@@ -550,6 +550,8 @@ class Produksi extends Component{
                 text: 'Tidak ada data.',
             });
         }
+        if(!this.props.loadingbrg)this.handleScroll();
+
     }
     handleScroll(){
         let divToScrollTo;
@@ -559,7 +561,6 @@ class Produksi extends Component{
         }
     }
     render() {
-        if(!this.props.loadingbrg)this.handleScroll();
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Produksi">

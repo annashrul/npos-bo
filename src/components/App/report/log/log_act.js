@@ -93,6 +93,7 @@ class LogActReport extends Component{
                 return array.indexOf(col) === i
             });
 
+
         this.setState({
             keyName_:keyName,
             valData_:arr_data
@@ -207,9 +208,7 @@ class LogActReport extends Component{
                                 </div>
                                 <div className="col-8">
                                     <h4 className="card-title">DETAIL ACT</h4>
-                                    <div className="table-responsive" ref={element => {
-                                        if (element) element.style.setProperty('overflow-x', 'auto', 'important');
-                                    }}>
+                                    <div className="table-responsive" ref={element => {if (element) element.style.setProperty('overflow-x', 'auto', 'important');}}>
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>

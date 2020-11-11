@@ -56,6 +56,8 @@ class Receive extends Component{
             ambil_data:1,
             ambil_nota:'',
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
             error:{
                 location:"",
                 supplier:"",
@@ -515,6 +517,9 @@ class Receive extends Component{
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
+        this.setState({
+            isScroll:false
+        });
         const finaldt = {
             kd_brg: item.kd_brg,
             barcode:item.barcode,
@@ -756,6 +761,7 @@ class Receive extends Component{
                 'error'
             )
         } else {
+            localStorage.setItem("anyReceive",this.state.search);
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty, 5));
             // this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, null, this.autoSetQty, 5));
@@ -786,11 +792,24 @@ class Receive extends Component{
         });
     }
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
-            // this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, null, this.autoSetQty, this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyReceive!==undefined?localStorage.anyReceive:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
 
         }
         else{
@@ -801,7 +820,17 @@ class Receive extends Component{
             });
         }
     }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
+
     render() {
+        if(this.state.isScroll===true)this.handleScroll();
+
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let opSupplier=[];
         if(this.props.supplier!==[]){
@@ -871,7 +900,7 @@ class Receive extends Component{
 
                                 </div>
                                 <div className="card-body">
-                                    <div className="chat-area">
+                                    <div className="chat-area" style={{zoom:"80%"}}>
                                         <div className="chat-header-text d-flex border-none mb-10">
                                             <div className="chat-about">
                                                 <div className="chat-with font-18">Pilih Barang</div>
@@ -906,8 +935,7 @@ class Receive extends Component{
                                                                 name="search"
                                                                 className="form-control form-control-sm"
                                                                 value={this.state.search}
-                                                                placeholder="Search"
-                                                                onChange={(e)=>this.HandleCommonInputChange(e,false)}
+                                                                placeholder={`Search ${localStorage.anyReceive!==undefined?localStorage.anyReceive:""}`}                                                                onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                                                 onKeyPress = {
                                                                     event => {
                                                                         if (event.key === 'Enter') {
@@ -948,7 +976,7 @@ class Receive extends Component{
                                                                     this.props.barang.map((i,inx)=>{
                                                                         return(
                                                                             <abbr title={i.nm_brg} key={inx} >
-                                                                            <li className="clearfix"onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                 kd_brg:i.kd_brg,
                                                                                 barcode:i.barcode,
                                                                                 satuan:i.satuan,
@@ -962,14 +990,11 @@ class Receive extends Component{
                                                                                 nm_brg:i.nm_brg,
                                                                                 tambahan:i.tambahan
                                                                             })}>
-                                                                                
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+
+                                                                                {i.gambar === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                    wordBreak:"break-all",
-                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                    <div className="status" style={{color: 'black',
-                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                 </div>
                                                                             </li>
                                                                             </abbr>
