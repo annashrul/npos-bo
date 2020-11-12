@@ -123,6 +123,7 @@ class PurchaseOrder extends Component{
         destroy(table);
         localStorage.removeItem('sp');
         localStorage.removeItem('lk');
+        localStorage.removeItem('anyPurchaseOrder');
     }
     HandleChangeLokasi(lk){
         let err = Object.assign({}, this.state.error, {
@@ -147,7 +148,8 @@ class PurchaseOrder extends Component{
         });
         this.setState({
             supplier: sp.value,
-            error: err
+            error: err,
+            isScroll:true
         })
         localStorage.setItem('sp', sp.value);
 

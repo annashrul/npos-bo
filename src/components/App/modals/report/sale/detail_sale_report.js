@@ -31,7 +31,9 @@ class DetailSaleReport extends Component{
     render(){
         
         const {detail} = this.props.detailSale;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
+        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace:"nowrap"};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailSaleReport"} size="lg">
                 <ModalHeader toggle={this.toggle}>Detail Penjualan {this.props.detailSale.kd_trx}</ModalHeader>
@@ -52,8 +54,8 @@ class DetailSaleReport extends Component{
                         </tr>
                         </tbody>
                     </table>
-                    <div className="table-responsive" style={{overflowX: "auto"}}>
-                        <table className="table table-hover table-bordered">
+                    <div style={{overflowX: "auto"}}>
+                        <table className="table table-hover">
                             <thead className="bg-light">
                             <tr>
                                 <th className="text-black" style={columnStyle}>Barcode</th>
@@ -71,13 +73,13 @@ class DetailSaleReport extends Component{
                                     detail.map((v,i)=>{
                                         return (
                                             <tr key={i}>
-                                                <td style={columnStyle}>{v.sku}</td>
-                                                <td style={columnStyle}>{v.nm_brg}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.open_price,10))}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
-                                                <td style={{textAlign:"right"}}>{v.qty} ({v.satuan})</td>
-                                                <td style={{textAlign:"right"}}>{v.dis_persen}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.subtotal,10))}</td>
+                                                <td style={leftStyle}>{v.sku}</td>
+                                                <td style={leftStyle}>{v.nm_brg}</td>
+                                                <td style={rightStyle}>{toRp(parseInt(v.open_price,10))}</td>
+                                                <td style={rightStyle}>{toRp(parseInt(v.hrg_jual,10))}</td>
+                                                <td style={rightStyle}>{v.qty} ({v.satuan})</td>
+                                                <td style={rightStyle}>{v.dis_persen}</td>
+                                                <td style={rightStyle}>{toRp(parseInt(v.subtotal,10))}</td>
                                             </tr>
                                         );
                                     }) : "No data." : "No data."

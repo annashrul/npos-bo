@@ -526,6 +526,7 @@ class TrxAdjustment extends Component{
         this.setState({
             isScroll:true
         });
+
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){

@@ -362,6 +362,7 @@ class AlokasiReport extends Component{
                             <table className="table table-hover table-bordered">
                                 <thead className="bg-light">
                                 <tr>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                     <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                     <th className="text-black" style={columnStyle} rowSpan="2">No Faktur Mutasi</th>
                                     <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
@@ -386,6 +387,7 @@ class AlokasiReport extends Component{
                                                         // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
                                                         return(
                                                             <tr key={i}>
+                                                                <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                                     <div className="btn-group">
                                                                         <UncontrolledButtonDropdown>
