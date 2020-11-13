@@ -11,10 +11,10 @@
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link id='favicon' rel="shortcut icon" href="%PUBLIC_URL%/favicon.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
-
+  <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">-->
+  <!--<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">-->
+  <!--<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">-->
+  <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
   <!-- Master Stylesheet [If you remove this CSS file, your file will be broken undoubtedly.] -->
   <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
 
@@ -31,6 +31,21 @@
 
 
   <style>
+    span.circle {
+      background: #5d78ff;
+      border-radius: 50%;
+      -moz-border-radius: 50%;
+      -webkit-border-radius: 50%;
+      color: white;
+      display: inline-block;
+      font-weight: bold;
+      line-height: 40px;
+      margin-right: 5px;
+      text-align: center;
+      width: 40px;
+      float: left;
+    }
+
     .custom-map-modal {
       width: 100%;
       height: 100%;
@@ -111,7 +126,40 @@
       width: 100% !important;
       height: 100% !important;
     }
-
+    .modal-header{
+      background-color: #5d78ff!important;
+    }
+    .modal-title,.close{
+      color:white!important;
+    }
+    input{
+      border:1px solid #e8ebf1!important;
+      width: 100%;
+    }
+    input[type="file"] {
+      padding:2px;
+    }
+    img{
+      border-radius: 10%!important;
+    }
+    button.btn-warning{color:white!important;}
+    button.cancelBtn{
+      /*color*/
+      background-color: #5d78ff!important;
+      color: white!important;
+    }
+    button.cancelBtn,button.applyBtn{
+      font-family: 'Rubik', sans-serif !important;
+      font-weight: bold !important;
+    }
+    .off, .ends, .available,.month,.drp-selected,.swal2-html-container,.swal2-title{
+      font-family: 'Rubik', sans-serif !important;
+      font-weight: bold !important;
+    }
+    .calendar-table>table{
+      font-family: 'Rubik', sans-serif !important;
+      font-weight: bold !important;
+    }
     html,
     body,
     h1,
@@ -123,7 +171,7 @@
     p,
     li,
     a {
-      font-family: 'Comfortaa', cursive !important;
+      font-family:'Rubik', sans-serif !important;
       font-weight: bold !important;
     }
 

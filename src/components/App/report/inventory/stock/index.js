@@ -227,93 +227,102 @@ class InventoryReport extends Component{
                 <div className="col-12">
                     <div className="card">
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor=""> Periode </label>
-                                        <DateRangePicker
-                                            style={{display:'unset'}}
-                                            ranges={rangeDate}
-                                            alwaysShowCalendars={true}
-                                            onEvent={this.handleEvent}
-                                        >
-                                            <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
-                                        </DateRangePicker>
+                            <div className="row" style={{zoom:"90%"}}>
+                               <div className="col-md-10">
+                                   <div className="row">
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label htmlFor=""> Periode </label>
+                                               <DateRangePicker
+                                                   style={{display:'unset'}}
+                                                   ranges={rangeDate}
+                                                   alwaysShowCalendars={true}
+                                                   onEvent={this.handleEvent}
+                                               >
+                                                   <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                               </DateRangePicker>
+                                           </div>
+                                       </div>
+
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label htmlFor="">Lokasi</label>
+                                               <Select
+                                                   options={this.state.location_data}
+                                                   onChange={this.HandleChangeLokasi}
+                                                   placeholder="Pilih Lokasi"
+                                                   value = {
+                                                       this.state.location_data.find(op => {
+                                                           return op.value === this.state.location
+                                                       })
+                                                   }
+                                               />
+                                           </div>
+                                       </div>
+
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label htmlFor="exampleFormControlSelect1">Filter Stock</label>
+                                               <Select
+                                                   options={this.state.status_data}
+                                                   onChange={this.HandleChangeStock}
+                                                   placeholder="Pilih Stock"
+                                                   value = {
+                                                       this.state.status_data.find(op => {
+                                                           return op.value === this.state.status
+                                                       })
+                                                   }
+                                               />
+
+                                           </div>
+                                       </div>
+                                       <div className="col-6 col-xs-6 col-md-2">
+                                           <div className="form-group">
+                                               <label htmlFor="exampleFormControlSelect1">Search By</label>
+                                               <Select
+                                                   options={this.state.search_by_data}
+                                                   onChange={this.HandleChangeSearchBy}
+                                                   placeholder="Pilih Kolom"
+                                                   value = {
+                                                       this.state.search_by_data.find(op => {
+                                                           return op.value === this.state.search_by
+                                                       })
+                                                   }
+                                               />
+
+                                           </div>
+                                       </div>
+                                       <div className="col-12 col-xs-12 col-md-2">
+                                           <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                           <div className="form-group">
+                                               <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
+                                           </div>
+
+                                       </div>
+                                   </div>
+                               </div>
+
+                                <div className="col-md-2">
+                                    <div className="row">
+                                        <div className="col-12 col-xs-12 col-md-12" style={{textAlign:"right"}}>
+                                            <div className="form-group text-right">
+                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleSearch(e))}>
+                                                    <i className="fa fa-search"/>
+                                                </button>
+                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                    <i className="fa fa-print"/> Export
+                                                </button>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor="">Lokasi</label>
-                                        <Select
-                                            options={this.state.location_data}
-                                            onChange={this.HandleChangeLokasi}
-                                            placeholder="Pilih Lokasi"
-                                            value = {
-                                                this.state.location_data.find(op => {
-                                                    return op.value === this.state.location
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor="exampleFormControlSelect1">Filter Stock</label>
-                                        <Select
-                                            options={this.state.status_data}
-                                            onChange={this.HandleChangeStock}
-                                            placeholder="Pilih Stock"
-                                            value = {
-                                                this.state.status_data.find(op => {
-                                                    return op.value === this.state.status
-                                                })
-                                            }
-                                        />
-
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label htmlFor="exampleFormControlSelect1">Search By</label>
-                                        <Select
-                                            options={this.state.search_by_data}
-                                            onChange={this.HandleChangeSearchBy}
-                                            placeholder="Pilih Kolom"
-                                            value = {
-                                                this.state.search_by_data.find(op => {
-                                                    return op.value === this.state.search_by
-                                                })
-                                            }
-                                        />
-
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <label htmlFor="exampleFormControlSelect1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <div className="form-group">
-                                        <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
-                                    </div>
-
-                                </div>
-
-                                <div className="col-6 col-xs-6 col-md-2" style={{textAlign:"right"}}>
-                                    <div className="form-group">
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleSearch(e))}>
-                                            <i className="fa fa-search"/>
-                                        </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                            <i className="fa fa-print"></i> Export
-                                        </button>
-                                    </div>
-
                                 </div>
                             </div>
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
+                            <div style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered" style={{zoom:"80%"}}>
                                     <thead className="bg-light">
                                     <tr>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Barang</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Barcode</th>
@@ -352,6 +361,7 @@ class InventoryReport extends Component{
                                                             
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>
@@ -390,7 +400,7 @@ class InventoryReport extends Component{
                                     }
                                     <tfoot>
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
-                                        <th colSpan="8">TOTAL PERPAGE</th>
+                                        <th colSpan="9">TOTAL PERPAGE</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_dn_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
@@ -399,7 +409,7 @@ class InventoryReport extends Component{
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_last_stock_per}</th>
                                     </tr>
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
-                                        <th colSpan="8">TOTAL</th>
+                                        <th colSpan="9">TOTAL</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_dn!==undefined?total_dn:'0'}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>

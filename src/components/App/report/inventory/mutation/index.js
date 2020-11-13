@@ -342,10 +342,11 @@ class MutationReport extends Component{
                                 </div>
 
                             </div>
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
+                            <div style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Faktur</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
@@ -365,6 +366,8 @@ class MutationReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>

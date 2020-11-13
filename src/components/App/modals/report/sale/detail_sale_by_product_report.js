@@ -94,44 +94,44 @@ class DetailSaleByProductReport extends Component{
     render(){
         
         const {data,last_page, per_page,current_page} = this.props.detailSaleByProduct;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+        const columnStyle = {verticalAlign: "middle", textAlign: "left",};
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailSaleByProductReport"} size={this.state.isExport===false?'lg':'sm'}>
                 <ModalHeader toggle={this.toggle}>{this.state.isExport===false?`Detail Penjualan By Barang (${this.props.detail.kd_brg})`:'Export Data'}</ModalHeader>
                 <ModalBody hidden={this.state.isExport===true}>
                     <div className="row">
-                        {/* <div className="col-6 col-xs-6 col-md-3">
-                            <div className="form-group">
-                                <label htmlFor=""> Periode </label>
-                                <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                    <input type="text" className="form-control" name="date_sale_by_product_report_detail" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
-                                </DateRangePicker>
-                            </div>
-                        </div> */}
-                        <div className="col-6 col-xs-6 col-md-12">
+                        <div className="col-6 col-xs-6 col-md-6">
+                            <table className="table no-border" >
+                                <tbody className="bg-transparent no-border" style={{border:"none"}}>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Nama Barang</th>
+                                    <th className="text-black" style={columnStyle}>: {this.props.detail.nm_brg}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Qty</th>
+                                    <th className="text-black" style={columnStyle}>: {parseInt(this.props.detail.qty_jual,10)+" "+this.props.detail.satuan}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Gross Sale</th>
+                                    <th className="text-black" style={columnStyle}>: {toRp(parseInt(this.props.detail.gross_sales,10))}</th>
+                                </tr>
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Nama Toko</th>
+                                    <th className="text-black" style={columnStyle}>: {this.props.detail.toko}</th>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                        <div className="col-6 col-xs-6 col-md-6">
                             <div className="form-group text-right">
                                 <button style={{marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleExport(e,(last_page*per_page)))}>
-                                    <i className="fa fa-print"></i> Export
+                                    <i className="fa fa-print"/> Export
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <table className="table" >
-                        <tbody className="bg-transparent no-border" style={{border:"none"}}>
-                            <tr>
-                                <th className="text-black" style={columnStyle}>Nama Barang</th>
-                                <th className="text-black" style={columnStyle}>Qty</th>
-                                <th className="text-black" style={columnStyle}>Gross Sale</th>
-                                <th className="text-black" style={columnStyle}>Store</th>
-                            </tr>
-                            <tr>
-                                <th className="text-black" style={columnStyle}>{this.props.detail.nm_brg}</th>
-                                <th className="text-black" style={columnStyle}>{parseInt(this.props.detail.qty_jual,10)+" "+this.props.detail.satuan}</th>
-                                <th className="text-black" style={columnStyle}>{toRp(parseInt(this.props.detail.gross_sales,10))}</th>
-                                <th className="text-black" style={columnStyle}>{this.props.detail.toko}</th>
-                            </tr>
-                        </tbody>
-                    </table>
+
                     <div style={{overflowX: "auto"}}>
                         <table className="table table-hover table-bordered">
                             <thead className="bg-light">

@@ -16,6 +16,7 @@ import {
 } from 'react-router-dom';
 import {toRp} from "../../../../helper";
 import Spinner from 'Spinner'
+import {HEADERS} from "../../../../redux/actions/_constants";
 
 const table='alokasi'
 const Toast = Swal.mixin({
@@ -57,10 +58,12 @@ class Alokasi extends Component{
             nota_trx:'-',
             jenis_trx:'Mutasi',
             jenis_trx_data:[
-            {value:"Alokasi",label:"Alokasi"},
-            {value:"Mutasi",label:"Mutasi"},
-            {value:"Transaksi",label:"Transaksi"},
-        ],
+                {value:"Alokasi",label:"Alokasi"},
+                {value:"Mutasi",label:"Mutasi"},
+                {value:"Transaksi",label:"Transaksi"},
+            ],
+            scrollPage:0,
+            isScroll:false,
             perpage:5,
             error:{
                 location:"",
@@ -244,6 +247,7 @@ class Alokasi extends Component{
         localStorage.removeItem('ambil_data');
         localStorage.removeItem('nota');
         localStorage.removeItem('catatan');
+        localStorage.removeItem('anyAlokasi');
 
     }
 
@@ -463,6 +467,9 @@ class Alokasi extends Component{
 
     HandleAddBrg(e,item) {
         e.preventDefault();
+        this.setState({
+            isScroll:false
+        });
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg: item.nm_brg,
@@ -673,6 +680,7 @@ class Alokasi extends Component{
                 'error'
             )
         } else {
+            localStorage.setItem("anyAlokasi",this.state.search);
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
@@ -707,10 +715,25 @@ class Alokasi extends Component{
     }
 
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+            this.props.dispatch(FetchBrg(1, searchby, localStorage.anyAlokasi!==undefined||localStorage.anyAlokasi!==""?localStorage.anyAlokasi:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
+
         }
         else{
             Swal.fire({
@@ -720,16 +743,17 @@ class Alokasi extends Component{
             });
         }
     }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
     render() {
-        // if(this.props.isLoading){
-        //   return <Preloader/>
-        // }
-
+        if(this.state.isScroll===true)this.handleScroll();
         let subtotal = 0;
-        // let grandtotal = 0;
-        //  let grandtotal = this.state.grandtotal;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
-
         return (
             <Layout page="Alokasi">
                 <div className="card">
@@ -738,7 +762,7 @@ class Alokasi extends Component{
                     </div>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <div className="col-md-12" style={{zoom:"80%",display: 'flex', alignItems: 'flex-start' }}>
                                 <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px" }}>
                                     <div className="chat-area">
                                         <div className="chat-header-text d-flex border-none mb-10">
@@ -817,7 +841,7 @@ class Alokasi extends Component{
                                                                 name="search"
                                                                 className="form-control form-control-sm"
                                                                 value={this.state.search}
-                                                                placeholder="Search"
+                                                                placeholder={`Search ${localStorage.anyAlokasi!==undefined?localStorage.anyAlokasi:""}`}
                                                                 onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                                                 onKeyPress = {
                                                                     event => {
@@ -858,7 +882,7 @@ class Alokasi extends Component{
                                                                 this.props.barang.length!==0?
                                                                     this.props.barang.map((i,inx)=>{
                                                                         return(
-                                                                            <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                 kd_brg:i.kd_brg,
                                                                                 nm_brg:i.nm_brg,
                                                                                 barcode:i.barcode,
@@ -869,13 +893,10 @@ class Alokasi extends Component{
                                                                                 qty:1,
                                                                                 tambahan:i.tambahan,
                                                                             })}>
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                {i.gambar === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                    wordBreak:"break-all",
-                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                    <div className="status" style={{color: 'black',
-                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                 </div>
 
                                                                             </li>
@@ -900,7 +921,7 @@ class Alokasi extends Component{
                                 </StickyBox>
                                 {/*START RIGHT*/}
                                 <div style={{width:"75%"}}>
-                                    <div className="card-header" style={{zoom:"85%"}}>
+                                    <div className="card-header" style={{zoom:"80%"}}>
                                         <form className=''>
                                             <div className="row">
                                                 <div className="col-md-2">
@@ -1002,22 +1023,22 @@ class Alokasi extends Component{
                                                                 }
                                                             </select></td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={toRp(item.harga_beli)}/>
+                                                                <input style={{textAlign:"right",width:"100px"}} readOnly={true} type="text" className="form-control" value={toRp(item.harga_beli)}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={toRp(item.hrg_jual)}/>
+                                                                <input style={{textAlign:"right",width:"100px"}} readOnly={true} type="text" className="form-control" value={toRp(item.hrg_jual)}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={item.stock}/>
+                                                                <input style={{textAlign:"right",width:"100px"}} readOnly={true} type="text" className="form-control" value={item.stock}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100%',textAlign:'right'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
+                                                                <input type='text' name='qty' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} style={{width:'100px',textAlign:'right'}} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/>
                                                                 <div className="invalid-feedback" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={this.state.jenis_trx.toLowerCase()!=='transaksi'?toRp(parseInt(item.harga_beli,10)*parseFloat(item.qty)):toRp(parseInt(item.hrg_jual,10)*parseFloat(item.qty))}/>
+                                                                <input style={{textAlign:"right",width:"100px"}} readOnly={true} type="text" className="form-control" value={this.state.jenis_trx.toLowerCase()!=='transaksi'?toRp(parseInt(item.harga_beli,10)*parseFloat(item.qty)):toRp(parseInt(item.hrg_jual,10)*parseFloat(item.qty))}/>
                                                             </td>
                                                         </tr>
                                                     )
@@ -1029,6 +1050,7 @@ class Alokasi extends Component{
 
 
                                     </div>
+                                    <hr/>
                                     <div className='row'>
                                         <div className="col-md-7">
                                             <div className="dashboard-btn-group d-flex align-items-center">
@@ -1036,7 +1058,7 @@ class Alokasi extends Component{
                                                 <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                             </div>
                                         </div>
-                                        <div className="col-md-5" style={{zoom:'70%'}}>
+                                        <div className="col-md-5">
                                             <div className="pull-right">
                                                 <form className="form_head">
                                                     <div className="row" style={{marginBottom: '3px'}}>

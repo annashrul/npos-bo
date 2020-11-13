@@ -72,6 +72,8 @@ class DeliveryNote extends Component{
             ambil_data:1,
             ambil_nota:'',
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
             error:{
                 location:"",
                 location2: "",
@@ -91,6 +93,7 @@ class DeliveryNote extends Component{
         this.getData = this.getData.bind(this);
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
+        this.handleLoad = this.handleLoad.bind(this);
     }
     getProps(param){
         if (param.auth.user) {
@@ -113,7 +116,6 @@ class DeliveryNote extends Component{
         if(param.barang.length>0){
             this.getData()
         }
-
         if (param.receive_data){
             if (param.receive_data.master!==undefined){
                 if(this.props.receive_data===undefined){
@@ -198,6 +200,7 @@ class DeliveryNote extends Component{
                 perpage:perpage+5
             });
         }
+
         this.getProps(nextProps);
     }
     componentWillUnmount() {
@@ -208,6 +211,7 @@ class DeliveryNote extends Component{
         localStorage.removeItem('ambil_data');
         localStorage.removeItem('nota');
         localStorage.removeItem('catatan');
+        localStorage.removeItem('anyDeliveryNote');
 
     }
     HandleChangeNota(nota){
@@ -403,6 +407,9 @@ class DeliveryNote extends Component{
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
+        this.setState({
+            isScroll:false
+        });
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg: item.nm_brg,
@@ -586,6 +593,7 @@ class DeliveryNote extends Component{
                 'error'
             )
         } else {
+            localStorage.setItem("anyDeliveryNote",this.state.search);
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
@@ -618,10 +626,24 @@ class DeliveryNote extends Component{
         });
     }
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyDeliveryNote!==undefined?localStorage.anyDeliveryNote:"", this.state.location, null, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
         }
         else{
             Swal.fire({
@@ -630,8 +652,23 @@ class DeliveryNote extends Component{
                 text: 'Tidak ada data.',
             });
         }
+
     }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
+
+    handleLoad(e){
+        console.log(e.height);
+    }
+
     render() {
+        if(this.state.isScroll===true)this.handleScroll();
+        console.log(this.state.isScroll);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let subtotal = 0;
         return (
@@ -644,7 +681,7 @@ class DeliveryNote extends Component{
                         <div className="row">
                             <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
                                 {/*START LEFT*/}
-                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={{zoom:"80%",width:"25%",marginRight:"10px"  }}>
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="form-group">
@@ -713,7 +750,7 @@ class DeliveryNote extends Component{
                                                                 name="search"
                                                                 className="form-control form-control-sm"
                                                                 value={this.state.search}
-                                                                placeholder="Search"
+                                                                placeholder={`Search ${localStorage.anyDeliveryNote!==undefined?localStorage.anyDeliveryNote:""}`}
                                                                 onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                                                 onKeyPress = {
                                                                     event => {
@@ -754,7 +791,7 @@ class DeliveryNote extends Component{
                                                                     this.props.barang.length!==0?
                                                                         this.props.barang.map((i,inx)=>{
                                                                             return(
-                                                                                <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                     kd_brg:i.kd_brg,
                                                                                     nm_brg:i.nm_brg,
                                                                                     barcode:i.barcode,
@@ -765,13 +802,10 @@ class DeliveryNote extends Component{
                                                                                     qty:1,
                                                                                     tambahan:i.tambahan,
                                                                                 })}>
-                                                                                    <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                {i.gambar === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                     <div className="about">
-                                                                                        <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                        wordBreak:"break-all",
-                                                                                        fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                        <div className="status" style={{color: 'black',
-                                                                                        fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                        <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                        <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                     </div>
                                                                                 </li>
                                                                             )
@@ -782,7 +816,7 @@ class DeliveryNote extends Component{
                                                                 }
                                                             </ul>
                                                         </div>
-                                                    :<Spinner/>
+                                                    :<div id="chat_user_2"><Spinner/></div>
                                             }
                                         </div>
                                         <hr/>
@@ -809,7 +843,7 @@ class DeliveryNote extends Component{
                                                         <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))} style={{padding:"9px"}}/>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-2">
+                                                <div className="col-md-3">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Lokasi Asal</label>
                                                         <Select options={this.state.location_data} placeholder = "=== Pilih ===" onChange={this.HandleChangeLokasi} value = {this.state.location_data.find(op => {return op.value === this.state.location})}/>
@@ -818,7 +852,7 @@ class DeliveryNote extends Component{
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-2">
+                                                <div className="col-md-3">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Lokasi Tujuan</label>
                                                         <Select options={this.state.location_data.filter(option => option.value !== this.state.location)}
@@ -831,7 +865,7 @@ class DeliveryNote extends Component{
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-4">
+                                                <div className="col-md-2">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Catatan</label>
                                                         <input type="text" name="catatan" className="form-control" value={this.state.catatan} onChange={(e=>this.HandleCommonInputChange(e))} style={{padding:"9px"}}/>
@@ -843,7 +877,7 @@ class DeliveryNote extends Component{
                                             </div>
                                         </form>
                                     </div>
-                                    <div style={{overflowX: 'auto',zoom:'85%',marginTop:"10px"}}>
+                                    <div style={{overflowX: 'auto',zoom:'80%',marginTop:"10px"}}>
                                         <table className="table table-hover">
                                             <thead>
                                             <tr>
@@ -885,19 +919,19 @@ class DeliveryNote extends Component{
                                                                 }
                                                             </select></td>
                                                             <td style={columnStyle}>
-                                                                <input type="text" className="form-control" value={toRp(item.harga_beli)} readOnly style={{textAlign:"right"}}/>
+                                                                <input type="text" className="form-control" value={toRp(item.harga_beli)} readOnly style={{textAlign:"right",width:"100px"}}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input type="text" className="form-control" value={toRp(item.hrg_jual)} readOnly style={{textAlign:"right"}}/>
+                                                                <input type="text" className="form-control" value={toRp(item.hrg_jual)} readOnly style={{textAlign:"right",width:"100px"}}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input type="text" className="form-control" value={item.stock} readOnly style={{textAlign:"right"}}/>
+                                                                <input type="text" className="form-control" value={item.stock} readOnly style={{textAlign:"right",width:"100px"}}/>
                                                             </td>
                                                             <td style={columnStyle}>
                                                                 <input
                                                                     type='text' name='qty'
                                                                     onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                    style={{width: '100%', textAlign: 'right'}}
+                                                                    style={{width: '100px', textAlign: 'right'}}
                                                                     onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                     className="form-control"
                                                                     value={this.state.brgval[index].qty}
@@ -908,7 +942,7 @@ class DeliveryNote extends Component{
                                                                 </div>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input type="text" className="form-control" value={toRp(parseInt(item.harga_beli,10) * parseFloat(item.qty))} readOnly style={{textAlign:"right"}}/>
+                                                                <input type="text" className="form-control" value={toRp(parseInt(item.harga_beli,10) * parseFloat(item.qty))} readOnly style={{textAlign:"right",width:"100px"}}/>
                                                             </td>
                                                         </tr>
                                                     )
@@ -918,6 +952,7 @@ class DeliveryNote extends Component{
                                             </tbody>
                                         </table>
                                     </div>
+                                    <hr/>
                                     <div className='row'>
                                         <div className="col-md-7">
                                             <div className="dashboard-btn-group d-flex align-items-center">

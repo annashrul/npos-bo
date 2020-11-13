@@ -37,6 +37,7 @@ class Produksi extends Component{
             qty_estimasi:0,
             perpage:5,
             isload:false,
+            scrollPage:0,
             error:{
                 location:"",
                 catatan:"",
@@ -539,6 +540,8 @@ class Produksi extends Component{
     handleLoadMore(){
         if(parseInt(this.props.barangBahan.total,10)>parseInt(this.props.barangBahan.per_page,10)){
             this.props.dispatch(FetchBrgProduksiBahan(1,'kd_brg',this.state.search,this.state.location,this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
+
         }
         else{
             Swal.fire({
@@ -547,12 +550,17 @@ class Produksi extends Component{
                 text: 'Tidak ada data.',
             });
         }
+        if(!this.props.loadingbrg)this.handleScroll();
+
+    }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView(false,{behavior: 'smooth'})
+        }
     }
     render() {
-        
-        
-        
-        
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Produksi">
@@ -600,7 +608,7 @@ class Produksi extends Component{
                                                         typeof this.props.barangBahan.data ==='object'? this.props.barangBahan.data.length!==0?
                                                             this.props.barangBahan.data.map((i,inx)=>{
                                                                 return(
-                                                                    <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                    <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                         barcode:i.barcode,
                                                                         harga_beli:i.harga_beli,
                                                                         satuan:i.satuan,
@@ -651,7 +659,7 @@ class Produksi extends Component{
                             <div style={{width:"80%"}}>
                                 <div className="card">
                                     <div className="card-body">
-                                        <div className="row" style={{zoom:"85%"}}>
+                                        <div className="row" style={{zoom:"80%"}}>
                                             <div className="col-md-2">
                                                 <div className="form-group">
                                                     <label className="control-label font-12">Kode Produksi</label>
@@ -706,6 +714,8 @@ class Produksi extends Component{
 
                                             </div>
 
+                                        </div>
+                                        <div className="row">
                                             <div className="col-md-12" style={{overflowX: "auto",zoom:"85%"}}>
                                                 <table className="table table-hover">
                                                     <thead>
