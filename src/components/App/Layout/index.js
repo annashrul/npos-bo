@@ -60,13 +60,13 @@ class Layout extends Component {
         const rawtime = parseInt(this.getTimeout(), 10);
         const timedout = rawtime === 0 ? 86400000 * 2 : rawtime;
         return (
-            <Idle
-                timeout={timedout}
-                render={({ idle }) =>
-                <div>
-                    {idle &&rawtime!==0
-                    ? this.handleLogout()
-                    : (
+            // <Idle
+            //     timeout={timedout}
+            //     render={({ idle }) =>
+            //     <div>
+            //         {idle &&rawtime!==0
+            //         ? this.handleLogout()
+            //         : (
                         <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active":"ecaps-page-wrapper " + (this.props.triggerMobileEcaps?"mobile-menu-active":"")}>
                         {/* Side Menu */}
                             <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
@@ -108,11 +108,11 @@ class Layout extends Component {
                             </div>
                         </div>
         
-                    )
-                    }
-                </div>
-                }
-            />
+                    // )
+                //     }
+                // </div>
+                // }
+            // />
             
         );
     }
