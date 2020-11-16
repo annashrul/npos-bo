@@ -707,7 +707,7 @@ class SideMenu extends Component {
                    isReportLog:true
                })
            } 
-        } else if(path==='/trx_produksi'||path==='/approval_produksi'){
+        } else if(path==='/production'||path==='/approval_produksi'){
             this.setState({
                 isProduction:true
             })
@@ -813,7 +813,7 @@ class SideMenu extends Component {
                     {/* MASTERDATA MODUL END */}
 
                     {/* PRODUKSI MODUL START */}
-                    <li style={this.state.produksi==="0"?{"display":"none"}:{"display":"block"}} className={path==='/trx_produksi'?"active":''}><Link to="/trx_produksi"> <i className="fa fa-product-hunt" /><span> Produksi</span></Link></li>
+                    <li style={this.state.produksi==="0"?{"display":"none"}:{"display":"block"}} className={path==='/production'?"active":''}><Link to="/production"> <i className="fa fa-product-hunt" /><span> Produksi</span></Link></li>
                     {/* PRODUKSI MODUL END */}
 
                     {/* INVENTORY MODUL START */}

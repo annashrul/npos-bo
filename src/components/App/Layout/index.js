@@ -6,7 +6,6 @@ import SideMenu from '../Layout/sideMenu'
 import {connect} from 'react-redux'
 import FreeScrollbar from 'react-free-scrollbar';
 import Default from 'assets/default.png';
-import Idle from 'react-idle'
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
 
@@ -57,8 +56,8 @@ class Layout extends Component {
     }
 
     render() {
-        const rawtime = parseInt(this.getTimeout(), 10);
-        const timedout = rawtime === 0 ? 86400000 * 2 : rawtime;
+        // const rawtime = parseInt(this.getTimeout(), 10);
+        // const timedout = rawtime === 0 ? 86400000 * 2 : rawtime;
         return (
             // <Idle
             //     timeout={timedout}

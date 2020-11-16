@@ -224,156 +224,112 @@ class ReportLabaRugi extends Component{
                                     />
                                 </div>
                             </div>
-                            {/* <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Kassa
-                                    </label>
-                                    <Select
-                                        options={this.state.kassa_data}
-                                        placeholder="Pilih Kassa"
-                                        onChange={this.HandleChangeKassa}
-                                        value={
-                                            this.state.kassa_data.find(op => {
-                                                return op.value === this.state.kassa
-                                            })
-                                        }
-
-                                    />
-                                </div>
-                            </div> */}
-                            {/* <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Tipe Kas
-                                    </label>
-                                    <Select
-                                        options={this.state.type_data}
-                                        placeholder="Pilih Tipe Kas"
-                                        onChange={this.HandleChangeType}
-                                        value={
-                                            this.state.type_data.find(op => {
-                                                return op.value === this.state.type
-                                            })
-                                        }
-
-                                    />
-                                </div>
-                            </div> */}
+                           
                             <div className="col-6 col-xs-6 col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12"></label>
                                     <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                         <i className="fa fa-search"></i>
                                     </button>
-                                    {/* <ReactHTMLTableToExcel
-                                        className="btn btn-primary btnBrg"
-                                        table={`laporan_kas`}
-                                        filename={`laporan_kas`}
-                                        sheet="kas"
-                                        buttonText="export excel">
-                                    </ReactHTMLTableToExcel> */}
                                 </div>
 
                             </div>
-                            <div className="col-md-12">
-                                <div className="col-md-6 offset-3">
+                            <div className="col-md-12 col-lg-12 col-sm-12">
+                                <div className="col-md-6 col-lg-6 col-sm-6 offset-lg-3 offset-md-3">
                                     <div className="card rounded box-margin">
                                         <div className="card-body">
                                             <div className="row">
-                                                <div className="col-10">
+                                                <div className="col-lg-10 col-sm-10 col-md-10 col-xs-10">
                                                     {/* <h6 className="mb-0">{item.kasir} - {item.nama_toko} ({item.kassa})</h6> */}
                                                     <p className="text-12 mb-0">PERIODE {moment(this.state.startDate).locale('id').format("yyyy/MM/DD")} - {moment(this.state.endDate).locale('id').format("yyyy/MM/DD")}</p>
                                                 </div>
-                                                <div className="col-2 text-right">
+                                                <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
                                                     <div className="dashboard-dropdown">
                                                         <div className="dropdown">
                                                             <button className="btn dropdown-toggle" type="button" id="dashboardDropdown50" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="ti-more"></i></button>
                                                             <div className="dropdown-menu dropdown-menu-right"
                                                                     aria-labelledby="dashboardDropdown50">
-                                                                {/* <a className="dropdown-item" href="javascript:void(0)" onClick={(e)=>this.handleReclosing(e,item.id,item.tanggal)}><i className="fa fa-history"/>Reclosing</a> */}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-12">
+                                                <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                     <hr></hr>
-                                                    {/* <button type="submit" className="btn btn-primary"><i className="fa fa-excel"> Re-closing</i></button> */}
                                                     <div className="row">
-                                                        <div className="col-12">
+                                                        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                             <strong className="text-10 mb-0 text-left">Pendapatan</strong>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <p className="text-10 mb-0 text-left">Total Penjualan</p>
                                                         </div>
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(penjualan,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <p className="text-10 mb-0 text-left">Kas Masuk</p>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_masuk,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <strong className="text-10 mb-0 text-left">Total Pendapatan</strong>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(total_pendapatan,10))}</p>
                                                         </div>
                                                     </div>
                                                     <hr></hr>
                                                     <div className="row">
-                                                        <div className="col-12">
+                                                        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                             <strong className="text-10 mb-0 text-left">Beban</strong>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <p className="text-10 mb-0 text-left">HPP</p>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(hpp,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <p className="text-10 mb-0 text-left">Diskon Penjualan</p>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(dis_penjualan,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <p className="text-10 mb-0 text-left">Kas Keluar</p>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_keluar,10))}</p>
                                                         </div>
                                                     </div>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <strong className="text-10 mb-0 text-left">Total Beban</strong>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(total_beban,10))}</p>
                                                         </div>
                                                     </div>
                                                     <hr></hr>
                                                     <div className="row">
-                                                        <div className="col-6">
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                             <strong className="text-10 mb-0 text-left">Laba</strong>
                                                         </div>
-                                                        <div className="col-6" >
+                                                        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(laba,10))}</p>
                                                         </div>
                                                     </div>

@@ -13,7 +13,7 @@ import {ToastQ} from "helper";
 import {toRp} from "../../../../helper";
 import Spinner from 'Spinner';
 import {HEADERS} from "../../../../redux/actions/_constants";
-import {setProductbrg} from "../../../../redux/actions/masterdata/product/product.action";
+// import {setProductbrg} from "../../../../redux/actions/masterdata/product/product.action";
 
 const table='adjusment';
 
@@ -581,7 +581,7 @@ class TrxAdjustment extends Component{
             <Layout page="Adjusment">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Adjusment {HEADERS.URL}</h4>
+                        <h4>Adjusment</h4>
                     </div>
                     <div className="card-body">
                         <div className="row">

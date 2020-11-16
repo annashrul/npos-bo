@@ -12,7 +12,6 @@ import Select from "react-select";
 import moment from "moment";
 import {storeReturTanpaNota} from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import {withRouter} from 'react-router-dom';
-import imgDefault from 'assets/default.png'
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'
 import {HEADERS} from "../../../../redux/actions/_constants";

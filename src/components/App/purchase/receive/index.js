@@ -15,7 +15,6 @@ import axios from "axios";
 import {HEADERS} from "redux/actions/_constants";
 import {withRouter} from "react-router-dom"
 import StickyBox from "react-sticky-box";
-import imgDefault from 'assets/default.png'
 import {toRp,ToastQ} from "helper";
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'

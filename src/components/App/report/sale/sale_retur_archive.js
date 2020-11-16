@@ -223,7 +223,6 @@ class SaleReturReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace:"nowrap"};
-        const leftStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
         const {
             per_page,
             last_page,

@@ -12,7 +12,6 @@ import FormSale from "../../modals/sale/form_sale";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import {FetchDetailLocation} from "redux/actions/masterdata/location/location.action";
-import imgDefault from 'assets/default.png'
 import {toRp,toCurrency,rmComma} from "helper";
 import Spinner from 'Spinner'
 import {HEADERS} from "../../../../redux/actions/_constants";

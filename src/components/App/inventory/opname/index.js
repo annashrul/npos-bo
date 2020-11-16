@@ -8,7 +8,6 @@ import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.act
 import moment from "moment";
 import {storeOpname} from "../../../../redux/actions/inventory/opname.action";
 import StickyBox from "react-sticky-box";
-import imgDefault from 'assets/default.png'
 import Spinner from 'Spinner'
 import {HEADERS} from "../../../../redux/actions/_constants";
 
