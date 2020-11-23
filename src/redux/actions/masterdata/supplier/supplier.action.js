@@ -42,7 +42,7 @@ export const FetchSupplierAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         
-        axios.get(HEADERS.URL+`supplier?page=1&perpage=100`)
+        axios.get(HEADERS.URL+`supplier?page=1&perpage=9999999`)
             .then(function(response){
                 const data = response.data;
                 
