@@ -382,7 +382,7 @@ class SideMenu extends Component {
     getProps(param){
         if (param.auth.user) {
             let akses =param.auth.user.access;
-            
+            console.log("AKSES",akses);
             if(akses!==undefined&&akses!==null){
                 // SETTING
                 let pengaturan_umum                 = akses[0]['value']!==null?akses[0]['value']:"0";   //cek varaibale akses apabila tidak bernilai null
@@ -447,11 +447,11 @@ class SideMenu extends Component {
                 let cetak_barcode                   = akses[90]['value']!==null?akses[90]['value']:"0"; //cek varaibale akses apabila tidak bernilai null
                 // start pengecekan apabila fitur bernilai 0
                 //setting
-                if(pengaturan_umum!=='0'&&pengguna!=='0'&&lokasi!=='0'){
+                if(pengaturan_umum!=='0'||pengguna!=='0'||lokasi!=='0'){
                     this.setState({modul_setting:true});
                 }
                 //masterdata
-                if(barang!=='0'&&departemen!=='0'&&supplier!=='0'&&customer!=='0'&&kas!=='0'&&sales!=='0'&&bank!=='0'&&promo!=='0'){
+                if(barang!=='0'||departemen!=='0'||supplier!=='0'||customer!=='0'||kas!=='0'||sales!=='0'||bank!=='0'||promo!=='0'){
                     this.setState({modul_masterdata:true});
                 }
                 //produksi
@@ -459,7 +459,7 @@ class SideMenu extends Component {
                     this.setState({modul_produksi:true});
                 }
                 //inventory
-                if(delivery_note!=='0'&&alokasi!=='0'&&approval_mutasi!=='0'&&adjusment!=='0'&&opname!=='0'&&approval_opname!=='0'&&packing!=='0'&&expedisi!=='0'&&approval_mutasi_jual_beli!=='0'&&bayar_mutasi_jual_beli!=='0'){
+                if(delivery_note!=='0'||alokasi!=='0'||approval_mutasi!=='0'||adjusment!=='0'||opname!=='0'||approval_opname!=='0'||packing!=='0'||expedisi!=='0'||approval_mutasi_jual_beli!=='0'||bayar_mutasi_jual_beli!=='0'){
                     this.setState({modul_inventory:true});
                 }
                 if(approval_mutasi_jual_beli!=='0'||bayar_mutasi_jual_beli!=='0'){
