@@ -15,7 +15,6 @@ import {HEADERS} from 'redux/actions/_constants'
 import {toRp,ToastQ} from "helper";
 import {withRouter} from 'react-router-dom';
 import StickyBox from "react-sticky-box";
-import imgDefault from 'assets/default.png';
 import Spinner from 'Spinner'
 
 const table='delivery_note'

@@ -12,7 +12,6 @@ import FormSale from "../../modals/sale/form_sale";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import {FetchDetailLocation} from "redux/actions/masterdata/location/location.action";
-import imgDefault from 'assets/default.png'
 import {toRp,toCurrency,rmComma} from "helper";
 import Spinner from 'Spinner'
 import {HEADERS} from "../../../../redux/actions/_constants";
@@ -385,7 +384,7 @@ class Sale extends Component{
             hrg_beli:item.hrg_beli,
             kategori:item.kategori,
             services:item.services,
-            tambahan: []
+            tambahan: item.tambahan
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
@@ -407,7 +406,7 @@ class Sale extends Component{
                     diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
-                    tambahan: []
+                    tambahan: res.tambahan
                 })
             }
 
@@ -527,6 +526,7 @@ class Sale extends Component{
                         "hr": "S",
                         "kartu": "-",
                         "dis_persen": this.state.discount_persen,
+                        "dis_rp": this.state.discount_harga===0?0:rmComma(this.state.discount_harga),
                         "kd_sales": 1,
                         "jam": moment(new Date()).format("HH:mm:ss"),
                         "tgl": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
@@ -534,7 +534,7 @@ class Sale extends Component{
                         "kd_kasir": this.state.userid,
                         "no_kartu": "0",
                         "id_hold": "-",
-                        "diskon": rmComma(this.state.discount_harga),
+                        "diskon": this.state.discount_harga===0?0:rmComma(this.state.discount_harga),
                         "compliment_rp": "0",
                         "jml_kartu": 0,
                         "charge": 0,
@@ -590,7 +590,7 @@ class Sale extends Component{
                     hrg_beli:data[0].hrg_beli,
                     kategori:data[0].kategori,
                     services:data[0].service,
-                    tambahan: []
+                    tambahan: data[0].tambahan
                 })
             } else {
                 update(table, {
@@ -765,7 +765,7 @@ class Sale extends Component{
                                                                                     hrg_beli:i.hrg_beli,
                                                                                     kategori:i.kategori,
                                                                                     services:i.service,
-                                                                                    tambahan: []
+                                                                                    tambahan: i.tambahan
                                                                                 },inx)}>
                                                                                 {i.gambar.replace(" ","") === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">

@@ -482,7 +482,7 @@ class Produksi extends Component{
                     stock:data[0].stock,
                     qty_adjust:0,
                     saldo_stock:data[0].stock,
-                    tambahan:[]
+                    tambahan: data[0].tambahan
                 })
             } else {
                 let saldo_stock = res.stock;
@@ -514,7 +514,7 @@ class Produksi extends Component{
                     stock:res.stock,
                     saldo_stock:saldo_stock,
                     qty_adjust:parseFloat(res.qty_adjust) + 1,
-                    tambahan: []
+                    tambahan: res.tambahan
                 })
             }
             return true

@@ -39,7 +39,7 @@ export const FetchSubDepartment = (page=1,q='')=>{
 export const FetchSubDepartmentAll = ()=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`group2?page=1&perpage=100`)
+        axios.get(HEADERS.URL+`group2?page=1&perpage=999999`)
             .then(function(response){
                 const data = response.data;
                 

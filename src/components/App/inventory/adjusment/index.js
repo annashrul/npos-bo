@@ -13,7 +13,7 @@ import {ToastQ} from "helper";
 import {toRp} from "../../../../helper";
 import Spinner from 'Spinner';
 import {HEADERS} from "../../../../redux/actions/_constants";
-import {setProductbrg} from "../../../../redux/actions/masterdata/product/product.action";
+// import {setProductbrg} from "../../../../redux/actions/masterdata/product/product.action";
 
 const table='adjusment';
 
@@ -347,6 +347,18 @@ class TrxAdjustment extends Component{
                         final[column]=val
                     }
                 })
+                if (column === 'qty_adjust'){
+                    let saldo_stock = res.stock;
+                    console.log(val);
+                    console.log(val);
+                    if (res.status === 'kurang') {
+                        saldo_stock = parseInt(res.stock, 10) - parseInt(val, 10);
+                    }
+                    if (res.status === 'tambah' || res.status === '' || res.status === undefined) {
+                        saldo_stock = parseInt(res.stock, 10) + parseInt(val, 10)
+                    }
+                    final[saldo_stock]=saldo_stock;
+                }
                 update(table, final);
                 ToastQ.fire({
                     icon: 'success',
@@ -465,7 +477,8 @@ class TrxAdjustment extends Component{
                     stock:data[0].stock,
                     qty_adjust:0,
                     saldo_stock:data[0].stock,
-                    tambahan:[]
+                    status:"tambah",
+                    tambahan: data[0].tambahan
                 })
             } else {
                 let saldo_stock = res.stock;
@@ -497,7 +510,8 @@ class TrxAdjustment extends Component{
                     stock:res.stock,
                     saldo_stock:saldo_stock,
                     qty_adjust:parseFloat(res.qty_adjust) + 1,
-                    tambahan: []
+                    status:res.status,
+                    tambahan: res.tambahan
                 })
             }
             return true
@@ -567,7 +581,7 @@ class TrxAdjustment extends Component{
             <Layout page="Adjusment">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Adjusment {HEADERS.URL}</h4>
+                        <h4>Adjusment</h4>
                     </div>
                     <div className="card-body">
                         <div className="row">
@@ -655,7 +669,7 @@ class TrxAdjustment extends Component{
                                                                                 group1:i.group1,
                                                                                 group2:i.group2,
                                                                                 stock:i.stock,
-                                                                                qty_adjust:0,
+                                                                                qty_adjust:1,
                                                                                 status:'tambah',
                                                                                 saldo_stock:i.stock,
                                                                                 tambahan:i.tambahan
@@ -688,7 +702,7 @@ class TrxAdjustment extends Component{
                                     </div>
                                     <hr/>
                                     <div className="form-group">
-                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'Tampilkan lebih banyak'}</button>
                                     </div>
                                 </StickyBox>
                                 {/*END LEFT*/}

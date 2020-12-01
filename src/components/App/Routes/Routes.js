@@ -112,7 +112,7 @@ const Routes = (
             {/* MASTERDATA SECTION END */}
 
             {/* PRODUCTION SECTION START */}
-            <PrivateRoute path="/trx_produksi" exact strict component={Produksi} />
+            <PrivateRoute path="/production" exact strict component={Produksi} />
             {/* PRODUCTION SECTION END */}
 
             {/* INVENTORY SECTION START */}

@@ -154,7 +154,7 @@ export const storeOpnamePosting = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: 'Gagal posting opname.',
                 });
 
                 if (error.response) {
@@ -164,4 +164,35 @@ export const storeOpnamePosting = (data,param) => {
     }
 }
 
+export const cancelOpname = (data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let url = `opname/`
+
+        axios.put(HEADERS.URL + url, data)
+            .then(function (response) {
+                Swal.fire({
+                    title: 'Success',
+                    type: 'success',
+                    text: "Cancel Opname Berhasil",
+                }).then((result) => {
+                    dispatch(FetchPostingOpname(1))
+                });
+
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'error',
+                    text: "Gagal Cancel opname",
+                });
+
+                if (error.response) {
+
+                }
+            })
+    }
+}
 

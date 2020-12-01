@@ -9,7 +9,6 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import StickyBox from "react-sticky-box";
-import imgDefault from 'assets/default.png'
 import {toRp,ToastQ} from "helper";
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'

@@ -459,7 +459,7 @@ class OpnameReport extends Component{
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.hrg_beli}</td>
                                                                     <td style={columnStyle}>{
-                                                                        v.status==='0'?statusQ('danger','Belum Opname'):(v.status==='1'?statusQ('warning','Sudah Opname'):"")
+                                                                        v.status==='0'?statusQ('warning','Belum Opname'):(v.status==='1'?statusQ('success','Sudah Opname'):statusQ('danger','Cancel Opname'))
                                                                         // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
                                                                     }</td>
 
