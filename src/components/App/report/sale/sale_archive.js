@@ -104,7 +104,13 @@ class SaleArchive extends Component{
         }
     }
     componentWillUnmount(){
-        localStorage.clear();
+        localStorage.removeItem('date_from_sale_report');
+        localStorage.removeItem('date_to_sale_report');
+        localStorage.removeItem('type_sale_report');
+        localStorage.removeItem('status_sale_report');
+        localStorage.removeItem('location_sale_report');
+        localStorage.removeItem('any_sale_report');
+        localStorage.removeItem('pageNumber_sale_report');
     }
     componentWillMount(){
         let page=localStorage.getItem("pageNumber_sale_report");
