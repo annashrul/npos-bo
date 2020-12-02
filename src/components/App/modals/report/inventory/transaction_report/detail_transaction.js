@@ -19,7 +19,7 @@ class DetailTransaction extends Component{
 
     render(){
         
-        const {data} = this.props.transactionDetail;
+        const data = this.props.transactionDetail.detail===undefined?[]:this.props.transactionDetail.detail.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>

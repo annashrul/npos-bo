@@ -17,6 +17,10 @@ class Print3ply extends Component {
   
     goBack() {
         this.props.history.goBack();
+        setTimeout(function() {
+//             this.setState({ render : !this.state.render })
+             window.location.reload();
+          }, 500);
     }
 
     print(){

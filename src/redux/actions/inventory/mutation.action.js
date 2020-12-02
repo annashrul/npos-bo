@@ -93,25 +93,54 @@ export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
     }
 }
 
-export const saveApprovalMutation = (data) => {
+export const saveApprovalMutation = (data,param) => {
     return (dispatch) => {
         // dispatch(setLoading(true))
         const url = HEADERS.URL + `mutasi/approve`;
         axios.post(url, data)
             .then(function (response) {
+//                const data = (response.data)
+//                if (data.status === 'success') {
+//                    Toast.fire({
+//                        icon: 'success',
+//                        title: data.msg
+//                    })
+//                } else {
+//                    Swal.fire({
+//                        title: 'failed',
+//                        type: 'error',
+//                        text: data.msg,
+//                    });
+//                }
                 const data = (response.data)
-                if (data.status === 'success') {
-                    Toast.fire({
-                        icon: 'success',
-                        title: data.msg
+                Swal.fire({
+                    title: 'Transaksi berhasil.',
+                    type: 'info',
+                    html: `Disimpan dengan nota: ${data.result.insertId}` +
+                        "<br><br>" +
+                        '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+                    showCancelButton: true,
+                    showConfirmButton: false
+                }).then((result) => {
+                    if(result.dismiss === 'cancel'){
+                        window.location.reload(false);
+                    }
+                })
+                document.getElementById("btnNotaPdf").addEventListener("click", () => {
+                    const win = window.open(data.result.nota, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
+                });
+                document.getElementById("btnNota3ply").addEventListener("click", () => {
+                    param({
+                        pathname: `/alokasi3ply/${response.data.result.insertId}`
                     })
-                } else {
-                    Swal.fire({
-                        title: 'failed',
-                        type: 'error',
-                        text: data.msg,
-                    });
-                }
+                    Swal.closeModal();
+                    return false;
+                });
+                dispatch(setLoading(false));
                 // dispatch(setLoading(false));
             })
             .catch(function (error) {
@@ -197,14 +226,14 @@ export const FetchMutationData = (page=1,code,dateFrom='',dateTo='',location='')
     }
 }
 
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
+//const Toast = Swal.mixin({
+//    toast: true,
+//    position: 'top-end',
+//    showConfirmButton: false,
+//    timer: 1000,
+//    timerProgressBar: true,
+//    onOpen: (toast) => {
+//        toast.addEventListener('mouseenter', Swal.stopTimer)
+//        toast.addEventListener('mouseleave', Swal.resumeTimer)
+//    }
+//})

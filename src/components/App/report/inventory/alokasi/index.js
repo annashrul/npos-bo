@@ -6,6 +6,7 @@ import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
+import FormAlokasi from "components/App/modals/inventory/alokasi/form_alokasi";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -18,6 +19,7 @@ class AlokasiReport extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -80,6 +82,13 @@ class AlokasiReport extends Component{
         this.props.dispatch(ModalType("detailAlokasi"));
         this.props.dispatch(FetchAlokasiDetail(1,code,'','',''))
     };
+    handleEdit(e,data){
+        e.preventDefault();
+        console.log(data)
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formEditAlokasi"));
+    }
     handleEvent = (event, picker) => {
         const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
         const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
@@ -394,6 +403,7 @@ class AlokasiReport extends Component{
                                                                             </DropdownToggle>
                                                                             <DropdownMenu>
                                                                                 <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
+                                                                                <DropdownItem onClick={(e)=>this.handleEdit(e,data[i])}>Edit</DropdownItem>
                                                                                 <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                             </DropdownMenu>
                                                                         </UncontrolledButtonDropdown>
@@ -432,6 +442,7 @@ class AlokasiReport extends Component{
                         </div>
                         <DetailAlokasi alokasiDetail={this.props.alokasiDetail}/>
                         <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
+                        <FormAlokasi/>
                     </div>
                 </div>
             </Layout>
