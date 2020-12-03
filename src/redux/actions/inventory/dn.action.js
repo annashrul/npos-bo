@@ -207,9 +207,13 @@ export const storeDN = (data,param) => {
                     }
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/dn3ply/${response.data.result.insertId}`
-                    })
+                    // param({
+                    //     pathname: `/dn3ply/${response.data.result.insertId}`
+                    // })
+                    const win = window.open(`/dn3ply/${response.data.result.insertId}`, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
                     Swal.closeModal();
                     return false;
                 });

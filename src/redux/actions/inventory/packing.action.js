@@ -116,9 +116,13 @@ export const storePacking = (data,param) => {
                 //     }
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/packing3ply/${response.data.result.insertId}`
-                    })
+                    // param({
+                    //     pathname: `/packing3ply/${response.data.result.insertId}`
+                    // })
+                        const win = window.open(`/packing3ply/${response.data.result.insertId}`, '_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
                     Swal.closeModal();
                     return false;
                 });

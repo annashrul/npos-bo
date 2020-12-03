@@ -47,7 +47,7 @@ class Print3ply extends Component {
                 <NoPrint> 
                     <div id="non-printable">
                         <div className="block-left">
-                            <button className="btn btn-blank" onClick={(event)=>{event.preventDefault();this.goBack()}}>← Back</button>
+                            <button className="btn btn-blank" onClick={(event)=>{event.preventDefault();window.close()}}>← Back</button>
                         </div>
                         <div className="block-right">
                             <button className="btn btn-primary" onClick={()=>{

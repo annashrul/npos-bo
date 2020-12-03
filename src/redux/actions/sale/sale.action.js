@@ -104,7 +104,7 @@ export const FetchNotaSale = (lokasi) => {
 export const storeSale = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
-        const rawdata=data;
+        // const rawdata=data;
         const url = HEADERS.URL + `pos/checkout`;
         axios.post(url, data.parsedata)
             .then(function (response) {
@@ -133,13 +133,17 @@ export const storeSale = (data,param) => {
                     }
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/print3ply/${data.result.kode}`,
-                        state: {
-                            data: rawdata,
-                            nota: data.result.kode
-                        }
-                    })
+                    // param({
+                    //     pathname: `/print3ply/${data.result.kode}`,
+                    //     state: {
+                    //         data: rawdata,
+                    //         nota: data.result.kode
+                    //     }
+                    // })
+                    const win = window.open(`/print3ply/${data.result.kode}`, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
                     Swal.closeModal();
                     return false;
                 });

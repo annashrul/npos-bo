@@ -147,11 +147,11 @@ export const saveApprovalMutation = (data,param) => {
 //                        text: data.msg,
 //                    });
 //                }
-                const data = (response.data)
+                // const data = data['kd_trx']
                 Swal.fire({
                     title: 'Transaksi berhasil.',
                     type: 'info',
-                    html: `Disimpan dengan nota: ${data.result.insertId}` +
+                    html: `Disimpan dengan nota: ${data['kd_trx']}` +
                         "<br><br>" +
                         '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
                         '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
@@ -163,28 +163,34 @@ export const saveApprovalMutation = (data,param) => {
                     }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {
-                    const win = window.open(data.result.nota, '_blank');
-                    if (win != null) {
-                        win.focus();
-                    }
+                    // const win = window.open(data['kd_trx'], '_blank');
+                    // if (win != null) {
+                    //     win.focus();
+                    // }
+                    
+                    dispatch(rePrintFaktur(data['kd_trx']));
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/alokasi3ply/${response.data.result.insertId}`
-                    })
-                    Swal.closeModal();
-                    return false;
+                    // param({
+                    //     pathname: `/alokasi3ply/${data['kd_trx']}`
+                    // })
+                    // Swal.closeModal();
+                    // return false;
+                        const win = window.open(`/alokasi3ply/${data['kd_trx']}`, '_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
                 });
                 dispatch(setLoading(false));
                 // dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // dispatch(setLoading(false));
-                // Swal.fire({
-                //     title: 'failed',
-                //     type: 'error',
-                //     text: error.response.data.msg,
-                // });
+                Swal.fire({
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response.data.msg,
+                });
 
                 if (error.response) {
                     

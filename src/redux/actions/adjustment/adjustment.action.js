@@ -116,10 +116,14 @@ export const storeAdjusment = (data,param) => {
                     }
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/adjust3ply/${response.data.result.insertId}`
-                    })
+                    // param({
+                    //     pathname: `/adjust3ply/${response.data.result.insertId}`
+                    // })
                     Swal.closeModal();
+                    const win = window.open(`/adjust3ply/${response.data.result.insertId}`, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
                     return false;
                 });
                 dispatch(setLoading(false));

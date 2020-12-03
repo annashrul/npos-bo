@@ -4,6 +4,7 @@ import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle} from "redux/actions/modal.action";
 import {FetchApprovalMutation, saveApprovalMutation} from "../../../../../redux/actions/inventory/mutation.action";
+import Swal from 'sweetalert2';
 
 class FormApprovalMutation extends Component{
     constructor(props){
@@ -129,8 +130,16 @@ class FormApprovalMutation extends Component{
         parsedata['kd_trx'] = localStorage.getItem("kd_trx_mutasi");
         parsedata['detail'] = data
 
-        if(isValid){
-            this.props.dispatch(saveApprovalMutation(parsedata, (arr)=>this.props.history.push(arr)));
+        if(data.length>0){
+            if(isValid){
+                this.props.dispatch(saveApprovalMutation(parsedata, (arr)=>this.props.history.push(arr)));
+            }
+        } else {
+            Swal.fire({
+                title: 'failed',
+                type: 'error',
+                text: 'ceklis item yang akan di approve!',
+            });
         }
         this.setState({});
         console.log("hhhhhhhhhhhhhh",parsedata)

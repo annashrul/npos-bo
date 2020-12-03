@@ -155,9 +155,82 @@ export const storeAlokasi = (data,param) => {
                     }
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/alokasi3ply/${response.data.result.insertId}`
-                    })
+                    // param({
+                    //     pathname: `/alokasi3ply/${response.data.result.insertId}`
+                    // })
+                    const win = window.open(`/alokasi3ply/${response.data.result.insertId}`, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
+                    Swal.closeModal();
+                    return false;
+                });
+                dispatch(setLoading(false));
+
+            })
+            .catch(function (error) {
+
+                Swal.fire({
+                    title: 'Failed',
+                    type: 'error',
+                    text: error.response.data.msg,
+                });
+
+                if (error.response) {
+                    
+                }
+            })
+    }
+}
+export const updateAlokasi = (data,param) => {
+    console.log(data)
+    return (dispatch) => {
+        dispatch(setLoading(true))
+        const url = HEADERS.URL + `alokasi/${data['nota']}`;
+        axios.put(url, data.detail)
+            .then(function (response) {
+                const data = (response.data)
+                Swal.fire({
+                    title: 'Transaksi berhasil diperbarui.',
+                    type: 'info',
+                    html: `Nota: ${data.result.insertId}` +
+                        "<br><br>" +
+                        '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+                    showCancelButton: true,
+                    showConfirmButton: false
+                }).then((result) => {
+                    // if (result.value) {
+                    //     const win = window.open(data.result.nota,'_blank');
+                    //     if (win != null) {
+                    //         win.focus();
+                    //     }
+                    // }
+                    destroy('alokasi');
+                    localStorage.removeItem('lk2');
+                    localStorage.removeItem('lk');
+                    localStorage.removeItem('ambil_data');
+                    localStorage.removeItem('nota');
+                    localStorage.removeItem('catatan');
+                    
+                    if(result.dismiss === 'cancel'){
+                        window.history.back();
+                    }
+                })
+                document.getElementById("btnNotaPdf").addEventListener("click", () => {
+                    const win = window.open(data.result.nota, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
+                });
+                document.getElementById("btnNota3ply").addEventListener("click", () => {
+                    // param({
+                    //     pathname: `/alokasi3ply/${response.data.result.insertId}`
+                    // })
+                    const win = window.open(`/alokasi3ply/${response.data.result.insertId}`, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
                     Swal.closeModal();
                     return false;
                 });
@@ -215,7 +288,7 @@ export const FetchAlokasiExcel = (page=1,where='',perpage=99999)=>{
         })
     }
 }
-export const FetchAlokasiDetail = (page=1,code,dateFrom='',dateTo='',location='')=>{
+export const FetchAlokasiDetail = (page=1,code,dateFrom='',dateTo='',location='',perpage='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
         let que = '';
@@ -231,6 +304,26 @@ export const FetchAlokasiDetail = (page=1,code,dateFrom='',dateTo='',location=''
         if(location!==''){
             que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
         }
+
+        if(perpage!==''){
+            que +=`&perpage=${perpage}`
+        }
+        
+        axios.get(HEADERS.URL+`${que}`)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setALOKASIData(data));
+                dispatch(setLoading(false));
+            }).catch(function(error){
+            
+        })
+    }
+}
+export const FetchAlokasiData = (page=1,code)=>{
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        let que = `alokasi/get/${code}`;
         
         axios.get(HEADERS.URL+`${que}`)
             .then(function(response){

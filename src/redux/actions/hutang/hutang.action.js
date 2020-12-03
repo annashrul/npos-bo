@@ -132,9 +132,13 @@ export const storeHutang = (data,param) => {
                 //     }
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
-                    })
+                    // param({
+                    //     pathname: `/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
+                    // })
+                        const win = window.open(`/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`, '_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
                     Swal.closeModal();
                     return false;
                 });
