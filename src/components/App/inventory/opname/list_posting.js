@@ -5,7 +5,7 @@ import {FetchPostingOpname} from "redux/actions/inventory/opname.action";
 import moment from "moment";
 import {statusQ, toRp} from "helper";
 import Paginationq from "helper";
-import {storeOpnamePosting} from "redux/actions/inventory/opname.action";
+import {storeOpnamePosting,cancelOpname} from "redux/actions/inventory/opname.action";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -25,7 +25,8 @@ class ListPosting extends Component{
         this.handleOne=this.handleOne.bind(this);
         this.HandleChangeLokasi=this.HandleChangeLokasi.bind(this);
         this.handleEvent=this.handleEvent.bind(this);
-        this.handleAll=this.handleAll.bind(this);
+        this.handleAll = this.handleAll.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
     }
     componentDidMount(){
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
@@ -125,8 +126,29 @@ class ListPosting extends Component{
                 this.props.dispatch(storeOpnamePosting(data,'item'))
             }
         });
+    }
+
+    handleCancel(e, kd_trx) {
+        e.preventDefault();
+        let data = {};
+        data['kd_trx'] = kd_trx;
+        Swal.fire({
+            title: 'Cancel Data Opname?',
+            text: "Data yang diubah tidak dapat dikembalikan!",
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonColor: '#0d47a1',
+            cancelButtonColor: '#f44336',
+            confirmButtonText: 'Ya, Cancel!',
+            cancelButtonText: 'Tidak!'
+        }).then((result) => {
+            if (result.value) {
+                this.props.dispatch(cancelOpname(data))
+            }
+        });
 
     }
+
     handleAll(e){
         e.preventDefault();
         let parsedata={};
@@ -260,6 +282,9 @@ class ListPosting extends Component{
                                                                 <td style={{textAlign:"right"}}>{toRp((Math.abs(parseFloat(v.qty_fisik)-parseFloat(v.stock_terakhir))) * v.hrg_beli)}</td>
                                                                 <td style={{textAlign:"right"}}>{statusQ("danger","POSTING")}</td>
                                                                 <td style={columnStyle}>
+                                                                    <button className="btn btn-danger btn-sm" onClick={(e)=>this.handleCancel(e,v.kd_trx)} style={{fontSize:'8px'}}>
+                                                                        <i className="fa fa-window-close"></i>
+                                                                    </button>{"  "}
                                                                     <button className="btn btn-primary btn-sm" onClick={(e)=>this.handleOne(e,v.kd_trx)} style={{fontSize:'8px'}}>
                                                                         <i className="fa fa-send"></i>
                                                                     </button>

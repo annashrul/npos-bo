@@ -2,17 +2,49 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/inventory/mutation/form_approval_mutation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/inventory/alokasi_report/detail_alokasi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/inventory/alokasi_report/detail_alokasi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/inventory/mutation_report/detail_mutation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/inventory/mutation_report/detail_mutation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/inventory/transaction_report/detail_transaction.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/inventory/transaction_report/detail_transaction.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/print/layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/print/layout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/Layout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/opname/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/opname/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/opname/list_posting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/opname/list_posting.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_by_product_report.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_by_product_report.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_report.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_report.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/modals/sale/form_sale.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/sale/form_sale.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/purchaseorder/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/purchaseorder/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/retur/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/retur/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/dn/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/dn/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/expedisi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/expedisi/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/mutation/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/mutation/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/opname/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/opname/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/packing/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/packing/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/transaction/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/transaction/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/laba_rugi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/laba_rugi/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/log/log_act.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/log/log_act.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_cust_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_cust_archive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_product_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_product_archive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_retur_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_retur_archive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App/sale/product_sale/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/sale/product_sale/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/opname.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/opname.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/department/sub_department.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/department/sub_department.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/supplier/supplier.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/supplier/supplier.action.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/piutang/piutang.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/piutang/piutang.action.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +119,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="MTConfigurable" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2018.2.8\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
@@ -159,11 +191,23 @@
       <workItem from="1599718211846" duration="20917000" />
       <workItem from="1599799137847" duration="7713000" />
       <workItem from="1602046371571" duration="1940000" />
+      <workItem from="1605002584825" duration="10668000" />
+      <workItem from="1605076513976" duration="2915000" />
+      <workItem from="1605079466244" duration="800000" />
+      <workItem from="1605081374093" duration="12441000" />
+      <workItem from="1605162468218" duration="161000" />
+      <workItem from="1605167047882" duration="3518000" />
+      <workItem from="1605172106806" duration="427000" />
+      <workItem from="1605176252545" duration="438000" />
+      <workItem from="1605178022423" duration="8247000" />
+      <workItem from="1606361559443" duration="303000" />
+      <workItem from="1606367598055" duration="1643000" />
+      <workItem from="1606812510260" duration="524000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="798367000" />
+    <option name="totallyTimeSpent" value="840452000" />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -181,14 +225,14 @@
       <screen x="0" y="0" width="1600" height="870" />
     </state>
     <state x="580" y="190" key="FileChooserDialogImpl/0.0.1600.870@0.0.1600.870" timestamp="1606895818375" />
-    <state x="211" y="91" key="SettingsEditor" timestamp="1606892607883">
+    <state x="289" y="78" key="SettingsEditor" timestamp="1606966823824">
       <screen x="0" y="0" width="1600" height="870" />
     </state>
-    <state x="211" y="91" key="SettingsEditor/0.0.1600.870@0.0.1600.870" timestamp="1606892607883" />
-    <state x="476" y="259" key="com.intellij.ide.util.TipDialog" timestamp="1606892682246">
+    <state x="289" y="78" key="SettingsEditor/0.0.1600.870@0.0.1600.870" timestamp="1606966823824" />
+    <state x="476" y="259" key="com.intellij.ide.util.TipDialog" timestamp="1606966532760">
       <screen x="0" y="0" width="1600" height="870" />
     </state>
-    <state x="476" y="259" key="com.intellij.ide.util.TipDialog/0.0.1600.870@0.0.1600.870" timestamp="1606892682246" />
+    <state x="476" y="259" key="com.intellij.ide.util.TipDialog/0.0.1600.870@0.0.1600.870" timestamp="1606966532760" />
     <state x="486" y="151" width="627" height="568" key="find.popup" timestamp="1606900546821">
       <screen x="0" y="0" width="1600" height="870" />
     </state>

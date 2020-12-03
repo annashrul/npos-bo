@@ -9,10 +9,10 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import StickyBox from "react-sticky-box";
-import imgDefault from 'assets/default.png'
 import {toRp,ToastQ} from "helper";
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'
+import {HEADERS} from "../../../../redux/actions/_constants";
 const table='purchase_order'
 
 
@@ -41,6 +41,8 @@ class PurchaseOrder extends Component{
             searchby:1,
             search:"",
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
             error:{
                 location:"",
                 supplier:"",
@@ -120,6 +122,7 @@ class PurchaseOrder extends Component{
         destroy(table);
         localStorage.removeItem('sp');
         localStorage.removeItem('lk');
+        localStorage.removeItem('anyPurchaseOrder');
     }
     HandleChangeLokasi(lk){
         let err = Object.assign({}, this.state.error, {
@@ -144,7 +147,8 @@ class PurchaseOrder extends Component{
         });
         this.setState({
             supplier: sp.value,
-            error: err
+            error: err,
+            isScroll:true
         })
         localStorage.setItem('sp', sp.value);
 
@@ -302,6 +306,9 @@ class PurchaseOrder extends Component{
     }
     HandleAddBrg(e,item,index) {
         e.preventDefault();
+        this.setState({
+            isScroll:false
+        });
         const finaldt = {
             kd_brg: item.kd_brg,
             barcode:item.barcode,
@@ -516,6 +523,7 @@ class PurchaseOrder extends Component{
                 'error'
             )
         }else{
+            localStorage.setItem("anyPurchaseOrder",this.state.search);
             const searchby = parseInt(this.state.searchby,10)===1?'kd_brg':(parseInt(this.state.searchby,10)===2?'barcode':'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty,5));
             this.setState({search: ''});
@@ -543,10 +551,25 @@ class PurchaseOrder extends Component{
         });
     }
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
+
         }
         else{
             Swal.fire({
@@ -556,7 +579,16 @@ class PurchaseOrder extends Component{
             });
         }
     }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
     render() {
+        if(this.state.isScroll===true)this.handleScroll();
+
         let opSupplier=[];
         if(this.props.supplier!==[]){
             this.props.supplier.map(i=>{
@@ -594,7 +626,7 @@ class PurchaseOrder extends Component{
                                     </div>
                                     <div className="form-group">
                                         <div className="input-group input-group-sm">
-                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder="Search" value={this.state.search}
+                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder={`Search ${localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:""}`} value={this.state.search}
                                                 onChange={(e)=>this.HandleCommonInputChange(e,false)}
                                                 onKeyPress = {event => {if (event.key === 'Enter') {this.HandleSearch();}}}
                                             />
@@ -605,7 +637,7 @@ class PurchaseOrder extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                    <div className="people-list" style={{zoom:"80%",height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?
                                                     <div id="chat_user_2">
@@ -614,7 +646,7 @@ class PurchaseOrder extends Component{
                                                                 this.props.barang.length!==0?
                                                                     this.props.barang.map((i,inx)=>{
                                                                         return(
-                                                                            <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                 kd_brg:i.kd_brg,
                                                                                 barcode:i.barcode,
                                                                                 satuan:i.satuan,
@@ -627,13 +659,10 @@ class PurchaseOrder extends Component{
                                                                                 nm_brg:i.nm_brg,
                                                                                 tambahan:i.tambahan
                                                                             })}>
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                {i.gambar === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                    wordBreak:"break-all",
-                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                    <div className="status" style={{color: 'black',
-                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                 </div>
                                                                             </li>
                                                                         )
@@ -813,7 +842,7 @@ class PurchaseOrder extends Component{
                                             </div>
                                         </div>
                                     </form>
-                                    <div style={{overflowX: "auto",zoom:"85%"}}>
+                                    <div style={{overflowX: "auto",zoom:"80%"}}>
                                         <table className="table table-hover">
                                             <thead>
                                             <tr>
@@ -902,6 +931,7 @@ class PurchaseOrder extends Component{
                                         </table>
 
                                     </div>
+                                    <hr/>
                                     <div className="row">
                                         <div className="col-md-12">
                                             <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>

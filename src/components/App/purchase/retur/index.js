@@ -12,9 +12,9 @@ import Select from "react-select";
 import moment from "moment";
 import {storeReturTanpaNota} from "redux/actions/purchase/retur_tanpa_nota/return_tanpa_nota.action";
 import {withRouter} from 'react-router-dom';
-import imgDefault from 'assets/default.png'
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'
+import {HEADERS} from "../../../../redux/actions/_constants";
 
 const table='retur_tanpa_nota';
 
@@ -36,6 +36,9 @@ class ReturTanpaNota extends Component{
             searchby:1,
             search:"",
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
+            isClick:0,
             error:{
                 location:"",
                 supplier:"",
@@ -114,6 +117,8 @@ class ReturTanpaNota extends Component{
         localStorage.removeItem('ambil_data');
         localStorage.removeItem('nota');
         localStorage.removeItem('catatan');
+        localStorage.removeItem('anyReturTanpaNota');
+
     }
     HandleChangeLokasi(lk) {
         let err = Object.assign({}, this.state.error, {
@@ -138,14 +143,15 @@ class ReturTanpaNota extends Component{
         });
         this.setState({
             supplier: sp.value,
-            error: err
+            error: err,
+            scrollPage:5
         })
         localStorage.setItem('sp', sp.value);
         if (this.state.location !== "") {
             this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty,5))
         }
         destroy(table);
-        this.getData()
+        this.getData();
     }
     HandleCommonInputChange(e,errs=true,st=0){
         const column = e.target.name;
@@ -268,8 +274,12 @@ class ReturTanpaNota extends Component{
             }
         })
     }
-    HandleAddBrg(e,item) {
+    HandleAddBrg(e,item,i) {
         e.preventDefault();
+        this.setState({
+            isScroll:false,
+            isClick:i
+        });
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg:item.nm_brg,
@@ -328,6 +338,7 @@ class ReturTanpaNota extends Component{
                 localStorage.removeItem('ambil_data');
                 localStorage.removeItem('nota');
                 localStorage.removeItem('catatan');
+                localStorage.removeItem('anyReturTanpaNota');
                 window.location.reload(false);
             }
         })
@@ -461,6 +472,8 @@ class ReturTanpaNota extends Component{
                 'error'
             )
         } else {
+            localStorage.setItem("anyReturTanpaNota",this.state.search);
+
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
             this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
@@ -488,10 +501,25 @@ class ReturTanpaNota extends Component{
         });
     }
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyReturTanpaNota!==undefined?localStorage.anyReturTanpaNota:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
+
         }
         else{
             Swal.fire({
@@ -501,7 +529,18 @@ class ReturTanpaNota extends Component{
             });
         }
     }
+
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
+
     render(){
+        if(this.state.isScroll===true)this.handleScroll();
+
         let total_stock = 0;
         let qty_retur = 0;
         let grand_total = 0;
@@ -520,7 +559,7 @@ class ReturTanpaNota extends Component{
             <Layout page="Retur Tanpa Nota">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Retur Tanpa Nota</h5>
+                        <h5>Retur Tanpa Nota {this.state.isScroll}</h5>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
                         <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%" }}>
@@ -540,7 +579,7 @@ class ReturTanpaNota extends Component{
                                     </div>
                                     <div className="form-group">
                                         <div className="input-group input-group-sm">
-                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder="Search" value={this.state.search}
+                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder={`Search ${localStorage.anyReturTanpaNota!==undefined?localStorage.anyReturTanpaNota:""}`} value={this.state.search}
                                                 onChange={(e) => this.HandleCommonInputChange(e, false)}
                                                 onKeyPress={event => {if (event.key === 'Enter') {this.HandleSearch();}}}
                                             />
@@ -551,7 +590,7 @@ class ReturTanpaNota extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                    <div className="people-list" style={{zoom:"80%",height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?
                                                     <div id="chat_user_2">
@@ -560,7 +599,7 @@ class ReturTanpaNota extends Component{
                                                                 this.props.barang.length !== 0 ?
                                                                     this.props.barang.map((i, inx) => {
                                                                         return (
-                                                                            <li className="clearfix" key={inx}
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx||this.state.isClick===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx}
                                                                                 onClick={(e) => this.HandleAddBrg(e, {
                                                                                     kd_brg: i.kd_brg,
                                                                                     nm_brg:i.nm_brg,
@@ -574,14 +613,11 @@ class ReturTanpaNota extends Component{
                                                                                     ket:'-',
                                                                                     qty_retur:1,
                                                                                     tambahan:i.tambahan
-                                                                                })}>
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                },inx)}>
+                                                                                {i.gambar === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                    wordBreak:"break-all",
-                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                    <div className="status" style={{color: 'black',
-                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                 </div>
                                                                             </li>
                                                                         )
@@ -618,7 +654,7 @@ class ReturTanpaNota extends Component{
                                                     <label className="control-label font-12">
                                                         Tanggal Order
                                                     </label>
-                                                    <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e => this.HandleCommonInputChange(e))}/>
+                                                    <input type="date" name={"tanggal"} className={"form-control form-control-lg"} value={this.state.tanggal} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                 </div>
                                             </div>
                                             <div className="col-md-3">
@@ -676,6 +712,7 @@ class ReturTanpaNota extends Component{
                                                         onChange={(e => this.HandleCommonInputChange(e))}
                                                         name="catatan"
                                                         value={this.state.catatan}
+                                                        style={{height:"39px"}}
                                                     />
                                                     <div className="invalid-feedback"
                                                          style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>

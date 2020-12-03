@@ -10,11 +10,14 @@ import {FetchCodeAdjustment, storeAdjusment} from "redux/actions/adjustment/adju
 import {withRouter} from 'react-router-dom';
 import StickyBox from "react-sticky-box";
 import {ToastQ} from "helper";
-import imgDefault from 'assets/default.png'
 import {toRp} from "../../../../helper";
-import Spinner from 'Spinner'
+import Spinner from 'Spinner';
+import {HEADERS} from "../../../../redux/actions/_constants";
+// import {setProductbrg} from "../../../../redux/actions/masterdata/product/product.action";
 
 const table='adjusment';
+
+
 class TrxAdjustment extends Component{
     constructor(props) {
         super(props);
@@ -30,6 +33,8 @@ class TrxAdjustment extends Component{
             search:"",
             userid:0,
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
             error:{
                 location:"",
                 catatan:""
@@ -45,6 +50,7 @@ class TrxAdjustment extends Component{
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
         this.handleLoadMore=this.handleLoadMore.bind(this);
+
 
     }
     getProps(param){
@@ -70,6 +76,7 @@ class TrxAdjustment extends Component{
         }
     }
     componentDidMount(){
+
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.setState({
                 location:localStorage.lk
@@ -81,6 +88,10 @@ class TrxAdjustment extends Component{
             this.props.dispatch(FetchCodeAdjustment(localStorage.lk));
         }
     }
+    componentWillUnmount() {
+        localStorage.removeItem('anyAdj');
+    }
+
     componentWillReceiveProps = (nextProps) => {
         let perpage=this.state.perpage;
         if(this.props.barang.length === perpage){
@@ -91,6 +102,7 @@ class TrxAdjustment extends Component{
        this.getProps(nextProps);
     }
     componentWillMount(){
+       this.getProps(this.props);
        this.getProps(this.props);
     }
     setTglOrder(date) {
@@ -151,12 +163,18 @@ class TrxAdjustment extends Component{
                 this.props.dispatch(FetchBrg(1, 'deskripsi', this.state.search, this.state.location, null, this.autoSetQty));
 
             }
+            localStorage.setItem("anyAdj",this.state.search);
             this.setState({search: ''});
+
+
 
         }
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
+        this.setState({
+            isScroll:false
+        });
         const finaldt = {
             barcode:item.barcode,
             harga_beli:item.harga_beli,
@@ -329,6 +347,18 @@ class TrxAdjustment extends Component{
                         final[column]=val
                     }
                 })
+                if (column === 'qty_adjust'){
+                    let saldo_stock = res.stock;
+                    console.log(val);
+                    console.log(val);
+                    if (res.status === 'kurang') {
+                        saldo_stock = parseInt(res.stock, 10) - parseInt(val, 10);
+                    }
+                    if (res.status === 'tambah' || res.status === '' || res.status === undefined) {
+                        saldo_stock = parseInt(res.stock, 10) + parseInt(val, 10)
+                    }
+                    final[saldo_stock]=saldo_stock;
+                }
                 update(table, final);
                 ToastQ.fire({
                     icon: 'success',
@@ -447,7 +477,8 @@ class TrxAdjustment extends Component{
                     stock:data[0].stock,
                     qty_adjust:0,
                     saldo_stock:data[0].stock,
-                    tambahan:[]
+                    status:"tambah",
+                    tambahan: data[0].tambahan
                 })
             } else {
                 let saldo_stock = res.stock;
@@ -479,7 +510,8 @@ class TrxAdjustment extends Component{
                     stock:res.stock,
                     saldo_stock:saldo_stock,
                     qty_adjust:parseFloat(res.qty_adjust) + 1,
-                    tambahan: []
+                    status:res.status,
+                    tambahan: res.tambahan
                 })
             }
             return true
@@ -502,11 +534,28 @@ class TrxAdjustment extends Component{
             })
         });
     }
+
+
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
+
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+            this.props.dispatch(FetchBrg(1, searchby, localStorage.anyAdj!==undefined?localStorage.anyAdj:"", this.state.location, null, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
         }
         else{
             Swal.fire({
@@ -516,7 +565,17 @@ class TrxAdjustment extends Component{
             });
         }
     }
+
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
+
     render() {
+        if(this.state.isScroll===true)this.handleScroll();
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Adjusment">
@@ -526,7 +585,11 @@ class TrxAdjustment extends Component{
                     </div>
                     <div className="card-body">
                         <div className="row">
+
+
                             <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
+
+
                                 {/*START LEFT*/}
                                 <StickyBox offsetTop={100} offsetBottom={20} style={{width:"23%",marginRight:"10px"  }}>
                                     <div className="form-group">
@@ -554,7 +617,7 @@ class TrxAdjustment extends Component{
                                                 id="chat-search"
                                                 name="search"
                                                 className="form-control form-control-sm"
-                                                placeholder="Search"
+                                                placeholder={`Search ${localStorage.anyAdj!==undefined?localStorage.anyAdj:""}`}
                                                 value={this.state.search}
                                                 onChange={(e) => this.HandleCommonInputChange(e, false)}
                                                 onKeyPress={
@@ -578,7 +641,7 @@ class TrxAdjustment extends Component{
                                                         </span>
                                         </div>
                                     </div>
-                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                    <div className="people-list" style={{zoom:"80%",height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?
                                                     <div id="chat_user_2">
@@ -587,7 +650,7 @@ class TrxAdjustment extends Component{
                                                                 this.props.barang.length!==0?
                                                                     this.props.barang.map((i,inx)=>{
                                                                         return(
-                                                                            <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                 barcode:i.barcode,
                                                                                 harga_beli:i.harga_beli,
                                                                                 satuan:i.satuan,
@@ -606,18 +669,21 @@ class TrxAdjustment extends Component{
                                                                                 group1:i.group1,
                                                                                 group2:i.group2,
                                                                                 stock:i.stock,
-                                                                                qty_adjust:0,
+                                                                                qty_adjust:1,
                                                                                 status:'tambah',
                                                                                 saldo_stock:i.stock,
                                                                                 tambahan:i.tambahan
                                                                             })}>
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                {
+                                                                                    i.gambar===`${HEADERS.URL}images/barang/default.png`?(
+                                                                                        <span class="circle">{inx+1}</span>
+                                                                                    ):(
+                                                                                        <img src={i.gambar} alt="avatar"/>
+                                                                                    )
+                                                                                }
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                        wordBreak:"break-all",
-                                                                                        fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                        <div className="status" style={{color: 'black',
-                                                                                        fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                 </div>
 
                                                                             </li>
@@ -628,21 +694,21 @@ class TrxAdjustment extends Component{
 
                                                             }
 
-
                                                         </ul>
                                                     </div>
-                                                    :<Spinner/>
+
+                                                :<Spinner/>
                                             }
                                     </div>
                                     <hr/>
                                     <div className="form-group">
-                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'tampilkan lebih banyak'}</button>
+                                        <button className={"btn btn-primary"} style={{width:"100%"}} onClick={this.handleLoadMore}>{this.props.loadingbrg?'tunggu sebentar ...':'Tampilkan lebih banyak'}</button>
                                     </div>
                                 </StickyBox>
                                 {/*END LEFT*/}
                                 {/*START RIGHT*/}
                                 <div style={{width:"77%"}}>
-                                    <div className="card-header" style={{zoom:"85%"}}>
+                                    <div className="card-header" style={{zoom:"80%"}}>
                                         <form className=''>
                                             <div className="row">
                                                 <div className="col-md-3">
@@ -753,8 +819,8 @@ class TrxAdjustment extends Component{
                                                                 }
                                                             </select></td>
 
-                                                            <td style={columnStyle}><input style={{textAlign:"right"}} readOnly={true} type='text' name='harga_beli' value={toRp(item.harga_beli)} className="form-control"/></td>
-                                                            <td style={columnStyle}><input style={{textAlign:"right"}} readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
+                                                            <td style={columnStyle}><input style={{textAlign:"right",width:"100px"}} readOnly={true} type='text' name='harga_beli' value={toRp(item.harga_beli)} className="form-control"/></td>
+                                                            <td style={columnStyle}><input style={{textAlign:"right",width:"100px"}} readOnly={true} type='text' name='stock' value={item.stock} className="form-control"/></td>
                                                             <td style={columnStyle}>
                                                                 <select style={{width:"120px"}} name='status' onChange={(e) => this.HandleChangeInput(e, item.barcode)} value={this.state.brgval[index].status} defaultValue={this.state.brgval[index].status} className="form-control">
                                                                     <option value="tambah">Tambah</option>
@@ -762,13 +828,13 @@ class TrxAdjustment extends Component{
                                                                 </select>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/>
+                                                                <input style={{textAlign:"right",width:"100px"}} type='text' name='qty_adjust' onBlur={(e) => this.HandleChangeInput(e, item.barcode)} onChange={(e) => this.HandleChangeInputValue(e, index)} value={this.state.brgval[index].qty_adjust}  className="form-control"/>
                                                                 {
                                                                     parseFloat(this.state.brgval[index].qty_adjust) <= 0 ? (<small style={{fontWeight:"bold",color:"red"}}>Qty Tidak boleh 0</small>) : ""
                                                                 }
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{textAlign:"right"}} readOnly={true} type="text" className="form-control" value={saldo_stock}/>
+                                                                <input style={{textAlign:"right",width:"100px"}} readOnly={true} type="text" className="form-control" value={saldo_stock}/>
                                                             </td>
                                                         </tr>
                                                     )
@@ -778,6 +844,7 @@ class TrxAdjustment extends Component{
                                         </table>
 
                                     </div>
+                                    <hr/>
                                     <div className="dashboard-btn-group d-flex align-items-center">
                                         <a href="about:blank" onClick={(e)=>this.HandleSubmit(e)} className="btn btn-primary ml-1">Simpan</a>
                                         <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>

@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
 import {FetchTransaction, FetchTransactionExcel, FetchTransactionData} from "redux/actions/inventory/transaction.action";
+import {rePrintFaktur} from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailTransaction from "components/App/modals/report/inventory/transaction_report/detail_transaction";
@@ -24,6 +25,7 @@ class TransactionReport extends Component{
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.handleRePrint = this.handleRePrint.bind(this);
         this.state={
             where_data:"",
             any:"",
@@ -232,6 +234,11 @@ class TransactionReport extends Component{
         this.props.dispatch(ModalType("formTransactionExcel"));
         this.props.dispatch(FetchTransactionExcel(1,this.state.where_data,total));
     }
+
+    handleRePrint(e,id){
+        e.preventDefault();
+        this.props.dispatch(rePrintFaktur(id));
+    }
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {
@@ -323,10 +330,11 @@ class TransactionReport extends Component{
                                 </div>
 
                             </div>
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
+                            <div style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Faktur</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
@@ -347,6 +355,8 @@ class TransactionReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>
@@ -356,6 +366,7 @@ class TransactionReport extends Component{
                                                                                 <DropdownMenu>
                                                                                     <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
                                                                                     <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                    <DropdownItem onClick={(e)=>this.handleRePrint(e,v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>

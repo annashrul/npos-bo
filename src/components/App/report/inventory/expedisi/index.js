@@ -405,6 +405,7 @@ class ExpedisiReport extends Component{
                                     <thead className="bg-light">
                                     <tr>
                                         {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Expedisi.</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Pengirim</th>
@@ -423,6 +424,8 @@ class ExpedisiReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+
                                                                     {/* <td style={columnStyle}>Example split danger button */}
                                                                         {/* <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

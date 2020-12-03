@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
 import {FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
+import {rePrintFaktur} from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
@@ -26,6 +27,7 @@ class AlokasiReport extends Component{
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.handleRePrint = this.handleRePrint.bind(this);
         this.state={
             where_data:"",
             any:"",
@@ -243,6 +245,10 @@ class AlokasiReport extends Component{
         this.props.dispatch(FetchAlokasiExcel(1,this.state.where_data,total));
     }
 
+    handleRePrint(e,id){
+        e.preventDefault();
+        this.props.dispatch(rePrintFaktur(id));
+    }
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -371,6 +377,7 @@ class AlokasiReport extends Component{
                             <table className="table table-hover table-bordered">
                                 <thead className="bg-light">
                                 <tr>
+                                    <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                     <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                     <th className="text-black" style={columnStyle} rowSpan="2">No Faktur Mutasi</th>
                                     <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
@@ -395,6 +402,7 @@ class AlokasiReport extends Component{
                                                         // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
                                                         return(
                                                             <tr key={i}>
+                                                                <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                                     <div className="btn-group">
                                                                         <UncontrolledButtonDropdown>
@@ -405,6 +413,7 @@ class AlokasiReport extends Component{
                                                                                 <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
                                                                                 <DropdownItem onClick={(e)=>this.handleEdit(e,data[i])}>Edit</DropdownItem>
                                                                                 <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                <DropdownItem onClick={(e)=>this.handleRePrint(e,v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
                                                                             </DropdownMenu>
                                                                         </UncontrolledButtonDropdown>
                                                                     </div>

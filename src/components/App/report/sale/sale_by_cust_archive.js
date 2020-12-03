@@ -325,119 +325,75 @@ class SaleByCustArchive extends Component{
                     </div>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label htmlFor=""> Periode </label>
-                                    <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                        <input type="text" className="form-control" name="date_sale_by_cust_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
-                                    </DateRangePicker>
+                            <div className="col-md-10">
+                                <div className="row">
+                                    <div className="col-6 col-xs-6 col-md-3">
+                                        <div className="form-group">
+                                            <label htmlFor=""> Periode </label>
+                                            <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                                                <input type="text" className="form-control" name="date_sale_by_cust_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
+                                            </DateRangePicker>
 
 
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">
+                                                Filter
+                                            </label>
+                                            <Select
+                                                options={this.state.filter_data}
+                                                // placeholder="Pilih Tipe Kas"
+                                                onChange={this.HandleChangeFilter}
+                                                value={
+                                                    this.state.filter_data.find(op => {
+                                                        return op.value === this.state.filter
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">
+                                                Sort
+                                            </label>
+                                            <Select
+                                                options={this.state.sort_data}
+                                                // placeholder="Pilih Tipe Kas"
+                                                onChange={this.HandleChangeSort}
+                                                value={
+                                                    this.state.sort_data.find(op => {
+                                                        return op.value === this.state.sort
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-xs-6 col-md-3">
+                                        <div className="form-group">
+                                            <label htmlFor="">Cari</label>
+                                            <input type="text" name="any_sale_by_cust_report" className="form-control form-control-lg" value={this.state.any_sale_by_cust_report} onChange={(e)=>this.handleChange(e)}/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            {/* <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Lokasi
-                                    </label>
-                                    <Select
-                                        options={this.state.location_data}
-                                        placeholder="Pilih Lokasi"
-                                        onChange={this.HandleChangeLokasi}
-                                        value={
-                                            this.state.location_data.find(op => {
-                                                return op.value === this.state.location
-                                            })
-                                        }
+                            <div className="col-md-2">
+                                <div className="row">
+                                    <div className="col-12 col-xs-12 col-md-12">
+                                        <div className="form-group text-right">
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                <i className="fa fa-search"/>
+                                            </button>
+                                            <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                                <i className="fa fa-print"/> Export
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                    />
-                                </div>
-                            </div> */}
-                            {/* <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Tipe Transaksi
-                                    </label>
-                                    <Select
-                                        options={this.state.type_data}
-                                        placeholder="Pilih Tipe Transaksi"
-                                        onChange={this.HandleChangeType}
-                                        value={
-                                            this.state.type_data.find(op => {
-                                                return op.value === this.state.type
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div> */}
-                            {/* <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Status
-                                        </label>
-                                        <Select
-                                            options={this.state.status_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeStatus}
-                                            value={
-                                                this.state.status_data.find(op => {
-                                                    return op.value === this.state.status
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div> */}
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Filter
-                                        </label>
-                                        <Select
-                                            options={this.state.filter_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeFilter}
-                                            value={
-                                                this.state.filter_data.find(op => {
-                                                    return op.value === this.state.filter
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Sort
-                                        </label>
-                                        <Select
-                                            options={this.state.sort_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeSort}
-                                            value={
-                                                this.state.sort_data.find(op => {
-                                                    return op.value === this.state.sort
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                            <div className="col-6 col-xs-6 col-md-2">
-                                <div className="form-group">
-                                    <label htmlFor="">Cari</label>
-                                    <input type="text" name="any_sale_by_cust_report" className="form-control" value={this.state.any_sale_by_cust_report} onChange={(e)=>this.handleChange(e)}/>
-                                </div>
                             </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                            <i className="fa fa-search"/>
-                                        </button>
-                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                            <i className="fa fa-print"></i> Export
-                                        </button>
-                                    </div>
-
-                                </div>
                             <div className="col-md-12">
                                 <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
 
@@ -446,6 +402,7 @@ class SaleByCustArchive extends Component{
 
                                         <tr>
                                             {/* <th className="text-black" rowSpan="2" style={columnStyle}>#</th> */}
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>No</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Kd Cust</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Nama</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Gross Sales</th>
@@ -476,6 +433,8 @@ class SaleByCustArchive extends Component{
                                                                             </div>
                                                                         </div>
                                                                     </td> */}
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+
                                                                     <td style={columnStyle}>{v.kd_cust}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>

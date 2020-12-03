@@ -12,9 +12,9 @@ import FormSale from "../../modals/sale/form_sale";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import {FetchDetailLocation} from "redux/actions/masterdata/location/location.action";
-import imgDefault from 'assets/default.png'
 import {toRp,toCurrency,rmComma} from "helper";
 import Spinner from 'Spinner'
+import {HEADERS} from "../../../../redux/actions/_constants";
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -57,6 +57,9 @@ class Sale extends Component{
             discount_harga:0,
             pajak:0,
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
+            isClick:0,
             error:{
                 location:"",
                 customer:"",
@@ -158,6 +161,7 @@ class Sale extends Component{
         destroy(table);
         localStorage.removeItem('cs');
         localStorage.removeItem('lk');
+        localStorage.removeItem('anySaleTrx');
     }
     HandleChangeLokasi(lk){
         let err = Object.assign({}, this.state.error, {
@@ -192,7 +196,8 @@ class Sale extends Component{
         });
         this.setState({
             customer: cs.value,
-            error: err
+            error: err,
+            scrollPage:5
         })
         localStorage.setItem('cs', cs.value);
 
@@ -357,7 +362,10 @@ class Sale extends Component{
     }
     HandleAddBrg(e,item,index) {
         e.preventDefault();
-        
+        this.setState({
+            isScroll:false,
+            isClick:index
+        });
         const finaldt = {
             kd_brg: item.kd_brg,
             nm_brg: item.nm_brg,
@@ -376,7 +384,7 @@ class Sale extends Component{
             hrg_beli:item.hrg_beli,
             kategori:item.kategori,
             services:item.services,
-            tambahan: []
+            tambahan: item.tambahan
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
@@ -398,7 +406,7 @@ class Sale extends Component{
                     diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
-                    tambahan: []
+                    tambahan: res.tambahan
                 })
             }
 
@@ -422,6 +430,7 @@ class Sale extends Component{
                 destroy(table);
                 localStorage.removeItem('cs');
                 localStorage.removeItem('lk');
+                localStorage.removeItem('anySaleTrx');
                 window.location.reload(false);
             }
         })
@@ -517,6 +526,7 @@ class Sale extends Component{
                         "hr": "S",
                         "kartu": "-",
                         "dis_persen": this.state.discount_persen,
+                        "dis_rp": this.state.discount_harga===0?0:rmComma(this.state.discount_harga),
                         "kd_sales": 1,
                         "jam": moment(new Date()).format("HH:mm:ss"),
                         "tgl": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
@@ -524,7 +534,7 @@ class Sale extends Component{
                         "kd_kasir": this.state.userid,
                         "no_kartu": "0",
                         "id_hold": "-",
-                        "diskon": rmComma(this.state.discount_harga),
+                        "diskon": this.state.discount_harga===0?0:rmComma(this.state.discount_harga),
                         "compliment_rp": "0",
                         "jml_kartu": 0,
                         "charge": 0,
@@ -580,7 +590,7 @@ class Sale extends Component{
                     hrg_beli:data[0].hrg_beli,
                     kategori:data[0].kategori,
                     services:data[0].service,
-                    tambahan: []
+                    tambahan: data[0].tambahan
                 })
             } else {
                 update(table, {
@@ -608,6 +618,8 @@ class Sale extends Component{
         if (this.state.customer === "" || this.state.lokasi === "") {
             Swal.fire('Gagal!', 'Pilih lokasi dan customer terlebih dahulu.', 'error')
         }else{
+            localStorage.setItem("anySaleTrx",this.state.search);
+
             let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
             if(parseInt(this.state.searchby,10)===1){if(where!==''){where+='&';}where+=`searchby=kd_brg`}
             if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
@@ -643,11 +655,16 @@ class Sale extends Component{
         });
     }
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.pagin_brg_sale.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
             let where=`lokasi=${this.state.location}&customer=${this.state.customer}&perpage=${this.state.perpage}`;
             this.props.dispatch(FetchProductSale(1,where,'sale',this.autoSetQty));
+            this.setState({scrollPage:this.state.scrollPage+5});
+
         }
         else{
             Swal.fire({
@@ -657,7 +674,16 @@ class Sale extends Component{
             });
         }
     }
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
     render() {
+        if(this.state.isScroll===true)this.handleScroll();
+
         let opCustomer=[{
             value: '1000001',
             label: 'UMUM'
@@ -672,8 +698,8 @@ class Sale extends Component{
             })
         }
         let totalsub=0;
-        const centerStyle = {verticalAlign: "middle", textAlign: "center"};
-        const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        const centerStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const leftStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
         const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         
         return (
@@ -700,7 +726,7 @@ class Sale extends Component{
                                     </div>
                                     <div className="form-group">
                                         <div className="input-group input-group-sm">
-                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder="Search" value={this.state.search}
+                                            <input autoFocus type="text" id="chat-search" name="search" className="form-control form-control-sm" placeholder={`Search ${localStorage.anySaleTrx!==undefined?localStorage.anySaleTrx:""}`} value={this.state.search}
                                                 onChange={(e) => this.HandleCommonInputChange(e, false)}
                                                 onKeyPress={event => {if (event.key === 'Enter') {this.HandleSearch();}}}
                                             />
@@ -711,7 +737,7 @@ class Sale extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                    <div className="people-list" style={{zoom:"80%",height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?
                                                     <div id="chat_user_2">
@@ -720,7 +746,7 @@ class Sale extends Component{
                                                                 this.props.barang.length !== 0 ?
                                                                     this.props.barang.map((i, inx) => {
                                                                         return (
-                                                                            <li className="clearfix" key={inx}
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx||this.state.isClick===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx}
                                                                                 onClick={(e) => this.HandleAddBrg(e, {
                                                                                     kd_brg: i.kd_brg,
                                                                                     nm_brg: i.nm_brg,
@@ -739,16 +765,14 @@ class Sale extends Component{
                                                                                     hrg_beli:i.hrg_beli,
                                                                                     kategori:i.kategori,
                                                                                     services:i.service,
-                                                                                    tambahan: []
-                                                                                })}>
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                    tambahan: i.tambahan
+                                                                                },inx)}>
+                                                                                {i.gambar.replace(" ","") === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                    wordBreak:"break-all",
-                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                    <div className="status" style={{color: 'black',
-                                                                                    fontWeight:"bold"}}><small>{toRp(i.harga)}</small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {toRp(i.harga)}</div>
                                                                                 </div>
+
                                                                             </li>
                                                                         )
                                                                     })
@@ -885,8 +909,8 @@ class Sale extends Component{
                                                             <td style={leftStyle}>{item.nm_brg}</td>
                                                             <td style={leftStyle}>{item.barcode}</td>
                                                             <td style={leftStyle}>{item.satuan}</td>
-                                                            <td>
-                                                                <select className="form-control" name='harga' style={{minWidth:"100px",maxWidth:"max-content"}}
+                                                            <td style={centerStyle}>
+                                                                <select className="form-control" name='harga' style={{width:"100px"}}
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}>
                                                                     <option value={this.state.brgval[index].harga} style={{display:this.state.brgval[index].harga===''||this.state.brgval[index].harga==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga)}</option>
@@ -899,7 +923,7 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={toCurrency(this.state.brgval[index].harga)}/> */}
                                                             </td>
-                                                            <td><input type='text' name='diskon_persen' style={{minWidth:"50px",maxWidth:"max-content"}} className="form-control"
+                                                            <td style={centerStyle}><input type='text' name='diskon_persen' style={{width:"100px",textAlign:"right"}} className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_persen}/>
@@ -910,13 +934,15 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_nominal}/>
                                                             </td> */}
-                                                            <td><input type='text' name='ppn' style={{minWidth:"50px",maxWidth:"max-content"}}  className="form-control"
+                                                            <td style={centerStyle}><input type='text' name='ppn' style={{width:"100px",textAlign:"right"}}  className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].ppn}/>
                                                             </td>
-                                                            <td style={rightStyle}>{item.stock}</td>
-                                                            <td><input type='text' name='qty' style={{minWidth:"50px",maxWidth:"max-content"}}
+                                                            <td style={centerStyle}>
+                                                                <input readOnly={true} type="text" value={item.stock} className="form-control" style={{width:"100px",textAlign:"right"}}/>
+                                                            </td>
+                                                            <td style={centerStyle}><input type='text' name='qty' style={{width:"100px",textAlign:"right"}}
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        className="form-control"
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
@@ -925,7 +951,10 @@ class Sale extends Component{
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
-                                                            <td style={rightStyle}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>
+                                                            <td style={centerStyle}>
+                                                                <input readOnly={true} type="text" value={toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))} className="form-control" style={{width:"100px",textAlign:"right"}}/>
+                                                            </td>
+                                                            {/*<td style={centerStyle}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>*/}
 
                                                         </tr>
                                                     )
@@ -942,6 +971,7 @@ class Sale extends Component{
                                         </table>
 
                                     </div>
+                                    <hr/>
                                     <div className='row'>
                                         <div className="col-md-7">
                                             <div className="dashboard-btn-group d-flex align-items-center">

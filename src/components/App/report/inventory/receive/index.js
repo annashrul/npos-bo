@@ -348,10 +348,10 @@ class ReceiveReport extends Component{
         let tot_beli = 0;
         return (
             <Layout page="Laporan Pembelian">
-                <div className="col-12 box-margin" style={{zoom:"80%"}}>
+                <div className="col-12 box-margin">
                     <div className="card">
                         <div className="card-body">
-                            <div className="row">
+                            <div className="row" style={{zoom:"70%"}}>
                                <div className="col-md-10">
                                    <div className="row">
                                        <div className="col-6 col-xs-6 col-md-2">
@@ -455,7 +455,7 @@ class ReceiveReport extends Component{
                                                 />
                                             </div>
                                         </div>
-                                       <div className="col-6 col-xs-6 col-md-1">
+                                       <div className="col-12 col-xs-12 col-md-1">
                                            <div className="form-group">
                                                <label htmlFor="">Cari</label>
                                                <input type="text" name="any_receive_report" className="form-control" style={{width:"100%"}} value={this.state.any_receive_report}  onChange={(e)=>this.handleChange(e)}/>
@@ -463,9 +463,9 @@ class ReceiveReport extends Component{
                                        </div>
                                    </div>
                                </div>
-                               <div className="col-md-2 text-right">
-                                    <div className="col-6 col-xs-6 col-md-12">
-                                        <div className="form-group">
+                               <div className="col-md-2">
+                                    <div className="col-12 col-xs-12 col-md-12">
+                                        <div className="form-group text-right">
                                             <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                                 <i className="fa fa-search"/>
                                             </button>
@@ -479,10 +479,11 @@ class ReceiveReport extends Component{
 
 
                             </div>
-                            <div style={{overflowX: "auto"}}>
+                            <div style={{overflowX: "auto",zoom:"80%"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
+                                        <th className="text-black" style={columnStyle}>No</th>
                                         <th className="text-black" style={columnStyle}>#</th>
                                         <th className="text-black" style={columnStyle}>No Faktur</th>
                                         <th className="text-black" style={columnStyle}>Tanggal</th>
@@ -511,6 +512,8 @@ class ReceiveReport extends Component{
                                                             tot_beli = tot_beli+parseInt(v.total_beli,10);
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>
@@ -560,7 +563,7 @@ class ReceiveReport extends Component{
                                                                     <td style={columnStyle}>{v.jumlah_pembayaran}</td>
                                                                     <td style={columnStyle}>{v.pelunasan.toLowerCase()==='lunas'?0:toRp(parseFloat(v.total_beli)-parseFloat(v.jumlah_bayar))}</td>
                                                                     <td style={columnStyle}>{v.qty_beli}</td>
-                                                                    <td style={columnStyle}>{toRp(parseInt(v.total_beli,10))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.total_beli,10))}</td>
                                                                 </tr>
                                                             )
                                                         })
@@ -572,7 +575,7 @@ class ReceiveReport extends Component{
                                     }
                                     <tfoot>
                                     <tr style={{backgroundColor:"#EEEEEE"}}>
-                                        <td colSpan="15">TOTAL PERPAGE</td>
+                                        <td colSpan="16">TOTAL PERPAGE</td>
                                         <td style={{textAlign:"right"}}>{toRp(tot_beli)}</td>
                                     </tr>
                                     </tfoot>

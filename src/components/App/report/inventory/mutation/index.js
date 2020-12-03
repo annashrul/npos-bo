@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
-import {FetchMutation,FetchMutationExcel, FetchMutationData} from "redux/actions/inventory/mutation.action";
+import {FetchMutation,FetchMutationExcel, FetchMutationData,rePrintFaktur} from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailMutation from "components/App/modals/report/inventory/mutation_report/detail_mutation";
@@ -24,6 +24,7 @@ class MutationReport extends Component{
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.handleRePrint = this.handleRePrint.bind(this);
         this.state={
             where_data:"",
             any:"",
@@ -233,6 +234,10 @@ class MutationReport extends Component{
         this.props.dispatch(ModalType("formMutationExcel"));
         this.props.dispatch(FetchMutationExcel(1,this.state.where_data,total));
     }
+    handleRePrint(e,id){
+        e.preventDefault();
+        this.props.dispatch(rePrintFaktur(id));
+    }
 
 
     render(){
@@ -343,10 +348,11 @@ class MutationReport extends Component{
                                 </div>
 
                             </div>
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
+                            <div style={{overflowX: "auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Faktur</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
@@ -366,6 +372,8 @@ class MutationReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+
                                                                     <td style={columnStyle}>
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>
@@ -375,6 +383,7 @@ class MutationReport extends Component{
                                                                                 <DropdownMenu>
                                                                                     <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
                                                                                     <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                    <DropdownItem onClick={(e)=>this.handleRePrint(e,v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>

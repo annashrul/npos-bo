@@ -80,30 +80,29 @@ class FormSale extends Component{
                 });
             }else{
                 this.setState({isTransfer:false})
-
             }
-        }
-        if(event.target.value === 'Kredit'){
-            
-            this.setState({
-                change:0,
-                tunai:0,
-            });
-            Object.assign(this.props.master,{
-                change:0,
-                tunai:rmComma(this.state.tunai),
-                jenis_trx:event.target.value,
-            });
+            if(event.target.value === 'Kredit'){
+                
+                this.setState({
+                    change:0,
+                    tunai:0,
+                });
+                Object.assign(this.props.master,{
+                    change:0,
+                    tunai:0,
+                    jenis_trx:event.target.value,
+                });
+            }
         }
         if(event.target.name.toLowerCase() === 'dp'){
             
             this.setState({
                 change:0,
-                tunai:event.target.value,
+                tunai: event.target.value === '' || event.target.value===undefined || event.target.value===null ? 0 : event.target.value,
             });
             Object.assign(this.props.master,{
                 change:0,
-                tunai:rmComma(this.state.tunai),
+                tunai: rmComma(this.state.tunai),
             });
         }
         if(event.target.name === 'tanggal_tempo'){

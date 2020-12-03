@@ -8,8 +8,8 @@ import {FetchBrg} from "../../../../redux/actions/masterdata/product/product.act
 import moment from "moment";
 import {storeOpname} from "../../../../redux/actions/inventory/opname.action";
 import StickyBox from "react-sticky-box";
-import imgDefault from 'assets/default.png'
 import Spinner from 'Spinner'
+import {HEADERS} from "../../../../redux/actions/_constants";
 
 const Toast = Swal.mixin({
     toast: true,
@@ -38,6 +38,8 @@ class TrxOpname extends Component{
             search:"",
             userid:0,
             perpage:5,
+            scrollPage:0,
+            isScroll:false,
             error:{
                 location:"",
                 catatan:""
@@ -142,6 +144,7 @@ class TrxOpname extends Component{
                 'error'
             )
         }else{
+            localStorage.setItem("anyOpnameTrx",this.state.search);
 
             if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
                 this.props.dispatch(FetchBrg(1, 'kd_brg', this.state.search, this.state.location, null, this.autoSetQty,5));
@@ -160,6 +163,9 @@ class TrxOpname extends Component{
     }
     HandleAddBrg(e,item) {
         e.preventDefault();
+        this.setState({
+            isScroll:false
+        });
         const finaldt = {
             barcode:item.barcode,
             harga_beli:item.harga_beli,
@@ -423,10 +429,27 @@ class TrxOpname extends Component{
         });
     }
     handleLoadMore(){
+        this.setState({
+            isScroll:true
+        });
         let perpage = parseInt(this.props.paginBrg.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            this.props.dispatch(FetchBrg(1, 'barcode', this.state.search, this.state.location, null, this.autoSetQty,this.state.perpage));
+            let searchby='';
+            if(parseInt(this.state.searchby,10)===1 || this.state.searchby===""){
+                searchby='kd_brg';
+            }
+            if(parseInt(this.state.searchby,10)===2){
+                searchby='barcode';
+            }
+            if(parseInt(this.state.searchby,10)===3){
+                searchby='deskripsi';
+            }
+
+
+            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyOpnameTrx!==undefined?localStorage.anyOpnameTrx:"", this.state.location, null, this.autoSetQty,this.state.perpage));
+            this.setState({scrollPage:this.state.scrollPage+5});
+
         }
         else{
             Swal.fire({
@@ -436,7 +459,18 @@ class TrxOpname extends Component{
             });
         }
     }
+
+    handleScroll(){
+        let divToScrollTo;
+        divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
+        if (divToScrollTo) {
+            divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
+
     render() {
+        if(this.state.isScroll===true)this.handleScroll();
+
         return (
             <Layout page="Opname">
                 <div className="card">
@@ -472,8 +506,7 @@ class TrxOpname extends Component{
                                                 id="chat-search"
                                                 name="search"
                                                 className="form-control form-control-sm"
-                                                placeholder="Search"
-                                                value={this.state.search}
+                                                placeholder={`Search ${localStorage.anyOpnameTrx!==undefined?localStorage.anyOpnameTrx:""}`}                                                value={this.state.search}
                                                 onChange={(e) => this.HandleCommonInputChange(e, false)}
                                                 onKeyPress={
                                                     event => {
@@ -496,7 +529,7 @@ class TrxOpname extends Component{
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
+                                    <div className="people-list" style={{zoom:"80%",height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?
                                                     <div id="chat_user_2">
@@ -505,7 +538,7 @@ class TrxOpname extends Component{
                                                                 this.props.barang.length!==0?
                                                                     this.props.barang.map((i,inx)=>{
                                                                         return(
-                                                                            <li className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
+                                                                            <li style={{backgroundColor:this.state.scrollPage===inx?"#eeeeee":""}} id={`item${inx}`} className="clearfix" key={inx} onClick={(e)=>this.HandleAddBrg(e,{
                                                                                 barcode:i.barcode,
                                                                                 harga_beli:i.harga_beli,
                                                                                 satuan:i.satuan,
@@ -526,13 +559,10 @@ class TrxOpname extends Component{
                                                                                 stock:i.stock,
                                                                                 qty_fisik:0,
                                                                             })}>
-                                                                                <img src={i.gambar} onError={(e)=>{e.target.onerror = null; e.target.src=`${imgDefault}`}} alt="avatar"/>
+                                                                                {i.gambar === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
-                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold",
-                                                                                    wordBreak:"break-all",
-                                                                                    fontSize:"12px"}}>{i.nm_brg}</div>
-                                                                                    <div className="status" style={{color: 'black',
-                                                                                    fontWeight:"bold"}}><small>({i.kd_brg}) <small>{i.supplier}</small></small></div>
+                                                                                    <div className="status" style={{color: 'black',fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>{i.nm_brg}</div>
+                                                                                    <div className="status" style={{color: '#a1887f', fontWeight:"bold", wordBreak:"break-all", fontSize:"12px"}}>({i.kd_brg}) {i.supplier}</div>
                                                                                 </div>
 
                                                                             </li>

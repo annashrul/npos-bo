@@ -177,7 +177,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
                 if(data.result.data.length===1){
                     const barang = data.result.data;
                     const cek=db(barang[0].kd_brg,barang);
-                    cek.then(re=>{
+                    cek.then(res=>{
                         dispatch(setProductbrg(data));
                         dispatch(setLoadingbrg(false));
                     })

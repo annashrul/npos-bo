@@ -44,6 +44,41 @@ export function setMutationData(data=[]){
     return {type:MUTATION.SUCCESS_DATA,data}
 }
 
+export const rePrintFaktur = (id) => {
+    return (dispatch) => {
+        Swal.fire({
+            title: 'Silahkan tunggu.',
+            html: 'Sedang memproses faktur..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
+        let url = `alokasi/reprint/${id}`;
+        
+        axios.get(HEADERS.URL + url)
+            .then(function (response) {
+                Swal.close() 
+
+                const data = response.data;
+                if(data.status==='success'){
+                    window.open(data.result.nota, '_blank');
+                }else{
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'error',
+                        text: 'Gagal mengambil faktur.',
+                    });
+
+                }
+                dispatch(setLoadingApprovalMutation(false));
+            }).catch(function (error) {
+                Swal.close() 
+
+
+            })
+    }
+}
 
 export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
     return (dispatch) => {

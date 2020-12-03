@@ -282,8 +282,6 @@ class FormPromo extends Component{
         // state.lokasi_data = locG;
         return null;
     }
-
-
     handleChange = (event) => {
         let column=event.target.name;
         let value=event.target.value;
@@ -350,6 +348,7 @@ class FormPromo extends Component{
             category:val.value,
             error: err
         });
+        localStorage.setItem("categoryPromo",val.value);
 
         // if(val.value==='kelbrg'){
         //     this.props.dispatch(FetchGroupProduct(1,'',100));
@@ -391,6 +390,7 @@ class FormPromo extends Component{
     toggle = (e) => {
         e.preventDefault();
         this.handleClearState();
+        localStorage.removeItem("categoryPromo");
     };
     handleChangeDynamic(e,i){
         let column = e.target.name;
@@ -954,7 +954,7 @@ class FormPromo extends Component{
                             </div>
                             <hr/>
                             {/*TABLE BARANG KATEGORI (BUY GET)*/}
-                            <div style={this.state.category==='bg'?{display:"block","float":"left","marginBottom":"10px"}:{display:"none"}}>
+                            <div style={localStorage.categoryPromo==='bg'?{display:"block","float":"left","marginBottom":"10px"}:{display:"none"}}>
                                 <div className="input-group mb-3">
                                     <input type="text" name={"any_2"} className={"form-control"} placeholder={"cari barcode"} value={this.state.any_2} onChange={this.handleChange} onKeyPress = {
                                         event => {
@@ -973,7 +973,7 @@ class FormPromo extends Component{
                                     </div>
                                 </div>
                             </div>
-                            <div style={this.state.category==='bg'?{display:"block","float":"right","marginBottom":"10px"}:{display:"none"}}>
+                            <div style={localStorage.categoryPromo==='bg'?{display:"block","float":"right","marginBottom":"10px"}:{display:"none"}}>
                                 <Paginationq
                                     current_page={parseInt(this.props.barang2.current_page,10)}
                                     per_page={parseInt(this.props.barang2.per_page,10)}
@@ -981,7 +981,7 @@ class FormPromo extends Component{
                                     callback={this.handlePagin2.bind(this)}
                                 />
                             </div>
-                            <div className="table-responsive" style={this.state.category==='bg'? {display:"block",overflowX: 'auto',height:'auto'}:{display:"none",overflowX: 'auto',height:"auto"}}>
+                            <div className="table-responsive" style={localStorage.categoryPromo==='bg'? {display:"block",overflowX: 'auto',height:'auto'}:{display:"none",overflowX: 'auto',height:"auto"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>

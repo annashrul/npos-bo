@@ -360,27 +360,27 @@ class OpnameReport extends Component{
                             {/*DATA EXCEL*/}
                             <table className="table table-hover"  id="report_opname_to_excel" style={{display:"none"}}>
                                     <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" colSpan={11}>{this.state.startDate} - {this.state.startDate}</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" colSpan={11}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                    </tr>
+                                        <tr>
+                                            <th className="text-black" colSpan={11}>{this.state.startDate} - {this.state.startDate}</th>
+                                        </tr>
+                                        <tr>
+                                            <th className="text-black" colSpan={11}>{this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
+                                        </tr>
 
-                                    <tr>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kode Trx</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>kode Barang</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Nama Barang</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Kel. Barang</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Barcode</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Qty Fisik</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Stok Terakhir</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Harga Beli</th>
-                                        <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    </tr>
-                                    <tr></tr>
+                                        <tr>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kode Trx</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>kode Barang</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Nama Barang</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Kel. Barang</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Barcode</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Qty Fisik</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Stok Terakhir</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Harga Beli</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
+                                        </tr>
+                                        <tr/>
                                     </thead>
                                     {
                                         <tbody>
@@ -408,11 +408,12 @@ class OpnameReport extends Component{
                                     }
                                 </table>
                                 {/*END DATA EXCEL*/}
-                            <div className="table-responsive" style={{overflowX: "auto"}}>
+                            <div style={{overflowX: "auto",zoom:"85%"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
                                         {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Trx</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">kode Barang</th>
@@ -435,6 +436,7 @@ class OpnameReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     {/* <td style={columnStyle}>Example split danger button */}
                                                                         {/* <div className="btn-group">
                                                                             <button className="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -457,7 +459,7 @@ class OpnameReport extends Component{
                                                                     <td style={columnStyle}>{v.lokasi}</td>
                                                                     <td style={columnStyle}>{v.hrg_beli}</td>
                                                                     <td style={columnStyle}>{
-                                                                        v.status==='0'?statusQ('danger','Belum Opname'):(v.status==='1'?statusQ('warning','Sudah Opname'):"")
+                                                                        v.status==='0'?statusQ('warning','Belum Opname'):(v.status==='1'?statusQ('success','Sudah Opname'):statusQ('danger','Cancel Opname'))
                                                                         // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
                                                                     }</td>
 

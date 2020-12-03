@@ -287,14 +287,14 @@ class AdjustmentReport extends Component{
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-12 col-xs-12 col-md-2">
                                             <div className="form-group">
                                                 <label>Cari</label>
                                                 <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
                                             </div>
                                         </div>
-                                        <div className="col-6 col-xs-6 col-md-2" style={{textAlign:"right"}}>
-                                            <div className="form-group">
+                                        <div className="col-12 col-xs-12 col-md-2" style={{textAlign:"right"}}>
+                                            <div className="form-group text-right">
                                                 <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
                                                     <i className="fa fa-search"/>
                                                 </button>
@@ -311,6 +311,7 @@ class AdjustmentReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
+                                        <th className="text-black" style={columnStyle}>No</th>
                                         <th className="text-black" style={columnStyle}>#</th>
                                         <th className="text-black" style={columnStyle}>No. Adjusment</th>
                                         <th className="text-black" style={columnStyle}>Tanggal</th>
@@ -328,6 +329,7 @@ class AdjustmentReport extends Component{
                                                         data.map((v,i)=>{
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={columnStyle}>{/* Example split danger button */}
                                                                         <div className="btn-group">
                                                                             <UncontrolledButtonDropdown>

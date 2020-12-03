@@ -6,7 +6,6 @@ import SideMenu from '../Layout/sideMenu'
 import {connect} from 'react-redux'
 import FreeScrollbar from 'react-free-scrollbar';
 import Default from 'assets/default.png';
-import Idle from 'react-idle'
 import { logoutUser } from "../../../redux/actions/authActions";
 import PropTypes from "prop-types";
 
@@ -57,16 +56,16 @@ class Layout extends Component {
     }
 
     render() {
-        const rawtime = parseInt(this.getTimeout(), 10);
-        const timedout = rawtime === 0 ? 86400000 * 2 : rawtime;
+        // const rawtime = parseInt(this.getTimeout(), 10);
+        // const timedout = rawtime === 0 ? 86400000 * 2 : rawtime;
         return (
-            <Idle
-                timeout={timedout}
-                render={({ idle }) =>
-                <div>
-                    {idle &&rawtime!==0
-                    ? this.handleLogout()
-                    : (
+            // <Idle
+            //     timeout={timedout}
+            //     render={({ idle }) =>
+            //     <div>
+            //         {idle &&rawtime!==0
+            //         ? this.handleLogout()
+            //         : (
                         <div className={this.props.triggerEcaps?"ecaps-page-wrapper sidemenu-hover-" + this.state.sideHover + " menu-collasped-active":"ecaps-page-wrapper " + (this.props.triggerMobileEcaps?"mobile-menu-active":"")}>
                         {/* Side Menu */}
                             <div className="ecaps-sidemenu-area" onMouseEnter={this.mouseEnterHandle} onMouseLeave={this.mouseOutHandle}>
@@ -108,11 +107,11 @@ class Layout extends Component {
                             </div>
                         </div>
         
-                    )
-                    }
-                </div>
-                }
-            />
+                    // )
+                //     }
+                // </div>
+                // }
+            // />
             
         );
     }

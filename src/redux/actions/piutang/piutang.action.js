@@ -71,7 +71,7 @@ export const FetchPiutang = (nota) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: "Data Tidak Ditemukan",
+                    text: error.response.data.msg,
                 });
             })
 
