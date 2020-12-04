@@ -112,7 +112,7 @@ class FormLocation extends Component{
                             <div className="col-4">
                                 <div className="form-group">
                                     <label>Name</label>
-                                    <input type="text" className="form-control" name="nama_toko" value={this.state.nama_toko} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="nama_toko" value={this.state.nama_toko} onChange={this.handleChange}  required/>
                                 </div>
                                 <div className="form-group">
                                     <label>Location Category</label>
@@ -133,7 +133,7 @@ class FormLocation extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label>Status</label>
-                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange} required>
                                         <option value="1">Active</option>
                                         <option value="0">In Active</option>
                                     </select>
@@ -142,43 +142,43 @@ class FormLocation extends Component{
                             <div className="col-4">
                                 <div className="form-group">
                                     <label>Phone</label>
-                                    <input type="number" className="form-control" name="phone" value={this.state.phone} onChange={this.handleChange}  />
+                                    <input type="number" className="form-control" name="phone" value={this.state.phone} onChange={this.handleChange} required />
                                 </div>
                                 <div className="form-group">
                                     <label>Email</label>
-                                    <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange}  />
+                                    <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} required />
                                 </div>
                                 <div className="form-group">
                                     <label>Kota</label>
-                                    <input type="text" className="form-control" name="kota" value={this.state.kota} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="kota" value={this.state.kota} onChange={this.handleChange} required />
                                 </div>
                                 <div className="form-group">
                                     <label>Web</label>
-                                    <input type="text" className="form-control" name="web" value={this.state.web} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="web" value={this.state.web} onChange={this.handleChange}  required/>
                                 </div>
                             </div>
                             <div className="col-4">
                                 <div className="form-group">
                                     <label>Footer 1</label>
-                                    <input type="text" className="form-control" name="footer1" value={this.state.footer1} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="footer1" value={this.state.footer1} onChange={this.handleChange}  required/>
                                 </div>
                                 <div className="form-group">
                                     <label>Footer 2</label>
-                                    <input type="text" className="form-control" name="footer2" value={this.state.footer2} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="footer2" value={this.state.footer2} onChange={this.handleChange}  required/>
                                 </div>
                                 <div className="form-group">
                                     <label>Footer 3</label>
-                                    <input type="text" className="form-control" name="footer3" value={this.state.footer3} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="footer3" value={this.state.footer3} onChange={this.handleChange}  required/>
                                 </div>
                                 <div className="form-group">
                                     <label>Footer 4</label>
-                                    <input type="text" className="form-control" name="footer4" value={this.state.footer4} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="footer4" value={this.state.footer4} onChange={this.handleChange}  required/>
                                 </div>
                             </div>
                             <div className="col-4">
                                 <div className="form-group">
                                     <label>Display in the member app ?</label>
-                                    <select className="form-control" name="status_show" defaultValue={this.state.status_show} value={this.state.status_show} onChange={this.handleChange}>
+                                    <select className="form-control" name="status_show" defaultValue={this.state.status_show} value={this.state.status_show} onChange={this.handleChange} required>
                                         <option value="1">Active</option>
                                         <option value="0">In Active</option>
                                     </select>
@@ -199,6 +199,7 @@ class FormLocation extends Component{
                                                value={this.state.jam_buka}
                                                pattern="\d{2}\/\d{2}/\d{4}"
                                                onChange={this.handleChange}
+                                               required
                                            />
                                        </div>
                                    </div>
@@ -215,6 +216,7 @@ class FormLocation extends Component{
                                                value={this.state.jam_tutup}
                                                pattern="\d{2}\/\d{2}/\d{4}"
                                                onChange={this.handleChange}
+                                               required
                                            />
                                        </div>
                                    </div>
@@ -222,7 +224,7 @@ class FormLocation extends Component{
                             </div>
                             <div className="col-4">
                                 <label htmlFor="">Note</label>
-                                <input className="form-control" name="ket" value={this.state.ket} onChange={this.handleChange}/>
+                                <input className="form-control" name="ket" value={this.state.ket} onChange={this.handleChange} required/>
                             </div>
                             <div className="col-6">
                                 <PlacesAutocomplete value={this.state.alamat} onClick={this.handleSelect} onChange={this.handleOnChange} onSelect={this.handleSelect}>

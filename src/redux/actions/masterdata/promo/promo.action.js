@@ -105,7 +105,7 @@ export const createPromo = (data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -143,7 +143,7 @@ export const updatePromo = (id,data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -180,7 +180,7 @@ export const deletePromo = (id) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -213,7 +213,7 @@ export const FetchBrg1 = (page=1,perpage=10,where='')=>  {
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                // text: error.response.data.msg,
+                // text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }
@@ -243,7 +243,7 @@ export const FetchBrg2 = (page=1,perpage=10,where='')=>  {
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                // text: error.response.data.msg,
+                // text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }

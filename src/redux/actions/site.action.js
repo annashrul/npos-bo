@@ -345,7 +345,7 @@ export const importTable = (data) => {
                 Swal.fire({
                     title: 'failed',
                     icon: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

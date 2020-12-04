@@ -124,7 +124,7 @@ export const createLocation = (data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -165,7 +165,7 @@ export const updateLocation = (id,data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -203,7 +203,7 @@ export const deleteLocation = (id) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

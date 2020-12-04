@@ -173,7 +173,7 @@ export const storeAlokasi = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -242,7 +242,7 @@ export const updateAlokasi = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {

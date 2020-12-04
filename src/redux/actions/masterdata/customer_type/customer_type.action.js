@@ -89,7 +89,7 @@ export const createCustomerType = (data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -129,7 +129,7 @@ export const updateCustomerType = (id,data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -167,7 +167,7 @@ export const deleteCustomerType = (id) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

@@ -134,7 +134,7 @@ export const storeAdjusment = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -174,7 +174,7 @@ export const updateAdjustment = (id,data,token) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -212,7 +212,7 @@ export const deleteAdjustment = (id) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -234,7 +234,7 @@ export const FetchAdjustmentDetail = (page=1,code)=>{
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

@@ -84,7 +84,7 @@ export const createSubDepartment = (data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -129,7 +129,7 @@ export const updateSubDepartment = (id,data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -171,7 +171,7 @@ export const deleteSubDepartment = (id,token) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

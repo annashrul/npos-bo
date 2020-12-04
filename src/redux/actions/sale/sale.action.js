@@ -156,7 +156,7 @@ export const storeSale = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -270,7 +270,7 @@ export const deleteReportSale = (kd_trx) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

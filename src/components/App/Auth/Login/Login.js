@@ -19,11 +19,16 @@ class Login extends Component {
             errors:{
             },
             logo: BgAuth,
-            width:'100px'
-         };
+            width:'100px',
+            tenant:`db_${String(window.location.hostname)!=='localhost'?String(window.location.hostname).split('.')[0]:'npos'}_v2`
+        };
     }
     getFaviconEl() {
         return document.getElementById("favicon");
+    }
+
+    componentDidUpdate(){
+        console.log(localStorage.getItem('header_tenant'));
     }
 
     componentDidMount (){
@@ -34,7 +39,12 @@ class Login extends Component {
     }
 
     initFetch(check){
-        fetch(HEADERS.URL + `site/logo`)
+        fetch(HEADERS.URL + `site/logo`, {
+            method: 'GET',
+            headers: {
+                'tenant': btoa(this.state.tenant),
+              }
+        })
         .then(res => res.json())
         .then(
             (data) => {
@@ -108,6 +118,7 @@ class Login extends Component {
                 }
                 localStorage.setItem("logos",data.result.logo)
                 localStorage.setItem("site_title", data.result.title)
+                localStorage.setItem("header_tenant", btoa(this.state.tenant))
                 document.title = `${data.result.title}`;
                 this.setState({
                     logo: data.result.logo,

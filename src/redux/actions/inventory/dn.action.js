@@ -225,7 +225,7 @@ export const storeDN = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {

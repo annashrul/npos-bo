@@ -122,6 +122,7 @@ class FormBank extends Component{
                 parseData['foto'] = '-';
             }
             if(Object.keys(this.props.detail).length > 0){
+                if(parseData['foto'] === '-'){delete parseData.foto}
                 this.props.dispatch(updateBank(this.state.id,parseData));
             }else{
                 this.props.dispatch(createBank(parseData));
@@ -194,7 +195,10 @@ class FormBank extends Component{
                                 <option value="">==== Pilih ====</option>
                                 <option value="1">Aktif</option>
                                 <option value="0">Tidak Aktif</option>
-                            </select>
+                            </select><div className="invalid-feedback"
+                                 style={this.state.error.status !== "" ? {display: 'block'} : {display: 'none'}}>
+                                {this.state.error.status}
+                            </div>
                         </div>
                         <div className="form-group">
                             <label htmlFor="inputState" className="col-form-label">Foto</label><br/>

@@ -79,7 +79,7 @@ export const FetchBrgPacking = (kode,db)=>{
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                // text: error.response.data.msg,
+                // text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }
@@ -160,7 +160,7 @@ export const FetchBrgPackingTrx = (kode)=>{
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                // text: error.response.data.msg,
+                // text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }

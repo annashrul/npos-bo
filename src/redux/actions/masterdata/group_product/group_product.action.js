@@ -67,7 +67,7 @@ export const createGroupProduct = (data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -108,7 +108,7 @@ export const updateGroupProduct = (id,data) => {
                 // Swal.fire({
                 //     title: 'failed',
                 //     type: 'error',
-                //     text: error.response.data.msg,
+                //     text: error.response === undefined?'error!':error.response.data.msg,
                 // });
                 if (error.response) {
                     
@@ -145,7 +145,7 @@ export const deleteGroupProduct = (id) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

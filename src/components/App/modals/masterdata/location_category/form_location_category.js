@@ -66,7 +66,7 @@ class FormLocationCategory extends Component{
                     <ModalBody>
                         <div className="form-group">
                             <label>Name</label>
-                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
+                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} required />
                         </div>
                     </ModalBody>
                     <ModalFooter>

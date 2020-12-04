@@ -185,6 +185,10 @@ class FormCustomer extends Component{
             err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
             this.setState({error: err});
         }
+        else if(this.state.location===''||this.state.location===undefined){
+            err = Object.assign({}, err, {location:"lokasi tidak boleh kosong"});
+            this.setState({error: err});
+        }
         else if( parseData['cust_type']===''|| parseData['cust_type']===undefined){
             err = Object.assign({}, err, {cust_type:"tipe customer tidak boleh kosong"});
             this.setState({error: err});
@@ -201,16 +205,8 @@ class FormCustomer extends Component{
             err = Object.assign({}, err, {email:"email tidak boleh kosong"});
             this.setState({error: err});
         }
-        // else if( parseData['password']===''|| parseData['password']===undefined){
-        //     err = Object.assign({}, err, {password:"password tidak boleh kosong"});
-        //     this.setState({error: err});
-        // }
         else if( parseData['tgl_ultah']===''|| parseData['tgl_ultah']===undefined){
             err = Object.assign({}, err, {tgl_ultah:"tanggal ulang tahun tidak boleh kosong"});
-            this.setState({error: err});
-        }
-        else if(this.state.location===''||this.state.location===undefined){
-            err = Object.assign({}, err, {status:"lokasi tidak boleh kosong"});
             this.setState({error: err});
         }
         else if( parseData['status']===''|| parseData['status']===undefined){
@@ -233,8 +229,14 @@ class FormCustomer extends Component{
                 this.props.dispatch(updateCustomer(this.props.dataCustomerEdit.kd_cust,parseData));
                 this.props.dispatch(ModalToggle(false));
             }else{
-                this.props.dispatch(createCustomer(parseData));
-                this.props.dispatch(ModalToggle(false));
+                
+                if( parseData['password']===''|| parseData['password']===undefined){
+                    err = Object.assign({}, err, {password:"password tidak boleh kosong"});
+                    this.setState({error: err});
+                } else {
+                    this.props.dispatch(createCustomer(parseData));
+                    this.props.dispatch(ModalToggle(false));
+                }
             }
             
         }
@@ -259,7 +261,7 @@ class FormCustomer extends Component{
                             <div className="col-6">
                                 <div className="form-group">
                                     <label>Nama</label>
-                                    <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} required />
                                     <div className="invalid-feedback" style={this.state.error.nama!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.nama}
                                     </div>
@@ -275,6 +277,7 @@ class FormCustomer extends Component{
                                                 return lk.value === this.state.location
                                             })
                                         }
+                                        required
                                     />
                                     <div className="invalid-feedback"
                                         style={this.state.error.location !== "" ? {display: 'block'} : {display: 'none'}}>
@@ -292,6 +295,7 @@ class FormCustomer extends Component{
                                                 return op.value === this.state.cust_type
                                             })
                                         }
+                                        required
                                     />
                                     <div className="invalid-feedback" style={this.state.error.cust_type!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.cust_type}
@@ -300,7 +304,7 @@ class FormCustomer extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label>Jenis Kelamin</label>
-                                    <select className="form-control" name="jenis_kelamin" defaultValue={this.state.jenis_kelamin} value={this.state.jenis_kelamin} onChange={this.handleChange}>
+                                    <select className="form-control" name="jenis_kelamin" defaultValue={this.state.jenis_kelamin} value={this.state.jenis_kelamin} onChange={this.handleChange} required>
                                         <option value="">Pilih</option>
                                         <option value="1">Laki-Laki</option>
                                         <option value="0">Perempuan</option>
@@ -311,21 +315,21 @@ class FormCustomer extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label>Telepon</label>
-                                    <input type="number" className="form-control" name="tlp" value={this.state.tlp} onChange={this.handleChange}  />
+                                    <input type="number" className="form-control" name="tlp" value={this.state.tlp} onChange={this.handleChange} required />
                                     <div className="invalid-feedback" style={this.state.error.tlp!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.tlp}
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Email</label>
-                                    <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange}  />
+                                    <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} required />
                                     <div className="invalid-feedback" style={this.state.error.email!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.email}
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Password {this.props.dataCustomerEdit!==undefined?<small>(kosongkan bila tidak akan diubah)</small>:""}</label>
-                                    <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange}  />
+                                    <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                                     <div className="invalid-feedback" style={this.state.error.password!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.password}
                                     </div>
@@ -341,14 +345,14 @@ class FormCustomer extends Component{
                                 {/*</div>*/}
                                 <div className="form-group">
                                     <label>Ulang Tahun</label>
-                                    <input type="date" name="tgl_ultah" className="form-control" data-parse="date" placeholder="MM/DD/YYYY" defaultValue={date} value={this.state.tgl_ultah} pattern="\d{2}\/\d{2}/\d{4}" onChange={this.handleChange}/>
+                                    <input type="date" name="tgl_ultah" className="form-control" data-parse="date" placeholder="MM/DD/YYYY" defaultValue={date} value={this.state.tgl_ultah} pattern="\d{2}\/\d{2}/\d{4}" onChange={this.handleChange} required/>
                                     <div className="invalid-feedback" style={this.state.error.tgl_ultah!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.tgl_ultah}
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Status</label>
-                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange}>
+                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange} required>
                                         <option value="">Pilih</option>
                                         <option value="1" selected={this.state.status==='1'}>Active</option>
                                         <option value="0" selected={this.state.status==='0'}>In Active</option>
@@ -370,7 +374,7 @@ class FormCustomer extends Component{
                                 </div> */}
                                 <div className="form-group">
                                     <label>Alamat</label>
-                                    <input type="text" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange}  />
+                                    <input type="text" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} required />
                                     <div className="invalid-feedback" style={this.state.error.alamat!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.alamat}
                                     </div>

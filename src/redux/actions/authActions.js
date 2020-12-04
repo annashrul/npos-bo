@@ -20,7 +20,9 @@ export const loginUser = (userData) =>
             onClose: () => {}
         })
 
-        axios.post(HEADERS.URL+'auth/bo', userData)
+        axios.post(HEADERS.URL+'auth/bo', userData,{
+            headers:{'tenant':localStorage.getItem('header_tenant')}
+        })
         .then(res=>{
             setTimeout(
             function () {
