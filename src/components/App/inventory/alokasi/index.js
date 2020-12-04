@@ -836,6 +836,7 @@ class Alokasi extends Component{
                         <div className="row">
                             <div className="col-md-12" style={{zoom:"80%",display: 'flex', alignItems: 'flex-start' }}>
                                 <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px" }}>
+                                    {this.props.match.params.id===undefined?
                                     <div className="chat-area">
                                         <div className="chat-header-text d-flex border-none mb-10">
                                             <div className="chat-about">
@@ -878,6 +879,7 @@ class Alokasi extends Component{
                                             </div>
                                         </div>
                                     </div>
+                                    :''}
                                     <div className="chat-area">
                                         <div className="chat-header-text d-flex border-none mb-10">
                                             <div className="chat-about">
@@ -944,7 +946,6 @@ class Alokasi extends Component{
                                                 </div>
                                             </div>
                                         </div>
-                                        {/*end chat-search*/}
                                         <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?

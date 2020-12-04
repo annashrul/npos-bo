@@ -36,8 +36,8 @@ class FormUserList extends Component{
             token:'',
             error:{
                 nama:"", username:"", password:"", password_confirmation:"", password_otorisasi:"",
-                email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",
-                user_lvl:"0", status:"1",
+                email:"", alamat:"", tgl_lahir:"", foto:"", nohp:"", lokasi:"",  selectedOption:"",
+                user_lvl:"", status:"",
             }
         }
 
@@ -150,8 +150,63 @@ class FormUserList extends Component{
                 this.setState({
                     error: err
                 })
-                
             }
+        } else if (this.state.username === "" || this.state.username === undefined) {
+            err = Object.assign({}, err, {
+                username: "username tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.selectedOption.length <=0 || this.state.selectedOption === "" || this.state.selectedOption === undefined) {
+            err = Object.assign({}, err, {
+                selectedOption: "lokasi tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.user_lvl === "" || this.state.user_lvl === undefined) {
+            err = Object.assign({}, err, {
+                user_lvl: "level user tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.foto === "" || this.state.foto === undefined) {
+            err = Object.assign({}, err, {
+                foto: "foto user tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.nohp === "" || this.state.nohp === undefined) {
+            err = Object.assign({}, err, {
+                nohp: "no hp tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.email === "" || this.state.email === undefined) {
+            err = Object.assign({}, err, {
+                email: "email tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.tgl_lahir === "" || this.state.tgl_lahir === undefined) {
+            err = Object.assign({}, err, {
+                tgl_lahir: "tgl_lahir tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
+        } else if (this.state.alamat === "" || this.state.alamat === undefined) {
+            err = Object.assign({}, err, {
+                alamat: "alamat tidak boleh kosong."
+            });
+            this.setState({
+                error: err
+            })
         }else{
             const form = e.target;
             let data = new FormData(form);
@@ -180,11 +235,38 @@ class FormUserList extends Component{
                 parseData['foto'] ='-'
             }
             if(this.props.userListEdit!==undefined && this.props.userListEdit!==[]){
+                if(parseData.password==='-'){delete parseData.password}
+                if(parseData.password_confirmation==='-'){delete parseData.password_confirmation}
+                if(parseData.password_otorisasi==='-'){delete parseData.password_otorisasi}
+                if(parseData.foto==='-'){delete parseData.foto}
                 this.props.dispatch(updateUserList(this.props.userListEdit.id,parseData));
                 this.props.dispatch(ModalToggle(false));
             }else{
-                this.props.dispatch(sendUserList(parseData));
-                this.props.dispatch(ModalToggle(false));
+                if (this.state.password === "" || this.state.password === undefined) {
+                    err = Object.assign({}, err, {
+                        password: "password tidak boleh kosong."
+                    });
+                    this.setState({
+                        error: err
+                    })
+                } else if (this.state.password_confirmation === "" || this.state.password_confirmation === undefined) {
+                    err = Object.assign({}, err, {
+                        password_confirmation: "konfirmasi password tidak boleh kosong."
+                    });
+                    this.setState({
+                        error: err
+                    })
+                } else if (this.state.password_otorisasi === "" || this.state.password_otorisasi === undefined) {
+                    err = Object.assign({}, err, {
+                        password_otorisasi: "otorisasi password tidak boleh kosong."
+                    });
+                    this.setState({
+                        error: err
+                    })
+                } else {
+                    this.props.dispatch(sendUserList(parseData));
+                    this.props.dispatch(ModalToggle(false));
+                }
             }
         }
 
@@ -194,10 +276,22 @@ class FormUserList extends Component{
         this.setState({
             foto: files
         })
+        let err = Object.assign({}, this.state.error, {
+            foto: ""
+        });
+        this.setState({
+            error: err
+        });
     };
     handleOnChange = (selectedOption) => {
         this.setState({
             selectedOption:selectedOption,
+        });
+        let err = Object.assign({}, this.state.error, {
+            selectedOption: ""
+        });
+        this.setState({
+            error: err
         });
     };
     toggle(e){
@@ -232,6 +326,12 @@ class FormUserList extends Component{
         this.setState({
             user_lvl:val.value,
         })
+        let err = Object.assign({}, this.state.error, {
+            user_lvl: ""
+        });
+        this.setState({
+            error: err
+        });
     }
     static getDerivedStateFromProps(props, state) {
         let userLevel = typeof props.userLevel.data === 'object' ? props.userLevel.data : [];
@@ -277,14 +377,17 @@ class FormUserList extends Component{
                                 <div className="form-group">
                                     <label>Password <small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
+                                    <div className="invalid-feedback" style={this.state.error.password !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.password}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Konfirmasi Password<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'(  kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control"  name="password_confirmation" value={this.state.password_confirmation} onChange={this.handleChange} />
+                                    <div className="invalid-feedback" style={this.state.error.password_confirmation !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.password_confirmation}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Otorisasi Password<small>{this.props.userListEdit!==undefined&&this.props.userListEdit!==[]?'( kosongkan jika tidak akan diubah )':''}</small></label>
                                     <input type="password" className="form-control" name="password_otorisasi" value={this.state.password_otorisasi} onChange={this.handleChange} />
+                                    <div className="invalid-feedback" style={this.state.error.password_otorisasi !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.password_otorisasi}</div>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="inputState" className="col-form-label">Lokasi&nbsp;<input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange}/> Pilih Semua </label>
@@ -297,6 +400,7 @@ class FormUserList extends Component{
                                             options={this.state.opt}
                                             name="lokasi"
                                         />
+                                        <div className="invalid-feedback" style={this.state.error.selectedOption !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.selectedOption}</div>
                                 </div>
                                 <label className="control-label font-12">
                                     User Level
@@ -312,6 +416,7 @@ class FormUserList extends Component{
                                     }
 
                                 />
+                                <div className="invalid-feedback" style={this.state.error.user_lvl !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.user_lvl}</div>
                             </div>
                             <div className="col-md-6">
                                 <div className="form-group">
@@ -320,14 +425,17 @@ class FormUserList extends Component{
                                         multiple={ false }
                                         className="mr-3 form-control-file"
                                         onDone={ this.getFiles.bind(this) } />
+                                        <div className="invalid-feedback" style={this.state.error.foto !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.foto}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>No. Hp</label>
-                                    <input type="text" className="form-control" name="nohp" defaultValue="0" onChange={this.handleChange}/>
+                                    <input type="text" className="form-control" name="nohp" defaultValue="0" value={this.state.nohp} onChange={this.handleChange}/>
+                                    <div className="invalid-feedback" style={this.state.error.nohp !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.nohp}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Email</label>
                                     <input type="email" className="form-control" aria-describedby="emailHelp" name="email" value={this.state.email} onChange={this.handleChange}  />
+                                    <div className="invalid-feedback" style={this.state.error.email !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.email}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Tanggal Lahir</label>
@@ -342,6 +450,7 @@ class FormUserList extends Component{
                                         pattern="\d{2}\/\d{2}/\d{4}"
                                         onChange={this.handleChange}
                                     />
+                                    <div className="invalid-feedback" style={this.state.error.tgl_lahir !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.tgl_lahir}</div>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="inputState" className="col-form-label">Status</label>
@@ -349,10 +458,12 @@ class FormUserList extends Component{
                                         <option value="1">Aktif</option>
                                         <option value="0">Tidak Aktif</option>
                                     </select>
+                                    <div className="invalid-feedback" style={this.state.error.status !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.status}</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Alamat</label>
                                     <textarea rows="2" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} style={{height:"125px"}}>-</textarea>
+                                    <div className="invalid-feedback" style={this.state.error.alamat !== "" ? {display: 'block'} : {display: 'none'}}>{this.state.error.alamat}</div>
                                 </div>
 
                             </div>
