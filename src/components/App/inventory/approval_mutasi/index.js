@@ -9,6 +9,7 @@ import Paginationq from "helper";
 import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
 import FormApprovalMutation from "../../modals/inventory/mutation/form_approval_mutation";
 import {FetchApprovalMutationDetail} from "../../../../redux/actions/inventory/mutation.action";
+import { Link } from 'react-router-dom';
 
 class ApprovalMutasi extends Component{
     constructor(props){
@@ -89,7 +90,12 @@ class ApprovalMutasi extends Component{
             <Layout page="Approval Mutasi">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Approval Mutasi</h5>
+                        <div className="card-body d-flex align-items-center justify-content-between">
+                            <h5>Approval Mutasi</h5>
+                            <div>
+                                <Link to="report/mutation" className="btn btn-outline-info"><i className="fa fa-eye"></i>&nbsp;VIEW REPORT</Link>
+                            </div>
+                        </div>
                     </div>
                     <div className="card-body">
                         <div className="row">

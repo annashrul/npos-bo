@@ -4,7 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout"
 import {FetchBrg,setProductbrg} from 'redux/actions/masterdata/product/product.action'
 import {FetchCheck} from 'redux/actions/site.action'
-import {FetchNota,storeAlokasi} from 'redux/actions/inventory/alokasi.action'
+import {FetchNota,storeAlokasi,updateAlokasi} from 'redux/actions/inventory/alokasi.action'
 import {FetchDnReport,FetchDnData,setDnData} from 'redux/actions/inventory/dn.action'
 import StickyBox from "react-sticky-box";
 import Select from 'react-select'
@@ -16,6 +16,7 @@ import {
 import {toRp} from "../../../../helper";
 import Spinner from 'Spinner'
 import {HEADERS} from "../../../../redux/actions/_constants";
+import { FetchAlokasiData } from '../../../../redux/actions/inventory/alokasi.action';
 
 const table='alokasi'
 const Toast = Swal.mixin({
@@ -84,6 +85,10 @@ class Alokasi extends Component{
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.HandleChangeJenisTrx= this.HandleChangeJenisTrx.bind(this);
         this.handleLoadMore= this.handleLoadMore.bind(this);
+
+        if(this.props.match.params.id!==undefined&&this.props.match.params.id!==''){
+            this.props.dispatch(FetchAlokasiData(1,atob(this.props.match.params.id),'','','','99999'))
+        }
     }
 
     getProps(param){
@@ -109,6 +114,54 @@ class Alokasi extends Component{
 
     componentWillMount(){
         this.getProps(this.props);
+    }
+
+    componentDidUpdate(prevState){
+        if(this.props.alokasiDetail!==prevState.alokasiDetail){
+            // this.getProps(this.props)
+            destroy(table)
+            let param = this.props
+            console.log(prevState)
+            console.log('==============================')
+            console.log(this.props)
+            if(param.alokasiDetail!==undefined||param.alokasiDetail.length>0){
+                let val = param.alokasiDetail;
+                this.setState({
+                    nota_trx:val.master.no_faktur_mutasi,
+                    tanggal:moment(val.master.tgl_mutasi).format("yyyy-MM-DD"),
+                    location:val.master.kd_lokasi_1,
+                    location2:val.master.kd_lokasi_2,
+                    catatan:val.master.keterangan,
+                    no_delivery_note:val.master.no_faktur_beli,
+                    jenis_trx:String(atob(this.props.match.params.id)).substr(0,2)==='MC'?'Alokasi':String(atob(this.props.match.params.id)).substr(0,2)==='MU'?'Mutasi':'Transaksi',
+                })
+                if(val.detail!==undefined){
+                    val.detail.map(item=>{
+                        const datas = {
+                            kd_brg: item.kode_barang,
+                            nm_brg: item.nm_brg,
+                            barcode: item.barcode,
+                            satuan: item.satuan,
+                            harga_beli: item.harga_beli,
+                            hrg_jual: item.harga_jual,
+                            stock: item.stock,
+                            qty: item.qty,
+                            tambahan: item.tambahan
+                        };
+                        store(table, datas)
+                        this.getData();
+                        return null;
+                    })
+                }
+
+                this.props.dispatch(FetchBrg(1, 'barcode', '', val.kd_lokasi_1, null, this.autoSetQty,5))
+            }
+        }
+        if(this.state.nota_trx==='-'){
+            this.setState({
+                nota_trx:this.props.alokasiDetail.master===undefined?'- ':this.props.alokasiDetail.master.no_faktur_mutasi
+            })
+        }
     }
 
     componentDidMount() {
@@ -529,7 +582,7 @@ class Alokasi extends Component{
 
     HandleSubmit(e){
         e.preventDefault();
-
+        console.log("fffffffffffffffff",this.state)
         // validator head form
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.location2 === "") {
@@ -609,12 +662,9 @@ class Alokasi extends Component{
                             parsedata['user'] = this.props.auth.user.username;
                             parsedata['lokasi_asal'] = this.state.location_val;
                             parsedata['lokasi_tujuan'] = this.state.location2_val;
-                            if(err_stock===''){
-                                this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
-                                this.setState({nota_trx:'-'})
-                            }else{
+                            if(this.props.match.params.id!==undefined&&this.props.match.params.id!==''){
                                 Swal.fire({
-                                    title: `Anda yakin akan melanjutkan transaksi?`,
+                                    title: `Anda yakin akan memperbarui transaksi?`,
                                     text: err_stock,
                                     icon: 'warning',
                                     showCancelButton: true,
@@ -624,10 +674,32 @@ class Alokasi extends Component{
                                     cancelButtonText: 'Tidak!'
                                 }).then((result) => {
                                     if (result.value) {
-                                        this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
+                                        parsedata['nota'] = this.state.nota_trx;
+                                        this.props.dispatch(updateAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
                                         this.setState({nota_trx:'-'})
                                     }
                                 })
+                            } else {
+                                if(err_stock===''){
+                                    this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
+                                    this.setState({nota_trx:'-'})
+                                }else{
+                                    Swal.fire({
+                                        title: `Anda yakin akan melanjutkan transaksi?`,
+                                        text: err_stock,
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Ya!',
+                                        cancelButtonText: 'Tidak!'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
+                                            this.setState({nota_trx:'-'})
+                                        }
+                                    })
+                                }
                             }
                         }
                     })
@@ -750,6 +822,7 @@ class Alokasi extends Component{
         }
     }
     render() {
+        console.log("this.state.databrg",JSON.stringify(this.state.databrg))
         if(this.state.isScroll===true)this.handleScroll();
         let subtotal = 0;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -757,12 +830,13 @@ class Alokasi extends Component{
             <Layout page="Alokasi">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Alokasi</h5>
+                        <h5>{this.props.match.params.id===undefined?'Alokasi':`Edit ${(String(atob(this.props.match.params.id)).substr(0,2)==='MU'?'Mutasi':String(atob(this.props.match.params.id)).substr(0,2)==='TR'?'Transaksi':'Alokasi')+' : '+atob(this.props.match.params.id)}`}</h5>
                     </div>
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12" style={{zoom:"80%",display: 'flex', alignItems: 'flex-start' }}>
                                 <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px" }}>
+                                    {this.props.match.params.id===undefined?
                                     <div className="chat-area">
                                         <div className="chat-header-text d-flex border-none mb-10">
                                             <div className="chat-about">
@@ -805,6 +879,7 @@ class Alokasi extends Component{
                                             </div>
                                         </div>
                                     </div>
+                                    :''}
                                     <div className="chat-area">
                                         <div className="chat-header-text d-flex border-none mb-10">
                                             <div className="chat-about">
@@ -871,7 +946,6 @@ class Alokasi extends Component{
                                                 </div>
                                             </div>
                                         </div>
-                                        {/*end chat-search*/}
                                         <div className="people-list" style={{height:'300px',maxHeight:'100%',overflowY:'scroll'}}>
                                             {
                                                 !this.props.loadingbrg?
@@ -932,7 +1006,7 @@ class Alokasi extends Component{
                                                 <div className="col-md-2">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Tanggal Order</label>
-                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))}/>
+                                                        <input type="date" name={"tanggal"} className={"form-control"} value={this.state.tanggal} onChange={(e=>this.HandleCommonInputChange(e))} disabled={this.props.match.params.id!==undefined}/>
                                                     </div>
                                                 </div>
                                                 <div className="col-md-2">
@@ -944,6 +1018,7 @@ class Alokasi extends Component{
                                                             placeholder="Pilih Jenis Transaksi"
                                                             onChange={this.HandleChangeJenisTrx}
                                                             value={this.state.jenis_trx_data.find(op => {return op.value === this.state.jenis_trx})}
+                                                            isDisabled={this.props.match.params.id!==undefined}
                                                         />
 
                                                     </div>
@@ -951,7 +1026,13 @@ class Alokasi extends Component{
                                                 <div className="col-md-2">
                                                     <div className="form-group">
                                                         <label className="control-label font-12">Lokasi Asal</label>
-                                                        <Select options={this.state.location_data} placeholder = "==== Pilih ====" onChange={this.HandleChangeLokasi} value = {this.state.location_data.find(op => {return op.value === this.state.location})}/>
+                                                        <Select
+                                                            options={this.state.location_data}
+                                                            placeholder = "==== Pilih ===="
+                                                            onChange={this.HandleChangeLokasi}
+                                                            value = {this.state.location_data.find(op => {return op.value === this.state.location})}
+                                                            isDisabled={this.props.match.params.id!==undefined}
+                                                        />
                                                         <div className="invalid-feedback" style={this.state.error.location!==""?{display:'block'}:{display:'none'}}>
                                                             {this.state.error.location}
                                                         </div>
@@ -1094,7 +1175,8 @@ const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     dn_report: state.dnReducer.report_data,
     dn_data: state.dnReducer.dn_data,
-    checkNotaPem: state.siteReducer.check
+    checkNotaPem: state.siteReducer.check,
+    alokasiDetail:state.alokasiReducer.alokasi_data,
 });
 
 export default withRouter(connect(mapStateToPropsCreateItem)(Alokasi));

@@ -382,7 +382,6 @@ class SideMenu extends Component {
     getProps(param){
         if (param.auth.user) {
             let akses =param.auth.user.access;
-            console.log("AKSES",akses);
             if(akses!==undefined&&akses!==null){
                 // SETTING
                 let pengaturan_umum                 = akses[0]['value']!==null?akses[0]['value']:"0";   //cek varaibale akses apabila tidak bernilai null

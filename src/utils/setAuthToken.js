@@ -9,6 +9,7 @@ const setAuthToken = token =>{
         axios.defaults.headers.common['username'] = `${HEADERS.USERNAME}`;
         axios.defaults.headers.common['password'] = `${HEADERS.PASSWORD}`;
         axios.defaults.headers.common['Content-Type'] = `application/x-www-form-urlencoded`;
+        axios.defaults.headers.common['tenant'] = localStorage.getItem('header_tenant');
     }else{
         // delete auth header
         delete axios.defaults.headers.common['Authorization'];

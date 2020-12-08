@@ -2,10 +2,12 @@ import React,{Component} from 'react'
 import Layout from 'components/App/Layout'
 import Paginationq from "helper";
 import {FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
+import {rePrintFaktur} from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
+import FormAlokasi from "components/App/modals/inventory/alokasi/form_alokasi";
 import Select from 'react-select';
 import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
@@ -18,12 +20,14 @@ class AlokasiReport extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.HandleChangeSort = this.HandleChangeSort.bind(this);
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+        this.handleRePrint = this.handleRePrint.bind(this);
         this.state={
             where_data:"",
             any:"",
@@ -80,6 +84,13 @@ class AlokasiReport extends Component{
         this.props.dispatch(ModalType("detailAlokasi"));
         this.props.dispatch(FetchAlokasiDetail(1,code,'','',''))
     };
+    handleEdit(e,data){
+        e.preventDefault();
+        console.log(data)
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formEditAlokasi"));
+    }
     handleEvent = (event, picker) => {
         const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
         const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
@@ -234,6 +245,10 @@ class AlokasiReport extends Component{
         this.props.dispatch(FetchAlokasiExcel(1,this.state.where_data,total));
     }
 
+    handleRePrint(e,id){
+        e.preventDefault();
+        this.props.dispatch(rePrintFaktur(id));
+    }
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
@@ -396,7 +411,9 @@ class AlokasiReport extends Component{
                                                                             </DropdownToggle>
                                                                             <DropdownMenu>
                                                                                 <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
+                                                                                {v.status==='0'?<Link to={`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`}><DropdownItem>Edit</DropdownItem></Link>:''}
                                                                                 <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                <DropdownItem onClick={(e)=>this.handleRePrint(e,v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
                                                                             </DropdownMenu>
                                                                         </UncontrolledButtonDropdown>
                                                                     </div>
@@ -434,6 +451,7 @@ class AlokasiReport extends Component{
                         </div>
                         <DetailAlokasi alokasiDetail={this.props.alokasiDetail}/>
                         <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
+                        <FormAlokasi/>
                     </div>
                 </div>
             </Layout>

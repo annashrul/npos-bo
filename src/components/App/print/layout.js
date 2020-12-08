@@ -17,6 +17,10 @@ class Print3ply extends Component {
   
     goBack() {
         this.props.history.goBack();
+        setTimeout(function() {
+//             this.setState({ render : !this.state.render })
+             window.location.reload();
+          }, 500);
     }
 
     print(){
@@ -43,7 +47,7 @@ class Print3ply extends Component {
                 <NoPrint> 
                     <div id="non-printable">
                         <div className="block-left">
-                            <button className="btn btn-blank" onClick={(event)=>{event.preventDefault();this.goBack()}}>← Back</button>
+                            <button className="btn btn-blank" onClick={(event)=>{event.preventDefault();window.close()}}>← Back</button>
                         </div>
                         <div className="block-right">
                             <button className="btn btn-primary" onClick={()=>{

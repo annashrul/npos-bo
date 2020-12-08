@@ -18,12 +18,21 @@ class Login extends Component {
             // acc_number:0,
             errors:{
             },
-            logo: BgAuth,
-            width:'100px'
-         };
+            logo: '-',
+            width:'-',
+            tenant:btoa('demo')
+        };
     }
     getFaviconEl() {
         return document.getElementById("favicon");
+    }
+
+    getSubdomain(){
+        let host = window.location.host;
+        let parts = host.split(".");
+        // console.log(parts);
+        // return btoa(parts[0])
+        return btoa('demo')
     }
 
     componentDidMount (){
@@ -34,87 +43,105 @@ class Login extends Component {
     }
 
     initFetch(check){
-        fetch(HEADERS.URL + `site/logo`)
+        fetch(HEADERS.URL + `site/logo`, {
+            method: 'GET',
+            headers: {
+                'tenant':this.getSubdomain(),
+              }
+        })
         .then(res => res.json())
         .then(
             (data) => {
-                if (parseInt(data.result.day,10) <= 7) {
-                    if (check) this.checkPembayaran();
-                    else{
-                        Swal.fire({
-                            title: 'Warning!',
-                            html: `<h6>Aplikasi ${parseInt(data.result.day,10)<=0?"telah":"mendekati"} kedaluarsa.</h6><br/>
-                                <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
-                                <b>Jumlah:</b><br/>
-                                ${data.result.server_price}<br/>
-                                <b>No. rekening:</b><br/>
-                                ${data.result.acc_number}<br/>
-                                <b>Atas nama:</b><br/>
-                                ${data.result.acc_name}<br/>`,
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#ff9800',
-                            cancelButtonColor: '#2196F3',
-                            confirmButtonText: 'Konfirmasi Pembayaran',
-                            cancelButtonText: 'Lain kali.'
-                        }).then((result) => {
-                            if (result.value) {
-                                // window.location.reload();
-                                if(!check){
-                                    fetch(HEADERS.URL + `site/confirm`)
-                                        .then(res => res.json())
-                                        .then(
-                                            (item) => {
-                                                if(item.status==='success'){
-                                                    let timerInterval
-                                                    Swal.fire({
-                                                        title: 'Silahkan tunggu konfirmasi dari admin!',
-                                                        html: '',
-                                                        timer: 10000,
-                                                        timerProgressBar: true,
-                                                        onBeforeOpen: () => {
-                                                            Swal.showLoading()
-                                                        },
-                                                        onClose: () => {
-                                                            clearInterval(timerInterval)
-                                                        }
-                                                    }).then((result) => {
-                                                        this.checkPembayaran();
-                                                        /* Read more about handling dismissals below */
-                                                        if (result.dismiss === Swal.DismissReason.timer) {
-                                                            
-                                                        }
-                                                    })
-                                                }
-                                            }
-                                        );
-                                }
-                            }
-                        })
-                    }
+                if(data.message!==undefined){
+                    Swal.fire({
+                        title: 'An error occured.',
+                        text: `You cannot access N-pos. Call customer service for more info.`,
+                        icon: 'info',
+                        showCancelButton: false,
+                        confirmButtonColor: '#ff9800',
+                        confirmButtonText: 'Ok.',
+                    }).then((result) => {
+                    })
                 }else{
-                    if (check){
-                        Swal.fire({
-                            title: 'Pembayaran Berhasil diterima.',
-                            text: `Silahkan login untuk melanjutkan.`,
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#ff9800',
-                            confirmButtonText: 'Oke',
-                        }).then((result) => {
-                            
-                        })
+                    if (parseInt(data.result.day,10) <= 7) {
+                        if (check) this.checkPembayaran();
+                        else{
+                            Swal.fire({
+                                title: 'Warning!',
+                                html: `<h6>Aplikasi ${parseInt(data.result.day,10)<=0?"telah":"mendekati"} kedaluarsa.</h6><br/>
+                                    <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
+                                    <b>Jumlah:</b><br/>
+                                    ${data.result.server_price}<br/>
+                                    <b>No. rekening:</b><br/>
+                                    ${data.result.acc_number}<br/>
+                                    <b>Atas nama:</b><br/>
+                                    ${data.result.acc_name}<br/>`,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#ff9800',
+                                cancelButtonColor: '#2196F3',
+                                confirmButtonText: 'Konfirmasi Pembayaran',
+                                cancelButtonText: 'Lain kali.'
+                            }).then((result) => {
+                                if (result.value) {
+                                    // window.location.reload();
+                                    if(!check){
+                                        fetch(HEADERS.URL + `site/confirm`)
+                                            .then(res => res.json())
+                                            .then(
+                                                (item) => {
+                                                    if(item.status==='success'){
+                                                        let timerInterval
+                                                        Swal.fire({
+                                                            title: 'Silahkan tunggu konfirmasi dari admin!',
+                                                            html: '',
+                                                            timer: 10000,
+                                                            timerProgressBar: true,
+                                                            onBeforeOpen: () => {
+                                                                Swal.showLoading()
+                                                            },
+                                                            onClose: () => {
+                                                                clearInterval(timerInterval)
+                                                            }
+                                                        }).then((result) => {
+                                                            this.checkPembayaran();
+                                                            /* Read more about handling dismissals below */
+                                                            if (result.dismiss === Swal.DismissReason.timer) {
+                                                                
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                            );
+                                    }
+                                }
+                            })
+                        }
+                    }else{
+                        if (check){
+                            Swal.fire({
+                                title: 'Pembayaran Berhasil diterima.',
+                                text: `Silahkan login untuk melanjutkan.`,
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#ff9800',
+                                confirmButtonText: 'Oke',
+                            }).then((result) => {
+                                
+                            })
+                        }
                     }
+                    localStorage.setItem("logos",data.result.logo)
+                    localStorage.setItem("site_title", data.result.title)
+                    localStorage.setItem("header_tenant",this.getSubdomain())
+                    document.title = `${data.result.title}`;
+                    this.setState({
+                        logo: data.result.logo,
+                        width:data.result.width
+                    })
+                    const favicon = this.getFaviconEl(); // Accessing favicon element
+                    favicon.href = data.result.fav_icon;
                 }
-                localStorage.setItem("logos",data.result.logo)
-                localStorage.setItem("site_title", data.result.title)
-                document.title = `${data.result.title}`;
-                this.setState({
-                    logo: data.result.logo,
-                    width:data.result.width
-                })
-                const favicon = this.getFaviconEl(); // Accessing favicon element
-                favicon.href = data.result.fav_icon;
             },
             (error) => {
                 this.setState({
@@ -192,7 +219,7 @@ class Login extends Component {
                         <div className="wrap-login100 p-b-160 p-t-50">
                             <form className="login100-form validate-form" action="#">
                                 <span className="login100-form-title p-b-43 mb-5">
-                                <img alt="logos" src={this.state.logo} className='img-responsive' width={this.state.width} style={{textAlign: 'center', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}/>
+                                <img alt="logos" src={this.state.logo==='-'?BgAuth:this.state.logo} className='img-responsive' width={this.state.width==='-'?'200px':this.state.width} style={{textAlign: 'center', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}/>
                                     {/* Account Login */}
                                 </span>
                                 <div className="wrap-input100 rs1 validate-input" data-validate="Username is required">

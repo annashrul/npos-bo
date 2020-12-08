@@ -19,7 +19,7 @@ class DetailMutation extends Component{
 
     render(){
         
-        const {data} = this.props.mutationDetail;
+        const data = this.props.mutationDetail.detail===undefined?[]:this.props.mutationDetail.detail.data;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>

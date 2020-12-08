@@ -19,7 +19,8 @@ class DetailAlokasi extends Component{
 
     render(){
         
-        const {data} = this.props.alokasiDetail;
+        const data = this.props.alokasiDetail.detail===undefined?[]:this.props.alokasiDetail.detail.data;
+        console.log(data)
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>

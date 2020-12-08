@@ -34,7 +34,7 @@ export const FetchPriceProduct = (page=1,q='')=>{
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                text: error.response.data.msg,
+                text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }
@@ -72,7 +72,7 @@ export const updatePriceProduct = (id,data) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

@@ -106,8 +106,8 @@ class FormSales extends Component{
             err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
             this.setState({error: err});
         }
-        else if(this.state.location===''||this.state.location===undefined){
-            err = Object.assign({}, err, {status:"lokasi tidak boleh kosong"});
+        else if(parseData['lokasi']===''||parseData['lokasi']===undefined){
+            err = Object.assign({}, err, {location:"lokasi tidak boleh kosong"});
             this.setState({error: err});
         }
         else if(parseData['status']===''||parseData['status']===undefined){

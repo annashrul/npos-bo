@@ -1,9 +1,10 @@
 import React,{Component} from 'react';
-import {ModalBody, ModalHeader} from "reactstrap";
+import {ModalBody, ModalHeader, ModalFooter} from "reactstrap";
 import WrapperModal from "../../_wrapper.modal";
 import connect from "react-redux/es/connect/connect";
 import {ModalToggle} from "redux/actions/modal.action";
 import {FetchApprovalMutation, saveApprovalMutation} from "../../../../../redux/actions/inventory/mutation.action";
+import Swal from 'sweetalert2';
 
 class FormApprovalMutation extends Component{
     constructor(props){
@@ -11,9 +12,11 @@ class FormApprovalMutation extends Component{
         this.toggle = this.toggle.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleOnEnter = this.handleOnEnter.bind(this);
+        this.handleCheck = this.handleCheck.bind(this);
         this.state = {
             dataApproval: [],
             q:'',
+            checked_all:false,
             error:{
 
             },
@@ -26,6 +29,7 @@ class FormApprovalMutation extends Component{
         if(typeof nextProps.dataApproval.data==='object'){
             nextProps.dataApproval.data.map((v,i)=>{
                 data.push({
+                    "checked":false,
                     "kd_brg":v.kd_brg,
                     "barcode":v.barcode,
                     "nm_brg":v.nm_brg,
@@ -70,6 +74,20 @@ class FormApprovalMutation extends Component{
         dataApproval[i] = {...dataApproval[i], [event.target.name]: event.target.value};
         this.setState({ dataApproval });
     }
+    handleCheck(event,i){
+            // event.preventDefault()
+            console.log("cccccccccccccc",event.target.checked)
+            let dataApproval = [...this.state.dataApproval];
+            if(event.target.name==='checked_all'){
+                for(let j=0;j<this.state.dataApproval.length;j++){
+                    dataApproval[j] = {...dataApproval[j], checked: !this.state.checked_all };
+                }
+                this.setState({checked_all:!this.state.checked_all})
+            } else {
+                dataApproval[i] = {...dataApproval[i], checked: !this.state.dataApproval[i].checked };
+            }
+            this.setState({ dataApproval });
+    }
     handleOnEnter(i){
         let data={};
         if(parseInt(this.state.dataApproval[i].sisa_approval,10) > (parseInt(this.state.dataApproval[i].total_qty,10)-parseInt(this.state.dataApproval[i].total_approval,10))){
@@ -82,19 +100,49 @@ class FormApprovalMutation extends Component{
             // let total_qty =  this.state.dataApproval[i].total_qty;
             // let total_approval =  this.state.dataApproval[i].total_approval;
             if(parseInt(this.state.dataApproval[i].sisa_approval,10)>0){
-                this.props.dispatch(saveApprovalMutation(data));
+                this.props.dispatch(saveApprovalMutation(data,(arr)=>this.props.history.push(arr)));
                 // this.state.dataApproval[i].isReadonly=true;
                 var dataApproval = this.state.dataApproval;
                 dataApproval[i].isReadonly = true;
                 this.setState({dataApproval: dataApproval});
-                
             }
             this.setState({});
         }
+    }
+    handleApproveAll(e){
+        e.preventDefault();
+        let isValid = true
+        let data = [];
+        for( let i = 0 ; i<this.state.dataApproval.length ; i++){
+            if(parseInt(this.state.dataApproval[i].sisa_approval,10)>0){
+                if(this.state.dataApproval[i].checked){
+                    let val = {}
+                    val['sisa_approval'] = this.state.dataApproval[i].sisa_approval;
+                    val['barcode'] = this.state.dataApproval[i].barcode;
+                    data.push(val);
+                }
+            } else {
+                isValid = false
+                break;
+            }
+        }
+        let parsedata = {}
+        parsedata['kd_trx'] = localStorage.getItem("kd_trx_mutasi");
+        parsedata['detail'] = data
 
-
-
-
+        if(data.length>0){
+            if(isValid){
+                this.props.dispatch(saveApprovalMutation(parsedata, (arr)=>this.props.history.push(arr)));
+            }
+        } else {
+            Swal.fire({
+                title: 'failed',
+                type: 'error',
+                text: 'ceklis item yang akan di approve!',
+            });
+        }
+        this.setState({});
+        console.log("hhhhhhhhhhhhhh",parsedata)
     }
     toggle(e){
         e.preventDefault();
@@ -112,6 +160,7 @@ class FormApprovalMutation extends Component{
                     <table className="table table-hover">
                         <thead>
                         <tr>
+                            <th className="text-black" style={columnStyle}><input type="checkbox" name="checked_all" checked={this.state.checked_all} defaultValue={this.state.checked_all} onChange={(e)=>this.handleCheck(e)} /></th>
                             <th className="text-black" style={columnStyle}>No</th>
                             <th className="text-black" style={columnStyle}>Kode Barang</th>
                             <th className="text-black" style={columnStyle}>Barcode</th>
@@ -129,6 +178,7 @@ class FormApprovalMutation extends Component{
                                 this.state.dataApproval.map((v,i)=>{
                                     return(
                                         <tr key={i}>
+                                            <td style={columnStyle}><input type="checkbox" name="checked" checked={v.checked} defaultValue={v.checked} onChange={(e)=>this.handleCheck(e,i)} /></td>
                                             <td style={columnStyle}>{i+1}</td>
                                             <td style={columnStyle}>{v.kd_brg}</td>
                                             <td style={columnStyle}>{v.barcode}</td>
@@ -159,6 +209,9 @@ class FormApprovalMutation extends Component{
                         </tbody>
                     </table>
                 </ModalBody>
+                <ModalFooter>
+                <button onClick={(e)=>this.handleApproveAll(e)} className="btn btn-primary float-right">Approve Checked</button>
+                </ModalFooter>
             </WrapperModal>
         );
     }

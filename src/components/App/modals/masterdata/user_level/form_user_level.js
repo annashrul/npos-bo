@@ -373,11 +373,7 @@ class FormUserLevel extends Component{
                 this.clearState();
             }
         }
-
-
     }
-
-
     render(){
         const {array_modul} = this.state;
         return (
@@ -390,8 +386,7 @@ class FormUserLevel extends Component{
                                 <div className="form-group">
                                     <label>Nama User Level</label>
                                     <input type="text" className="form-control" name="lvl" value={this.state.lvl}  onChange={(e)=>this.handleChange(e)} />
-                                    <div className="invalid-feedback"
-                                         style={this.state.error.lvl !== "" ? {display: 'block'} : {display: 'none'}}>
+                                    <div className="invalid-feedback" style={this.state.error.lvl !== "" ? {display: 'block'} : {display: 'none'}}>
                                         {this.state.error.lvl}
                                     </div>
                                 </div>

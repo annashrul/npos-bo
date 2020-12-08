@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import BgAuth from "../../../assets/ic_logo.png"
 // const mainStyle = {
 //     height: '100%',
 //     display: 'grid'
@@ -12,11 +12,11 @@ export default class Footer extends Component {
         super(props);
        
         this.state = {
-            link: atob(document.getElementById("hellyeah").value)+"images/logo.png"
+            link: BgAuth
         }
     }
     componentWillMount() {
-        document.title = `Page Not Found - ${atob(document.getElementById("coolyeah").value)}`;
+        document.title = `Page Not Found - N-POS`;
     }
     render() {
         return (
@@ -25,7 +25,7 @@ export default class Footer extends Component {
             <div className="error-content text-center">
                 {/* Error Thumb */}
                 <div className="error-thumb">
-                <img src={this.state.link} alt="" />
+                <img src={this.state.link} width="150px" alt="" />
                 </div>
                 <h2>Halaman ini tidak tersedia!</h2>
                 <p>Silahkan kembali ke halaman awal untuk melanjutan.</p>

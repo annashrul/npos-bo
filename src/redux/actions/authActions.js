@@ -20,7 +20,9 @@ export const loginUser = (userData) =>
             onClose: () => {}
         })
 
-        axios.post(HEADERS.URL+'auth/bo', userData)
+        axios.post(HEADERS.URL+'auth/bo', userData,{
+            headers:{'tenant':localStorage.getItem('header_tenant')}
+        })
         .then(res=>{
             setTimeout(
             function () {
@@ -65,11 +67,19 @@ export const loginUser = (userData) =>
                      'error'
                  )
             }else{
-                Swal.fire(
-                    err.response.data.msg,
-                    '',
-                    'error'
-                )
+                if (err.response.data.message === 'No access.'){
+                    Swal.fire(
+                        "No access.",
+                        'You cannot access this page. Please call customer service for more info.',
+                        'error'
+                    )
+                }else{
+                    Swal.fire(
+                        err.response.data.msg,
+                        '',
+                        'error'
+                    )
+                }
                 dispatch({type: AUTH.GET_ERRORS, payload: err.response.data.msg})
 
             }

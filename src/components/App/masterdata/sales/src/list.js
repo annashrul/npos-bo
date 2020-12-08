@@ -17,20 +17,32 @@ class ListSales extends Component{
             lokasi_data:[]
         }
     }
-    componentWillReceiveProps(nextProps){
-        this.setState({
-            lokasi_data:nextProps.auth.user.lokasi
-        })
-        localStorage.setItem('location_sales_data', JSON.stringify(nextProps.auth.user.lokasi));
-    }
-    componentDidMount(){
-        if(localStorage.location_sales_data!==undefined&&localStorage.location_sales_data!==''){
+    // componentDidUpdate(prevState){
+    //     console.log("aaaaaaaaaaaaaaa",prevState)
+    //     if(prevState.auth.user.lokasi!==this.props.auth.user.lokasi){
+    //         this.setState({
+    //             lokasi_data:this.props.auth.user.lokasi
+    //         })
+    //         localStorage.setItem('location_sales_data', JSON.stringify(this.props.auth.user.lokasi));
+    //     }
+    // }
+    // componentWillReceiveProps(nextProps){
+    //     console.log(nextProps)
+    //     this.setState({
+    //         lokasi_data:nextProps.auth.user.lokasi
+    //     })
+    //     localStorage.setItem('location_sales_data', JSON.stringify(nextProps.auth.user.lokasi));
+    // }
+    // componentDidMount(){
+        
+    //     console.log("aaaaaaaaaaaaaaa",this.props.auth.user.lokasi)
+    //     if(localStorage.location_sales_data!==undefined&&localStorage.location_sales_data!==''){
             
-            this.setState({
-                lokasi_data:JSON.parse(localStorage.location_sales_data)
-            })
-        }
-    }
+    //         this.setState({
+    //             lokasi_data:this.props.auth.user.lokasi
+    //         })
+    //     }
+    // }
     handlePageChange(pageNumber){
         localStorage.setItem("page_sales",pageNumber);
         this.props.dispatch(FetchSales(pageNumber,''))
@@ -122,7 +134,7 @@ class ListSales extends Component{
                             (
                                 typeof data === 'object' ?
                                     data.map((v,i)=>{
-                                        let getLok = this.state.lokasi_data.filter(item => item.kode === v.lokasi);
+                                        let getLok = this.props.auth.user.lokasi.filter(item => item.kode === v.lokasi);
                                         return(
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}

@@ -116,10 +116,10 @@ export const storeAdjusment = (data,param) => {
                     }
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/adjust3ply/${response.data.result.insertId}`
-                    })
-                    Swal.closeModal();
+                    const win = window.open(`/adjust3ply/${response.data.result.insertId}`, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
                     return false;
                 });
                 dispatch(setLoading(false));
@@ -130,7 +130,7 @@ export const storeAdjusment = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -170,7 +170,7 @@ export const updateAdjustment = (id,data,token) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -208,7 +208,7 @@ export const deleteAdjustment = (id) => {
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
@@ -230,7 +230,7 @@ export const FetchAdjustmentDetail = (page=1,code)=>{
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     

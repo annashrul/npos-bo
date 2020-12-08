@@ -54,7 +54,12 @@ class Header extends Component {
       })
   }
   componentWillMount(){
-    fetch(HEADERS.URL + `site/logo`)
+    fetch(HEADERS.URL + `site/logo`, {
+        method: 'GET',
+        headers: {
+            'tenant': localStorage.getItem('header_tenant'),
+        }
+    })
         .then(res => res.json())
         .then(
             (data) => {

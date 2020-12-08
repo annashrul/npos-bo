@@ -80,7 +80,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db,pe
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                // text: error.response.data.msg,
+                // text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }
@@ -105,7 +105,7 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
             Swal.fire({
                 title: 'failed',
                 type: 'error',
-                // text: error.response.data.msg,
+                // text: error.response === undefined?'error!':error.response.data.msg,
             });
         })
     }
@@ -140,7 +140,7 @@ export const storeProduksi = (data) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -175,7 +175,7 @@ export const storeApproval = (data) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {

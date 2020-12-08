@@ -328,7 +328,8 @@ class Dashboard extends Component {
         socket.emit('get_dashboard', {
             datefrom: start!==null?start:this.state.startDate,
             dateto: end!==null?end:this.state.endDate,
-            location: loc!==null?loc:this.state.location
+            location: loc!==null?loc:this.state.location,
+            tenant: localStorage.getItem('header_tenant')
         })
     }
 

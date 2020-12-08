@@ -124,6 +124,7 @@ const Routes = (
             <PrivateRoute path="/alokasi" exact strict component={Alokasi} />
             <PrivateRoute path="/packing" exact strict component={Packing} />
             <PrivateRoute path="/expedisi" exact strict component={Expedisi} />
+            <PrivateRoute path="/edit/alokasi/:id" exact strict component={Alokasi} />
 
             <PrivateRoute path="/approval_mutasi_jual_beli" exact strict component={ApprovalMutasiJualBeli} />
             <PrivateRoute path="/bayar_mutasi_jual_beli" exact strict component={BayarMutasiJualBeli} />

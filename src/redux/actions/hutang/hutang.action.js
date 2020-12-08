@@ -132,9 +132,13 @@ export const storeHutang = (data,param) => {
                 //     }
                 // });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    param({
-                        pathname: `/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
-                    })
+                    // param({
+                    //     pathname: `/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`,
+                    // })
+                        const win = window.open(`/bayar_hutang3ply/${response.data.result.insertId}|${data.nota_jual}`, '_blank');
+                        if (win != null) {
+                            win.focus();
+                        }
                     Swal.closeModal();
                     return false;
                 });
@@ -155,7 +159,7 @@ export const storeHutang = (data,param) => {
                 Swal.fire({
                     title: 'Failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
 
                 if (error.response) {
@@ -259,7 +263,7 @@ export const DeleteHutangReport = (id)=>{
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
-                    text: error.response.data.msg,
+                    text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
                     
