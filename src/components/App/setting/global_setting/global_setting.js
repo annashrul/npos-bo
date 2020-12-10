@@ -19,7 +19,7 @@ class GlobalSetting extends Component{
     componentWillMount(){
         document.title = `Site Config`;
         let count=1;
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Verify Access',
             input: 'password',
             inputAttributes: {
@@ -28,8 +28,6 @@ class GlobalSetting extends Component{
             showCancelButton: false,
             confirmButtonText: 'Akses',
             showLoaderOnConfirm: true,
-            closeOnClickOutside: false,
-            allowOutsideClick: false,
             preConfirm: (login) => {
                 if(LOC_VERIF.password === btoa(login)){
                     this.props.dispatch(FetchSite());
@@ -59,7 +57,7 @@ class GlobalSetting extends Component{
 
     handleMerge(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Anda Yakin?',
             text: "Lakukan Backup Data Sebelum Melakukan Merging",
             icon: 'warning',

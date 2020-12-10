@@ -429,7 +429,7 @@ class InventoryReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan} startDate={this.state.startDate} endDate={this.state.endDate}/>
+                            <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan} startDate={this.state.startDate} endDate={this.state.endDate} lokasi={this.props.auth.user.lokasi}/>
                             <StockReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>

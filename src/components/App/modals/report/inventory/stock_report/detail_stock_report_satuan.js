@@ -37,17 +37,13 @@ class DetailStockReportSatuan extends Component{
         this.props.dispatch(FetchStockReportDetailTransaction(1, code, this.props.startDate, this.props.endDate, localStorage.getItem("locationDetailTrx")))
     };
     componentDidMount(){
-        this.getLok()
-        .then(data => {
-            
             this.setState({
-                    data_lok:data.result.data
-                }
-            )
-        })
+                data_lok:this.props.lokasi
+            }
+        )
     }
     getLok = async () => {
-        let response = await fetch(HEADERS.URL+"lokasi?perpage=99");
+        let response = await fetch(HEADERS.URL+"lokasi?perpage=99",{method:'post', headers : {tenant:'YmlhbnQ='}});
         let data = await response.json()
         return data;
     };
@@ -150,14 +146,20 @@ class DetailStockReportSatuan extends Component{
                                                 sumTotPrice2=sumTotPrice2+v.total_hrg2;
                                                 sumTotPrice3=sumTotPrice3+v.total_hrg3;
                                                 sumTotPrice4=sumTotPrice4+v.total_hrg4;
+                                                let lok = (this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
+                                                    filteredCat.nama
+                                                ))
+                                                console.log(this.props.lokasi)
+                                                console.log(v.lokasi)
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
                                                             <a className="btn btn-sm btn-primary" href={null} onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
                                                         </td>
-                                                        {this.state.data_lok.filter(cat => cat.kode===v.lokasi).map(filteredCat => (
-                                                        <td>{filteredCat.nama_toko}</td>
-                                                        ))}
+                                                        {/* {(this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
+                                                        <td>{filteredCat.nama}</td>
+                                                        ))} */}
+                                                        <td style={{textAlign:"right"}}>{lok}</td>
                                                         <td style={{textAlign:"right"}}>{toRp(v.harga)}</td>
                                                         <td style={{textAlign:"right"}}>{toRp(v.harga2)}</td>
                                                         <td style={{textAlign:"right"}}>{toRp(v.harga3)}</td>
@@ -207,14 +209,14 @@ class DetailStockReportSatuan extends Component{
                     </ModalBody>
 
                 </WrapperModal>
-                <DetailStockReportTransaction lok={this.state.data_lok} startDate={this.props.startDate} endDate={this.props.endDate} code={localStorage.getItem('codeDetailTrx')} />
+                <DetailStockReportTransaction lok={this.props.lokasi} startDate={this.props.startDate} endDate={this.props.endDate} code={localStorage.getItem('codeDetailTrx')} />
             </div>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    
+    console.log(state)
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

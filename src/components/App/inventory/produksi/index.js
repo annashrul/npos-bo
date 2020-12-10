@@ -271,7 +271,7 @@ class Produksi extends Component{
     }
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -293,7 +293,7 @@ class Produksi extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -389,7 +389,7 @@ class Produksi extends Component{
                             'error'
                         )
                     }else{
-                        Swal.fire({
+                        Swal.fire({allowOutsideClick: false,
                             title: 'Simpan Produksi?',
                             text: "Pastikan data yang anda masukan sudah benar!",
                             icon: 'warning',
@@ -427,7 +427,7 @@ class Produksi extends Component{
 
                                 for(let x=0;x<res.length;x++){
                                     if(parseFloat(res[x].qty_adjust) > parseFloat(res[x].stock)){
-                                        Swal.fire({
+                                        Swal.fire({allowOutsideClick: false,
                                             title: `Anda yakin akan melanjutkan transaksi?`,
                                             text: `ada qty yang melebihi stock`,
                                             icon: 'warning',
@@ -544,7 +544,7 @@ class Produksi extends Component{
 
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Perhatian',
                 icon: 'warning',
                 text: 'Tidak ada data.',

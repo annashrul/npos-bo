@@ -271,7 +271,7 @@ class CetakBarcode extends Component{
     }
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -293,7 +293,7 @@ class CetakBarcode extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -396,7 +396,7 @@ class CetakBarcode extends Component{
     HandleSubmit(e){
         e.preventDefault();
         if(this.state.price_tag){
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Information.',
                     icon: 'info',
                     html: "Data Price Tag Berhasil Diolah!" +
@@ -418,7 +418,7 @@ class CetakBarcode extends Component{
                             data: this.state.databrg
                         }
                     })
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     localStorage.removeItem('lk');
                     destroy('cetak_barcode');
                     return false;
@@ -450,7 +450,7 @@ class CetakBarcode extends Component{
                             'error'
                         )
                     }else{
-                        Swal.fire({
+                        Swal.fire({allowOutsideClick: false,
                             title: 'Simpan Barcode?',
                             text: "Pastikan data yang anda masukan sudah benar!",
                             icon: 'warning',
@@ -483,7 +483,7 @@ class CetakBarcode extends Component{
                                 })
                                 parseData['data'] = detail;
                                 this.downloadTxtFile(barcode);
-                                Swal.fire({
+                                Swal.fire({allowOutsideClick: false,
                                     title: 'Buka batender?',
                                     text: "buka dan import file txt, dan masukan ke aplikasi bartender.",
                                     icon: 'success',

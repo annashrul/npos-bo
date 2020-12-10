@@ -83,14 +83,14 @@ export const createPromo = (data) => {
             .then(function (response) {
                 const data = (response.data)
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                     // window.location.reload();
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -102,7 +102,7 @@ export const createPromo = (data) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -122,14 +122,14 @@ export const updatePromo = (id,data) => {
             .then(function (response) {
                 const data = (response.data)
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                     // window.location.reload();
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -140,7 +140,7 @@ export const updatePromo = (id,data) => {
 
             })
             .catch(function (error) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -160,13 +160,13 @@ export const deletePromo = (id) => {
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -177,7 +177,7 @@ export const deletePromo = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -210,7 +210,7 @@ export const FetchBrg1 = (page=1,perpage=10,where='')=>  {
             
             dispatch(setLoading(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,
@@ -240,7 +240,7 @@ export const FetchBrg2 = (page=1,perpage=10,where='')=>  {
             
             dispatch(setLoading(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,

@@ -68,7 +68,7 @@ export const storeCompany = (data) => {
             .then(function (response) {
                 dispatch(FetchCompany());
                 dispatch(setLoadingPost(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Berhasil merubah data.',
                     type: 'success',
                     text: "Silahkan login kembali untuk melanjutkan",
@@ -80,7 +80,7 @@ export const storeCompany = (data) => {
             })
             .catch(function (error) {
                 dispatch(setLoadingPost(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

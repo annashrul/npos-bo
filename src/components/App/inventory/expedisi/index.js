@@ -177,7 +177,7 @@ class Expedisi extends Component{
                     'error'
                 )
             }else{
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Simpan Expedisi?',
                     text: "Pastikan data yang anda masukan sudah benar!",
                     icon: 'warning',
@@ -225,7 +225,7 @@ class Expedisi extends Component{
     }
     handleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',

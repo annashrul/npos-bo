@@ -72,7 +72,7 @@ class ApproveProduction extends Component{
                 error: err
             })
         }else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Approve?',
                 text: "Pastikan data yang anda masukan sudah benar!",
                 icon: 'warning',

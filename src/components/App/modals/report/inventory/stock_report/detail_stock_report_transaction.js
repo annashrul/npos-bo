@@ -9,6 +9,9 @@ import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/
 class DetailStockReportTransaction extends Component{
     constructor(props){
         super(props);
+        this.state = ({
+            data_lok:[]
+        })
         this.toggle = this.toggle.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
     }
@@ -24,6 +27,14 @@ class DetailStockReportTransaction extends Component{
         this.props.dispatch(ModalType("detailStockReportSatuan"));
 
     };
+
+    
+    componentDidMount(){
+        this.setState({
+            data_lok:this.props.auth.user.lokasi
+        }
+    )
+}
 
     render(){
         const {data,
@@ -43,8 +54,8 @@ class DetailStockReportTransaction extends Component{
                         <tbody>
                         <tr>
                             <td className="text-black">Location</td>
-                            <td className="text-black">: {lok.filter(cat => cat.kode===localStorage.getItem("locationDetailTrx")).map(filteredCat => (
-                                                        (filteredCat.nama_toko)
+                            <td className="text-black">: {(lok===undefined?[]:lok).filter(cat => cat.kode===localStorage.getItem("locationDetailTrx")).map(filteredCat => (
+                                                        (filteredCat.nama)
                                                         ))}</td>
                         </tr>
                         <tr>
@@ -126,6 +137,7 @@ class DetailStockReportTransaction extends Component{
 const mapStateToProps = (state) => {
 
     return {
+        auth: state.auth,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
         stockReportDetailTransaction: state.stockReportReducer.dataDetailTransaksi,

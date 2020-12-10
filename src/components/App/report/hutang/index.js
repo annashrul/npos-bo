@@ -142,7 +142,7 @@ class HutangReport extends Component{
     }
     handleDelete(e,kode){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Peringatan',
             text: "Hapus data ini?",
             type: 'warning',

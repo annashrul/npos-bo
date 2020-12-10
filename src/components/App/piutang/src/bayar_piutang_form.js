@@ -159,7 +159,7 @@ class BayarPiutangForm extends Component{
             })
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Simpan Piutang?',
                 text: "Pastikan data yang anda masukan sudah benar!",
                 icon: 'warning',
@@ -195,7 +195,7 @@ class BayarPiutangForm extends Component{
     }
     handleCancel(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',

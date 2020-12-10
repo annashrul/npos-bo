@@ -93,7 +93,7 @@ export const storeReceive= (data,param) => {
         axios.post(url, data.detail)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
                     html: `Disimpan dengan nota: ${data.result.insertId}` +
@@ -133,7 +133,7 @@ export const storeReceive= (data,param) => {
                             nota: data.result.kode
                         }
                     })
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     return false;
                 });
                 dispatch(setLoading(false));
@@ -141,7 +141,7 @@ export const storeReceive= (data,param) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -160,7 +160,7 @@ export const updateReceive= (data,kode) => {
         axios.put(url, data.detail)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     text: `Disimpan dengan nota: ${data.result.insertId}`,
                     icon: 'info',
@@ -193,7 +193,7 @@ export const updateReceive= (data,kode) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -292,13 +292,13 @@ export const deleteReceiveReport = (id) => {
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -309,7 +309,7 @@ export const deleteReceiveReport = (id) => {
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

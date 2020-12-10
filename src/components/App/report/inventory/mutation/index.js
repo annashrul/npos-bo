@@ -383,7 +383,7 @@ class MutationReport extends Component{
                                                                                 <DropdownMenu>
                                                                                     <DropdownItem onClick={(e)=>this.toggle(e,v.no_faktur_mutasi,'','')}>Detail</DropdownItem>
                                                                                     {v.status==='0'?<Link to={`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`}><DropdownItem>Edit</DropdownItem></Link>:''}
-                                                                                    <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                                    <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`} target="_blank"><DropdownItem>3ply</DropdownItem></Link>
                                                                                     <DropdownItem onClick={(e)=>this.handleRePrint(e,v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>

@@ -31,6 +31,11 @@ export function setCodeBayarMutasiJualBeli(data = []) {
         data
     }
 }
+
+export function setKartuAlokasi(data=[]){
+    return {type:MUTASI_JUAL_BELI.SUCCESS_KARTU,data}
+}
+
 export const FetchCodeBayarMutasiJualBeli = (lokasi) => {
     return (dispatch) => {
         dispatch(setLoadingMutasiJualBeli(true));
@@ -63,7 +68,7 @@ export const FetchDataBayarMutasiJualBeli = (kode) => {
                 // handle error
                 
                 dispatch(setLoadingMutasiJualBeli(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -83,7 +88,7 @@ export const storeMutasiJualBeli = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data);
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     text: `Disimpan dengan nota: ${data.result.insertId}`,
                     icon: 'info',
@@ -99,7 +104,7 @@ export const storeMutasiJualBeli = (data) => {
             })
             .catch(function (error) {
                 dispatch(setLoadingMutasiJualBeli(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -112,3 +117,23 @@ export const storeMutasiJualBeli = (data) => {
     }
 }
 
+
+export const FetchKartuAlokasi = (page=1,where='')=>{
+    return (dispatch) => {
+        dispatch(setLoadingMutasiJualBeli(true));
+        let url = `alokasi_trx/kartu_hutang?page=${page}`;
+        if(where!==''){
+            url+=`${where}`
+        }
+        
+        axios.get(HEADERS.URL+`${url}`)
+            .then(function(response){
+                const data = response.data;
+                
+                dispatch(setKartuAlokasi(data));
+                dispatch(setLoadingMutasiJualBeli(false));
+            }).catch(function(error){
+            
+        })
+    }
+}

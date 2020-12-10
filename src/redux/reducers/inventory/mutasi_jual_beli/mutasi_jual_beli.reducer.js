@@ -8,6 +8,7 @@ const initialState = {
     status:"",
     msg:"",
     data:[],
+    kartu_data:[],
 };
 
 export const mutasiJualBeliReducer = (state = initialState, action) => {
@@ -16,6 +17,10 @@ export const mutasiJualBeliReducer = (state = initialState, action) => {
 
             return Object.assign({}, state, {
                 code: action.data.result
+            });
+        case MUTASI_JUAL_BELI.SUCCESS_KARTU:
+            return Object.assign({}, state, {
+                kartu_data: action.data.result
             });
         case MUTASI_JUAL_BELI.SUCCESS_DATA_BAYAR:
             

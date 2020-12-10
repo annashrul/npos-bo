@@ -174,7 +174,7 @@ export const storeDN = (data,param) => {
         axios.post(url, data.detail)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
                     html: `Disimpan dengan nota: ${data.result.insertId}` +
@@ -214,7 +214,7 @@ export const storeDN = (data,param) => {
                     if (win != null) {
                         win.focus();
                     }
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     return false;
                 });
                 dispatch(setLoading(false));
@@ -222,7 +222,7 @@ export const storeDN = (data,param) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

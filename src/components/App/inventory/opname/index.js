@@ -220,7 +220,7 @@ class TrxOpname extends Component{
     }
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -243,7 +243,7 @@ class TrxOpname extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -323,7 +323,7 @@ class TrxOpname extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Simpan Opname?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
@@ -452,7 +452,7 @@ class TrxOpname extends Component{
 
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Perhatian',
                 icon: 'warning',
                 text: 'Tidak ada data.',

@@ -496,7 +496,7 @@ class Alokasi extends Component{
 
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -560,7 +560,7 @@ class Alokasi extends Component{
 
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -616,7 +616,7 @@ class Alokasi extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: `Simpan ${this.state.jenis_trx}?`,
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
@@ -663,7 +663,7 @@ class Alokasi extends Component{
                             parsedata['lokasi_asal'] = this.state.location_val;
                             parsedata['lokasi_tujuan'] = this.state.location2_val;
                             if(this.props.match.params.id!==undefined&&this.props.match.params.id!==''){
-                                Swal.fire({
+                                Swal.fire({allowOutsideClick: false,
                                     title: `Anda yakin akan memperbarui transaksi?`,
                                     text: err_stock,
                                     icon: 'warning',
@@ -684,7 +684,7 @@ class Alokasi extends Component{
                                     this.props.dispatch(storeAlokasi(parsedata, (arr)=>this.props.history.push(arr)));
                                     this.setState({nota_trx:'-'})
                                 }else{
-                                    Swal.fire({
+                                    Swal.fire({allowOutsideClick: false,
                                         title: `Anda yakin akan melanjutkan transaksi?`,
                                         text: err_stock,
                                         icon: 'warning',
@@ -807,7 +807,7 @@ class Alokasi extends Component{
 
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Perhatian',
                 icon: 'warning',
                 text: 'Tidak ada data.',

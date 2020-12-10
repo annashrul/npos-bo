@@ -75,7 +75,7 @@ class Billing extends Component{
         }
 
         let timerInterval;
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Tunggu Sebentar',
             html: 'data sedang dikirim ke server',
             timer: 1000,

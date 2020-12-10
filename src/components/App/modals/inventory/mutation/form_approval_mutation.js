@@ -135,7 +135,7 @@ class FormApprovalMutation extends Component{
                 this.props.dispatch(saveApprovalMutation(parsedata, (arr)=>this.props.history.push(arr)));
             }
         } else {
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 text: 'ceklis item yang akan di approve!',

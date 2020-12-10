@@ -34,7 +34,7 @@ class FormBackup extends Component{
         let data = this.state.backup;
         let parsedata = {};
         parsedata['table'] = data;
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Tunggu Sebentar',
             html: 'data \''+data+'\' sedang dicadangkan ke server',
             timer: 1000,

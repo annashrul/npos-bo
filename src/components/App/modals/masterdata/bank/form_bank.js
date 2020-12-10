@@ -116,11 +116,11 @@ class FormBank extends Component{
             this.setState({error: err});
         }
         else{
-            if(parseData['foto']!==undefined){
+            // if(parseData['foto']!==undefined){
                 parseData['foto'] = this.state.foto.base64;
-            }else{
-                parseData['foto'] = '-';
-            }
+            // }else{
+            //     parseData['foto'] = '-';
+            // }
             if(Object.keys(this.props.detail).length > 0){
                 if(parseData['foto'] === '-'){delete parseData.foto}
                 this.props.dispatch(updateBank(this.state.id,parseData));

@@ -76,7 +76,7 @@ export const FetchBrgPacking = (kode,db)=>{
             
             dispatch(setLoading(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,
@@ -92,7 +92,7 @@ export const storePacking = (data,param) => {
         axios.post(url, data.detail)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
                     html: `Disimpan dengan nota: ${data.result.insertId}` +
@@ -123,7 +123,7 @@ export const storePacking = (data,param) => {
                         if (win != null) {
                             win.focus();
                         }
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     return false;
                 });
                 dispatch(setLoading(false));
@@ -132,7 +132,7 @@ export const storePacking = (data,param) => {
             .catch(function (error) {
                 
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: "error.response.data.msg===undefined?'something wrong':error.response.data.msg",
@@ -157,7 +157,7 @@ export const FetchBrgPackingTrx = (kode)=>{
 
             }).catch(function(error){
             dispatch(setLoading(false));
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,

@@ -34,6 +34,24 @@ class FormSale extends Component{
         this.handleSetTunai = this.handleSetTunai.bind(this)
     }
 
+    resetState(){
+        this.setState({
+            isTransfer:false,
+            error:{
+                tunai:"",
+                bank:"",
+                tanggal_tempo:"",
+            },
+            gt:0,
+            kode_trx:'',
+            jenis_trx:"Tunai",
+            tunai:0,
+            tanggal_tempo:'',
+            change:0,
+            bank:''
+        })
+    }
+
     componentWillReceiveProps(nextProps){
         
         if(nextProps.master!==undefined&&nextProps.master!==[]){
@@ -155,6 +173,7 @@ class FormSale extends Component{
                 newparse['alamat'] = this.props.lokasi.alamat;
                 newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
                 this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
+                this.resetState()
             }
         }else{ 
             if(parseFloat(this.state.tunai.toString().replace(/,/g,''))<this.state.gt){
@@ -177,6 +196,7 @@ class FormSale extends Component{
                 newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
 
                 this.props.dispatch(storeSale(newparse,(arr)=>this.props.history.push(arr)));
+                this.resetState()
             }
         }
     }

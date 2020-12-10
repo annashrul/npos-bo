@@ -66,7 +66,7 @@ export const clearLogAct = (data) => {
         let url='log/master';
         axios.post(HEADERS.URL + url, data)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
                     text:"Clearing Done!",
@@ -76,7 +76,7 @@ export const clearLogAct = (data) => {
 
             })
             .catch(function (error) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

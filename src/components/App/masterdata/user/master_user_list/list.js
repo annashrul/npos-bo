@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import connect from "react-redux/es/connect/connect";
 import FormUserList from "components/App/modals/masterdata/user_list/form_user_list";
+import FormUserListPrompt from "components/App/modals/masterdata/user_list/form_user_list_prompt";
 
 import profile from "assets/profile.png";
 import Swal from "sweetalert2";
@@ -49,7 +50,7 @@ class ListUserList extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("formUserList"));
+        this.props.dispatch(ModalType(this.props.auth.user.is_public===1?"formUserList":"formUserListPrompt"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchUserLevel(1,'','100'));
         this.props.dispatch(setUserListEdit([]));
@@ -76,7 +77,7 @@ class ListUserList extends Component{
 
     handleDelete(e, id) {
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             type: 'warning',
@@ -172,6 +173,9 @@ class ListUserList extends Component{
                     userLevel={this.props.userLevel}
                     userListEdit={this.props.userListEdit}
                 />
+                <FormUserListPrompt
+                    token={this.props.token}
+                />
                 <DetailUserList userListDetail={this.props.userListDetail} lokasi={this.props.lokasi}/>
             </div>
         );
@@ -180,6 +184,7 @@ class ListUserList extends Component{
 
 const mapStateToProps = (state) => {
     return {
+        auth:state.auth,
         isLoading: state.userListReducer.isLoading,
         isOpen:state.modalReducer,
         lokasi:state.locationReducer.allData,

@@ -101,7 +101,7 @@ export const storeOpname = (data) => {
         const url = HEADERS.URL + `opname`;
         axios.post(url, data)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
                     text:"Transaksi Berhasil",
@@ -115,7 +115,7 @@ export const storeOpname = (data) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -139,7 +139,7 @@ export const storeOpnamePosting = (data,param) => {
         }
         axios.post(HEADERS.URL + url, data)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
                     text:"Transaksi Berhasil",
@@ -151,7 +151,7 @@ export const storeOpnamePosting = (data,param) => {
 
             })
             .catch(function (error) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: 'Gagal posting opname.',
@@ -171,7 +171,7 @@ export const cancelOpname = (data) => {
 
         axios.put(HEADERS.URL + url, data)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
                     text: "Cancel Opname Berhasil",
@@ -183,7 +183,7 @@ export const cancelOpname = (data) => {
 
             })
             .catch(function (error) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: "Gagal Cancel opname",

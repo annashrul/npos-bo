@@ -66,7 +66,7 @@ export const storeClosing = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     text: `Disimpan dengan nota: ${data.result.insertId}`,
                     icon: 'info',
@@ -95,7 +95,7 @@ export const storeClosing = (data) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -115,14 +115,14 @@ export const reClosing = (data) => {
                 const data = (response.data);
                 dispatch(FetchClosing(1,''));
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
 
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -133,7 +133,7 @@ export const reClosing = (data) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

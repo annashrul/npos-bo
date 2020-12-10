@@ -39,13 +39,13 @@ class Upload extends Component{
                     isLoad:param
                 });
             reader.onabort = () =>
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title:'Kesalahan',
                     text:'File Dibatalkan!',
                     icon:'error'
                 });
             reader.onerror = () =>
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title:'Kesalahan',
                     text:'File Error!',
                     icon:'error'
@@ -61,7 +61,7 @@ class Upload extends Component{
                     table:param
                 });
         } else {
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title:'Kesalahan',
                 text:'Format File Tidak Diperbolehkan!',
                 icon:'error'

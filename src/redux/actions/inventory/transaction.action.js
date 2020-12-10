@@ -106,7 +106,7 @@ export const saveApprovalTransaction = (data) => {
                         title: data.msg
                     })
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -116,7 +116,7 @@ export const saveApprovalTransaction = (data) => {
             })
             .catch(function (error) {
                 // dispatch(setLoading(false));
-                // Swal.fire({
+                // Swal.fire({allowOutsideClick: false,
                 //     title: 'failed',
                 //     type: 'error',
                 //     text: error.response === undefined?'error!':error.response.data.msg,

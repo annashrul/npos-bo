@@ -77,7 +77,7 @@ export const FetchBrgProduksiBahan = (page=1,by='barcode',q='',lokasi=null,db,pe
             
             dispatch(setLoading(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,
@@ -102,7 +102,7 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
             
             dispatch(setLoadingbrg(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,
@@ -119,7 +119,7 @@ export const storeProduksi = (data) => {
             .then(function (response) {
                 const data = (response.data)
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     html:`<table class="table table-bordered table-hover"><thead><tr><th>Total Hpp</th><th>Qty Estimasi</th><th>Hpp Peritem</th></tr></thead><tbody><tr><td>${parseInt(data.result.total_hpp,10)}</td><td>${data.result.qty_estimasi}</td><td>${parseInt(data.result.hpp_peritem,10)}</td></tr></tbody></table>`,
                     icon: 'success',
@@ -137,7 +137,7 @@ export const storeProduksi = (data) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -156,7 +156,7 @@ export const storeApproval = (data) => {
         const url = HEADERS.URL + `production/approve`;
         axios.post(url, data)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Berhasil Diapprove!',
                     icon: 'success',
                     showCancelButton: false,
@@ -172,7 +172,7 @@ export const storeApproval = (data) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

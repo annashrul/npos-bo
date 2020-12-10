@@ -733,7 +733,7 @@ class SideMenu extends Component {
     
     handleLogout = (e) => {
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Apakah anda yakin akan logout aplikasi?',
             text: "",
             icon: 'warning',

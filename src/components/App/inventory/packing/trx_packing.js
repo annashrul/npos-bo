@@ -213,7 +213,7 @@ class TrxPacking extends Component{
     }
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -235,7 +235,7 @@ class TrxPacking extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -360,7 +360,7 @@ class TrxPacking extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Simpan Produksi?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',

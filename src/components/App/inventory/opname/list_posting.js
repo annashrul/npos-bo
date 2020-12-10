@@ -27,6 +27,7 @@ class ListPosting extends Component{
         this.handleEvent=this.handleEvent.bind(this);
         this.handleAll = this.handleAll.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
     componentDidMount(){
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
@@ -79,6 +80,13 @@ class ListPosting extends Component{
 
         this.props.dispatch(FetchPostingOpname(1,where));
     }
+    handleSearch(){
+        if(this.state.location===undefined||this.state.location===''){
+            Swal.fire("Info","Pilih lokasi",'info')
+        } else{
+            this.props.dispatch(FetchPostingOpname(1,`&lokasi=${this.state.location}&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`));
+        }
+    }
     HandleChangeLokasi(lk){
         this.setState({
             location: lk.value,
@@ -112,7 +120,7 @@ class ListPosting extends Component{
         e.preventDefault();
         let data={};
         data['kd_trx'] = kd_trx;
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Posting Data Opname?',
             text: "Pastikan data yang anda masukan sudah benar!",
             icon: 'warning',
@@ -132,7 +140,7 @@ class ListPosting extends Component{
         e.preventDefault();
         let data = {};
         data['kd_trx'] = kd_trx;
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Cancel Data Opname?',
             text: "Data yang diubah tidak dapat dikembalikan!",
             icon: 'error',
@@ -159,7 +167,7 @@ class ListPosting extends Component{
         }else{
             parsedata['lokasi']=this.state.location;
         }
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Posting Data Opname?',
             text: "Pastikan data yang anda masukan sudah benar!",
             icon: 'warning',
@@ -234,7 +242,13 @@ class ListPosting extends Component{
                                     <div className="col-md-2">
                                         <div className="form-group">
                                             <label htmlFor=""></label>
-                                            <button style={{marginTop:"28px"}} className="btn btn-primary" onClick={this.handleAll}>Posting All</button>
+                                            <button style={{marginTop:"28px"}} className="btn btn-primary" onClick={this.handleSearch}><i class="fa fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2 offset-md-3">
+                                        <div className="form-group">
+                                            <label htmlFor=""></label>
+                                            <button style={{marginTop:"28px"}} className="btn btn-block btn-info" onClick={this.handleAll}>Posting All</button>
                                         </div>
                                     </div>
                                 </div>

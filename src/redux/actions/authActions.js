@@ -11,7 +11,7 @@ import {HEADERS} from "./_constants";
 export const loginUser = (userData) =>
     async dispatch =>{
         destroy('sess');
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Please Wait.',
             html: 'Checking your account.',
             onBeforeOpen: () => {
@@ -49,6 +49,7 @@ export const loginUser = (userData) =>
                     harga4:res.data.result.nama_harga.harga4,
                     set_harga:res.data.result.set_harga,
                     site_title:res.data.result.title,
+                    use_supplier:res.data.result.use_supplier,
                 })
             
                 // Set token to Auth Header 

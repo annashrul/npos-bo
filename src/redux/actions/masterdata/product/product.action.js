@@ -71,7 +71,7 @@ export const FetchProduct = (page=1,where,param='',db=null)=>{
             }).catch(function(error){
             
             dispatch(setLoading(false));
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 text: error.response === undefined?'error!':error.response.data.msg,
@@ -90,13 +90,13 @@ export const createProduct = (data) => {
                 const data = (response.data);
                 
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         icon: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         icon: 'error',
                         text: data.msg,
@@ -109,7 +109,7 @@ export const createProduct = (data) => {
                 // handle error
                 dispatch(setLoading(false));
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     icon: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -131,13 +131,13 @@ export const deleteProduct = (id) => {
                 const data = (response.data);
                 
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -149,7 +149,7 @@ export const deleteProduct = (id) => {
             .catch(function (error) {
                 dispatch(setLoading(false));
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -190,7 +190,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
             
             dispatch(setLoadingbrg(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,
@@ -231,7 +231,7 @@ export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,
             
             dispatch(setLoadingbrg(false));
 
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 // text: error.response === undefined?'error!':error.response.data.msg,
@@ -253,7 +253,7 @@ export const FetchProductEdit = (kode)=>{
             }).catch(function(error){
             
             dispatch(setLoading(false));
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 text: error.msg,
@@ -273,13 +273,13 @@ export const updateProduct = (id,data) => {
                 const data = (response.data);
                 
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -292,7 +292,7 @@ export const updateProduct = (id,data) => {
                 // handle error
                 dispatch(setLoading(false));
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -317,7 +317,7 @@ export const FetchProductDetail = (kode)=>{
             }).catch(function(error){
             
             dispatch(setLoading(false));
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 text: error.response === undefined?'error!':error.response.data.msg,
@@ -375,7 +375,7 @@ export const FetchProductSale = (page=1,where,param='',db)=>{
             }).catch(function(error){
             
             dispatch(setLoadingBrgSale(false));
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'failed',
                 type: 'error',
                 text: error.response === undefined?'error!':error.response.data.msg,

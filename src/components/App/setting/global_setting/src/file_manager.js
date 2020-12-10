@@ -23,7 +23,7 @@ class FileManager extends Component{
     }
     handleDelete(e,i){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',

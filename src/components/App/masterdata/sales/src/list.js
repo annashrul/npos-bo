@@ -79,7 +79,7 @@ class ListSales extends Component{
     }
     handleDelete(e,id){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             type: 'warning',

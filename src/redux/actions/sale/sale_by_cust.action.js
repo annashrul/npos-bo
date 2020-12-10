@@ -99,7 +99,7 @@ export const storeSaleByCust = (data) => {
         axios.post(url, data)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     text: `Terimakasih Telah Melakukan Transaksi Di Toko Kami`,
                     icon: 'info',
@@ -123,7 +123,7 @@ export const storeSaleByCust = (data) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -212,13 +212,13 @@ export const deleteReportSaleByCust = (kd_trx) => {
                 const data = (response.data);
                 
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -238,7 +238,7 @@ export const deleteReportSaleByCust = (kd_trx) => {
             .catch(function (error) {
                 dispatch(setLoadingReport(false));
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

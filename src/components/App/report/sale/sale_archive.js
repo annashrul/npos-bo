@@ -221,7 +221,7 @@ class SaleArchive extends Component{
     }
     handleDelete(e,id){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             type: 'warning',
@@ -265,8 +265,9 @@ class SaleArchive extends Component{
             // to,
             data
         } = this.props.saleReport;
-        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding} = this.props.totalPenjualan;
+        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit} = this.props.totalPenjualan;
         let omset_per = 0;
+        let profit_per = 0;
         let dis_item_per = 0;
         // let sub_total_per = 0;
         let dis_persen_per = 0;
@@ -412,6 +413,7 @@ class SaleArchive extends Component{
                                                         data.map((v,i)=>{
                                                             
                                                             omset_per+= parseFloat(v.omset);
+                                                            profit_per+= parseFloat(v.profit);
                                                             dis_item_per = dis_item_per + parseInt(v.diskon_item,10);
                                                             dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);
                                                             dis_rp_per = dis_rp_per + parseInt(v.dis_rp,10);
@@ -483,7 +485,9 @@ class SaleArchive extends Component{
                                             <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_rp_per)}</td>
                                             <td style={{textAlign:"right"}}>{dis_persen_per}</td>
-                                            <td colSpan="4"></td>
+                                            <td colSpan="2"></td>
+                                            <td style={{textAlign:"right"}}>{toRp(profit_per)}</td>
+                                            <td colSpan="1"></td>
                                             <td style={{textAlign:"right"}}>{toRp(kas_lain_per)}</td>
                                             <td colSpan="1"></td>
                                             <td style={{textAlign:"right"}}>{toRp(gt_per)}</td>
@@ -500,7 +504,9 @@ class SaleArchive extends Component{
                                             <td style={{textAlign:"right"}}>{toRp(dis_item===null?0:dis_item.toFixed(2))}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_rp===null?0:dis_rp.toFixed(2))}</td>
                                             <td style={{textAlign:"right"}}>{dis_persen===null?0:dis_persen.toFixed(2)}</td>
-                                            <td colSpan="4"></td>
+                                            <td colSpan="2"></td>
+                                            <td style={{textAlign:"right"}}>{profit===undefined&&profit===''?0:toRp(profit)}</td>
+                                            <td colSpan="1"></td>
                                             <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>
                                             <td colSpan="1"></td>
                                             <td style={{textAlign:"right"}}>{toRp(gt)}</td>

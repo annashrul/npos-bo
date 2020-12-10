@@ -77,7 +77,11 @@ class PurchaseOrder extends Component{
             })
         }
         if (localStorage.sp !== undefined && localStorage.sp !== '' && localStorage.lk!==undefined&&localStorage.lk!=='') {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty,5))
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, null, this.autoSetQty,5))
+            } else {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.sp, this.autoSetQty,5))
+            }
 
         }
     }
@@ -136,7 +140,11 @@ class PurchaseOrder extends Component{
         localStorage.setItem('lk', lk.value);
         this.props.dispatch(FetchNota(lk.value))
         if (this.state.supplier!==""){
-            this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, null, this.autoSetQty))
+            } else {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', lk.value, this.state.supplier, this.autoSetQty))
+            }
         }
         destroy(table)
         this.getData();
@@ -153,7 +161,11 @@ class PurchaseOrder extends Component{
         localStorage.setItem('sp', sp.value);
 
         if (this.state.location !== "") {
-            this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty,5))
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, null, this.autoSetQty,5))
+            } else {
+                this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, sp.value, this.autoSetQty,5))
+            }
         }
         destroy(table)
         this.getData();
@@ -281,7 +293,7 @@ class PurchaseOrder extends Component{
     };
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -353,7 +365,7 @@ class PurchaseOrder extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -405,7 +417,7 @@ class PurchaseOrder extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Simpan Purchase Order?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
@@ -525,7 +537,11 @@ class PurchaseOrder extends Component{
         }else{
             localStorage.setItem("anyPurchaseOrder",this.state.search);
             const searchby = parseInt(this.state.searchby,10)===1?'kd_brg':(parseInt(this.state.searchby,10)===2?'barcode':'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty,5));
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, null,this.autoSetQty,5));
+            } else {
+                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty,5));
+            }
             this.setState({search: ''});
 
         }
@@ -567,12 +583,16 @@ class PurchaseOrder extends Component{
             if(parseInt(this.state.searchby,10)===3){
                 searchby='deskripsi';
             }
-            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            if (this.getConfigSupplier() === 0) {
+                this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.lokasi, null, this.autoSetQty,this.state.perpage));
+            } else {
+                this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            }
             this.setState({scrollPage:this.state.scrollPage+5});
 
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Perhatian',
                 icon: 'warning',
                 text: 'Tidak ada data.',
@@ -586,6 +606,12 @@ class PurchaseOrder extends Component{
             divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
         }
     }
+    
+    getConfigSupplier() {
+        const config = this.props.auth.user.use_supplier;
+        return parseInt(config,10);
+    }
+
     render() {
         if(this.state.isScroll===true)this.handleScroll();
 

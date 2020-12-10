@@ -15,7 +15,7 @@ class Card extends Component {
 
     handleReclosing(e, id, tanggal) {
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Reclosing?',
             icon: 'info',
             showCancelButton: true,

@@ -109,7 +109,7 @@ export const storeSale = (data,param) => {
         axios.post(url, data.parsedata)
             .then(function (response) {
                 const data = (response.data)
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
                     html: "Terimakasih Telah Melakukan Transaksi Di Toko Kami" +
@@ -144,7 +144,7 @@ export const storeSale = (data,param) => {
                     if (win != null) {
                         win.focus();
                     }
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     return false;
                 });
 
@@ -153,7 +153,7 @@ export const storeSale = (data,param) => {
             })
             .catch(function (error) {
 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -241,13 +241,13 @@ export const deleteReportSale = (kd_trx) => {
                 const data = (response.data);
                 
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -267,7 +267,7 @@ export const deleteReportSale = (kd_trx) => {
             .catch(function (error) {
                 dispatch(setLoadingReport(false));
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

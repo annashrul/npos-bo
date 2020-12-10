@@ -90,7 +90,7 @@ class Receive extends Component{
             })
     }
     getConfigSupplier() {
-        const config = document.getElementById("supplier").value;
+        const config = this.props.auth.user.use_supplier;
         return parseInt(config,10);
     }
     componentWillMount(){
@@ -510,7 +510,7 @@ class Receive extends Component{
     };
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -580,7 +580,7 @@ class Receive extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -645,7 +645,7 @@ class Receive extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Simpan Receive Pembelian?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
@@ -838,7 +838,7 @@ class Receive extends Component{
         this.setState({scrollPage:this.state.scrollPage+5});
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Perhatian',
                 icon: 'warning',
                 text: 'Tidak ada data.',

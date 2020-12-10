@@ -254,7 +254,7 @@ class ReturTanpaNota extends Component{
     };
     HandleRemove(e, id){
         e.preventDefault()
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -322,7 +322,7 @@ class ReturTanpaNota extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -377,7 +377,7 @@ class ReturTanpaNota extends Component{
                         'error'
                     )
                 }else{
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Simpan Transaksi Retur Tanpa Nota?',
                         text: "Pastikan data yang anda masukan sudah benar!",
                         icon: 'warning',
@@ -522,7 +522,7 @@ class ReturTanpaNota extends Component{
 
         }
         else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Perhatian',
                 icon: 'warning',
                 text: 'Tidak ada data.',

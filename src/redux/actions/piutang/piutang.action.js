@@ -68,7 +68,7 @@ export const FetchPiutang = (nota) => {
                 // handle error
                 
                 dispatch(setLoading(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -109,7 +109,7 @@ export const storePiutang = (data,param) => {
                 
 
                 dispatch(setLoadingPost(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
                     html: `Data telah disimpan!` +
@@ -139,12 +139,12 @@ export const storePiutang = (data,param) => {
                         if (win != null) {
                             win.focus();
                         }
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     return false;
                 });
 
                 // dispatch(setLoadingPost(false));
-                // Swal.fire({
+                // Swal.fire({allowOutsideClick: false,
                 //     title: 'Success',
                 //     type: 'success',
                 //     text:"Transaksi Berhasil",
@@ -156,7 +156,7 @@ export const storePiutang = (data,param) => {
             })
             .catch(function (error) {
                 dispatch(setLoadingPost(false));
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -242,13 +242,13 @@ export const DeletePiutangReport = (id)=>{
             .then(function (response) {
                 const data = (response.data);
                 if (data.status === 'success') {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'Success',
                         type: 'success',
                         text: data.msg,
                     });
                 } else {
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'failed',
                         type: 'error',
                         text: data.msg,
@@ -260,7 +260,7 @@ export const DeletePiutangReport = (id)=>{
             .catch(function (error) {
                 dispatch(setLoading(false));
                 
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,

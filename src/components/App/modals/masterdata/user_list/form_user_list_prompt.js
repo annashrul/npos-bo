@@ -6,7 +6,7 @@ import connect from "react-redux/es/connect/connect";
 import {stringifyFormData} from "helper";
 import {LOC_VERIF} from "redux/actions/_constants";
 import Swal from "sweetalert2";
-class FormLocationPrompt extends Component{
+class FormUserListPrompt extends Component{
     constructor(props){
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -45,7 +45,7 @@ class FormLocationPrompt extends Component{
         let parseData = stringifyFormData(data);
         parseData['password'] = this.state.password;
         if(btoa(parseData['password'])===LOC_VERIF.password){
-            this.props.dispatch(ModalType("formLocation"));
+            this.props.dispatch(ModalType("formUserList"));
         } else {
             Swal.fire({allowOutsideClick: false,
                 title: 'Gagal!',
@@ -60,7 +60,7 @@ class FormLocationPrompt extends Component{
     }
     render(){
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formLocationPrompt"} size="sm">
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formUserListPrompt"} size="sm">
                 <ModalHeader toggle={this.toggle}>Verifikasi.</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
@@ -91,4 +91,4 @@ const mapStateToProps = (state) => {
         type: state.modalTypeReducer,
     }
 }
-export default connect(mapStateToProps)(FormLocationPrompt);
+export default connect(mapStateToProps)(FormUserListPrompt);

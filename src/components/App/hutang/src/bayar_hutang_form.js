@@ -149,7 +149,7 @@ class BayarHutang extends Component{
                 jumlah_bayar:"Jumlah Bayar Tidak Boleh Kosong"
             });
         }else{
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Simpan Hutang?',
                 text: "Pastikan data yang anda masukan sudah benar!",
                 icon: 'warning',
@@ -189,7 +189,7 @@ class BayarHutang extends Component{
     }
     handleCancel(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',

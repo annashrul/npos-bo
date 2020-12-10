@@ -169,7 +169,7 @@ class Sale extends Component{
     }
     HandleReset(e){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -237,7 +237,7 @@ class Sale extends Component{
                 "jenis": this.state.jenis.value
             };
             
-            Swal.fire({
+            Swal.fire({allowOutsideClick: false,
                 title: 'Informasi',
                 text: "Pastikan data telah diisi dengan benar!",
                 icon: 'info',

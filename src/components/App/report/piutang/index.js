@@ -136,7 +136,7 @@ class PiutangReport extends Component{
     }
     handleDelete(e,kode){
         e.preventDefault();
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Peringatan',
             text: "Hapus data ini?",
             type: 'warning',
@@ -516,7 +516,7 @@ class PiutangReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    
+    console.log(state)
     return {
         piutangReport:state.piutangReducer.data_report,
         isLoadingDetail: state.piutangReducer.isLoadingDetail,

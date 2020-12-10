@@ -20,7 +20,7 @@ class Login extends Component {
             },
             logo: '-',
             width:'-',
-            tenant:btoa('demo')
+            tenant:btoa('cff')
         };
     }
     getFaviconEl() {
@@ -28,11 +28,11 @@ class Login extends Component {
     }
 
     getSubdomain(){
-        let host = window.location.host;
-        let parts = host.split(".");
+        // let host = window.location.host;
+        // let parts = host.split(".");
         // console.log(parts);
         // return btoa(parts[0])
-        return btoa('demo')
+        return btoa('cff')
     }
 
     componentDidMount (){
@@ -46,14 +46,14 @@ class Login extends Component {
         fetch(HEADERS.URL + `site/logo`, {
             method: 'GET',
             headers: {
-                'tenant':this.getSubdomain(),
+                'tenant':this.getSubdomain()===null?this.state.tenant:this.getSubdomain(),
               }
         })
         .then(res => res.json())
         .then(
             (data) => {
                 if(data.message!==undefined){
-                    Swal.fire({
+                    Swal.fire({allowOutsideClick: false,
                         title: 'An error occured.',
                         text: `You cannot access N-pos. Call customer service for more info.`,
                         icon: 'info',
@@ -66,7 +66,7 @@ class Login extends Component {
                     if (parseInt(data.result.day,10) <= 7) {
                         if (check) this.checkPembayaran();
                         else{
-                            Swal.fire({
+                            Swal.fire({allowOutsideClick: false,
                                 title: 'Warning!',
                                 html: `<h6>Aplikasi ${parseInt(data.result.day,10)<=0?"telah":"mendekati"} kedaluarsa.</h6><br/>
                                     <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
@@ -92,7 +92,7 @@ class Login extends Component {
                                                 (item) => {
                                                     if(item.status==='success'){
                                                         let timerInterval
-                                                        Swal.fire({
+                                                        Swal.fire({allowOutsideClick: false,
                                                             title: 'Silahkan tunggu konfirmasi dari admin!',
                                                             html: '',
                                                             timer: 10000,
@@ -119,7 +119,7 @@ class Login extends Component {
                         }
                     }else{
                         if (check){
-                            Swal.fire({
+                            Swal.fire({allowOutsideClick: false,
                                 title: 'Pembayaran Berhasil diterima.',
                                 text: `Silahkan login untuk melanjutkan.`,
                                 icon: 'success',
@@ -133,7 +133,7 @@ class Login extends Component {
                     }
                     localStorage.setItem("logos",data.result.logo)
                     localStorage.setItem("site_title", data.result.title)
-                    localStorage.setItem("header_tenant",this.getSubdomain())
+                    localStorage.setItem("header_tenant",this.getSubdomain()===null?this.state.tenant:this.getSubdomain())
                     document.title = `${data.result.title}`;
                     this.setState({
                         logo: data.result.logo,
@@ -153,7 +153,7 @@ class Login extends Component {
     }
 
     checkPembayaran(){
-        Swal.fire({
+        Swal.fire({allowOutsideClick: false,
             title: 'Cek pembayaran.',
             text: `Silahkan tekan tombol cek status pembayaran untuk mengetahui status pembayaran anda.`,
             icon: 'info',

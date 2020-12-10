@@ -104,7 +104,7 @@ export const storeExpedisi = (data,param) => {
         const url = HEADERS.URL + `expedisi`;
         axios.post(url, data.detail)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
                     html: `Data telah disimpan!` +
@@ -135,13 +135,13 @@ export const storeExpedisi = (data,param) => {
                             nota: data.result.kode
                         }
                     })
-                    Swal.closeModal();
+                    //Swal.closeModal();==
                     return false;
                 });
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
@@ -164,7 +164,7 @@ export const storeExpedisiPosting = (data,param) => {
         }
         axios.post(HEADERS.URL + url, data)
             .then(function (response) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
                     text:"Transaksi Berhasil",
@@ -176,7 +176,7 @@ export const storeExpedisiPosting = (data,param) => {
 
             })
             .catch(function (error) {
-                Swal.fire({
+                Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',
                     text: error.response === undefined?'error!':error.response.data.msg,
