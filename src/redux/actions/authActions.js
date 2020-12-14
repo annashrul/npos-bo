@@ -21,7 +21,7 @@ export const loginUser = (userData) =>
         })
 
         axios.post(HEADERS.URL+'auth/bo', userData,{
-            headers:{'tenant':localStorage.getItem('header_tenant')}
+            headers:{'username':localStorage.getItem('uidtnt')}
         })
         .then(res=>{
             setTimeout(
@@ -50,6 +50,7 @@ export const loginUser = (userData) =>
                     set_harga:res.data.result.set_harga,
                     site_title:res.data.result.title,
                     use_supplier:res.data.result.use_supplier,
+                    is_public: res.data.result.is_public,
                 })
             
                 // Set token to Auth Header 

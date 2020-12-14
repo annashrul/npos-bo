@@ -121,9 +121,6 @@ class Alokasi extends Component{
             // this.getProps(this.props)
             destroy(table)
             let param = this.props
-            console.log(prevState)
-            console.log('==============================')
-            console.log(this.props)
             if(param.alokasiDetail!==undefined||param.alokasiDetail.length>0){
                 let val = param.alokasiDetail;
                 this.setState({
@@ -582,7 +579,6 @@ class Alokasi extends Component{
 
     HandleSubmit(e){
         e.preventDefault();
-        console.log("fffffffffffffffff",this.state)
         // validator head form
         let err = this.state.error;
         if (this.state.catatan === "" || this.state.location === "" || this.state.location2 === "") {
@@ -822,7 +818,6 @@ class Alokasi extends Component{
         }
     }
     render() {
-        console.log("this.state.databrg",JSON.stringify(this.state.databrg))
         if(this.state.isScroll===true)this.handleScroll();
         let subtotal = 0;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};

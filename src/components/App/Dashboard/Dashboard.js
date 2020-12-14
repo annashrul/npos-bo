@@ -329,7 +329,7 @@ class Dashboard extends Component {
             datefrom: start!==null?start:this.state.startDate,
             dateto: end!==null?end:this.state.endDate,
             location: loc!==null?loc:this.state.location,
-            tenant: localStorage.getItem('header_tenant')
+            tenant: localStorage.getItem('uidtnt')
         })
     }
 

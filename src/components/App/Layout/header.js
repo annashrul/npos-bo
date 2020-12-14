@@ -57,7 +57,7 @@ class Header extends Component {
     fetch(HEADERS.URL + `site/logo`, {
         method: 'GET',
         headers: {
-            'tenant': localStorage.getItem('header_tenant'),
+            'username': localStorage.getItem('uidtnt'),
         }
     })
         .then(res => res.json())

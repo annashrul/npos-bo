@@ -17,32 +17,6 @@ class ListSales extends Component{
             lokasi_data:[]
         }
     }
-    // componentDidUpdate(prevState){
-    //     console.log("aaaaaaaaaaaaaaa",prevState)
-    //     if(prevState.auth.user.lokasi!==this.props.auth.user.lokasi){
-    //         this.setState({
-    //             lokasi_data:this.props.auth.user.lokasi
-    //         })
-    //         localStorage.setItem('location_sales_data', JSON.stringify(this.props.auth.user.lokasi));
-    //     }
-    // }
-    // componentWillReceiveProps(nextProps){
-    //     console.log(nextProps)
-    //     this.setState({
-    //         lokasi_data:nextProps.auth.user.lokasi
-    //     })
-    //     localStorage.setItem('location_sales_data', JSON.stringify(nextProps.auth.user.lokasi));
-    // }
-    // componentDidMount(){
-        
-    //     console.log("aaaaaaaaaaaaaaa",this.props.auth.user.lokasi)
-    //     if(localStorage.location_sales_data!==undefined&&localStorage.location_sales_data!==''){
-            
-    //         this.setState({
-    //             lokasi_data:this.props.auth.user.lokasi
-    //         })
-    //     }
-    // }
     handlePageChange(pageNumber){
         localStorage.setItem("page_sales",pageNumber);
         this.props.dispatch(FetchSales(pageNumber,''))

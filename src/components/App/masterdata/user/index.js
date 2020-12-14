@@ -66,7 +66,10 @@ class User extends Component{
                             <div className="card-body mb-1">
                                 <TabList>
                                     <Tab label="Core Courses" onClick={() =>this.handleSelect(0)}>User List</Tab>
-                                    <Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>User Level</Tab>
+                                    {
+                                        this.props.auth.is_public !== 1?<Tab label="Core Courses" onClick={() =>this.handleSelect(1)}>User Level</Tab>:''
+                                    }
+                                    
                                 </TabList>
                             </div>
                             <hr/>
@@ -112,7 +115,7 @@ const mapStateToProps = (state) => {
         isOpen:state.modalReducer,
         isLoading: state.userListReducer.isLoading,
         isLoading1: state.userLevelReducer.isLoading,
-        auth: state.auth
+        auth: state.auth.user
 
     }
 }

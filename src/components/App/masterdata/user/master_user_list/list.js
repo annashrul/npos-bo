@@ -50,7 +50,7 @@ class ListUserList extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType(this.props.auth.user.is_public===1?"formUserList":"formUserListPrompt"));
+        this.props.dispatch(ModalType(this.props.auth.user.is_public === 1 ? "formUserListPrompt" : "formUserList"));
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchUserLevel(1,'','100'));
         this.props.dispatch(setUserListEdit([]));
@@ -145,7 +145,12 @@ class ListUserList extends Component{
                                                             <DropdownMenu>
                                                                 <DropdownItem onClick={(e)=>this.toggleEdit(e,v.id)}><i className="ti-pencil-alt"></i> Edit</DropdownItem>
                                                                 <DropdownItem onClick={(e)=>this.handleDetail(e,v.id)}><i className="ti-eye"></i> Detail</DropdownItem>
-                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                                {
+                                                                this.props.auth.user.is_public !== 1 ? (
+                                                                    <DropdownItem onClick={(e)=>this.handleDelete(e,v.id)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                                ):''
+                                                                }
+                                                                
                                                             </DropdownMenu>
                                                             </UncontrolledButtonDropdown>
                                                     </div>
