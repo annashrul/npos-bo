@@ -60,6 +60,11 @@ export const DBConfig = {
                 { name: 'diskon2', keypath: 'diskon2', options: { unique: false } },
                 { name: 'diskon3', keypath: 'diskon3', options: { unique: false } },
                 { name: 'diskon4', keypath: 'diskon4', options: { unique: false } },
+                { name: 'harga', keypath: 'harga', options: { unique: false } },
+                { name: 'harga2', keypath: 'harga2', options: { unique: false } },
+                { name: 'harga3', keypath: 'harga3', options: { unique: false } },
+                { name: 'harga4', keypath: 'harga4', options: { unique: false } },
+
                 { name: 'stock', keypath: 'stock', options: { unique: false } },
                 { name: 'ppn', keypath: 'ppn', options: { unique: false } },
                 { name: 'harga_beli', keypath: 'harga_beli', options: { unique: false } },

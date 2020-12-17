@@ -2,54 +2,96 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/debug.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/Layout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Layout/sideMenu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/Routes/Routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/adjusment/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/alokasi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/delivery_note/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/opname/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/opname/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/opname/list_posting.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/opname/list_posting.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/inventory/produksi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/promo/form_promo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_by_product_report.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_by_product_report.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_report.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/report/sale/detail_sale_report.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/modals/sale/form_sale.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/modals/sale/form_sale.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/purchaseorder/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/purchaseorder/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/purchase/retur/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/purchase/retur/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/adjustment/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/alokasi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/dn/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/dn/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/expedisi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/expedisi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/mutation/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/mutation/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/opname/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/opname/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/packing/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/packing/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/receive/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/stock/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/inventory/transaction/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/inventory/transaction/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/laba_rugi/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/laba_rugi/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/log/log_act.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/log/log_act.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_cust_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_cust_archive.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_product_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_by_product_archive.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/report/sale/sale_retur_archive.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/report/sale/sale_retur_archive.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/App/sale/product_sale/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/sale/product_sale/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/mutation.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/inventory/opname.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/inventory/opname.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/department/sub_department.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/department/sub_department.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/product/product.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/masterdata/supplier/supplier.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/masterdata/supplier/supplier.action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/piutang/piutang.action.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/piutang/piutang.action.js" afterDir="false" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DBConfig.js" afterPath="$PROJECT_DIR$/src/DBConfig.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/Auth/Login/Login.js" afterPath="$PROJECT_DIR$/src/components/App/Auth/Login/Login.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" afterPath="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/redux/actions/_constants.js" afterPath="$PROJECT_DIR$/src/redux/actions/_constants.js" />
     </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="DBConfig.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/DBConfig.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="353">
+              <caret line="62" column="48" lean-forward="true" selection-start-line="62" selection-start-column="48" selection-end-line="62" selection-end-column="48" />
+              <folding>
+                <element signature="e#211#1762#0" expanded="false" />
+                <element signature="e#1782#2916#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/App/purchase/receive/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="307">
+              <caret line="786" column="29" lean-forward="false" selection-start-line="782" selection-start-column="28" selection-end-line="786" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
+                <element signature="n#!!block;n#fetchDataEdit#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#getConfigSupplier#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#componentWillMount#0;n#Receive#0" expanded="false" />
+                <element signature="e#3890#5996#0" expanded="false" />
+                <element signature="e#4034#4831#0" expanded="false" />
+                <element signature="e#4918#5048#0" expanded="false" />
+                <element signature="e#5052#5193#0" expanded="false" />
+                <element signature="n#!!block;n#componentDidMount#0;n#Receive#0" expanded="false" />
+                <element signature="e#6206#6306#0" expanded="false" />
+                <element signature="e#6393#6635#0" expanded="false" />
+                <element signature="e#6710#6930#0" expanded="false" />
+                <element signature="e#7001#7157#0" expanded="false" />
+                <element signature="e#7227#7323#0" expanded="false" />
+                <element signature="e#7452#7765#0" expanded="false" />
+                <element signature="e#7819#11220#0" expanded="false" />
+                <element signature="e#8031#8521#0" expanded="false" />
+                <element signature="n#!!block;n#componentWillUnmount#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeNota#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeLokasi#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeSupplier#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleCommonInputChange#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeInput#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleChangeInputValue#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#setTanggal#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleRemove#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleAddBrg#0;n#Receive#0" expanded="false" />
+                <element signature="e#20202#20255#0" expanded="false" />
+                <element signature="n#!!block;n#HandleReset#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#autoSetQty#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#HandleSearch#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#handleLoadMore#0;n#Receive#0" expanded="false" />
+                <element signature="n#!!block;n#handleScroll#0;n#Receive#0" expanded="false" />
+                <element signature="e#35457#35675#0" expanded="false" />
+                <element signature="e#50299#65781#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="form_product.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="2293" column="101" lean-forward="true" selection-start-line="2277" selection-start-column="100" selection-end-line="2293" selection-end-column="101" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -58,8 +100,24 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>receive</find>
+      <find>console</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/components/App/Auth/Login/Login.js" />
+        <option value="$PROJECT_DIR$/src/redux/actions/_constants.js" />
+        <option value="$PROJECT_DIR$/src/DBConfig.js" />
+        <option value="$PROJECT_DIR$/src/components/App/purchase/receive/index.js" />
+      </list>
+    </option>
   </component>
   <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
@@ -76,6 +134,11 @@
     <packageJsonPaths>
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-7" />
+    <option name="width" value="697" />
+    <option name="height" value="735" />
   </component>
   <component name="ProjectId" id="1l5WcRhgkxCikkNK2hMyTM9w9K9" />
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -103,6 +166,81 @@
       </profile-state>
     </entry>
   </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="App" type="462c0819:PsiDirectoryNode" />
+              <item name="modals" type="462c0819:PsiDirectoryNode" />
+              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
+              <item name="product" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
   <component name="ProjectViewState">
     <option name="compactDirectories" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -114,7 +252,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/NETINDO/web/npos_bo_react/src/components/App/sale/product_sale/index.js" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/App/modals/inventory/alokasi" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -127,8 +265,23 @@
       <recent name="C:\xampp\htdocs\npos_bo_react\src\components\App\modals\inventory\alokasi" />
     </key>
   </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
   <component name="RunManager">
     <configuration name="sale_archive.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-node="project" path-to-js-file="sale_archive.js" working-dir="$PROJECT_DIR$/src/components/App/report/sale" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -203,14 +356,41 @@
       <workItem from="1606361559443" duration="303000" />
       <workItem from="1606367598055" duration="1643000" />
       <workItem from="1606812510260" duration="524000" />
+      <workItem from="1608186390140" duration="5507000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="840452000" />
+    <option name="totallyTimeSpent" value="845959000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.72039473" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36677632" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
   </component>
   <component name="WindowStateProjectService">
     <state x="391" y="92" key="#Notifications" timestamp="1606889144265">
@@ -237,5 +417,94 @@
       <screen x="0" y="0" width="1600" height="870" />
     </state>
     <state x="486" y="151" width="627" height="568" key="find.popup/0.0.1600.870@0.0.1600.870" timestamp="1606900546821" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/redux/actions/_constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="16" column="34" lean-forward="false" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/Auth/Login/Login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="33" column="27" lean-forward="true" selection-start-line="33" selection-start-column="27" selection-end-line="33" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#41#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DBConfig.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="62" column="48" lean-forward="true" selection-start-line="62" selection-start-column="48" selection-end-line="62" selection-end-column="48" />
+          <folding>
+            <element signature="e#211#1762#0" expanded="false" />
+            <element signature="e#1782#2916#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="2293" column="101" lean-forward="true" selection-start-line="2277" selection-start-column="100" selection-end-line="2293" selection-end-column="101" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App/purchase/receive/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="786" column="29" lean-forward="false" selection-start-line="782" selection-start-column="28" selection-end-line="786" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+            <element signature="n#!!block;n#fetchDataEdit#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#getConfigSupplier#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#componentWillMount#0;n#Receive#0" expanded="false" />
+            <element signature="e#3890#5996#0" expanded="false" />
+            <element signature="e#4034#4831#0" expanded="false" />
+            <element signature="e#4918#5048#0" expanded="false" />
+            <element signature="e#5052#5193#0" expanded="false" />
+            <element signature="n#!!block;n#componentDidMount#0;n#Receive#0" expanded="false" />
+            <element signature="e#6206#6306#0" expanded="false" />
+            <element signature="e#6393#6635#0" expanded="false" />
+            <element signature="e#6710#6930#0" expanded="false" />
+            <element signature="e#7001#7157#0" expanded="false" />
+            <element signature="e#7227#7323#0" expanded="false" />
+            <element signature="e#7452#7765#0" expanded="false" />
+            <element signature="e#7819#11220#0" expanded="false" />
+            <element signature="e#8031#8521#0" expanded="false" />
+            <element signature="n#!!block;n#componentWillUnmount#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeNota#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeLokasi#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeSupplier#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleCommonInputChange#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeInput#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleChangeInputValue#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#setTanggal#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleRemove#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleAddBrg#0;n#Receive#0" expanded="false" />
+            <element signature="e#20202#20255#0" expanded="false" />
+            <element signature="n#!!block;n#HandleReset#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#autoSetQty#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#HandleSearch#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#handleLoadMore#0;n#Receive#0" expanded="false" />
+            <element signature="n#!!block;n#handleScroll#0;n#Receive#0" expanded="false" />
+            <element signature="e#35457#35675#0" expanded="false" />
+            <element signature="e#50299#65781#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
