@@ -516,7 +516,6 @@ class PiutangReport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         piutangReport:state.piutangReducer.data_report,
         isLoadingDetail: state.piutangReducer.isLoadingDetail,

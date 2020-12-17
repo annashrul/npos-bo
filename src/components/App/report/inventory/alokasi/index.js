@@ -86,7 +86,6 @@ class AlokasiReport extends Component{
     };
     handleEdit(e,data){
         e.preventDefault();
-        console.log(data)
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formEditAlokasi"));

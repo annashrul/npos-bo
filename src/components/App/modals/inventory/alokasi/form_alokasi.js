@@ -734,7 +734,6 @@ class FormAlokasi extends Component{
     render(){
         
 //        const data = this.props.alokasiForm.detail===undefined?[]:this.props.alokasiForm.detail.data;
-//        console.log(data)
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
             <div>

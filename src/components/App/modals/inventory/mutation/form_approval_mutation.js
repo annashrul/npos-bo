@@ -76,7 +76,6 @@ class FormApprovalMutation extends Component{
     }
     handleCheck(event,i){
             // event.preventDefault()
-            console.log("cccccccccccccc",event.target.checked)
             let dataApproval = [...this.state.dataApproval];
             if(event.target.name==='checked_all'){
                 for(let j=0;j<this.state.dataApproval.length;j++){
@@ -142,7 +141,6 @@ class FormApprovalMutation extends Component{
             });
         }
         this.setState({});
-        console.log("hhhhhhhhhhhhhh",parsedata)
     }
     toggle(e){
         e.preventDefault();

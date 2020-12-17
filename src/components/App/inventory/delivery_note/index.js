@@ -662,7 +662,6 @@ class DeliveryNote extends Component{
     }
 
     handleLoad(e){
-        console.log(e.height);
     }
 
     render() {

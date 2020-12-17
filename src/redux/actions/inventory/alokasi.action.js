@@ -183,7 +183,6 @@ export const storeAlokasi = (data,param) => {
     }
 }
 export const updateAlokasi = (data,param) => {
-    console.log(data)
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `alokasi/${data['nota']}`;

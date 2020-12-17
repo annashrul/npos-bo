@@ -149,8 +149,6 @@ class DetailStockReportSatuan extends Component{
                                                 let lok = (this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
                                                     filteredCat.nama
                                                 ))
-                                                console.log(this.props.lokasi)
-                                                console.log(v.lokasi)
                                                 return (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
@@ -216,7 +214,6 @@ class DetailStockReportSatuan extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,

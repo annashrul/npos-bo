@@ -349,8 +349,6 @@ class TrxAdjustment extends Component{
                 })
                 if (column === 'qty_adjust'){
                     let saldo_stock = res.stock;
-                    console.log(val);
-                    console.log(val);
                     if (res.status === 'kurang') {
                         saldo_stock = parseInt(res.stock, 10) - parseInt(val, 10);
                     }
