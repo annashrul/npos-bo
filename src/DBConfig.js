@@ -126,7 +126,8 @@ export const DBConfig = {
                 { name: 'hrg_beli', keypath: 'hrg_beli', options: { unique: false } },
                 { name: 'kategori', keypath: 'kategori', options: { unique: false } },
                 { name: 'services', keypath: 'services', options: { unique: false } },
-                { name: 'tambahan', keypath: 'tambahan', options: { unique: false } }
+                { name: 'tambahan', keypath: 'tambahan', options: { unique: false } },
+                { name: 'isOpenPrice', keypath: 'isOpenPrice', options: { unique: false } }
 
             ]
         },

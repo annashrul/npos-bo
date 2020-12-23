@@ -35,6 +35,7 @@ class Sale extends Component{
         super(props);
 
         this.state = {
+            isOpenPrice:false,
             addingItemName: "",
             databrg: [],
             brgval:[],
@@ -78,6 +79,7 @@ class Sale extends Component{
         this.HandleReset = this.HandleReset.bind(this);
         this.HandleSearch = this.HandleSearch.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
+        this.handleChecked = this.handleChecked.bind(this);
     }
 
     componentDidMount(){
@@ -258,7 +260,6 @@ class Sale extends Component{
                     title: `not found.`
                 })
             } else {
-
                 let final= {}
                 Object.keys(res).forEach((k, i) => {
                     if(k!==column){
@@ -280,10 +281,11 @@ class Sale extends Component{
     HandleChangeInputValue(e,i,barcode=null,datas=[]) {
         const column = e.target.name;
         const val = e.target.value;
-        
-        let brgval = [...this.state.brgval];
-        brgval[i] = {...brgval[i], [column]: val};
-        this.setState({ brgval });
+        if(column==='harga'||column==='qty'||column==='diskon_persen'||column==='ppn'){
+            let brgval = [...this.state.brgval];
+            brgval[i] = {...brgval[i], [column]: val};
+            this.setState({ brgval });
+        }
 
         const cek = cekData('barcode', barcode, table);
         if(column === 'satuan'){
@@ -294,14 +296,6 @@ class Sale extends Component{
                         title: `not found.`
                     })
                 } else {
-                    // let newbrg=[];
-                    // datas.map(i=>{
-                    //     if(i.satuan===val){
-                    //         newbrg=i;
-                    //     }
-                    //     return true;
-                    // })
-
                     let final= {
                         id: res.id,
                         qty: 0,
@@ -384,7 +378,8 @@ class Sale extends Component{
             hrg_beli:item.hrg_beli,
             kategori:item.kategori,
             services:item.services,
-            tambahan: item.tambahan
+            tambahan: item.tambahan,
+            isOpenPrice: item.isOpenPrice,
         };
         const cek = cekData('barcode',item.barcode,table);
         cek.then(res => {
@@ -556,6 +551,7 @@ class Sale extends Component{
                         "status": "LUNAS",
                         "optional_note":this.state.catatan
                     };
+                    console.log(detail);
                     this.setState({
                         master:master,
                         detail:detail
@@ -568,10 +564,8 @@ class Sale extends Component{
     }
     autoSetQty(kode,data){
         const cek = cekData('barcode', kode, table);
-        
         return cek.then(res => {
             if (res === undefined) {
-                
                 store(table, {
                     kd_brg: data[0].kd_brg,
                     nm_brg: data[0].nm_brg,
@@ -590,7 +584,8 @@ class Sale extends Component{
                     hrg_beli:data[0].hrg_beli,
                     kategori:data[0].kategori,
                     services:data[0].service,
-                    tambahan: data[0].tambahan
+                    tambahan: data[0].tambahan,
+                    isOpenPrice:false,
                 })
             } else {
                 update(table, {
@@ -636,6 +631,7 @@ class Sale extends Component{
             let brg = []
             res.map((i) => {
                 brg.push({
+                    isOpenPrice:i.isOpenPrice,
                     harga: i.harga,
                     harga2: i.harga2,
                     harga3: i.harga3,
@@ -679,6 +675,50 @@ class Sale extends Component{
         divToScrollTo = document.getElementById(`item${this.state.scrollPage}`);
         if (divToScrollTo) {
             divToScrollTo.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'end' })
+        }
+    }
+    handleChecked(event,i,barcode){
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        // this.setState({
+        //     [name]: value,
+        // });
+        let brgval = [...this.state.brgval];
+        brgval[i] = {...brgval[i], [name]: value};
+        this.setState({ brgval });
+        const cek = cekData('barcode', barcode, table);
+        if(name === 'isOpenPrice'){
+            cek.then(res => {
+                if (res === undefined) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: `not found.`
+                    })
+                } else {
+                    let final= {
+                        id: res.id,
+                        qty: 0,
+                        kd_brg: res.kd_brg,
+                        nm_brg: res.nm_brg,
+                        barcode: res.barcode,
+                        satuan: res.satuan,
+                        harga: res.harga,
+                        stock: res.stock,
+                        diskon_persen: res.diskon_persen,
+                        diskon_nominal: res.diskon_nominal,
+                        ppn: res.ppn,
+                        tambahan: res.tambahan,
+                        isOpenPrice:value
+                    }
+                    update(table, final);
+                    Toast.fire({
+                        icon: 'success',
+                        title: `${name} has been changed.`
+                    })
+                }
+                this.getData();
+            })
         }
     }
     render() {
@@ -765,7 +805,8 @@ class Sale extends Component{
                                                                                     hrg_beli:i.hrg_beli,
                                                                                     kategori:i.kategori,
                                                                                     services:i.service,
-                                                                                    tambahan: i.tambahan
+                                                                                    tambahan: i.tambahan,
+                                                                                    isOpenPrice: false,
                                                                                 },inx)}>
                                                                                 {i.gambar.replace(" ","") === `${HEADERS.URL}images/barang/default.png` ? (<span class="circle">{inx + 1}</span>) : (<img src={i.gambar} alt="avatar"/>)}
                                                                                 <div className="about">
@@ -910,20 +951,44 @@ class Sale extends Component{
                                                             <td style={leftStyle}>{item.barcode}</td>
                                                             <td style={leftStyle}>{item.satuan}</td>
                                                             <td style={centerStyle}>
-                                                                <select className="form-control" name='harga' style={{width:"100px"}}
-                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}>
-                                                                    <option value={this.state.brgval[index].harga} style={{display:this.state.brgval[index].harga===''||this.state.brgval[index].harga==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga)}</option>
-                                                                    <option value={this.state.brgval[index].harga2} style={{display:this.state.brgval[index].harga2===''||this.state.brgval[index].harga2==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga2)}</option>
-                                                                    <option value={this.state.brgval[index].harga3} style={{display:this.state.brgval[index].harga3===''||this.state.brgval[index].harga3==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga3)}</option>
-                                                                    <option value={this.state.brgval[index].harga4} style={{display:this.state.brgval[index].harga4===''||this.state.brgval[index].harga4==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga4)}</option>
-                                                                </select>
+                                                                <div className="row">
+                                                                    <div className="col-md-4">
+                                                                        <input type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index,item.barcode)}/>
+                                                                    </div>
+                                                                    <div className="col-md-8">
+                                                                        <small>open price</small>
+                                                                    </div>
+
+                                                                </div>
+                                                                {/*<label>Open Price <input style={{float:"right!important"}} type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index)}/></label>*/}
+
+
+
+                                                                {
+
+                                                                    this.state.brgval[index].isOpenPrice?(
+                                                                        <input type="text" className={"form-control"} value={toCurrency(this.state.brgval[index].harga)} style={{width:"100px"}} name="harga"
+                                                                               onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                               onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                        />
+                                                                    ):(
+                                                                        <select className="form-control" name='harga' style={{width:"100px"}}
+                                                                                onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                                onChange={(e) => this.HandleChangeInputValue(e, index)}>
+                                                                            <option value={this.state.brgval[index].harga} style={{display:this.state.brgval[index].harga===''||this.state.brgval[index].harga==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga)}</option>
+                                                                            <option value={this.state.brgval[index].harga2} style={{display:this.state.brgval[index].harga2===''||this.state.brgval[index].harga2==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga2)}</option>
+                                                                            <option value={this.state.brgval[index].harga3} style={{display:this.state.brgval[index].harga3===''||this.state.brgval[index].harga3==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga3)}</option>
+                                                                            <option value={this.state.brgval[index].harga4} style={{display:this.state.brgval[index].harga4===''||this.state.brgval[index].harga4==='0'?'none':''}}>{toCurrency(this.state.brgval[index].harga4)}</option>
+                                                                        </select>
+                                                                    )
+                                                                }
+
                                                                 {/* <input type='text' className="form-control" name='harga'
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={toCurrency(this.state.brgval[index].harga)}/> */}
                                                             </td>
-                                                            <td style={centerStyle}><input type='text' name='diskon_persen' style={{width:"100px",textAlign:"right"}} className="form-control"
+                                                            <td style={centerStyle}><input type='number' name='diskon_persen' style={{width:"100px",textAlign:"right"}} className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_persen}/>
@@ -934,13 +999,13 @@ class Sale extends Component{
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].diskon_nominal}/>
                                                             </td> */}
-                                                            <td style={centerStyle}><input type='text' name='ppn' style={{width:"100px",textAlign:"right"}}  className="form-control"
+                                                            <td style={centerStyle}><input type='number' name='ppn' style={{width:"100px",textAlign:"right"}}  className="form-control"
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
                                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                        value={this.state.brgval[index].ppn}/>
                                                             </td>
                                                             <td style={centerStyle}>
-                                                                <input readOnly={true} type="text" value={item.stock} className="form-control" style={{width:"100px",textAlign:"right"}}/>
+                                                                <input readOnly={true} type="number" value={item.stock} className="form-control" style={{width:"100px",textAlign:"right"}}/>
                                                             </td>
                                                             <td style={centerStyle}><input type='text' name='qty' style={{width:"100px",textAlign:"right"}}
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
