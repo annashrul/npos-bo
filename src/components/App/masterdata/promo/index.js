@@ -170,11 +170,11 @@ class Promo extends Component{
                                                                                     <div className="dashboard-dropdown">
                                                                                         <UncontrolledButtonDropdown>
                                                                                                 <DropdownToggle caret style={{background:'transparent',border:'none'}}>
-                                                                                                    <i className="zmdi zmdi-more-vert"></i>
+                                                                                                    <i className="zmdi zmdi-more-vert"/>
                                                                                                 </DropdownToggle>
                                                                                             <DropdownMenu>
                                                                                                 <DropdownItem onClick={(e)=>this.handleEdit(e,v.id_promo)}><i className="ti-pencil-alt"/> Edit</DropdownItem>
-                                                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"></i> Delete</DropdownItem>
+                                                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.id_promo)}><i className="ti-trash"/> Delete</DropdownItem>
                                                                                             </DropdownMenu>
                                                                                         </UncontrolledButtonDropdown>
                                                                                     </div>
@@ -187,31 +187,31 @@ class Promo extends Component{
                                                                                     <table className="table" style={{padding:0,border:"none"}}>
                                                                                         <thead>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Kategori</th>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Promo {kat[0].title}</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Kategori </td>
+                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> Promo {kat[0].title}</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Lokasi</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Lokasi</td>
                                                                                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {arrLok.length >= 3 ? `${getVal1}, ${getVal2}, ${getVal3} ...` : arrLok.length >= 2 ? `${getVal1} & ${getVal2}` : this.state.lokasi_data===undefined?'':val[0]===undefined?'':val[0].nama_toko}</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Mulai</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Tgl Mulai</td>
                                                                                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.daritgl).format('YYYY-MM-DD HH:mm:ss')}</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Tgl Selesai</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Tgl Selesai</td>
                                                                                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==="1"?'-':moment(v.sampaitgl).format('YYYY-MM-DD HH:mm:ss')}</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Member</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Member</td>
                                                                                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.member==='0'?'-':v.member}</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Periode</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Periode</td>
                                                                                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.periode==='1'?'Tanpa Periode':'-'}</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}>Catatan</th>
+                                                                                            <td style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:5,borderTop:"none"}}>Catatan</td>
                                                                                             <th style={{paddingTop:"3px",paddingBottom:"3px",paddingLeft:0,paddingRight:0,borderTop:"none"}}> {v.keterangan.length>20?`${v.keterangan.substring(0,20)} ...` : v.keterangan}</th>
                                                                                         </tr>
                                                                                         </thead>
