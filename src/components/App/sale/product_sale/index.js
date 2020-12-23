@@ -951,15 +951,7 @@ class Sale extends Component{
                                                             <td style={leftStyle}>{item.barcode}</td>
                                                             <td style={leftStyle}>{item.satuan}</td>
                                                             <td style={centerStyle}>
-                                                                <div className="row">
-                                                                    <div className="col-md-4">
-                                                                        <input type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index,item.barcode)}/>
-                                                                    </div>
-                                                                    <div className="col-md-8">
-                                                                        <small>open price</small>
-                                                                    </div>
 
-                                                                </div>
                                                                 {/*<label>Open Price <input style={{float:"right!important"}} type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index)}/></label>*/}
 
 
@@ -982,6 +974,15 @@ class Sale extends Component{
                                                                         </select>
                                                                     )
                                                                 }
+                                                                <div className="row" style={{marginTop:"5px"}}>
+                                                                    <div className="col-md-3" style={{paddingRight:"0px"}}>
+                                                                        <input type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index,item.barcode)}/>
+                                                                    </div>
+                                                                    <div className="col-md-9" style={{marginTop:"-3px",textAlign:"left",paddingLeft:"0px"}}>
+                                                                        <small>open price</small>
+                                                                    </div>
+
+                                                                </div>
 
                                                                 {/* <input type='text' className="form-control" name='harga'
                                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
