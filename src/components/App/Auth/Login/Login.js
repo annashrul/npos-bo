@@ -31,7 +31,7 @@ class Login extends Component {
         // let host = window.location.host;
         // let parts = host.split(".");
         // return btoa(parts[0])
-        return btoa('demo')
+        return btoa('demo');
     }
 
     componentDidMount (){
@@ -46,7 +46,7 @@ class Login extends Component {
             method: 'GET',
             headers: {
                 'username':this.getSubdomain()===null?this.state.tenant:this.getSubdomain(),
-              }
+            }
         })
         .then(res => res.json())
         .then(

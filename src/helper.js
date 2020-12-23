@@ -115,12 +115,11 @@ export const toMoney = (angka) => {
 // }
 export const toCurrency = (angka) => {
     let numbers=0;
+    if (parseFloat(angka)===0) return 0;
     if(parseFloat(angka)<0){
         numbers = angka.toString().replace('-', '');
-        
     }else{
         numbers=angka;
-        
     }
     var number_string = (numbers===''||numbers===undefined)? String(0.0) : numbers.toString().replace(/,|\D/g,''),
         split = number_string.split('.'),
@@ -140,6 +139,7 @@ export const toCurrency = (angka) => {
 }
 export const rmComma = (angka) => {
     let numbers=0;
+    if (parseFloat(angka) === 0) return 0;
     if(parseFloat(angka)<0){
         numbers = angka.toString().replace('-', '');
     }else{

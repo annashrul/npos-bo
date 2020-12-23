@@ -451,6 +451,7 @@ class Receive extends Component{
                         final[column]=val
                     }
                 })
+                console.log(final);
                 update(table, final)
                 ToastQ.fire({
                     icon: 'success',
@@ -590,7 +591,7 @@ class Receive extends Component{
                     diskon3: 0,
                     diskon4: 0,
 
-                    harga:res.harga,
+                    harga:res.harga,        
                     harga2:res.harga2,
                     harga3:res.harga3,
                     harga4:res.harga4,
@@ -707,30 +708,11 @@ class Receive extends Component{
                                 let harga_2=0;
                                 let harga_3=0;
                                 let harga_4=0;
-                                if(this.state.set_harga===1){
-                                    harga_=item.harga;
-                                    harga_2=0;
-                                    harga_3=0;
-                                    harga_4=0;
-                                }
-                                if(this.state.set_harga===2){
-                                   harga_=item.harga;
-                                   harga_2=item.harga2;
-                                   harga_3=0;
-                                   harga_4=0;
-                                }
-                                if(this.state.set_harga===3){
-                                   harga_=item.harga;
-                                   harga_2=item.harga2;
-                                   harga_3=item.harga3;
-                                   harga_4=0;
-                                }
-                                if(this.state.set_harga===4){
-                                   harga_=item.harga;
-                                   harga_2=item.harga2;
-                                   harga_3=item.harga3;
-                                   harga_4=item.harga4;
-                                }
+                                if(this.state.set_harga===1) harga_=rmComma(item.harga);
+                                else if(this.state.set_harga===2) {harga_=rmComma(item.harga);harga_2=rmComma(item.harga2);}
+                                else if(this.state.set_harga===3) {harga_=rmComma(item.harga);harga_2=rmComma(item.harga2);harga_3=rmComma(item.harga3);}
+                                else if(this.state.set_harga===4){harga_=rmComma(item.harga);harga_2=rmComma(item.harga2);harga_3=rmComma(item.harga3);harga_4=rmComma(item.harga4);} 
+                                
                                 detail.push({
                                     kd_brg: item.kd_brg,
                                     barcode: item.barcode,
@@ -740,10 +722,10 @@ class Receive extends Component{
                                     diskon3: item.diskon3,
                                     diskon4: item.diskon4,
 
-                                    harga: harga_,
-                                    harga2: harga_2,
-                                    harga3: harga_3,
-                                    harga4: harga_4,
+                                    harga_jual: harga_,
+                                    harga_jual2: harga_2,
+                                    harga_jual3: harga_3,
+                                    harga_jual4: harga_4,
 
                                     ppn: item.ppn,
                                     harga_beli: rmComma(item.harga_beli),
@@ -1384,25 +1366,21 @@ class Receive extends Component{
                                                                 <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga_beli)}/>
                                                             </td>
 
-                                                            {
+                                                            {/* {
                                                                 (()=>{
                                                                     let container =[];
                                                                     for(let x=0; x<this.state.set_harga; x++){
                                                                         let hrgName='';
                                                                         let hrgValue=0;
-                                                                        if(x===0){
-                                                                            hrgName='harga';
-                                                                        }
-                                                                        if(x===1){
-                                                                            hrgName='harga2';
-                                                                        }
-                                                                        if(x===2){
-                                                                            hrgName='harga3';
-                                                                        }
-                                                                        if(x===3){
-                                                                            hrgName='harga4';
+                                                                        switch (x){
+                                                                            case x===0:hrgName='harga';break;
+                                                                            case x===1:hrgName='harga2';break;
+                                                                            case x===2:hrgName='harga3';break;
+                                                                            case x===3:hrgName='harga4';break;
                                                                         }
                                                                         hrgValue = this.state.brgval[index][hrgName];
+                                                                        console.log("HARGAAA", this.state.brgval);
+                                                                        console.log("HARGAAA", hrgValue);
 
                                                                         container.push(
 
@@ -1419,20 +1397,34 @@ class Receive extends Component{
                                                                     }
                                                                     return container;
                                                                 })()
-                                                            }
+                                                            } */}
 
-                                                            {/*<td style={columnStyle}>*/}
-                                                                {/*<input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga)}/>*/}
-                                                            {/*</td>*/}
-                                                            {/*<td style={columnStyle}>*/}
-                                                                {/*<input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga2' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga2)}/>*/}
-                                                            {/*</td>*/}
-                                                            {/*<td style={columnStyle}>*/}
-                                                                {/*<input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga3' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga3)}/>*/}
-                                                            {/*</td>*/}
-                                                            {/*<td style={columnStyle}>*/}
-                                                                {/*<input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga4' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga4)}/>*/}
-                                                            {/*</td>*/}
+                                                            <td style={columnStyle}>
+                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga)}/>
+                                                            </td>
+                                                             {
+                                                                parseInt(this.state.set_harga,10)>=2?(
+                                                                    <td style={columnStyle}>
+                                                                        <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga2' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga2)}/>
+                                                                    </td>
+                                                                ):""
+                                                            }
+                                                            {
+
+                                                                parseInt(this.state.set_harga,10)>=3?(
+                                                                    <td style={columnStyle}>
+                                                                        <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga3' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga3)}/>
+                                                                    </td>
+                                                                ):""
+                                                            }
+                                                            {
+                                                                parseInt(this.state.set_harga,10)===4?(
+                                                                    <td style={columnStyle}>
+                                                                        <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga4' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga4)}/>
+                                                                    </td>
+                                                                ):""
+                                                            }
+                                                           
 
                                                             <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='diskon' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
                                                             <td style={columnStyle}><input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='ppn' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/></td>
