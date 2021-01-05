@@ -47,7 +47,7 @@ class Sale extends Component{
             qty:0,
             location_data:[],
             location:"",
-            customer:"1000001",
+            customer:"",
             catatan:"-",
             jenis_trx:"Tunai",
             userid:0,
@@ -83,9 +83,8 @@ class Sale extends Component{
     }
 
     componentDidMount(){
+        console.log("componentDidMount");
         this.getData();
-        
-        
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.props.dispatch(FetchNotaSale(localStorage.lk));
             this.setState({
@@ -97,16 +96,21 @@ class Sale extends Component{
                 customer: localStorage.cs
             })
         }
-        if (localStorage.cs !== undefined && localStorage.cs !== '' && localStorage.lk!==undefined&&localStorage.lk!=='') {
-            // this.props.dispatch(FetchBrg(1, 'barcode', '', localStorage.lk, localStorage.cs, this.autoSetQty))
-            let where=``;
-            if(this.state.location!==''){
-                if(where!==''){where+='&';}where+=`lokasi=${this.state.location}`
+        console.log("CS",localStorage.cs);
+        console.log("LK",localStorage.lk);
+        if (localStorage.cs !== undefined && localStorage.lk!==undefined) {
+
+            let where=`lokasi=${localStorage.lk}&customer=${localStorage.cs}`;
+
+            if(localStorage.anySaleTrx!==undefined){
+                if(where!==''){where+='&';}
+                where+=`q=${localStorage.anySaleTrx}`;
+                if(parseInt(this.state.searchby,10)===1){if(where!==''){where+='&';}where+=`searchby=kd_brg`}
+                if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
+                if(parseInt(this.state.searchby,10)===3){if(where!==''){where+='&';}where+=`searchby=deskripsi`}
             }
-            if(this.state.customer!==''){
-                if(where!==''){where+='&';}where+=`customer=${this.state.customer}`
-            }
-            this.props.dispatch(FetchProductSale(1,`${where}&perpage=5`,'sale',this.autoSetQty));
+            console.log(where);
+            this.props.dispatch(FetchProductSale(1,`${where}&perpage=${this.state.perpage}`,'sale',this.autoSetQty));
         }
 
         const nextProps = this.props;
@@ -192,7 +196,6 @@ class Sale extends Component{
         this.getData();
     }
     HandleChangeCustomer(cs) {
-        
         let err = Object.assign({}, this.state.error, {
             customer: ""
         });
@@ -202,7 +205,6 @@ class Sale extends Component{
             scrollPage:5
         })
         localStorage.setItem('cs', cs.value);
-
         if (this.state.location !== "") {
             let where=``;
             if(where!==''){where+='&';}where+=`lokasi=${this.state.location}`
@@ -614,7 +616,6 @@ class Sale extends Component{
             Swal.fire('Gagal!', 'Pilih lokasi dan customer terlebih dahulu.', 'error')
         }else{
             localStorage.setItem("anySaleTrx",this.state.search);
-
             let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
             if(parseInt(this.state.searchby,10)===1){if(where!==''){where+='&';}where+=`searchby=kd_brg`}
             if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
@@ -657,10 +658,19 @@ class Sale extends Component{
         let perpage = parseInt(this.props.pagin_brg_sale.per_page,10);
         let lengthBrg = parseInt(this.props.barang.length,10);
         if(perpage===lengthBrg || perpage<lengthBrg){
-            let where=`lokasi=${this.state.location}&customer=${this.state.customer}&perpage=${this.state.perpage}`;
-            this.props.dispatch(FetchProductSale(1,where,'sale',this.autoSetQty));
+            // barang?page=1&lokasi=LK/0001&customer=1000001&searchby=deskripsi&q=cedea&perpage=5
+            let where=`lokasi=${this.state.location}&customer=${this.state.customer}`;
+            if(localStorage.anySaleTrx!==undefined){
+                if(where!==''){where+='&';}
+                where+=`q=${localStorage.anySaleTrx}`
+                if(parseInt(this.state.searchby,10)===1){if(where!==''){where+='&';}where+=`searchby=kd_brg`}
+                if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
+                if(parseInt(this.state.searchby,10)===3){if(where!==''){where+='&';}where+=`searchby=deskripsi`}
+            }
+            // console.log(localStorage.anySaleTrx);
+            // let where=`lokasi=${this.state.location}&customer=${this.state.customer}&perpage=${this.state.perpage}`;
+            this.props.dispatch(FetchProductSale(1,`${where}&perpage=${this.state.perpage}`,'sale',this.autoSetQty));
             this.setState({scrollPage:this.state.scrollPage+5});
-
         }
         else{
             Swal.fire({allowOutsideClick: false,
@@ -851,7 +861,7 @@ class Sale extends Component{
                                                     <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                 </div>
                                             </div>
-                                            <div className="col-md-2">
+                                            <div className="col-md-3">
                                                 <div className="form-group">
                                                     <label className="control-label font-12">Lokasi</label>
                                                     <Select options={this.state.location_data} placeholder="Pilih Lokasi"
@@ -975,10 +985,10 @@ class Sale extends Component{
                                                                     )
                                                                 }
                                                                 <div className="row" style={{marginTop:"5px"}}>
-                                                                    <div className="col-md-3" style={{paddingRight:"0px"}}>
+                                                                    <div className="col-md-3" style={{paddingRight:"0px",paddingLeft:"0px"}}>
                                                                         <input type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index,item.barcode)}/>
                                                                     </div>
-                                                                    <div className="col-md-9" style={{marginTop:"-3px",textAlign:"left",paddingLeft:"0px"}}>
+                                                                    <div className="col-md-" style={{marginTop:"-3px",textAlign:"left",paddingLeft:"0px"}}>
                                                                         <small>open price</small>
                                                                     </div>
 

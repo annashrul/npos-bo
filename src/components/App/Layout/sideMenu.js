@@ -243,7 +243,6 @@ class SideMenu extends Component {
                 })
             }
         }
-
         else {
             this.setState({
                 isSetting:false,

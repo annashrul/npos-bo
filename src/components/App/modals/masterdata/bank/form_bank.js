@@ -41,7 +41,6 @@ class FormBank extends Component{
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
     }
-
     getProps(param){
         if(Object.keys(param.detail).length > 0){
             this.setState({
