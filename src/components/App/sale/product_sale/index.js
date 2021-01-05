@@ -502,13 +502,13 @@ class Sale extends Component{
                             subtotal:(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10),
                             price:rmComma(item.harga),
                             qty:item.qty,
+                            diskon:disc2,
                             kategori:item.kategori,
                             tax:item.ppn,
                             services:item.services,
                             sku:item.barcode,
                             open_price:rmComma(item.harga)===rmComma(item.harga_old)?0:rmComma(item.harga),
                             hrg_beli:rmComma(item.hrg_beli),
-                            diskon:0,
                             nm_brg: item.nm_brg,
                             satuan: item.satuan
                         })
@@ -728,7 +728,8 @@ class Sale extends Component{
             value: '1000001',
             label: 'UMUM'
         }];
-        if(this.props.customer!==[]){
+        // console.log(this.props.customer);
+        if (this.props.customer !== undefined && this.props.customer !== []) {
             this.props.customer.map(i=>{
                 opCustomer.push({
                     value: i.kd_cust,

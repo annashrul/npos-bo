@@ -12,9 +12,9 @@ class FormPriceProduct extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.state = {
-            id:'',harga:'', harga2:'',harga3:'',harga4:'',ppn:'',service:'',
+            id:'',harga:'', harga2:'',harga3:'',harga4:'',ppn:'',service:'',harga_beli:'',
             error:{
-                harga:'', harga2:'',harga3:'',harga4:'',ppn:'',service:'',
+                harga:'', harga2:'',harga3:'',harga4:'',ppn:'',service:'',harga_beli:''
             }
         };
     }
@@ -28,6 +28,7 @@ class FormPriceProduct extends Component{
                 harga4:param.detail.harga4,
                 ppn:param.detail.ppn,
                 service:param.detail.service,
+                harga_beli: param.detail.harga_beli
             })
         }else{
             this.setState({harga:'', harga2:'',harga3:'',harga4:'',ppn:'',service:''})
@@ -64,6 +65,7 @@ class FormPriceProduct extends Component{
         parseData['harga2'] = this.state.harga2;
         parseData['harga3'] = this.state.harga3;
         parseData['harga4'] = this.state.harga4;
+        parseData['harga_beli'] = this.state.harga_beli;
         let err = this.state.error;
         if(parseData['harga']===''||parseData['harga']===undefined){
             err = Object.assign({}, err, {harga:"harga 1 tidak boleh kosong"});
@@ -136,6 +138,13 @@ class FormPriceProduct extends Component{
                 <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"":"Ubah Harga Barang"}</ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
+                        <div className="form-group">
+                            <label>Harga Beli</label>
+                            <input type="number" className="form-control" name="harga_beli" value={this.state.harga_beli} onChange={this.handleChange}  />
+                            <div className="invalid-feedback" style={this.state.error.harga_beli!==""?{display:'block'}:{display:'none'}}>
+                                {this.state.error.harga_beli}
+                            </div>
+                        </div>
                         <div className="form-group">
                             <label>Harga 1</label>
                             <input type="number" className="form-control" name="harga" value={this.state.harga} onChange={this.handleChange}  />

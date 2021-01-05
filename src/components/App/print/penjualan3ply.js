@@ -57,7 +57,7 @@ class Print3ply extends Component {
             xhr.send();
         }
         let gt=0;
-        
+                                console.log(data);
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -124,7 +124,8 @@ class Print3ply extends Component {
                             <th className="tengah">KODE BARANG</th>
                             <th className="tengah">NAMA BARANG</th>
                             <th className="tengah">HARGA @ Rp</th>
-                            <th className="tengah">Pajak</th>
+                            <th className="tengah">Diskon(%)</th>
+                            <th className="tengah">Pajak(%)</th>
                             <th className="tengah">Jumlah</th>
                         </tr>
                         </thead>
@@ -139,7 +140,8 @@ class Print3ply extends Component {
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.sku}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(parseInt(item.hrg_jual,10))}</td>
-                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.tax}%</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.dis_persen}</td>
+                                            <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-center">{item.tax}</td>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt', paddingRight: '5pt'}} className="text-right">{toRp(parseInt(item.subtotal,10))}</td>
                                         </tr>
                                         )
