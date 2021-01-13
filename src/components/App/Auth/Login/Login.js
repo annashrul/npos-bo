@@ -31,7 +31,7 @@ class Login extends Component {
         // let host = window.location.host;
         // let parts = host.split(".");
         // return btoa(parts[0])
-        return btoa('cff')
+        return btoa('npos')
     }
 
     componentDidMount (){

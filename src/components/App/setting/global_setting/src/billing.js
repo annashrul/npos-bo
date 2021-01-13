@@ -74,6 +74,8 @@ class Billing extends Component{
             };
         }
 
+        console.log("DATA",parsedata);
+
         let timerInterval;
         Swal.fire({allowOutsideClick: false,
             title: 'Tunggu Sebentar',
@@ -124,18 +126,18 @@ class Billing extends Component{
                                 ):(
                                     <select name="tanggal_tempo_select" className="form-control" value={this.state.tanggal_tempo_select} defaultValue={this.state.tanggal_tempo_select} onChange={this.handleChange}>
                                         <option value="-">==== Pilih ====</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(30, 'days').format('yyyy-MM-DD')}>1 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(60, 'days').format('yyyy-MM-DD')}>2 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(90, 'days').format('yyyy-MM-DD')}>3 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(120, 'days').format('yyyy-MM-DD')}>4 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(150, 'days').format('yyyy-MM-DD')}>5 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(180, 'days').format('yyyy-MM-DD')}>6 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(210, 'days').format('yyyy-MM-DD')}>7 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(240, 'days').format('yyyy-MM-DD')}>8 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(270, 'days').format('yyyy-MM-DD')}>9 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(300, 'days').format('yyyy-MM-DD')}>10 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(330, 'days').format('yyyy-MM-DD')}>11 Bulan</option>
-                                        <option value={this.props.site.result===undefined?"":moment(this.props.site.result.tanggal_tempo).add(360, 'days').format('yyyy-MM-DD')}>12 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(30, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(30, 'days').format('yyyy-MM-DD')}>1 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(60, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(60, 'days').format('yyyy-MM-DD')}>2 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(90, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(90, 'days').format('yyyy-MM-DD')}>3 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(120, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(120, 'days').format('yyyy-MM-DD')}>4 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(150, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(150, 'days').format('yyyy-MM-DD')}>5 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(180, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(180, 'days').format('yyyy-MM-DD')}>6 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(210, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(210, 'days').format('yyyy-MM-DD')}>7 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(240, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(240, 'days').format('yyyy-MM-DD')}>8 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(270, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(270, 'days').format('yyyy-MM-DD')}>9 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(300, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(300, 'days').format('yyyy-MM-DD')}>10 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(330, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(330, 'days').format('yyyy-MM-DD')}>11 Bulan</option>
+                                        <option value={this.props.site.result===undefined?moment(new Date()).add(360, 'days').format('yyyy-MM-DD'):moment(this.props.site.result.tanggal_tempo).add(360, 'days').format('yyyy-MM-DD')}>12 Bulan</option>
                                     </select>
                                 )
                             }
