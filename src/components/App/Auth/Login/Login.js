@@ -20,7 +20,7 @@ class Login extends Component {
             },
             logo: '-',
             width:'-',
-            tenant:btoa('cff')
+            tenant:btoa('netindo')
         };
     }
     getFaviconEl() {
@@ -31,7 +31,7 @@ class Login extends Component {
         // let host = window.location.host;
         // let parts = host.split(".");
         // return btoa(parts[0])
-        return btoa('npos')
+        return btoa('netindo');
     }
 
     componentDidMount (){

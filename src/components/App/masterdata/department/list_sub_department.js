@@ -19,6 +19,8 @@ class ListSubDepartment extends Component{
         }
     }
     handlePageChange(pageNumber){
+        console.log(pageNumber);
+        this.props.dispatch(FetchSubDepartment(`page=${pageNumber}`));
     }
     handlesearch(e){
         e.preventDefault();
@@ -27,9 +29,12 @@ class ListSubDepartment extends Component{
         let any = data.get('field_any');
         localStorage.setItem('any_sub_department',any);
         if(any!==''||any!==undefined||any!==null){
-            this.props.dispatch(FetchSubDepartment(1,any));
+            this.props.dispatch(FetchSubDepartment(`page=1&q=${any}`));
+
+            // this.props.dispatch(FetchSubDepartment(1,any));
         }else{
-            this.props.dispatch(FetchSubDepartment(1,''));
+            this.props.dispatch(FetchSubDepartment(`page=1`));
+            // this.props.dispatch(FetchSubDepartment(1,''));
         }
     }
     toggleModal(e,i) {

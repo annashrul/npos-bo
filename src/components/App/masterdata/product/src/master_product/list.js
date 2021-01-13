@@ -59,6 +59,7 @@ class ListProduct extends Component{
             any_nama_barang:"",
             any_kelompok_barang:"",
             any_supplier_barang:"",
+            any_dept_barang:"",
             any_subdept_barang:"",
             any_kategori_barang:"",
         }
@@ -99,6 +100,9 @@ class ListProduct extends Component{
         }
         if(localStorage.any_master_subdept_barang!==undefined&&localStorage.any_master_subdept_barang!==null&&localStorage.any_master_subdept_barang!==''){
             this.setState({any_subdept_barang:localStorage.any_master_subdept_barang});
+        }
+        if(localStorage.any_master_dept_barang!==undefined&&localStorage.any_master_dept_barang!==null&&localStorage.any_master_dept_barang!==''){
+            this.setState({any_dept_barang:localStorage.any_master_dept_barang});
         }
         if(localStorage.any_master_kategori_barang!==undefined&&localStorage.any_master_kategori_barang!==null&&localStorage.any_master_kategori_barang!==''){
             this.setState({any_kategori_barang:localStorage.any_master_kategori_barang});
@@ -152,6 +156,7 @@ class ListProduct extends Component{
         let nama=this.state.any_nama_barang;
         let kelompok=this.state.any_kelompok_barang;
         let supplier=this.state.any_supplier_barang;
+        let dept=this.state.any_dept_barang;
         let subdept=this.state.any_subdept_barang;
         let kategori=this.state.any_kategori_barang;
         if(kode!==''||nama!==''||kelompok!==''||supplier!==''||subdept!==''||kategori!==''){
@@ -175,6 +180,11 @@ class ListProduct extends Component{
                 where+=`searchby=supplier&q=${supplier}`;
                 localStorage.setItem(`${que}_supplier_barang`,supplier);
             }
+            if(column==='any_dept_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=dept&q=${dept}`;
+                localStorage.setItem(`${que}_dept_barang`,dept);
+            }
             if(column==='any_subdept_barang'){
                 if(where!==''){where+='&';}
                 where+=`searchby=subdept&q=${subdept}`;
@@ -191,6 +201,7 @@ class ListProduct extends Component{
                 localStorage.removeItem(`${que}_nama_barang`);
                 localStorage.removeItem(`${que}_kelompok_barang`);
                 localStorage.removeItem(`${que}_supplier_barang`);
+                localStorage.removeItem(`${que}_dept_barang`);
                 localStorage.removeItem(`${que}_subdept_barang`);
                 localStorage.removeItem(`${que}_kategori_barang`);
                 this.props.dispatch(FetchProduct(pageNumber,''));
@@ -267,9 +278,10 @@ class ListProduct extends Component{
         let nama=this.state.any_nama_barang;
         let kelompok=this.state.any_kelompok_barang;
         let supplier=this.state.any_supplier_barang;
+        let dept=this.state.any_dept_barang;
         let subdept=this.state.any_subdept_barang;
         let kategori=this.state.any_kategori_barang;
-        if(kode!==''||nama!==''||kelompok!==''||supplier!==''||subdept!==''||kategori!==''){
+        if(kode!==''||nama!==''||kelompok!==''||supplier!==''||dept!==''||subdept!==''||kategori!==''){
             if(column==='any_kode_barang'){
                 if(where!==''){where+='&';}
                 where+=`searchby=kd_brg&q=${kode}`;
@@ -290,6 +302,11 @@ class ListProduct extends Component{
                 where+=`searchby=supplier&q=${supplier}`;
                 localStorage.setItem(`${que}_supplier_barang`,supplier);
             }
+            if(column==='any_dept_barang'){
+                if(where!==''){where+='&';}
+                where+=`searchby=dept&q=${dept}`;
+                localStorage.setItem(`${que}_dept_barang`,dept);
+            }
             if(column==='any_subdept_barang'){
                 if(where!==''){where+='&';}
                 where+=`searchby=subdept&q=${subdept}`;
@@ -307,6 +324,7 @@ class ListProduct extends Component{
             localStorage.removeItem(`${que}_nama_barang`);
             localStorage.removeItem(`${que}_kelompok_barang`);
             localStorage.removeItem(`${que}_supplier_barang`);
+            localStorage.removeItem(`${que}_dept_barang`);
             localStorage.removeItem(`${que}_subdept_barang`);
             localStorage.removeItem(`${que}_kategori_barang`);
             this.props.dispatch(FetchProduct(1,''));
@@ -388,6 +406,7 @@ class ListProduct extends Component{
         const {total,per_page,current_page,data} = this.props.data;
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left"};
+        console.log(data);
         // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         return (
             <div>
@@ -446,6 +465,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={centerStyle}>Name</th>
                             <th className="text-black" style={centerStyle}>Group</th>
                             <th className="text-black" style={centerStyle}>Supplier</th>
+                            <th className="text-black" style={centerStyle}>Dept</th>
                             <th className="text-black" style={centerStyle}>Sub Dept</th>
                             <th className="text-black" style={centerStyle}>Purchase Price</th>
                             <th className="text-black" style={centerStyle}>Category</th>
@@ -465,6 +485,7 @@ class ListProduct extends Component{
                                                 <td style={centerStyle}>{v.nm_brg}</td>
                                                 <td style={centerStyle}>{v.kel_brg}</td>
                                                 <td style={centerStyle}>{v.supplier}</td>
+                                                <td style={centerStyle}>{v.dept}</td>
                                                 <td style={centerStyle}>{v.subdept}</td>
                                                 <td style={centerStyle}>{v.kategori}</td>
                                                 <td style={centerStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
@@ -493,6 +514,7 @@ class ListProduct extends Component{
                             <th className="text-black" style={centerStyle}>Nama Barang</th>
                             <th className="text-black" width="10%" style={centerStyle}>Kelompok</th>
                             <th className="text-black" width="10%" style={centerStyle}>Supplier</th>
+                            <th className="text-black" width="10%" style={centerStyle}>Dept</th>
                             <th className="text-black" width="10%" style={centerStyle}>Sub Dept</th>
                             <th className="text-black" width="10%" style={centerStyle}>Kategori</th>
                             <th className="text-black" style={centerStyle} colSpan={3}/>
@@ -508,6 +530,7 @@ class ListProduct extends Component{
                             <td><input name="any_nama_barang" value={this.state.any_nama_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_nama_barang');}}} style={{width:"-webkit-fill-available"}} type="text" className="form-control" placeholder="Nama Barang"/></td>
                             <td><input name="any_kelompok_barang" value={this.state.any_kelompok_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kelompok_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Kelompok"/></td>
                             <td><input name="any_supplier_barang" value={this.state.any_supplier_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_supplier_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Supplier"/></td>
+                            <td/>
                             <td><input name="any_subdept_barang" value={this.state.any_subdept_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_subdept_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Sub Dept"/></td>
                             <td><input name="any_kategori_barang" value={this.state.any_kategori_barang} onChange={this.handleChange} onKeyPress={event=>{if(event.key==='Enter'){this.handleEnter('any_kategori_barang');}}} style={{minWidth:"100px", maxWidth:"max-content"}} type="text" className="form-control" placeholder="Kategori"/></td>
                             <td className="text-black" style={centerStyle}>Jenis</td>
@@ -528,6 +551,7 @@ class ListProduct extends Component{
                                                 <td style={leftStyle}>{v.nm_brg}</td>
                                                 <td style={leftStyle}>{v.kel_brg}</td>
                                                 <td style={leftStyle}>{v.supplier}</td>
+                                                <td style={leftStyle}>{v.dept}</td>
                                                 <td style={leftStyle}>{v.subdept}</td>
                                                 <td style={leftStyle}>{v.kategori}</td>
                                                 <td style={centerStyle}>{v.jenis==='0'? <img alt="netindo" src={imgT} width="20px"/>: <img alt="netindo" src={imgY} width="20px"/>}</td>
@@ -565,6 +589,7 @@ class ListProduct extends Component{
                         callback={this.handlePageChange.bind(this)}
                     />
                 </div>
+
                 <FormProduct
                     data={this.props.groupProduct}
                     dataLocation={this.props.location}
