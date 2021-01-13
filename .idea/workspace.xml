@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a8fd85b-1e48-4545-a3a8-e45b825c4591" name="Default Changelist" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" afterPath="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App/setting/global_setting/src/billing.js" afterPath="$PROJECT_DIR$/src/components/App/setting/global_setting/src/billing.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/redux/actions/site.action.js" afterPath="$PROJECT_DIR$/src/redux/actions/site.action.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -50,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="form_product.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="form_product.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="1810" column="51" lean-forward="true" selection-start-line="1810" selection-start-column="51" selection-end-line="1810" selection-end-column="51" />
+            <state relative-caret-position="167">
+              <caret line="2077" column="28" lean-forward="true" selection-start-line="2077" selection-start-column="28" selection-end-line="2077" selection-end-column="28" />
               <folding>
                 <element signature="e#2227#3527#0" expanded="false" />
                 <element signature="e#3556#4857#0" expanded="false" />
@@ -76,7 +74,20 @@
                 <element signature="n#!!block;n#handleCheckChieldElementSku#0;n#FormProduct#0" expanded="false" />
                 <element signature="n#!!block;n#handleChange#0;n#FormProduct#0" expanded="false" />
                 <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" expanded="false" />
+                <element signature="e#100370#100631#0" expanded="false" />
+                <element signature="e#100694#112877#0" expanded="false" />
+                <element signature="e#112906#118566#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="60" column="23" lean-forward="true" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -136,6 +147,7 @@
         <option value="$PROJECT_DIR$/src/redux/actions/site.action.js" />
         <option value="$PROJECT_DIR$/src/components/App/setting/global_setting/src/billing.js" />
         <option value="$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js" />
+        <option value="$PROJECT_DIR$/public/index.html" />
       </list>
     </option>
   </component>
@@ -211,87 +223,7 @@
             <path>
               <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
               <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="modals" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="modals" type="462c0819:PsiDirectoryNode" />
-              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="modals" type="462c0819:PsiDirectoryNode" />
-              <item name="masterdata" type="462c0819:PsiDirectoryNode" />
-              <item name="product" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="setting" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="setting" type="462c0819:PsiDirectoryNode" />
-              <item name="global_setting" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="App" type="462c0819:PsiDirectoryNode" />
-              <item name="setting" type="462c0819:PsiDirectoryNode" />
-              <item name="global_setting" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="redux" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="npos_bo_react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="npos_bo_react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="redux" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -421,12 +353,12 @@
       <workItem from="1609737059609" duration="67000" />
       <workItem from="1609744104639" duration="4315000" />
       <workItem from="1609819453656" duration="2246000" />
-      <workItem from="1610525820931" duration="2462000" />
+      <workItem from="1610525820931" duration="2840000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="865545000" />
+    <option name="totallyTimeSpent" value="865923000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -587,6 +519,9 @@
             <element signature="n#!!block;n#handleCheckChieldElementSku#0;n#FormProduct#0" expanded="false" />
             <element signature="n#!!block;n#handleChange#0;n#FormProduct#0" expanded="false" />
             <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" expanded="false" />
+            <element signature="e#100370#100631#0" expanded="false" />
+            <element signature="e#100694#112877#0" expanded="false" />
+            <element signature="e#112906#118566#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -683,13 +618,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
           <caret line="193" column="95" lean-forward="false" selection-start-line="193" selection-start-column="95" selection-end-line="193" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1856">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -854,8 +782,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/modals/masterdata/product/form_product.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="1810" column="51" lean-forward="true" selection-start-line="1810" selection-start-column="51" selection-end-line="1810" selection-end-column="51" />
+        <state relative-caret-position="167">
+          <caret line="2077" column="28" lean-forward="true" selection-start-line="2077" selection-start-column="28" selection-end-line="2077" selection-end-column="28" />
           <folding>
             <element signature="e#2227#3527#0" expanded="false" />
             <element signature="e#3556#4857#0" expanded="false" />
@@ -877,7 +805,18 @@
             <element signature="n#!!block;n#handleCheckChieldElementSku#0;n#FormProduct#0" expanded="false" />
             <element signature="n#!!block;n#handleChange#0;n#FormProduct#0" expanded="false" />
             <element signature="n#!!block;n#handleChangeMore#0;n#FormProduct#0" expanded="false" />
+            <element signature="e#100370#100631#0" expanded="false" />
+            <element signature="e#100694#112877#0" expanded="false" />
+            <element signature="e#112906#118566#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="60" column="23" lean-forward="true" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
+          <folding />
         </state>
       </provider>
     </entry>
