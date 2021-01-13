@@ -242,6 +242,7 @@ export const mergeStock = () => {
             })
     }
 }
+
 export const storeSite = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true));

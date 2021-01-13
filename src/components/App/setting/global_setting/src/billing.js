@@ -38,7 +38,7 @@ class Billing extends Component{
     componentWillReceiveProps(nextProps){
         this.getProps(nextProps);
     }
-    
+
     handleChange = (event) => {
         let column=event.target.name;
         let value=event.target.value;
@@ -109,8 +109,8 @@ class Billing extends Component{
     }
 
     render(){
-        
-        
+
+
         return (
             !this.props.isLoading?(
                 <div>

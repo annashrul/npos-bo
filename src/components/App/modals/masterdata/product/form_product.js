@@ -1788,7 +1788,7 @@ class FormProduct extends Component{
                             alert(`margin ${setHrg+1} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh kurang dari 0`);
                             return false;
                         }
-                        if(parseInt(rmComma(stateBrgHrg[valHrgJual]),10)===0||parseInt(rmComma(stateBrgHrg[valHrgJual]),10)<0||stateBrgHrg[valHrgJual]===''){
+                        if(stateBrgHrg[valHrgJual]===''){
                             alert(`harga jual ${this.state[lblHrg]} ${stateSku.qty!==undefined?`jenis barang ${stateSku.qty}`:''}  di lokasi ${stateBrgHrg.nama_toko} tidak boleh atau kurang dari 0`);
                             return false;
                         }
@@ -1822,6 +1822,7 @@ class FormProduct extends Component{
 
         parseData["barang_sku"]     = barangSku;
         parseData["barang_harga"]   = barangHarga;
+        // console.log(parseData);
         if(this.props.dataEdit !== undefined && this.props.dataEdit !== []){
             this.props.dispatch(updateProduct(this.state.kd_brg,parseData))
         }else{
