@@ -15,15 +15,12 @@ export function setAllDepartment(data=[]){
 export function setDepartmentFailed(data=[]){
     return {type:DEPT.FAILED,data}
 }
-export const FetchDepartment = (page=1,q='')=>{
+export const FetchDepartment = (where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        
-        let url = '';
-        if(q===''){
-            url = `departement?page=${page}`;
-        }else{
-            url = `departement?page=${page}&q=${q}`;
+        let url = 'departement';
+        if(where!==''){
+            url+=`?${where}`;
         }
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
