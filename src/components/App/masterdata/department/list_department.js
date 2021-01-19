@@ -18,6 +18,7 @@ class ListDepartment extends Component{
         }
     }
     handlePageChange(pageNumber){
+        this.props.dispatch(FetchDepartment(`page=${pageNumber}`));
     }
     handlesearch(e){
         e.preventDefault();
@@ -26,9 +27,9 @@ class ListDepartment extends Component{
         let any = data.get('field_any');
         localStorage.setItem('any_department',any);
         if(any!==''||any!==undefined||any!==null){
-            this.props.dispatch(FetchDepartment(1,any));
+            this.props.dispatch(FetchDepartment(`page=1&q=${any}`));
         }else{
-            this.props.dispatch(FetchDepartment(1,''));
+            this.props.dispatch(FetchDepartment(`page=1`));
         }
     }
     toggleModal(e,i) {

@@ -15,15 +15,18 @@ export function setSubDepartmentAll(data=[]){
 export function setSubDepartmentFailed(data=[]){
     return {type:SUB_DEPT.FAILED,data}
 }
-export const FetchSubDepartment = (page=1,q='')=>{
+export const FetchSubDepartment = (where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url = '';
-        if(q===''){
-            url = `group2?page=${page}`;
-        }else{
-            url = `group2?page=${page}&q=${q}`;
+        let url = 'group2';
+        if(where!==''){
+            url+=`?${where}`
         }
+        // if(q===''){
+        //     url = `group2?page=${page}`;
+        // }else{
+        //     url = `group2?page=${page}&q=${q}`;
+        // }
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;

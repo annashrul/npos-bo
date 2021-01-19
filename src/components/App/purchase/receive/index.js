@@ -267,6 +267,13 @@ class Receive extends Component{
                     localStorage.setItem('catatan', nextProps.po_data.master.catatan)
 
                     nextProps.po_data.detail.map(item=>{
+                        let newbrg = [];
+                        item.tambahan.map(i => {
+                            if (i.satuan === item.satuan) {
+                                newbrg = i;
+                            }
+                            return null;
+                        });
                         const datas = {
                             kd_brg: item.kode_barang,
                             barcode: item.barcode,
@@ -281,6 +288,10 @@ class Receive extends Component{
                             qty_bonus: 0,
                             stock: item.stock,
                             nm_brg: item.nm_brg,
+                            harga: newbrg.harga,
+                            harga2: newbrg.harga2,
+                            harga3: newbrg.harga3,
+                            harga4: newbrg.harga4,
                             tambahan: item.tambahan
                         };
                         store(table, datas);
