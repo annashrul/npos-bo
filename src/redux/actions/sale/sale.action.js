@@ -101,6 +101,27 @@ export const FetchNotaSale = (lokasi) => {
 
     }
 }
+
+export const FetchNotaReceipt = (kd_trx) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        axios.get(HEADERS.URL + `report/penjualan/nota/${kd_trx}`)
+            .then(function (response) {
+                const data = response.data
+
+               const win = window.open(data.result.nota, '_blank');
+               if (win != null) {
+                   win.focus();
+               }
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+
+            })
+
+    }
+}
 export const storeSale = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))

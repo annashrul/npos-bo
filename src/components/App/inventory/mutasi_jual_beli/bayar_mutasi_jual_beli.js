@@ -98,7 +98,7 @@ class BayarMutasiJualBeli extends Component{
                                                         <div className="card-header d-flex align-items-center justify-content-between" style={{borderBottom:'none'}}>
                                                         <h5 className="mb-0">
                                                             {/* <button className="btn btn-link collapsed" onClick={this.toggle} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> */}
-                                                            {v.nama} | Sisa : Rp. {toRp(parseInt(v.sisa_piutang,10))}
+                                                            {v.asal} | Sisa : Rp. {toRp(parseInt(v.sisa_hutang,10))}
                                                             {/* </button> */}
                                                         </h5>
                                                         <h5><i className={this.state.isOpen&&this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
@@ -116,7 +116,7 @@ class BayarMutasiJualBeli extends Component{
                                                                                         <div>
                                                                                             <h6 className="text-light">
                                                                                                 {/* <button className="btn btn-link" onClick={(e)=>this.handleBayar(e,w.kd_trx)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> */}
-                                                                                                {w.kd_trx} | Sisa : Rp. {toRp(parseInt(w.sisa_piutang,10))}
+                                                                                                {w.no_faktur_mutasi} | Sisa : Rp. {toRp(parseInt(w.sisa_hutang,10))}
                                                                                                 {/* </button> */}
                                                                                             </h6>
                                                                                             <small className="text-light">{moment(w.tgl).format('YYYY-MM-DD')} | </small>

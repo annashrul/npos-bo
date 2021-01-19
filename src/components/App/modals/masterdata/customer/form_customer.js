@@ -177,7 +177,7 @@ class FormCustomer extends Component{
         parseData['foto'] = this.state.foto === undefined || this.state.foto === '-' || this.state.foto === null? '-' : this.state.foto.base64
         parseData['jenis_kelamin'] = this.state.jenis_kelamin;
         parseData['email'] = this.state.email;
-        parseData['biografi'] = '-';
+        parseData['biografi'] = this.state.biografi;
         // parseData['special_price'] = this.state.special_price;
         parseData['special_price'] = 0;
         let err = this.state.error;
@@ -379,6 +379,14 @@ class FormCustomer extends Component{
                                         {this.state.error.alamat}
                                     </div>
                                 </div>
+                                <div className="form-group">
+                                    <label>Keterangan</label>
+                                    <input type="text" className="form-control" name="biografi" value={this.state.biografi} onChange={this.handleChange} required />
+                                    <div className="invalid-feedback" style={this.state.error.biografi!==""?{display:'block'}:{display:'none'}}>
+                                        {this.state.error.biografi}
+                                    </div>
+                                </div>
+                                
                                 <div className="form-group">
                                     <label htmlFor="inputState" className="col-form-label">Foto {this.props.dataCustomerEdit!==undefined?<small>(kosongkan bila tidak akan diubah)</small>:""}</label><br/>
                                     <FileBase64

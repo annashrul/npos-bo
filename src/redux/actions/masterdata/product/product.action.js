@@ -355,6 +355,7 @@ export const FetchProductSale = (page=1,where,param='',db)=>{
                 url=`barang?page=${page}`;
             }
         }
+        console.log(url);
         
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){

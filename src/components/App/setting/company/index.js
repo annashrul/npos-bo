@@ -137,7 +137,7 @@ class Company extends Component{
                                             <tr>
                                                 <th style={columnStyle}>TITLE</th>
                                                 <th style={columnStyle}>META KEY</th>
-                                                <th style={columnStyle}>META DESKRIPSI</th>
+                                                <th style={columnStyle}>Keterangan penjualan</th>
                                                 <th style={columnStyle}>LINK WEBSITE</th>
                                                 <th style={columnStyle}>SET HARGA</th>
                                             </tr>

@@ -28,12 +28,10 @@ class Login extends Component {
     }
 
     getSubdomain(){
-        let host = window.location.host;
-        let parts = host.split(".");
+        // let host = window.location.host;
+        // let parts = host.split(".");
         // return btoa(parts[0])
-        return document.getElementById("coolyeah").value;
-
-        // return btoa('npos');
+        return btoa('npos')
     }
 
     componentDidMount (){
@@ -47,7 +45,7 @@ class Login extends Component {
         fetch(HEADERS.URL + `site/logo`, {
             method: 'GET',
             headers: {
-                'username':this.getSubdomain()===null?this.state.tenant:this.getSubdomain(),
+                'username':this.getSubdomain(),
             }
         })
         .then(res => res.json())
@@ -134,7 +132,7 @@ class Login extends Component {
                     }
                     localStorage.setItem("logos",data.result.logo)
                     localStorage.setItem("site_title", data.result.title)
-                    localStorage.setItem("uidtnt",this.getSubdomain()===null?this.state.tenant:this.getSubdomain())
+                    localStorage.setItem("uidtnt",this.getSubdomain())
                     document.title = `${data.result.title}`;
                     this.setState({
                         logo: data.result.logo,

@@ -11,12 +11,14 @@ import Swal from "sweetalert2";
 import {
     deleteReportSale,
     FetchReportDetailSale,
-    FetchReportSaleExcel
+    FetchReportSaleExcel,
+    FetchNotaReceipt
+
 } from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {HEADERS} from 'redux/actions/_constants'
+// import {HEADERS} from 'redux/actions/_constants'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -438,7 +440,10 @@ class SaleArchive extends Component{
                                                                             <DropdownMenu>
                                                                                 <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</DropdownItem>
                                                                                 <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
-                                                                                <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                                <DropdownItem onClick={(e)=>{
+                                                                                    e.preventDefault();
+                                                                                    this.props.dispatch(FetchNotaReceipt(v.kd_trx))
+                                                                                }}>Nota</DropdownItem>
                                                                                 <Link to={`../print3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                             </DropdownMenu>
                                                                             </UncontrolledButtonDropdown>
