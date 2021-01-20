@@ -159,8 +159,8 @@ export const saveApprovalMutation = (data,param) => {
                     showConfirmButton: false
                 }).then((result) => {
                     if(result.dismiss === 'cancel'){
-                        // window.location.reload(false);
-                        window.open(`/approval_mutasi`, '_top');
+                        window.location.reload(false);
+                        // window.open(`/approval_mutasi`, '_top');
                     }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {

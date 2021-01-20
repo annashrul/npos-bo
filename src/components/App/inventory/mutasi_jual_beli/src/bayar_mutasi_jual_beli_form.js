@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import Layout from "../../../Layout";
+// import Layout from "../../../Layout";
 import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
 import {
@@ -10,13 +10,14 @@ import Preloader from "Preloader";
 import {toRp} from "helper";
 import moment from "moment";
 import {FetchBank, setBank} from "redux/actions/masterdata/bank/bank.action";
+import { rmComma, toCurrency } from '../../../../../helper';
 
 class BayarMutasiJualBeliFrom extends Component{
     constructor(props) {
         super(props);
         this.state={
             no_trx:"-",
-            tgl_trx:new Date(),
+            tgl_trx:moment(new Date()).format('YYYY-MM-DD'),
             jenis_data:[],
             location:"",
             jenis_trx:"",
@@ -54,10 +55,11 @@ class BayarMutasiJualBeliFrom extends Component{
         this.setState({
             jenis_data:jn,
             no_trx:param.getKode,
-            location:param.getData.lokasi_tujuan,
-            total_hutang:param.getData.total_hutang,
-            jumlah_sudah_bayar:param.getData.total_dibayar,
-            sisa_hutang:param.getData.sisa,
+            no_faktur_mutasi:param.getData.no_faktur_mutasi,
+            location:param.getData.kd_tujuan,
+            total_hutang:param.getData.nilai_pembelian,
+            jumlah_sudah_bayar:param.getData.jumlah_bayar,
+            sisa_hutang:parseInt(param.getData.nilai_pembelian,10)-parseInt(param.getData.jumlah_bayar),
 
         });
         if (param.auth.user) {
@@ -125,26 +127,33 @@ class BayarMutasiJualBeliFrom extends Component{
     };
     handleChange(e,errs=true){
         const column = e.target.name;
-        const val = e.target.value;
-        this.setState({
-            [column]: val
-        });
+        let val = e.target.value;
         if(column==='jumlah_bayar'){
-            let sisa = 0;let sudah=0;
-            if(parseInt(val,10) <= parseInt(this.state.total_hutang,10)){
-                sisa = parseInt(this.state.total_hutang,10) - parseInt(val,10);
-                sudah = val;
-            }
-            if(parseInt(val,10) > parseInt(this.state.total_hutang,10)){
-                sudah=this.state.total_hutang;
-                sisa = 0;
+            // let sisa = 0;let sudah=0;
+            // if(parseInt(val,10) <= parseInt(this.state.total_hutang,10)){
+            //     sisa = parseInt(this.state.total_hutang,10) - parseInt(val,10);
+            //     sudah = val;
+            // }
+            // if(parseInt(val,10) > parseInt(this.state.total_hutang,10)){
+            //     sudah=this.state.total_hutang;
+            //     sisa = 0;
 
+            // }
+            // this.setState({
+            //     jumlah_sudah_bayar:sudah,
+            //     sisa_hutang:sisa
+
+            // })
+            if(parseInt(rmComma(val),10) > parseInt(this.state.sisa_hutang,10)){
+                val = parseInt(this.state.sisa_hutang,10);
             }
             this.setState({
-                jumlah_sudah_bayar:sudah,
-                sisa_hutang:sisa
-
-            })
+                [column]: val
+            });
+        } else {
+            this.setState({
+                [column]: val
+            });
         }
         if(errs){
             let err = Object.assign({}, this.state.error, {
@@ -194,7 +203,7 @@ class BayarMutasiJualBeliFrom extends Component{
                 let parseData={};
                 parseData['no_faktur_mutasi'] = this.state.no_faktur_mutasi;
                 parseData['tanggal'] = moment(this.state.tgl_trx).format("yyyy-MM-DD");
-                parseData['jumlah_bayar'] = this.state.jumlah_bayar;
+                parseData['jumlah_bayar'] = rmComma(this.state.jumlah_bayar);
                 parseData['jumlah_hutang'] = this.state.total_hutang;
                 parseData['lokasi'] = this.state.location;
                 parseData['jenis_pembayaran'] = this.state.jenis_trx;
@@ -211,10 +220,10 @@ class BayarMutasiJualBeliFrom extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         return (
-            <Layout page="Bayar Mutasi Jual Beli">
+            // <Layout page="Bayar Mutasi Jual Beli">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Pembayaran Mutasi Jual Beli</h4>
+                        <h4>Bayar Mutasi Jual Beli</h4>
                     </div>
                     <div className="card-body">
                         <div className="row">
@@ -243,8 +252,8 @@ class BayarMutasiJualBeliFrom extends Component{
                                 <div className="form-group">
                                     <label>No Faktur Mutasi</label>
                                     <div className="input-group mb-3">
-                                        <input type="text" name="no_faktur_mutasi" className="form-control" value={this.state.no_faktur_mutasi} onChange={(e)=>this.handleChange(e,true)}/>
-                                        <div className="input-group-prepend">
+                                        <input type="text" name="no_faktur_mutasi" readOnly className="form-control" value={this.state.no_faktur_mutasi} onChange={(e)=>this.handleChange(e,true)}/>
+                                        <div className="input-group-prepend d-none">
                                             <button className="btn btn-primary" onClick={this.handleSearch}>{
                                                 !this.props.isLoading?<i className="fa fa-search"/>:"loading ...."
                                             }</button>
@@ -278,7 +287,7 @@ class BayarMutasiJualBeliFrom extends Component{
                                     <div className="col-md-4">
                                         <div className="form-group">
                                             <label>Jumlah Bayar</label>
-                                            <input type="text" name="jumlah_bayar" className="form-control" value={this.state.jumlah_bayar} onChange={(e)=>this.handleChange(e,true)} onBlur={this.handleBlur}/>
+                                            <input type="text" name="jumlah_bayar" className="form-control" value={toCurrency(this.state.jumlah_bayar)} onChange={(e)=>this.handleChange(e,true)} onKeyUp={(e)=>this.handleChange(e,true)}/>
                                             <div className="invalid-feedback"
                                                  style={this.state.error.jumlah_bayar !== "" ? {display: 'block'} : {display: 'none'}}>
                                                 {this.state.error.jumlah_bayar}
@@ -315,7 +324,7 @@ class BayarMutasiJualBeliFrom extends Component{
                         <hr/>
                         <div className="row">
                             <div className="col-md-12">
-                                <div className="table-responsive">
+                                <div className="table-responsive d-none">
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>
@@ -350,12 +359,13 @@ class BayarMutasiJualBeliFrom extends Component{
                                 <button className="btn btn-primary" onClick={(e)=>this.handleSave(e,'simpan')} style={{marginRight:"5px"}}>{
                                     !this.props.isLoading?'Simpan':'loading......'
                                 }</button>
-                                <button className="btn btn-danger" onClick={(e)=>this.handleSave(e,'batal')}>Batal</button>
+                                <button className="btn btn-danger" onClick={this.props.action(false)}>Kembali</button>
                             </div>
                         </div>
                     </div>
+                    {this.props.isLoading?<Preloader/>:''}
                 </div>
-            </Layout>
+            // </Layout>
         );
     }
 

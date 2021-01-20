@@ -61,7 +61,7 @@ export const FetchDataBayarMutasiJualBeli = (kode) => {
                 const data = response.data;
                 
                 dispatch(setBayarMutasiJualBeli(data));
-                dispatch(FetchCodeBayarMutasiJualBeli(data.result.lokasi_tujuan));
+                dispatch(FetchCodeBayarMutasiJualBeli(data.result.kd_tujuan));
                 dispatch(setLoadingMutasiJualBeli(false));
             })
             .catch(function (error) {
@@ -92,11 +92,11 @@ export const storeMutasiJualBeli = (data) => {
                     title: 'Transaksi berhasil.',
                     text: `Disimpan dengan nota: ${data.result.insertId}`,
                     icon: 'info',
-                    showCancelButton: true,
+                    showCancelButton: false,
                     confirmButtonColor: '#ff9800',
-                    cancelButtonColor: '#2196F3',
-                    confirmButtonText: 'Print Nota?',
-                    cancelButtonText: 'Oke!'
+                    // cancelButtonColor: '#2196F3',
+                    confirmButtonText: 'Ok',
+                    // cancelButtonText: 'Oke!'
                 }).then((result) => {
                     window.location.reload(false);
                 })

@@ -12,7 +12,6 @@ class Print3ply extends Component {
             data:[],
             newLogo:''
         };
-        this.props.dispatch(FetchAlokasiDetail(1,this.props.match.params.id,'','',''))
     }
     
     UNSAFE_componentWillReceiveProps(nextProps){

@@ -146,7 +146,7 @@ class FormApprovalMutation extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(FetchApprovalMutation(1,'','',this.props.parameterMutasi==='TR'?'TR':''))
+        // this.props.dispatch(FetchApprovalMutation(1,'','',this.props.parameterMutasi==='TR'?'TR':''))
     };
 
     render(){
@@ -176,7 +176,7 @@ class FormApprovalMutation extends Component{
                                 this.state.dataApproval.map((v,i)=>{
                                     return(
                                         <tr key={i}>
-                                            <td style={columnStyle}><input type="checkbox" name="checked" checked={v.checked} defaultValue={v.checked} onChange={(e)=>this.handleCheck(e,i)} /></td>
+                                            <td style={columnStyle}><input type="checkbox" className={v.isReadonly?'d-none':''} name="checked" checked={v.checked} defaultValue={v.checked} onChange={(e)=>this.handleCheck(e,i)} /></td>
                                             <td style={columnStyle}>{i+1}</td>
                                             <td style={columnStyle}>{v.kd_brg}</td>
                                             <td style={columnStyle}>{v.barcode}</td>
