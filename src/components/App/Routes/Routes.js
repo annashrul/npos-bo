@@ -71,10 +71,12 @@ import Packing3ply from "../print/packing3ply";
 import Expedisi3ply from "../print/expedisi3ply";
 import BayarHutang3ply from "../print/bayar_hutang3ply";
 import BayarPiutang3ply from "../print/bayar_piutang3ply";
+import BayarMutasi3ply from "../print/bayar_mutasi3ply";
 import Pembelian3ply from "../print/pembelian3ply";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
 import priceTagPrint from "../print/priceTag";
+import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
     <div>
@@ -89,10 +91,12 @@ const Routes = (
             <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
             <Route path="/bayar_hutang3ply/:id" exact strict component={BayarHutang3ply} />
             <Route path="/bayar_piutang3ply/:id" exact strict component={BayarPiutang3ply} />
+            <Route path="/bayar_mutasi3ply" exact strict component={BayarMutasi3ply} />
             <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
             <Route path="/retur3ply" exact strict component={Retur3ply} />
             <Route path="/po3ply" exact strict component={Po3ply} />
             <Route path="/priceTag" exact strict component={priceTagPrint} />
+            <Route path="/approvalAlokasi3ply" exact strict component={approvalAlokasi3ply} />
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}

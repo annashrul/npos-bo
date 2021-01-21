@@ -63,6 +63,44 @@ export const rePrintFaktur = (id) => {
                 const data = response.data;
                 if(data.status==='success'){
                     window.open(data.result.nota, '_blank');
+                    Swal.fire({
+                        allowOutsideClick:false,
+                        title: 'Transaksi berhasil.',
+                        type: 'info',
+                        html: `Disimpan dengan nota: ${id}` +
+                            "<br><br>" +
+                            '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+                            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
+                        showCancelButton: true,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        if(result.dismiss === 'cancel'){
+                            window.location.reload();
+                            // window.open(`/approval_mutasi`, '_top');
+                        }
+                    })
+                    document.getElementById("btnNotaPdf").addEventListener("click", () => {
+                        // const win = window.open(data['kd_trx'], '_blank');
+                        // if (win != null) {
+                        //     win.focus();
+                        // }
+                        
+                        dispatch(rePrintFaktur(id));
+                    });
+                    document.getElementById("btnNota3ply").addEventListener("click", () => {
+                        // param({
+                        //     pathname: `/approvalAlokasi3ply`,
+                        //     state: {
+                        //         data: rawdata,
+                        //     }
+                        // })
+                        // Swal.closeModal();
+                        // return false;
+                            const win = window.open(`/alokasi3ply/${id}`, '_blank');
+                            if (win != null) {
+                                win.focus();
+                            }
+                    });
                 }else{
                     Swal.fire({
                         title: 'failed',
@@ -130,10 +168,21 @@ export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
 
 export const saveApprovalMutation = (data,param) => {
     return (dispatch) => {
+        // let rawdata = data;
         // dispatch(setLoading(true))
+        Swal.fire({
+            allowOutsideClick:false,
+            title: 'Silahkan tunggu.',
+            html: 'Sedang memproses data..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         const url = HEADERS.URL + `mutasi/approve`;
-        axios.post(url, data)
+        axios.post(url, data.data)
             .then(function (response) {
+                Swal.close()
 //                const data = (response.data)
 //                if (data.status === 'success') {
 //                    Toast.fire({
@@ -149,18 +198,19 @@ export const saveApprovalMutation = (data,param) => {
 //                }
                 // const data = data['kd_trx']
                 Swal.fire({
+                    allowOutsideClick:false,
                     title: 'Transaksi berhasil.',
                     type: 'info',
-                    html: `Disimpan dengan nota: ${data['kd_trx']}` +
+                    html: `Disimpan dengan nota: ${data.data['kd_trx']}` +
                         "<br><br>" +
                         '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
-                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
+                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
                     showCancelButton: true,
                     showConfirmButton: false
                 }).then((result) => {
                     if(result.dismiss === 'cancel'){
-                        // window.location.reload(false);
-                        window.open(`/approval_mutasi`, '_top');
+                        window.location.reload();
+                        // window.open(`/approval_mutasi`, '_top');
                     }
                 })
                 document.getElementById("btnNotaPdf").addEventListener("click", () => {
@@ -169,15 +219,18 @@ export const saveApprovalMutation = (data,param) => {
                     //     win.focus();
                     // }
                     
-                    dispatch(rePrintFaktur(data['kd_trx']));
+                    dispatch(rePrintFaktur(data.data['kd_trx']));
                 });
                 document.getElementById("btnNota3ply").addEventListener("click", () => {
                     // param({
-                    //     pathname: `/alokasi3ply/${data['kd_trx']}`
+                    //     pathname: `/approvalAlokasi3ply`,
+                    //     state: {
+                    //         data: rawdata,
+                    //     }
                     // })
                     // Swal.closeModal();
                     // return false;
-                        const win = window.open(`/alokasi3ply/${data['kd_trx']}`, '_blank');
+                        const win = window.open(`/alokasi3ply/${data.data['kd_trx']}`, '_blank');
                         if (win != null) {
                             win.focus();
                         }

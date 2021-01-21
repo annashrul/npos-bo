@@ -31,8 +31,8 @@ class BayarMutasiJualBeli extends Component{
     toggle(e,index){
         e.preventDefault();
         this.setState({
-            isOpen:!this.state.isOpen,
-            indexOpen:index
+            // isOpen:!this.state.isOpen,
+            indexOpen:index===this.state.indexOpen?null:index
         })
     }
     handleBayar(e,kode){
@@ -64,11 +64,11 @@ class BayarMutasiJualBeli extends Component{
         }
     }
     render(){
-        const {last_page,current_page,per_page,data,total_piutang} = this.props.getKartuPiutang===undefined?{'last_page':'','per_page':'','current_page':'','data':[],'total_piutang':''}:this.props.getKartuPiutang;
+        const {last_page,current_page,per_page,data,total_hutang} = this.props.getKartuPiutang===undefined?{'last_page':'','per_page':'','current_page':'','data':[],'total_hutang':''}:this.props.getKartuPiutang;
         return (
             <Layout page="Bayar Mutasi Jual Beli">
             <Card>
-                    <CardHeader className="bg-transparent d-flex align-items-center justify-content-between"><h4>Pembayaran Mutasi</h4><h4>Total Nominal Mutasi Rp. {toRp(parseInt(total_piutang,10))}</h4></CardHeader>
+                    <CardHeader className="bg-transparent d-flex align-items-center justify-content-between"><h4>Pembayaran Mutasi Jual Beli</h4><h4>Total Nominal Mutasi Rp. {toRp(parseInt(total_hutang,10))}</h4></CardHeader>
                     <CardBody hidden={this.state.isPay}>
                         <form onSubmit={this.handlesearch} noValidate>
                             <div className="row">
@@ -101,10 +101,10 @@ class BayarMutasiJualBeli extends Component{
                                                             {v.asal} | Sisa : Rp. {toRp(parseInt(v.sisa_hutang,10))}
                                                             {/* </button> */}
                                                         </h5>
-                                                        <h5><i className={this.state.isOpen&&this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
+                                                        <h5><i className={this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
                                                         </div>
                                                     </button>
-                                                        <Collapse isOpen={this.state.isOpen&&this.state.indexOpen===i}>
+                                                        <Collapse isOpen={this.state.indexOpen===i}>
                                                             <Card>
                                                             <CardBody style={{minHeight:'min-content',maxHeight:'400px',overflowX:'auto'}}>
                                                                 {
@@ -119,11 +119,12 @@ class BayarMutasiJualBeli extends Component{
                                                                                                 {w.no_faktur_mutasi} | Sisa : Rp. {toRp(parseInt(w.sisa_hutang,10))}
                                                                                                 {/* </button> */}
                                                                                             </h6>
+                                                                                            <p className="text-light">Lokasi Asal : {w.kd_lokasi_1} | Lokasi Tujuan : {w.kd_lokasi_2}</p>
                                                                                             <small className="text-light">{moment(w.tgl).format('YYYY-MM-DD')} | </small>
-                                                                                            <small className="text-light">Piutang : {toRp(parseInt(w.piutang,10))} | </small>
+                                                                                            <small className="text-light">Hutang : {toRp(parseInt(w.hutang,10))} | </small>
                                                                                             <small className="text-light">Dibayar : {toRp(parseInt(w.dibayar,10))}</small>
                                                                                         </div>
-                                                                                        <button className="btn btn-primary" onClick={(e)=>this.handleBayar(e,w.kd_trx)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                                        <button className="btn btn-primary" onClick={(e)=>this.handleBayar(e,w.no_faktur_mutasi)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                                                                         <i class="fa fa-usd"></i>&nbsp;Bayar
                                                                                         </button>
                                                                                     </div>
@@ -166,6 +167,7 @@ class BayarMutasiJualBeli extends Component{
 const mapStateToPropsCreateItem = (state) => ({
     auth:state.auth,
     isOpen:state.modalReducer,
+    getKartuPiutang:state.mutasiJualBeliReducer.kartu_data,
     isLoading:state.mutasiJualBeliReducer.isLoading,
 });
 

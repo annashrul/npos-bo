@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import {FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
+// import {FetchAlokasiDetail} from "redux/actions/inventory/alokasi.action";
 import connect from "react-redux/es/connect/connect";
 import Layout from './layout';
-import {toRp} from 'helper';
+// import {toRp} from 'helper';
 import Barcode from 'react-barcode';
-import moment from 'moment'
+// import moment from 'moment'
 class Print3ply extends Component {
     constructor(props) {
         super(props);
@@ -12,32 +12,49 @@ class Print3ply extends Component {
             data:[],
             newLogo:''
         };
-        this.props.dispatch(FetchAlokasiDetail(1,this.props.match.params.id,'','',''))
     }
     
-    UNSAFE_componentWillReceiveProps(nextProps){
-        let getData = nextProps.alokasiDetail.length!==0?nextProps.alokasiDetail:0
-        if(getData!==0 && nextProps.auth.user.logo!==undefined){
-            if(this.state.newLogo === ''){
-                const xhr = new XMLHttpRequest();
-                xhr.onload = () => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        this.setState({newLogo : reader.result});
-                    };
-                    reader.readAsDataURL(xhr.response);
-                };
-                xhr.open('GET', nextProps.auth.user.logo!==undefined?nextProps.auth.user.logo:'');
-                xhr.responseType = 'blob';
-                xhr.send();
-            }
-        }
-        this.setState({
-            data: getData,
-        })
+    // UNSAFE_componentWillReceiveProps(nextProps){
+    //     let getData = nextProps.parse.length!==0?nextProps.parse:0
+    //     if(getData!==0 && nextProps.auth.user.logo!==undefined){
+    //         if(this.state.newLogo === ''){
+    //             const xhr = new XMLHttpRequest();
+    //             xhr.onload = () => {
+    //                 const reader = new FileReader();
+    //                 reader.onloadend = () => {
+    //                     this.setState({newLogo : reader.result});
+    //                 };
+    //                 reader.readAsDataURL(xhr.response);
+    //             };
+    //             xhr.open('GET', nextProps.auth.user.logo!==undefined?nextProps.auth.user.logo:'');
+    //             xhr.responseType = 'blob';
+    //             xhr.send();
+    //         }
+    //     }
+    //     this.setState({
+    //         data: getData,
+    //     })
+    // }
+    componentWillMount(){
+        const getData = this.props.location.state.data;
+        console.log(getData)
+        // this.setState({
+        //     data: getData.detail,
+        //     master: getData.master,
+        //     nota: getData.nota,
+        //     logo: getData.logo,
+        //     user: getData.user,
+        //     lokasi: getData.lokasi,
+        // })
+    }
+
+    getLogo(){
+        const simg = document.getElementsByClassName('selected__img');
+        const src = simg[0].src;
+        return src
     }
     render() {
-        const {detail,total,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi,no_faktur_beli}=this.state.data;
+        // const {detail,total,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi,no_faktur_beli}=this.state.data;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -63,7 +80,7 @@ class Print3ply extends Component {
                             <td width="2%" />
                             <td width="29%" />
                         </tr>
-                        <tr>
+                        {/* <tr>
                             <td />
                             <td>Tanggal</td>
                             <td>:</td>
@@ -92,7 +109,7 @@ class Print3ply extends Component {
                             <td>Keterangan</td>
                             <td>:</td>
                             <td>{keterangan}</td>
-                        </tr>
+                        </tr> */}
                         </tbody>
                     </table>
                     <table width="99%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
@@ -108,7 +125,7 @@ class Print3ply extends Component {
                         </tr>
                         </thead>
                         <tbody>
-                        {
+                        {/* {
                             detail!==undefined?detail.data.map((item,index)=>{
                                 return (
                                     <tr key={index} >
@@ -123,12 +140,12 @@ class Print3ply extends Component {
                                 )
                             }):"no data"
 
-                        }
+                        } */}
                         </tbody>
                         <tfoot>
                         <tr>
                             <td colSpan={6} style={{borderTop: '', borderWidth: '',paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{toRp(total)}</td>
+                            {/* <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{toRp(total)}</td> */}
                             <td style={{borderTop: '', borderWidth: ''}} />
                         </tr>
                         </tfoot>

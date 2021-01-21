@@ -105,14 +105,32 @@ export const FetchNotaSale = (lokasi) => {
 export const FetchNotaReceipt = (kd_trx) => {
     return (dispatch) => {
         dispatch(setLoading(true));
+        Swal.fire({
+            title: 'Silahkan tunggu.',
+            html: 'Sedang memproses faktur..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         axios.get(HEADERS.URL + `report/penjualan/nota/${kd_trx}`)
             .then(function (response) {
+                Swal.close()
                 const data = response.data
+                if(data.status==='success'){
+                    // window.open(data.result.nota, '_blank');
+                    const win = window.open(data.result.nota, '_blank');
+                    if (win != null) {
+                        win.focus();
+                    }
+                }else{
+                    Swal.fire({
+                        title: 'failed',
+                        type: 'error',
+                        text: 'Gagal mengambil faktur.',
+                    });
 
-               const win = window.open(data.result.nota, '_blank');
-               if (win != null) {
-                   win.focus();
-               }
+                }
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
