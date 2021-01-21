@@ -108,7 +108,7 @@ class ApprovalMutasiJualBeli extends Component{
                         <div className="card-body d-flex align-items-center justify-content-between">
                             <h5>Approval Mutasi</h5>
                             <div>
-                                <Link to="report/mutation" className="btn btn-outline-info"><i className="fa fa-eye"></i>&nbsp;VIEW REPORT</Link>
+                                <Link to="report/alokasi_trx" className="btn btn-outline-info"><i className="fa fa-eye"></i>&nbsp;VIEW REPORT</Link>
                             </div>
                         </div>
                     </div>
