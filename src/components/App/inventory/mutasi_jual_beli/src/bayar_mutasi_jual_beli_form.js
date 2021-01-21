@@ -11,6 +11,7 @@ import {toRp} from "helper";
 import moment from "moment";
 import {FetchBank, setBank} from "redux/actions/masterdata/bank/bank.action";
 import { rmComma, toCurrency } from '../../../../../helper';
+import { withRouter } from 'react-router-dom';
 
 class BayarMutasiJualBeliFrom extends Component{
     constructor(props) {
@@ -59,7 +60,7 @@ class BayarMutasiJualBeliFrom extends Component{
             location:param.getData.kd_tujuan,
             total_hutang:param.getData.nilai_pembelian,
             jumlah_sudah_bayar:param.getData.jumlah_bayar,
-            sisa_hutang:parseInt(param.getData.nilai_pembelian,10)-parseInt(param.getData.jumlah_bayar),
+            sisa_hutang:parseInt(param.getData.nilai_pembelian,10)-parseInt(param.getData.jumlah_bayar,10),
 
         });
         if (param.auth.user) {
@@ -210,7 +211,7 @@ class BayarMutasiJualBeliFrom extends Component{
                 parseData['bank'] = this.state.bank;
                 parseData['keterangan'] ='-';
                 parseData['userid'] =this.state.userid;
-                this.props.dispatch(storeMutasiJualBeli(parseData));
+                this.props.dispatch(storeMutasiJualBeli(parseData,(arr)=>this.props.history.push(arr)));
             }
 
         }else{
@@ -381,4 +382,4 @@ const mapStateToPropsCreateItem = (state) => ({
     getBank:state.bankReducer.data
 });
 
-export default connect(mapStateToPropsCreateItem)(BayarMutasiJualBeliFrom);
+export default withRouter(connect(mapStateToPropsCreateItem)(BayarMutasiJualBeliFrom));

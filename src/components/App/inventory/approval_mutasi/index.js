@@ -5,7 +5,7 @@ import connect from "react-redux/es/connect/connect";
 import {FetchApprovalMutation} from "redux/actions/inventory/mutation.action";
 import moment from "moment";
 // import Preloader from "../../../../Preloader";
-// import Paginationq from "helper";
+import Paginationq from "helper";
 import {ModalToggle, ModalType} from "../../../../redux/actions/modal.action";
 import FormApprovalMutation from "../../modals/inventory/mutation/form_approval_mutation";
 import {FetchApprovalMutationDetail} from "../../../../redux/actions/inventory/mutation.action";
@@ -64,7 +64,7 @@ class ApprovalMutasi extends Component{
         this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx!==''?this.state.kd_trx:'',lk.value,''));
     }
     handlePageChange(pageNumber){
-        this.props.dispatch(FetchApprovalMutation(pageNumber,'','',''))
+        this.props.dispatch(FetchApprovalMutation(pageNumber,this.state.kd_trx!==''?this.state.kd_trx:'',this.state.location!==''?this.state.location:'',''))
     }
     handleChange = (event) => {
         this.setState({ [event.target.name]: event.target.value });
@@ -100,7 +100,7 @@ class ApprovalMutasi extends Component{
             // to,
             data
         } = this.props.mutation;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        // const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Approval Mutasi">
                 <div className="card">
@@ -227,6 +227,15 @@ class ApprovalMutasi extends Component{
                                                                         )
                                                                     }) : "No data." : "No data."
                                                                 }
+                                                                {this.props.isLoading?false:this.state.indexOpen===i?
+                                                                <div style={{"marginTop":"20px","float":"right"}}>
+                                                                    <Paginationq
+                                                                        current_page={current_page}
+                                                                        per_page={per_page}
+                                                                        total={total}
+                                                                        callback={this.handlePageChange.bind(this)}
+                                                                    />
+                                                                </div>:''}
                                                             </CardBody>
                                                             </Card>
                                                         </Collapse>
