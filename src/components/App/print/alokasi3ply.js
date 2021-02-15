@@ -37,7 +37,8 @@ class Print3ply extends Component {
         })
     }
     render() {
-        const {detail,total,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi,no_faktur_beli}=this.state.data;
+        const {detail,operator,keterangan,lokasi_asal,lokasi_tujuan,tgl_mutasi,no_faktur_beli}=this.state.data;
+        let amount_total=0;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -103,6 +104,7 @@ class Print3ply extends Component {
                             <td style={{width: '15%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Barcode</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Satuan</td>
                             <td style={{width: '10%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Qty</td>
+                            <td style={{width: '10%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Qty diterima</td>
                             <td style={{width: '20%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Harga jual</td>
                             <td style={{width: '20%', borderBottom: '', borderWidth: '', paddingLeft: '5pt'}} className="text-center">Amount</td>
                         </tr>
@@ -110,6 +112,7 @@ class Print3ply extends Component {
                         <tbody>
                         {
                             detail!==undefined?detail.data.map((item,index)=>{
+                                amount_total += item.hrg_jual * (item.qty - item.qty_retur)
                                 return (
                                     <tr key={index} >
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-center">{index+1}</td>
@@ -117,8 +120,9 @@ class Print3ply extends Component {
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{item.qty}</td>
+                                        <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{item.qty-item.qty_retur}</td>
                                         <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_jual)}</td>
-                                        <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_jual*item.qty)}</td>
+                                        <td style={{border: 'solid', borderWidth: '', paddingLeft: '5pt'}} className="text-right">{toRp(item.hrg_jual*(item.qty-item.qty_retur))}</td>
                                     </tr>
                                 )
                             }):"no data"
@@ -127,8 +131,8 @@ class Print3ply extends Component {
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colSpan={6} style={{borderTop: '', borderWidth: '',paddingLeft: '25pt'}}>TOTAL</td>
-                            <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{toRp(total)}</td>
+                            <td colSpan={7} style={{borderTop: '', borderWidth: '',paddingLeft: '25pt'}}>TOTAL</td>
+                            <td className="text-right" style={{borderTop: '', borderWidth: '', paddingLeft: '5pt'}}>{toRp(amount_total)}</td>
                             <td style={{borderTop: '', borderWidth: ''}} />
                         </tr>
                         </tfoot>

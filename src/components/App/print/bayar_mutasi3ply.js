@@ -42,7 +42,6 @@ class Print3ply extends Component {
         }
         const getData = nextProps.location.state.data;
         const getNota = nextProps.location.state.nota;
-        console.log(getData)
         
         this.setState({
             jenis_pembayaran: getData.jenis_pembayaran,
@@ -59,7 +58,6 @@ class Print3ply extends Component {
     componentWillMount(){
         // const getData = this.props.location.state.data;
         // const getNota = this.props.location.state.nota;
-        // console.log(getData)
         
         // this.setState({
         //     jenis_pembayaran: getData.jenis_pembayaran,

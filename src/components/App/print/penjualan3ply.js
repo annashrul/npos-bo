@@ -57,7 +57,6 @@ class Print3ply extends Component {
             xhr.send();
         }
         let gt=0;
-                                console.log(data);
         return (
             <Layout>
                 <div  id="print_3ply">

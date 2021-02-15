@@ -666,7 +666,6 @@ class DeliveryNote extends Component{
 
     render() {
         if(this.state.isScroll===true)this.handleScroll();
-        console.log(this.state.isScroll);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let subtotal = 0;
         return (

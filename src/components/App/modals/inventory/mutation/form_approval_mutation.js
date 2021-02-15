@@ -40,6 +40,7 @@ class FormApprovalMutation extends Component{
                     "nm_brg":v.nm_brg,
                     "satuan":v.satuan,
                     "hrg_beli":v.hrg_beli,
+                    "hrg_jual":v.hrg_jual,
                     "total_qty":v.total_qty,
                     "total_approval":v.total_approval,
                     "sisa_approval":v.total_qty,
@@ -193,6 +194,7 @@ class FormApprovalMutation extends Component{
                             <th className="text-black" style={columnStyle}>Nama Barang</th>
                             <th className="text-black" style={columnStyle}>Satuan</th>
                             <th className="text-black" style={columnStyle}>Harga Beli</th>
+                            <th className="text-black" style={columnStyle}>Harga Jual</th>
                             <th className="text-black" style={columnStyle}>Total Qty</th>
                             <th className="text-black" style={columnStyle}>Total Approval</th>
                             <th className="text-black" style={columnStyle}>Qty Approval</th>
@@ -211,6 +213,7 @@ class FormApprovalMutation extends Component{
                                             <td style={columnStyle}>{v.nm_brg}</td>
                                             <td style={columnStyle}>{v.satuan}</td>
                                             <td style={columnStyle}>{v.hrg_beli}</td>
+                                            <td style={columnStyle}>{v.hrg_jual}</td>
                                             <td style={columnStyle}>{v.total_qty}</td>
                                             <td style={columnStyle}>{v.total_approval}</td>
                                             <td style={columnStyle}>

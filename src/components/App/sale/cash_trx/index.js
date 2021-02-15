@@ -97,7 +97,6 @@ class Sale extends Component{
         // e.preventDefault();
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column)
         if(column==='jumlah'){
             this.setState({
                 jumlah: (val.replace(/,/g,'').replace(/\D/,''))

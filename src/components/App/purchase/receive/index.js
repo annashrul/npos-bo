@@ -462,7 +462,6 @@ class Receive extends Component{
                         final[column]=val
                     }
                 })
-                console.log(final);
                 update(table, final)
                 ToastQ.fire({
                     icon: 'success',
@@ -1390,8 +1389,6 @@ class Receive extends Component{
                                                                             case x===3:hrgName='harga4';break;
                                                                         }
                                                                         hrgValue = this.state.brgval[index][hrgName];
-                                                                        console.log("HARGAAA", this.state.brgval);
-                                                                        console.log("HARGAAA", hrgValue);
 
                                                                         container.push(
 

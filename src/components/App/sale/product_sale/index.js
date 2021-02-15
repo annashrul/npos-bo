@@ -83,7 +83,6 @@ class Sale extends Component{
     }
 
     componentDidMount(){
-        console.log("componentDidMount");
         this.getData();
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.props.dispatch(FetchNotaSale(localStorage.lk));
@@ -96,8 +95,6 @@ class Sale extends Component{
                 customer: localStorage.cs
             })
         }
-        console.log("CS",localStorage.cs);
-        console.log("LK",localStorage.lk);
         if (localStorage.cs !== undefined && localStorage.lk!==undefined) {
 
             let where=`lokasi=${localStorage.lk}&customer=${localStorage.cs}`;
@@ -109,7 +106,6 @@ class Sale extends Component{
                 if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
                 if(parseInt(this.state.searchby,10)===3){if(where!==''){where+='&';}where+=`searchby=deskripsi`}
             }
-            console.log(where);
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=${this.state.perpage}`,'sale',this.autoSetQty));
         }
 
@@ -398,12 +394,17 @@ class Sale extends Component{
                     harga2: res.harga2,
                     harga3: res.harga3,
                     harga4: res.harga4,
+                    harga_old: res.harga,
+                    hrg_beli: res.hrg_beli,
                     stock: res.stock,
                     diskon_persen: res.diskon_persen,
                     diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
-                    tambahan: res.tambahan
+                    kategori: item.kategori,
+                    services: item.services,
+                    tambahan: item.tambahan,
+                    isOpenPrice: item.isOpenPrice,
                 })
             }
 
@@ -553,7 +554,6 @@ class Sale extends Component{
                         "status": "LUNAS",
                         "optional_note":this.state.catatan
                     };
-                    console.log(detail);
                     this.setState({
                         master:master,
                         detail:detail
@@ -667,7 +667,6 @@ class Sale extends Component{
                 if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
                 if(parseInt(this.state.searchby,10)===3){if(where!==''){where+='&';}where+=`searchby=deskripsi`}
             }
-            // console.log(localStorage.anySaleTrx);
             // let where=`lokasi=${this.state.location}&customer=${this.state.customer}&perpage=${this.state.perpage}`;
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=${this.state.perpage}`,'sale',this.autoSetQty));
             this.setState({scrollPage:this.state.scrollPage+5});
@@ -738,7 +737,7 @@ class Sale extends Component{
             value: '1000001',
             label: 'UMUM'
         }];
-        // console.log(this.props.customer);
+
         if (this.props.customer !== undefined && this.props.customer !== []) {
             this.props.customer.map(i=>{
                 opCustomer.push({

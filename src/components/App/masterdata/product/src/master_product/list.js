@@ -406,7 +406,6 @@ class ListProduct extends Component{
         const {total,per_page,current_page,data} = this.props.data;
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left"};
-        console.log(data);
         // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         return (
             <div>

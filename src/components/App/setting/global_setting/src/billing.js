@@ -74,8 +74,6 @@ class Billing extends Component{
             };
         }
 
-        console.log("DATA",parsedata);
-
         let timerInterval;
         Swal.fire({allowOutsideClick: false,
             title: 'Tunggu Sebentar',

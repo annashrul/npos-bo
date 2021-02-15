@@ -41,7 +41,7 @@ import TransactionReport from '../report/inventory/transaction'
 import ProductionReport from '../report/inventory/production'
 import LogTrxReport from '../report/log/log_trx'
 import LogActReport from '../report/log/log_act'
-import Closing from '../report/inventory/closing'
+import Closing from '../report/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import SaleByProductArchive from '../report/sale/sale_by_product_archive'
@@ -76,7 +76,7 @@ import Pembelian3ply from "../print/pembelian3ply";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
 import priceTagPrint from "../print/priceTag";
-import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
+// import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
     <div>
@@ -96,7 +96,7 @@ const Routes = (
             <Route path="/retur3ply" exact strict component={Retur3ply} />
             <Route path="/po3ply" exact strict component={Po3ply} />
             <Route path="/priceTag" exact strict component={priceTagPrint} />
-            <Route path="/approvalAlokasi3ply" exact strict component={approvalAlokasi3ply} />
+            {/* <Route path="/approvalAlokasi3ply" exact strict component={approvalAlokasi3ply} /> */}
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}

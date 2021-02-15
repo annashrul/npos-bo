@@ -12,7 +12,7 @@ import moment from "moment";
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
-import {statusQ} from "helper";
+import {statusQ,toRp} from "helper";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 class TransactionReport extends Component{
@@ -247,9 +247,11 @@ class TransactionReport extends Component{
             current_page,
             // from,
             // to,
+            total_periode,
             data,
             // total
         } = this.props.transactionReport;
+        let ns=0;let hp=0;let pr=0;
         return (
             <Layout page="Laporan Alokasi Transaksi">
                 <div className="col-12 box-margin">
@@ -340,7 +342,9 @@ class TransactionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Asal</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Tujuan</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No. Faktur Beli</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Net Sales</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Hpp</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Profit</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status Penerimaan</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status Pembayaran</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
@@ -353,6 +357,9 @@ class TransactionReport extends Component{
                                                 (
                                                     typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
+                                                            ns+=parseInt(v.net_sales,10);
+                                                            hp+=parseInt(v.hpp,10);
+                                                            pr+=parseInt(v.profit,10);
                                                             return(
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
@@ -376,7 +383,9 @@ class TransactionReport extends Component{
                                                                     <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
                                                                     <td style={columnStyle}>{v.lokasi_asal}</td>
                                                                     <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                                                                    <td style={columnStyle}>{v.no_faktur_beli}</td>
+                                                                    <td style={columnStyle}>{toRp(v.net_sales)}</td>
+                                                                    <td style={columnStyle}>{toRp(v.hpp)}</td>
+                                                                    <td style={columnStyle}>{toRp(v.profit)}</td>
                                                                     <td style={columnStyle}>{
                                                                         v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")
                                                                         // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
@@ -393,9 +402,26 @@ class TransactionReport extends Component{
                                                         : "No data." : "No data."
                                                 )
                                             }
+                                            
                                             </tbody>
                                         ):<Preloader/>
                                     }
+                                    <tfoot>
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
+                                            <td colSpan="6">TOTAL PERPAGE</td>
+                                            <td style={{textAlign:"right"}}>{toRp(ns)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(hp)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(pr)}</td>
+                                            <td colSpan="3"></td>
+                                        </tr>
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
+                                            <td colSpan="6">TOTAL</td>
+                                            <td style={{textAlign:"right"}}>{toRp(total_periode!==undefined?total_periode.net_sales:0)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(total_periode!==undefined?total_periode.hpp:0)}</td>
+                                            <td style={{textAlign:"right"}}>{toRp(total_periode!==undefined?total_periode.profit:0)}</td>
+                                            <td colSpan="3"></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>
