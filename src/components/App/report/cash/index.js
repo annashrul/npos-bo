@@ -1,16 +1,16 @@
 import React,{Component} from 'react'
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {FetchCashReport} from "redux/actions/masterdata/cash/cash.action";
+import {FetchCashReportExcel,FetchCashReport,setUpdate} from "redux/actions/masterdata/cash/cash.action";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
 import Preloader from "../../../../Preloader";
 import {kassa, rangeDate, toRp} from "../../../../helper";
-import {FetchCashReportExcel} from "../../../../redux/actions/masterdata/cash/cash.action";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import CashReportExcel from 'components/App/modals/report/cash/form_cash_excel'
+import Updates from 'components/App/modals/report/cash/update'
 
 class ReportCash extends Component{
     constructor(props){
@@ -31,6 +31,7 @@ class ReportCash extends Component{
         this.HandleChangeType = this.HandleChangeType.bind(this);
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this)
 
     }
     componentWillReceiveProps = (nextProps) => {
@@ -156,6 +157,14 @@ class ReportCash extends Component{
         this.props.dispatch(ModalType("formCashExcel"));
         this.props.dispatch(FetchCashReportExcel(this.state.where_data,total));
     }
+
+    handleUpdate(e,data){
+        e.preventDefault();
+        const bool = !this.props.isOpen;
+        this.props.dispatch(setUpdate(data))
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formUpdateKasTrx"));
+    }
     checkingParameter(pageNumber){
         let where='';
         let dateFrom=localStorage.getItem("date_from_cash_report");
@@ -190,15 +199,11 @@ class ReportCash extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {
-            // total,
             last_page,
             per_page,
             current_page,
-            // from,
-            // to,
             data
         } = this.props.cashReport;
-        let subtotal=0;
         
         return (
             <Layout page="Laporan Kas">
@@ -288,78 +293,18 @@ class ReportCash extends Component{
                             </div>
                             <div className="col-md-12">
                                 <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
-                                    <table className="table table-hover table-bordered"  id="laporan_kas" style={{display:"none"}}>
-                                        <thead className="bg-light">
-                                        <tr>
-                                            <th className="text-black" colSpan={10}>TIPE : {this.state.type===''?'SEMUA':this.state.type.toUpperCase()}</th>
-                                        </tr>
-                                        <tr>
-                                            <th className="text-black" colSpan={10}>PERIODE: {this.state.startDate} - {this.state.startDate}</th>
-                                        </tr>
-                                        <tr>
-                                            <th className="text-black" colSpan={10}>LOKASI: {this.state.location===''?'SEMUA LOKASI':this.state.location}</th>
-                                        </tr>
-                                        <tr>
-                                            <th className="text-black" colSpan={10}>KASSA : {this.state.kassa===''?'SEMUA KASSA':this.state.kassa}</th>
-                                        </tr>
-                                        <tr>
-                                            <th className="text-black" style={columnStyle}>No</th>
-                                            <th className="text-black" style={columnStyle}>Tgl</th>
-                                            <th className="text-black" style={columnStyle}>Kd Trx</th>
-                                            <th className="text-black" style={columnStyle}>Keterangan</th>
-                                            <th className="text-black" style={columnStyle}>Lokasi</th>
-                                            <th className="text-black" style={columnStyle}>Kassa</th>
-                                            <th className="text-black" style={columnStyle}>Kasir</th>
-                                            <th className="text-black" style={columnStyle}>Tipe</th>
-                                            <th className="text-black" style={columnStyle}>Jenis</th>
-                                            <th className="text-black" style={columnStyle}>Jumlah</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        {
-                                            (
-                                                (typeof this.props.cashReportExcel.data === 'object') ? this.props.cashReportExcel.data.length > 0 ?
-                                                    this.props.cashReportExcel.data.map((v,i)=>{
-                                                        subtotal = subtotal+parseInt(v.jumlah,10);
-                                                        return(
-                                                            <tr key={i}>
-                                                                <td style={columnStyle}>{i+1}</td>
-                                                                <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
-                                                                <td style={columnStyle}>{v.kd_trx}</td>
-                                                                <td style={columnStyle}>{v.keterangan}</td>
-                                                                <td style={columnStyle}>{v.lokasi}</td>
-                                                                <td style={columnStyle}>{v.kassa}</td>
-                                                                <td style={columnStyle}>{v.kasir}</td>
-                                                                <td style={columnStyle}>{v.type}</td>
-                                                                <td style={columnStyle}>{v.jenis}</td>
-                                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.jumlah,10))}</td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                    : "No data." : "No data."
-                                            )
-                                        }
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <td colSpan={9}>TOTAL</td>
-                                            <td style={{textAlign:"right"}}>{toRp(subtotal)}</td>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
                                     <table className="table table-hover table-bordered">
                                         <thead className="bg-light">
                                         <tr>
-                                            <th className="text-black" style={columnStyle}>Kd Trx</th>
-                                            <th className="text-black" style={columnStyle}>Tgl</th>
+                                            <th className="text-black" style={columnStyle}>Kode Transaksi</th>
+                                            <th className="text-black" style={columnStyle}>Tipe</th>
+                                            <th className="text-black" style={columnStyle}>Jenis</th>
                                             <th className="text-black" style={columnStyle}>Jumlah</th>
                                             <th className="text-black" style={columnStyle}>Keterangan</th>
                                             <th className="text-black" style={columnStyle}>Lokasi</th>
-                                            <th className="text-black" style={columnStyle}>Kassa</th>
                                             <th className="text-black" style={columnStyle}>Kasir</th>
-                                            <th className="text-black" style={columnStyle}>Tipe</th>
-                                            <th className="text-black" style={columnStyle}>Jenis</th>
+                                            <th className="text-black" style={columnStyle}>Tanggal</th>
+                                            <th className="text-black" style={columnStyle}>Aksi</th>
                                         </tr>
                                         </thead>
                                         {
@@ -373,14 +318,20 @@ class ReportCash extends Component{
                                                                 return(
                                                                     <tr key={i}>
                                                                         <td style={columnStyle}>{v.kd_trx}</td>
-                                                                        <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}</td>
-                                                                        <td style={columnStyle}>{toRp(v.jumlah)}</td>
-                                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                                        <td style={columnStyle}>{v.lokasi}</td>
-                                                                        <td style={columnStyle}>{v.kassa}</td>
-                                                                        <td style={columnStyle}>{v.kasir}</td>
                                                                         <td style={columnStyle}>{v.type}</td>
                                                                         <td style={columnStyle}>{v.jenis}</td>
+                                                                        <td style={columnStyle}>{toRp(v.jumlah)}</td>
+                                                                        <td style={columnStyle}>{v.keterangan}</td>
+                                                                        <td style={columnStyle}>{v.lokasi} ({v.kassa})</td>
+                                                                        <td style={columnStyle}>{v.kasir}</td>
+                                                                        <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}</td>
+                                                                        <td style={columnStyle}><button className="btn btn-success" onClick={event=>{this.handleUpdate(event,{
+                                                                            kd_trx:v.kd_trx,
+                                                                            jumlah:v.jumlah,
+                                                                            keterangan:v.keterangan,
+                                                                            tgl:v.tgl,
+                                                                        })}}><i className="fa fa-edit"/></button></td>
+
                                                                     </tr>
                                                                 )
                                                             })
@@ -402,6 +353,7 @@ class ReportCash extends Component{
                                         callback={this.handlePageChange.bind(this)}
                                     />
                                     <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />
+                                    <Updates/>
                                 </div>
                             </div>
                         </div>

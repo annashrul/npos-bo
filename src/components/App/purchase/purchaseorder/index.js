@@ -43,6 +43,7 @@ class PurchaseOrder extends Component{
             perpage:5,
             scrollPage:0,
             isScroll:false,
+            toggleSide:false,
             error:{
                 location:"",
                 supplier:"",
@@ -61,6 +62,13 @@ class PurchaseOrder extends Component{
         this.HandleSearch = this.HandleSearch.bind(this);
         this.HandleCommonInputChange = this.HandleCommonInputChange.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
+        this.handleClickToggle = this.handleClickToggle.bind(this);
+    }
+    handleClickToggle(e) {
+        e.preventDefault();
+        this.setState({
+            toggleSide: !this.state.toggleSide
+        })
     }
     componentDidMount(){
         this.props.dispatch(FetchSupplierAll())
@@ -199,13 +207,24 @@ class PurchaseOrder extends Component{
             } else {
 
                 let final= {}
-                Object.keys(res).forEach((k) => {
-                    if(k!==column){
-                        final[k] = res[k];
-                    }else{
-                        final[column]=val
-                    }
-                })
+                if (column === 'ppn_nominal') {
+                    Object.keys(res).forEach((k, i) => {
+                        if (k !== 'ppn') {
+                            final[k] = res[k];
+                        } else {
+                            final['ppn'] = (parseFloat(val, 10) / parseFloat(res.harga_beli, 10)) * 100
+                        }
+                    })
+                } else {
+                    Object.keys(res).forEach((k, i) => {
+                        if (k !== column) {
+                            final[k] = res[k];
+                        } else {
+                            final[column] = val
+                        }
+                    })
+
+                }
                 update(table, final)
                 ToastQ.fire({
                     icon: 'success',
@@ -528,7 +547,7 @@ class PurchaseOrder extends Component{
         })
     }
     HandleSearch(){
-        if (this.state.supplier === "" || this.state.lokasi === "") {
+        if (this.state.supplier === "" || this.state.location === "") {
             Swal.fire(
                 'Gagal!',
                 'Pilih lokasi dan supplier terlebih dahulu.',
@@ -538,9 +557,9 @@ class PurchaseOrder extends Component{
             localStorage.setItem("anyPurchaseOrder",this.state.search);
             const searchby = parseInt(this.state.searchby,10)===1?'kd_brg':(parseInt(this.state.searchby,10)===2?'barcode':'deskripsi')
             if (this.getConfigSupplier() === 0) {
-                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, null,this.autoSetQty,5));
+                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, null,this.autoSetQty,5));
             } else {
-                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier,this.autoSetQty,5));
+                this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier,this.autoSetQty,5));
             }
             this.setState({search: ''});
 
@@ -555,6 +574,7 @@ class PurchaseOrder extends Component{
                     harga_beli: i.harga_beli,
                     diskon: i.diskon,
                     ppn: i.ppn,
+                    ppn_nominal: parseInt(i.harga_beli,10)*(parseFloat(i.ppn)/100),
                     qty: i.qty,
                     satuan: i.satuan
                 });
@@ -584,9 +604,9 @@ class PurchaseOrder extends Component{
                 searchby='deskripsi';
             }
             if (this.getConfigSupplier() === 0) {
-                this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.lokasi, null, this.autoSetQty,this.state.perpage));
+                this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.location, null, this.autoSetQty,this.state.perpage));
             } else {
-                this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+                this.props.dispatch(FetchBrg(1,searchby, localStorage.anyPurchaseOrder!==undefined?localStorage.anyPurchaseOrder:"", this.state.location, this.state.supplier, this.autoSetQty,this.state.perpage));
             }
             this.setState({scrollPage:this.state.scrollPage+5});
 
@@ -632,10 +652,11 @@ class PurchaseOrder extends Component{
             <Layout page="Purchase Order">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Purchase Order</h4>
+                        
+                        <h4><button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button> Purchase Order</h4>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"25%",marginRight:"10px"}:{display:'block',width:"25%",marginRight:"10px"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
@@ -711,7 +732,7 @@ class PurchaseOrder extends Component{
                                 </div>
                             </div>
                         </StickyBox>
-                        <div style={{width:"75%"}}>
+                        <div style={this.state.toggleSide?{width:"100%"}:{width:"75%"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <form className='' style={{zoom:"85%"}}>
@@ -930,7 +951,30 @@ class PurchaseOrder extends Component{
                                                                 <input style={{width:"100px",textAlign:"right"}} type='text' name='diskon' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{width:"100px",textAlign:"right"}} type='text' name='ppn' className="form-control" onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={this.state.brgval[index].ppn}/>
+                                                                <div style={{width: '130px', float: 'left'}}>
+                                                                    <div className="form-group" style={{width: '60px', float: 'left'}}>
+                                                                        <label style={{fontSize: '.8em'}}>persen</label>
+                                                                        <input 
+                                                                        style={{width:"100%",textAlign:"right"}}
+                                                                        className="form-control"
+                                                                        type='text'
+                                                                        name='ppn'
+                                                                        onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
+                                                                        onChange={(e)=>this.HandleChangeInputValue(e,index)}
+                                                                        value={this.state.brgval[index].ppn}/>
+                                                                    </div>
+                                                                    <div className="form-group" style={{width: '70px', float: 'right'}}>
+                                                                        <label style={{fontSize: '.8em'}}>nominal</label>
+                                                                        <input 
+                                                                        style={{width:"100%",textAlign:"right"}}
+                                                                        className="form-control"
+                                                                        type='text'
+                                                                        name='ppn_nominal'
+                                                                        onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
+                                                                        onChange={(e)=>this.HandleChangeInputValue(e,index)}
+                                                                        value={this.state.brgval[index].ppn_nominal}/>
+                                                                    </div>
+                                                                </div>
                                                             </td>
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"100px",textAlign:"right"}} readOnly className="form-control" type="text" value={item.stock}/>

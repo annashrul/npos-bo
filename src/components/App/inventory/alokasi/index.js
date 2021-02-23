@@ -65,6 +65,7 @@ class Alokasi extends Component{
             scrollPage:0,
             isScroll:false,
             perpage:5,
+            toggleSide:false,
             error:{
                 location:"",
                 location2: "",
@@ -89,7 +90,14 @@ class Alokasi extends Component{
         if(this.props.match.params.id!==undefined&&this.props.match.params.id!==''){
             this.props.dispatch(FetchAlokasiData(1,atob(this.props.match.params.id),'','','','99999'))
         }
-    }
+     this.handleClickToggle = this.handleClickToggle.bind(this);
+     }
+     handleClickToggle(e) {
+         e.preventDefault();
+         this.setState({
+             toggleSide: !this.state.toggleSide
+         })
+     }
 
     getProps(param){
         if (param.auth.user) {
@@ -798,7 +806,7 @@ class Alokasi extends Component{
             if(parseInt(this.state.searchby,10)===3){
                 searchby='deskripsi';
             }
-            this.props.dispatch(FetchBrg(1, searchby, localStorage.anyAlokasi!==undefined||localStorage.anyAlokasi!==""?localStorage.anyAlokasi:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            this.props.dispatch(FetchBrg(1, searchby, localStorage.anyAlokasi !== undefined || localStorage.anyAlokasi !== "" ? localStorage.anyAlokasi : "", this.state.location, this.state.supplier, this.autoSetQty, this.state.perpage));
             this.setState({scrollPage:this.state.scrollPage+5});
 
         }
@@ -825,12 +833,12 @@ class Alokasi extends Component{
             <Layout page="Alokasi">
                 <div className="card">
                     <div className="card-header">
-                        <h5>{this.props.match.params.id===undefined?'Alokasi':`Edit ${(String(atob(this.props.match.params.id)).substr(0,2)==='MU'?'Mutasi':String(atob(this.props.match.params.id)).substr(0,2)==='TR'?'Transaksi':'Alokasi')+' : '+atob(this.props.match.params.id)}`}</h5>
+                        <h5><button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button> {this.props.match.params.id===undefined?'Alokasi':`Edit ${(String(atob(this.props.match.params.id)).substr(0,2)==='MU'?'Mutasi':String(atob(this.props.match.params.id)).substr(0,2)==='TR'?'Transaksi':'Alokasi')+' : '+atob(this.props.match.params.id)}`}</h5>
                     </div>
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12" style={{zoom:"80%",display: 'flex', alignItems: 'flex-start' }}>
-                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px" }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"25%",marginRight:"10px"}:{display:'block',width:"25%",marginRight:"10px"}}>
                                     {this.props.match.params.id===undefined?
                                     <div className="chat-area">
                                         <div className="chat-header-text d-flex border-none mb-10">
@@ -988,7 +996,7 @@ class Alokasi extends Component{
                                     </div>
                                 </StickyBox>
                                 {/*START RIGHT*/}
-                                <div style={{width:"75%"}}>
+                                <div style={this.state.toggleSide?{width:"100%"}:{width:"75%"}}>
                                     <div className="card-header" style={{zoom:"80%"}}>
                                         <form className=''>
                                             <div className="row">

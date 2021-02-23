@@ -12,7 +12,12 @@ export function setCash(data=[]){
 export function setCashFailed(data=[]){
     return {type:CASH.FAILED,data}
 }
-
+export function setUpdate(data = []) {
+    return {
+        type: CASH.UPDATE,
+        data
+    }
+}
 
 export function successCashTrx(bool) {
     return {
@@ -63,6 +68,9 @@ export const FetchCash = (page=1,type='masuk',param=null,perpage=10)=>{
         })
     }
 }
+
+
+
 export const FetchCashDetail = (id)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -170,6 +178,61 @@ export const StoreCashTrx = (data) => {
 
     }
 }
+
+export const UpdateCashTrx = (kd_trx,data) => {
+    return (dispatch) => {
+        dispatch(setLoading(true));
+        const url = HEADERS.URL + `pos/kas/${btoa(kd_trx)}`;
+        axios.put(url,data)
+            .then(function (response) {
+                const data = (response.data);
+                
+                if (data.status === 'success') {
+                    // Swal.fire({allowOutsideClick: false,
+                    //     title: 'Success',
+                    //     type: 'success',
+                    //     text: data.msg,
+                    // });
+                    Swal.fire({allowOutsideClick: false,
+                        title: 'Success',
+                        text: data.msg,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Tutup'
+                    }).then((result) => {
+                        if (result.value) {
+                            dispatch(successCashTrx(true));
+                        }
+                    })
+                } else {
+                    Swal.fire({allowOutsideClick: false,
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(FetchCashReport());
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                // handle error
+                dispatch(setLoading(false));
+                
+                Swal.fire({allowOutsideClick: false,
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response === undefined?'error!':error.response.data.msg,
+                });
+                if (error.response) {
+                    
+                }
+            })
+
+    }
+}
+
 export const updateCash = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));

@@ -35,6 +35,7 @@ class TrxAdjustment extends Component{
             perpage:5,
             scrollPage:0,
             isScroll:false,
+            toggleSide: false,
             error:{
                 location:"",
                 catatan:""
@@ -50,8 +51,13 @@ class TrxAdjustment extends Component{
         this.HandleChangeInputValue=this.HandleChangeInputValue.bind(this);
         this.HandleChangeInput=this.HandleChangeInput.bind(this);
         this.handleLoadMore=this.handleLoadMore.bind(this);
-
-
+        this.handleClickToggle = this.handleClickToggle.bind(this);
+    }
+    handleClickToggle(e) {
+        e.preventDefault();
+        this.setState({
+            toggleSide: !this.state.toggleSide
+        })
     }
     getProps(param){
         if (param.auth.user) {
@@ -579,17 +585,16 @@ class TrxAdjustment extends Component{
             <Layout page="Adjusment">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Adjusment</h4>
+                        <h4>
+                            <button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button>
+
+                            Adjusment</h4>
                     </div>
                     <div className="card-body">
                         <div className="row">
-
-
                             <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
-
-
                                 {/*START LEFT*/}
-                                <StickyBox offsetTop={100} offsetBottom={20} style={{width:"23%",marginRight:"10px"  }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"23%",marginRight:"10px"}:{display:'block',width:"23%",marginRight:"10px"}}>
                                     <div className="form-group">
                                         <label htmlFor="">Plih Barang</label>
                                         <div className="input-group input-group-sm">
@@ -705,7 +710,7 @@ class TrxAdjustment extends Component{
                                 </StickyBox>
                                 {/*END LEFT*/}
                                 {/*START RIGHT*/}
-                                <div style={{width:"77%"}}>
+                                <div style={this.state.toggleSide?{width:"100%"}:{width:"77%"}}>
                                     <div className="card-header" style={{zoom:"80%"}}>
                                         <form className=''>
                                             <div className="row">

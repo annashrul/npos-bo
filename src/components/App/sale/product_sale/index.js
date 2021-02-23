@@ -57,10 +57,12 @@ class Sale extends Component{
             discount_persen:0,
             discount_harga:0,
             pajak:0,
+            ppn_harga:0,
             perpage:5,
             scrollPage:0,
             isScroll:false,
             isClick:0,
+            toggleSide: false,
             error:{
                 location:"",
                 customer:"",
@@ -80,6 +82,14 @@ class Sale extends Component{
         this.HandleSearch = this.HandleSearch.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.handleChecked = this.handleChecked.bind(this);
+        this.handleClickToggle = this.handleClickToggle.bind(this);
+    }
+
+    handleClickToggle(e) {
+        e.preventDefault();
+        this.setState({
+            toggleSide: !this.state.toggleSide
+        })
     }
 
     componentDidMount(){
@@ -219,24 +229,40 @@ class Sale extends Component{
         const column = e.target.name;
         const val = e.target.value;
         if (column === 'discount_persen' || column === 'pajak'){
-            if (val < 0 || val==='') this.setState({[column]: 0});
-            else if (val >100) this.setState({[column]: 100});
-            else this.setState({[column]: val});
+            let val_final=0
+            if (val < 0 || val === '') val_final = 0
+            else if (parseFloat(val) >100) {val_final=100}
+            else {val_final=val}
+            console.log(val_final)
 
             if (column === 'discount_persen'){
-                this.setState({ 'discount_harga': (st*(rmComma(val)/100)) });
+                this.setState({ 
+                    'discount_harga': (st*(rmComma(val_final)/100)),
+                    discount_persen:val_final });
+            } else if (column === 'pajak') {
+                this.setState({
+                    'ppn_harga': (st * (rmComma(val_final) / 100)),
+                    pajak:val_final
+                });
             }
         } else if (column === 'discount_harga') {
+            const disper = (rmComma(val) / st) * 100;
+            this.setState({
+                'discount_persen': disper >= 100 ? 100 : disper,
+                [column]: disper >= 100 ? st : rmComma(val)
+            });
+        } else if (column === 'ppn_harga') {
             const disper = (rmComma(val)/st) * 100;
-            this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:rmComma(val) });
-        }else{
+            this.setState({
+                'pajak': disper >= 100 ? 100 : disper,
+                [column]: disper >= 100 ? st : rmComma(val)
+            });
+        }else {
             this.setState({
                 [column]: val
             });
         }
-        this.setState({
-            [column]: val
-        });
+
         if(errs){
             let err = Object.assign({}, this.state.error, {
                 [column]: ""
@@ -612,7 +638,7 @@ class Sale extends Component{
         })
     }
     HandleSearch(){
-        if (this.state.customer === "" || this.state.lokasi === "") {
+        if (this.state.customer === "" || this.state.location === "") {
             Swal.fire('Gagal!', 'Pilih lokasi dan customer terlebih dahulu.', 'error')
         }else{
             localStorage.setItem("anySaleTrx",this.state.search);
@@ -756,10 +782,12 @@ class Sale extends Component{
             <Layout page="Penjualan Barang">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Penjualan Barang</h4>
+                        <h4>
+                            <button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button>
+                            Penjualan Barang</h4>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"25%",marginRight:"10px"}:{display:'block',width:"25%",marginRight:"10px"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
@@ -844,7 +872,7 @@ class Sale extends Component{
 
                             </div>
                         </StickyBox>
-                        <div style={{width:"75%",zoom:'85%'}}>
+                        <div style={this.state.toggleSide?{width:"100%",zoom:"85%"}:{width:"75%",zoom:"85%"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <form className=''>
@@ -1074,11 +1102,15 @@ class Sale extends Component{
                                                         </div>
                                                     </div>
                                                     <div className="row" style={{marginBottom: '3px'}}>
-                                                        <label className="col-sm-4">Pajak %</label>
-                                                        <div className="col-sm-3">
-                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+                                                        <label className="col-sm-4">Pajak</label>
+                                                            <div className="col-sm-3">
+                                                                <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,totalsub)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+
+                                                            </div>
+                                                            <div className="col-sm-5">
+                                                                <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,totalsub)} name="ppn_harga" className="form-control text-right" placeholder="Rp" value={toCurrency(this.state.ppn_harga)}/>
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                     <div className="row" style={{marginBottom: '3px'}}>
                                                         <label className="col-sm-4">Grand Total</label>
                                                         <div className="col-sm-8">

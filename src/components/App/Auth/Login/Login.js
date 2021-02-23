@@ -27,11 +27,11 @@ class Login extends Component {
     }
 
     getSubdomain(){
-        let host = window.location.host;
-        let parts = host.split(".");
-        return btoa(parts[0])
+        // let host = window.location.host;
+        // let parts = host.split(".");
+        // return btoa(parts[0])
         // return document.getElementById("coolyeah").value;
-        // return btoa('cff')
+        return btoa('npos')
     }
 
     componentDidMount (){
