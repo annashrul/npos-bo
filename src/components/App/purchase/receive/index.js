@@ -408,7 +408,7 @@ class Receive extends Component{
         const column = e.target.name;
         const val = e.target.value;
 
-                if (column === 'discount_persen' || column === 'pajak'){
+        if (column === 'discount_persen' || column === 'pajak'){
             let val_final=0
             if (val < 0 || val === '') val_final = 0
             else if (parseFloat(val) >100) {val_final=100}
@@ -517,7 +517,12 @@ class Receive extends Component{
         const column = e.target.name;
         const val = e.target.value;
         let brgval = [...this.state.brgval];
-        brgval[i] = {...brgval[i], [column]: val};
+        let values=val;
+        if (column === 'ppn' || column === 'diskon'){
+            if (val < 0 || val === '') values = 0
+            else if (parseFloat(val) >100) {values=100}
+        }
+        brgval[i] = {...brgval[i], [column]: values};
         this.setState({ brgval });
 
         if(column==='satuan'){
@@ -1449,33 +1454,17 @@ class Receive extends Component{
 
                                                             <td style={columnStyle}><input style={{width:"70px",textAlign:"right"}} className="form-control" type='text' name='diskon' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
                                                             <td style={columnStyle}>
-                                                                <div style={{width: '130px', float: 'left'}}>
-                                                                <div className="form-group" style={{width: '60px', float: 'left'}}>
-                                                                    <label style={{fontSize: '.8em'}}>persen</label>
-                                                                    <input 
-                                                                    style={{width:"100%",textAlign:"right"}}
+                                                               <input 
+                                                                    style={{width:"80px",textAlign:"right"}}
                                                                     className="form-control"
                                                                     type='text'
                                                                     name='ppn'
                                                                     onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
                                                                     onChange={(e)=>this.HandleChangeInputValue(e,index)}
                                                                     value={this.state.brgval[index].ppn}/>
-                                                                </div>
-                                                                <div className="form-group" style={{width: '70px', float: 'right'}}>
-                                                                    <label style={{fontSize: '.8em'}}>nominal</label>
-                                                                    <input 
-                                                                    style={{width:"100%",textAlign:"right"}}
-                                                                    className="form-control"
-                                                                    type='text'
-                                                                    name='ppn_nominal'
-                                                                    onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
-                                                                    onChange={(e)=>this.HandleChangeInputValue(e,index)}
-                                                                    value={this.state.brgval[index].ppn_nominal}/>
-                                                                </div>
-                                                                </div>
 
                                                                 
-                                                                </td>
+                                                            </td>
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"80px",textAlign:"right"}} readOnly type="text" className="form-control" value={item.stock}/>
                                                             </td>

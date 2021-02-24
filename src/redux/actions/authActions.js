@@ -4,11 +4,10 @@ import Swal from 'sweetalert2'
 import {store,destroy} from "components/model/app.model";
 import setAuthToken from '../../utils/setAuthToken';
 import {HEADERS} from "./_constants";
-
-// user register
+import Cookies from 'js-cookie'
 
 // Login user -- get token
-export const loginUser = (userData) =>
+export const loginUser = (userData,expire=1) =>
     async dispatch =>{
         destroy('sess');
         Swal.fire({allowOutsideClick: false,
@@ -29,7 +28,8 @@ export const loginUser = (userData) =>
                 Swal.close() 
                 // save token to localStorage
                 const token = res.data.result.token;
-                localStorage.setItem('npos', btoa(token));
+                
+
                 store('sess', {
                     id: res.data.result.id,
                     username: res.data.result.username,
@@ -58,6 +58,15 @@ export const loginUser = (userData) =>
                 // decode token to set user data
                 dispatch(setCurrentUser(res.data.result));
                 dispatch(setLoggedin(true));
+
+                // set Cookie
+                Cookies.set('datum_exp', btoa(token), {
+                    expires: expire
+                });
+                Cookies.set('datum_np', btoa(res.data.result.id), {
+                    expires: expire
+                });
+
             },800)
 
         }).catch(err =>{

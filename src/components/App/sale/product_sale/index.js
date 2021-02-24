@@ -307,7 +307,12 @@ class Sale extends Component{
         const val = e.target.value;
         if(column==='harga'||column==='qty'||column==='diskon_persen'||column==='ppn'){
             let brgval = [...this.state.brgval];
-            brgval[i] = {...brgval[i], [column]: val};
+            let values=val;
+            if (column === 'ppn' || column === 'diskon_persen') {
+                if (val < 0 || val === '') values = 0
+                else if (parseFloat(val) >100) {values=100}
+            }
+            brgval[i] = {...brgval[i], [column]: values};
             this.setState({ brgval });
         }
 
