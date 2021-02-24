@@ -149,17 +149,25 @@ export default class Print3ply extends Component {
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={8}>TOTAL</td>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} />
+                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={7}></td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">TOTAL Rp.</td>
                             <td style={{borderTop: '', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(data.sub_total)}</td>
                         </tr>
                         <tr>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={9}>PPN</td>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{data.ppn}</td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={7}></td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">PPN Rp.</td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{data.ppn_harga}</td>
                         </tr>
                         <tr>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={9}>GRAND TOTAL</td>
-                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{toRp((data.sub_total - (data.sub_total * (parseFloat(data.discount_harga/data.sub_total) / 100))) + (data.sub_total * (parseFloat(data.ppn) / 100)))}</td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={7}></td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">DISKON Rp.</td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{data.discount_harga}</td>
+                        </tr>
+                        <tr>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={7}></td>
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">GRAND TOTAL Rp.</td>
+                            {/* <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{toRp((data.sub_total - (data.sub_total * (parseFloat(data.discount_harga/data.sub_total) / 100))) + (data.sub_total * (parseFloat(data.ppn) / 100)))}</td> */}
+                            <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{toRp((data.sub_total - (data.sub_total * (parseFloat(data.discount_persen) / 100))) + (data.sub_total * (parseFloat(data.ppn) / 100)))}</td>
                         </tr>
                         </tfoot>
                     </table>
