@@ -56,9 +56,9 @@ class Print3ply extends Component {
             xhr.responseType = 'blob';
             xhr.send();
         }
-        let gt=0;
-        let dp=0;
-        let pj=0;
+        // let gt=0;
+        // let dp=0;
+        // let pj=0;
         return (
             <Layout>
                 <div  id="print_3ply">
@@ -134,9 +134,9 @@ class Print3ply extends Component {
                             {
                                 data.length>0?
                                     data.map((item,key)=>{
-                                        gt += parseInt(item.subtotal,10);
-                                        dp += parseInt(item.hrg_jual,10)*Math.round(parseInt(item.dis_persen,10)/100);
-                                        pj += parseInt(item.hrg_jual,10)*Math.round(parseInt(item.tax,10)/100);
+                                        // gt += parseInt(item.subtotal,10);
+                                        // dp += parseInt(item.hrg_jual,10)*Math.round(parseInt(item.dis_persen,10)/100);
+                                        // pj += parseInt(item.hrg_jual,10)*Math.round(parseInt(item.tax,10)/100);
                                         return(
                                         <tr>
                                             <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{parseInt(item.qty,10)} {item.satuan}</td>
