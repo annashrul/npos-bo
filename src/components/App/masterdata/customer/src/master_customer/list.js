@@ -109,13 +109,13 @@ class ListCustomer extends Component{
                             <th className="text-black" style={centerStyle}>#</th>
                             <th className="text-black" style={centerStyle}>Code</th>
                             <th className="text-black" style={centerStyle}>Name</th>
-                            <th className="text-black" style={centerStyle}>Address</th>
-                            <th className="text-black" style={centerStyle}>Status</th>
                             <th className="text-black" style={centerStyle}>Handphone</th>
                             <th className="text-black" style={centerStyle}>Cust Type</th>
-                            <th className="text-black" style={centerStyle}>Gender</th>
                             <th className="text-black" style={centerStyle}>Email</th>
                             <th className="text-black" style={centerStyle}>Location</th>
+                            <th className="text-black" style={centerStyle}>Keterangan</th>
+                            <th className="text-black" style={centerStyle}>Address</th>
+                            <th className="text-black" style={centerStyle}>Status</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -140,13 +140,13 @@ class ListCustomer extends Component{
                                                 </td>
                                                 <td style={leftStyle}>{v.kd_cust}</td>
                                                 <td style={leftStyle}>{v.nama}</td>
-                                                <td style={leftStyle}>{v.alamat}</td>
-                                                <td style={centerStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
                                                 <td style={rightStyle}>{v.tlp}</td>
                                                 <td style={leftStyle}>{v.cust_type}</td>
-                                                <td style={leftStyle}>{v.jenis_kelamin==='1'?'Male':'Female'}</td>
                                                 <td style={leftStyle}>{v.email}</td>
                                                 <td style={leftStyle}>{v.lokasi}</td>
+                                                <td style={leftStyle}>{v.keterangan}</td>
+                                                <td style={leftStyle}>{v.alamat}</td>
+                                                <td style={centerStyle}>{v.status==='1'?statusQ('success','Active'):statusQ('danger','In Active')}</td>
                                             </tr>
                                         )
                                     })

@@ -6,12 +6,15 @@ import './login.css'
 import {loginUser} from 'redux/actions/authActions';
 import Swal from 'sweetalert2'
 import {HEADERS} from 'redux/actions/_constants'
+import Cookies from 'js-cookie'
+
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             email: '',
             password: '',
+            rememberme:false,
             // disableButton:false,
             // server_price:0,
             // acc_name:"",
@@ -20,8 +23,9 @@ class Login extends Component {
             },
             logo: '-',
             width:'-',
-            tenant:btoa('netindo')
         };
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleRemember = this.handleRemember.bind(this)
     }
     getFaviconEl() {
         return document.getElementById("favicon");
@@ -30,11 +34,17 @@ class Login extends Component {
     getSubdomain(){
         // let host = window.location.host;
         // let parts = host.split(".");
-        // return btoa(parts[0])
-        return btoa('netindo');
+        // const subdomain = btoa(parts[0]);
+        // const subdomain = btoa(document.getElementById("coolyeah").value);
+        const subdomains = btoa('npos');
+        Cookies.set('tnt=', btoa(subdomains), {
+            expires: 365
+        });
+        return subdomains;
     }
 
     componentDidMount (){
+        this.getSubdomain()
         if(this.props.auth.isAuthenticated){
             this.props.history.push('/')
         }
@@ -45,8 +55,8 @@ class Login extends Component {
         fetch(HEADERS.URL + `site/logo`, {
             method: 'GET',
             headers: {
-                'username':this.getSubdomain()===null?this.state.tenant:this.getSubdomain(),
-              }
+                'username':this.getSubdomain(),
+            }
         })
         .then(res => res.json())
         .then(
@@ -132,7 +142,7 @@ class Login extends Component {
                     }
                     localStorage.setItem("logos",data.result.logo)
                     localStorage.setItem("site_title", data.result.title)
-                    localStorage.setItem("uidtnt",this.getSubdomain()===null?this.state.tenant:this.getSubdomain())
+                    
                     document.title = `${data.result.title}`;
                     this.setState({
                         logo: data.result.logo,
@@ -188,7 +198,8 @@ class Login extends Component {
                 username: email,
                 password: password
             }
-            this.props.loginUser(user);
+            const expires=this.state.rememberme?30:1;
+            this.props.loginUser(user,expires);
         }else{
             Swal.fire(
                 'Isi Username dan Password Terlebih Dahulu! ',
@@ -205,6 +216,12 @@ class Login extends Component {
         const name = target.name;
         this.setState({
           [name]: value
+        });
+    }
+
+    handleRemember = (event) => {
+        this.setState({
+            rememberme: !this.state.rememberme
         });
     }
 
@@ -254,6 +271,21 @@ class Login extends Component {
                                         {/* Login ke backoffice. */}
                                     </a>
                                 </div>
+                                <div style={{color: 'white', width: '100%', textAlign: 'right', padding: '10px'}}>
+                                    <div className="form-check form-check-inline">
+                                        <input
+                                            type="checkbox"
+                                            name = 'rememberme'
+                                            class = "form-check-input"
+                                            id = "inlineCheckbox1"
+                                            onChange={this.handleRemember}
+                                            checked={this.state.rememberme}
+                                        />
+                                        
+                                        <label className="form-check-label" htmlFor="inlineCheckbox1">Biarkan saya tetap login.</label>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
                     </div>

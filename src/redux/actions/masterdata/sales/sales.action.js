@@ -38,11 +38,15 @@ export const FetchSales = (page=1,q='')=>{
         })
     }
 }
-export const FetchSalesAll = ()=>{
+export const FetchSalesAll = (lok) => {
     return (dispatch) => {
         dispatch(setLoading(true));
+        let w = '';
+        if (lok !== '') {
+            w += `&lokasi=${lok}`;
+        }
         
-        axios.get(HEADERS.URL+`sales?page=1&perpage=100`)
+        axios.get(HEADERS.URL+`sales?page=1&perpage=1000${w}`)
             .then(function(response){
                 const data = response.data;
                 

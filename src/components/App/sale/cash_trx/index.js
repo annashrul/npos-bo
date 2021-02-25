@@ -5,7 +5,7 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import {FetchCash, StoreCashTrx} from "redux/actions/masterdata/cash/cash.action";
 import {kassa,toCurrency,rmComma} from "../../../../helper";
-
+import moment from "moment"
 class Sale extends Component{
 
     constructor(props) {
@@ -16,6 +16,7 @@ class Sale extends Component{
         this.HandleChangeJenis = this.HandleChangeJenis.bind(this);
         this.HandleChangeKassa = this.HandleChangeKassa.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+        this.handleEvent = this.handleEvent.bind(this);
 
         this.state = {
             addingItemName: "",
@@ -26,10 +27,10 @@ class Sale extends Component{
             userid: "",
             jenis: "",
             jenis_data: [],
-            location: "",
+            location: "LK/0001",
             location_data: [],
             kassa: "A",
-
+            startDate: moment().format("yyyy-MM-DD"),
             selectedOpt:"",
             error:{
                 kassa:"",
@@ -59,6 +60,7 @@ class Sale extends Component{
                 })
                 this.setState({
                     jenis_data: j,
+                    jenis: "",
                     userid: nextProps.auth.user.id
                 })
             }
@@ -84,7 +86,8 @@ class Sale extends Component{
                 jumlah: "",
                 keterangan: "",
                 jenis: "",
-                location: "",
+                jenis_data:[],
+                location: "LK/0001",
                 kassa: "A",
             })
         }
@@ -93,11 +96,16 @@ class Sale extends Component{
     componentWillUnmount(){
     }
 
+    handleEvent = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
+        let err = Object.assign({}, this.state.error, {[event.target.name]: ""});
+        this.setState({error: err});
+    }
+
     HandleInput(e){
         // e.preventDefault();
         const column = e.target.name;
         const val = e.target.value;
-        console.log(column)
         if(column==='jumlah'){
             this.setState({
                 jumlah: (val.replace(/,/g,'').replace(/\D/,''))
@@ -109,11 +117,12 @@ class Sale extends Component{
         }
         if(column==='kategori'){
             this.setState({
-               jumlah : '',
-               keterangan : '',
-               jenis : '',
-               location : '',
-               // kassa : '',
+                jumlah : '',
+                keterangan : '',
+                jenis: '',
+                jenis_data: [],
+                location : 'LK/0001',
+                kassa : 'A',
             });
             this.props.dispatch(FetchCash(1,val,'',this.state.perpage));
         }
@@ -142,7 +151,7 @@ class Sale extends Component{
             jenis: ""
         });
         this.setState({
-            jenis:jn,
+            jenis: jn.value,
             error: err
         })
     }
@@ -153,7 +162,7 @@ class Sale extends Component{
         });
 
         this.setState({
-            kassa: ks,
+            kassa: ks.value,
             error: err
         });
         // localStorage.setItem('kassa_cash_report', ks.value);
@@ -164,7 +173,7 @@ class Sale extends Component{
             location: ""
         });
         this.setState({
-            location:lk,
+            location: lk.value,
             error: err
         })
     }
@@ -185,7 +194,7 @@ class Sale extends Component{
                     jumlah:"",
                     keterangan:"",
                     jenis:"",
-                    location:"",
+                    location:"LK/0001",
                     kassa:"A",
                     selectedOpt:"",
                 })
@@ -196,7 +205,7 @@ class Sale extends Component{
     HandleSubmit(e){
         // e.preventDefault();
         let err = this.state.error;
-        if (this.state.jenis === "" || this.state.jumlah === "" || this.state.keterangan === ""){
+        if (this.state.jenis === "" || this.state.jumlah === "" || this.state.keterangan === "" || this.state.location === "" || this.state.kassa==="") {
             if(this.state.jenis===""){
                 err = Object.assign({}, err, {
                     jenis:"Jenis tidak boleh kosong."
@@ -231,11 +240,12 @@ class Sale extends Component{
                 "kd_kasir": this.state.userid,
                 "jumlah": rmComma(this.state.jumlah),
                 "keterangan": this.state.keterangan,
-                "lokasi": this.state.location.value,
-                "kassa": this.state.kassa.value,
+                "lokasi": this.state.location,
+                "kassa": this.state.kassa,
                 "kd_trx": "",
                 "type_kas": this.state.kategori,
-                "jenis": this.state.jenis.value
+                "jenis": this.state.jenis,
+                tanggal: this.state.startDate
             };
             
             Swal.fire({allowOutsideClick: false,
@@ -309,6 +319,15 @@ class Sale extends Component{
                                         </div>
                                         <div className="col-md-6">
                                             <div className="form-group">
+                                                <input type="date" name="startDate" className="form-control" value={this.state.startDate===undefined?moment(new Date()).format("yyyy-MM-DD"):moment(this.state.startDate).format("yyyy-MM-DD")} onChange={this.handleEvent} />
+
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
                                                 <Select
                                                     options={kassa('')}
                                                     placeholder="Pilih Kassa"
@@ -325,18 +344,21 @@ class Sale extends Component{
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+
+                                        <div className="col-md-6">
                                             <div className="form-group">
-                                                {/* <label className="control-label font-12">
-                                                    &nbsp;
-                                                </label> */}
                                                 <Select
                                                     options={this.state.jenis_data}
-                                                    placeholder="Pilih Jenis"
+                                                    placeholder="Pilih Jenis Kas"
                                                     onChange={this.HandleChangeJenis}
-                                                    value={this.state.jenis}
+                                                    value={
+                                                        this.state.jenis!==''?
+                                                            this.state.jenis_data.find(op => {
+                                                                return op.value === this.state.jenis
+                                                            })
+                                                        :''
+                                                    }
+
 
                                                 />
                                                 <div className="invalid-feedback"

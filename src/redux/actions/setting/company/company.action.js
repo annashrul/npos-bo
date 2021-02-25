@@ -9,6 +9,8 @@ export function setLoadingGet(load) {
         load
     }
 }
+
+
 export function setSuccessGet(data = []) {
     return {
         type: COMPANY.SUCCESS_GET,

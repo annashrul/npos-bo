@@ -9,6 +9,7 @@ import {toRp} from "helper";
 import {FetchStock} from 'redux/actions/dashboard/dashboard.action'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+import Cookies from 'js-cookie'
 
 import socketIOClient from "socket.io-client";
 import {HEADERS} from 'redux/actions/_constants'
@@ -329,7 +330,7 @@ class Dashboard extends Component {
             datefrom: start!==null?start:this.state.startDate,
             dateto: end!==null?end:this.state.endDate,
             location: loc!==null?loc:this.state.location,
-            tenant: localStorage.getItem('uidtnt')
+            tenant: atob(Cookies.get('tnt='))
         })
     }
 

@@ -8,6 +8,7 @@ const initialState = {
     per_page:0,
     total:0,
     dataReport:[],
+    update_data:[],
     isLoadingReport:false,
     isSuccessTrx:false
 };
@@ -17,6 +18,10 @@ export const cashReducer = (state=initialState,action) => {
         case CASH.EXCEL_REPORT:
             return Object.assign({}, state,{
                 dataExcel:action.data.result
+            });
+        case CASH.UPDATE:
+            return Object.assign({}, state,{
+                update_data: action.data
             });
         case CASH.SUCCESS_REPORT:
             return Object.assign({}, state,{

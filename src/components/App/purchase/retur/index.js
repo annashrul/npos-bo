@@ -465,7 +465,7 @@ class ReturTanpaNota extends Component{
         })
     }
     HandleSearch() {
-        if (this.state.supplier === "" || this.state.lokasi === "") {
+        if (this.state.supplier === "" || this.state.location === "") {
             Swal.fire(
                 'Gagal!',
                 'Pilih lokasi dan supplier terlebih dahulu.',
@@ -475,7 +475,7 @@ class ReturTanpaNota extends Component{
             localStorage.setItem("anyReturTanpaNota",this.state.search);
 
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
+            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
 
         }
@@ -517,7 +517,7 @@ class ReturTanpaNota extends Component{
             if(parseInt(this.state.searchby,10)===3){
                 searchby='deskripsi';
             }
-            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyReturTanpaNota!==undefined?localStorage.anyReturTanpaNota:"", this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+            this.props.dispatch(FetchBrg(1,searchby, localStorage.anyReturTanpaNota!==undefined?localStorage.anyReturTanpaNota:"", this.state.location, this.state.supplier, this.autoSetQty,this.state.perpage));
             this.setState({scrollPage:this.state.scrollPage+5});
 
         }

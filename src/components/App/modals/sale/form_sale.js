@@ -215,7 +215,7 @@ class FormSale extends Component{
 
                         </div>
                         <div className="col-md-6" style={{textAlign:"right"}}>
-                            <button className="btn btn-primary" onClick={this.handleSubmit} style={parseInt(this.state.change,10)>=0?{display:''}:{display:'none'}}>Simpan</button>
+                            <button className="btn btn-primary" onClick={this.handleSubmit} style={parseInt(this.state.change,10)>=0?{display:''}:{display:'none'}} disabled={this.props.isLoadingSale}>{this.props.isLoadingSale?<span className="spinner-border spinner-border-sm text-light"/>:'Simpan'}</button>
                         </div>
                     </div>
                     <hr/>
@@ -291,6 +291,7 @@ const mapStateToProps = (state) => {
         type: state.modalTypeReducer,
         bank:state.bankReducer.data,
         isLoading: state.bankReducer.isLoading,
+        isLoadingSale: state.saleReducer.isLoading,
     }
 }
 export default withRouter(connect(mapStateToProps)(FormSale));

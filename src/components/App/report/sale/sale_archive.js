@@ -11,12 +11,14 @@ import Swal from "sweetalert2";
 import {
     deleteReportSale,
     FetchReportDetailSale,
-    FetchReportSaleExcel
+    FetchReportSaleExcel,
+    FetchNotaReceipt
+
 } from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {HEADERS} from 'redux/actions/_constants'
+// import {HEADERS} from 'redux/actions/_constants'
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -379,8 +381,10 @@ class SaleArchive extends Component{
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Sales</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
                                             <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Pajak</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>HPP</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Subtotal</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Profit</th>
@@ -418,7 +422,7 @@ class SaleArchive extends Component{
                                                             dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);
                                                             dis_rp_per = dis_rp_per + parseInt(v.dis_rp,10);
                                                             kas_lain_per = kas_lain_per + parseInt(v.kas_lain,10);
-                                                            gt_per = gt_per + parseInt(v.omset - v.diskon_item - v.dis_rp - v.kas_lain,10);
+                                                            gt_per = gt_per + parseInt(v.gt, 10);
                                                             bayar_per = bayar_per + parseInt(v.bayar,10);
                                                             jml_kartu_per = jml_kartu_per + parseInt(v.jml_kartu,10);
                                                             charge_per = charge_per + parseInt(v.charge,10);
@@ -438,7 +442,10 @@ class SaleArchive extends Component{
                                                                             <DropdownMenu>
                                                                                 <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx)}>Detail</DropdownItem>
                                                                                 <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
-                                                                                <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                                <DropdownItem onClick={(e)=>{
+                                                                                    e.preventDefault();
+                                                                                    this.props.dispatch(FetchNotaReceipt(v.kd_trx))
+                                                                                }}>Nota</DropdownItem>
                                                                                 <Link to={`../print3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link>
                                                                             </DropdownMenu>
                                                                             </UncontrolledButtonDropdown>
@@ -449,10 +456,12 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
                                                                     <td style={columnStyle}>{v.customer}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
+                                                                    <td style={columnStyle}>{v.sales}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseFloat(v.omset))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
                                                                     <td style={{textAlign:"right"}}>{parseFloat(v.dis_persen).toFixed(2)}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(v.hrg_jual*(parseFloat(v.tax)/100))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
@@ -485,7 +494,7 @@ class SaleArchive extends Component{
                                             <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_rp_per)}</td>
                                             <td style={{textAlign:"right"}}>{dis_persen_per}</td>
-                                            <td colSpan="2"></td>
+                                            <td colSpan="3"></td>
                                             <td style={{textAlign:"right"}}>{toRp(profit_per)}</td>
                                             <td colSpan="1"></td>
                                             <td style={{textAlign:"right"}}>{toRp(kas_lain_per)}</td>
@@ -504,7 +513,7 @@ class SaleArchive extends Component{
                                             <td style={{textAlign:"right"}}>{toRp(dis_item===null?0:dis_item.toFixed(2))}</td>
                                             <td style={{textAlign:"right"}}>{toRp(dis_rp===null?0:dis_rp.toFixed(2))}</td>
                                             <td style={{textAlign:"right"}}>{dis_persen===null?0:dis_persen.toFixed(2)}</td>
-                                            <td colSpan="2"></td>
+                                            <td colSpan="3"></td>
                                             <td style={{textAlign:"right"}}>{profit===undefined&&profit===''?0:toRp(profit)}</td>
                                             <td colSpan="1"></td>
                                             <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>

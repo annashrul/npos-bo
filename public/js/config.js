@@ -1,5 +1,5 @@
 
-// document.getElementById("hellyeah").value = btoa('');
-// document.getElementById("hellyeah").value = btoa('http://192.168.100.10:3000/');
-// document.getElementById("coolyeah").value = '0';
-// document.getElementById("supplier").value = '0';
+//ieu url API
+document.getElementById("hellyeah").value = btoa('http://192.168.100.222:6692/');
+//ieu value tenant anu dipake subdomain tea
+document.getElementById("coolyeah").value = btoa('hanif-grosir');

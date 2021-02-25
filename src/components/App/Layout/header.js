@@ -17,6 +17,7 @@ import {
     DropdownToggle
 } from 'reactstrap';
 import Default from 'assets/default.png';
+import Cookies from 'js-cookie'
 
 class Header extends Component {
   constructor(props) {
@@ -57,7 +58,7 @@ class Header extends Component {
     fetch(HEADERS.URL + `site/logo`, {
         method: 'GET',
         headers: {
-            'username': localStorage.getItem('uidtnt'),
+            'username': atob(Cookies.get('tnt=')),
         }
     })
         .then(res => res.json())

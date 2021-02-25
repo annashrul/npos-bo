@@ -41,10 +41,11 @@ import TransactionReport from '../report/inventory/transaction'
 import ProductionReport from '../report/inventory/production'
 import LogTrxReport from '../report/log/log_trx'
 import LogActReport from '../report/log/log_act'
-import Closing from '../report/inventory/closing'
+import Closing from '../report/closing'
 import SaleArchive from '../report/sale/sale_archive'
 import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import SaleByProductArchive from '../report/sale/sale_by_product_archive'
+import SaleBySalesArchive from '../report/sale/sale_by_sales_archive'
 import Sale from '../sale/product_sale'
 import CashTrx from '../sale/cash_trx'
 import Company from "../setting/company";
@@ -71,10 +72,12 @@ import Packing3ply from "../print/packing3ply";
 import Expedisi3ply from "../print/expedisi3ply";
 import BayarHutang3ply from "../print/bayar_hutang3ply";
 import BayarPiutang3ply from "../print/bayar_piutang3ply";
+import BayarMutasi3ply from "../print/bayar_mutasi3ply";
 import Pembelian3ply from "../print/pembelian3ply";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
 import priceTagPrint from "../print/priceTag";
+// import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
     <div>
@@ -89,10 +92,12 @@ const Routes = (
             <Route path="/expedisi3ply" exact strict component={Expedisi3ply} />
             <Route path="/bayar_hutang3ply/:id" exact strict component={BayarHutang3ply} />
             <Route path="/bayar_piutang3ply/:id" exact strict component={BayarPiutang3ply} />
+            <Route path="/bayar_mutasi3ply" exact strict component={BayarMutasi3ply} />
             <Route path="/pembelian3ply" exact strict component={Pembelian3ply} />
             <Route path="/retur3ply" exact strict component={Retur3ply} />
             <Route path="/po3ply" exact strict component={Po3ply} />
             <Route path="/priceTag" exact strict component={priceTagPrint} />
+            {/* <Route path="/approvalAlokasi3ply" exact strict component={approvalAlokasi3ply} /> */}
             {/* DASHBOARD SECTION START */}
             <PrivateRoute path="/" exact strict component={Dashboard} />
             {/* DASHBOARD SECTION END */}
@@ -167,6 +172,7 @@ const Routes = (
             <PrivateRoute path="/report/sale_archive" exact strict component={SaleArchive} />
             <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/report/sale_by_product_archive" exact strict component={SaleByProductArchive} />
+            <PrivateRoute path="/report/sale_by_sales_archive" exact strict component={SaleBySalesArchive} />
             <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
             <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
             <PrivateRoute path="/log/trx" exact strict component={LogTrxReport} />

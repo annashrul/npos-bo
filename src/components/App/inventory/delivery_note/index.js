@@ -73,6 +73,7 @@ class DeliveryNote extends Component{
             perpage:5,
             scrollPage:0,
             isScroll:false,
+            toggleSide:false,
             error:{
                 location:"",
                 location2: "",
@@ -93,6 +94,13 @@ class DeliveryNote extends Component{
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.handleLoad = this.handleLoad.bind(this);
+        this.handleClickToggle = this.handleClickToggle.bind(this);
+    }
+    handleClickToggle(e) {
+        e.preventDefault();
+        this.setState({
+            toggleSide: !this.state.toggleSide
+        })
     }
     getProps(param){
         if (param.auth.user) {
@@ -585,7 +593,7 @@ class DeliveryNote extends Component{
         })
     }
     HandleSearch() {
-        if (this.state.supplier === "" || this.state.lokasi === "") {
+        if (this.state.supplier === "" || this.state.location === "") {
             Swal.fire(
                 'Gagal!',
                 'Pilih lokasi dan supplier terlebih dahulu.',
@@ -594,7 +602,7 @@ class DeliveryNote extends Component{
         } else {
             localStorage.setItem("anyDeliveryNote",this.state.search);
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
+            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier, this.autoSetQty,5));
             this.setState({search: ''});
 
         }
@@ -666,20 +674,22 @@ class DeliveryNote extends Component{
 
     render() {
         if(this.state.isScroll===true)this.handleScroll();
-        console.log(this.state.isScroll);
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         let subtotal = 0;
         return (
             <Layout page="Delivery Note">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Delivery Note</h4>
+                        <h4>
+                            <button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button>
+                            Delivery Note
+                        </h4>
                     </div>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                            <div className="col-md-12" style={{ display: 'flex', alignItems: 'flex-start',zoom:'90%' }}>
                                 {/*START LEFT*/}
-                                <StickyBox offsetTop={100} offsetBottom={20} style={{zoom:"80%",width:"25%",marginRight:"10px"  }}>
+                                <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"25%",marginRight:"10px"}:{display:'block',width:"25%",marginRight:"10px"}}>
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="form-group">
@@ -825,7 +835,7 @@ class DeliveryNote extends Component{
                                 </StickyBox>
                                 {/*END LEFT*/}
                                 {/*START RIGHT*/}
-                                <div style={{width:"75%"}}>
+                                <div style={this.state.toggleSide?{width:"100%"}:{width:"75%"}}>
                                     <div className="card-header" style={{zoom:"85%"}}>
                                         <form className=''>
                                             <div className="row">

@@ -129,7 +129,7 @@ class Card extends Component {
                                         <p className="text-10 mb-0 text-left">Cash</p>
                                     </div>
                                     <div className="col-6" >
-                                        <p className="text-12 mb-0 text-right">{toRp(parseInt(item.tunai,10))}</p>
+                                        <p className="text-12 mb-0 text-right">{toRp(parseInt(item.net_omset,10)-parseInt(item.setoran_card,10))}</p>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -240,7 +240,7 @@ class Card extends Component {
                                         <p className="text-10 mb-0 text-left">Cash in Hand</p>
                                     </div>
                                     <div className="col-6" >
-                                        <p className="text-12 mb-0 text-right">{toRp(parseInt(item.tunai,10)+parseInt(item.income,10))}</p>
+                                        <p className="text-12 mb-0 text-right">{toRp((parseInt(item.net_omset,10)-parseInt(item.setoran_card,10))+parseInt(item.income,10))}</p>
                                     </div>
                                 </div>
                                 <hr style={{margin:'unset'}}></hr>

@@ -6,6 +6,7 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import {FetchCustomerAll} from "redux/actions/masterdata/customer/customer.action";
+import {FetchSalesAll} from "redux/actions/masterdata/sales/sales.action";
 import {setProductbrg, FetchProductSale} from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
@@ -47,7 +48,8 @@ class Sale extends Component{
             qty:0,
             location_data:[],
             location:"",
-            customer:"",
+            sales:"1",
+            customer: "1000001",
             catatan:"-",
             jenis_trx:"Tunai",
             userid:0,
@@ -57,36 +59,52 @@ class Sale extends Component{
             discount_persen:0,
             discount_harga:0,
             pajak:0,
+            ppn_harga:0,
             perpage:5,
             scrollPage:0,
             isScroll:false,
             isClick:0,
+            toggleSide: false,
             error:{
                 location:"",
                 customer:"",
                 catatan:""
             },
             detail:[],
-            master:{}
+            master:{},
+            opSales: [{
+                value: '1',
+                label: 'UMUM'
+            }]
         };
         this.HandleRemove = this.HandleRemove.bind(this);
         this.HandleAddBrg = this.HandleAddBrg.bind(this);
         this.HandleChangeInput = this.HandleChangeInput.bind(this);
         this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+        this.HandleChangeSales = this.HandleChangeSales.bind(this);
         this.HandleChangeCustomer = this.HandleChangeCustomer.bind(this);
         this.setTglOrder=this.setTglOrder.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
         this.HandleSearch = this.HandleSearch.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.handleChecked = this.handleChecked.bind(this);
+        this.handleClickToggle = this.handleClickToggle.bind(this);
+    }
+
+    handleClickToggle(e) {
+        e.preventDefault();
+        this.setState({
+            toggleSide: !this.state.toggleSide
+        })
     }
 
     componentDidMount(){
-        console.log("componentDidMount");
         this.getData();
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.props.dispatch(FetchNotaSale(localStorage.lk));
+            this.props.dispatch(FetchCustomerAll(localStorage.lk));
+            this.props.dispatch(FetchSalesAll(localStorage.lk));
             this.setState({
                 location:localStorage.lk
             })
@@ -96,8 +114,11 @@ class Sale extends Component{
                 customer: localStorage.cs
             })
         }
-        console.log("CS",localStorage.cs);
-        console.log("LK",localStorage.lk);
+        if (localStorage.sl !== undefined && localStorage.sl !== '') {
+            this.setState({
+                sales: localStorage.sl
+            })
+        }
         if (localStorage.cs !== undefined && localStorage.lk!==undefined) {
 
             let where=`lokasi=${localStorage.lk}&customer=${localStorage.cs}`;
@@ -109,7 +130,6 @@ class Sale extends Component{
                 if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
                 if(parseInt(this.state.searchby,10)===3){if(where!==''){where+='&';}where+=`searchby=deskripsi`}
             }
-            console.log(where);
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=${this.state.perpage}`,'sale',this.autoSetQty));
         }
 
@@ -160,6 +180,24 @@ class Sale extends Component{
             this.getData();
 
         }
+        if (nextProps.sales.data !== undefined) {
+            const opSales = [{
+                value: '1',
+                label: 'UMUM'
+            }];
+            nextProps.sales.data.map(i => {
+                if (i.nama!=='UMUM'){
+                    opSales.push({
+                        value: i.kode,
+                        label: i.nama
+                    })
+                }
+                return null;
+            })
+            this.setState({
+                opSales:opSales
+            })
+        }
 
     }
     componentWillUnmount(){
@@ -167,6 +205,7 @@ class Sale extends Component{
         destroy(table);
         localStorage.removeItem('cs');
         localStorage.removeItem('lk');
+        localStorage.removeItem('sl');
         localStorage.removeItem('anySaleTrx');
     }
     HandleChangeLokasi(lk){
@@ -181,6 +220,8 @@ class Sale extends Component{
         this.props.dispatch(FetchNotaSale(lk.value));
         this.props.dispatch(FetchDetailLocation(lk.value));
         this.props.dispatch(FetchCustomerAll(lk.value));
+        this.props.dispatch(FetchSalesAll(lk.value));
+        
         if (this.state.customer!==""){
             let where=``;
             
@@ -219,28 +260,56 @@ class Sale extends Component{
         destroy(table);
         this.getData();
     }
+
+    HandleChangeSales(sl){
+         let err = Object.assign({}, this.state.error, {
+            sales: ""
+        });
+        this.setState({
+            sales: sl.value,
+            error: err
+        })
+        localStorage.setItem('sl', sl.value);
+        
+    }
     HandleCommonInputChange(e,errs=true,st=0){
         const column = e.target.name;
         const val = e.target.value;
         if (column === 'discount_persen' || column === 'pajak'){
-            if (val < 0 || val==='') this.setState({[column]: 0});
-            else if (val >100) this.setState({[column]: 100});
-            else this.setState({[column]: val});
+            let val_final=0
+            if (val < 0 || val === '') val_final = 0
+            else if (parseFloat(val) >100) {val_final=100}
+            else {val_final=val}
+            console.log(val_final)
 
             if (column === 'discount_persen'){
-                this.setState({ 'discount_harga': (st*(rmComma(val)/100)) });
+                this.setState({ 
+                    'discount_harga': (st*(rmComma(val_final)/100)),
+                    discount_persen:val_final });
+            } else if (column === 'pajak') {
+                this.setState({
+                    'ppn_harga': (st * (rmComma(val_final) / 100)),
+                    pajak:val_final
+                });
             }
         } else if (column === 'discount_harga') {
+            const disper = (rmComma(val) / st) * 100;
+            this.setState({
+                'discount_persen': disper >= 100 ? 100 : disper,
+                [column]: disper >= 100 ? st : rmComma(val)
+            });
+        } else if (column === 'ppn_harga') {
             const disper = (rmComma(val)/st) * 100;
-            this.setState({ 'discount_persen': disper>=100?100:disper, [column]: disper>=100?st:rmComma(val) });
-        }else{
+            this.setState({
+                'pajak': disper >= 100 ? 100 : disper,
+                [column]: disper >= 100 ? st : rmComma(val)
+            });
+        }else {
             this.setState({
                 [column]: val
             });
         }
-        this.setState({
-            [column]: val
-        });
+
         if(errs){
             let err = Object.assign({}, this.state.error, {
                 [column]: ""
@@ -285,7 +354,12 @@ class Sale extends Component{
         const val = e.target.value;
         if(column==='harga'||column==='qty'||column==='diskon_persen'||column==='ppn'){
             let brgval = [...this.state.brgval];
-            brgval[i] = {...brgval[i], [column]: val};
+            let values=val;
+            if (column === 'ppn' || column === 'diskon_persen') {
+                if (val < 0 || val === '') values = 0
+                else if (parseFloat(val) >100) {values=100}
+            }
+            brgval[i] = {...brgval[i], [column]: values};
             this.setState({ brgval });
         }
 
@@ -398,12 +472,17 @@ class Sale extends Component{
                     harga2: res.harga2,
                     harga3: res.harga3,
                     harga4: res.harga4,
+                    harga_old: res.harga,
+                    hrg_beli: res.hrg_beli,
                     stock: res.stock,
                     diskon_persen: res.diskon_persen,
                     diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
-                    tambahan: res.tambahan
+                    kategori: item.kategori,
+                    services: item.services,
+                    tambahan: item.tambahan,
+                    isOpenPrice: item.isOpenPrice,
                 })
             }
 
@@ -436,7 +515,7 @@ class Sale extends Component{
         e.preventDefault();
         // validator head form
         let err = this.state.error;
-        if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
+        if (this.state.catatan === "" || this.state.location === "" || this.state.customer === "" || this.state.sales === "") {
             if(this.state.catatan===""){
                 err = Object.assign({}, err, {
                     catatan:"Catatan tidak boleh kosong."
@@ -451,6 +530,12 @@ class Sale extends Component{
             if (this.state.customer === "") {
                 err = Object.assign({}, err, {
                     customer: "customer tidak boleh kosong."
+                });
+            }
+
+            if (this.state.sales === "") {
+                err = Object.assign({}, err, {
+                    sales: "sales tidak boleh kosong."
                 });
             }
             this.setState({
@@ -504,13 +589,13 @@ class Sale extends Component{
                             subtotal:(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10),
                             price:rmComma(item.harga),
                             qty:item.qty,
+                            diskon:disc2,
                             kategori:item.kategori,
                             tax:item.ppn,
                             services:item.services,
                             sku:item.barcode,
                             open_price:rmComma(item.harga)===rmComma(item.harga_old)?0:rmComma(item.harga),
                             hrg_beli:rmComma(item.hrg_beli),
-                            diskon:0,
                             nm_brg: item.nm_brg,
                             satuan: item.satuan
                         })
@@ -524,7 +609,7 @@ class Sale extends Component{
                         "kartu": "-",
                         "dis_persen": this.state.discount_persen,
                         "dis_rp": this.state.discount_harga===0?0:rmComma(this.state.discount_harga),
-                        "kd_sales": 1,
+                        "kd_sales": this.state.sales,
                         "jam": moment(new Date()).format("HH:mm:ss"),
                         "tgl": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
                         "compliment": "-",
@@ -553,7 +638,6 @@ class Sale extends Component{
                         "status": "LUNAS",
                         "optional_note":this.state.catatan
                     };
-                    console.log(detail);
                     this.setState({
                         master:master,
                         detail:detail
@@ -612,7 +696,7 @@ class Sale extends Component{
         })
     }
     HandleSearch(){
-        if (this.state.customer === "" || this.state.lokasi === "") {
+        if (this.state.customer === "" || this.state.location === "") {
             Swal.fire('Gagal!', 'Pilih lokasi dan customer terlebih dahulu.', 'error')
         }else{
             localStorage.setItem("anySaleTrx",this.state.search);
@@ -667,7 +751,6 @@ class Sale extends Component{
                 if(parseInt(this.state.searchby,10)===2){if(where!==''){where+='&';}where+=`searchby=barcode`}
                 if(parseInt(this.state.searchby,10)===3){if(where!==''){where+='&';}where+=`searchby=deskripsi`}
             }
-            // console.log(localStorage.anySaleTrx);
             // let where=`lokasi=${this.state.location}&customer=${this.state.customer}&perpage=${this.state.perpage}`;
             this.props.dispatch(FetchProductSale(1,`${where}&perpage=${this.state.perpage}`,'sale',this.autoSetQty));
             this.setState({scrollPage:this.state.scrollPage+5});
@@ -738,7 +821,8 @@ class Sale extends Component{
             value: '1000001',
             label: 'UMUM'
         }];
-        if(this.props.customer!==[]){
+
+        if (this.props.customer !== undefined && this.props.customer !== []) {
             this.props.customer.map(i=>{
                 opCustomer.push({
                     value: i.kd_cust,
@@ -747,19 +831,22 @@ class Sale extends Component{
                 return null;
             })
         }
+
+        
         let totalsub=0;
         const centerStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
-        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         
         return (
             <Layout page="Penjualan Barang">
                 <div className="card">
                     <div className="card-header">
-                        <h4>Penjualan Barang</h4>
+                        <h4>
+                            <button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button>
+                            Penjualan Barang</h4>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <StickyBox offsetTop={100} offsetBottom={20} style={{width:"25%",marginRight:"10px"  }}>
+                        <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"25%",marginRight:"10px"}:{display:'block',width:"25%",marginRight:"10px"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <div className="form-group">
@@ -844,7 +931,7 @@ class Sale extends Component{
 
                             </div>
                         </StickyBox>
-                        <div style={{width:"75%",zoom:'85%'}}>
+                        <div style={this.state.toggleSide?{width:"100%",zoom:"85%"}:{width:"75%",zoom:"85%"}}>
                             <div className="card">
                                 <div className="card-body">
                                     <form className=''>
@@ -861,7 +948,7 @@ class Sale extends Component{
                                                     <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                 </div>
                                             </div>
-                                            <div className="col-md-3">
+                                            <div className="col-md-2">
                                                 <div className="form-group">
                                                     <label className="control-label font-12">Lokasi</label>
                                                     <Select options={this.state.location_data} placeholder="Pilih Lokasi"
@@ -874,7 +961,7 @@ class Sale extends Component{
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-md-3">
+                                            <div className="col-md-2">
                                                 <div className="form-group">
                                                     <label className="control-label font-12">Customer</label>
                                                     <Select options={opCustomer} placeholder="Pilih Customer"
@@ -884,6 +971,19 @@ class Sale extends Component{
                                                     <div className="invalid-feedback"
                                                          style={this.state.error.customer !== "" ? {display: 'block'} : {display: 'none'}}>
                                                         {this.state.error.customer}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2">
+                                                <div className="form-group">
+                                                    <label className="control-label font-12">Sales</label>
+                                                    <Select options={this.state.opSales} placeholder="Pilih Sales"
+                                                            onChange={this.HandleChangeSales}
+                                                            value={this.state.opSales.find(op => {return op.value === this.state.sales})}
+                                                    />
+                                                    <div className="invalid-feedback"
+                                                         style={this.state.error.sales !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                        {this.state.error.sales}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1039,9 +1139,6 @@ class Sale extends Component{
                                             </tbody>
                                             <tfoot>
                                             <tr style={{background: '#eee'}}>
-                                                <td colSpan='9' style={rightStyle}>Total
-                                                </td>
-                                                <td colSpan='1' style={rightStyle}>{toRp(totalsub)}</td>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -1074,11 +1171,15 @@ class Sale extends Component{
                                                         </div>
                                                     </div>
                                                     <div className="row" style={{marginBottom: '3px'}}>
-                                                        <label className="col-sm-4">Pajak %</label>
-                                                        <div className="col-sm-3">
-                                                            <input type="number" onChange={(e)=>this.HandleCommonInputChange(e)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+                                                        <label className="col-sm-4">Pajak</label>
+                                                            <div className="col-sm-3">
+                                                                <input type="number" onChange={(e)=>this.HandleCommonInputChange(e,false,totalsub)}  name="pajak"  min="0" max="100" className="form-control" placeholder="%" value={this.state.pajak}/>
+
+                                                            </div>
+                                                            <div className="col-sm-5">
+                                                                <input type="text" onChange={(e) => this.HandleCommonInputChange(e,false,totalsub)} name="ppn_harga" className="form-control text-right" placeholder="Rp" value={toCurrency(this.state.ppn_harga)}/>
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                     <div className="row" style={{marginBottom: '3px'}}>
                                                         <label className="col-sm-4">Grand Total</label>
                                                         <div className="col-sm-8">
@@ -1112,6 +1213,7 @@ const mapStateToPropsCreateItem = (state) => ({
     pagin_brg_sale:state.productReducer.pagin_brg_sale,
     nota: state.saleReducer.code,
     customer: state.customerReducer.all,
+    sales: state.salesReducer.dataAll,
     auth:state.auth,
     dataDetailLocation:state.locationReducer.detail,
 });

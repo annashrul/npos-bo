@@ -40,7 +40,7 @@ class ListPriceProduct extends Component{
     handleDelete = (e,kode) => {
         e.preventDefault();
     };
-    handleEdit = (e,id,harga,ppn,service,harga2,harga3,harga4) => {
+    handleEdit = (e,id,harga,ppn,service,harga2,harga3,harga4,harga_beli) => {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
@@ -54,6 +54,7 @@ class ListPriceProduct extends Component{
                 "harga2":harga2,
                 "harga3":harga3,
                 "harga4":harga4,
+                harga_beli: harga_beli
             }
         })
     };
@@ -97,6 +98,7 @@ class ListPriceProduct extends Component{
                             <th className="text-black" style={centerStyle} rowSpan="2">Barcode</th>
                             <th className="text-black" style={centerStyle} rowSpan="2">Nama</th>
                             <th className="text-black" style={centerStyle} rowSpan="2">Lokasi</th>
+                            <th className="text-black" style={centerStyle} rowSpan="2">Harga Beli</th>
                             <th className="text-black" style={centerStyle} colSpan="4">Harga Jual</th>
                             <th className="text-black" style={centerStyle} rowSpan="2">PPN</th>
                             <th className="text-black" style={centerStyle} rowSpan="2">Servis</th>
@@ -118,7 +120,7 @@ class ListPriceProduct extends Component{
                                                 <td style={centerStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
                                                         <button className="btn btn-primary btn-sm" type="button"  onClick={(e)=>this.handleEdit(
-                                                            e,v.id,v.harga,v.ppn,v.service,v.harga2,v.harga3,v.harga4
+                                                            e,v.id,v.harga,v.ppn,v.service,v.harga2,v.harga3,v.harga4,v.harga_beli
                                                         )}>
                                                             Edit
                                                         </button>
@@ -129,6 +131,7 @@ class ListPriceProduct extends Component{
                                                 <td style={leftStyle}>{v.barcode?v.barcode:'-'}</td>
                                                 <td style={leftStyle}>{v.nm_brg?v.nm_brg:'-'}</td>
                                                 <td style={leftStyle}>{v.nama_toko?v.nama_toko:'-'}</td>
+                                                <td style={leftStyle}>{v.harga_beli}</td>
                                                 <td style={rightStyle}>{toRp(v.harga)}</td>
                                                 <td style={rightStyle}>{toRp(v.harga2)}</td>
                                                 <td style={rightStyle}>{toRp(v.harga3)}</td>

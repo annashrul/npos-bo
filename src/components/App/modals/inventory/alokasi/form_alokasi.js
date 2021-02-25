@@ -668,7 +668,7 @@ class FormAlokasi extends Component{
             }
 
             HandleSearch() {
-                if (this.state.supplier === "" || this.state.lokasi === "") {
+                if (this.state.supplier === "" || this.state.location === "") {
                     Swal.fire(
                         'Gagal!',
                         'Pilih lokasi dan supplier terlebih dahulu.',
@@ -676,7 +676,7 @@ class FormAlokasi extends Component{
                     )
                 } else {
                     const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-                    this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
+                    this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier, this.autoSetQty,5));
                     this.setState({search: ''});
 
                 }
@@ -712,7 +712,7 @@ class FormAlokasi extends Component{
                 let perpage = parseInt(this.props.paginBrg.per_page,10);
                 let lengthBrg = parseInt(this.props.barang.length,10);
                 if(perpage===lengthBrg || perpage<lengthBrg){
-                    this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.lokasi, this.state.supplier, this.autoSetQty,this.state.perpage));
+                    this.props.dispatch(FetchBrg(1, 'barcode', '', this.state.location, this.state.supplier, this.autoSetQty,this.state.perpage));
                 }
                 else{
                     Swal.fire({allowOutsideClick: false,

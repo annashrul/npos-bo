@@ -19,7 +19,6 @@ class ListSubDepartment extends Component{
         }
     }
     handlePageChange(pageNumber){
-        console.log(pageNumber);
         this.props.dispatch(FetchSubDepartment(`page=${pageNumber}`));
     }
     handlesearch(e){

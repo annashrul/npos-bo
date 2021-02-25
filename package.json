@@ -12,6 +12,7 @@
     "dom-to-image": "^2.6.0",
     "dz-daterangepicker-material": "^1.0.9",
     "fw-simple-html2pdf": "^2.1.2",
+    "js-cookie": "^2.2.1",
     "js-xlsx": "^0.8.22",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.5.6",
