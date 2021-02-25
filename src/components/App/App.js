@@ -10,6 +10,7 @@ import { DBConfig } from 'DBConfig';
 import { initDB } from 'react-indexed-db';
  import {get} from "components/model/app.model";
 import Cookies from 'js-cookie'
+import jwt_decode from "jwt-decode";
 
 initDB(DBConfig);
 // Check token in cookie
@@ -24,18 +25,18 @@ if (token) {
         // Set auth token header auth
         setAuthToken(atob(token));
         store.dispatch(setCurrentUser(res[0]))
-        var decodedToken = jwt.decode(atob(token), {complete: true});
-        var dateNow = new Date();
 
-        if (decodedToken.exp < dateNow.getTime()){
+        // cek JWT Token
+        var decodedToken = jwt_decode(atob(token));
+        var dateNow = new Date();
+        if (decodedToken.exp * 1000 < dateNow.getTime()){
           store.dispatch(logoutUser());
           Cookies.remove('datum_exp')
           Cookies.remove('datum_np')
           // Redirect to login
           window.location.href = '/login';
         }
-
-
+        
       }else{
         store.dispatch(logoutUser());
         Cookies.remove('datum_exp')

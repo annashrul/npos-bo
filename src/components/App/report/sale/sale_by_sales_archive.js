@@ -7,9 +7,9 @@ import Select from "react-select";
 import Paginationq from "helper";
 import Preloader from "Preloader";
 import {rangeDate, toRp} from "helper";
-// import SaleByCustReportExcel from "components/App/modals/report/sale/form_sale_by_sales_excel";
 import {
-    FetchReportSaleBySales
+    FetchReportSaleBySales,
+    FetchReportDetailSaleBySales
 } from "redux/actions/sale/sale_by_sales.action";
 // import DetailSaleByCustReport from "../../modals/report/sale/detail_sale_by_sales_report";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
@@ -184,8 +184,21 @@ class SaleBySalesArchive extends Component{
 
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("detailSaleByCustReport"));
-        // this.props.dispatch(FetchReportDetailSaleByCust(kode));
+        this.props.dispatch(ModalType("detailSaleBySalesReport"));
+        let where=''
+        let dateFrom = localStorage.getItem("date_from_sale_by_sales_report");
+        let dateTo = localStorage.getItem("date_to_sale_by_sales_report");
+        let lokasi = localStorage.location_sale_by_sales_report;
+
+        if(dateFrom!==undefined&&dateFrom!==null){
+            if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
+        }else{
+            if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
+        }
+        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
+            if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
+        }
+        this.props.dispatch(FetchReportDetailSaleBySales(1, btoa(kode), where));
     }
 
     
@@ -334,7 +347,7 @@ class SaleBySalesArchive extends Component{
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"center"}}>
-                                                                        <button className="btn btn-secondary"><i className="fa fa-eye"/> Detail</button>
+                                                                        <button className="btn btn-secondary" onClick={event=>this.handleDetail(event,v.kode)}><i className="fa fa-eye"/> Detail</button>
                                                                     </td>
                                                                 </tr>
                                                             );

@@ -22,12 +22,6 @@ export function setSaleBySales(data = []) {
     }
 }
 
-export function setSaleBySalesData(data = []) {
-    return {
-        type: SALE_BY_SALES.SALE_BY_SALES_DATA,
-        data
-    }
-}
 export function setSaleBySalesReportData(data = []) {
     return {
         type: SALE_BY_SALES.REPORT_DETAIL_SUCCESS,
@@ -71,66 +65,6 @@ export function setLoadingReport(load) {
     return {
         type: SALE_BY_SALES.REPORT_LOADING,
         load
-    }
-}
-export const FetchNotaSaleByCust = () => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `pos/getcode`)
-            .then(function (response) {
-                const data = response.data
-                
-                dispatch(setCode(data))
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // handle error
-                
-            })
-
-    }
-}
-export const storeSaleByCust = (data) => {
-    return (dispatch) => {
-        dispatch(setLoading(true))
-        const url = HEADERS.URL + `pos/checkout`;
-        axios.post(url, data)
-            .then(function (response) {
-                const data = (response.data)
-                Swal.fire({allowOutsideClick: false,
-                    title: 'Transaksi berhasil.',
-                    text: `Terimakasih Telah Melakukan Transaksi Di Toko Kami`,
-                    icon: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#ff9800',
-                    cancelButtonColor: '#2196F3',
-                    confirmButtonText: 'Print Nota?',
-                    cancelButtonText: 'Oke!'
-                }).then((result) => {
-                    if (result.value) {
-                        const win = window.open(data.result.nota, '_blank');
-                        if (win != null) {
-                            win.focus();
-                        }
-                    }
-                    destroy('SALE_BY_SALES');
-                    window.location.reload(false);
-                })
-                dispatch(setLoading(false));
-
-            })
-            .catch(function (error) {
-
-                Swal.fire({allowOutsideClick: false,
-                    title: 'Failed',
-                    type: 'error',
-                    text: error.response === undefined?'error!':error.response.data.msg,
-                });
-
-                if (error.response) {
-                    
-                }
-            })
     }
 }
 
@@ -181,11 +115,15 @@ export const FetchReportSaleBySalesExcel = (page=1,where='',perpage=10000) => {
     }
 }
 
-export const FetchReportDetailSaleBySales = (kd_trx) => {
+export const FetchReportDetailSaleBySales = (page=1,kd_trx,where='') => {
     return (dispatch) => {
         dispatch(setLoadingDetail(true));
+        let w=''
+        if (where !== '') {
+            w+= `&${where}`;
+        }
         
-        axios.get(HEADERS.URL + `report/penjualan/sales/${kd_trx}`)
+        axios.get(HEADERS.URL + `report/penjualan/sales/${kd_trx}?page=${page}${w}`)
             .then(function (response) {
                 const data = response.data;
                 
