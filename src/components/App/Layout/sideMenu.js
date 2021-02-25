@@ -28,6 +28,7 @@ class SideMenu extends Component {
             isProduction:false,
             isPaid:false,
             isArea:false,
+
             pageMenu : '',
             dataUser:[],
             dataUser0:'',
@@ -83,299 +84,36 @@ class SideMenu extends Component {
     }
 
     changeMenu(e,param){
+
         e.preventDefault();
-        if(this.state.isReport === true){
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: false,
-                isReport: true,
-                isReceive: false,
-                isSale:false,
-                isProduction:false,
-                isPaid:false
-            })
-            if(this.state.isReportInventory === true){
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:!this.state.isReportInventory,
-                    isReportPembelian:false,
-                    isReportPembayaran:false,
-                    isReportPenjualan:false,
-                    isReportLog:false
-                })
-            }
-            if(this.state.isReportPembelian === true) {
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:false,
-                    isReportPembelian:!this.state.isReportPembelian,
-                    isReportPembayaran:false,
-                    isReportPenjualan:false,
-                    isReportLog:false
-                })
-            }
-            if(this.state.isReportPenjualan === true) {
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:false,
-                    isReportPembelian:false,
-                    isReportPembayaran:false,
-                    isReportPenjualan:!this.state.isReportPenjualan,
-                    isReportLog:false
-                })
-            }
-            if(this.state.isReportPembayaran === true) {
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:false,
-                    isReportPembelian:false,
-                    isReportPembayaran:!this.state.isReportPembayaran,
-                    isReportPenjualan:false,
-                    isReportLog:false
-                })
-            }
-            if(this.state.isReportLog === true) {
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: false,
-                    isReport: true,
-                    isReceive: false,
-                    isSale:false,
-                    isReportInventory:false,
-                    isReportPembelian:false,
-                    isReportPembayaran:false,
-                    isReportLog:!this.state.isReportLog,
-                    isReportPenjualan:false
-                })
-            }
-        }
-        else if(this.state.isInventory === true){
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: true,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportPembelian:false,
-                isReportPembayaran:false,
-                isReportInventory:false,
-                isReportPenjualan:false,
-                isProduction:false,
-                isPaid:false,
-                isReportLog:false
-            });
+        const sts = {
+            isSetting:false,
+            isMasterdata: false,
+            isInventory: false,
+            isReport: false,
+            isReceive: false,
+            isHutang:false,
+            isSale:false,
+            isReportInventory:false,
+            isReportPembelian:false,
+            isReportPembayaran:false,
+            isReportLog:false,
+            isReportPenjualan:false,
+            isTrxMutasi:false,
+            isTrxOpname:false,
+            isTrxPengiriman:false,
+            isProduction:false,
+            isPaid:false,
+            isArea:false,
+        };
+        sts[param] = !this.state[param];
+        this.setState(sts);
 
-            if(this.state.isTrxMutasi === true){
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: true,
-                    isReport: false,
-                    isReceive: false,
-                    isSale:false,
-                    isReportPembelian:false,
-                    isReportPembayaran:false,
-                    isReportInventory:false,
-                    isReportPenjualan:false,
-                    isTrxOpname:false,
-                    isTrxPengiriman:false,
-                    isTrxMutasi:!this.state.isTrxMutasi,
-                    isReportLog:false
-                })
-            }
-            if(this.state.isTrxOpname === true){
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: true,
-                    isReport: false,
-                    isReceive: false,
-                    isSale:false,
-                    isReportPembelian:false,
-                    isReportPembayaran:false,
-                    isReportInventory:false,
-                    isReportPenjualan:false,
-                    isTrxMutasi:false,
-                    isTrxOpname:!this.state.isTrxOpname,
-                    isTrxPengiriman:false,
-                    isReportLog:false
-                })
-            }
-            if(this.state.isTrxPengiriman === true){
-                this.setState({
-                    isSetting:false,
-                    isMasterdata: false,
-                    isInventory: true,
-                    isReport: false,
-                    isReceive: false,
-                    isSale:false,
-                    isReportPembelian:false,
-                    isReportPembayaran:false,
-                    isReportInventory:false,
-                    isReportPenjualan:false,
-                    isTrxMutasi:false,
-                    isTrxOpname:false,
-                    isTrxPengiriman:!this.state.isTrxPengiriman,
-                    isReportLog:false
-                })
-            }
-        }
-        else {
-            this.setState({
-                isSetting:false,
-                isMasterdata: false,
-                isInventory: false,
-                isReport: false,
-                isReceive: false,
-                isSale:false,
-                isReportInventory:false,
-                isReportPembelian:false,
-                isReportPembayaran:false,
-                isReportLog:false,
-                isReportPenjualan:false,
-                isProduction:false,
-                isPaid:false
-            })
-        }
-
-        if(param === 'setting'){
-            this.setState({
-                isSetting : !this.state.isSetting, 
-                isReport : false,
-                isInventory : false
-            });
-        }
-        if(param === 'masterdata'){
-            this.setState({
-                isMasterdata : !this.state.isMasterdata, 
-                isReport : false,
-                isInventory : false
-            });
-        }
-        if(param === 'production'){
-            this.setState({
-                isProduction : !this.state.isProduction,
-                isInventory : false,
-                isReport : false,
-            });
-        }
-        if (param === 'inventory'){
-            this.setState({
-                isInventory : !this.state.isInventory, 
-                isReport : false
-            });
-        }
-        if (param === 'trx_mutasi'){
-            this.setState({
-                isTrxMutasi : !this.state.isTrxMutasi,
-            });
-        }
-        if (param === 'trx_opname'){
-            this.setState({
-                isTrxOpname : !this.state.isTrxOpname,
-            });
-        }
-        if (param === 'trx_pengiriman'){
-            this.setState({
-                isTrxPengiriman : !this.state.isTrxPengiriman,
-            });
-        }
-        if(param === 'hutang'){
-            this.setState({
-                isHutang : !this.state.isHutang, 
-                isReport : false,
-                isInventory : false
-            });
-        }
-        if(param === 'report'){
-            this.setState({
-                isReport : !this.state.isReport,
-                isInventory : false
-            });
-        }
-        if(param === 'report_inventory'){
-            this.setState({
-                isReportInventory : !this.state.isReportInventory,
-                isInventory : false
-            });
-        }
-        if(param === 'report_pembelian'){
-            this.setState({
-                isReportPembelian: !this.state.isReportPembelian,
-                isInventory : false
-            });
-        }
-        if(param === 'report_pembayaran'){
-            this.setState({
-                isReportPembayaran: !this.state.isReportPembayaran,
-                isInventory : false
-            });
-        }
-        if(param === 'report_log'){
-            this.setState({
-                isReportLog: !this.state.isReportLog,
-                // isInventory : false
-            });
-        }
-        if(param === 'report_penjualan'){
-            this.setState({
-                isReportPenjualan: !this.state.isReportPenjualan,
-                isInventory : false
-            });
-        }
-        if(param === 'receive'){
-            this.setState({
-                isReceive : !this.state.isReceive, 
-                isReport : false,
-                isInventory : false
-            });
-        }
-        if(param === 'sale'){
-            this.setState({
-                isSale : !this.state.isSale,
-                isReport : false,
-                isInventory : false
-            });
-        }
-        if(param === 'paid'){
-            this.setState({
-                isPaid : !this.state.isPaid, 
-                isReport : false,
-                isInventory : false
-            });
-        }
-        if(param === 'area'){
-            this.setState({
-                isArea : !this.state.isArea, 
-                isMasterdata : true,
-                isReport : false,
-                isInventory : false
-            });
-        }
         this.forceUpdate();
+
+
+
+
         
     }
     getProps(param){
@@ -787,7 +525,7 @@ class SideMenu extends Component {
                             ?" active menu-open" : "")
                     } style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
 
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'masterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isMasterdata')}><i className="zmdi zmdi-receipt" /> <span>Master Data</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isMasterdata===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isMasterdata===true
                         ?"block" : "none"}}>
                             <li className={path==='/product'?"active":''} style={this.state.barang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/product" style={{width:'fit-content'}}> <i className="fa fa-list-alt" />Barang</Link></li>
@@ -826,7 +564,7 @@ class SideMenu extends Component {
                         path === '/packing'||
                         path === '/expedisi'
                         ?" active menu-open" : "")} style={modul_inventory===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'inventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isInventory')}><i className="zmdi zmdi-storage" /> <span>Inventory</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isInventory===true
                         ?"block" : "none"}}>
                             <li className={path==='/adjustment'?"active":''} style={this.state.adjusment==="0"?{"display":"none"}:{"display":"block"}}><Link to="/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment </Link></li>
@@ -834,21 +572,21 @@ class SideMenu extends Component {
                             <li className={path==='/alokasi'?"active":''} style={this.state.alokasi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/alokasi" style={{width:'fit-content'}}> <i className="fa fa-dropbox" />Alokasi </Link></li>
                             <li className={path==='/approval_mutasi'?"active":''} style={this.state.approval_mutasi==="0"?{"display":"none"}:{"display":"block"}}><Link to="/approval_mutasi" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval Mutasi </Link></li>
                             <li className={"treeview" + (this.state.isTrxOpname===true || path==='/opname'|| path==='/approval_opname'?" active menu-open" : "")} style={modul_inventory_opname===true?{display:'block'}:{display:'none'}}>
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'trx_opname')}><i className="fa fa-object-group" /> <span>Opname</span> <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isTrxOpname')}><i className="fa fa-object-group" /> <span>Opname</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isTrxOpname===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxOpname===true ?"block" : "none"}}>
                                     <li className={path==='/opname'?"active":''} style={this.state.opname==="0"?{"display":"none"}:{"display":"block"}}><Link to="/opname" style={{width:'fit-content'}}> <i className="fa fa-balance-scale" />Transaksi </Link></li>
                                     <li className={path==='/approval_opname'?"active":''} style={this.state.approval_opname==="0"?{"display":"none"}:{"display":"block"}}><Link to="/approval_opname" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval </Link></li>
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isTrxPengiriman===true || path==='/packing'|| path==='/expedisi'?" active menu-open" : "")} style={modul_inventory_pengiriman===true?{display:'block'}:{display:'none'}}>
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'trx_pengiriman')}><i className="fa fa-send" /> <span>Pengiriman</span> <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isTrxPengiriman')}><i className="fa fa-send" /> <span>Pengiriman</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isTrxPengiriman===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxPengiriman===true ?"block" : "none"}}>
                                     <li className={path==='/packing'?"active":''} style={this.state.packing==="0"?{"display":"none"}:{"display":"block"}}><Link to="/packing" style={{width:'fit-content'}}> <i className="fa fa-codepen" />Packing </Link></li>
                                     <li className={path==='/expedisi'?"active":''} style={this.state.packing==="0"?{"display":"none"}:{"display":"block"}}><Link to="/expedisi" style={{width:'fit-content'}}> <i className="fa fa-truck" />Expedisi </Link></li>
                                 </ul>
                             </li>
                             <li className={"treeview" + (this.state.isTrxMutasi===true || path==='/approval_mutasi_jual_beli'|| path==='/bayar_mutasi_jual_beli'?" active menu-open" : "")} style={modul_inventory_mutasi===true?{display:'block'}:{display:'none'}}>
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'trx_mutasi')}><i className="zmdi zmdi-card" /> <span>Mutasi Jual Beli</span> <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isTrxMutasi')}><i className="zmdi zmdi-card" /> <span>Mutasi Jual Beli</span> <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isTrxMutasi===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isTrxMutasi===true ?"block" : "none"}}>
                                     <li className={path==='/approval_mutasi_jual_beli'?"active":''} style={this.state.approval_mutasi_jual_beli==="0"?{"display":"none"}:{"display":"block"}}><Link to="/approval_mutasi_jual_beli" style={{width:'fit-content'}}> <i className="zmdi zmdi-calendar-check" />Approval</Link></li>
                                     <li className={path==='/bayar_mutasi_jual_beli'?"active":''} style={this.state.bayar_mutasi_jual_beli==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bayar_mutasi_jual_beli" style={{width:'fit-content'}}> <i className="fa fa-money" />Bayar</Link></li>
@@ -861,7 +599,7 @@ class SideMenu extends Component {
                     {/* PEMBELIAN MODUL START */}
 
                     <li className={"treeview" + (this.state.isReceive===true  || path==='/purchase_order' || path === '/receive'|| path === '/retur_tanpa_nota' ?" active menu-open" : "")}  style={modul_pembelian===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'receive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isReceive')}><i className="fa fa-list-alt"/> <span>Pembelian</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isReceive===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReceive===true
                         ?"block" : "none"}}>
                             <li className={path==='/purchase_order'?"active":''} style={this.state.purchase_order==="0"?{"display":"none"}:{"display":"block"}}><Link to="/purchase_order" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
@@ -873,7 +611,7 @@ class SideMenu extends Component {
 
                     {/* TRANSAKSI MODUL START */}
                     <li className={"treeview" + (this.state.isSale===true  || path==='/sale'?" active menu-open" : "")} style={modul_penjualan===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'sale')}><i className="fa fa-shopping-cart" /> <span>Transaksi</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isSale')}><i className="fa fa-shopping-cart" /> <span>Transaksi</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSale===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSale===true
                         ?"block" : "none"}}>
                             <li className={path==='/sale'?"active":''} style={this.state.penjualan_barang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/sale" style={{width:'fit-content'}}> <i className="fa fa-shopping-bag" />Penjualan Barang</Link></li>
@@ -884,7 +622,7 @@ class SideMenu extends Component {
 
                     {/* PEMBAYARAN SECTION START */}
                     <li className={"treeview" + (this.state.isPaid===true  || path==='/bayar_hutang' || path==='/bayar_piutang'?" active menu-open" : "")} style={modul_pembayaran===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'paid')}><i className="fa fa-money" /> <span>Pembayaran</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isPaid')}><i className="fa fa-money" /> <span>Pembayaran</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isPaid===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isPaid===true
                         ?"block" : "none"}}>
                             <li className={path==='/bayar_hutang'?"active":''} style={this.state.hutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/bayar_hutang" style={{width:'fit-content'}}> <i className="fa fa-dollar" />Hutang</Link></li>
@@ -904,7 +642,7 @@ class SideMenu extends Component {
                         path==='/report/cash'||
                         path==='/report/closing'
                         ?" active menu-open" : "")} style={modul_report===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'report')}><i className="zmdi zmdi-book" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isReport')}><i className="zmdi zmdi-book" /> <span>Report</span> <i className="fa fa-angle-right" /></a>
 
                         <ul className={"treeview-menu animate__animated" + (this.state.isReport===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReport===true || this.state.isReportInventory===true || this.state.isReportPembelian===true ?"block" : "none"}}>
                             <li className={path==='/report/closing'?"active":''} style={this.state.r_closing==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/closing" style={{width:'fit-content'}}> <i className="zmdi zmdi-lock" />Closing</Link></li>
@@ -919,7 +657,7 @@ class SideMenu extends Component {
                                 path==='/report/sale_by_cust_archive' ||
                                 path==='/report/sale_by_product_archive' 
                                 ?" active menu-open" : "")} style={modul_report_penjualan===true?{display:'block'}:{display:'none'}}>
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_penjualan')}><i className="fa fa-list-alt"/>Penjualan <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isReportPenjualan')}><i className="fa fa-list-alt"/>Penjualan <i className="fa fa-angle-right"/></a>
 
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPenjualan===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPenjualan===true ?"block" : "none"}}>
                                     <li className={path==='/report/sale_archive'?"active":''} style={this.state.r_arsip_penjualan==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/sale_archive" style={{width:'fit-content'}}> <i className="zmdi zmdi-archive" />Arsip Penjualan</Link></li>
@@ -940,7 +678,7 @@ class SideMenu extends Component {
                                 path==='/report/mutation'||
                                 path==='/report/alokasi_trx'||
                                 path==='/report/dn'?" active menu-open" : "")} style={modul_report_inventory===true?{display:'block'}:{display:'none'}}>
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_inventory')}><i className="zmdi zmdi-widgets"/>Inventory <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isReportInventory')}><i className="zmdi zmdi-widgets"/>Inventory <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportInventory===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportInventory===true?"block" : "none"}}>
                                     <li className={path==='/report/inventory'?"active":''} style={this.state.r_stock==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/inventory" style={{width:'fit-content'}}> <i className="zmdi zmdi-chart" />Stock</Link></li>
                                     <li className={path==='/report/adjustment'?"active":''} style={this.state.r_adjusment==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/adjustment" style={{width:'fit-content'}}> <i className="fa fa-adjust" />Adjustment</Link></li>
@@ -962,7 +700,7 @@ class SideMenu extends Component {
                                 path==='/report/purchase_by_supplier'
                                 ?" active menu-open" : "")} style={modul_report_pembelian===true?{display:'block'}:{display:'none'}}>
 
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_pembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isReportPembelian')}><i className="fa fa-list-alt"/>Pembelian <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembelian===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembelian===true
                         ?"block" : "none"}}>
                                     <li className={path==='/report/po'?"active":''} style={this.state.r_purchase_order==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/po" style={{width:'fit-content'}}> <i className="fa fa-list-ol" />Purchase Order</Link></li>
@@ -978,7 +716,7 @@ class SideMenu extends Component {
                                 path==='/report/piutang'
                                 ?" active menu-open" : "")} style={modul_report_pembayaran===true?{display:'block'}:{display:'none'}}>
 
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_pembayaran')}><i className="fa fa-money"/>Pembayaran <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isReportPembayaran')}><i className="fa fa-money"/>Pembayaran <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportPembayaran===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportPembayaran===true
                         ?"block" : "none"}}>
                                     <li className={path==='/report/hutang'?"active":''} style={this.state.r_hutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/report/hutang" style={{width:'fit-content'}}> <i className="fa fa-dollar" />Hutang</Link></li>
@@ -993,7 +731,7 @@ class SideMenu extends Component {
                                 path==='/log/act'
                                 ?" active menu-open" : "")} style={modul_report_log===true?{display:'block'}:{display:'none'}}>
 
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'report_log')}><i className="fa fa-pencil"/>Log <i className="fa fa-angle-right"/></a>
+                                <a href="!#" onClick={(e) => this.changeMenu(e,'isReportLog')}><i className="fa fa-pencil"/>Log <i className="fa fa-angle-right"/></a>
                                 <ul className={"treeview-menu animate__animated" + (this.state.isReportLog===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isReportLog===true
                         ?"block" : "none"}}>
                                     <li className={path==='/log/trx'?"active":''} style={this.state.r_hutang==="0"?{"display":"none"}:{"display":"block"}}><Link to="/log/trx" style={{width:'fit-content'}}> <i className="fa fa-file-text" />Transaksi</Link></li>
@@ -1017,7 +755,7 @@ class SideMenu extends Component {
                         ?" active menu-open" : ""
                         )
                     } style={modul_setting===true?{display:'block'}:{display:'none'}}>
-                        <a href="!#" onClick={(e) => this.changeMenu(e,'setting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
+                        <a href="!#" onClick={(e) => this.changeMenu(e,'isSetting')}><i className="fa fa-gears" /> <span>Setting</span> <i className="fa fa-angle-right" /></a>
                         <ul className={"treeview-menu animate__animated" + (this.state.isSetting===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isSetting===true
                         ?"block" : "none"}}>
                             <li className={path==='/company'?"active":''} style={this.state.pengaturan_umum==="0"?{"display":"none"}:{"display":"block"}}><Link to="/company" style={{width:'fit-content'}}> <i className="fa fa-gear" />Pengaturan Umum</Link></li>

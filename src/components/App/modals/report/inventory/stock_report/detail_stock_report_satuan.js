@@ -21,14 +21,12 @@ class DetailStockReportSatuan extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-
         localStorage.removeItem("code");
         localStorage.removeItem("barcode");
         localStorage.removeItem("name");
     };
     handelDetailTrx(e,code,location,barcode,name){
         e.preventDefault();
-
         localStorage.setItem("codeDetailTrx",code);
         localStorage.setItem("locationDetailTrx",location);
         localStorage.setItem("barcodeDetailTrx",barcode);
