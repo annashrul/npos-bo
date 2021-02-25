@@ -133,7 +133,7 @@ export const storeReceive= (data,param) => {
                             nota: data.result.kode
                         }
                     })
-                    //Swal.closeModal();==
+                    Swal.closeModal();
                     return false;
                 });
                 dispatch(setLoading(false));

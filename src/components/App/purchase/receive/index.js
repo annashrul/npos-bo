@@ -801,7 +801,9 @@ class Receive extends Component{
                                 nota_supplier: this.state.notasupplier,
                                 nama_penerima: this.state.penerima,
                                 discount_harga: this.state.discount_harga,
+                                discount_persen: this.state.discount_persen,
                                 ppn: this.state.pajak,
+                                ppn_harga: this.state.ppn_harga,
                                 lokasi_beli: this.state.location,
                                 userid: this.state.userid,
                                 detail: detail
