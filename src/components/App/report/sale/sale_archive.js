@@ -381,6 +381,7 @@ class SaleArchive extends Component{
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Jam</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Customer</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Kasir</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Sales</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Omset</th>
                                             <th className="text-black" colSpan={3} style={columnStyle}>Diskon</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Pajak</th>
@@ -455,6 +456,7 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{moment(v.jam).format("hh:mm:ss")}</td>
                                                                     <td style={columnStyle}>{v.customer}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
+                                                                    <td style={columnStyle}>{v.sales}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseFloat(v.omset))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
                                                                     <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>

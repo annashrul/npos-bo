@@ -20,7 +20,7 @@ export const loginUser = (userData,expire=1) =>
         })
 
         axios.post(HEADERS.URL+'auth/bo', userData,{
-            headers:{'username':localStorage.getItem('uidtnt')}
+            headers:{'username':atob(Cookies.get('tnt='))}
         })
         .then(res=>{
             setTimeout(
@@ -40,7 +40,6 @@ export const loginUser = (userData,expire=1) =>
                     nama: res.data.result.nama,
                     alamat: res.data.result.alamat,
                     foto: res.data.result.foto,
-                    token:token,
                     logo:res.data.result.logo,
                     fav_icon:res.data.result.fav_icon,
                     harga1:res.data.result.nama_harga.harga1,

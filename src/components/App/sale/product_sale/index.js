@@ -6,6 +6,7 @@ import Select from 'react-select'
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import {FetchCustomerAll} from "redux/actions/masterdata/customer/customer.action";
+import {FetchSalesAll} from "redux/actions/masterdata/sales/sales.action";
 import {setProductbrg, FetchProductSale} from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
@@ -47,6 +48,7 @@ class Sale extends Component{
             qty:0,
             location_data:[],
             location:"",
+            sales:"1",
             customer: "1000001",
             catatan:"-",
             jenis_trx:"Tunai",
@@ -69,13 +71,18 @@ class Sale extends Component{
                 catatan:""
             },
             detail:[],
-            master:{}
+            master:{},
+            opSales: [{
+                value: '1',
+                label: 'UMUM'
+            }]
         };
         this.HandleRemove = this.HandleRemove.bind(this);
         this.HandleAddBrg = this.HandleAddBrg.bind(this);
         this.HandleChangeInput = this.HandleChangeInput.bind(this);
         this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+        this.HandleChangeSales = this.HandleChangeSales.bind(this);
         this.HandleChangeCustomer = this.HandleChangeCustomer.bind(this);
         this.setTglOrder=this.setTglOrder.bind(this);
         this.HandleReset = this.HandleReset.bind(this);
@@ -96,6 +103,8 @@ class Sale extends Component{
         this.getData();
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.props.dispatch(FetchNotaSale(localStorage.lk));
+            this.props.dispatch(FetchCustomerAll(localStorage.lk));
+            this.props.dispatch(FetchSalesAll(localStorage.lk));
             this.setState({
                 location:localStorage.lk
             })
@@ -103,6 +112,11 @@ class Sale extends Component{
         if (localStorage.cs !== undefined && localStorage.cs !== '') {
             this.setState({
                 customer: localStorage.cs
+            })
+        }
+        if (localStorage.sl !== undefined && localStorage.sl !== '') {
+            this.setState({
+                sales: localStorage.sl
             })
         }
         if (localStorage.cs !== undefined && localStorage.lk!==undefined) {
@@ -166,6 +180,24 @@ class Sale extends Component{
             this.getData();
 
         }
+        if (nextProps.sales.data !== undefined) {
+            const opSales = [{
+                value: '1',
+                label: 'UMUM'
+            }];
+            nextProps.sales.data.map(i => {
+                if (i.nama!=='UMUM'){
+                    opSales.push({
+                        value: i.kode,
+                        label: i.nama
+                    })
+                }
+                return null;
+            })
+            this.setState({
+                opSales:opSales
+            })
+        }
 
     }
     componentWillUnmount(){
@@ -173,6 +205,7 @@ class Sale extends Component{
         destroy(table);
         localStorage.removeItem('cs');
         localStorage.removeItem('lk');
+        localStorage.removeItem('sl');
         localStorage.removeItem('anySaleTrx');
     }
     HandleChangeLokasi(lk){
@@ -187,6 +220,8 @@ class Sale extends Component{
         this.props.dispatch(FetchNotaSale(lk.value));
         this.props.dispatch(FetchDetailLocation(lk.value));
         this.props.dispatch(FetchCustomerAll(lk.value));
+        this.props.dispatch(FetchSalesAll(lk.value));
+        
         if (this.state.customer!==""){
             let where=``;
             
@@ -224,6 +259,18 @@ class Sale extends Component{
         }
         destroy(table);
         this.getData();
+    }
+
+    HandleChangeSales(sl){
+         let err = Object.assign({}, this.state.error, {
+            sales: ""
+        });
+        this.setState({
+            sales: sl.value,
+            error: err
+        })
+        localStorage.setItem('sl', sl.value);
+        
     }
     HandleCommonInputChange(e,errs=true,st=0){
         const column = e.target.name;
@@ -468,7 +515,7 @@ class Sale extends Component{
         e.preventDefault();
         // validator head form
         let err = this.state.error;
-        if (this.state.catatan === "" || this.state.location === "" || this.state.customer === ""){
+        if (this.state.catatan === "" || this.state.location === "" || this.state.customer === "" || this.state.sales === "") {
             if(this.state.catatan===""){
                 err = Object.assign({}, err, {
                     catatan:"Catatan tidak boleh kosong."
@@ -483,6 +530,12 @@ class Sale extends Component{
             if (this.state.customer === "") {
                 err = Object.assign({}, err, {
                     customer: "customer tidak boleh kosong."
+                });
+            }
+
+            if (this.state.sales === "") {
+                err = Object.assign({}, err, {
+                    sales: "sales tidak boleh kosong."
                 });
             }
             this.setState({
@@ -556,7 +609,7 @@ class Sale extends Component{
                         "kartu": "-",
                         "dis_persen": this.state.discount_persen,
                         "dis_rp": this.state.discount_harga===0?0:rmComma(this.state.discount_harga),
-                        "kd_sales": 1,
+                        "kd_sales": this.state.sales,
                         "jam": moment(new Date()).format("HH:mm:ss"),
                         "tgl": moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
                         "compliment": "-",
@@ -778,10 +831,11 @@ class Sale extends Component{
                 return null;
             })
         }
+
+        
         let totalsub=0;
         const centerStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
-        const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
         
         return (
             <Layout page="Penjualan Barang">
@@ -894,7 +948,7 @@ class Sale extends Component{
                                                     <input type="date" name={"tgl_order"} className={"form-control"} value={this.state.tgl_order} onChange={(e => this.HandleCommonInputChange(e))}/>
                                                 </div>
                                             </div>
-                                            <div className="col-md-3">
+                                            <div className="col-md-2">
                                                 <div className="form-group">
                                                     <label className="control-label font-12">Lokasi</label>
                                                     <Select options={this.state.location_data} placeholder="Pilih Lokasi"
@@ -907,7 +961,7 @@ class Sale extends Component{
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-md-3">
+                                            <div className="col-md-2">
                                                 <div className="form-group">
                                                     <label className="control-label font-12">Customer</label>
                                                     <Select options={opCustomer} placeholder="Pilih Customer"
@@ -917,6 +971,19 @@ class Sale extends Component{
                                                     <div className="invalid-feedback"
                                                          style={this.state.error.customer !== "" ? {display: 'block'} : {display: 'none'}}>
                                                         {this.state.error.customer}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-2">
+                                                <div className="form-group">
+                                                    <label className="control-label font-12">Sales</label>
+                                                    <Select options={this.state.opSales} placeholder="Pilih Sales"
+                                                            onChange={this.HandleChangeSales}
+                                                            value={this.state.opSales.find(op => {return op.value === this.state.sales})}
+                                                    />
+                                                    <div className="invalid-feedback"
+                                                         style={this.state.error.sales !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                        {this.state.error.sales}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1072,9 +1139,6 @@ class Sale extends Component{
                                             </tbody>
                                             <tfoot>
                                             <tr style={{background: '#eee'}}>
-                                                <td colSpan='9' style={rightStyle}>Total
-                                                </td>
-                                                <td colSpan='1' style={rightStyle}>{toRp(totalsub)}</td>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -1149,6 +1213,7 @@ const mapStateToPropsCreateItem = (state) => ({
     pagin_brg_sale:state.productReducer.pagin_brg_sale,
     nota: state.saleReducer.code,
     customer: state.customerReducer.all,
+    sales: state.salesReducer.dataAll,
     auth:state.auth,
     dataDetailLocation:state.locationReducer.detail,
 });

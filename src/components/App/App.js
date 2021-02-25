@@ -22,8 +22,19 @@ if (token) {
     sess.then(res => {
       if (res.length!==0) {
         // Set auth token header auth
-        setAuthToken(res[0].token);
+        setAuthToken(atob(token));
         store.dispatch(setCurrentUser(res[0]))
+        var decodedToken = jwt.decode(atob(token), {complete: true});
+        var dateNow = new Date();
+
+        if (decodedToken.exp < dateNow.getTime()){
+          store.dispatch(logoutUser());
+          Cookies.remove('datum_exp')
+          Cookies.remove('datum_np')
+          // Redirect to login
+          window.location.href = '/login';
+        }
+
 
       }else{
         store.dispatch(logoutUser());
