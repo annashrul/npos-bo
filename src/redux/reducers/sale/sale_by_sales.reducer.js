@@ -5,7 +5,7 @@ const initialState = {
     isLoadingDetail: false,
     isLoadingReport: false,
     data: [],
-    dataDetail:[],
+    detail:[],
     msg:"",
     status:"",
     code:"-",
@@ -16,9 +16,11 @@ const initialState = {
 
 export const saleBySalesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SALE_BY_SALES.REPORT_DETAIL_SUCCESS:
+        case SALE_BY_SALES.DETAIL:
             return Object.assign({}, state, {
-                dataDetail: action.data.result,
+                 status: action.data.status,
+                msg: action.data.msg,
+                detail: action.data.result,
             });
         case SALE_BY_SALES.SUCCESS:
             return Object.assign({}, state, {
@@ -26,25 +28,6 @@ export const saleBySalesReducer = (state = initialState, action) => {
                 msg: action.data.msg,
                 data: action.data.result,
                 total: action.data.result.total
-            });
-        case SALE_BY_SALES.REPORT_SUCCESS_EXCEL:
-            return Object.assign({}, state, {
-                report_excel: action.data.result,
-                total_penjualan_excel: action.data.result.total_penjualan,
-            });
-        case SALE_BY_SALES.REPORT_SUCCESS:
-            return Object.assign({}, state, {
-                report: action.data.result,
-                report_data: action.data.result.data,
-                total_penjualan: action.data.result.total_penjualan,
-            });
-        case SALE_BY_SALES.SALE_BY_SALES_DATA:
-            return Object.assign({}, state, {
-                SALE_BY_SALES_data: action.data.result
-            });
-        case SALE_BY_SALES.SUCCESS_CODE:
-            return Object.assign({}, state, {
-                code: action.data.result
             });
         case SALE_BY_SALES.FAILED:
             return Object.assign({}, state, {

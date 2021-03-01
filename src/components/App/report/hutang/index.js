@@ -456,6 +456,7 @@ class HutangReport extends Component{
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Nilai Pembelian</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Tempo</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tgl Transaksi</th>
                                     </tr>
                                     </thead>
                                     {
@@ -474,7 +475,7 @@ class HutangReport extends Component{
                                                                                     Aksi
                                                                                 </DropdownToggle>
                                                                                 <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tempo)}>Detail Pembayaran</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tgl_jatuh_tempo)}>Detail Pembayaran</DropdownItem>
                                                                                     {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_faktur_beli)}>Delete</DropdownItem> */}
                                                                                     {/* <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>
@@ -486,7 +487,8 @@ class HutangReport extends Component{
                                                                     <td style={ leftStyle}>{v.supplier}</td>
                                                                     <td style={ rightStyle}>{toRp(parseInt(v.nilai_pembelian,10))}</td>
                                                                     <td style={ centerStyle}>{statusQ(v.status==='LUNAS'?'success':'danger',v.status)}</td>
-                                                                    <td style={ centerStyle}>{moment(v.tempo).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ centerStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ centerStyle}>{moment(v.tgl_beli).format('YYYY-MM-DD')}</td>
 
                                                                 </tr>
                                                             )

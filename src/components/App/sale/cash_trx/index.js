@@ -277,17 +277,17 @@ class Sale extends Component{
                 <div className="row">
                     <div className="col-12">
                         <div className="row">
-                            <div className="col-md-6 offset-3">
+                            <div className="col-md-6 offset-md-3 col-sm-12 offset-sm-0">
                                 <div className="card">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 col-sm-6 col-xs-6 col-6">
                                             <div className="custom-control custom-radio" style={{textAlign:'end'}}>
                                                 <input type="radio" id="customRadio1" checked={this.state.kategori === 'masuk'} onChange={(e) => this.HandleInput(e)} value={'masuk'} name="kategori" className="custom-control-input" />
                                                 <label className="custom-control-label" htmlFor="customRadio1">Kas Masuk</label>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 col-sm-6 col-xs-6 col-6">
                                             <div className="custom-control custom-radio">
                                                 <input type="radio" id="customRadio2" checked={this.state.kategori === 'keluar'} onChange={(e) => this.HandleInput(e)} value={'keluar'} name="kategori" className="custom-control-input" />
                                                 <label className="custom-control-label" htmlFor="customRadio2">Kas Keluar</label>

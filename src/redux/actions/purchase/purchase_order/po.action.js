@@ -124,10 +124,20 @@ export const FetchNota = (lokasi) => {
 export const storePo = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         let rawdata = data;
         const url = HEADERS.URL + `purchaseorder`;
         axios.post(url, data.detail)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data)
                 Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
@@ -174,7 +184,7 @@ export const storePo = (data,param) => {
 
             })
             .catch(function (error) {
-
+                Swal.close()
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',

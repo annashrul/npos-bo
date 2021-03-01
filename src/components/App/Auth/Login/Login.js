@@ -34,8 +34,8 @@ class Login extends Component {
     getSubdomain(){
         // let host = window.location.host;
         // let parts = host.split(".");
-        // const subdomain = btoa(parts[0]);
-        // const subdomain = btoa(document.getElementById("coolyeah").value);
+        // const subdomains = btoa(parts[0]);
+        // const subdomains = btoa(document.getElementById("coolyeah").value);
         const subdomains = btoa('npos');
         Cookies.set('tnt=', btoa(subdomains), {
             expires: 365

@@ -259,7 +259,7 @@ class ReportLabaRugi extends Component{
                                                     <hr></hr>
                                                     <div className="row">
                                                         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                            <strong className="text-10 mb-0 text-left">Pendapatan</strong>
+                                                            <h5 className="text-15 mb-2 text-left">Pendapatan</h5>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -278,9 +278,9 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_masuk,10))}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="row">
+                                                    <div className="row mt-1">
                                                         <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                            <strong className="text-10 mb-0 text-left">Total Pendapatan</strong>
+                                                            <h6 className="text-10 mb-0 text-left">Total Pendapatan</h6>
                                                         </div>
                                                         <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(total_pendapatan,10))}</p>
@@ -289,7 +289,7 @@ class ReportLabaRugi extends Component{
                                                     <hr></hr>
                                                     <div className="row">
                                                         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                            <strong className="text-10 mb-0 text-left">Beban</strong>
+                                                            <h5 className="text-15 mb-2 text-left">Beban</h5>
                                                         </div>
                                                     </div>
                                                     <div className="row">
@@ -316,9 +316,9 @@ class ReportLabaRugi extends Component{
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(kas_keluar,10))}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="row">
+                                                    <div className="row mt-1">
                                                         <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                            <strong className="text-10 mb-0 text-left">Total Beban</strong>
+                                                            <h6 className="text-10 mb-0 text-left">Total Beban</h6>
                                                         </div>
                                                         <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(total_beban,10))}</p>
@@ -327,7 +327,7 @@ class ReportLabaRugi extends Component{
                                                     <hr></hr>
                                                     <div className="row">
                                                         <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                                            <strong className="text-10 mb-0 text-left">Laba</strong>
+                                                            <h6 className="text-10 mb-0 text-left">Laba</h6>
                                                         </div>
                                                         <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6" >
                                                             <p className="text-12 mb-0 text-right">{toRp(parseInt(laba,10))}</p>

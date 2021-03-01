@@ -24,10 +24,20 @@ export function setCode(data = []) {
 export const storeReturTanpaNota = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         let rawdata = data;
         const url = HEADERS.URL + `retur`;
         axios.post(url, data.detail)
             .then(function (response) {
+                Swal.close();
                 const data = (response.data)
                 Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
@@ -74,6 +84,7 @@ export const storeReturTanpaNota = (data,param) => {
 
             })
             .catch(function (error) {
+                Swal.close();
                 dispatch(setLoading(false));
 
                 Swal.fire({allowOutsideClick: false,

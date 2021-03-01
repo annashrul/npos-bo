@@ -30,6 +30,7 @@ class Receive extends Component{
             databrg: [],
             brgval:[],
             tanggal: moment(new Date()).format("yyyy-MM-DD"),
+            tanggal_tempo: moment(new Date()).format("yyyy-MM-DD"),
             harga_beli: 0,
             diskon:0,
             ppn:0,
@@ -169,9 +170,7 @@ class Receive extends Component{
         }
     }
     componentDidMount() {
-        this.getSetting();
         this.props.dispatch(FetchSupplierAll())
-        this.getData()
         if (localStorage.catatan !== undefined && localStorage.catatan !== '') {
             this.setState({
                 catatan: localStorage.catatan
@@ -746,19 +745,16 @@ class Receive extends Component{
 
                             res.map(item => {
                                 let disc1 = 0;
-                                let disc2 = 0;
                                 let ppn = 0;
                                 if (item.diskon !== 0) {
-                                    disc1 = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.diskon) / 100);
-                                    disc2 = disc1;
-                                    if (item.diskon2 !== 0) {
-                                        disc2 = disc1 * (parseFloat(item.diskon2) / 100);
-                                    }
+                                    disc1 = parseInt(rmComma(item.harga_beli), 10) * (parseFloat(item.diskon) / 100);
                                 }
+
                                 if (item.ppn !== 0) {
-                                    ppn = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.ppn) / 100);
+                                    ppn = (parseInt(rmComma(item.harga_beli), 10) - disc1) * (parseFloat(item.ppn) / 100);
                                 }
-                                subtotal += ((parseInt(rmComma(item.harga_beli),10) - disc2) + ppn) * parseFloat(item.qty);
+                                const subtotal_perrow = ((parseInt(rmComma(item.harga_beli), 10) - disc1) + ppn) * parseFloat(item.qty);
+                                subtotal += subtotal_perrow
 
                                 let harga_=0;
                                 let harga_2=0;
@@ -791,9 +787,9 @@ class Receive extends Component{
                                 return null;
                             })
                             let data_final = {
-                                tanggal: moment(this.state.tanggal).format("YYYY-MM-DD"),
+                                tanggal: moment(this.state.tanggal).format("YYYY-MM-DD HH:mm:ss"),
                                 type: this.state.jenis_trx,
-                                tgl_jatuh_tempo: moment(this.state.tanggal).format("YYYY-MM-DD"),
+                                tgl_jatuh_tempo: moment(this.state.tanggal_tempo).format("YYYY-MM-DD HH:mm:ss"),
                                 no_po: this.state.no_po,
                                 pre_receive: this.state.pre_receive,
                                 sub_total: subtotal,
@@ -1309,6 +1305,16 @@ class Receive extends Component{
                                                                 {this.state.error.supplier}
                                                             </div>
                                                         </div>
+                                                        {
+                                                            this.state.jenis_trx === 'Kredit'?
+                                                            <div className="form-group">
+                                                                <label className="control-label font-12">
+                                                                    Tanggal Jatuh Tempo
+                                                                </label>
+                                                                <input type="date" name={"tanggal_tempo"} min={this.state.tanggal} className={"form-control"} value={this.state.tanggal_tempo} onChange={(e)=>this.HandleCommonInputChange(e,true)}/>
+                                                            </div>
+                                                            :''
+                                                        }
                                                     </div>
                                                     <div className="col-md-6">
                                                         <div className="form-group">
@@ -1389,20 +1395,16 @@ class Receive extends Component{
                                             {
                                                 this.state.databrg.map((item,index)=>{
                                                     let disc1=0;
-                                                    let disc2=0;
                                                     let ppn=0;
                                                     if(item.diskon!==0){
-                                                        disc1 = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.diskon) / 100);
-                                                        disc2=disc1;
-                                                        if(item.diskon2!==0){
-                                                            disc2 = disc1 * (parseFloat(item.diskon2) / 100);
-                                                        }
+                                                        disc1 = parseInt(rmComma(item.harga_beli), 10) * (parseFloat(item.diskon) / 100);
                                                     }
 
                                                     if(item.ppn!==0){
-                                                        ppn = parseInt(rmComma(item.harga_beli),10) * (parseFloat(item.ppn) / 100);
+                                                        ppn = (parseInt(rmComma(item.harga_beli), 10) -disc1) * (parseFloat(item.ppn) / 100);
                                                     }
-                                                    subtotal+=((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty);
+                                                    const subtotal_perrow = ((parseInt(rmComma(item.harga_beli), 10) - disc1) + ppn) * parseFloat(item.qty);
+                                                    subtotal += subtotal_perrow
                                                     //
                                                     return (
                                                         <tr key={index} >
@@ -1464,8 +1466,6 @@ class Receive extends Component{
                                                                     onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
                                                                     onChange={(e)=>this.HandleChangeInputValue(e,index)}
                                                                     value={this.state.brgval[index].ppn}/>
-
-                                                                
                                                             </td>
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"80px",textAlign:"right"}} readOnly type="text" className="form-control" value={item.stock}/>
@@ -1473,7 +1473,7 @@ class Receive extends Component{
                                                             <td style={columnStyle}><input style={{width:"80px",textAlign:"right"}} className="form-control" type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
                                                             <td style={columnStyle}><input style={{width:"80px",textAlign:"right"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
                                                             <td style={columnStyle}>
-                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty))}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(subtotal_perrow)}/>
                                                             </td>
                                                         </tr>
                                                     )

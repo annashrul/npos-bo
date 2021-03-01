@@ -15,6 +15,8 @@ import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import imgExcel from 'assets/xls.png';
 import { Link } from 'react-router-dom';
 import Spinner from '../../../../Spinner';
+import Swal from 'sweetalert2'
+
 class DetailSaleByProductReport extends Component{
     constructor(props){
         super(props);
@@ -30,9 +32,22 @@ class DetailSaleByProductReport extends Component{
 
 
     }
-    componentDidMount(){
-        
+    handlePaymentSlip(e, title,image) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Bukti Pembayaran',
+            text: title,
+            imageUrl: image,
+            imageAlt: title,
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            },
+        })
     }
+
     componentWillMount(){
         
         this.setState({
@@ -171,9 +186,8 @@ class DetailSaleByProductReport extends Component{
                                 <th className="text-black" style={centerStyle}>No Giro</th> */}
                                 <th className="text-black" style={centerStyle}>Operator</th>
                                 <th className="text-black" style={centerStyle}>Tanggal Bayar</th>
-                                {/* <th className="text-black" style={centerStyle}>Tanggal Cair Giru</th> */}
-                                <th className="text-black" style={centerStyle}>Tanggal Jatuh Tempo</th>
                                 <th className="text-black" style={centerStyle}>Ket</th>
+                                <th className="text-black" style={centerStyle}>Bukti</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -207,9 +221,8 @@ class DetailSaleByProductReport extends Component{
                                                 <td style={centerStyle}>{v.nogiro}</td> */}
                                                 <td style={centerStyle}>{v.operator}</td>
                                                 <td style={centerStyle}>{moment(v.tgl_byr).format('YYYY-MM-DD')}</td>
-                                                {/* <td style={centerStyle}>{moment(v.tgl_cair_giro).format('YYYY-MM-DD')}</td> */}
-                                                <td style={centerStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
                                                 <td style={centerStyle}>{v.ket}</td>
+                                                <td style={centerStyle}><button className='btn btn-secondary' onClick={event=>this.handlePaymentSlip(event,v.no_nota,v.payment_slip)}><i className="fa fa-eye"/> Bukti Pembayaran</button></td>
                                             </tr>
                                         );
                                     }) : "No data." : "No data."
