@@ -160,6 +160,7 @@ const Routes = (
             <PrivateRoute path="/report/arsip_retur_penjualan" exact strict component={SaleReturReport} />
             <PrivateRoute path="/report/penjualan_by_customer" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/report/penjualan_by_barang" exact strict component={SaleByProductArchive} />
+            <PrivateRoute path="/report/penjualan_by_sales" exact strict component={SaleBySalesArchive} />
 
             <PrivateRoute path="/report/stock" exact strict component={InventoryReport} />
             <PrivateRoute path="/report/adjusment" exact strict component={AdjustmentReport} />
@@ -181,7 +182,6 @@ const Routes = (
             <PrivateRoute path="/report/log_aktifitas" exact strict component={LogActReport} />
 
             <PrivateRoute path="/report/packing" exact strict component={PackingReport} />
-            {/*<PrivateRoute path="/report/sale_by_sales_archive" exact strict component={SaleBySalesArchive} />*/}
 
             {/* REPORT SECTION END */}
 

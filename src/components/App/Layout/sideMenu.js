@@ -25,15 +25,12 @@ class SideMenu extends Component {
             isSetting:false,
             //################################## END PARENT MENU ###############################
             //################################## START CHILD MENU ###############################
-            isReportLog:false,
-            isTrxOpname:false,
-            isTrxPengiriman:false,
-            isTrxMutasi:false,
+            isReportPenjualan:false,
             isReportInventory:false,
             isReportPembelian:false,
-            isReportPenjualan:false,
             isReportPembayaran:false,
-            isArea:false,
+            isReportLog:false,
+
             //################################## END CHILD MENU ###############################
             //################################## START STATE DISPLAY MENU ACCESS ###############################
             isMasterdataDisplay:false,
@@ -54,18 +51,6 @@ class SideMenu extends Component {
 
             //################################## END STATE DISPLAY MENU ACCESS ###############################
             aksesUser:[],
-            menuReport:[],
-            menuNameReport:[
-                {label:'closing',state:''},
-                {label:'kas',state:''},
-                {label:'laba_rugi',state:''},
-                {label:'produksi',state:''},
-                {label:'penjualan',state:'isReportPenjualan',display:'isReportPenjualanDisplay'},
-                {label:'inventory',state:'isReportInventory',display:'isReportInventoryDisplay'},
-                {label:'pembelian',state:'isReportPembelian',display:'isReportPembelianDisplay'},
-                {label:'pembayaran',state:'isReportPembayaran',display:'isReportPembayaranDisplay'},
-                {label:'log',state:'isReportLog',display:'isReportLogDisplay'},
-            ],
             arrState:[
                 {temp:1,parent:0,range1:0,range2:10,label:'setting',display:'isSettingDisplay',state:'isSetting'},
                 {temp:1,parent:1,range1:10,range2:20,label:'masterdata',display:'isMasterdataDisplay',state:'isMasterdata'},
@@ -115,7 +100,7 @@ class SideMenu extends Component {
         }
         // this.forceUpdate();
     }
-    handleMenuActive(param,active){
+    handleMenuActive(param,state){
         const path = this.props.location.pathname;
         for(let i=0;i<param.length;i++){
             let val=param[i];
@@ -124,54 +109,62 @@ class SideMenu extends Component {
                 let label=`/${val.label.replaceAll(" ","_").toLowerCase()}`;
                 if(val.menu===''){
                     if(path===label){
-                        this.setState({[active]:true});
+                        this.setState({[state['state']]:true});
                         break;
                     }
                 }else{
-                    for(let x=0;x<this.state.menuNameReport.length;x++){
-                        if(`/report/${labelReport}`===path&&val.menu===this.state.menuNameReport[x]['label']){
-                            this.setState({isReport:true,[this.state.menuNameReport[x]['state']]:true});
-                            break;
+                    if(state['data']!==undefined){
+                        let childState=state['data'];
+                        for(let x=0;x<childState.length;x++){
+                            if(`/report/${labelReport}`=== path && val.menu===childState[x]['label']){
+                                this.setState({
+                                    isReport:true,
+                                    [childState[x]['activeChild']]:true
+                                });
+                                break;
+                            }
                         }
                     }
+
                 }
                 continue;
             }
             break;
         }
     }
-    handleDisplay(param,display){
-        this.setState({isLoading:true});
-        param.map(val=>{
-            if(val.label!==''){
-                if(val.value==='1'){
-                    this.setState({[display]:true});
+    handleMenuDisplay(props,state){
+        let group=groupByArray(props,menu=>menu['parent']);
+        let data=group.get(state['parent']);
+        for(let i=0;i<data.length;i++){
+            if(data[i].label!==''){
+                if(data[i].value==='1'){
+                    this.setState({[state['display']]:true});
                 }
-            }
-        });
-        let group=groupByArray(param,menu=>menu['menu']);
-        for(let i=0;i<this.state.menuNameReport.length;i++){
-            let dataGroup = group.get(this.state.menuNameReport[i]['label']);
-            if(dataGroup!==undefined){
-                if(this.state.menuNameReport[i]['display']!==''){
-                    for(let val=0;val<dataGroup.length;val++){
-                        if(dataGroup[val]['value']==='1'){
-                            this.setState({
-                                [this.state.menuNameReport[i]['display']]:true,
-                            });
-                        }else{
-                            this.setState({
-                                [this.state.menuNameReport[i]['display']]:false,
-                            });
+                if(state['data']!==undefined){
+                    for(let x=0;x<state['data'].length;x++){
+                        let childState=state['data'][x];
+                        if(childState['display']!==''){
+                            if(data[i].value==='1'){
+                                this.setState({
+                                    [childState['display']]:true
+                                })
+                            }
+                            else{
+                                this.setState({
+                                    [childState['display']]:false
+                                })
+                            }
+
+                            // break;
                         }
+                        // break;
+
                     }
-                    continue;
+                    // continue;
                 }
-                continue;
+                break;
             }
-
             break;
-
         }
     }
     getProps(param){
@@ -181,8 +174,8 @@ class SideMenu extends Component {
             if(akses!==undefined&&akses!==null){
                 let toArray=[];
                 this.state.arrState.forEach((val,i)=>{
-                    this.handleMenuActive(akses.slice(val.range1,val.range2),val.state);
-                    this.handleDisplay(akses.slice(val.range1,val.range2),val.display);
+                    this.handleMenuActive(akses.slice(val.range1,val.range2),val);
+                    this.handleMenuDisplay(akses.slice(val.range1,val.range2),val);
                 });
 
                 if(akses.length>0){
@@ -207,7 +200,6 @@ class SideMenu extends Component {
     componentWillReceiveProps = (nextProps) => {
         this.getProps(nextProps);
     }
-
     handleLogout = (e) => {
         e.preventDefault();
         Swal.fire({allowOutsideClick: false,
@@ -228,9 +220,7 @@ class SideMenu extends Component {
         // const path = this.props.location.pathname;
         const {
             path,arrState,
-            aksesUser,menuNameReport,
-            isMasterdata,isInventory,isReceive,isSale,isPaid,isReport,isSetting,
-            isMasterdataDisplay,isInventoryDisplay,isReceiveDisplay,isSaleDisplay,isPaidDisplay,isReportDisplay,isSettingDisplay,
+            aksesUser,isReport
         } = this.state;
 
         return (
@@ -244,7 +234,6 @@ class SideMenu extends Component {
                             {
                                 (()=>{
                                     let child =[];
-
                                     arrState.map(val=>{
                                         if(aksesUser.length>0){
                                             let group=groupByArray(aksesUser,key=>key['parent']);
@@ -300,7 +289,7 @@ class SideMenu extends Component {
                                                                     let dataGroup=group.get(valKey.label);
                                                                     child.push(
                                                                         {
-                                                                            isActive:isReport&&this.state[valKey.activeChild], isDisplay:isReport&&this.state[valKey.display], arg1:valKey.activeChild, label:valKey.label.replaceAll("_"," ").toLowerCase(), path:`/report/${valKey.label}`,
+                                                                            isActive:this.state[val.state]&&this.state[valKey.activeChild], isDisplay:this.state[val.state]&&this.state[valKey.display], arg1:valKey.activeChild, label:valKey.label.replaceAll("_"," ").toLowerCase(), path:`/report/${valKey.label}`,
                                                                             data:(()=>{
                                                                                 let data=[];
                                                                                 dataGroup.map((val,x)=>{
@@ -323,201 +312,12 @@ class SideMenu extends Component {
 
 
                                         }
-                                        // console.log("array state",data);
                                     });
                                     return child;
                                 })()
 
 
                             }
-
-                            {/* ########################################## MASTERDATA MODUL START ########################################## */}
-                            <MenuTreeviewTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                isActive={isMasterdata}
-                                isDisplay={isMasterdataDisplay}
-                                arg1={'isMasterdata'}
-                                arg2={''}
-                                icon={'zmdi zmdi-receipt'}
-                                label={'Masterdata'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        for(let x=10; x<20; x++){
-                                            if(aksesUser[x]['label']!==''){
-                                                child.push(
-                                                    {path:`${aksesUser[x]['label'].replaceAll(" ","_").toLowerCase()}`,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                    // {path:path,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                )
-                                            }
-                                        }
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## MASTERDATA MODUL END ########################################## */}
-                            {/* ########################################## PRODUKSI MODUL START ########################################## */}
-                            <MenuTemp display={this.state.produksi} isActive={path==='/production'?"active":''} path={"/production"} icon={"fa fa-product-hunt"} label={"Produksi"}/>
-                            {/* ########################################## PRODUKSI MODUL END ########################################## */}
-                            {/* ########################################## INVENTORY MODUL START ########################################## */}
-                            <MenuTreeviewTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                isActive={isInventory}
-                                isDisplay={isInventoryDisplay}
-                                arg1={'isInventory'}
-                                arg2={''}
-                                icon={'zmdi zmdi-storage'}
-                                label={'Inventory'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        for(let x=30; x<40; x++){
-                                            if(aksesUser[x]['label']!==''){
-                                                child.push(
-                                                    {path:`${aksesUser[x]['label'].replaceAll(" ","_").toLowerCase()}`,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                )                                    }
-                                        }
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## INVENTORY MODUL END ########################################## */}
-                            {/* ########################################## PEMBELIAN MODUL START ########################################## */}
-                            <MenuTreeviewTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                isActive={isReceive}
-                                isDisplay={isReceiveDisplay}
-                                arg1={'isReceive'}
-                                arg2={''}
-                                icon={'zmdi zmdi-storage'}
-                                label={'Pembelian'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        for(let x=40; x<50; x++){
-                                            if(aksesUser[x]['label']!==''){
-                                                child.push(
-                                                    {path:`${aksesUser[x]['label'].replaceAll(" ","_").toLowerCase()}`,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                )                                    }
-                                        }
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## PEMBELIAN MODUL END ########################################## */}
-                            {/* ########################################## TRANSAKSI MODUL START ########################################## */}
-                            <MenuTreeviewTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                isActive={isSale}
-                                isDisplay={isSaleDisplay}
-                                arg1={'isSale'}
-                                arg2={''}
-                                icon={'fa fa-shopping-cart'}
-                                label={'Transaksi'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        for(let x=50; x<60; x++){
-                                            if(aksesUser[x]['label']!==''){
-                                                child.push(
-                                                    {path:`${aksesUser[x]['label'].replaceAll(" ","_").toLowerCase()}`,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                )                                    }
-                                        }
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## TRANSAKSI MODUL END ########################################## */}
-                            {/* ########################################## PEMBAYARAN SECTION START ########################################## */}
-                            <MenuTreeviewTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                isActive={isPaid}
-                                isDisplay={isPaidDisplay}
-                                arg1={'isPaid'}
-                                arg2={''}
-                                icon={'fa fa-money'}
-                                label={'Pembayaran'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        for(let x=60; x<70; x++){
-                                            if(aksesUser[x]['label']!==''){
-                                                child.push(
-                                                    {path:`${aksesUser[x]['label'].replaceAll(" ","_").toLowerCase()}`,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                )                                    }
-                                        }
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## PEMBAYARAN SECTION END ########################################## */}
-                            {/* ########################################## LAPORAN MODUL START ########################################## */}
-                            <MenuTreeviewSubTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                changeSubMenu={this.menuChange.bind(this)}
-                                isActive={isReport}
-                                isDisplay={isReportDisplay}
-                                arg1={'isReport'}
-                                arg2={''}
-                                labelParent={'Laporan'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        let group=groupByArray(aksesUser,menu=>menu['menu']);
-                                        menuNameReport.map(arg=>{
-                                            let dataGroup=group.get(arg['label']);
-                                            child.push(
-                                                {
-                                                    isActive:isReport&&this.state[arg['state']], isDisplay:isReport&&this.state[arg['display']], arg1:arg['state'], label:arg['label'].replaceAll("_"," ").toLowerCase(), path:`/report/${arg['label']}`,
-                                                    data:(()=>{
-                                                        let data=[];
-                                                        dataGroup.map((val,x)=>{
-                                                            let label=val['label'].replaceAll("Laporan ","").toLowerCase();
-                                                            data.push({isDisplay:val['value']==='1',label:label,path:'/report/'+label.replaceAll(" ","_").toLowerCase()})
-                                                        });
-                                                        return arg['state']===''?undefined:data
-                                                    })()
-                                                }
-                                            )
-                                        })
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## LAPORAN MODUL END ########################################## */}
-                            {/* ########################################## START MODUL CETAK BARCODE ########################################## */}
-                            <li className={path==='/cetak_barcode'?"active":''}><Link to="/cetak_barcode"> <i className="fa fa-barcode" /><span>Cetak Barcode </span></Link></li>
-                            {/* ########################################## MODUL CETAK BARCODE END ########################################## */}
-                            {/* ########################################## SETTINGS MODUL START ########################################## */}
-                            <MenuTreeviewTemp
-                                changeMenu={this.menuChange.bind(this)}
-                                isActive={isSetting}
-                                isDisplay={isSettingDisplay}
-                                arg1={'isSetting'}
-                                arg2={''}
-                                icon={'fa fa-gears'}
-                                label={'Pengaturan'}
-                                path={path}
-                                data={
-                                    aksesUser.length>0?(()=>{
-                                        let child =[];
-                                        for(let x=0; x<10; x++){
-                                            if(aksesUser[x]['label']!==''){
-                                                child.push(
-                                                    {path:`${aksesUser[x]['label'].replaceAll(" ","_").toLowerCase()}`,display:aksesUser[x]['value']==='1',label:aksesUser[x]['label']}
-                                                )                                    }
-                                        }
-                                        return child;
-                                    })():[]
-                                }
-                            />
-                            {/* ########################################## SETTINGS MODUL END ########################################## */}
                             {/* ########################################## LOGOUT MODUL START ########################################## */}
                             <li><a href={null} style={{cursor:'pointer',color:'#a6b6d0'}} onClick={(event)=>this.handleLogout(event)}> <i className="fa fa-chain-broken" /><span> Logout</span></a></li>
                             {/* ########################################## LOGOUT MODUL END ########################################## */}
