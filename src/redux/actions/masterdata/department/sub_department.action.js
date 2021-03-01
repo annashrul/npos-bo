@@ -30,8 +30,10 @@ export const FetchSubDepartment = (where='')=>{
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
+                if (data.status === 'success') {
+                    dispatch(setSubDepartment(data));
+                }
                 
-                dispatch(setSubDepartment(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             
@@ -45,8 +47,10 @@ export const FetchSubDepartmentAll = ()=>{
         axios.get(HEADERS.URL+`group2?page=1&perpage=999999`)
             .then(function(response){
                 const data = response.data;
+                if (data.status === 'success') {
+                    dispatch(setSubDepartmentAll(data));
+                }
                 
-                dispatch(setSubDepartmentAll(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             

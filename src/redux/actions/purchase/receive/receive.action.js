@@ -88,10 +88,20 @@ export const FetchNota = (lokasi) => {
 export const storeReceive= (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         const rawdata = data;
         const url = HEADERS.URL + `receive`;
         axios.post(url, data.detail)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data)
                 Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
@@ -140,6 +150,7 @@ export const storeReceive= (data,param) => {
 
             })
             .catch(function (error) {
+                Swal.close()
 
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',

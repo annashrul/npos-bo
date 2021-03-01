@@ -129,9 +129,19 @@ export const createCash = (data) => {
 export const StoreCashTrx = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         const url = HEADERS.URL + `pos/kas`;
         axios.post(url,data)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data);
                 
                 if (data.status === 'success') {
@@ -163,6 +173,7 @@ export const StoreCashTrx = (data) => {
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
+                Swal.close()
                 // handle error
                 dispatch(setLoading(false));
                 

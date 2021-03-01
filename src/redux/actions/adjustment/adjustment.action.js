@@ -82,10 +82,20 @@ export const FetchAdjustmentAll = ()=>{
 
 export const storeAdjusment = (data,param) => {
     return (dispatch) => {
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         dispatch(setLoading(true))
         const url = HEADERS.URL + `adjustment`;
         axios.post(url, data)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data)
                 Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
@@ -126,6 +136,7 @@ export const storeAdjusment = (data,param) => {
 
             })
             .catch(function (error) {
+                Swal.close()
 
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',

@@ -91,63 +91,62 @@ class BayarHutang extends Component{
                             </div>
 
                         </form>
-                            {
-                                !this.props.isLoading?
-                                <div>
-                                    {
-                                        data!==undefined? data.map((v,i)=>{
-                                            return(
-                                                <div className="accordion" key={i}>
-                                                    <div className="card mb-2">
-                                                    <button className="btn btn-link btn-block text-left" onClick={(e)=>this.toggle(e,i)}>
-                                                        <div className="card-header d-flex align-items-center justify-content-between" style={{borderBottom:'none'}}>
-                                                        <h5 className="mb-0">
-                                                            {/* <button className="btn btn-link collapsed" onClick={this.toggle} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> */}
-                                                            {v.nama} | Sisa : Rp. {toRp(parseInt(v.sisa_hutang,10))}
-                                                            {/* </button> */}
-                                                        </h5>
-                                                        <h5><i className={this.state.isOpen&&this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
+                {
+                    !this.props.isLoading?
+                    <div>
+                        {
+                            data!==undefined? data.map((v,i)=>{
+                                return(
+                                    <div className="accordion" key={i}>
+                                        <div className="card mb-2">
+                                        <button className="btn btn-link btn-block text-left" onClick={(e)=>this.toggle(e,i)}>
+                                            <div className="card-header d-flex align-items-center justify-content-between" style={{borderBottom:'none'}}>
+                                            <h5 className="mb-0">
+                                                {/* <button className="btn btn-link collapsed" onClick={this.toggle} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> */}
+                                                {v.nama} | Sisa : Rp. {toRp(parseInt(v.sisa_hutang,10))}
+                                                {/* </button> */}
+                                            </h5>
+                                            <h5><i className={this.state.isOpen&&this.state.indexOpen===i?"fa fa-angle-up":"fa fa-angle-down"}></i></h5>
+                                            </div>
+                                        </button>
+                                            <Collapse isOpen={this.state.isOpen&&this.state.indexOpen===i}>
+                                                <Card>
+                                                <CardBody style={{minHeight:'min-content',maxHeight:'400px',overflowX:'auto'}}>
+                                        {
+                                            v.detail.map((w,j) => {
+                                                return(
+                                                    <div className="accordion" key={j}>
+                                                        <div className="card rounded bg-dark mb-1">
+                                                            <div className="card-header d-flex align-items-center justify-content-between">
+                                                                <div>
+                                                                    <h6 className="text-light">
+                                                                        {w.no_faktur_beli} | Sisa : Rp. {toRp(parseInt(w.sisa_hutang,10))}
+                                                                    </h6>
+                                                                    <small className="text-light">Dibuat : {moment(w.tgl_beli).format('YYYY-MM-DD')} | </small>
+                                                                    <small className="text-light">Tempo : {moment(w.tempo).format('YYYY-MM-DD')} | </small>
+                                                                    <small className="text-light">Nota Supplier : {w.nota_supplier} | </small>
+                                                                    <small className="text-light">Hutang : {toRp(parseInt(w.hutang,10))} | </small>
+                                                                    <small className="text-light">Dibayar : {toRp(parseInt(w.dibayar,10))}</small>
+                                                                </div>
+                                                                <button className="btn btn-primary" onClick={(e)=>this.handleBayar(e,w.no_faktur_beli)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                <i class="fa fa-usd"></i>&nbsp;Bayar
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </button>
-                                                        <Collapse isOpen={this.state.isOpen&&this.state.indexOpen===i}>
-                                                            <Card>
-                                                            <CardBody style={{minHeight:'min-content',maxHeight:'400px',overflowX:'auto'}}>
-                                                                {
-                                                                    v.detail.map((w,j) => {
-                                                                        return(
-                                                                            <div className="accordion" key={j}>
-                                                                                <div className="card rounded bg-dark mb-1">
-                                                                                    <div className="card-header d-flex align-items-center justify-content-between">
-                                                                                        <div>
-                                                                                            <h6 className="text-light">
-                                                                                                {/* <button className="btn btn-link" onClick={(e)=>this.handleBayar(e,w.kd_trx)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> */}
-                                                                                                {w.no_faktur_beli} | Sisa : Rp. {toRp(parseInt(w.sisa_hutang,10))}
-                                                                                                {/* </button> */}
-                                                                                            </h6>
-                                                                                            <small className="text-light">{moment(w.tgl_beli).format('YYYY-MM-DD')} | </small>
-                                                                                            <small className="text-light">Nota Supplier : {w.nota_supplier} | </small>
-                                                                                            <small className="text-light">Hutang : {toRp(parseInt(w.hutang,10))} | </small>
-                                                                                            <small className="text-light">Dibayar : {toRp(parseInt(w.dibayar,10))}</small>
-                                                                                        </div>
-                                                                                        <button className="btn btn-primary" onClick={(e)=>this.handleBayar(e,w.no_faktur_beli)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                                                                        <i class="fa fa-usd"></i>&nbsp;Bayar
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </CardBody>
-                                                            </Card>
-                                                        </Collapse>
                                                     </div>
-                                                </div>
-                                            )
-                                        }) : "no data"
-                                    }
-                                </div> : <Spinner spinnerLabel={"Memuat data ..."}/>
-                            }
+                                                )
+                                            })
+                                        }
+                                                </CardBody>
+                                                </Card>
+                                            </Collapse>
+                                        </div>
+                                    </div>
+                                )
+                            }) : "no data"
+                        }
+                    </div> : <Spinner spinnerLabel={"Memuat data ..."}/>
+                }
                             
                             <div style={{"marginTop":"20px","float":"right"}}>
                                 <Paginationq

@@ -258,20 +258,18 @@ class SaleArchive extends Component{
 
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const columnRight = {verticalAlign: "middle", textAlign: "right",whiteSpace:"nowrap"};
         const {
-            // total,
             last_page,
             per_page,
             current_page,
-            // from,
-            // to,
             data
         } = this.props.saleReport;
-        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit} = this.props.totalPenjualan;
+        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit,hpp} = this.props.totalPenjualan;
         let omset_per = 0;
         let profit_per = 0;
+        let hpp_per = 0;
         let dis_item_per = 0;
-        // let sub_total_per = 0;
         let dis_persen_per = 0;
         let dis_rp_per = 0;
         let kas_lain_per = 0;
@@ -287,7 +285,17 @@ class SaleArchive extends Component{
             <Layout page="Laporan Arsip Penjualan">
                 <div className="card">
                     <div className="card-header">
-                        <h5>Laporan Arsip Penjualan</h5>
+                        <div className="row">
+                            <div className='col-md-6'>
+                                <h5>Laporan Arsip Penjualan</h5>
+                            </div>
+                            <div className='col-md-6 text-right'>
+                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
+                                    <i className="fa fa-print"></i> Export
+                                </button>
+                            </div>
+
+                        </div>
                     </div>
                     <div className="card-body">
                                     <div className="row" style={{zoom:"100%"}}>
@@ -352,21 +360,24 @@ class SaleArchive extends Component{
                                             </div>
                                         </div>
                                         <div className="col-6 col-xs-6 col-md-2">
-                                            <div className="form-group">
-                                                <label htmlFor="">Cari</label>
-                                                <input type="text" name="any_sale_report" className="form-control" value={this.state.any_sale_report} placeholder="Kode/Kasir/Customer" onChange={(e)=>this.handleChange(e)}/>
+                                            <div className="row">
+                                                <div className="col-md-10" style={{padding: 0, margin: 0}}>
+                                                    <div className="form-group">
+                                                        <label htmlFor="">Cari</label>
+                                                        <input type="text" name="any_sale_report" className="form-control" value={this.state.any_sale_report} placeholder="Kode/Kasir/Sales/Customer" onChange={(e)=>this.handleChange(e)}/>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-2" style={{padding: 0, margin: 0, paddingLeft: '5px'}}>
+                                                    <div className="form-group">
+                                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
+                                                            <i className="fa fa-search"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="col-6 col-xs-6 col-md-2 text-right">
-                                            <div className="form-group">
-                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}>
-                                                    <i className="fa fa-search"/>
-                                                </button>
-                                                <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                                    <i className="fa fa-print"></i> Export
-                                                </button>
                                             </div>
-                                        </div>
+
+                                        
                                     </div>
                                 <div style={{overflowX: "auto",zoom:"85%"}}>
 
@@ -428,7 +439,9 @@ class SaleArchive extends Component{
                                                             charge_per = charge_per + parseInt(v.charge,10);
                                                             change_per = change_per + parseInt(v.change,10);
                                                             voucher_per = voucher_per + parseInt(v.voucher,10);
-                                                            rounding_per = rounding_per + parseInt(v.rounding,10);
+                                                            rounding_per = rounding_per + parseInt(v.rounding, 10);
+                                                            hpp_per += parseInt(v.hrg_beli, 10);
+                                                            
 
                                                             return (
                                                                 <tr key={i}>
@@ -457,23 +470,23 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{v.customer}</td>
                                                                     <td style={columnStyle}>{v.nama}</td>
                                                                     <td style={columnStyle}>{v.sales}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.omset))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(v.dis_rp)}</td>
-                                                                    <td style={{textAlign:"right"}}>{parseFloat(v.dis_persen).toFixed(2)}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(v.hrg_jual*(parseFloat(v.tax)/100))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_beli,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.hrg_jual,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.profit,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.omset))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.diskon_item,10))}</td>
+                                                                    <td style={columnRight}>{toRp(v.dis_rp)}</td>
+                                                                    <td style={columnRight}>{parseFloat(v.dis_persen).toFixed(2)}</td>
+                                                                    <td style={columnRight}>{toRp(v.hrg_jual*(parseFloat(v.tax)/100))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.hrg_beli,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.hrg_jual,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.profit,10))}</td>
                                                                     <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
                                                                     <td style={columnStyle}>{v.kas_lain}</td>
                                                                     <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gt,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.rounding,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.bayar,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.change,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.jml_kartu,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.charge,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.gt,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.rounding,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.bayar,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.change,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.jml_kartu,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseInt(v.charge,10))}</td>
                                                                     <td style={columnStyle}>{v.kartu}</td>
                                                                     <td style={columnStyle}>{CapitalizeEachWord(v.status)}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
@@ -489,41 +502,45 @@ class SaleArchive extends Component{
                                         }
                                         <tfoot>
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="7">TOTAL PERPAGE</td>
-                                            <td style={{textAlign:"right"}}>{toRp(omset_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_item_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_rp_per)}</td>
-                                            <td style={{textAlign:"right"}}>{dis_persen_per}</td>
-                                            <td colSpan="3"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(profit_per)}</td>
+                                            <td colSpan="8">TOTAL PERPAGE</td>
+                                            <td style={columnRight}>{toRp(omset_per)}</td>
+                                            <td style={columnRight}>{toRp(dis_item_per)}</td>
+                                            <td style={columnRight}>{toRp(dis_rp_per)}</td>
+                                            <td style={columnRight}>{dis_persen_per}</td>
                                             <td colSpan="1"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(kas_lain_per)}</td>
+                                            <td style={columnRight}>{toRp(hpp_per)}</td>
                                             <td colSpan="1"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(gt_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(rounding_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(bayar_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(change_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(jml_kartu_per)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(charge_per)}</td>
+                                            <td style={columnRight}>{toRp(profit_per)}</td>
+                                            <td colSpan="1"></td>
+                                            <td style={columnRight}>{toRp(kas_lain_per)}</td>
+                                            <td colSpan="1"></td>
+                                            <td style={columnRight}>{toRp(gt_per)}</td>
+                                            <td style={columnRight}>{toRp(rounding_per)}</td>
+                                            <td style={columnRight}>{toRp(bayar_per)}</td>
+                                            <td style={columnRight}>{toRp(change_per)}</td>
+                                            <td style={columnRight}>{toRp(jml_kartu_per)}</td>
+                                            <td style={columnRight}>{toRp(charge_per)}</td>
                                             <td colSpan="4"></td>
                                         </tr>
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="7">TOTAL</td>
-                                            <td style={{textAlign:"right"}}>{toRp(omset)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_item===null?0:dis_item.toFixed(2))}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(dis_rp===null?0:dis_rp.toFixed(2))}</td>
-                                            <td style={{textAlign:"right"}}>{dis_persen===null?0:dis_persen.toFixed(2)}</td>
-                                            <td colSpan="3"></td>
-                                            <td style={{textAlign:"right"}}>{profit===undefined&&profit===''?0:toRp(profit)}</td>
+                                            <td colSpan="8">TOTAL</td>
+                                            <td style={columnRight}>{toRp(omset)}</td>
+                                            <td style={columnRight}>{toRp(dis_item===null?0:dis_item.toFixed(0))}</td>
+                                            <td style={columnRight}>{toRp(dis_rp===null?0:dis_rp.toFixed(0))}</td>
+                                            <td style={columnRight}>{dis_persen===null?0:dis_persen.toFixed(0)}</td>
                                             <td colSpan="1"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(kas_lain)}</td>
+                                            <td style={columnRight}>{hpp===undefined&&hpp===''?0:toRp(hpp)}</td>
                                             <td colSpan="1"></td>
-                                            <td style={{textAlign:"right"}}>{toRp(gt)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(rounding)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(bayar)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(change)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(jml_kartu)}</td>
-                                            <td style={{textAlign:"right"}}>{toRp(charge)}</td>
+                                            <td style={columnRight}>{profit===undefined&&profit===''?0:toRp(profit)}</td>
+                                            <td colSpan="1"></td>
+                                            <td style={columnRight}>{toRp(kas_lain)}</td>
+                                            <td colSpan="1"></td>
+                                            <td style={columnRight}>{toRp(gt)}</td>
+                                            <td style={columnRight}>{toRp(rounding)}</td>
+                                            <td style={columnRight}>{toRp(bayar)}</td>
+                                            <td style={columnRight}>{toRp(change)}</td>
+                                            <td style={columnRight}>{toRp(jml_kartu)}</td>
+                                            <td style={columnRight}>{toRp(charge)}</td>
                                             <td colSpan="4"></td>
                                         </tr>
                                         </tfoot>

@@ -126,6 +126,7 @@ class Alokasi extends Component{
 
     componentDidUpdate(prevState){
         if(this.props.alokasiDetail!==prevState.alokasiDetail){
+            console.log('ALOKASI DETAIL');
             // this.getProps(this.props)
             destroy(table)
             let param = this.props
@@ -757,7 +758,7 @@ class Alokasi extends Component{
         } else {
             localStorage.setItem("anyAlokasi",this.state.search);
             const searchby = parseInt(this.state.searchby,10) === 1 ? 'kd_brg' : (parseInt(this.state.searchby,10) === 2 ? 'barcode' : 'deskripsi')
-            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.lokasi, this.state.supplier, this.autoSetQty,5));
+            this.props.dispatch(FetchBrg(1, searchby, this.state.search, this.state.location, this.state.supplier, this.autoSetQty, 5));
             this.setState({search: ''});
 
         }

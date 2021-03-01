@@ -113,10 +113,20 @@ export const FetchBrgProduksiPaket = (page=1,by='barcode',q='',lokasi=null)=>{
 
 export const storeProduksi = (data) => {
     return (dispatch) => {
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         dispatch(setLoading(true))
         const url = HEADERS.URL + `production`;
         axios.post(url, data)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data)
                 
                 Swal.fire({allowOutsideClick: false,
@@ -136,6 +146,7 @@ export const storeProduksi = (data) => {
 
             })
             .catch(function (error) {
+                Swal.close()
 
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',

@@ -448,9 +448,10 @@ class PiutangReport extends Component{
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Nama Toko</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Customer</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Piutang</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Telah Dibayar</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Telah Dibayar</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={ centerStyle} rowSpan="2">Tempo</th>
+                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tgl Transaksi</th>
                                     </tr>
                                     </thead>
                                     {
@@ -483,6 +484,7 @@ class PiutangReport extends Component{
                                                                     <td style={ rightStyle}>{toRp(parseInt(v.jumlah_telah_bayar,10))}</td>
                                                                     <td style={ centerStyle}>{statusQ(v.status==='LUNAS'?'success':'danger',v.status)}</td>
                                                                     <td style={ centerStyle}>{moment(v.tempo).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ centerStyle}>{moment(v.tgl).format('YYYY-MM-DD')}</td>
 
                                                                 </tr>
                                                             )

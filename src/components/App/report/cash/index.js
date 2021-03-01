@@ -202,9 +202,10 @@ class ReportCash extends Component{
             last_page,
             per_page,
             current_page,
+            total_kas,
             data
         } = this.props.cashReport;
-        
+        let total_perpage=0;
         return (
             <Layout page="Laporan Kas">
                 <div className="card">
@@ -291,71 +292,82 @@ class ReportCash extends Component{
                                 </div>
 
                             </div>
-                            <div className="col-md-12">
-                                <div className="table-responsive" style={{overflowX: "auto",zoom:"85%"}}>
-                                    <table className="table table-hover table-bordered">
-                                        <thead className="bg-light">
-                                        <tr>
-                                            <th className="text-black" style={columnStyle}>Kode Transaksi</th>
-                                            <th className="text-black" style={columnStyle}>Tipe</th>
-                                            <th className="text-black" style={columnStyle}>Jenis</th>
-                                            <th className="text-black" style={columnStyle}>Jumlah</th>
-                                            <th className="text-black" style={columnStyle}>Keterangan</th>
-                                            <th className="text-black" style={columnStyle}>Lokasi</th>
-                                            <th className="text-black" style={columnStyle}>Kasir</th>
-                                            <th className="text-black" style={columnStyle}>Tanggal</th>
-                                            <th className="text-black" style={columnStyle}>Aksi</th>
-                                        </tr>
-                                        </thead>
+                        </div>                                
+                        <div  style={{overflowX: "auto",zoom:"85%"}}>
+                            <table className="table table-hover table-bordered">
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="text-black" style={columnStyle}>Kode Transaksi</th>
+                                    <th className="text-black" style={columnStyle}>Tipe</th>
+                                    <th className="text-black" style={columnStyle}>Jenis</th>
+                                    <th className="text-black" style={columnStyle}>Lokasi</th>
+                                    <th className="text-black" style={columnStyle}>Kasir</th>
+                                    <th className="text-black" style={columnStyle}>Jumlah</th>
+                                    <th className="text-black" style={columnStyle}>Keterangan</th>
+                                    <th className="text-black" style={columnStyle}>Tanggal</th>
+                                    {/* <th className="text-black" style={columnStyle}>Aksi</th> */}
+                                </tr>
+                                </thead>
+                                {
+                                    !this.props.isLoadingReport?(
+                                        <tbody>
+
                                         {
-                                            !this.props.isLoadingReport?(
-                                                <tbody>
+                                            (
+                                                typeof data === 'object' ? data.length > 0 ?
+                                                    data.map((v,i)=>{
+                                                        total_perpage += parseInt(v.jumlah,10)
+                                                        return(
+                                                            <tr key={i}>
+                                                                <td style={columnStyle}>{v.kd_trx}</td>
+                                                                <td style={columnStyle}>{v.type}</td>
+                                                                <td style={columnStyle}>{v.jenis}</td>
+                                                                <td style={columnStyle}>{v.lokasi} ({v.kassa})</td>
+                                                                <td style={columnStyle}>{v.kasir}</td>
+                                                                <td style={columnStyle}>{toRp(v.jumlah)}</td>
+                                                                <td style={columnStyle}>{v.keterangan}</td>
+                                                                <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}</td>
+                                                                {/* <td style={columnStyle}><button className="btn btn-success" onClick={event=>{this.handleUpdate(event,{
+                                                                    kd_trx:v.kd_trx,
+                                                                    jumlah:v.jumlah,
+                                                                    keterangan:v.keterangan,
+                                                                    tgl:v.tgl,
+                                                                })}}><i className="fa fa-edit"/></button></td> */}
 
-                                                {
-                                                    (
-                                                        typeof data === 'object' ? data.length > 0 ?
-                                                            data.map((v,i)=>{
-                                                                return(
-                                                                    <tr key={i}>
-                                                                        <td style={columnStyle}>{v.kd_trx}</td>
-                                                                        <td style={columnStyle}>{v.type}</td>
-                                                                        <td style={columnStyle}>{v.jenis}</td>
-                                                                        <td style={columnStyle}>{toRp(v.jumlah)}</td>
-                                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                                        <td style={columnStyle}>{v.lokasi} ({v.kassa})</td>
-                                                                        <td style={columnStyle}>{v.kasir}</td>
-                                                                        <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}</td>
-                                                                        <td style={columnStyle}><button className="btn btn-success" onClick={event=>{this.handleUpdate(event,{
-                                                                            kd_trx:v.kd_trx,
-                                                                            jumlah:v.jumlah,
-                                                                            keterangan:v.keterangan,
-                                                                            tgl:v.tgl,
-                                                                        })}}><i className="fa fa-edit"/></button></td>
-
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                            : "No data." : "No data."
-                                                    )
-                                                }
-                                                </tbody>
-                                            ):<Preloader/>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                    : "No data." : "No data."
+                                            )
                                         }
+                                        </tbody>
+                                    ):<Preloader/>
+                                }
+                                <tfoot className="bg-light">
+                                    <tr style={{backgroundColor: 'rgb(238, 238, 238)'}}>
+                                        <td colSpan='5'>TOTAL PERPAGE</td>
+                                        <td style={columnStyle} colSpan=''>{toRp(total_perpage)}</td>
+                                        <td colSpan='3'></td>
+                                    </tr>
+                                    <tr style={{backgroundColor: 'rgb(238, 238, 238)'}}>
+                                        <td colSpan='5'>TOTAL</td>
+                                        <td style={columnStyle} colSpan=''>{total_kas===undefined?0:toRp(total_kas.jumlah)}</td>
+                                        <td colSpan='3'></td>
+                                    </tr>
+                                </tfoot>
 
-                                    </table>
+                            </table>
 
-                                </div>
-                                <div style={{"marginTop":"20px","float":"right"}}>
-                                    <Paginationq
-                                        current_page={parseInt(current_page,10)}
-                                        per_page={parseInt(per_page,10)}
-                                        total={parseInt((per_page*last_page),10)}
-                                        callback={this.handlePageChange.bind(this)}
-                                    />
-                                    <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />
-                                    <Updates/>
-                                </div>
-                            </div>
+                        </div>
+                        <div style={{"marginTop":"20px","float":"right"}}>
+                            <Paginationq
+                                current_page={parseInt(current_page,10)}
+                                per_page={parseInt(per_page,10)}
+                                total={parseInt((per_page*last_page),10)}
+                                callback={this.handlePageChange.bind(this)}
+                            />
+                            <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />
+                            <Updates/>
                         </div>
                     </div>
                 </div>

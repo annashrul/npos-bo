@@ -11,7 +11,7 @@ class Cash extends Component{
         this.state = {
             section:"list",
             token:"",
-            type:localStorage.getItem('type')!==null && localStorage.getItem('type')!==undefined?localStorage.getItem('type'):"0",
+            type:localStorage.getItem('type')!==null && localStorage.getItem('type')!==undefined?localStorage.getItem('type'):"masuk",
             any:localStorage.getItem('any')!==null && localStorage.getItem('any')!==undefined?localStorage.getItem('any'):"",
         }
         this.handlePagin=this.handlePagin.bind(this);
@@ -32,9 +32,16 @@ class Cash extends Component{
         }
     }
 
+    componentWillUnmount(){
+        localStorage.removeItem('type')
+        localStorage.removeItem('any')
+        
+    }
+
     componentWillMount(){
         let type = this.state.type;
         let any = this.state.any;
+        localStorage.setItem('type','masuk')
         this.props.dispatch(FetchCash(1,type===undefined&&type===null?'masuk':type,any===undefined?'':any));
     }
 
@@ -61,6 +68,7 @@ class Cash extends Component{
                                 !this.props.isLoading ? ( <ListCash
                                     pagin={this.handlePagin}
                                     data={this.props.cash}
+                                    type={this.state.type}
                                     deletes={this.handleDelete}
                                 /> ) : <Preloader/>
                             }

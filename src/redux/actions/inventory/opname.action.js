@@ -97,10 +97,20 @@ export const FetchOpnameExcel = (page=1,where='',perpage=99999)=>{
 
 export const storeOpname = (data) => {
     return (dispatch) => {
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         dispatch(setLoading(true))
         const url = HEADERS.URL + `opname`;
         axios.post(url, data)
             .then(function (response) {
+                Swal.close();
                 Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
@@ -114,6 +124,7 @@ export const storeOpname = (data) => {
 
             })
             .catch(function (error) {
+                Swal.close();
 
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
@@ -130,6 +141,16 @@ export const storeOpname = (data) => {
 
 export const storeOpnamePosting = (data,param) => {
     return (dispatch) => {
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
+
         dispatch(setLoading(true));
         let url='';
         if(param==='all'){
@@ -139,6 +160,7 @@ export const storeOpnamePosting = (data,param) => {
         }
         axios.post(HEADERS.URL + url, data)
             .then(function (response) {
+                Swal.close();
                 Swal.fire({allowOutsideClick: false,
                     title: 'Success',
                     type: 'success',
@@ -151,6 +173,7 @@ export const storeOpnamePosting = (data,param) => {
 
             })
             .catch(function (error) {
+                Swal.close()
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',
                     type: 'error',

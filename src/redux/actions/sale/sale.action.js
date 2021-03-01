@@ -143,10 +143,20 @@ export const FetchNotaReceipt = (kd_trx) => {
 export const storeSale = (data,param) => {
     return (dispatch) => {
         dispatch(setLoading(true))
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         // const rawdata=data;
         const url = HEADERS.URL + `pos/checkout`;
         axios.post(url, data.parsedata)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data)
                 Swal.fire({allowOutsideClick: false,
                     title: 'Transaksi berhasil.',
@@ -191,6 +201,7 @@ export const storeSale = (data,param) => {
 
             })
             .catch(function (error) {
+                Swal.close()
 
                 Swal.fire({allowOutsideClick: false,
                     title: 'Failed',

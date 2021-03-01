@@ -11,7 +11,7 @@ import {
     FetchReportSaleBySales,
     FetchReportDetailSaleBySales
 } from "redux/actions/sale/sale_by_sales.action";
-// import DetailSaleByCustReport from "../../modals/report/sale/detail_sale_by_sales_report";
+import Details from "../../modals/report/sale/detail_sale_by_sales_report";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 
 class SaleBySalesArchive extends Component{
@@ -374,7 +374,7 @@ class SaleBySalesArchive extends Component{
                         </div>
                     </div>
                 </div>
-                {/* <DetailSaleByCustReport detailSaleByCust={this.props.detailSaleByCust}/> */}
+                <Details />
             </Layout>
         );
     }

@@ -13,16 +13,14 @@ class ListCash extends Component{
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
-        // this.handlePageChange = this.handlePageChange.bind(this);
+        this.handleClickType = this.handleClickType.bind(this);
         this.state = {
             value: 'masuk',
             any:'',
+            type:'',
             detail:{}
         }
     }
-
-
-
     handlePageChange(pageNumber){
         this.setState({activePage: pageNumber});
         this.props.pagin(pageNumber);
@@ -32,9 +30,9 @@ class ListCash extends Component{
         event.preventDefault();
         const form = event.target;
         const data = new FormData(form);
-        let type = data.get('type');
+        let type = localStorage.getItem('type');;
         let any = data.get('any');
-        localStorage.setItem('type',type);
+        
         localStorage.setItem('any',any);
 
         if((type!==''||type!==undefined) && (any!==''||any!==undefined)){
@@ -46,6 +44,11 @@ class ListCash extends Component{
         }else{
             this.props.dispatch(FetchCash(1,'masuk',''));
         }
+    }
+    handleClickType(e,type){
+        localStorage.setItem('type', type);
+        this.props.dispatch(FetchCash(1, type, ''));
+
     }
 
     toggleModal(e,i) {
@@ -99,11 +102,9 @@ class ListCash extends Component{
                     <div className="row">
                         <div className="col-md-3">
                             <div className="form-group">
-                                <label htmlFor="exampleFormControlSelect1">Choose Type</label>
-                                <select className="form-control form-control-lg" id="type" name="type" defaultValue={localStorage.getItem('type')}>
-                                    <option value="masuk" selected={localStorage.getItem('type')==='masuk'?true:false}>Cash In</option>
-                                    <option value="keluar" selected={localStorage.getItem('type')==='keluar'?true:false}>Cash Out</option>
-                                </select>
+                                <label>Tipe Kas</label><br/>
+                                <button onClick={event=>this.handleClickType(event,'masuk')} className={localStorage.getItem('type')==='masuk'?'btn btn-primary':'btn btn-outline-primary'} style={{marginRight:'10px'}}>Kas Masuk</button>
+                                <button onClick={event=>this.handleClickType(event,'keluar')} className={localStorage.getItem('type')==='keluar'?'btn btn-primary':'btn btn-outline-primary'} >Kas Keluar</button>
                             </div>
                         </div>
                         <div className="col-md-3">

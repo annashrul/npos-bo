@@ -8,6 +8,7 @@ import {toRp} from "helper";
 import Swal from "sweetalert2";
 import Spinner from "Spinner";
 import { rmComma, toCurrency } from 'helper';
+import File64 from '../../common/File64';
 
 class BayarPiutangForm extends Component{
     constructor(props) {
@@ -25,6 +26,7 @@ class BayarPiutangForm extends Component{
             jumlah_telah_bayar:"",
             jumlah_bayar:"",
             userid:0,
+            payment_slip:'-',
             error:{
                 location:"",
                 jenis_trx:"",
@@ -39,7 +41,17 @@ class BayarPiutangForm extends Component{
         this.handleSearch   = this.handleSearch.bind(this);
         this.handleCancel   = this.handleCancel.bind(this);
         this.handleSave     = this.handleSave.bind(this);
+        this.handleChangeImage = this.handleChangeImage.bind(this)
     }
+
+    handleChangeImage(files) {
+        if (files.status === 'success') {
+            // this.props.dispatch(putMember({picture:files.base64},this.props.auth.user.id))
+            this.setState({
+                payment_slip: files.base64
+            })
+        }
+    };
 
     getProps(param){
         let jns=[
@@ -185,6 +197,8 @@ class BayarPiutangForm extends Component{
                     data['ket'] = this.state.catatan;
                     data['userid'] = this.state.userid;
                     data['jumlah_sudah_bayar'] = this.props.getPiutang.jumlah_telah_bayar;
+                    data['payment_slip'] = this.state.payment_slip;
+
                     
                     this.props.dispatch(storePiutang(data,(arr)=>this.props.history.push(arr)));
                 }
@@ -222,104 +236,122 @@ class BayarPiutangForm extends Component{
                     </div>
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">No. Bayar Piutang</label>
-                                    <input  readOnly={true} type="text" className="form-control" value={this.props.nota}/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="control-label font-12">Tanggal</label>
-                                    <input type="date" name={"tgl"} className="form-control" value={this.state.tgl} onChange={this.handleChange}/>
+                            <div className='col-md-8'>
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">No. Bayar Piutang</label>
+                                            <input  readOnly={true} type="text" className="form-control" value={this.props.nota}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Tanggal</label>
+                                            <input type="date" name={"tgl"} className="form-control" value={this.state.tgl} onChange={this.handleChange}/>
 
-                                </div>
+                                        </div>
 
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">Lokasi Piutang</label>
-                                    <input readOnly={true} type="text" name="lokasi" className="form-control" value={this.props.getPiutang.lokasi!==undefined?this.props.getPiutang.lokasi:"-"}/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="control-label font-12">Jenis Pembayaran</label>
-                                    <Select
-                                        options={this.state.jenis_trx_data}
-                                        placeholder="Pilih Jenis Transaksi"
-                                        onChange={this.HandleChangeJenisTrx}
-                                        value={
-                                            this.state.jenis_trx_data.find(op => {
-                                                return op.value === this.state.jenis_trx
-                                            })
-                                        }
-
-                                    />
-                                    <div className="invalid-feedback"
-                                         style={this.state.error.jenis_trx !== "" ? {display: 'block'} : {display: 'none'}}>
-                                        {this.state.error.jenis_trx}
                                     </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">Nota Penjualan</label>
-                                    <div className="input-group">
-                                        <input type="text" className="form-control" name="nota_pembelian" readOnly={true} value={this.state.nota_pembelian} onChange={this.handleChange}
-                                               onKeyPress = {
-                                                   event => {
-                                                       if (event.key === 'Enter') {
-                                                           this.handleSearch()
-
-                                                       }
-                                                   }
-                                               }
-                                        />
-                                        <div className="input-group-prepend">
-                                            <button className="btn btn-primary" onClick={this.handleSearch}>
-                                                {
-                                                    this.props.isLoading?"loading ....":<i className="fa fa-search"/>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Lokasi Piutang</label>
+                                            <input readOnly={true} type="text" name="lokasi" className="form-control" value={this.props.getPiutang.lokasi!==undefined?this.props.getPiutang.lokasi:"-"}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Jenis Pembayaran</label>
+                                            <Select
+                                                options={this.state.jenis_trx_data}
+                                                placeholder="Pilih Metode"
+                                                onChange={this.HandleChangeJenisTrx}
+                                                value={
+                                                    this.state.jenis_trx_data.find(op => {
+                                                        return op.value === this.state.jenis_trx
+                                                    })
                                                 }
-                                            </button>
+
+                                            />
+                                            <div className="invalid-feedback"
+                                                style={this.state.error.jenis_trx !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.jenis_trx}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="invalid-feedback"
-                                         style={this.state.error.nota_pembelian !== "" ? {display: 'block'} : {display: 'none'}}>
-                                        {this.state.error.nota_pembelian}
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Nota Penjualan</label>
+                                            <div className="input-group">
+                                                <input type="text" className="form-control" name="nota_pembelian" readOnly={true} value={this.state.nota_pembelian} onChange={this.handleChange}
+                                                    onKeyPress = {
+                                                        event => {
+                                                            if (event.key === 'Enter') {
+                                                                this.handleSearch()
+
+                                                            }
+                                                        }
+                                                    }
+                                                />
+                                                <div className="input-group-prepend">
+                                                    <button className="btn btn-primary" onClick={this.handleSearch}>
+                                                        {
+                                                            this.props.isLoading?"loading ....":<i className="fa fa-search"/>
+                                                        }
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="invalid-feedback"
+                                                style={this.state.error.nota_pembelian !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.nota_pembelian}
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Customer</label>
+                                            <input readOnly={true} type="text" className="form-control" name="nama" value={this.props.getPiutang.nama!==undefined?this.props.getPiutang.nama:this.state.nama}/>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Jatuh Tempo</label>
+                                            <input readOnly={true} type="text" className="form-control" name="tempo" value={this.props.getPiutang.tempo!==undefined?moment(this.props.getPiutang.tempo).format("yyyy-MM-DD"):this.state.tempo}/>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">DP</label>
+                                            <input readOnly={true} type="text" className="form-control" name="dp" value={this.props.getPiutang.dp!==undefined?this.props.getPiutang.dp:this.state.dp}/>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Jumlah Kartu</label>
+                                            <input readOnly={true} type="text" className="form-control" name="jml_kartu" value={this.props.getPiutang.jml_kartu!==undefined?this.props.getPiutang.jml_kartu:this.state.jml_kartu}/>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Kas Lain</label>
+                                            <input readOnly={true} type="text" className="form-control" name="kas_lain" value={this.props.getPiutang.kas_lain!==undefined?this.props.getPiutang.kas_lain:this.state.kas_lain}/>
+                                        </div>
+                                    </div>
+                                    <div className='col-md-6'>
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Keterangan</label>
+                                            <input type="text" className="form-control" name="catatan" value={this.state.catatan} onChange={this.handleChange}/>
+                                            <div className="invalid-feedback"
+                                                style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>
+                                                {this.state.error.catatan}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="form-group">
-                                    <label className="control-label font-12">Nama</label>
-                                    <input readOnly={true} type="text" className="form-control" name="nama" value={this.props.getPiutang.nama!==undefined?this.props.getPiutang.nama:this.state.nama}/>
-                                </div>
                             </div>
-                            <div className="col-md-3">
+
+                            <div className="col-md-4">
                                 <div className="form-group">
-                                    <label className="control-label font-12">Jatuh Tempo</label>
-                                    <input readOnly={true} type="text" className="form-control" name="tempo" value={this.props.getPiutang.tempo!==undefined?moment(this.props.getPiutang.tempo).format("yyyy-MM-DD"):this.state.tempo}/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="control-label font-12">Keterangan</label>
-                                    <input type="text" className="form-control" name="catatan" value={this.state.catatan} onChange={this.handleChange}/>
-                                    <div className="invalid-feedback"
-                                         style={this.state.error.catatan !== "" ? {display: 'block'} : {display: 'none'}}>
-                                        {this.state.error.catatan}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">DP</label>
-                                    <input readOnly={true} type="text" className="form-control" name="dp" value={this.props.getPiutang.dp!==undefined?this.props.getPiutang.dp:this.state.dp}/>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">Jumlah Kartu</label>
-                                    <input readOnly={true} type="text" className="form-control" name="jml_kartu" value={this.props.getPiutang.jml_kartu!==undefined?this.props.getPiutang.jml_kartu:this.state.jml_kartu}/>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">Kas Lain</label>
-                                    <input readOnly={true} type="text" className="form-control" name="kas_lain" value={this.props.getPiutang.kas_lain!==undefined?this.props.getPiutang.kas_lain:this.state.kas_lain}/>
+                                    <label className="control-label font-12">Bukti Pembayaran <small className="text-muted">(optional)</small></label>
+                                    <File64
+                                        multiple={ false }
+                                        maxSize={2048} //in kb
+                                        fileType='png,jpg' //pisahkan dengan koma
+                                        className="form-control-file"
+                                        onDone={ this.handleChangeImage }
+                                        lang='id'
+                                    />
                                 </div>
                             </div>
 

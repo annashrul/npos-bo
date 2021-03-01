@@ -1,7 +1,5 @@
 import {SALE_BY_SALES,HEADERS} from "../_constants";
 import axios from "axios"
-import Swal from 'sweetalert2'
-import {destroy} from "components/model/app.model";
 
 export function setLoading(load) {
     return {
@@ -22,9 +20,9 @@ export function setSaleBySales(data = []) {
     }
 }
 
-export function setSaleBySalesReportData(data = []) {
+export function setDetail(data = []) {
     return {
-        type: SALE_BY_SALES.REPORT_DETAIL_SUCCESS,
+        type: SALE_BY_SALES.DETAIL,
         data
     }
 }
@@ -127,7 +125,7 @@ export const FetchReportDetailSaleBySales = (page=1,kd_trx,where='') => {
             .then(function (response) {
                 const data = response.data;
                 
-                dispatch(setSaleBySalesReportData(data));
+                dispatch(setDetail(data));
                 dispatch(setLoadingDetail(false));
             })
             .catch(function (error) {
