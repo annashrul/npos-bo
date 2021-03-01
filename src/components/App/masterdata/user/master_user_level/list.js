@@ -132,7 +132,7 @@ class ListUserLevel extends Component{
                        callback={this.handlePageChange.bind(this)}
                    />
                </div>
-               <FormUserLevel token={this.props.token} detail={this.state.detail}/>
+               {this.props.isOpen?<FormUserLevel token={this.props.token} detail={this.state.detail}/>:null}
            </div>
         );
     }
