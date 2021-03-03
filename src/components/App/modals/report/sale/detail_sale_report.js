@@ -58,6 +58,7 @@ class DetailSaleReport extends Component{
                         <table className="table table-hover">
                             <thead className="bg-light">
                             <tr>
+                                <th className="text-black" style={columnStyle}>Kode</th>
                                 <th className="text-black" style={columnStyle}>Barcode</th>
                                 <th className="text-black" style={columnStyle}>Nama Barang</th>
                                 <th className="text-black" style={columnStyle}>Open Price</th>
@@ -73,6 +74,7 @@ class DetailSaleReport extends Component{
                                     detail.map((v,i)=>{
                                         return (
                                             <tr key={i}>
+                                                <td style={leftStyle}>{v.kd_brg}</td>
                                                 <td style={leftStyle}>{v.sku}</td>
                                                 <td style={leftStyle}>{v.nm_brg}</td>
                                                 <td style={rightStyle}>{toRp(parseInt(v.open_price,10))}</td>

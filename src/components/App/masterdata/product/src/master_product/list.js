@@ -6,7 +6,7 @@ import {FetchGroupProduct} from "redux/actions/masterdata/group_product/group_pr
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import "jspdf-autotable";
 import {to_pdf} from "helper";
-import {FetchLocation} from "redux/actions/masterdata/location/location.action";
+import {FetchAllLocation} from "redux/actions/masterdata/location/location.action";
 import {FetchProduct,deleteProduct} from "redux/actions/masterdata/product/product.action";
 import Paginationq from "helper";
 import {FetchSupplierAll} from "redux/actions/masterdata/supplier/supplier.action";
@@ -354,7 +354,7 @@ class ListProduct extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formProduct"));
         this.props.dispatch(FetchGroupProduct(1,'','1000'));
-        this.props.dispatch(FetchLocation());
+        this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
         this.props.dispatch(setProductEdit([]));
@@ -366,7 +366,7 @@ class ListProduct extends Component{
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formProduct"));
         this.props.dispatch(FetchGroupProduct(1,'','1000'));
-        this.props.dispatch(FetchLocation());
+        this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
         this.props.dispatch(FetchProductEdit(kode));
@@ -608,7 +608,7 @@ class ListProduct extends Component{
 const mapStateToProps = (state) => {
     return {
         isOpen:state.modalReducer,
-        location:state.locationReducer.data,
+        location:state.locationReducer.allData,
         supplier:state.supplierReducer.dataSupllier,
         subDept:state.subDepartmentReducer.all,
         productEdit:state.productReducer.dataEdit,

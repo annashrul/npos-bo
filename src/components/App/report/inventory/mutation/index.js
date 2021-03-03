@@ -352,15 +352,16 @@ class MutationReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">#</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">No</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kode Faktur</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Asal</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Lokasi Tujuan</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">No. Faktur Beli</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Total QTY</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Status</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
                                     </tr>
                                     </thead>
                                     {
@@ -390,15 +391,16 @@ class MutationReport extends Component{
                                                                         </div>
                                                                     </td>
                                                                     <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
                                                                     <td style={columnStyle}>{v.lokasi_asal}</td>
                                                                     <td style={columnStyle}>{v.lokasi_tujuan}</td>
                                                                     <td style={columnStyle}>{v.no_faktur_beli}</td>
+                                                                    <td style={columnStyle}>{v.total_qty}</td>
                                                                     <td style={columnStyle}>{
                                                                         v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")
                                                                         // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
                                                                     }</td>
                                                                     <td style={columnStyle}>{v.keterangan}</td>
+                                                                    <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
 
                                                                 </tr>
                                                             )
@@ -420,7 +422,7 @@ class MutationReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailMutation mutationDetail={this.props.mutationDetail}/>
+                            <DetailMutation/>
                             <MutationReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         </div>
                     </div>
@@ -437,7 +439,6 @@ const mapStateToProps = (state) => {
         isLoadingDetail: state.mutationReducer.isLoadingApproval,
         auth:state.auth,
         isLoading: state.mutationReducer.isLoadingApproval,
-        mutationDetail:state.mutationReducer.report_data,
         mutationReportExcel:state.mutationReducer.report_excel,
         // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
         isOpen: state.modalReducer,

@@ -95,7 +95,12 @@ class Login extends Component {
                                 if (result.value) {
                                     // window.location.reload();
                                     if(!check){
-                                        fetch(HEADERS.URL + `site/confirm`)
+                                        fetch(HEADERS.URL + `site/confirm`, {
+                                            method: 'GET',
+                                            headers: {
+                                                'username': this.getSubdomain(),
+                                            }
+                                        })
                                             .then(res => res.json())
                                             .then(
                                                 (item) => {

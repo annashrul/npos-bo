@@ -479,7 +479,7 @@ class HutangReport extends Component{
                                                                                     {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_faktur_beli)}>Delete</DropdownItem> */}
                                                                                     {/* <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
                                                                                 </DropdownMenu>
-                                                                                </UncontrolledButtonDropdown>
+                                                                            </UncontrolledButtonDropdown>
                                                                         </div>
                                                                     </td>
                                                                     <td style={ leftStyle}>{v.no_faktur_beli}</td>

@@ -2,7 +2,8 @@ import { AUTH} from '../actions/_constants';
 
 const initialState = {
     isAuthenticated: false,
-    user: {}
+    user: {},
+    id_log:''
 }
 
 export default function(state= initialState, action){
@@ -17,6 +18,12 @@ export default function(state= initialState, action){
                 ...state,
                 isAuthenticated: action.payload
             }
+        case AUTH.SET_OTORISASI_ID:
+            return {
+                ...state,
+                id_log: action.payload
+            }
+            
         default:
             return state;
     }

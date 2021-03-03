@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {FetchCashReportExcel,FetchCashReport,setUpdate} from "redux/actions/masterdata/cash/cash.action";
+import {FetchCashReportExcel,FetchCashReport,setUpdate,deleteCashTransaksi} from "redux/actions/masterdata/cash/cash.action";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
@@ -11,6 +11,9 @@ import {kassa, rangeDate, toRp} from "../../../../helper";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import CashReportExcel from 'components/App/modals/report/cash/form_cash_excel'
 import Updates from 'components/App/modals/report/cash/update'
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import Otorisasi from "../../modals/otorisasi.modal";
+import Swal from 'sweetalert2'
 
 class ReportCash extends Component{
     constructor(props){
@@ -23,6 +26,7 @@ class ReportCash extends Component{
             location:"",
             kassa_data: [],
             kassa:"",
+            id_trx: '',
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD")
         }
@@ -32,7 +36,19 @@ class ReportCash extends Component{
         this.handleEvent = this.handleEvent.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
+        this.onDone = this.onDone.bind(this)
 
+    }
+
+    onDone(id, id_trx) {
+        this.props.dispatch(deleteCashTransaksi(id, id_trx));
+        setTimeout(() => {
+            this.checkingParameter(1);
+        }, 1500)
+        this.setState({
+            id_trx: ''
+        })
     }
     componentWillReceiveProps = (nextProps) => {
         let type = [
@@ -164,6 +180,29 @@ class ReportCash extends Component{
         this.props.dispatch(setUpdate(data))
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formUpdateKasTrx"));
+    }
+    handleDelete(e,id) {
+        e.preventDefault();
+        this.setState({
+            id_trx: id
+        })
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Apakah anda yakin?',
+            text: "Data yang telah dihapus tidak bisa dikembalikan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                const bool = !this.props.isOpen;
+                this.props.dispatch(ModalToggle(bool));
+                this.props.dispatch(ModalType("modalOtorisasi"));
+            }
+        })
+
     }
     checkingParameter(pageNumber){
         let where='';
@@ -297,6 +336,7 @@ class ReportCash extends Component{
                             <table className="table table-hover table-bordered">
                                 <thead className="bg-light">
                                 <tr>
+                                    <th className="text-black" style={columnStyle}>#</th>
                                     <th className="text-black" style={columnStyle}>Kode Transaksi</th>
                                     <th className="text-black" style={columnStyle}>Tipe</th>
                                     <th className="text-black" style={columnStyle}>Jenis</th>
@@ -318,7 +358,23 @@ class ReportCash extends Component{
                                                     data.map((v,i)=>{
                                                         total_perpage += parseInt(v.jumlah,10)
                                                         return(
-                                                            <tr key={i}>
+                                                            <tr  key={i}>
+                                                                <td style={columnStyle}>
+                                                                    <UncontrolledButtonDropdown>
+                                                                        <DropdownToggle caret>
+                                                                            Aksi
+                                                                        </DropdownToggle>
+                                                                        <DropdownMenu>
+                                                                            <DropdownItem onClick={event=>{this.handleUpdate(event,{
+                                                                                    kd_trx:v.kd_trx,
+                                                                                    jumlah:v.jumlah,
+                                                                                    keterangan:v.keterangan,
+                                                                                    tgl:v.tgl,
+                                                                                })}}>Edit</DropdownItem>
+                                                                            <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
+                                                                        </DropdownMenu>
+                                                                    </UncontrolledButtonDropdown>
+                                                                </td>
                                                                 <td style={columnStyle}>{v.kd_trx}</td>
                                                                 <td style={columnStyle}>{v.type}</td>
                                                                 <td style={columnStyle}>{v.jenis}</td>
@@ -327,12 +383,7 @@ class ReportCash extends Component{
                                                                 <td style={columnStyle}>{toRp(v.jumlah)}</td>
                                                                 <td style={columnStyle}>{v.keterangan}</td>
                                                                 <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}</td>
-                                                                {/* <td style={columnStyle}><button className="btn btn-success" onClick={event=>{this.handleUpdate(event,{
-                                                                    kd_trx:v.kd_trx,
-                                                                    jumlah:v.jumlah,
-                                                                    keterangan:v.keterangan,
-                                                                    tgl:v.tgl,
-                                                                })}}><i className="fa fa-edit"/></button></td> */}
+                                                                {/* <td style={columnStyle}><button className="btn btn-success" ><i className="fa fa-edit"/></button></td> */}
 
                                                             </tr>
                                                         )
@@ -371,6 +422,8 @@ class ReportCash extends Component{
                         </div>
                     </div>
                 </div>
+                <Otorisasi datum={{module:'transaksi kas',aksi:'delete',id_trx:this.state.id_trx}}  onDone={this.onDone} />
+
             </Layout>
         );
     }

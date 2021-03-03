@@ -151,7 +151,7 @@ export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
 export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
     return (dispatch) => {
         dispatch(setLoadingApprovalMutation(true));
-        let url=`mutasi/${kd_trx}/?page=${page}`;
+        let url=`mutasi/${kd_trx}/?perpage=${page}`;
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data;

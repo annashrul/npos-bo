@@ -96,6 +96,58 @@ export const loginUser = (userData,expire=1) =>
             
         });
     }
+// / set user data
+export const setOtorisasiId = decoded => {
+    return {
+        type: AUTH.SET_OTORISASI_ID,
+        payload: decoded
+    }
+}
+    
+export const checkOtorisasi = (userData) =>
+    async dispatch =>{
+        Swal.fire({allowOutsideClick: false,
+            title: 'Silahkan tunggu.',
+            html: 'Mem-verifikasi data anda..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
+
+        axios.post(HEADERS.URL+'auth/otorisasi', userData,)
+        .then(res=>{
+            Swal.close() 
+            // save token to localStorage
+            const id = res.data.result.id_log;
+            dispatch(setOtorisasiId(id))
+
+        }).catch(err =>{
+            Swal.close() 
+            if (err.message === 'Network Error') {
+                 Swal.fire(
+                     'Server tidak tersambung!.',
+                     'Periksa koneksi internet anda.',
+                     'error'
+                 )
+            }else{
+                if (err.response.data.message === 'No access.'){
+                    Swal.fire(
+                        "No access.",
+                        'You cannot access this page. Please call customer service for more info.',
+                        'error'
+                    )
+                }else{
+                    Swal.fire(
+                        err.response.data.msg,
+                        '',
+                        'error'
+                    )
+                }
+            }
+            
+        });
+    }
 // set user data
 export const setCurrentUser = decoded =>{
     return{

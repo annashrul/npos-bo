@@ -29,7 +29,7 @@ class Sale extends Component{
             jenis_data: [],
             location: "LK/0001",
             location_data: [],
-            kassa: "A",
+            kassa: "Z",
             startDate: moment().format("yyyy-MM-DD"),
             selectedOpt:"",
             error:{
@@ -88,7 +88,7 @@ class Sale extends Component{
                 jenis: "",
                 jenis_data:[],
                 location: "LK/0001",
-                kassa: "A",
+                kassa: "Z",
             })
         }
     }
@@ -122,7 +122,7 @@ class Sale extends Component{
                 jenis: '',
                 jenis_data: [],
                 location : 'LK/0001',
-                kassa : 'A',
+                kassa : 'Z',
             });
             this.props.dispatch(FetchCash(1,val,'',this.state.perpage));
         }

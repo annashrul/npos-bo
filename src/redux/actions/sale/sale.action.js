@@ -282,12 +282,22 @@ export const FetchReportDetailSale = (kd_trx) => {
 }
 
 
-export const deleteReportSale = (kd_trx) => {
+export const deleteReportSale = (id,id_trx) => {
+    const kd_trx = btoa(id+"|"+id_trx)
     return (dispatch) => {
         dispatch(setLoading(true));
+        Swal.fire({allowOutsideClick: false,
+            title: 'Silahkan tunggu.',
+            html: 'Memproses permintaan..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         const url = HEADERS.URL + `pos/remove_penjualan/${kd_trx}`;
         axios.delete(url)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data);
                 
                 if (data.status === 'success') {
@@ -315,6 +325,7 @@ export const deleteReportSale = (kd_trx) => {
                 dispatch(FetchReportSale(1,where));
             })
             .catch(function (error) {
+                Swal.close()
                 dispatch(setLoadingReport(false));
                 
                 Swal.fire({allowOutsideClick: false,

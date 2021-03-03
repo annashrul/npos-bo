@@ -193,9 +193,19 @@ export const StoreCashTrx = (data) => {
 export const UpdateCashTrx = (kd_trx,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
         const url = HEADERS.URL + `pos/kas/${btoa(kd_trx)}`;
         axios.put(url,data)
             .then(function (response) {
+                Swal.close()
                 const data = (response.data);
                 
                 if (data.status === 'success') {
@@ -228,6 +238,7 @@ export const UpdateCashTrx = (kd_trx,data) => {
                 dispatch(setLoading(false));
             })
             .catch(function (error) {
+                Swal.close()
                 // handle error
                 dispatch(setLoading(false));
                 
@@ -288,16 +299,6 @@ export const deleteCash = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `kas/${id}`;
-        // const headers = {
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `${token}`,
-        //         'username': `${HEADERS.USERNAME}`,
-        //         'password': `${HEADERS.PASSWORD}`,
-        //         'crossDomain': true
-        //     }
-        // }
-        // 
 
         axios.delete(url)
             .then(function (response) {
@@ -370,5 +371,59 @@ export const FetchCashReportExcel = (where='',perpage='')=>{
             }).catch(function(error){
             
         })
+    }
+}
+export const deleteCashTransaksi = (id,id_trx) => {
+    return (dispatch) => {
+        Swal.fire({
+            allowOutsideClick: false,
+            title: 'Please Wait.',
+            html: 'Sending request..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
+        dispatch(setLoading(true));
+        const ids = btoa(id + "|" + id_trx);
+        const url = HEADERS.URL + `pos/kas/${ids}`;
+
+        axios.delete(url)
+            .then(function (response) {
+                const data = (response.data);
+                Swal.close();
+
+                if (data.status === 'success') {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        title: 'Success',
+                        type: 'success',
+                        text: data.msg,
+                    });
+                } else {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(setLoading(false));
+            })
+            .catch(function (error) {
+                dispatch(setLoading(false));
+                Swal.close();
+
+
+                Swal.fire({
+                    allowOutsideClick: false,
+                    title: 'failed',
+                    type: 'error',
+                    text: error.response === undefined ? 'error!' : error.response.data.msg,
+                });
+                if (error.response) {
+
+                }
+            })
     }
 }

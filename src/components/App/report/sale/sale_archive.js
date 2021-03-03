@@ -13,9 +13,9 @@ import {
     FetchReportDetailSale,
     FetchReportSaleExcel,
     FetchNotaReceipt
-
 } from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
+import Otorisasi from "../../modals/otorisasi.modal";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import {ModalToggle, ModalType} from "redux/actions/modal.action";
 // import {HEADERS} from 'redux/actions/_constants'
@@ -34,6 +34,7 @@ class SaleArchive extends Component{
             location_data:[],
             location:"",
             any_sale_report:"",
+            id_trx:'',
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD")
         }
@@ -45,7 +46,15 @@ class SaleArchive extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleDetail = this.handleDetail.bind(this);
+        this.onDone = this.onDone.bind(this)
 
+    }
+
+    onDone(id,id_trx){
+        this.props.dispatch(deleteReportSale(id, id_trx));
+        this.setState({
+            id_trx:''
+        })
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -223,17 +232,22 @@ class SaleArchive extends Component{
     }
     handleDelete(e,id){
         e.preventDefault();
+        this.setState({
+            id_trx: id
+        })
         Swal.fire({allowOutsideClick: false,
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
+            title: 'Apakah anda yakin?',
+            text: "Data yang telah dihapus tidak bisa dikembalikan.",
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                this.props.dispatch(deleteReportSale(id));
+                const bool = !this.props.isOpen;
+                this.props.dispatch(ModalToggle(bool));
+                this.props.dispatch(ModalType("modalOtorisasi"));
             }
         })
 
@@ -559,6 +573,7 @@ class SaleArchive extends Component{
                 </div>
                 <DetailSaleReport detailSale={this.props.detailSale}/>
                 <SaleReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} totalPenjualan={this.props.totalPenjualan} totalPenjualanExcel={this.props.totalPenjualanExcel}/>
+                <Otorisasi datum={{module:'arsip penjualan',aksi:'delete',id_trx:this.state.id_trx}}  onDone={this.onDone} />
             </Layout>
         );
     }

@@ -162,7 +162,22 @@ class SaleReportExcel extends Component{
                             'Jenis Trx']
                     ]
         let footer = [
-                        ['TOTAL','','','','',toRp(this.props.totalPenjualanExcel.omset),toRp(this.props.totalPenjualanExcel.dis_item),toRp(this.props.totalPenjualanExcel.dis_rp),this.props.totalPenjualanExcel.dis_persen,'','','','',toRp(this.props.totalPenjualanExcel.kas_lain),'',toRp(this.props.totalPenjualanExcel.gt),toRp(this.props.totalPenjualanExcel.rounding),toRp(this.props.totalPenjualanExcel.bayar),toRp(this.props.totalPenjualanExcel.change),toRp(this.props.totalPenjualanExcel.jml_kartu),toRp(this.props.totalPenjualanExcel.charge),'','','','']
+                        [
+                            'TOTAL'
+                            ,''
+                            ,''
+                            ,''
+                            ,'',toRp(this.props.totalPenjualanExcel.omset),toRp(this.props.totalPenjualanExcel.dis_item),toRp(this.props.totalPenjualanExcel.dis_rp),this.props.totalPenjualanExcel.dis_persen
+                            ,''
+                            ,''
+                            ,''
+                            ,'',toRp(this.props.totalPenjualanExcel.kas_lain)
+                            ,'',toRp(this.props.totalPenjualanExcel.gt),toRp(this.props.totalPenjualanExcel.rounding),toRp(this.props.totalPenjualanExcel.bayar),toRp(this.props.totalPenjualanExcel.change),toRp(this.props.totalPenjualanExcel.jml_kartu),toRp(this.props.totalPenjualanExcel.charge)
+                            ,''
+                            ,''
+                            ,''
+                            ,''
+                        ]
                     ]
         // Kd Trx	Tanggal	Jam	Customer	Kasir	Omset	Diskon			HPP	Hrg Jual	Profit	Reg.Member	Trx Lain	Keterangan	Grand Total	Rounding	Tunai	Change	Transfer	Charge	Nama Kartu	Status	Lokasi	Jenis Trx
 						// Peritem(%)	Total(rp)	Total(%)																
@@ -177,7 +192,7 @@ class SaleReportExcel extends Component{
             toRp(parseInt(v.diskon_item,10)),
             toRp(v.dis_rp),
             v.dis_persen,
-            toRp(parseInt(v.hrg_beli,10)*parseInt(v.hrg_jual,10)),
+            toRp(parseInt(v.hrg_beli,10)),
             toRp(parseInt(v.hrg_jual,10)),
             toRp(parseInt(v.profit,10)),
             v.regmember?v.regmember:"-",

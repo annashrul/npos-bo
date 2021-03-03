@@ -72,13 +72,13 @@ class ApprovalMutasi extends Component{
     HandleSearch(event){
         this.props.dispatch(FetchApprovalMutation(1,this.state.kd_trx,'',''));
     }
-    toggleModal(e,kd_trx) {
+    toggleModal(e,kd_trx,total=20) {
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formApprovalMutation"));
         localStorage.setItem("kd_trx_mutasi",kd_trx)
-        this.props.dispatch(FetchApprovalMutationDetail(1,kd_trx))
+        this.props.dispatch(FetchApprovalMutationDetail(total, kd_trx))
     }
     toggle(e,index,lokasi){
         e.preventDefault();
@@ -175,7 +175,7 @@ class ApprovalMutasi extends Component{
                                                                     <small className="text-light">Total Item : {toRp(parseInt(w.total_qty,10))} | </small>
                                                                     <small className="text-light">Total Approval : {toRp(parseInt(w.total_approval,10))}</small>
                                                                 </div>
-                                                                <button className="btn btn-primary" onClick={(e)=>this.toggleModal(e,w.no_faktur_mutasi)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                <button className="btn btn-primary" onClick={(e)=>this.toggleModal(e,w.no_faktur_mutasi,parseInt(w.total_qty,10))} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                                                 <i class="fa fa-check"></i>&nbsp;Approval
                                                                 </button>
                                                             </div>
@@ -218,7 +218,7 @@ class ApprovalMutasi extends Component{
                                                                                             <small className="text-light">Total Item : {toRp(parseInt(w.total_qty,10))} | </small>
                                                                                             <small className="text-light">Total Approval : {toRp(parseInt(w.total_approval,10))}</small>
                                                                                         </div>
-                                                                                        <button className="btn btn-primary" onClick={(e)=>this.toggleModal(e,w.no_faktur_mutasi)} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                                        <button className="btn btn-primary" onClick={(e)=>this.toggleModal(e,w.no_faktur_mutasi,parseInt(w.total_qty,10))} type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                                                                         <i class="fa fa-check"></i>&nbsp;Approval
                                                                                         </button>
                                                                                     </div>

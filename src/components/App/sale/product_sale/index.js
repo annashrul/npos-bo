@@ -633,7 +633,7 @@ class Sale extends Component{
                         "kode_trx":this.props.nota,
                         "subtotal": subtotal,
                         "lokasi": this.state.location,
-                        "kassa": "A",
+                        "kassa": "Z",
                         "jns_kartu": "Debit",
                         "status": "LUNAS",
                         "optional_note":this.state.catatan
