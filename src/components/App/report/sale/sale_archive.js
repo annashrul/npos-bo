@@ -35,6 +35,7 @@ class SaleArchive extends Component{
             location:"",
             any_sale_report:"",
             id_trx:'',
+            prevLoc:[],
             startDate:moment(new Date()).format("yyyy-MM-DD"),
             endDate:moment(new Date()).format("yyyy-MM-DD")
         }
@@ -95,22 +96,32 @@ class SaleArchive extends Component{
         });
 
         if (nextProps.auth.user) {
-            let lk = [{
-                value: "",
-                label: "Semua Lokasi"
-            }];
+            let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
-                loc.map((i) => {
-                    lk.push({
-                        value: i.kode,
-                        label: i.nama
-                    });
-                    return null;
-                })
-                this.setState({
-                    location_data: lk,
-                })
+                if (loc!==this.state.prevLoc){
+                    if (loc.length === 1) {
+                        this.setState({
+                            location: loc[0].kode,
+                        })
+                    } else {
+                        lk.push({
+                            value: "-",
+                            label: "Semua Lokasi"
+                        })
+                    }
+                    loc.map((i) => {
+                        lk.push({
+                            value: i.kode,
+                            label: i.nama
+                        });
+                        return null;
+                    })
+                    this.setState({
+                        location_data: lk,
+                        prevLoc:loc
+                    })
+                }
             }
         }
     }
@@ -201,7 +212,7 @@ class SaleArchive extends Component{
         let dateTo=localStorage.getItem("date_to_sale_report");
         let tipe=this.state.type===''?localStorage.getItem("type_sale_report"):this.state.type;
         let status=this.state.status===''?localStorage.getItem("status_sale_report"):this.state.status;
-        let lokasi=localStorage.getItem("location_sale_report");
+        let lokasi = this.state.location === '' ? localStorage.getItem("location_sale_report") : this.state.location;
         let any=this.state.any_sale_report===''?localStorage.getItem("any_sale_report"):this.state.any_sale_report;
         if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`

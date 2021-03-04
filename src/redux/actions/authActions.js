@@ -170,6 +170,8 @@ export const logoutUser = () => dispatch =>{
     destroy('sess')
     dispatch(setLoggedin(false));
     localStorage.clear()
+    Cookies.remove('datum_exp')
+    Cookies.remove('datum_np')
 
     // remove auth header for future request
     setAuthToken(false);

@@ -69,7 +69,7 @@ export const to_pdf = (filename,title='',header=[],body=[],footer=[])=>{
     // doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     addFooters(doc);
-    return doc.save(filename+"report.pdf");
+    return doc.save(filename+"_report.pdf");
 
 }
 export const to_pdf_l = (filename,title='',header=[],body=[],footer=[])=>{

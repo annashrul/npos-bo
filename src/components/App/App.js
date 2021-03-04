@@ -31,16 +31,12 @@ if (token) {
         var dateNow = new Date();
         if (decodedToken.exp * 1000 < dateNow.getTime()){
           store.dispatch(logoutUser());
-          Cookies.remove('datum_exp')
-          Cookies.remove('datum_np')
           // Redirect to login
           window.location.href = '/login';
         }
         
       }else{
         store.dispatch(logoutUser());
-        Cookies.remove('datum_exp')
-        Cookies.remove('datum_np')
         // Redirect to login
         window.location.href = '/login';
       }

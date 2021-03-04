@@ -303,12 +303,20 @@ class Dashboard extends Component {
 
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
-          let lk = [{
-              value: "-",
-              label: "Semua Lokasi"
-          }]
+          let lk = []
           let loc = nextProps.auth.user.lokasi;
           if(loc!==undefined){
+              if(loc.length===1){
+                  this.setState({
+                      location: loc[0].kode,
+                  })
+                this.refreshData(this.state.startDate, this.state.endDate, loc[0].kode);
+              }else{
+                  lk.push({
+                      value: "-",
+                      label: "Semua Lokasi"
+                  })
+              }
               loc.map((i) => {
                 lk.push({
                   value: i.kode,

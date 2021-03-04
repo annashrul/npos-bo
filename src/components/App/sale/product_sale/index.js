@@ -10,12 +10,14 @@ import {FetchSalesAll} from "redux/actions/masterdata/sales/sales.action";
 import {setProductbrg, FetchProductSale} from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
+import FormClosing from "../../modals/sale/form_closing";
 import {ModalToggle,ModalType} from "redux/actions/modal.action";
 import {FetchNotaSale} from "redux/actions/sale/sale.action";
 import {FetchDetailLocation} from "redux/actions/masterdata/location/location.action";
 import {toRp,toCurrency,rmComma} from "helper";
 import Spinner from 'Spinner'
 import {HEADERS} from "../../../../redux/actions/_constants";
+import Cookies from 'js-cookie'
 
 const table='sale'
 const Toast = Swal.mixin({
@@ -75,7 +77,8 @@ class Sale extends Component{
             opSales: [{
                 value: '1',
                 label: 'UMUM'
-            }]
+            }],
+            modalClosing:false,
         };
         this.HandleRemove = this.HandleRemove.bind(this);
         this.HandleAddBrg = this.HandleAddBrg.bind(this);
@@ -90,6 +93,7 @@ class Sale extends Component{
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.handleChecked = this.handleChecked.bind(this);
         this.handleClickToggle = this.handleClickToggle.bind(this);
+        this.handleClosing = this.handleClosing.bind(this);
     }
 
     handleClickToggle(e) {
@@ -101,6 +105,7 @@ class Sale extends Component{
 
     componentDidMount(){
         this.getData();
+        this.setState({modalClosing:false});
         if(localStorage.lk!==undefined&&localStorage.lk!==''){
             this.props.dispatch(FetchNotaSale(localStorage.lk));
             this.props.dispatch(FetchCustomerAll(localStorage.lk));
@@ -814,6 +819,17 @@ class Sale extends Component{
             })
         }
     }
+    handleClosing(e){
+        e.preventDefault();
+        this.setState({modalClosing:true});
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formClosing"));
+    }
+
+
+
+
     render() {
         if(this.state.isScroll===true)this.handleScroll();
 
@@ -832,18 +848,26 @@ class Sale extends Component{
             })
         }
 
-        
+
         let totalsub=0;
         const centerStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left",whiteSpace:"nowrap"};
-        
+
         return (
             <Layout page="Penjualan Barang">
                 <div className="card">
                     <div className="card-header">
-                        <h4>
+                        <h4 style={{float:'left'}}>
                             <button onClick={this.handleClickToggle} className={this.state.toggleSide?"btn btn-danger mr-3":"btn btn-outline-dark text-dark mr-3"}><i className={this.state.toggleSide?"fa fa-remove":"fa fa-bars"}/></button>
-                            Penjualan Barang</h4>
+                            Penjualan Barang
+                        </h4>
+                        {
+                            atob(atob(Cookies.get('tnt=')))==='nov-jkt'?
+                                <h4 style={{float:'right'}}>
+                                    <button className={"btn btn-primary"} onClick={(e)=>this.handleClosing(e)}>Closing</button>
+                                </h4>
+                            :''
+                        }
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
                         <StickyBox offsetTop={100} offsetBottom={20} style={this.state.toggleSide?{display:'none',width:"25%",marginRight:"10px"}:{display:'block',width:"25%",marginRight:"10px"}}>
@@ -1201,6 +1225,10 @@ class Sale extends Component{
 
 
                 <FormSale master={this.state.master} detail={this.state.detail} subtotal={totalsub} lokasi={this.props.dataDetailLocation}/>
+
+                {
+                    this.state.modalClosing?<FormClosing/>:null
+                }
             </Layout>
         );
     }

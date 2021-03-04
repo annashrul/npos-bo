@@ -7,6 +7,9 @@ import Swal from 'sweetalert2'
 import {
     destroy
 } from "components/model/app.model";
+import {to_pdf, toRp} from "../../../../helper";
+import moment from "moment";
+import {ModalToggle} from "../../modal.action";
 
 export function setLoading(load) {
     return {
@@ -22,6 +25,12 @@ export function setLoadingDetail(load){
 export function setCLOSING(data = []) {
     return {
         type: CLOSING.SUCCESS,
+        data
+    }
+}
+export function setClosingPdf(data = []) {
+    return {
+        type: CLOSING.CLOSING_PDF,
         data
     }
 }
@@ -139,11 +148,70 @@ export const reClosing = (data) => {
                     text: error.response === undefined?'error!':error.response.data.msg,
                 });
                 if (error.response) {
-                    
+
                 }
             })
     }
 };
+export const postClosing = (data,dataUser) => async dispatch =>{
+    Swal.fire({allowOutsideClick: false,
+        title: 'Please Wait.',
+        html: 'Checking your account.',
+        onBeforeOpen: () => {
+            Swal.showLoading()
+        },
+        onClose: () => {}
+    })
+    axios.post(HEADERS.URL+'pos/closing',data)
+        .then(res=>{
+            setTimeout(
+                function () {
+                    Swal.close()
+                    const response = (res.data);
+                    console.log(`&q=${btoa(response.result.id_setoran)}`);
+                    if (response.status === 'success') {
+                        dispatch(ModalToggle(false));
+                        Swal.fire({allowOutsideClick: false,
+                            title: 'Transaksi berhasil.',
+                            text: `Closing berhasil dilakukan`,
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonColor: '#ff9800',
+                            cancelButtonColor: '#2196F3',
+                            confirmButtonText: 'Print Nota?',
+                            cancelButtonText: 'Oke!'
+                        }).then((result) => {
+                            if (result.value) {
+                                console.log(response);
+                                dispatch(FetchClosingPdf(1,`&q=${btoa(response.result.id_setoran)}`));
+                            }
+                            // window.location.reload(false);
+                        })
+
+                    } else {
+                        Swal.fire({allowOutsideClick: false,
+                            title: 'failed',
+                            type: 'error',
+                            text: data.msg,
+                        });
+                    }
+
+                },800)
+
+        })
+        .catch(function (error) {
+
+            Swal.fire({allowOutsideClick: false,
+                title: 'failed',
+                type: 'error',
+                text: error.response === undefined?'error!':error.response.data.msg,
+            });
+            if (error.response) {
+
+            }
+        })
+}
+
 export const FetchClosing = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
@@ -151,13 +219,93 @@ export const FetchClosing = (page=1,where='')=>{
         if(where !==''){
             url+=`${where}`
         }
+        console.log(url);
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
+
+
+
+
                 dispatch(setCLOSING(data));
                 dispatch(setLoading(false));
             }).catch(function(error){
             
+        })
+    }
+}
+export const FetchClosingPdf = (page=1,where='')=>{
+    return (dispatch) => {
+        let url = `report/closing?page=${page}`;
+        if(where !==''){
+            url+=`${where}`
+        }
+        console.log(url);
+        axios.get(HEADERS.URL+url)
+            .then(function(res){
+                const item = res.data.result.data[0];
+                let stringHtml = '';
+                stringHtml+= `<h3 align="center">${item.kasir} - ${item.nama_toko} ( ${item.kassa} )</h3>`;
+                stringHtml+= `<h3 align="center">${moment(item.tanggal).locale('id').format("LLLL")}</h3>`;
+                const headers = [];
+                const body = [
+                    [``,'',``,'','','','','','','',''],
+                    ['Total Sales',':',`${toRp(parseInt(item.gross_sales,10))}`,'','','','','','','',''],
+                    ['Discount Item',':',`${toRp(parseInt(item.disc,10))}`,'','','','','','','',''],
+                    ['Discount Total',':',`${toRp(parseInt(item.disc_tr,10))}`,'','','','','','','',''],
+                    ['Net Omset',':',`${toRp(parseInt(item.net_omset,10))}`,'','','','','','','',''],
+                    ['Tax',':',`${toRp(parseInt(item.tax,10))}`,'','','','','','','',''],
+                    ['Service',':',`${toRp(parseInt(item.serv,10))}`,'','','','','','','',''],
+                    ['Rounding',':',`${toRp(parseInt(item.rounding,10))}`,'','','','','','','',''],
+                    ['Total Omset',':',`${toRp(parseInt(item.net_omset,10))}`,'','','','','','','',''],
+                    ['----------------------------------------------------','','','','','','','','','',''],
+                    ['Cash',':',`${toRp(parseInt(item.net_omset,10)-parseInt(item.setoran_card,10))}`,'','','','','','','',''],
+                    ['Piutang',':',`${toRp(parseInt(item.piutang,10))}`,'','','','','','','',''],
+                    ['EDC Seatle',':',`${toRp(parseInt(item.setoran_card,10))}`,'','','','','','','',''],
+                    ['Total Debit',':',`${toRp(parseInt(item.total_debit,10))}`,'','','','','','','',''],
+                    ['Total Kredit',':',`${toRp(parseInt(item.total_kredit,10))}`,'','','','','','','',''],
+                    ['Compliment',':',`${toRp(parseInt(item.setoran_compliment,10))}`,'','','','','','','',''],
+                    ['Point',':',`${toRp(parseInt(item.setoran_poin,10))}`,'','','','','','','',''],
+
+                    ['----------------------------------------------------','','','','','','','','','',''],
+
+                    ['Receive Amount',':',`${toRp(parseInt(item.income,10))}`,'','','','','','','',''],
+                    ['Other Income',':',`${toRp(parseInt('0',10))}`,'','','','','','','',''],
+                    ['Total Income',':',`${toRp(parseInt(item.income,10))}`,'','','','','','','',''],
+
+                    ['----------------------------------------------------','','','','','','','','','',''],
+
+                    ['Cash In Hand',':',`${toRp((parseInt(item.net_omset,10)-parseInt(item.setoran_card,10))+parseInt(item.income,10))}`,'','','','','','','',''],
+
+                    ['----------------------------------------------------','','','','','','','','','',''],
+
+                    ['Return',':',`${toRp(parseInt(item.total_retur,10))}`,'','','','','','','',''],
+                    ['Tax',':',`${toRp(parseInt(item.tax_retur,10))}`,'','','','','','','',''],
+                    ['Service',':',`${toRp(parseInt(item.service_retur,10))}`,'','','','','','','',''],
+                    ['Discount',':',`${toRp(parseInt(item.disc_retur,10))}`,'','','','','','','',''],
+                    ['Paid Out',':',`${toRp(parseInt(item.kas_keluar,10))}`,'','','','','','','',''],
+                    ['Total Outcome',':',`${toRp(parseInt(item.outcome,10))}`,'','','','','','','',''],
+                    ['----------------------------------------------------','','','','','','','','','',''],
+                    ['Total Cash Sales',':',`${toRp(parseInt(item.total_cash_sales,10))}`,'','','','','','','',''],
+                    ['Cashier Cash',':',`${toRp(parseInt(item.cashier_cash,10))}`,'','','','','','','',''],
+                    ['Status',':',item.status,'','','','','','','',''],
+                    ['Note',':',item.keterangan?item.keterangan:'-','','','','','','','',''],
+                ]
+                // console.log(body);
+                const footer =[];
+
+                to_pdf(
+                    "closing",
+                    stringHtml,
+                    headers,
+                    body,
+                    footer,
+                    false
+                );
+
+                // dispatch(setClosingPdf(re));
+            }).catch(function(error){
+
         })
     }
 }
