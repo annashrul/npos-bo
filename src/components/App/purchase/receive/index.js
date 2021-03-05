@@ -18,8 +18,9 @@ import StickyBox from "react-sticky-box";
 import {toRp,ToastQ} from "helper";
 import { rmComma, toCurrency } from '../../../../helper';
 import Spinner from 'Spinner'
-const table='receive';
+import Cookies from 'js-cookie'
 
+const table='receive';
 class Receive extends Component{
     constructor(props) {
         super(props);
@@ -491,15 +492,23 @@ class Receive extends Component{
                             final['ppn'] = (parseFloat(val, 10) / parseFloat(res.harga_beli, 10)) * 100
                         }
                     })
-                }else if(column==='qty'){
+                } else if (column === 'qty') {
                     Object.keys(res).forEach((k, i) => {
                         if (k !== 'qty') {
                             final[k] = res[k];
                         } else {
-                            final['qty'] = val===''?1:val
+                            final['qty'] = val === '' ? 1 : val
                         }
                     })
-                }else{
+                } else if (column === 'harga_beli') {
+                    Object.keys(res).forEach((k, i) => {
+                        if (k !== 'harga_beli') {
+                            final[k] = res[k];
+                        } else {
+                            final['harga_beli'] = rmComma(res.harga_beli)
+                        }
+                    })
+                } else {
                     Object.keys(res).forEach((k, i) => {
                         if(k!==column){
                             final[k] = res[k];
@@ -531,8 +540,6 @@ class Receive extends Component{
             if(val==='') values=0;
             else values=val;
         }
-        console.log(column);
-        console.log(values);
         brgval[i] = {...brgval[i], [column]: values};
         this.setState({ brgval });
         
@@ -783,13 +790,13 @@ class Receive extends Component{
                                 let disc1 = 0;
                                 let ppn = 0;
                                 if (item.diskon !== 0) {
-                                    disc1 = parseInt(rmComma(item.harga_beli), 10) * (parseFloat(item.diskon) / 100);
+                                    disc1 = parseFloat(rmComma(item.harga_beli)) * (parseFloat(item.diskon) / 100);
                                 }
 
                                 if (item.ppn !== 0) {
-                                    ppn = (parseInt(rmComma(item.harga_beli), 10) - disc1) * (parseFloat(item.ppn) / 100);
+                                    ppn = (parseFloat(rmComma(item.harga_beli)) - disc1) * (parseFloat(item.ppn) / 100);
                                 }
-                                const subtotal_perrow = ((parseInt(rmComma(item.harga_beli), 10) - disc1) + ppn) * parseFloat(item.qty);
+                                const subtotal_perrow = ((parseFloat(rmComma(item.harga_beli)) - disc1) + ppn) * parseFloat(item.qty);
                                 subtotal += subtotal_perrow
 
                                 let harga_=0;
@@ -1003,6 +1010,7 @@ class Receive extends Component{
     render() {
         if(this.state.isScroll===true)this.handleScroll();
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
+        const tenant = atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01';
         let opSupplier=[];
         if(this.props.supplier!==[]){
             this.props.supplier.map(i=>{
@@ -1433,13 +1441,13 @@ class Receive extends Component{
                                                     let disc1=0;
                                                     let ppn=0;
                                                     if(item.diskon!==0){
-                                                        disc1 = parseInt(rmComma(item.harga_beli), 10) * (parseFloat(item.diskon) / 100);
+                                                        disc1 = parseFloat(rmComma(item.harga_beli)) * (parseFloat(item.diskon) / 100);
                                                     }
 
                                                     if(item.ppn!==0){
-                                                        ppn = (parseInt(rmComma(item.harga_beli), 10) -disc1) * (parseFloat(item.ppn) / 100);
+                                                        ppn = (parseFloat(rmComma(item.harga_beli)) -disc1) * (parseFloat(item.ppn) / 100);
                                                     }
-                                                    const subtotal_perrow = ((parseInt(rmComma(item.harga_beli), 10) - disc1) + ppn) * parseFloat(item.qty);
+                                                    const subtotal_perrow = ((parseFloat(rmComma(item.harga_beli)) - disc1) + ppn) * parseFloat(item.qty);
                                                     subtotal += subtotal_perrow
                                                     //
                                                     return (
@@ -1461,7 +1469,7 @@ class Receive extends Component{
                                                                 </select>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga_beli)}/>
+                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={tenant?(this.state.brgval[index].harga_beli):toCurrency(this.state.brgval[index].harga_beli)}/>
                                                             </td>
 
                                                            

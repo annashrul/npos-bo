@@ -488,7 +488,7 @@ class Sale extends Component{
             diskon_nominal: 0,
             ppn: item.ppn,
             qty: item.qty,
-            hrg_beli:item.hrg_beli,
+            hrg_beli:parseFloat(item.hrg_beli),
             kategori:item.kategori,
             services:item.services,
             tambahan: item.tambahan,
@@ -636,7 +636,7 @@ class Sale extends Component{
                             services:item.services,
                             sku:item.barcode,
                             open_price:rmComma(item.harga)===rmComma(item.harga_old)?0:rmComma(item.harga),
-                            hrg_beli:rmComma(item.hrg_beli),
+                            hrg_beli:item.hrg_beli,
                             nm_brg: item.nm_brg,
                             satuan: item.satuan
                         })

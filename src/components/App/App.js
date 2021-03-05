@@ -11,6 +11,13 @@ import { initDB } from 'react-indexed-db';
  import {get} from "components/model/app.model";
 import Cookies from 'js-cookie'
 import jwt_decode from "jwt-decode";
+import axios from 'axios';
+import {HEADERS} from "redux/actions/_constants";
+
+// SET HEADERS COMMON
+axios.defaults.headers.common['username'] = atob(Cookies.get('tnt='));
+axios.defaults.headers.common['password'] = `${HEADERS.PASSWORD}`;
+axios.defaults.headers.common['Content-Type'] = `application/json`;
 
 initDB(DBConfig);
 // Check token in cookie

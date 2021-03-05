@@ -125,9 +125,6 @@ export const rangeDate = {
 export const toMoney = (angka) => {
     return angka.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
 }
-// export const toCurrency = (angka) => {
-//     return isEmpty(angka)?'':angka.toString().replace(/,|\D/g,'').toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-// }
 export const toCurrency = (angka) => {
     let numbers=0;
     if (parseFloat(angka)===0) return 0;

@@ -290,7 +290,22 @@ class SaleArchive extends Component{
             current_page,
             data
         } = this.props.saleReport;
-        const {omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit,hpp} = this.props.totalPenjualan;
+        const {
+            omset,
+            dis_item,
+            dis_persen,
+            dis_rp,
+            kas_lain,
+            gt,
+            bayar,
+            jml_kartu,
+            charge,
+            change,
+            rounding,
+            profit,
+            hpp,
+            total_tunai_all
+        } = this.props.totalPenjualan;
         let omset_per = 0;
         let profit_per = 0;
         let hpp_per = 0;
@@ -305,6 +320,7 @@ class SaleArchive extends Component{
         let change_per = 0;
         let voucher_per = 0;
         let rounding_per = 0;
+        let total_tunai=0
 
         return (
             <Layout page="Laporan Arsip Penjualan">
@@ -431,6 +447,7 @@ class SaleArchive extends Component{
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Rounding</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Tunai</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Change</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Total Tunai</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Transfer</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Charge</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Nama Kartu</th>
@@ -454,18 +471,19 @@ class SaleArchive extends Component{
                                                             
                                                             omset_per+= parseFloat(v.omset);
                                                             profit_per+= parseFloat(v.profit);
-                                                            dis_item_per = dis_item_per + parseInt(v.diskon_item,10);
-                                                            dis_persen_per = dis_persen_per + parseInt(v.dis_persen,10);
-                                                            dis_rp_per = dis_rp_per + parseInt(v.dis_rp,10);
+                                                            dis_item_per = dis_item_per + parseFloat(v.diskon_item);
+                                                            dis_persen_per = dis_persen_per + parseFloat(v.dis_persen);
+                                                            dis_rp_per = dis_rp_per + parseFloat(v.dis_rp);
                                                             kas_lain_per = kas_lain_per + parseInt(v.kas_lain,10);
-                                                            gt_per = gt_per + parseInt(v.gt, 10);
+                                                            gt_per = gt_per + parseFloat(v.gt);
                                                             bayar_per = bayar_per + parseInt(v.bayar,10);
-                                                            jml_kartu_per = jml_kartu_per + parseInt(v.jml_kartu,10);
-                                                            charge_per = charge_per + parseInt(v.charge,10);
-                                                            change_per = change_per + parseInt(v.change,10);
+                                                            jml_kartu_per = jml_kartu_per + parseFloat(v.jml_kartu)
+                                                            charge_per = charge_per + parseFloat(v.charge)
+                                                            change_per = change_per + parseFloat(v.change)
                                                             voucher_per = voucher_per + parseInt(v.voucher,10);
                                                             rounding_per = rounding_per + parseInt(v.rounding, 10);
-                                                            hpp_per += parseInt(v.hrg_beli, 10);
+                                                            hpp_per += parseFloat(v.hrg_beli)
+                                                            total_tunai += parseFloat(v.bayar) - parseFloat(v.change);
                                                             
 
                                                             return (
@@ -496,22 +514,23 @@ class SaleArchive extends Component{
                                                                     <td style={columnStyle}>{v.nama}</td>
                                                                     <td style={columnStyle}>{v.sales}</td>
                                                                     <td style={columnRight}>{toRp(parseFloat(v.omset))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.diskon_item,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.diskon_item))}</td>
                                                                     <td style={columnRight}>{toRp(v.dis_rp)}</td>
                                                                     <td style={columnRight}>{parseFloat(v.dis_persen).toFixed(2)}</td>
                                                                     <td style={columnRight}>{toRp(v.hrg_jual*(parseFloat(v.tax)/100))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.hrg_beli,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.hrg_jual,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.profit,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.hrg_beli))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.hrg_jual))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.profit))}</td>
                                                                     <td style={columnStyle}>{v.regmember?v.regmember:"-"}</td>
                                                                     <td style={columnStyle}>{v.kas_lain}</td>
                                                                     <td style={columnStyle}>{v.ket_kas_lain}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.gt,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.rounding,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.bayar,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.change,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.jml_kartu,10))}</td>
-                                                                    <td style={columnRight}>{toRp(parseInt(v.charge,10))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.gt))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.rounding))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.bayar))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.change))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.bayar)-parseFloat(v.change))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.jml_kartu))}</td>
+                                                                    <td style={columnRight}>{toRp(parseFloat(v.charge))}</td>
                                                                     <td style={columnStyle}>{v.kartu}</td>
                                                                     <td style={columnStyle}>{CapitalizeEachWord(v.status)}</td>
                                                                     <td style={columnStyle}>{v.lokasi}</td>
@@ -543,6 +562,7 @@ class SaleArchive extends Component{
                                             <td style={columnRight}>{toRp(rounding_per)}</td>
                                             <td style={columnRight}>{toRp(bayar_per)}</td>
                                             <td style={columnRight}>{toRp(change_per)}</td>
+                                            <td style={columnRight}>{toRp(total_tunai)}</td>
                                             <td style={columnRight}>{toRp(jml_kartu_per)}</td>
                                             <td style={columnRight}>{toRp(charge_per)}</td>
                                             <td colSpan="4"></td>
@@ -564,6 +584,8 @@ class SaleArchive extends Component{
                                             <td style={columnRight}>{toRp(rounding)}</td>
                                             <td style={columnRight}>{toRp(bayar)}</td>
                                             <td style={columnRight}>{toRp(change)}</td>
+                                            <td style={columnRight}>{toRp(total_tunai_all)}</td>
+
                                             <td style={columnRight}>{toRp(jml_kartu)}</td>
                                             <td style={columnRight}>{toRp(charge)}</td>
                                             <td colSpan="4"></td>

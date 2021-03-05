@@ -9,6 +9,8 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import {toRp} from "helper";
 import DetailStockReportTransaction from "./detail_stock_report_transaction";
 import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/stock_report.action";
+import Cookies from 'js-cookie'
+
 class DetailStockReportSatuan extends Component{
     constructor(props){
         super(props);
@@ -47,7 +49,8 @@ class DetailStockReportSatuan extends Component{
     };
 
     render(){
-        
+        const tenant = atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01';
+
         const {data} = this.props.stockReportDetailSatuan;
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         let totPrice1=0;
@@ -91,37 +94,54 @@ class DetailStockReportSatuan extends Component{
                         </table>
                         <div className="table-responsive" style={{overflowX: "auto"}}>
                             <table className="table table-hover table-bordered">
-                                <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">Location</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">PRICE</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">STOCK</th>
-                                    <th className="text-black" style={columnStyle} rowSpan="2">HPP</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">PROFIT</th>
-                                    <th className="text-black" style={columnStyle} colSpan="4">TOTAL</th>
-                                </tr>
-                                <tr>
-                                    <td className="text-black" style={columnStyle}>1</td>
-                                    <td className="text-black" style={columnStyle}>2</td>
-                                    <td className="text-black" style={columnStyle}>3</td>
-                                    <td className="text-black" style={columnStyle}>4</td>
+                                {
+                                    tenant?
+                                         <thead className="bg-light">
+                                            <tr>
+                                                <th className="text-black" style={columnStyle} rowSpan="2">#</th>
+                                                <th className="text-black" style={columnStyle} rowSpan="2">LOKASI</th>
+                                                <th className="text-black" style={columnStyle} colSpan="4">STOCK</th>
+                                            </tr>
+                                            <tr>
+                                                <td className="text-black" style={columnStyle}>First Stock</td>
+                                                <td className="text-black" style={columnStyle}>Stock In</td>
+                                                <td className="text-black" style={columnStyle}>Stock Out</td>
+                                                <td className="text-black" style={columnStyle}>Last Stock</td>
+                                            </tr>
+                                        </thead>
+                                        :
+                                    <thead className="bg-light">
+                                    <tr>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">LOKASI</th>
+                                        <th className="text-black" style={columnStyle} colSpan="4">HARGA</th>
+                                        <th className="text-black" style={columnStyle} colSpan="4">STOCK</th>
+                                        <th className="text-black" style={columnStyle} rowSpan="2">HPP</th>
+                                        <th className="text-black" style={columnStyle} colSpan="4">PROFIT</th>
+                                        <th className="text-black" style={columnStyle} colSpan="4">TOTAL HARGA</th>
+                                    </tr>
+                                    <tr>
+                                        <td className="text-black" style={columnStyle}>1</td>
+                                        <td className="text-black" style={columnStyle}>2</td>
+                                        <td className="text-black" style={columnStyle}>3</td>
+                                        <td className="text-black" style={columnStyle}>4</td>
 
-                                    <td className="text-black" style={columnStyle}>First Stock</td>
-                                    <td className="text-black" style={columnStyle}>Stock In</td>
-                                    <td className="text-black" style={columnStyle}>Stock Out</td>
-                                    <td className="text-black" style={columnStyle}>Last Stock</td>
+                                        <td className="text-black" style={columnStyle}>First Stock</td>
+                                        <td className="text-black" style={columnStyle}>Stock In</td>
+                                        <td className="text-black" style={columnStyle}>Stock Out</td>
+                                        <td className="text-black" style={columnStyle}>Last Stock</td>
 
-                                    <td className="text-black" style={columnStyle}>1</td>
-                                    <td className="text-black" style={columnStyle}>2</td>
-                                    <td className="text-black" style={columnStyle}>3</td>
-                                    <td className="text-black" style={columnStyle}>4</td>
-                                    <td className="text-black" style={columnStyle}>1</td>
-                                    <td className="text-black" style={columnStyle}>2</td>
-                                    <td className="text-black" style={columnStyle}>3</td>
-                                    <td className="text-black" style={columnStyle}>4</td>
-                                </tr>
-                                </thead>
+                                        <td className="text-black" style={columnStyle}>1</td>
+                                        <td className="text-black" style={columnStyle}>2</td>
+                                        <td className="text-black" style={columnStyle}>3</td>
+                                        <td className="text-black" style={columnStyle}>4</td>
+                                        <td className="text-black" style={columnStyle}>1</td>
+                                        <td className="text-black" style={columnStyle}>2</td>
+                                        <td className="text-black" style={columnStyle}>3</td>
+                                        <td className="text-black" style={columnStyle}>4</td>
+                                    </tr>
+                                    </thead>
+                                }
                                 <tbody>
                                 {
                                     (
@@ -147,10 +167,26 @@ class DetailStockReportSatuan extends Component{
                                                 let lok = (this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
                                                     filteredCat.nama
                                                 ))
-                                                return (
+                                                return tenant ?
+                                                 (
                                                     <tr key={i}>
                                                         <td style={columnStyle}>{/* Example split danger button */}
-                                                            <a className="btn btn-sm btn-primary" href={null} onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</a>
+                                                            <button className="btn btn-sm btn-primary"  onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</button>
+                                                        </td>
+                                                        {/* {(this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
+                                                        <td>{filteredCat.nama}</td>
+                                                        ))} */}
+                                                        <td style={{textAlign:"right"}}>{lok}</td>
+                                                        <td style={{textAlign:"right"}}>{v.stock_awal}</td>
+                                                        <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
+                                                        <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
+                                                        <td style={{textAlign:"right"}}>{v.stock_akhir}</td>
+                                                    </tr>
+                                                ):
+                                                (
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}>{/* Example split danger button */}
+                                                            <button className="btn btn-sm btn-primary"  onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</button>
                                                         </td>
                                                         {/* {(this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
                                                         <td>{filteredCat.nama}</td>
@@ -179,26 +215,38 @@ class DetailStockReportSatuan extends Component{
                                 }
                                 </tbody>
                                 <tfoot>
-                                <tr style={{backgroundColor:"#EEEEEE"}}>
-                                    <td colSpan="2">TOTAL</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice1)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice2)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice3)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice4)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totFirstStock}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totStockIn}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totStockOut}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{totLastStock}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totHpp)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice1)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice2)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice3)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice4)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice1)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice2)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice3)}</td>
-                                    <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice4)}</td>
-                                </tr>
+                                    {
+                                        tenant ?
+                                        <tr style={{backgroundColor:"#EEEEEE"}}>
+                                            <td colSpan="2">TOTAL</td>
+                                            <td colSpan="1" style={{textAlign:"right"}}>{totFirstStock}</td>
+                                            <td colSpan="1" style={{textAlign:"right"}}>{totStockIn}</td>
+                                            <td colSpan="1" style={{textAlign:"right"}}>{totStockOut}</td>
+                                            <td colSpan="1" style={{textAlign:"right"}}>{totLastStock}</td>
+                                        </tr>
+                                            :
+                                    <tr style={{backgroundColor:"#EEEEEE"}}>
+                                        <td colSpan="2">TOTAL</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice1)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice2)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice3)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice4)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{totFirstStock}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{totStockIn}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{totStockOut}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{totLastStock}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totHpp)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice1)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice2)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice3)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice4)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice1)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice2)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice3)}</td>
+                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice4)}</td>
+                                    </tr>
+                                    }
+                                
                                 </tfoot>
                             </table>
                         </div>
