@@ -244,7 +244,7 @@ class BayarPiutangForm extends Component{
                                             <input  readOnly={true} type="text" className="form-control" value={this.props.nota}/>
                                         </div>
                                         <div className="form-group">
-                                            <label className="control-label font-12">Tanggal</label>
+                                            <label className="control-label font-12">Tanggal Pembayaran</label>
                                             <input type="date" name={"tgl"} className="form-control" value={this.state.tgl} onChange={this.handleChange}/>
 
                                         </div>
@@ -302,24 +302,25 @@ class BayarPiutangForm extends Component{
                                             </div>
                                         </div>
                                         <div className="form-group">
-                                            <label className="control-label font-12">Customer</label>
-                                            <input readOnly={true} type="text" className="form-control" name="nama" value={this.props.getPiutang.nama!==undefined?this.props.getPiutang.nama:this.state.nama}/>
+                                            <label className="control-label font-12">Tanggal Transaksi</label>
+                                            <input readOnly={true} type="text" className="form-control" name="tempo" value={this.props.getPiutang.tgl!==undefined?moment(this.props.getPiutang.tgl).format("yyyy-MM-DD"):this.state.tgl}/>
                                         </div>
                                     </div>
                                     <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Customer</label>
+                                            <input readOnly={true} type="text" className="form-control" name="nama" value={this.props.getPiutang.nama!==undefined?this.props.getPiutang.nama:this.state.nama}/>
+                                        </div>
                                         <div className="form-group">
                                             <label className="control-label font-12">Jatuh Tempo</label>
                                             <input readOnly={true} type="text" className="form-control" name="tempo" value={this.props.getPiutang.tempo!==undefined?moment(this.props.getPiutang.tempo).format("yyyy-MM-DD"):this.state.tempo}/>
                                         </div>
-                                        <div className="form-group">
-                                            <label className="control-label font-12">DP</label>
-                                            <input readOnly={true} type="text" className="form-control" name="dp" value={this.props.getPiutang.dp!==undefined?this.props.getPiutang.dp:this.state.dp}/>
-                                        </div>
+                                        {/* sss */}
                                     </div>
                                     <div className="col-md-3">
                                         <div className="form-group">
-                                            <label className="control-label font-12">Jumlah Kartu</label>
-                                            <input readOnly={true} type="text" className="form-control" name="jml_kartu" value={this.props.getPiutang.jml_kartu!==undefined?this.props.getPiutang.jml_kartu:this.state.jml_kartu}/>
+                                            <label className="control-label font-12">DP</label>
+                                            <input readOnly={true} type="text" className="form-control" name="dp" value={(this.props.getPiutang.dp!==undefined?parseInt(this.props.getPiutang.dp,10):0)+(this.props.getPiutang.jml_kartu!==undefined?parseInt(this.props.getPiutang.jml_kartu,10):0)}/>
                                         </div>
                                     </div>
                                     <div className="col-md-3">

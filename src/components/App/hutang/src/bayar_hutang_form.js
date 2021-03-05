@@ -236,7 +236,7 @@ class BayarHutang extends Component{
                                             <input  readOnly={true} type="text" className="form-control" value={this.props.nota}/>
                                         </div>
                                         <div className="form-group">
-                                            <label className="control-label font-12">Tanggal</label>
+                                            <label className="control-label font-12">Tanggal Pembayaran</label>
                                             <input type="date" name={"tgl"} className="form-control" value={this.state.tgl} onChange={this.handleChange}/>
                                         </div>
                                     </div>
@@ -296,13 +296,19 @@ class BayarHutang extends Component{
                                             <input readOnly={true} type="text" className="form-control" name="nama_supplier" value={this.props.getHutang.supplier!==undefined?this.props.getHutang.supplier:this.state.nama_supplier}/>
                                         </div>
                                     </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-3">
+                                        <div className="form-group">
+                                            <label className="control-label font-12">Tanggal Transaksi</label>
+                                            <input readOnly={true} type="text" className="form-control" name="jatuh_tempo" value={this.props.getHutang.tgl_beli!==undefined?moment(this.props.getHutang.tgl_beli).format("yyyy-MM-DD"):this.state.jatuh_tempo}/>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-3">
                                         <div className="form-group">
                                             <label className="control-label font-12">Jatuh Tempo</label>
                                             <input readOnly={true} type="text" className="form-control" name="jatuh_tempo" value={this.props.getHutang.tgl_jatuh_tempo!==undefined?moment(this.props.getHutang.tgl_jatuh_tempo).format("yyyy-MM-DD"):this.state.jatuh_tempo}/>
                                         </div>
                                     </div>
-                                    <div className="col-md-8">
+                                    <div className="col-md-6">
                                         
                                         <div className="form-group">
                                             <label className="control-label font-12">Keterangan</label>

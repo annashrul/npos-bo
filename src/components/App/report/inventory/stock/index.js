@@ -191,8 +191,8 @@ class InventoryReport extends Component{
             where+=`&searchby=${search_by}`;
         }
 
-        if(any!==undefined&&any!==null&&any!==''){
-            where+=`&q=${any}`;
+    if(any!==undefined&&any!==null&&any!==''){
+            where+=`&q=${btoa(any)}`;
         }
         this.setState({
             where_data:where

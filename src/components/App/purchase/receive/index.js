@@ -68,7 +68,7 @@ class Receive extends Component{
                 catatan:"",
                 notasupplier:"",
                 penerima: ""
-            }
+            }   
         };
         this.HandleRemove = this.HandleRemove.bind(this);
         this.HandleAddBrg = this.HandleAddBrg.bind(this);
@@ -83,6 +83,7 @@ class Receive extends Component{
         this.HandleChangeNota = this.HandleChangeNota.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.handleClickToggle = this.handleClickToggle.bind(this);
+        this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this);
     }
     handleClickToggle(e){
         e.preventDefault();
@@ -490,6 +491,14 @@ class Receive extends Component{
                             final['ppn'] = (parseFloat(val, 10) / parseFloat(res.harga_beli, 10)) * 100
                         }
                     })
+                }else if(column==='qty'){
+                    Object.keys(res).forEach((k, i) => {
+                        if (k !== 'qty') {
+                            final[k] = res[k];
+                        } else {
+                            final['qty'] = val===''?1:val
+                        }
+                    })
                 }else{
                     Object.keys(res).forEach((k, i) => {
                         if(k!==column){
@@ -500,8 +509,6 @@ class Receive extends Component{
                     })
 
                 }
-                console.log(column);
-                console.log(final['ppn']);
                 update(table, final)
                 ToastQ.fire({
                     icon: 'success',
@@ -520,9 +527,15 @@ class Receive extends Component{
         if (column === 'ppn' || column === 'diskon'){
             if (val < 0 || val === '') values = 0
             else if (parseFloat(val) >100) {values=100}
+        }else if(column ==='qty'){
+            if(val==='') values=0;
+            else values=val;
         }
+        console.log(column);
+        console.log(values);
         brgval[i] = {...brgval[i], [column]: values};
         this.setState({ brgval });
+        
 
         if(column==='satuan'){
             const cek = cekData('barcode', barcode, table);
@@ -574,6 +587,23 @@ class Receive extends Component{
             })
         }
 
+    }
+
+    HandleFocusInputReset(e, i) {
+        const column = e.target.name;
+        const val = e.target.value;
+        let brgval = [...this.state.brgval];
+        if(column==='qty'){
+            if(parseInt(val,10)<2){
+                brgval[i] = {
+                    ...brgval[i],
+                    [column]: ''
+                };
+                this.setState({
+                    brgval
+                });
+            }
+        }
     }
     setTanggal(date) {
         this.setState({
@@ -633,8 +663,7 @@ class Receive extends Component{
         cek.then(res => {
             if(res===undefined){
                 store(table, finaldt)
-            }
-            else{
+            }else{
                 update(table,{
                     id:res.id,
                     qty:parseFloat(res.qty)+1,
@@ -659,7 +688,14 @@ class Receive extends Component{
                     tambahan: res.tambahan
                 })
             }
+            
             this.getData()
+            setTimeout(
+                () => this[`qty-${btoa(finaldt.barcode)}`].focus(),
+            500
+            );
+
+            
         })
     }
     HandleReset(e){
@@ -1461,7 +1497,7 @@ class Receive extends Component{
                                                                <input 
                                                                     style={{width:"80px",textAlign:"right"}}
                                                                     className="form-control"
-                                                                    type='text'
+                                                                    type='number'
                                                                     name='ppn'
                                                                     onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
                                                                     onChange={(e)=>this.HandleChangeInputValue(e,index)}
@@ -1470,7 +1506,19 @@ class Receive extends Component{
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"80px",textAlign:"right"}} readOnly type="text" className="form-control" value={item.stock}/>
                                                             </td>
-                                                            <td style={columnStyle}><input style={{width:"80px",textAlign:"right"}} className="form-control" type='text' name='qty' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty}/></td>
+                                                            <td style={columnStyle}>
+                                                                <input
+                                                                    style={{width:"80px",textAlign:"right"}}
+                                                                    className="form-control"
+                                                                    type='text'
+                                                                    name='qty'
+                                                                    ref={ input => this[`qty-${btoa(item.barcode)}`] = input }
+                                                                    onFocus={(e)=>this.HandleFocusInputReset(e,index)}
+                                                                    onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
+                                                                    onChange={(e)=>this.HandleChangeInputValue(e,index)}
+                                                                    value={this.state.brgval[index].qty}
+                                                                />
+                                                            </td>
                                                             <td style={columnStyle}><input style={{width:"80px",textAlign:"right"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(subtotal_perrow)}/>

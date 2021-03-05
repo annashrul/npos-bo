@@ -94,6 +94,7 @@ class Sale extends Component{
         this.handleChecked = this.handleChecked.bind(this);
         this.handleClickToggle = this.handleClickToggle.bind(this);
         this.handleClosing = this.handleClosing.bind(this);
+        this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this)
     }
 
     handleClickToggle(e) {
@@ -337,13 +338,25 @@ class Sale extends Component{
                 })
             } else {
                 let final= {}
-                Object.keys(res).forEach((k, i) => {
-                    if(k!==column){
-                        final[k] = res[k];
-                    }else{
-                        final[column]=val
-                    }
-                })
+                if (column === 'qty') {
+                    Object.keys(res).forEach((k, i) => {
+                        if (k !== 'qty') {
+                            final[k] = res[k];
+                        } else {
+                            final['qty'] = val === '' ? 1 : val
+                        }
+                    })
+                } else {
+                    Object.keys(res).forEach((k, i) => {
+                        if (k !== column) {
+                            final[k] = res[k];
+                        } else {
+                            final[column] = val
+                        }
+                    })
+
+                }
+                
                 update(table, final)
                 Toast.fire({
                     icon: 'success',
@@ -399,6 +412,25 @@ class Sale extends Component{
                 }
                 this.getData();
             })
+        }
+
+    }
+
+    HandleFocusInputReset(e, i) {
+        const column = e.target.name;
+        const val = e.target.value;
+        let brgval = [...this.state.brgval];
+        if (column === 'qty') {
+            if (parseInt(val, 10) < 2) {
+                brgval[i] = {
+                    ...brgval[i],
+                    [column]: ''
+                };
+                this.setState({
+                    brgval
+                });
+
+            }
         }
 
     }
@@ -493,6 +525,10 @@ class Sale extends Component{
 
 
             this.getData();
+            setTimeout(
+                () => this[`qty-${btoa(finaldt.barcode)}`].focus(),
+                500
+            );
         })
         
     }
@@ -827,9 +863,6 @@ class Sale extends Component{
         this.props.dispatch(ModalType("formClosing"));
     }
 
-
-
-
     render() {
         if(this.state.isScroll===true)this.handleScroll();
 
@@ -1142,11 +1175,17 @@ class Sale extends Component{
                                                             <td style={centerStyle}>
                                                                 <input readOnly={true} type="number" value={item.stock} className="form-control" style={{width:"100px",textAlign:"right"}}/>
                                                             </td>
-                                                            <td style={centerStyle}><input type='text' name='qty' style={{width:"100px",textAlign:"right"}}
-                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                       className="form-control"
-                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                       value={this.state.brgval[index].qty}/>
+                                                            <td style={centerStyle}>
+                                                    <input
+                                                        type='text'
+                                                        name='qty'
+                                                        style={{width:"100px",textAlign:"right"}}
+                                                        ref={ input => this[`qty-${btoa(item.barcode)}`] = input }
+                                                        onFocus={(e)=>this.HandleFocusInputReset(e,index)}
+                                                        onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                        className="form-control"
+                                                        onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                        value={this.state.brgval[index].qty}/>
                                                                 <div className="invalid-feedback text-center" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
