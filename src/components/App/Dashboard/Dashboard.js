@@ -274,22 +274,24 @@ class Dashboard extends Component {
         })
         
         socket.on("set_dashboard", (data) => {
-            this.setState({
-                grossSales:toRp(parseInt(data.header.penjualan,10)),
-                netSales:toRp(parseInt(data.header.net_sales,10)),
-                trxNum:data.header.transaksi,
-                avgTrx:toRp(parseInt(data.header.avg,10)),
-                lokasi_sales: data.lokasi_sales,
-                lokasi_tr: data.lokasi_tr,
-                hourly: data.hourly,
-                daily: data.daily,
-                top_item_qty: data.top_item_qty,
-                top_item_sale: data.top_item_sale,
-                top_cat_qty: data.top_cat_qty,
-                top_cat_sale: data.top_cat_sale,
-                top_sp_qty: data.top_sp_qty,
-                top_sp_sale: data.top_sp_sale,
-            });
+            if (data.tenant === atob(atob(Cookies.get('tnt=')))){
+                this.setState({
+                    grossSales:toRp(parseInt(data.header.penjualan,10)),
+                    netSales:toRp(parseInt(data.header.net_sales,10)),
+                    trxNum:data.header.transaksi,
+                    avgTrx:toRp(parseInt(data.header.avg,10)),
+                    lokasi_sales: data.lokasi_sales,
+                    lokasi_tr: data.lokasi_tr,
+                    hourly: data.hourly,
+                    daily: data.daily,
+                    top_item_qty: data.top_item_qty,
+                    top_item_sale: data.top_item_sale,
+                    top_cat_qty: data.top_cat_qty,
+                    top_cat_sale: data.top_cat_sale,
+                    top_sp_qty: data.top_sp_qty,
+                    top_sp_sale: data.top_sp_sale,
+                });
+            }
         });
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSelect2 = this.handleSelect2.bind(this);

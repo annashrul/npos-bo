@@ -51,6 +51,7 @@ class Sale extends Component{
             let j = []
             let jns = nextProps.cash.data;
             if(jns!==undefined){
+                
                 jns.map((i) => {
                     j.push({
                         value: i.id,
@@ -69,6 +70,11 @@ class Sale extends Component{
             let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
+                if (loc.length === 1) {
+                    this.setState({
+                        location: loc[0].kode,
+                    })
+                }
                 loc.map((i) => {
                     lk.push({
                         value: i.kode,

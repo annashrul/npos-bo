@@ -169,6 +169,11 @@ class Sale extends Component{
             let lk = []
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
+                if (loc.length === 1) {
+                    this.setState({
+                        location: loc[0].kode,
+                    })
+                }
                 loc.map((i) => {
                     lk.push({
                         value: i.kode,
@@ -391,18 +396,26 @@ class Sale extends Component{
                     })
                 } else {
                     let final= {
-                        id: res.id,
-                        qty: 0,
-                        kd_brg: res.kd_brg,
-                        nm_brg: res.nm_brg,
-                        barcode: res.barcode,
-                        satuan: res.satuan,
-                        harga: res.harga,
-                        stock: res.stock,
-                        diskon_persen: res.diskon_persen,
-                        diskon_nominal: res.diskon_nominal,
-                        ppn: res.ppn,
-                        tambahan: res.tambahan
+                         id: res.id,
+                            kd_brg: res.kd_brg,
+                            nm_brg: res.nm_brg,
+                            barcode: res.barcode,
+                            satuan: res.satuan,
+                            harga: res.harga,
+                            harga2: res.harga2,
+                            harga3: res.harga3,
+                            harga4: res.harga4,
+                            harga_old: res.harga,
+                            hrg_beli: res.hrg_beli,
+                            stock: res.stock,
+                            diskon_persen: res.diskon_persen,
+                            diskon_nominal: 0,
+                            ppn: res.ppn,
+                            qty: 1,
+                            kategori: res.kategori,
+                            services: res.services,
+                            tambahan: res.tambahan,
+                            isOpenPrice: res.isOpenPrice,
                     }
                     update(table, final)
                     Toast.fire({
@@ -516,10 +529,10 @@ class Sale extends Component{
                     diskon_nominal: 0,
                     ppn: res.ppn,
                     qty: parseFloat(res.qty)+1,
-                    kategori: item.kategori,
-                    services: item.services,
-                    tambahan: item.tambahan,
-                    isOpenPrice: item.isOpenPrice,
+                    kategori: res.kategori,
+                    services: res.services,
+                    tambahan: res.tambahan,
+                    isOpenPrice: res.isOpenPrice,
                 })
             }
 
@@ -623,6 +636,7 @@ class Sale extends Component{
                         if(ppnInt!==0){
                             ppn = hrg*(ppnInt/100);
                         }
+                        console.log("HARGA BELI", item.hrg_beli);
 
                         subtotal+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10);
                         detail.push({
@@ -674,7 +688,7 @@ class Sale extends Component{
                         "kode_trx":this.props.nota,
                         "subtotal": subtotal,
                         "lokasi": this.state.location,
-                        "kassa": "Z",
+                        "kassa": atob(atob(Cookies.get('tnt=')))==='nov-jkt'?"Z":"Q",
                         "jns_kartu": "Debit",
                         "status": "LUNAS",
                         "optional_note":this.state.catatan
@@ -728,7 +742,11 @@ class Sale extends Component{
                     stock: res.stock,
                     diskon_persen: res.diskon_persen,
                     diskon_nominal: res.diskon_nominal,
-                    ppn: res.ppn,
+                    ppn: res.ppn, 
+                    hrg_beli: res.hrg_beli,
+                    kategori: res.kategori,
+                    services: res.service,
+                    isOpenPrice: res.isOpenPrice,
                     qty: parseFloat(res.qty) + 1,
                     tambahan: res.tambahan
                 })
@@ -830,22 +848,29 @@ class Sale extends Component{
                         title: `not found.`
                     })
                 } else {
-                    let final= {
-                        id: res.id,
-                        qty: 0,
-                        kd_brg: res.kd_brg,
-                        nm_brg: res.nm_brg,
-                        barcode: res.barcode,
-                        satuan: res.satuan,
-                        harga: res.harga,
-                        stock: res.stock,
-                        diskon_persen: res.diskon_persen,
-                        diskon_nominal: res.diskon_nominal,
-                        ppn: res.ppn,
-                        tambahan: res.tambahan,
-                        isOpenPrice:value
-                    }
-                    update(table, final);
+                
+                     update(table, {
+                            id: res.id,
+                            kd_brg: res.kd_brg,
+                            nm_brg: res.nm_brg,
+                            barcode: res.barcode,
+                            satuan: res.satuan,
+                            harga: res.harga,
+                            harga2: res.harga2,
+                            harga3: res.harga3,
+                            harga4: res.harga4,
+                            harga_old: res.harga,
+                            hrg_beli: res.hrg_beli,
+                            stock: res.stock,
+                            diskon_persen: res.diskon_persen,
+                            diskon_nominal: 0,
+                            ppn: res.ppn,
+                            qty:res.qty,
+                            kategori: res.kategori,
+                            services: res.services,
+                            tambahan: res.tambahan,
+                            isOpenPrice: value,
+                     })
                     Toast.fire({
                         icon: 'success',
                         title: `${name} has been changed.`
@@ -1082,10 +1107,10 @@ class Sale extends Component{
                                                     let disc1 = 0;
                                                     let disc2 = 0;
                                                     let ppn = 0;
-                                                    let hrg=parseInt(rmComma(item.harga),10);
-                                                    let ppnInt=parseInt(item.ppn,10);
-                                                    let disc_rp=parseInt(item.diskon_nominal,10);
-                                                    let disc_per=parseInt(item.diskon_persen,10);
+                                                    let hrg=parseFloat(rmComma(item.harga));
+                                                    let ppnInt=parseFloat(item.ppn);
+                                                    let disc_rp=parseFloat(item.diskon_nominal);
+                                                    let disc_per=parseFloat(item.diskon_persen);
                                                     // 2000-(2000*(10/100)) = 1800 // diskon 1 (%)
                                                     // 1800-(1800*(10/100)) = 1620 // diskon 2 (%)
                                                     // 2000+(2000*(10/100)) = 2200 // ppn
@@ -1106,8 +1131,8 @@ class Sale extends Component{
                                                     if(ppnInt!==0){
                                                         ppn = hrg*(ppnInt/100);
                                                     }
-
-                                                    totalsub+=(disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10);
+                                                    const subtot = (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseFloat(item.qty);
+                                                    totalsub+=subtot;
 
                                                     return (
                                                         <tr key={index}>
@@ -1126,9 +1151,14 @@ class Sale extends Component{
                                                                 {
 
                                                                     this.state.brgval[index].isOpenPrice?(
-                                                                        <input type="text" className={"form-control"} value={toCurrency(this.state.brgval[index].harga)} style={{width:"100px"}} name="harga"
-                                                                               onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                               onChange={(e) => this.HandleChangeInputValue(e, index)}
+                                                                        <input 
+                                                                            type="text"
+                                                                            className={"form-control"}
+                                                                            value={toCurrency(this.state.brgval[index].harga)}
+                                                                            style={{width:"100px"}}
+                                                                            name="harga"
+                                                                            onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
+                                                                            onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                                         />
                                                                     ):(
                                                                         <select className="form-control" name='harga' style={{width:"100px"}}
@@ -1186,12 +1216,12 @@ class Sale extends Component{
                                                         className="form-control"
                                                         onChange={(e) => this.HandleChangeInputValue(e, index)}
                                                         value={this.state.brgval[index].qty}/>
-                                                                <div className="invalid-feedback text-center" style={parseInt(this.state.brgval[index].qty,10)>parseInt(item.stock,10)?{display:'block'}:{display:'none'}}>
+                                                                <div className="invalid-feedback text-center" style={parseFloat(this.state.brgval[index].autoSetQty)>parseFloat(item.stockautoSetQty)?{display:'block'}:{display:'none'}}>
                                                                     Qty Melebihi Stock.
                                                                 </div>
                                                             </td>
                                                             <td style={centerStyle}>
-                                                                <input readOnly={true} type="text" value={toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))} className="form-control" style={{width:"100px",textAlign:"right"}}/>
+                                                                <input readOnly={true} type="text" value={toCurrency(subtot)} className="form-control" style={{width:"100px",textAlign:"right"}}/>
                                                             </td>
                                                             {/*<td style={centerStyle}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>*/}
 

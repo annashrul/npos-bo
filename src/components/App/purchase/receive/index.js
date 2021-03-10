@@ -121,21 +121,43 @@ class Receive extends Component{
             const data = this.fetchDataEdit();
             data.then(res=>{
                 res.detail.map((v,i)=>{
-                    const data_final={
-                        "kd_brg" : v.kode_barang,
-                        "barcode" : v.barcode,
-                        "satuan" : v.satuan,
-                        "diskon" : v.diskon,
-                        "harga_beli" : v.harga_beli,
-                        "stock" : v.stock,
-                        "diskon2" : 0,
-                        "diskon3" :0,
-                        "diskon4" : 0,
-                        "ppn" : v.ppn,
-                        "qty" : v.jumlah_beli,
-                        "qty_bonus" : v.jumlah_bonus,
-                        "nm_brg" : v.nm_brg,
-                        "tambahan" : v.tambahan,
+                    // const data_final={
+                    //     "kd_brg" : v.kode_barang,
+                    //     "barcode" : v.barcode,
+                    //     "satuan" : v.satuan,
+                    //     "diskon" : v.diskon,
+                    //     "harga_beli" : v.harga_beli,
+                    //     "stock" : v.stock,
+                    //     "diskon2" : 0,
+                    //     "diskon3" :0,
+                    //     "diskon4" : 0,
+                    //     "ppn" : v.ppn,
+                    //     "qty" : v.jumlah_beli,
+                    //     "qty_bonus" : v.jumlah_bonus,
+                    //     "nm_brg" : v.nm_brg,
+                    //     "tambahan" : v.tambahan,
+                    // };
+                    const data_final = {
+                        kd_brg: v.kode_barang,
+                        barcode: v.barcode,
+                        satuan: v.satuan,
+                        diskon: v.diskon,
+                        diskon2: 0,
+                        diskon3: 0,
+                        diskon4: 0,
+
+                        harga: v.tambahan[0].harga,
+                        harga2: v.tambahan[0].harga2,
+                        harga3: v.tambahan[0].harga3,
+                        harga4: v.tambahan[0].harga4,
+
+                        ppn: v.ppn===null?0:v.ppn,
+                        harga_beli: rmComma(v.harga_beli),
+                        qty: v.jumlah_beli,
+                        qty_bonus: v.jumlah_bonus,
+                        stock: v.stock,
+                        nm_brg: v.nm_brg,
+                        tambahan: v.tambahan
                     };
                     store('receive', data_final);
                     return null;
@@ -505,7 +527,7 @@ class Receive extends Component{
                         if (k !== 'harga_beli') {
                             final[k] = res[k];
                         } else {
-                            final['harga_beli'] = rmComma(res.harga_beli)
+                            final['harga_beli'] = rmComma(val)
                         }
                     })
                 } else {
@@ -1469,7 +1491,19 @@ class Receive extends Component{
                                                                 </select>
                                                             </td>
                                                             <td style={columnStyle}>
-                                                                <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga_beli' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={tenant?(this.state.brgval[index].harga_beli):toCurrency(this.state.brgval[index].harga_beli)}/>
+                                                                <input
+                                                                style={{width:"100px",textAlign:"right"}}
+                                                                className="form-control"
+                                                                type='text'
+                                                                name='harga_beli'
+                                                                onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
+                                                                onChange={(e)=>this.HandleChangeInputValue(e,index)}
+                                                                value={
+                                                                    tenant?
+                                                                    (this.state.brgval[index].harga_beli)
+                                                                        :
+                                                                    toCurrency(this.state.brgval[index].harga_beli)}
+                                                                />
                                                             </td>
 
                                                            

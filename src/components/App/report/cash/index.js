@@ -70,12 +70,19 @@ class ReportCash extends Component{
             type_data: data_type,
         });
         if (nextProps.auth.user) {
-            let lk = [{
-                value: "",
-                label: "Semua Lokasi"
-            }];
+            let lk =[];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
+                if (loc.length === 1) {
+                    this.setState({
+                        location: loc[0].kode,
+                    })
+                } else {
+                    lk.push({
+                        value: "-",
+                        label: "Semua Lokasi"
+                    })
+                }
                 // loc.push({"kode":"","nama":"Semua Lokasi"});
                 loc.map((i) => {
                     lk.push({
