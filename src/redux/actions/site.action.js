@@ -5,6 +5,7 @@ import {
 import axios from "axios"
 import {destroy} from "components/model/app.model";
 import * as Swal from "sweetalert2";
+import Cookies from 'js-cookie'
 
 export const setEcaps = (bool) => dispatch => {
     dispatch(setEcaps_(bool));
@@ -64,10 +65,17 @@ export function setCheck(data = []) {
 export function setLinkTxt(data=[]){
     return {type:SITE.DOWNLOAD_TXT,data}
 }
+
+
+
 export const FetchSite = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `site/logo`)
+        axios.get(HEADERS.URL + `site/logo`, {
+            headers: {
+                username: atob(Cookies.get('tnt='))
+            }
+        })
             .then(function (response) {
                 const data = response.data;
                 dispatch(setSite(data));
@@ -83,7 +91,11 @@ export const FetchSite = () => {
 export const FetchFolder = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `site/folders`)
+        axios.get(HEADERS.URL + `site/folders`, {
+            headers: {
+                username: atob(Cookies.get('tnt='))
+            }
+        })
             .then(function (response) {
                 const data = response.data;
                 dispatch(setFolder(data));
@@ -104,7 +116,11 @@ export const FetchFiles = (path) => {
         if(path!==undefined){
             where +=`?path=${path}`;
         }
-        axios.get(HEADERS.URL + `site/files`+where)
+        axios.get(HEADERS.URL + `site/files` + where, {
+            headers: {
+                username: atob(Cookies.get('tnt='))
+            }
+        })
             .then(function (response) {
                 const data = response.data;
                 dispatch(setList(data));
@@ -120,7 +136,11 @@ export const FetchFiles = (path) => {
 export const FetchTables = () => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `site/tables`)
+        axios.get(HEADERS.URL + `site/tables`, {
+            headers: {
+                username: atob(Cookies.get('tnt='))
+            }
+        })
             .then(function (response) {
                 const data = response.data;
                 dispatch(setTables(data));
@@ -247,7 +267,11 @@ export const storeSite = (data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
         const url = HEADERS.URL + `site`;
-        axios.put(url,data)
+        axios.put(url, data, {
+            headers: {
+                username: atob(Cookies.get('tnt='))
+            }
+        })
             .then(function (response) {
                 dispatch(setLoading(false));
                 Swal.fire({allowOutsideClick: false,

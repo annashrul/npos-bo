@@ -66,13 +66,13 @@ class CustomerPrice extends Component{
     handlePageChange(pageNumber){
         let q=localStorage.getItem("q_price_customer");
         localStorage.setItem("page_price_customer",pageNumber);
-        this.props.dispatch(FetchCustomerPrice(localStorage.getItem("kd_brg_price_customer"),pageNumber,q===undefined&&q===null?'':q));
+        this.props.dispatch(FetchCustomerPrice(localStorage.getItem("kd_brg_price_customer"),pageNumber,q===undefined||q===null?'':q));
     }
     handleOnSearch(){
-        let page=localStorage.getItem("page_price_customer");
+        localStorage.setItem("page_price_customer", 1);
         
         localStorage.setItem("q_price_customer",this.state.q);
-        this.props.dispatch(FetchCustomerPrice(localStorage.getItem("kd_brg_price_customer"),page===null?1:page,this.state.q));
+        this.props.dispatch(FetchCustomerPrice(localStorage.getItem("kd_brg_price_customer"),1,this.state.q));
 
     }
 

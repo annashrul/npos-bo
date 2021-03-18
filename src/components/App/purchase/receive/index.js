@@ -152,7 +152,7 @@ class Receive extends Component{
                         harga4: v.tambahan[0].harga4,
 
                         ppn: v.ppn===null?0:v.ppn,
-                        harga_beli: rmComma(v.harga_beli),
+                        harga_beli: (v.harga_beli),
                         qty: v.jumlah_beli,
                         qty_bonus: v.jumlah_bonus,
                         stock: v.stock,
@@ -316,7 +316,7 @@ class Receive extends Component{
                             diskon3: item.disc3,
                             diskon4: item.disc4,
                             ppn: item.ppn,
-                            harga_beli: rmComma(item.harga_beli),
+                            harga_beli: (item.harga_beli),
                             qty: item.jumlah_beli,
                             qty_bonus: 0,
                             stock: item.stock,
@@ -527,7 +527,7 @@ class Receive extends Component{
                         if (k !== 'harga_beli') {
                             final[k] = res[k];
                         } else {
-                            final['harga_beli'] = rmComma(val)
+                            final['harga_beli'] = (val)
                         }
                     })
                 } else {
@@ -681,7 +681,7 @@ class Receive extends Component{
             harga4:item.tambahan[0].harga4,
 
             ppn:item.ppn,
-            harga_beli:rmComma(item.harga_beli),
+            harga_beli:(item.harga_beli),
             qty:item.qty,
             qty_bonus: item.qty_bonus,
             stock:item.stock,
@@ -812,13 +812,13 @@ class Receive extends Component{
                                 let disc1 = 0;
                                 let ppn = 0;
                                 if (item.diskon !== 0) {
-                                    disc1 = parseFloat(rmComma(item.harga_beli)) * (parseFloat(item.diskon) / 100);
+                                    disc1 = parseFloat((item.harga_beli)) * (parseFloat(item.diskon) / 100);
                                 }
 
                                 if (item.ppn !== 0) {
-                                    ppn = (parseFloat(rmComma(item.harga_beli)) - disc1) * (parseFloat(item.ppn) / 100);
+                                    ppn = (parseFloat((item.harga_beli)) - disc1) * (parseFloat(item.ppn) / 100);
                                 }
-                                const subtotal_perrow = ((parseFloat(rmComma(item.harga_beli)) - disc1) + ppn) * parseFloat(item.qty);
+                                const subtotal_perrow = ((parseFloat((item.harga_beli)) - disc1) + ppn) * parseFloat(item.qty);
                                 subtotal += subtotal_perrow
 
                                 let harga_=0;
@@ -845,7 +845,7 @@ class Receive extends Component{
                                     harga_jual4: harga_4,
 
                                     ppn: item.ppn,
-                                    harga_beli: rmComma(item.harga_beli),
+                                    harga_beli: (item.harga_beli),
                                     qty: item.qty,
                                     qty_bonus: item.qty_bonus
                                 })
@@ -1463,13 +1463,13 @@ class Receive extends Component{
                                                     let disc1=0;
                                                     let ppn=0;
                                                     if(item.diskon!==0){
-                                                        disc1 = parseFloat(rmComma(item.harga_beli)) * (parseFloat(item.diskon) / 100);
+                                                        disc1 = parseFloat((item.harga_beli)) * (parseFloat(item.diskon) / 100);
                                                     }
 
                                                     if(item.ppn!==0){
-                                                        ppn = (parseFloat(rmComma(item.harga_beli)) -disc1) * (parseFloat(item.ppn) / 100);
+                                                        ppn = (parseFloat((item.harga_beli)) -disc1) * (parseFloat(item.ppn) / 100);
                                                     }
-                                                    const subtotal_perrow = ((parseFloat(rmComma(item.harga_beli)) - disc1) + ppn) * parseFloat(item.qty);
+                                                    const subtotal_perrow = ((parseFloat((item.harga_beli)) - disc1) + ppn) * parseFloat(item.qty);
                                                     subtotal += subtotal_perrow
                                                     //
                                                     return (
@@ -1499,10 +1499,8 @@ class Receive extends Component{
                                                                 onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
                                                                 onChange={(e)=>this.HandleChangeInputValue(e,index)}
                                                                 value={
-                                                                    tenant?
-                                                                    (this.state.brgval[index].harga_beli)
-                                                                        :
-                                                                    toCurrency(this.state.brgval[index].harga_beli)}
+                                                                        this.state.brgval[index].harga_beli
+                                                                    }
                                                                 />
                                                             </td>
 

@@ -125,7 +125,7 @@ export const createProduct = (data) => {
 export const deleteProduct = (id) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `barang/${id}`;
+        const url = HEADERS.URL + `barang/${btoa(id)}`;
         axios.delete(url)
             .then(function (response) {
                 const data = (response.data);
@@ -165,7 +165,7 @@ export const FetchBrg = (page=1,by='barcode',q='',lokasi=null,supplier=null,db,p
     return (dispatch) => {
         dispatch(setLoadingbrg(true));
         let url = `barang/get?page=${page}`;
-        if(q!=='') url+=`&q=${q}&searchby=${by}`;
+        if(q!=='') url+=`&q=${btoa(q)}&searchby=${by}`;
         if(lokasi!==null) url+=`&lokasi=${lokasi}`;
         if(supplier!==null) url+=`&supplier=${supplier}`;
         // if(supplier!==null) url+=`&supplier=${supplier}`;
@@ -211,7 +211,7 @@ export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,
         }
         if(perpage!==undefined) url+=`&perpage=${perpage}`;
         // if(perpage!==null||perpage!==''||perpage!==undefined||perpage!=='undefined'||isNaN(perpage)) url+=`&perpage=${perpage}`;
-        if(q!=='') url+=`&q=${q}&searchby=${by}`;
+        if(q!=='') url+=`&q=${btoa(q)}&searchby=${by}`;
         axios.get(HEADERS.URL+`${url}`)
             .then(function(response){
                 const data = response.data;
@@ -244,7 +244,7 @@ export const FetchBrgSame = (page=1,by='barcode',q='',lokasi=null,supplier=null,
 export const FetchProductEdit = (kode)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`barang/update/${kode}`)
+        axios.get(HEADERS.URL+`barang/update/${btoa(kode)}`)
             .then(function(response){
                 const data = response.data;
                 
@@ -266,7 +266,7 @@ export const FetchProductEdit = (kode)=>{
 export const updateProduct = (id,data) => {
     return (dispatch) => {
         dispatch(setLoading(true));
-        const url = HEADERS.URL + `barang/${id}`;
+        const url = HEADERS.URL + `barang/${btoa(id)}`;
 
         axios.put(url, data)
             .then(function (response) {
@@ -308,7 +308,7 @@ export const updateProduct = (id,data) => {
 export const FetchProductDetail = (kode)=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        axios.get(HEADERS.URL+`barang/${kode}?isbo=true`)
+        axios.get(HEADERS.URL+`barang/${btoa(kode)}?isbo=true`)
             .then(function(response){
                 const data = response.data;
                 

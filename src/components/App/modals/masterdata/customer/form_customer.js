@@ -16,8 +16,8 @@ class FormCustomer extends Component{
         this.HandleChangeCustomer = this.HandleChangeCustomer.bind(this);
         this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
         this.state = {
-            kd_cust:'', nama:'', alamat:'', status:'', tgl_ultah:'', tlp:'', cust_type:'',cust_type_data:[], password:'', register:'',
-            foto:'-', jenis_kelamin:'', email:'', biografi:'', special_price:'', discount:'',
+            kd_cust:'', nama:'', alamat:'-', status:'', tgl_ultah:'', tlp:'08', cust_type:'',cust_type_data:[], password:'-', register:'',
+            foto:'-', jenis_kelamin:'', email:'', biografi:'-', special_price:'', discount:'',
             location_data:[],
             location:"",
             error:{
@@ -69,8 +69,8 @@ class FormCustomer extends Component{
         }
         else{
             this.setState({
-                kd_cust:'', nama:'', alamat:'', status:'', tgl_ultah:'', tlp:'', cust_type:'', password:'', register:'',
-                foto:'-', jenis_kelamin:'', email:'', biografi:'', special_price:'', discount:'',
+                kd_cust:'', nama:'', alamat:'-', status:'', tgl_ultah:'', tlp:'08', cust_type:'', password:'-', register:'',
+                foto:'-', jenis_kelamin:'', email:'', biografi:'-', special_price:'', discount:'',
             })
         }
         let cust=[];
@@ -174,7 +174,7 @@ class FormCustomer extends Component{
         parseData['cust_type'] = this.state.cust_type;
         parseData['password'] = this.state.password;
         parseData['register'] = this.state.register;
-        parseData['foto'] = this.state.foto === undefined || this.state.foto === '-' || this.state.foto === null? '-' : this.state.foto.base64
+        parseData['foto'] = this.state.foto;
         parseData['jenis_kelamin'] = this.state.jenis_kelamin;
         parseData['email'] = this.state.email;
         parseData['biografi'] = this.state.biografi;
@@ -245,7 +245,7 @@ class FormCustomer extends Component{
     }
     getFiles(files) {
         this.setState({
-            foto: files
+            foto: files.base64
         })
     };
     render(){

@@ -22,6 +22,7 @@ class BayarHutang extends Component{
         this.handleBayar     = this.handleBayar.bind(this);
         this.handlesearch     = this.handlesearch.bind(this);
         this.handlePageChange     = this.handlePageChange.bind(this);
+        this.update = this.update.bind(this);
     }
 
     componentWillMount(){
@@ -158,7 +159,7 @@ class BayarHutang extends Component{
                             </div>
                     </CardBody>
                     <CardBody hidden={!this.state.isPay}>
-                        <BayarHutangForm data={this.state.data} action={this.update.bind(this)} />
+                        <BayarHutangForm data={this.state.data} action={this.update} />
                     </CardBody>
                 </Card>
             </Layout>

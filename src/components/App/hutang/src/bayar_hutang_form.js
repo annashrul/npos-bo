@@ -132,7 +132,6 @@ class BayarHutang extends Component{
         }
         else{
             this.props.dispatch(FetchHutang(this.state.nota_pembelian));
-            
         }
         this.setState({
             error: err
@@ -372,7 +371,7 @@ class BayarHutang extends Component{
                                     <div className="form-group">
                                         <div className="pull-right" style={{alignSelf: "flex-end"}}>
                                             <button className="btn btn-primary btn-sm" style={{marginTop:"29px"}} onClick={this.handleSave} disabled={this.state.jumlah_bayar > (parseInt(this.props.getHutang.nilai_pembelian,10)-parseInt(this.props.getHutang.jumlah_bayar,10))?true:false}>Simpan</button>
-                                            <button className="btn btn-danger btn-sm" style={{marginTop:"29px",marginLeft:"5px"}} onClick={this.props.action(false)}>Kembali</button>
+                                            <button className="btn btn-danger btn-sm" id="back" style={{marginTop:"29px",marginLeft:"5px"}} ref={input => this.inputElement = input}  onClick={this.props.action(false)}>Kembali</button>
                                         </div>
 
                                     </div>

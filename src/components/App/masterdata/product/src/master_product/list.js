@@ -162,37 +162,37 @@ class ListProduct extends Component{
         if(kode!==''||nama!==''||kelompok!==''||supplier!==''||subdept!==''||kategori!==''){
             if(column==='any_kode_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=kd_brg&q=${kode}`;
+                where += `searchby=kd_brg&q=${btoa(kode)}`;
                 localStorage.setItem(`${que}_kode_barang`,kode);
             }
             if(column==='any_nama_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=nm_brg&q=${nama}`;
+                where += `searchby=nm_brg&q=${btoa(nama)}`;
                 localStorage.setItem(`${que}_nama_barang`,nama);
             }
             if(column==='any_kelompok_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=kel_brg&q=${kelompok}`;
+                where += `searchby=kel_brg&q=${btoa(kelompok)}`;
                 localStorage.setItem(`${que}_kelompok_barang`,kelompok);
             }
             if(column==='any_supplier_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=supplier&q=${supplier}`;
+                where += `searchby=supplier&q=${btoa(supplier)}`;
                 localStorage.setItem(`${que}_supplier_barang`,supplier);
             }
             if(column==='any_dept_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=dept&q=${dept}`;
+                where += `searchby=dept&q=${btoa(dept)}`;
                 localStorage.setItem(`${que}_dept_barang`,dept);
             }
             if(column==='any_subdept_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=subdept&q=${subdept}`;
+                where += `searchby=subdept&q=${btoa(subdept)}`;
                 localStorage.setItem(`${que}_subdept_barang`,subdept);
             }
             if(column==='any_kategori_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=kategori&q=${kategori}`;
+                where += `searchby=kategori&q=${btoa(kategori)}`;
                 localStorage.setItem(`${que}_kategori_barang`,kategori);
             }
                 this.props.dispatch(FetchProduct(pageNumber,where));
@@ -284,37 +284,37 @@ class ListProduct extends Component{
         if(kode!==''||nama!==''||kelompok!==''||supplier!==''||dept!==''||subdept!==''||kategori!==''){
             if(column==='any_kode_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=kd_brg&q=${kode}`;
+                where += `searchby=kd_brg&q=${btoa(kode)}`;
                 localStorage.setItem(`${que}_kode_barang`,kode);
             }
             if(column==='any_nama_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=nm_brg&q=${nama}`;
+                where += `searchby=nm_brg&q=${btoa(nama)}`;
                 localStorage.setItem(`${que}_nama_barang`,nama);
             }
             if(column==='any_kelompok_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=kel_brg&q=${kelompok}`;
+                where += `searchby=kel_brg&q=${btoa(kelompok)}`;
                 localStorage.setItem(`${que}_kelompok_barang`,kelompok);
             }
             if(column==='any_supplier_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=supplier&q=${supplier}`;
+                where+=`searchby=supplier&q=${btoa(supplier)}`;
                 localStorage.setItem(`${que}_supplier_barang`,supplier);
             }
             if(column==='any_dept_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=dept&q=${dept}`;
+                where+=`searchby=dept&q=${btoa(dept)}`;
                 localStorage.setItem(`${que}_dept_barang`,dept);
             }
             if(column==='any_subdept_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=subdept&q=${subdept}`;
+                where+=`searchby=subdept&q=${btoa(subdept)}`;
                 localStorage.setItem(`${que}_subdept_barang`,subdept);
             }
             if(column==='any_kategori_barang'){
                 if(where!==''){where+='&';}
-                where+=`searchby=kategori&q=${kategori}`;
+                where+=`searchby=kategori&q=${btoa(kategori)}`;
                 localStorage.setItem(`${que}_kategori_barang`,kategori);
             }
             
@@ -346,7 +346,7 @@ class ListProduct extends Component{
         this.props.dispatch(ModalType("CustomerPrice"));
         localStorage.setItem("nm_brg_price_customer",nm_brg);
         localStorage.setItem("kd_brg_price_customer",kode);
-        this.props.dispatch(FetchCustomerPrice(kode,1,''));
+        this.props.dispatch(FetchCustomerPrice(btoa(kode),1,''));
     }
     toggleModal(e) {
         e.preventDefault();
@@ -369,7 +369,7 @@ class ListProduct extends Component{
         this.props.dispatch(FetchAllLocation());
         this.props.dispatch(FetchSupplierAll());
         this.props.dispatch(FetchSubDepartmentAll());
-        this.props.dispatch(FetchProductEdit(kode));
+        this.props.dispatch(FetchProductEdit((kode)));
         // this.props.dispatch(FetchProductCode());
 
     };

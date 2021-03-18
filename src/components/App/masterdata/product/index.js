@@ -61,27 +61,27 @@ class Product extends Component{
         let dateTo=localStorage.getItem(`date_to_master_barang`);
         if(kode!==undefined&&kode!==null&&kode!==''){
             if(where!==''){where+='&';}
-            where+=`searchby=kd_brg&q=${kode}`;
+            where+=`searchby=kd_brg&q=${btoa(kode)}`;
         }
         if(nama!==undefined&&nama!==null&&nama!==''){
             if(where!==''){where+='&';}
-            where+=`searchby=nm_brg&q=${nama}`;
+            where += `searchby=nm_brg&q=${btoa(nama)}`;
         }
         if(kelompok!==undefined&&kelompok!==null&&kelompok!==''){
             if(where!==''){where+='&';}
-            where+=`searchby=kel_brg&q=${kelompok}`;
+            where += `searchby=kel_brg&q=${btoa(kelompok)}`;
         }
         if(supplier!==undefined&&supplier!==null&&supplier!==''){
             if(where!==''){where+='&';}
-            where+=`searchby=supplier&q=${supplier}`;
+            where += `searchby=supplier&q=${btoa(supplier)}`;
         }
         if(subdept!==undefined&&subdept!==null&&subdept!==''){
             if(where!==''){where+='&';}
-            where+=`searchby=subdept&q=${subdept}`;
+            where += `searchby=subdept&q=${btoa(subdept)}`;
         }
         if(kategori!==undefined&&kategori!==null&&kategori!==''){
             if(where!==''){where+='&';}
-            where+=`searchby=kategori&q=${kategori}`;
+            where += `searchby=kategori&q=${btoa(kategori)}`;
         }
         if(localStorage.semuaPeriode==='false'){
             if(dateFrom!==undefined&&dateFrom!==null&&dateFrom!==''){

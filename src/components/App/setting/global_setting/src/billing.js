@@ -120,7 +120,7 @@ class Billing extends Component{
                             <label htmlFor="inputState" className="col-form-label"><input type="checkbox" name="checkboxTgl" checked={this.state.isChecked} onChange={this.handleChange}/> Pilih { this.state.isChecked!==true?'Datepicker':'Dropdown'}</label>
                             {
                                 this.state.isChecked===true?(
-                                    <input type="date" name={"tanggal_tempo_select"} min={moment(new Date()).add(1,'days').format("yyyy-MM-DD")} className="form-control" value={this.state.tanggal_tempo_select} onChange={this.handleChange}/>
+                                    <input type="date" name={"tanggal_tempo_select"} className="form-control" value={this.state.tanggal_tempo_select} onChange={this.handleChange}/>
                                 ):(
                                     <select name="tanggal_tempo_select" className="form-control" value={this.state.tanggal_tempo_select} defaultValue={this.state.tanggal_tempo_select} onChange={this.handleChange}>
                                         <option value="-">==== Pilih ====</option>

@@ -32,6 +32,7 @@ class Sale extends Component{
             kassa: "Z",
             startDate: moment().format("yyyy-MM-DD"),
             selectedOpt:"",
+            jns:[],
             error:{
                 kassa:"",
                 location:"",
@@ -50,7 +51,7 @@ class Sale extends Component{
         if (nextProps.cash.data) {
             let j = []
             let jns = nextProps.cash.data;
-            if(jns!==undefined){
+            if(jns!==this.state.jns){
                 
                 jns.map((i) => {
                     j.push({
@@ -61,6 +62,7 @@ class Sale extends Component{
                 })
                 this.setState({
                     jenis_data: j,
+                    jns:jns,
                     jenis: "",
                     userid: nextProps.auth.user.id
                 })
@@ -92,7 +94,6 @@ class Sale extends Component{
                 jumlah: "",
                 keterangan: "",
                 jenis: "",
-                jenis_data:[],
                 location: "LK/0001",
                 kassa: "Z",
             })
@@ -204,6 +205,8 @@ class Sale extends Component{
                     kassa:"A",
                     selectedOpt:"",
                 })
+                        this.props.dispatch(FetchCash(1, this.state.kategori, '', this.state.perpage));
+
             }
         })
     }
@@ -265,6 +268,8 @@ class Sale extends Component{
             }).then((result) => {
                 if (result.value) {
                     this.props.dispatch((StoreCashTrx(data)));
+                    this.props.dispatch(FetchCash(1, this.state.kategori, '', this.state.perpage));
+
                 }
             })
         }
