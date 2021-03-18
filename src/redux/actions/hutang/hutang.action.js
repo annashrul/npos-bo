@@ -155,7 +155,7 @@ export const storeHutang = (data,param) => {
 export const FetchHutangReport = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url = `hutang/report?page=${page}`;
+        let url = `hutang/report/detail?page=${page}`;
         if(where!==''){
             url+=`${where}`
         }

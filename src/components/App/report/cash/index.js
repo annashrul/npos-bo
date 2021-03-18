@@ -403,14 +403,14 @@ class ReportCash extends Component{
                                 }
                                 <tfoot className="bg-light">
                                     <tr style={{backgroundColor: 'rgb(238, 238, 238)'}}>
-                                        <td colSpan='5'>TOTAL PERPAGE</td>
+                                        <td colSpan='6'>TOTAL PERPAGE</td>
                                         <td style={columnStyle} colSpan=''>{toRp(total_perpage)}</td>
-                                        <td colSpan='3'></td>
+                                        <td colSpan='2'></td>
                                     </tr>
                                     <tr style={{backgroundColor: 'rgb(238, 238, 238)'}}>
-                                        <td colSpan='5'>TOTAL</td>
+                                        <td colSpan='6'>TOTAL</td>
                                         <td style={columnStyle} colSpan=''>{total_kas===undefined?0:toRp(total_kas.jumlah)}</td>
-                                        <td colSpan='3'></td>
+                                        <td colSpan='2'/>
                                     </tr>
                                 </tfoot>
 

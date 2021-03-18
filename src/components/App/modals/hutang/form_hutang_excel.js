@@ -98,7 +98,7 @@ class HutangReportExcel extends Component{
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
                         <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
-                        <h3 className="text-center">Manage Export</h3>
+                        <h3 className="text-center">Manage Export sd</h3>
                         <div className="row mb-4">
                             {/* <div className="col-4">
                                 <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
@@ -106,7 +106,7 @@ class HutangReportExcel extends Component{
                             <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src={imgPdf} alt=""></img>
+                                        <img src={imgPdf} alt=""/>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon">
@@ -118,7 +118,7 @@ class HutangReportExcel extends Component{
                             <div className="col-6">
                                 <div className="single-gallery--item">
                                     <div className="gallery-thumb">
-                                        <img src={imgExcel} alt=""></img>
+                                        <img src={imgExcel} alt=""/>
                                     </div>
                                     <div className="gallery-text-area">
                                         <div className="gallery-icon" onClick={(e => this.toggle(e))}>

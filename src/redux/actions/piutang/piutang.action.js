@@ -175,7 +175,7 @@ export const storePiutang = (data,param) => {
 export const FetchPiutangReport = (page=1,where='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
-        let url = `piutang/report?page=${page}`;
+        let url = `piutang/report/detail?page=${page}`;
         if(where!==''){
             url+=`${where}`
         }

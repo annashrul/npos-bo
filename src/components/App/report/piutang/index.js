@@ -28,6 +28,7 @@ class PiutangReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
+        this.handlePaymentSlip = this.handlePaymentSlip.bind(this);
         this.state={
             detail:{},
             where_data:"",
@@ -300,6 +301,17 @@ class PiutangReport extends Component{
         this.props.dispatch(ModalType("formPiutangExcel"));
         this.props.dispatch(FetchPiutangReportExcel(this.state.where_data,total));
     }
+    handlePaymentSlip(e,img){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Bukti Transfer',
+            imageUrl: img,
+            imageAlt: 'image not available',
+            showClass   : {popup: 'animate__animated animate__fadeInDown'},
+            hideClass   : {popup: 'animate__animated animate__fadeOutUp'},
+        })
+
+    }
 
     render(){
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
@@ -314,7 +326,8 @@ class PiutangReport extends Component{
             data,
             // total
         } = this.props.piutangReport;
-        
+        console.log(data);
+        let totPerpage=0;
         return (
             <Layout page="Laporan Piutang">
                 <div className="col-12 box-margin">
@@ -350,60 +363,6 @@ class PiutangReport extends Component{
                                         />
                                     </div>
                                 </div>
-                                {/*<div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Status
-                                        </label>
-                                        <Select
-                                            options={this.state.status_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeStatus}
-                                            value={
-                                                this.state.status_data.find(op => {
-                                                    return op.value === this.state.status
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2"></div> */}
-                                {/* <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Filter
-                                        </label>
-                                        <Select
-                                            options={this.state.filter_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeFilter}
-                                            value={
-                                                this.state.filter_data.find(op => {
-                                                    return op.value === this.state.filter
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Sort
-                                        </label>
-                                        <Select
-                                            options={this.state.sort_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeSort}
-                                            value={
-                                                this.state.sort_data.find(op => {
-                                                    return op.value === this.state.sort
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div> */}
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label htmlFor="exampleFormControlSelect1">Search By</label>
@@ -432,7 +391,7 @@ class PiutangReport extends Component{
                                             <i className="fa fa-search"/>
                                         </button>
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                            <i className="fa fa-print"></i> Export
+                                            <i className="fa fa-print"/> Export
                                         </button>
                                     </div>
 
@@ -443,15 +402,20 @@ class PiutangReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Kode trx</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nama Toko</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Customer</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Jumlah Piutang</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Telah Dibayar</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tempo</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tgl Transaksi</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>No</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>#</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>No.Faktur Beli</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>No.Nota</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Customer</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Operator</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Bank</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Jumlah</th>
+                                        <th className="text-black" style={centerStyle} colspan={2}>Tanggal</th>
+
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" style={centerStyle}>Bayar</th>
+                                        <th className="text-black" style={centerStyle}>Jatuh Tempo</th>
                                     </tr>
                                     </thead>
                                     {
@@ -461,30 +425,21 @@ class PiutangReport extends Component{
                                                 (
                                                     typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
+                                                            totPerpage=totPerpage+parseInt(v.jumlah,10);
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={ centerStyle}>{i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={ centerStyle}>
-                                                                        <div className="btn-group">
-                                                                            <UncontrolledButtonDropdown>
-                                                                                <DropdownToggle caret>
-                                                                                    Aksi
-                                                                                </DropdownToggle>
-                                                                                <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.kd_trx,v.nama_toko,v.nama,v.jml_piutang,v.jumlah_telah_bayar,v.status,v.tempo)}>Detail Pembayaran</DropdownItem>
-                                                                                    {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
-                                                                                    {/* <Link to={`../bayar_piutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
-                                                                                </DropdownMenu>
-                                                                                </UncontrolledButtonDropdown>
-                                                                        </div>
+                                                                        <button className="btn btn-primary" onClick={(e)=>this.handlePaymentSlip(e,v.payment_slip)}><i className="fa fa-eye"/></button>
                                                                     </td>
-                                                                    <td style={ leftStyle}>{v.kd_trx}</td>
-                                                                    <td style={ leftStyle}>{v.nama_toko}</td>
+                                                                    <td style={ leftStyle}>{v.fak_jual}</td>
+                                                                    <td style={ leftStyle}>{v.no_nota}</td>
                                                                     <td style={ leftStyle}>{v.nama}</td>
-                                                                    <td style={ rightStyle}>{toRp(parseInt(v.jml_piutang,10))}</td>
-                                                                    <td style={ rightStyle}>{toRp(parseInt(v.jumlah_telah_bayar,10))}</td>
-                                                                    <td style={ centerStyle}>{statusQ(v.status==='LUNAS'?'success':'danger',v.status)}</td>
-                                                                    <td style={ centerStyle}>{moment(v.tempo).format('YYYY-MM-DD')}</td>
-                                                                    <td style={ centerStyle}>{moment(v.tgl).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ leftStyle}>{v.operator}</td>
+                                                                    <td style={ leftStyle}>{v.nm_bank}</td>
+                                                                    <td style={ rightStyle}>{toRp(parseInt(v.jumlah,10))}</td>
+                                                                    <td style={ leftStyle}>{moment(v.tgl_byr).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ leftStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
 
                                                                 </tr>
                                                             )
@@ -493,8 +448,18 @@ class PiutangReport extends Component{
                                                 )
                                             }
                                             </tbody>
+
+
+
                                         ):<Preloader/>
                                     }
+                                    <tfoot>
+                                    <tr style={{backgroundColor:"#EEEEEE"}}>
+                                        <th colspan={7}>TOTAL PERHALAMAN</th>
+                                        <th style={rightStyle}>{toRp(totPerpage)}</th>
+                                        <th colspan={2}/>
+                                    </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>

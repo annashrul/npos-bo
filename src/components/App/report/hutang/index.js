@@ -28,6 +28,7 @@ class HutangReport extends Component{
         this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
+        this.handlePaymentSlip = this.handlePaymentSlip.bind(this);
         this.state={
             detail:{},
             where_data:"",
@@ -44,8 +45,8 @@ class HutangReport extends Component{
             status_data:[],
             search_by:"no_faktur_beli",
             search_by_data:[
-                {value: "no_faktur_beli", label:'Kode Trx'},
-                {value: "nama", label:'Customer'},
+                {value: "no_faktur_beli", label:'No.Faktur'},
+                {value: "supplier", label:'Supplier'},
             ],
         }
     }
@@ -279,7 +280,6 @@ class HutangReport extends Component{
     handleChange(event){
         this.setState({ [event.target.name]: event.target.value });
     }
-
     HandleChangeSort(sr) {
         this.setState({
             sort: sr.value,
@@ -306,7 +306,17 @@ class HutangReport extends Component{
         this.props.dispatch(ModalType("formHutangExcel"));
         this.props.dispatch(FetchHutangReportExcel(this.state.where_data,total));
     }
+    handlePaymentSlip(e,img){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Bukti Transfer',
+            imageUrl: img,
+            imageAlt: 'image not available',
+            showClass   : {popup: 'animate__animated animate__fadeInDown'},
+            hideClass   : {popup: 'animate__animated animate__fadeOutUp'},
+        })
 
+    }
     render(){
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left"};
@@ -320,7 +330,8 @@ class HutangReport extends Component{
             data,
             // total
         } = this.props.hutangReport;
-        
+        let totPerpage=0;
+
         return (
             <Layout page="Laporan Hutang">
                 <div className="col-12 box-margin">
@@ -356,60 +367,7 @@ class HutangReport extends Component{
                                         />
                                     </div>
                                 </div>
-                                {/*<div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Status
-                                        </label>
-                                        <Select
-                                            options={this.state.status_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeStatus}
-                                            value={
-                                                this.state.status_data.find(op => {
-                                                    return op.value === this.state.status
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2"></div>
-                                <div className="col-6 col-xs-6 col-md-2"></div> */}
-                                {/* <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Filter
-                                        </label>
-                                        <Select
-                                            options={this.state.filter_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeFilter}
-                                            value={
-                                                this.state.filter_data.find(op => {
-                                                    return op.value === this.state.filter
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6 col-xs-6 col-md-2">
-                                    <div className="form-group">
-                                        <label className="control-label font-12">
-                                            Sort
-                                        </label>
-                                        <Select
-                                            options={this.state.sort_data}
-                                            // placeholder="Pilih Tipe Kas"
-                                            onChange={this.HandleChangeSort}
-                                            value={
-                                                this.state.sort_data.find(op => {
-                                                    return op.value === this.state.sort
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div> */}
+
                                 <div className="col-6 col-xs-6 col-md-2">
                                     <div className="form-group">
                                         <label htmlFor="exampleFormControlSelect1">Search By</label>
@@ -438,7 +396,7 @@ class HutangReport extends Component{
                                             <i className="fa fa-search"/>
                                         </button>
                                         <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.toggleModal(e,(last_page*per_page),per_page))}>
-                                            <i className="fa fa-print"></i> Export
+                                            <i className="fa fa-print"/> Export
                                         </button>
                                     </div>
 
@@ -449,14 +407,36 @@ class HutangReport extends Component{
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Kode trx</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nama Toko</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Supplier</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Nilai Pembelian</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Status</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tempo</th>
-                                        <th className="text-black" style={ centerStyle} rowSpan="2">Tgl Transaksi</th>
+                                        {/*bulat: "0"*/}
+                                        {/*cara_byr: "Tunai"*/}
+                                        {/*fak_beli: "BL-2103170004-2"*/}
+                                        {/*jumlah: "19842"*/}
+                                        {/*kasir: "1"*/}
+                                        {/*ket: "-"*/}
+                                        {/*nama: "MAWAR"*/}
+                                        {/*nm_bank: "-"*/}
+                                        {/*no_nota: "BH-2103170004-9"*/}
+                                        {/*nogiro: "0"*/}
+                                        {/*nonota: "sadsadsa"*/}
+                                        {/*payment_slip: "http://ptnetindo.com:6692/images/default.png "*/}
+                                        {/*tgl_byr: "2021-03-16T17:00:00.000Z"*/}
+                                        {/*tgl_cair_giro: "2021-03-16T17:00:00.000Z"*/}
+                                        {/*tgl_jatuh_tempo: "2021-03-16T17:00:00.000Z"*/}
+                                        {/*totalrecords: "13"*/}
+                                        <th className="text-black" style={centerStyle} rowspan={2}>No</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>#</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>No.Faktur Beli</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>No.Nota</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Supplier</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Bank</th>
+                                        <th className="text-black" style={centerStyle} rowspan={2}>Jumlah</th>
+                                        <th className="text-black" style={centerStyle} colspan={2}>Tanggal</th>
+
+                                    </tr>
+                                    <tr>
+                                        <th className="text-black" style={centerStyle}>Bayar</th>
+                                        {/*<th className="text-black" style={centerStyle}>Cair Giro</th>*/}
+                                        <th className="text-black" style={centerStyle}>Jatuh Tempo</th>
                                     </tr>
                                     </thead>
                                     {
@@ -466,29 +446,21 @@ class HutangReport extends Component{
                                                 (
                                                     typeof data === 'object' ? data.length>0?
                                                         data.map((v,i)=>{
+                                                            totPerpage=totPerpage+parseInt(v.jumlah,10);
+
                                                             return(
                                                                 <tr key={i}>
+                                                                    <td style={ centerStyle}>{i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={ centerStyle}>
-                                                                        <div className="btn-group">
-                                                                            <UncontrolledButtonDropdown>
-                                                                                <DropdownToggle caret>
-                                                                                    Aksi
-                                                                                </DropdownToggle>
-                                                                                <DropdownMenu>
-                                                                                    <DropdownItem onClick={(e)=>this.handleDetail(e,v.no_faktur_beli,v.nama_toko,v.supplier,v.nilai_pembelian,v.status,v.tgl_jatuh_tempo)}>Detail Pembayaran</DropdownItem>
-                                                                                    {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.no_faktur_beli)}>Delete</DropdownItem> */}
-                                                                                    {/* <Link to={`../bayar_hutang3ply/${v.no_nota}`}><DropdownItem>3ply</DropdownItem></Link> */}
-                                                                                </DropdownMenu>
-                                                                            </UncontrolledButtonDropdown>
-                                                                        </div>
+                                                                        <button className="btn btn-primary" onClick={(e)=>this.handlePaymentSlip(e,v.payment_slip)}><i className="fa fa-eye"/></button>
                                                                     </td>
-                                                                    <td style={ leftStyle}>{v.no_faktur_beli}</td>
-                                                                    <td style={ leftStyle}>{v.nama_toko}</td>
-                                                                    <td style={ leftStyle}>{v.supplier}</td>
-                                                                    <td style={ rightStyle}>{toRp(parseInt(v.nilai_pembelian,10))}</td>
-                                                                    <td style={ centerStyle}>{statusQ(v.status==='LUNAS'?'success':'danger',v.status)}</td>
-                                                                    <td style={ centerStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
-                                                                    <td style={ centerStyle}>{moment(v.tgl_beli).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ leftStyle}>{v.fak_beli}</td>
+                                                                    <td style={ leftStyle}>{v.no_nota}</td>
+                                                                    <td style={ leftStyle}>{v.nama}</td>
+                                                                    <td style={ leftStyle}>{v.nm_bank}</td>
+                                                                    <td style={ rightStyle}>{toRp(parseInt(v.jumlah,10))}</td>
+                                                                    <td style={ leftStyle}>{moment(v.tgl_byr).format('YYYY-MM-DD')}</td>
+                                                                    <td style={ leftStyle}>{moment(v.tgl_jatuh_tempo).format('YYYY-MM-DD')}</td>
 
                                                                 </tr>
                                                             )
@@ -499,6 +471,13 @@ class HutangReport extends Component{
                                             </tbody>
                                         ):<Preloader/>
                                     }
+                                    <tfoot>
+                                    <tr style={{backgroundColor:"#EEEEEE"}}>
+                                        <th colspan={6}>TOTAL PERHALAMAN</th>
+                                        <th style={rightStyle}>{toRp(totPerpage)}</th>
+                                        <th colspan={2}/>
+                                    </tr>
+                                    </tfoot>
                                 </table>
 
                             </div>
