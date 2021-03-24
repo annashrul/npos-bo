@@ -14,6 +14,7 @@ import Preloader from "Preloader";
 import {HEADERS} from "redux/actions/_constants";
 import Paginationq from "helper";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+import { toRp } from '../../../../../helper';
 
 class InventoryReport extends Component{
     constructor(props){
@@ -222,6 +223,7 @@ class InventoryReport extends Component{
         let total_stock_in_per=0;
         let total_stock_out_per=0;
         let total_stock_penjualan_per=0;
+        let get_lokasi=true;
         return (
             <Layout page="Laporan Stock">
                 <div className="col-12">
@@ -332,6 +334,8 @@ class InventoryReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Sub Dept</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kelompok</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">DN</th>
+                                        <th className={`text-black ${this.state.location===""?'d-none':''}`} style={columnStyle} rowSpan="2">Harga Lokasi</th>
+                                        <th className={`text-black ${this.state.location===""?'d-none':''}`} style={columnStyle} rowSpan="2">Harga Beli Lokasi</th>
                                         <th className="text-black" style={columnStyle} colSpan="5">Stok</th>
                                     </tr>
                                     <tr>
@@ -358,7 +362,7 @@ class InventoryReport extends Component{
                                                             total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk,10);
                                                             total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar,10);
                                                             total_stock_penjualan_per = total_stock_penjualan_per+parseInt(v.stock_penjualan,10);
-                                                            
+                                                            get_lokasi = v.lokasi==='-';
                                                             return(
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
@@ -383,6 +387,8 @@ class InventoryReport extends Component{
                                                                     <td style={columnStyle}>{v.sub_dept}</td>
                                                                     <td style={columnStyle}>{v.nama_kel}</td>
                                                                     <td style={{textAlign:"right"}}>{v.delivery_note}</td>
+                                                                    <td className={`${this.state.location===""?'d-none':''}`} style={{textAlign:"right"}}>{get_lokasi?0:toRp(v.harga_lokasi)}</td>
+                                                                    <td className={`${this.state.location===""?'d-none':''}`} style={{textAlign:"right"}}>{get_lokasi?0:toRp(v.harga_beli_lokasi)}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_awal}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
@@ -402,6 +408,8 @@ class InventoryReport extends Component{
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
                                         <th colSpan="9">TOTAL PERPAGE</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_dn_per}</th>
+                                        <th className={`${this.state.location===""?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{''}</th>
+                                        <th className={`${this.state.location===""?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{''}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
@@ -411,6 +419,8 @@ class InventoryReport extends Component{
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
                                         <th colSpan="9">TOTAL</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_dn!==undefined?total_dn:'0'}</th>
+                                        <th className={`${this.state.location===""?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{''}</th>
+                                        <th className={`${this.state.location===""?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{''}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_keluar===undefined?0:total_stock_keluar}</th>
