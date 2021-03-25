@@ -648,11 +648,6 @@ class FormProduct extends Component{
         }
 
         if(event.target.id==='barcode1'){
-            if(val===this.state.kd_brg){
-                alert('barcode 1 tidak boleh sama dengan kode barang');
-                barangSku[0].barcode='0';
-            }
-
             const data = this.fetchData({
                 table: 'barang_sku',
                 kolom: 'barcode',
@@ -673,10 +668,6 @@ class FormProduct extends Component{
             });
         }
         if(event.target.id==='barcode2'){
-            if(val===this.state.kd_brg){
-                alert('barcode 2 tidak boleh sama dengan kode barang');
-                barangSku[1].barcode='0';
-            }
             const data = this.fetchData({
                 table: 'barang_sku',
                 kolom: 'barcode',
@@ -697,10 +688,6 @@ class FormProduct extends Component{
             });
         }
         if(event.target.id==='barcode3'){
-            if(val===this.state.kd_brg){
-                alert('barcode 3 tidak boleh sama dengan kode barang');
-                barangSku[2].barcode='0';
-            }
             const data = this.fetchData({
                 table: 'barang_sku',
                 kolom: 'barcode',
@@ -1205,7 +1192,7 @@ class FormProduct extends Component{
             if(event.target.value === '0'){
                 let brgSku = [];
                 for(let i=0;i<3;i++){
-                    let brcd    = i===0?`${this.state.kd_brg}01`:(i===1?`${this.state.kd_brg}02`:`${this.state.kd_brg}03`);
+                    let brcd    = i===0?`${this.state.kd_brg}`:(i===1?`${this.state.kd_brg}02`:`${this.state.kd_brg}03`);
                     let satuan  = (i===0)?"Pcs":(i===1?"Pack":"Karton");
                     brgSku.push({"barcode":brcd,"qty":satuan,"konversi":"0","satuan_jual":"1"})
                 }
@@ -1214,7 +1201,7 @@ class FormProduct extends Component{
             else if(event.target.value === '2'){
                 let brgSku = [];
                 for(let i=0;i<2;i++){
-                    let brcd=i===0?`${this.state.kd_brg}01`:(i===1?`${this.state.kd_brg}02`:'');
+                    let brcd=i===0?`${this.state.kd_brg}`:(i===1?`${this.state.kd_brg}02`:'');
                     brgSku.push({"barcode":brcd,"qty":"","konversi":"0","satuan_jual":"1"})
                 }
                 this.setState({barangSku: brgSku});
@@ -1223,7 +1210,7 @@ class FormProduct extends Component{
                 let brgSku = [];
                 for(let i=0;i<1;i++){
                     let satuan=val==='1'?'':(val==='1'?'Pcs':'Pack');
-                    brgSku.push({"barcode":`${this.state.kd_brg}01`,"qty":satuan,"konversi":"0","satuan_jual":"1"})
+                    brgSku.push({"barcode":`${this.state.kd_brg}`,"qty":satuan,"konversi":"0","satuan_jual":"1"})
                 }
                 this.setState({barangSku: brgSku});
             }
