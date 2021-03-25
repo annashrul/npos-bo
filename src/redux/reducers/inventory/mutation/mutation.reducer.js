@@ -3,7 +3,9 @@ import {
 } from "../../../actions/_constants";
 
 const initialState = {
+    isLoadingApprove: false,
     isLoadingApproval: false,
+    isLoadingApprovalDetail: false,
     dataApproval: [],
     report: [],
     report_excel: [],
@@ -48,6 +50,14 @@ export const mutationReducer = (state = initialState, action) => {
         case MUTATION.APPROVAL_MUTATION_LOADING:
             return Object.assign({}, state, {
                 isLoadingApproval: action.load
+            });
+        case MUTATION.APPROVAL_MUTATION_LOADING_DETAIL:
+            return Object.assign({}, state, {
+                isLoadingApprovalDetail: action.load
+            });
+        case MUTATION.APPROVAL_MUTATION_SAVE:
+            return Object.assign({}, state, {
+                isLoadingApprove: action.load
             });
         default:
             return state
