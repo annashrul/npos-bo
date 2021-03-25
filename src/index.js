@@ -10,8 +10,8 @@ import 'sweetalert2/src/sweetalert2.scss'
 import store from './redux/store';
 
 ReactDOM.render(
-    <Provider store={store}>
+    (<Provider store={store}>
        <App />
-    </Provider>, 
+    </Provider>), 
     document.getElementById('root'));
 registerServiceWorker();
