@@ -8,6 +8,7 @@ import {
     saveApprovalMutation} from "../../../../../redux/actions/inventory/mutation.action";
 import Swal from 'sweetalert2';
 import { withRouter } from 'react-router-dom';
+import Spinner from 'Spinner';
 
 class FormApprovalMutation extends Component{
     constructor(props){
@@ -184,6 +185,7 @@ class FormApprovalMutation extends Component{
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formApprovalMutation"} size="lg" className="custom-map-modal">
                 <ModalHeader toggle={this.toggle}><p>{localStorage.getItem("kd_trx_mutasi")} <br/> <small style={{color:"red"}}>( Enter Atau Klik Button Approval Untuk Menyimpan Data )</small> </p></ModalHeader>
                 <ModalBody style={{height:'100vh'}}>
+                    {this.props.isLoadingApprovalDetail?<Spinner/> :
                     <table className="table table-hover">
                         <thead>
                         <tr>
@@ -237,9 +239,10 @@ class FormApprovalMutation extends Component{
                         }
                         </tbody>
                     </table>
+                    }
                 </ModalBody>
                 <ModalFooter>
-                <button onClick={(e)=>this.handleApproveAll(e)} className="btn btn-primary float-right">Approve Checked</button>
+                <button onClick={(e)=>this.handleApproveAll(e)} className="btn btn-primary float-right" disabled={this.props.isLoadingApprove}>{this.props.isLoadingApprove?<span className="spinner-border spinner-border-sm mr-2"></span> :''}Approve Checked</button>
                 </ModalFooter>
             </WrapperModal>
         );
@@ -251,6 +254,8 @@ const mapStateToProps = (state) => {
     return {
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
+        isLoadingApprovalDetail: state.mutationReducer.isLoadingApprovalDetail,
+        isLoadingApprove: state.mutationReducer.isLoadingApprove,
     }
 }
 // const mapDispatch

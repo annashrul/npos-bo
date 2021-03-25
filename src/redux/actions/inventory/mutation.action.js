@@ -6,9 +6,21 @@ import axios from "axios"
 import Swal from 'sweetalert2'
 import {setLoading} from "../masterdata/customer/customer.action";
 
+export function setLoadingApprove(load) {
+    return {
+        type: MUTATION.APPROVAL_MUTATION_SAVE,
+        load
+    }
+}
 export function setLoadingApprovalMutation(load) {
     return {
         type: MUTATION.APPROVAL_MUTATION_LOADING,
+        load
+    }
+}
+export function setLoadingApprovalMutationDetail(load) {
+    return {
+        type: MUTATION.APPROVAL_MUTATION_LOADING_DETAIL,
         load
     }
 }
@@ -150,17 +162,21 @@ export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
 
 export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
     return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
+        dispatch(setLoadingApprovalMutationDetail(true));
         let url=`mutasi/${kd_trx}/?perpage=${page}`;
         axios.get(HEADERS.URL + url)
             .then(function (response) {
                 const data = response.data;
                 dispatch(setApprovalMutationDetail(data));
-                dispatch(setLoadingApprovalMutation(false));
+                dispatch(setLoadingApprovalMutationDetail(false));
             })
             .catch(function (error) {
                 // handle error
-                
+                Swal.fire({
+                    title: 'failed',
+                    type: 'error',
+                    text: 'Gagal mengambil data.\n'+JSON.stringify(error),
+                });
             })
 
     }
@@ -169,7 +185,7 @@ export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
 export const saveApprovalMutation = (data,param) => {
     return (dispatch) => {
         // let rawdata = data;
-        // dispatch(setLoading(true))
+        dispatch(setLoadingApprove(true))
         Swal.fire({
             allowOutsideClick:false,
             title: 'Silahkan tunggu.',
@@ -235,11 +251,12 @@ export const saveApprovalMutation = (data,param) => {
                             win.focus();
                         }
                 });
+                dispatch(setLoadingApprove(false));
                 dispatch(setLoading(false));
-                // dispatch(setLoading(false));
             })
             .catch(function (error) {
                 // dispatch(setLoading(false));
+                dispatch(setLoadingApprove(false));
                 Swal.fire({
                     title: 'failed',
                     type: 'error',
