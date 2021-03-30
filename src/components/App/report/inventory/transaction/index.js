@@ -15,6 +15,8 @@ import Preloader from "Preloader";
 import {statusQ,toRp} from "helper";
 import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { DeleteTransaction } from '../../../../../redux/actions/inventory/transaction.action';
 class TransactionReport extends Component{
     constructor(props){
         super(props);
@@ -239,6 +241,26 @@ class TransactionReport extends Component{
         e.preventDefault();
         this.props.dispatch(rePrintFaktur(id));
     }
+    
+    HandleRemove(e, id){
+        e.preventDefault()
+        Swal.fire({allowOutsideClick: false,
+            title: 'Are you sure?',
+            text: "You won't be able to revert this! ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                // del(table,id);
+                // this.getData()
+                this.props.dispatch(DeleteTransaction(id));
+            }
+        })
+    }
+
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",};
         const {
@@ -375,6 +397,7 @@ class TransactionReport extends Component{
                                                                                     {v.status==='0'?<Link to={`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`}><DropdownItem>Edit</DropdownItem></Link>:''}
                                                                                     <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`} target="_blank"><DropdownItem>3ply</DropdownItem></Link>
                                                                                     <DropdownItem onClick={(e)=>this.handleRePrint(e,v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
+                                                                                    <DropdownItem onClick={(e)=>this.HandleRemove(e,v.no_faktur_mutasi)}>Delete</DropdownItem>
                                                                                 </DropdownMenu>
                                                                                 </UncontrolledButtonDropdown>
                                                                         </div>

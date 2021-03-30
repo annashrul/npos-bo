@@ -168,6 +168,44 @@ export const FetchTransactionExcel = (page=1,where='',perpage=99999)=>{
         })
     }
 }
+export const DeleteTransaction = (id)=>{
+    return (dispatch) => {
+        Swal.fire({
+            allowOutsideClick:false,
+            title: 'Silahkan tunggu.',
+            html: 'Sedang menghapus data..',
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+            onClose: () => {}
+        })
+        let url=`alokasi/${id}`;
+        axios.delete(HEADERS.URL+url)
+            .then(function(response){
+                const data = response.data;
+                Swal.close()
+                if (data.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.msg
+                    })
+                } else {
+                    Swal.fire({allowOutsideClick: false,
+                        title: 'failed',
+                        type: 'error',
+                        text: data.msg,
+                    });
+                }
+                dispatch(FetchTransaction(1));
+            }).catch(function(error){
+                Swal.fire({allowOutsideClick: false,
+                    title: 'failed',
+                    type: 'error',
+                    text: JSON.stringify(error),
+                });
+        })
+    }
+}
 export const FetchTransactionData = (page=1,code,dateFrom='',dateTo='',location='')=>{
     return (dispatch) => {
         dispatch(setLoading(true));
