@@ -173,6 +173,8 @@ class Receive extends Component{
                     catatan:res.master.catatan,
                     supplier:res.master.kode_supplier,
                     no_faktur_beli:this.props.match.params.slug,
+                    tanggal:moment(res.master.tgl_beli).format('YYYY-MM-DD'),
+                    tanggal_tempo:moment(res.master.tgl_jatuh_tempo).format('YYYY-MM-DD'),
                     penerima:res.master.nama_penerima,
                     notasupplier:res.master.nonota,
                     jenis_trx:res.master.type,
