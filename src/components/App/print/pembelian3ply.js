@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Layout from './layout';
 import {toRp} from 'helper';
 import { rmComma } from '../../../helper';
+import { CONFIG_HIDE } from '../../../redux/actions/_constants';
 
 export default class Print3ply extends Component {
       constructor(props) {
@@ -103,12 +104,16 @@ export default class Print3ply extends Component {
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Nama barang</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Barcode</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Satuan</td>
+                            {data.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Harga Beli</td>
+                            :''}
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Diskon</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">PPN %</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">QTY</td>
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Bonus</td>
+                            {data.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                             <td style={{borderBottom: '', borderWidth: 'thin', paddingLeft: '5pt', fontSize: '10pt !important'}} className="text-center">Subtotal</td>
+                            :''}
                         </tr>
                         </thead>
                         <tbody>
@@ -135,18 +140,23 @@ export default class Print3ply extends Component {
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.nm_brg}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.barcode}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-left">{item.satuan}</td>
+                                        {data.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(rmComma(item.harga_beli))}</td>
+                                        :''}
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.diskon}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.ppn}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty}</td>
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{item.qty_bonus}</td>
+                                        {data.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                         <td style={{border: 'solid', borderWidth: 'thin', paddingLeft: '5pt'}} className="text-right">{toRp(((parseInt(rmComma(item.harga_beli),10)-disc2)+ppn)*parseFloat(item.qty))}</td>
+                                        :''}
 
                                     </tr>
                                 )
                             })
                         }
                         </tbody>
+                        {data.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                         <tfoot>
                         <tr>
                             <td style={{borderTop: '', borderWidth: 'thin'}} colSpan={7}></td>
@@ -170,6 +180,7 @@ export default class Print3ply extends Component {
                             <td style={{borderTop: '', borderWidth: 'thin'}} className="text-right">{toRp((data.sub_total - (data.sub_total * (parseFloat(data.discount_persen) / 100))) + (data.sub_total * (parseFloat(data.ppn) / 100)))}</td>
                         </tr>
                         </tfoot>
+                        :''}
                     </table>
                     <table width="100%" style={{letterSpacing: 5, fontFamily: '"Courier New"', fontSize: '20pt'}}>
                         <thead>

@@ -224,11 +224,13 @@ class InventoryReport extends Component{
     render(){
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         const {per_page,last_page,current_page,data,total} = this.props.stockReport;
-        const {total_harga_beli,total_harga_jual,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir,total_stock_penjualan} = this.props.total_stock;
+        const {total_harga_beli,total_harga_jual,total_harga_beli_qty,total_harga_jual_qty,total_stock_awal,total_stock_masuk,total_stock_keluar,total_stock_akhir,total_stock_penjualan} = this.props.total_stock;
 
         let total_dn_per=0;
         let total_jual_per = 0;
         let total_beli_per = 0;
+        let total_jual_qty_per = 0;
+        let total_beli_qty_per = 0;
         let total_first_stock_per=0;
         let total_last_stock_per=0;
         let total_stock_in_per=0;
@@ -345,7 +347,9 @@ class InventoryReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Sub Dept</th>
                                         <th className="text-black" style={columnStyle} rowSpan="2">Kelompok</th>
                                         <th className={`text-black ${!this.state.bukaHarga?'d-none':''}`} style={columnStyle} rowSpan="2">Harga Beli</th>
+                                        <th className={`text-black ${!this.state.bukaHarga?'d-none':''}`} style={columnStyle} rowSpan="2">Total Harga Beli</th>
                                         <th className={`text-black ${!this.state.bukaHarga?'d-none':''}`} style={columnStyle} rowSpan="2">Harga</th>
+                                        <th className={`text-black ${!this.state.bukaHarga?'d-none':''}`} style={columnStyle} rowSpan="2">Total Harga</th>
                                         <th className="text-black" style={columnStyle} colSpan="5">Stok</th>
                                     </tr>
                                     <tr>
@@ -373,6 +377,8 @@ class InventoryReport extends Component{
                                                             total_stock_out_per = total_stock_out_per+parseFloat(v.stock_keluar,10);
                                                             total_jual_per += parseInt(v.harga_lokasi)
                                                             total_beli_per += parseInt(v.harga_beli_lokasi)
+                                                            total_jual_qty_per += parseInt(v.harga_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))
+                                                            total_beli_qty_per += parseInt(v.harga_beli_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))
                                                             total_stock_penjualan_per = total_stock_penjualan_per+parseFloat(v.stock_penjualan,10);
                                                             get_lokasi = v.lokasi==='-';
                                                             return(
@@ -400,7 +406,9 @@ class InventoryReport extends Component{
                                                                     <td style={columnStyle}>{v.nama_kel}</td>
                                                                     {/* <td style={{textAlign:"right"}}>{v.delivery_note}</td> */}
                                                                     <td className={`${!this.state.bukaHarga?'d-none':''}`} style={{textAlign:"right"}}>{get_lokasi?0:toRp(v.harga_beli_lokasi)}</td>
+                                                                    <td className={`${!this.state.bukaHarga?'d-none':''}`} style={{textAlign:"right"}}>{get_lokasi?0:toRp(v.harga_beli_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))}</td>
                                                                     <td className={`${!this.state.bukaHarga?'d-none':''}`} style={{textAlign:"right"}}>{get_lokasi?0:toRp(v.harga_lokasi)}</td>
+                                                                    <td className={`${!this.state.bukaHarga?'d-none':''}`} style={{textAlign:"right"}}>{get_lokasi?0:toRp(v.harga_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_awal}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
                                                                     <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
@@ -420,8 +428,10 @@ class InventoryReport extends Component{
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
                                         <th colSpan="9">TOTAL PERPAGE</th>
                                         {/* <th colSpan="1" style={{textAlign:"right"}}>{total_dn_per}</th> */}
-                                        <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_jual_per)}</th>
                                         <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_beli_per)}</th>
+                                        <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_beli_qty_per)}</th>
+                                        <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_jual_per)}</th>
+                                        <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_jual_qty_per)}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_first_stock_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_in_per}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_out_per}</th>
@@ -432,7 +442,9 @@ class InventoryReport extends Component{
                                         <th colSpan="9">TOTAL</th>
                                         {/* <th colSpan="1" style={{textAlign:"right"}}>{total_dn!==undefined?total_dn:'0'}</th> */}
                                         <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_harga_beli)}</th>
+                                        <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_harga_beli_qty===undefined?0:total_harga_beli_qty)}</th>
                                         <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_harga_jual)}</th>
+                                        <th className={`${!this.state.bukaHarga?'d-none':''}`} colSpan="1" style={{textAlign:"right"}}>{toRp(total_harga_jual_qty===undefined?0:total_harga_jual_qty)}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_awal===undefined?0:total_stock_awal}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_masuk===undefined?0:total_stock_masuk}</th>
                                         <th colSpan="1" style={{textAlign:"right"}}>{total_stock_keluar===undefined?0:total_stock_keluar}</th>

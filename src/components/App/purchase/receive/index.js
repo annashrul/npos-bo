@@ -12,7 +12,7 @@ import Swal from 'sweetalert2'
 import moment from 'moment';
 import {updateReceive} from "redux/actions/purchase/receive/receive.action";
 import axios from "axios";
-import {HEADERS} from "redux/actions/_constants";
+import {HEADERS, CONFIG_HIDE} from "redux/actions/_constants";
 import {withRouter} from "react-router-dom"
 import StickyBox from "react-sticky-box";
 import {toRp,ToastQ} from "helper";
@@ -869,7 +869,8 @@ class Receive extends Component{
                                 ppn_harga: this.state.ppn_harga,
                                 lokasi_beli: this.state.location,
                                 userid: this.state.userid,
-                                detail: detail
+                                detail: detail,
+                                lvl: this.props.auth.user.lvl,
                             };
                             let parsedata = {};
                             parsedata['detail'] = data_final;
@@ -1438,8 +1439,13 @@ class Receive extends Component{
                                                 <th style={columnStyle}>Nama barang</th>
                                                 <th style={columnStyle}>barcode</th>
                                                 <th style={columnStyle}>satuan</th>
-                                                <th style={columnStyle}>harga beli</th>
                                                 {
+                                                    this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
+                                                        <th style={columnStyle}>harga beli</th>
+                                                    :''
+                                                }
+
+                                                {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                                     (()=>{
                                                         let container =[];
                                                         for(let x=0; x<this.state.set_harga; x++){
@@ -1449,13 +1455,15 @@ class Receive extends Component{
                                                         }
                                                         return container;
                                                     })()
-                                                }
+                                                :''}
                                                 <th style={columnStyle}>diskon</th>
                                                 <th style={columnStyle}>ppn</th>
                                                 <th style={columnStyle}>stock</th>
                                                 <th style={columnStyle}>qty</th>
                                                 <th style={columnStyle}>bonus</th>
+                                                {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                                 <th style={columnStyle}>Subtotal</th>
+                                                :''}
                                             </tr>
                                             </thead>
 
@@ -1492,47 +1500,52 @@ class Receive extends Component{
                                                                     }
                                                                 </select>
                                                             </td>
-                                                            <td style={columnStyle}>
-                                                                <input
-                                                                style={{width:"100px",textAlign:"right"}}
-                                                                className="form-control"
-                                                                type='text'
-                                                                name='harga_beli'
-                                                                onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
-                                                                onChange={(e)=>this.HandleChangeInputValue(e,index)}
-                                                                value={
-                                                                        this.state.brgval[index].harga_beli
-                                                                    }
-                                                                />
-                                                            </td>
+                                                            
+                                                            {
+                                                                this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
+                                                                    <td style={columnStyle}>
+                                                                        <input
+                                                                        style={{width:"100px",textAlign:"right"}}
+                                                                        className="form-control"
+                                                                        type='text'
+                                                                        name='harga_beli'
+                                                                        onBlur={(e)=>this.HandleChangeInput(e,item.barcode)}
+                                                                        onChange={(e)=>this.HandleChangeInputValue(e,index)}
+                                                                        value={
+                                                                                this.state.brgval[index].harga_beli
+                                                                            }
+                                                                        />
+                                                                    </td>
+                                                                :''
+                                                            }
 
-                                                           
+                                                            {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga)}/>
                                                             </td>
-                                                             {
+                                                            :''}
+                                                            {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                                                 parseInt(this.state.set_harga,10)>=2?(
                                                                     <td style={columnStyle}>
                                                                         <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga2' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga2)}/>
                                                                     </td>
                                                                 ):""
-                                                            }
-                                                            {
+                                                            :''}
+                                                            {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
 
                                                                 parseInt(this.state.set_harga,10)>=3?(
                                                                     <td style={columnStyle}>
                                                                         <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga3' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga3)}/>
                                                                     </td>
                                                                 ):""
-                                                            }
-                                                            {
+                                                            :''}
+                                                            {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                                                 parseInt(this.state.set_harga,10)===4?(
                                                                     <td style={columnStyle}>
                                                                         <input style={{width:"100px",textAlign:"right"}} className="form-control" type='text' name='harga4' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}   value={toCurrency(this.state.brgval[index].harga4)}/>
                                                                     </td>
                                                                 ):""
-                                                            }
-                                                           
+                                                            :''}
 
                                                             <td style={columnStyle}><input style={{width:"70px",textAlign:"right"}} className="form-control" type='text' name='diskon' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)} value={this.state.brgval[index].diskon}/></td>
                                                             <td style={columnStyle}>
@@ -1562,9 +1575,12 @@ class Receive extends Component{
                                                                 />
                                                             </td>
                                                             <td style={columnStyle}><input style={{width:"80px",textAlign:"right"}} className="form-control" type='text' name='qty_bonus' onBlur={(e)=>this.HandleChangeInput(e,item.barcode)} onChange={(e)=>this.HandleChangeInputValue(e,index)}  value={this.state.brgval[index].qty_bonus}/></td>
+                                                            {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                                             <td style={columnStyle}>
                                                                 <input style={{width:"100px",textAlign:"right"}} readOnly type="text" className="form-control" value={toRp(subtotal_perrow)}/>
                                                             </td>
+                                                            :''}
+
                                                         </tr>
                                                     )
                                                 })
@@ -1583,6 +1599,7 @@ class Receive extends Component{
                                                 <a href="about:blank" onClick={(e)=>this.HandleReset(e)} className="btn btn-danger ml-1">Reset</a>
                                             </div>
                                         </div>
+                                        {this.props.auth.user.lvl!==CONFIG_HIDE.HIDE_HRG_BELI?
                                         <div className="col-md-5">
                                             <div className="pull-right">
                                                 <form className="form_head">
@@ -1621,6 +1638,7 @@ class Receive extends Component{
                                                 </form>
                                             </div>
                                         </div>
+                                        :''}
 
                                     </div>
                                 </div>

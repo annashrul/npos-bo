@@ -21,6 +21,10 @@ export const HEADERS ={
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO"
 }
 
+export const CONFIG_HIDE = {
+    HIDE_HRG_BELI: "admin-cabang"
+}
+
 /****************
       PASSWORD MODAL ADD LOCATION
 *****************/
