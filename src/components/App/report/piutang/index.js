@@ -17,6 +17,7 @@ import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle 
 // import { Link } from 'react-router-dom';
 import { statusQ, toRp } from '../../../../helper';
 import DetailPiutang from '../../modals/piutang/detail_piutang_report'
+import OtorisasiModal from '../../modals/otorisasi.modal';
 class PiutangReport extends Component{
     constructor(props){
         super(props);
@@ -29,8 +30,10 @@ class PiutangReport extends Component{
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
         this.handlePaymentSlip = this.handlePaymentSlip.bind(this);
+        this.onDone = this.onDone.bind(this);
         this.state={
             detail:{},
+            id_trx:"",
             where_data:"",
             any:"",
             location:"",
@@ -137,6 +140,7 @@ class PiutangReport extends Component{
     }
     handleDelete(e,kode){
         e.preventDefault();
+        this.setState({id_trx:kode})
         Swal.fire({allowOutsideClick: false,
             title: 'Peringatan',
             text: "Hapus data ini?",
@@ -149,7 +153,9 @@ class PiutangReport extends Component{
         }).then((result) => {
             if (result.value) {
                 
-                this.props.dispatch(DeletePiutangReport(kode));
+                const bool = !this.props.isOpen;
+                this.props.dispatch(ModalToggle(bool));
+                this.props.dispatch(ModalType("modalOtorisasi"));
             }
         })
     }
@@ -312,6 +318,13 @@ class PiutangReport extends Component{
         })
 
     }
+    onDone(id,id_trx){
+        this.props.dispatch(DeletePiutangReport(id_trx));
+        // this.props.dispatch(deleteReportSale(id, id_trx));
+        this.setState({
+            id_trx:''
+        })
+    }
 
     render(){
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
@@ -431,6 +444,7 @@ class PiutangReport extends Component{
                                                                     <td style={ centerStyle}>{i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={ centerStyle}>
                                                                         <button className="btn btn-primary" onClick={(e)=>this.handlePaymentSlip(e,v.payment_slip)}><i className="fa fa-eye"/></button>
+                                                                        <button className="btn btn-danger ml-2" onClick={(e)=>this.handleDelete(e,v.fak_jual)}><i className="fa fa-trash"/></button>
                                                                     </td>
                                                                     <td style={ leftStyle}>{v.fak_jual}</td>
                                                                     <td style={ leftStyle}>{v.no_nota}</td>
@@ -477,6 +491,7 @@ class PiutangReport extends Component{
                         </div>
                     </div>
                 </div>
+                <OtorisasiModal datum={{module:'report piutang',aksi:'delete',id_trx:this.state.id_trx}}  onDone={this.onDone} />
             </Layout>
             );
     }

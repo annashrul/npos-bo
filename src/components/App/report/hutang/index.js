@@ -17,6 +17,7 @@ import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle 
 // import { Link } from 'react-router-dom';
 import { statusQ, toRp } from '../../../../helper';
 import DetailHutang from '../../modals/hutang/detail_hutang_report'
+import OtorisasiModal from '../../modals/otorisasi.modal';
 class HutangReport extends Component{
     constructor(props){
         super(props);
@@ -29,9 +30,11 @@ class HutangReport extends Component{
         this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
         this.HandleChangeSearchBy = this.HandleChangeSearchBy.bind(this);
         this.handlePaymentSlip = this.handlePaymentSlip.bind(this);
+        this.onDone = this.onDone.bind(this);
         this.state={
             detail:{},
-            where_data:"",
+            id_trx:"", 
+            where_data:"", 
             any:"",
             location:"",
             location_data:[],
@@ -143,6 +146,7 @@ class HutangReport extends Component{
     }
     handleDelete(e,kode){
         e.preventDefault();
+        this.setState({id_trx:kode})
         Swal.fire({allowOutsideClick: false,
             title: 'Peringatan',
             text: "Hapus data ini?",
@@ -154,8 +158,10 @@ class HutangReport extends Component{
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.value) {
-                
-                this.props.dispatch(DeleteHutangReport(kode));
+                const bool = !this.props.isOpen;
+                this.props.dispatch(ModalToggle(bool));
+                this.props.dispatch(ModalType("modalOtorisasi"));
+
             }
         })
     }
@@ -317,6 +323,13 @@ class HutangReport extends Component{
         })
 
     }
+    onDone(id,id_trx){
+        this.props.dispatch(DeleteHutangReport(id_trx));
+        // this.props.dispatch(deleteReportSale(id, id_trx));
+        this.setState({
+            id_trx:''
+        })
+    }
     render(){
         const centerStyle = {verticalAlign: "middle", textAlign: "center"};
         const leftStyle = {verticalAlign: "middle", textAlign: "left"};
@@ -453,6 +466,7 @@ class HutangReport extends Component{
                                                                     <td style={ centerStyle}>{i+1 + (10 * (parseInt(current_page,10)-1))}</td>
                                                                     <td style={ centerStyle}>
                                                                         <button className="btn btn-primary" onClick={(e)=>this.handlePaymentSlip(e,v.payment_slip)}><i className="fa fa-eye"/></button>
+                                                                        <button className="btn btn-danger ml-2" onClick={(e)=>this.handleDelete(e,v.no_nota)}><i className="fa fa-trash"/></button>
                                                                     </td>
                                                                     <td style={ leftStyle}>{v.fak_beli}</td>
                                                                     <td style={ leftStyle}>{v.no_nota}</td>
@@ -495,6 +509,7 @@ class HutangReport extends Component{
                         </div>
                     </div>
                 </div>
+                <OtorisasiModal datum={{module:'report hutang',aksi:'delete',id_trx:this.state.id_trx}}  onDone={this.onDone} />
             </Layout>
             );
     }

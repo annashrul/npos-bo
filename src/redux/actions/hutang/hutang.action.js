@@ -235,7 +235,7 @@ export const DeleteHutangReport = (id)=>{
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchHutangReport(localStorage.getItem("page_hutang_report")?localStorage.getItem("page_hutang_report"):1,localStorage.getItem('where_hutang_report')));
+                dispatch(FetchHutangReport(1));
             })
             .catch(function (error) {
                 dispatch(setLoading(false));
