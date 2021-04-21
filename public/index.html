@@ -14,10 +14,11 @@
   <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">-->
   <!--<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">-->
   <!--<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">-->
-  <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
   <!-- Master Stylesheet [If you remove this CSS file, your file will be broken undoubtedly.] -->
   <link rel="stylesheet" href="%PUBLIC_URL%/style.css">
-
+<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -148,37 +149,50 @@
       color: white!important;
     }
     button.cancelBtn,button.applyBtn{
-      font-family: 'Rubik', sans-serif !important;
+                  font-family: 'Roboto Condensed', sans-serif!important;
+
       font-weight: bold !important;
     }
     .off, .ends, .available,.month,.drp-selected,.swal2-html-container,.swal2-title{
-      font-family: 'Rubik', sans-serif !important;
+            font-family: 'Roboto Condensed', sans-serif!important;
       font-weight: bold !important;
     }
     .calendar-table>table{
-      font-family: 'Rubik', sans-serif !important;
+            font-family: 'Roboto Condensed', sans-serif!important;
       font-weight: bold !important;
     }
-    html,
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p,
-    li,
-    a {
-      font-family:'Rubik', sans-serif !important;
-      font-weight: bold !important;
-    }
-
-    td,
-    th,
-    a {
-      font-size: 12px !important;
-    }
+   html,
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        li,
+        td,
+        th,
+        a,
+        .apexcharts-legend-text,
+        .apexcharts-yaxis-label,
+        .apexcharts-text,
+        .apexcharts-active,
+        .apexcharts-xaxistooltip,
+        .apexcharts-yaxistooltip,
+        .apexcharts-yaxistooltip-text {
+            font-family: 'Roboto Condensed', sans-serif!important;
+            /*font-weight: bold !important;*/
+        }
+        
+        td,
+        th,
+        a {
+            /*font-size: 12px !important;*/
+            font-family: 'Roboto Condensed', sans-serif!important;
+            letter-spacing: 1px!important;
+        }
+        
 
     .btnBrg {
       margin-top: 29px
@@ -195,7 +209,45 @@
     /*outline: 0 !important;*/
     /*}*/
 
-    .location-search-input,
+   
+    .table-responsive {
+      overflow: inherit !important;
+    }
+
+   ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+            background-color: #1a1c23!important;
+        }
+        
+         ::-webkit-scrollbar-button {
+            width: 5px;
+            height: 5px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: #1a1c23!important;
+            border: thin solid #1a1c23!important;
+            box-shadow: 0px 0px 3px #1a1c23 inset;
+            border-radius: 10px;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: #999;
+            border: thin solid gray;
+            border-radius: 10px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: #7d7d7d;
+        }
+
+    .react-bootstrap-daterangepicker-container {
+      display: unset !important;
+    }
+
+
+     .location-search-input,
     .location-search-input:focus,
     .location-search-input:active {
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -219,47 +271,13 @@
       border-radius: 0 0 2px 2px;
     }
 
-    .table-responsive {
-      overflow: inherit !important;
-    }
-
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 16px;
-    }
-
-    ::-webkit-scrollbar-button {
-      width: 8px;
-      height: 5px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #eee;
-      border: thin solid lightgray;
-      box-shadow: 0px 0px 3px #dfdfdf inset;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #999;
-      border: thin solid gray;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #7d7d7d;
-    }
-
-    .react-bootstrap-daterangepicker-container {
-      display: unset !important;
-    }
   </style>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
     async defer></script>
 
 </head>
 
-<body class="load" style="zoom:90%">
+<body class="load">
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
