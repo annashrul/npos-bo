@@ -304,8 +304,7 @@ class FormCustomer extends Component{
                                 </div>
                                 <div className="form-group">
                                     <label>Jenis Kelamin</label>
-                                    <select className="form-control" name="jenis_kelamin" defaultValue={this.state.jenis_kelamin} value={this.state.jenis_kelamin} onChange={this.handleChange} required>
-                                        <option value="">Pilih</option>
+                                    <select className="form-control" name="jenis_kelamin" value={this.state.jenis_kelamin} onChange={this.handleChange} required>
                                         <option value="1">Laki-Laki</option>
                                         <option value="0">Perempuan</option>
                                     </select>
@@ -345,17 +344,16 @@ class FormCustomer extends Component{
                                 {/*</div>*/}
                                 <div className="form-group">
                                     <label>Ulang Tahun</label>
-                                    <input type="date" name="tgl_ultah" className="form-control" data-parse="date" placeholder="MM/DD/YYYY" defaultValue={date} value={this.state.tgl_ultah} pattern="\d{2}\/\d{2}/\d{4}" onChange={this.handleChange} required/>
+                                    <input type="date" name="tgl_ultah" className="form-control" data-parse="date" placeholder="MM/DD/YYYY" value={this.state.tgl_ultah} pattern="\d{2}\/\d{2}/\d{4}" onChange={this.handleChange} required/>
                                     <div className="invalid-feedback" style={this.state.error.tgl_ultah!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.tgl_ultah}
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Status</label>
-                                    <select className="form-control" name="status" defaultValue={this.state.status} value={this.state.status} onChange={this.handleChange} required>
-                                        <option value="">Pilih</option>
-                                        <option value="1" selected={this.state.status==='1'}>Active</option>
-                                        <option value="0" selected={this.state.status==='0'}>In Active</option>
+                                    <select className="form-control" name="status" value={this.state.status} onChange={this.handleChange} required>
+                                        <option value="1">Active</option>
+                                        <option value="0">In Active</option>
                                     </select>
                                     <div className="invalid-feedback" style={this.state.error.status!==""?{display:'block'}:{display:'none'}}>
                                         {this.state.error.status}
@@ -391,7 +389,7 @@ class FormCustomer extends Component{
                                     <label htmlFor="inputState" className="col-form-label">Foto {this.props.dataCustomerEdit!==undefined?<small>(kosongkan bila tidak akan diubah)</small>:""}</label><br/>
                                     <FileBase64
                                         multiple={ false }
-                                        className="mr-3 form-control-file"
+                                        className="form-control "
                                         onDone={ this.getFiles.bind(this) } />
                                 </div>
                             </div>

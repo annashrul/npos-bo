@@ -47,9 +47,12 @@ class InventoryReport extends Component{
                 {value: "br.nm_brg", label:'Nama Barang'},
                 {value: "br.group1", label:'Supplier'}
             ],
+            isModalExcel:false,
+            isModalDetail:false
         }
     }
     componentWillUnmount() {
+        this.setState({isModalDetail:false,isModalExcel:false});
         localStorage.removeItem('page_stock_report');
         localStorage.removeItem('code');
         localStorage.removeItem('barcode');
@@ -106,6 +109,7 @@ class InventoryReport extends Component{
     }
     toggle(e,code,barcode,name){
         e.preventDefault();
+        this.setState({isModalDetail:true});
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
@@ -214,6 +218,7 @@ class InventoryReport extends Component{
     }
     toggleModal(e,total,perpage) {
         e.preventDefault();
+        this.setState({isModalExcel:true});
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formStockExcel"));
@@ -254,7 +259,7 @@ class InventoryReport extends Component{
                                                    alwaysShowCalendars={true}
                                                    onEvent={this.handleEvent}
                                                >
-                                                   <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                                   <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                </DateRangePicker>
                                            </div>
                                        </div>
@@ -362,8 +367,7 @@ class InventoryReport extends Component{
                                     <tr></tr>
                                     </thead>
                                     {
-                                        !this.props.isLoading?(
-                                            <tbody>
+                                        <tbody>
                                             {
                                                 (
                                                     typeof data === 'object' ?
@@ -422,7 +426,6 @@ class InventoryReport extends Component{
                                                 )
                                             }
                                             </tbody>
-                                        ):<Preloader/>
                                     }
                                     <tfoot>
                                     <tr style={{fontWeight:"bold",backgroundColor:"#EEEEEE"}}>
@@ -463,8 +466,14 @@ class InventoryReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan} startDate={this.state.startDate} endDate={this.state.endDate} lokasi={this.props.auth.user.lokasi}/>
-                            <StockReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
+                            {
+                                this.state.isModalDetail?<DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan} startDate={this.state.startDate} endDate={this.state.endDate} lokasi={this.props.auth.user.lokasi}/>:null
+                            }
+                            {
+                                this.state.isModalExcel?<StockReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />:null
+                            }
+                            
+                            
                         </div>
                     </div>
 

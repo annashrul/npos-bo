@@ -175,50 +175,54 @@ class ListSupplier extends Component {
               </tr>
             </thead>
             <tbody>
-              {typeof data === "object"
-                ? data.map((v, i) => {
-                    return (
-                      <tr key={i}>
-                        <td style={centerStyle}>
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                        </td>
-                        <td style={centerStyle}>
-                          {/* Example split danger button */}
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) => this.toggleModal(e, i)}
-                                >
-                                  Edit
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => this.handleDelete(e, v.kode)}
-                                >
-                                  Delete
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        <td style={leftStyle}>{v.kode}</td>
-                        <td style={leftStyle}>{v.nama}</td>
-                        <td style={leftStyle}>{v.alamat}</td>
-                        <td style={leftStyle}>{v.kota}</td>
-                        <td style={rightStyle}>{v.telp}</td>
-                        <td style={leftStyle}>{v.penanggung_jawab}</td>
-                        <td style={rightStyle}>{v.no_penanggung_jawab}</td>
-                        <td style={centerStyle}>
-                          {v.status === "1"
-                            ? statusQ("success", "Active")
-                            : statusQ("danger", "In Active")}
-                        </td>
-                        <td style={leftStyle}>{v.email}</td>
-                      </tr>
-                    );
-                  })
-                : "No data."}
+              {typeof data === "object" ? (
+                data.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <td style={centerStyle}>
+                        {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                      </td>
+                      <td style={centerStyle}>
+                        {/* Example split danger button */}
+                        <div className="btn-group">
+                          <UncontrolledButtonDropdown>
+                            <DropdownToggle caret>Aksi</DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem
+                                onClick={(e) => this.toggleModal(e, i)}
+                              >
+                                Edit
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={(e) => this.handleDelete(e, v.kode)}
+                              >
+                                Delete
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledButtonDropdown>
+                        </div>
+                      </td>
+                      <td style={leftStyle}>{v.kode}</td>
+                      <td style={leftStyle}>{v.nama}</td>
+                      <td style={leftStyle}>{v.alamat}</td>
+                      <td style={leftStyle}>{v.kota}</td>
+                      <td style={rightStyle}>{v.telp}</td>
+                      <td style={leftStyle}>{v.penanggung_jawab}</td>
+                      <td style={rightStyle}>{v.no_penanggung_jawab}</td>
+                      <td style={centerStyle}>
+                        {v.status === "1"
+                          ? statusQ("success", "Active")
+                          : statusQ("danger", "In Active")}
+                      </td>
+                      <td style={leftStyle}>{v.email}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td>No data.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

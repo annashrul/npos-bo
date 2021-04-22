@@ -1,8 +1,9 @@
 import { PRODUCT, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Nprogress from "nprogress";
+import Nprogress  from "nprogress";
 import "nprogress/nprogress.css";
+import { configure } from "../../_interceptor";
 
 export function setLoadingbrg(load) {
   return { type: PRODUCT.LOADING_BRG, load };
@@ -55,36 +56,32 @@ export const FetchProduct = (page = 1, where, param = "", db = null) => {
       }
     }
 
-    axios
-      .get(HEADERS.URL + `${url}`)
-      .then(function (response) {
-        const data = response.data;
-
-        if (db !== null) {
-          const barang = data.result.data;
-          const cek = db(barang[0].kd_brg, barang);
-          cek.then((re) => {
-            dispatch(setProductbrg(data));
-            dispatch(setLoadingbrg(false));
-          });
-        } else {
-          dispatch(setProduct(data));
-          dispatch(setLoading(false));
-        }
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+    configure().then(async (api) => {
+      const response = await api.get(url)
+      const data = response.data;
+      if (db !== null) {
+        const barang = data.result.data;
+        const cek = db(barang[0].kd_brg, barang);
+        cek.then((re) => {
+          dispatch(setProductbrg(data));
+          dispatch(setLoadingbrg(false));
         });
+      } else {
+        dispatch(setProduct(data));
+        dispatch(setLoading(false));
+      }
+      Nprogress.done();
+    }).catch(function (error) {
+      Nprogress.done();
+      dispatch(setLoading(false));
+      Swal.fire({
+        allowOutsideClick: false,
+        title: "failed",
+        type: "error",
+        text:
+          error.response === undefined ? "error!" : error.response.data.msg,
       });
+    });
   };
 };
 

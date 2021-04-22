@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import {ModalToggle} from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody} from "reactstrap";
+import {ModalBody,ModalHeader} from "reactstrap";
 import moment from "moment";
 import {toRp} from "helper";
 // import ReactHTMLTableToExcel from "react-html-table-to-excel";
@@ -249,7 +249,7 @@ class SaleReportExcel extends Component{
         
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleExcel"}</ModalHeader> */}
+                <ModalHeader toggle={this.toggle}></ModalHeader>
                 <form onSubmit={this.handleSubmit}>
                     { !this.props.isLoadingReport?
                     <ModalBody>
@@ -314,7 +314,7 @@ class SaleReportExcel extends Component{
                                 </div>
                             </div> */}
                         </div>
-                    </ModalBody> : <Spinner spinnerLabel={"Sedang memuat data ..."}/>
+                    </ModalBody> : <Spinner spinnerLabel={`Sedang memuat data sebanyak ${this.props.totalRow} ...`}/>
                     }
                 </form>
             </WrapperModal>

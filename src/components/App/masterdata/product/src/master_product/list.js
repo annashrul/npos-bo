@@ -554,7 +554,7 @@ class ListProduct extends Component {
                 </label>
               </div>
             </div>
-            <div className="col-6 col-xs6 col-md-2">
+            <div className="col-6 col-xs-6 col-md-3">
               <div className="form-group">
                 <label htmlFor=""> Periode </label>
                 <DateRangePicker
@@ -564,6 +564,7 @@ class ListProduct extends Component {
                   onEvent={this.handleEvent}
                 >
                   <input
+                    readOnly={true}
                     type="text"
                     className="form-control"
                     name="date_product"
@@ -653,29 +654,33 @@ class ListProduct extends Component {
               </tr>
             </thead>
             <tbody>
-              {typeof data === "object"
-                ? data.map((v, i) => {
-                    return (
-                      <tr key={i}>
-                        <td style={centerStyle}>{v.kd_brg}</td>
-                        <td style={centerStyle}>{v.nm_brg}</td>
-                        <td style={centerStyle}>{v.kel_brg}</td>
-                        <td style={centerStyle}>{v.supplier}</td>
-                        <td style={centerStyle}>{v.dept}</td>
-                        <td style={centerStyle}>{v.subdept}</td>
-                        <td style={centerStyle}>{v.kategori}</td>
-                        <td style={centerStyle}>
-                          {v.jenis === "0" ? (
-                            <img alt="netindo" src={imgT} width="20px" />
-                          ) : (
-                            <img alt="netindo" src={imgY} width="20px" />
-                          )}
-                        </td>
-                        <td style={centerStyle}>{v.stock_min}</td>
-                      </tr>
-                    );
-                  })
-                : "No data."}
+              {typeof data === "object" ? (
+                data.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <td style={centerStyle}>{v.kd_brg}</td>
+                      <td style={centerStyle}>{v.nm_brg}</td>
+                      <td style={centerStyle}>{v.kel_brg}</td>
+                      <td style={centerStyle}>{v.supplier}</td>
+                      <td style={centerStyle}>{v.dept}</td>
+                      <td style={centerStyle}>{v.subdept}</td>
+                      <td style={centerStyle}>{v.kategori}</td>
+                      <td style={centerStyle}>
+                        {v.jenis === "0" ? (
+                          <img alt="netindo" src={imgT} width="20px" />
+                        ) : (
+                          <img alt="netindo" src={imgY} width="20px" />
+                        )}
+                      </td>
+                      <td style={centerStyle}>{v.stock_min}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td>No data</td>
+                </tr>
+              )}
             </tbody>
             <tfoot>
               <tr>
@@ -829,72 +834,77 @@ class ListProduct extends Component {
               </tr>
             </thead>
             <tbody>
-              {typeof data === "object"
-                ? data.length > 0
-                  ? data.map((v, i) => {
-                      return (
-                        <tr key={i}>
-                          <td style={centerStyle}>
-                            {" "}
-                            {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                          </td>
-                          <td style={leftStyle}>{v.kd_brg}</td>
-                          <td style={leftStyle}>{v.nm_brg}</td>
-                          <td style={leftStyle}>{v.kel_brg}</td>
-                          <td style={leftStyle}>{v.supplier}</td>
-                          <td style={leftStyle}>{v.dept}</td>
-                          <td style={leftStyle}>{v.subdept}</td>
-                          <td style={leftStyle}>{v.kategori}</td>
-                          <td style={centerStyle}>
-                            {v.jenis === "0" ? (
-                              <img alt="netindo" src={imgT} width="20px" />
-                            ) : (
-                              <img alt="netindo" src={imgY} width="20px" />
-                            )}
-                          </td>
-                          <td style={centerStyle}>{v.stock_min}</td>
-                          <td style={centerStyle}>
-                            <div className="btn-group mb-2 mr-2">
-                              <UncontrolledButtonDropdown>
-                                <DropdownToggle caret>Aksi</DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handlePriceCustomer(
-                                        e,
-                                        v.kd_brg,
-                                        v.nm_brg
-                                      )
-                                    }
-                                  >
-                                    Set Harga Customer
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.loc_detail(e, v.kd_brg)
-                                    }
-                                  >
-                                    Detail
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) => loc_edit(e, v.kd_brg)}
-                                  >
-                                    Edit
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) => loc_delete(e, v.kd_brg)}
-                                  >
-                                    Delete
-                                  </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledButtonDropdown>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : "No data."
-                : "No data."}
+              {typeof data === "object" ? (
+                data.length > 0 ? (
+                  data.map((v, i) => {
+                    return (
+                      <tr key={i}>
+                        <td style={centerStyle}>
+                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                        </td>
+                        <td style={leftStyle}>{v.kd_brg}</td>
+                        <td style={leftStyle}>{v.nm_brg}</td>
+                        <td style={leftStyle}>{v.kel_brg}</td>
+                        <td style={leftStyle}>{v.supplier}</td>
+                        <td style={leftStyle}>{v.dept}</td>
+                        <td style={leftStyle}>{v.subdept}</td>
+                        <td style={leftStyle}>{v.kategori}</td>
+                        <td style={centerStyle}>
+                          {v.jenis === "0" ? (
+                            <img alt="netindo" src={imgT} width="20px" />
+                          ) : (
+                            <img alt="netindo" src={imgY} width="20px" />
+                          )}
+                        </td>
+                        <td style={centerStyle}>{v.stock_min}</td>
+                        <td style={centerStyle}>
+                          <div className="btn-group mb-2 mr-2">
+                            <UncontrolledButtonDropdown>
+                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handlePriceCustomer(
+                                      e,
+                                      v.kd_brg,
+                                      v.nm_brg
+                                    )
+                                  }
+                                >
+                                  Set Harga Customer
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) => this.loc_detail(e, v.kd_brg)}
+                                >
+                                  Detail
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) => loc_edit(e, v.kd_brg)}
+                                >
+                                  Edit
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) => loc_delete(e, v.kd_brg)}
+                                >
+                                  Delete
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledButtonDropdown>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td>No data</td>
+                  </tr>
+                )
+              ) : (
+                <tr>
+                  <td>No data</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
