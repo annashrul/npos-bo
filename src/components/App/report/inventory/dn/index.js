@@ -37,7 +37,15 @@ class DnReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            isModalDetail:false,
+            isModalExport:false
         }
+    }
+    componentWillUnmount(){
+        this.setState({
+            isModalDetail:false,
+            isModalExport:false
+        })
     }
     componentWillMount(){
         let page=localStorage.page_dn_report;
@@ -72,6 +80,7 @@ class DnReport extends Component{
     }
     toggle(e,code,barcode,name){
         e.preventDefault();
+        this.setState({isModalDetail:true});
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
@@ -228,6 +237,8 @@ class DnReport extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         // let range = total*perpage;
+        this.setState({isModalExport:true});
+
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formDnExcel"));
         this.props.dispatch(FetchDnExcel(1,this.state.where_data,total));
@@ -246,10 +257,7 @@ class DnReport extends Component{
         } = this.props.dnReport;
         return (
             <Layout page="Laporan Dn">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
+                <div className="row">
                                 <div className="col-md-10" style={{zoom:"85%"}}>
                                     <div className="row">
                                         <div className="col-6 col-xs-6 col-md-2">
@@ -261,7 +269,7 @@ class DnReport extends Component{
                                                     alwaysShowCalendars={true}
                                                     onEvent={this.handleEvent}
                                                 >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -378,7 +386,6 @@ class DnReport extends Component{
                                 </tr>
                                 <tr></tr>
                                 </thead>
-                                {
                                     <tbody>
                                     {
                                         typeof this.props.dnReportExcel.data==='object'? this.props.dnReportExcel.data.length>0?
@@ -394,10 +401,9 @@ class DnReport extends Component{
                                                         <td style={columnStyle}>{v.keterangan?v.keterangan:'-'}</td>
                                                     </tr>
                                                 );
-                                            }) : "No data." : "No data."
+                                            }) :<tr><td>No Data.</td></tr> :<tr><td>No Data.</td></tr> 
                                     }
                                     </tbody>
-                                }
                             </table>
                             {/*END DATA EXCEL*/}
                             <div style={{overflowX: "auto"}}>
@@ -416,7 +422,6 @@ class DnReport extends Component{
                                     </tr>
                                     </thead>
                                     {
-                                        !this.props.isLoading?(
                                             <tbody>
                                             {
                                                 (
@@ -457,11 +462,10 @@ class DnReport extends Component{
                                                                 </tr>
                                                             )
                                                         })
-                                                        : "No data." : "No data."
+                                                        :<tr><td>No Data.</td></tr> : <tr><td>No Data.</td></tr>
                                                 )
                                             }
                                             </tbody>
-                                        ):<Preloader/>
                                     }
                                 </table>
 
@@ -474,11 +478,9 @@ class DnReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailDn dnDetail={this.props.dnDetail}/>
-                            <DnReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
-                        </div>
-                    </div>
-                </div>
+                                {this.state.isModalDetail?<DetailDn dnDetail={this.props.dnDetail}/>:null}
+                            
+                            {this.state.isModalExport?<DnReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />:null}
             </Layout>
             );
     }

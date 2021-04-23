@@ -5,6 +5,8 @@ import {
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {setLoading} from "../masterdata/customer/customer.action";
+import {handleGet} from "../_interceptor"
+
 
 export function setLoadingApprove(load) {
     return {
@@ -272,20 +274,10 @@ export const saveApprovalMutation = (data,param) => {
 
 export const FetchMutation = (page=1,where='')=>{
     return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
         let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
-        if(where!==''){
-            url+=where
-        }
-        
-        axios.get(HEADERS.URL+url)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setMutation(data));
-                dispatch(setLoadingApprovalMutation(false));
-            }).catch(function(error){
-            
+        if(where!=='')url+=where
+        handleGet(url,(res)=>{
+            dispatch(setMutation(res));
         })
     }
 }

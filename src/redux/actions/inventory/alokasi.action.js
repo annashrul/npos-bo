@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 import {
     destroy
 } from "components/model/app.model";
-
+import {handleGet} from "../_interceptor"
 
 export function setLoading(load) {
     return {
@@ -67,17 +67,12 @@ export function setAlokasiDetail(data=[]){
 
 export const FetchDnReport = (page = 1, perpage = 10) => {
     return (dispatch) => {
-        dispatch(setLoading(true));
-        axios.get(HEADERS.URL + `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`)
-            .then(function (response) {
-                const data = response.data
-                dispatch(setReport(data))
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // handle error
-                
-            })
+
+        handleGet(`purchaseorder/report?page=${page}&perpage=${perpage}&status=0`,(res)=>{
+            dispatch(setReport(res))
+        })
+
+        
 
     }
 }
@@ -268,16 +263,11 @@ export const FetchAlokasi = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        
-        axios.get(HEADERS.URL+`${url}`)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setALOKASI(data));
-                dispatch(setLoading(false));
-            }).catch(function(error){
-            
+        handleGet(url,(res)=>{
+            dispatch(setALOKASI(res))
         })
+        
+        
     }
 }
 export const FetchAlokasiExcel = (page=1,where='',perpage=99999)=>{

@@ -41,8 +41,15 @@ class TransactionReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            isModalDetail:false,
+            isModalExport:false
         }
     }
+
+    componentWillUnmount(){
+        this.setState({isModalDetail:false,isModalExport:false})
+    }
+
     componentWillMount(){
         let page=localStorage.page_transaction_report;
         this.handleParameter(page!==undefined&&page!==null?page:1);
@@ -76,6 +83,7 @@ class TransactionReport extends Component{
     }
     toggle(e,code,barcode,name){
         e.preventDefault();
+        this.setState({isModalDetail:true})
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
@@ -232,6 +240,8 @@ class TransactionReport extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         // let range = total*perpage;
+        this.setState({isModalExport:true})
+
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formTransactionExcel"));
         this.props.dispatch(FetchTransactionExcel(1,this.state.where_data,total));
@@ -276,13 +286,10 @@ class TransactionReport extends Component{
         let ns=0;let hp=0;let pr=0;
         return (
             <Layout page="Laporan Alokasi Transaksi">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
+                <div className="row">
                                 <div className="col-md-10" style={{zoom:"85%"}}>
                                     <div className="row">
-                                        <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-6 col-xs-6 col-md-3">
                                             <div className="form-group">
                                                 <label htmlFor=""> Periode </label>
                                                 <DateRangePicker
@@ -291,11 +298,11 @@ class TransactionReport extends Component{
                                                     alwaysShowCalendars={true}
                                                     onEvent={this.handleEvent}
                                                 >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
-                                        <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-6 col-xs-6 col-md-3">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Filter
@@ -312,7 +319,7 @@ class TransactionReport extends Component{
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-6 col-xs-6 col-md-3">
                                             <div className="form-group">
                                                 <label className="control-label font-12">
                                                     Sort
@@ -329,7 +336,7 @@ class TransactionReport extends Component{
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-6 col-xs-6 col-md-2">
+                                        <div className="col-6 col-xs-6 col-md-3">
                                             <div className="form-group">
                                                 <label>Cari</label>
                                                 <input className="form-control" type="text" style={{padding: '9px',fontWeight:'bolder'}} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)}/>
@@ -372,9 +379,7 @@ class TransactionReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Keterangan</th>
                                     </tr>
                                     </thead>
-                                    {
-                                        !this.props.isLoading?(
-                                            <tbody>
+                                    <tbody>
                                             {
                                                 (
                                                     typeof data === 'object' ? data.length>0?
@@ -422,13 +427,11 @@ class TransactionReport extends Component{
                                                                 </tr>
                                                             )
                                                         })
-                                                        : "No data." : "No data."
+                                                        : <tr><td>No Data</td></tr> : <tr><td>No Data</td></tr>
                                                 )
                                             }
                                             
                                             </tbody>
-                                        ):<Preloader/>
-                                    }
                                     <tfoot>
                                         <tr style={{backgroundColor:"#EEEEEE"}}>
                                             <td colSpan="6">TOTAL PERPAGE</td>
@@ -456,11 +459,13 @@ class TransactionReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailTransaction transactionDetail={this.props.transactionDetail}/>
-                            <TransactionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
-                        </div>
-                    </div>
-                </div>
+                            {
+                                this.state.isModalDetail?<DetailTransaction transactionDetail={this.props.transactionDetail}/>:null
+                            }
+                            
+                            {
+                                this.state.isModalExport?<TransactionReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />:null
+                            }
             </Layout>
             );
     }

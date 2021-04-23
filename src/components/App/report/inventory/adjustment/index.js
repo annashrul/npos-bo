@@ -40,8 +40,14 @@ class AdjustmentReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
+            isModalExcel:false,
+            isModalDetail:false
         }
     }
+    componentWillUnmount(){
+        this.setState({isModalExcel:false,isModalDetail:false})
+    }
+
     componentWillReceiveProps = (nextProps) => {
         let sort = [
             {kode:"desc",value: "DESCENDING"},
@@ -162,6 +168,7 @@ class AdjustmentReport extends Component{
     }
     toggleModalDet(e, kd_trx) {
         e.preventDefault();
+        this.setState({isModalDetail:true});
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailAdjustment"));
@@ -213,7 +220,7 @@ class AdjustmentReport extends Component{
     toggleModal(e,total,perpage) {
         e.preventDefault();
         const bool = !this.props.isOpen;
-        // let range = total*perpage;
+        this.setState({isModalExcel:true});
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formAdjustmentExcel"));
         this.props.dispatch(FetchAdjustmentExcel(1,this.state.where_data,total));
@@ -233,17 +240,15 @@ class AdjustmentReport extends Component{
         const columnStyle = {verticalAlign: "middle", textAlign: "center",whiteSpace:"nowrap"};
         return (
             <Layout page="Laporan Adjusment">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
+                    
+                <div className="row">
                                 <div className="col-md-12" style={{zoom:"85%"}}>
                                     <div className="row">
                                         <div className="col-6 col-xs-6 col-md-2">
                                             <div className="form-group">
                                                 <label htmlFor=""> Periode &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
                                                 <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -307,73 +312,76 @@ class AdjustmentReport extends Component{
                                 </div>
 
                             </div>
-                            <div style={{overflowX: "auto"}}>
-                                <table className="table table-hover table-bordered">
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>No</th>
-                                        <th className="text-black" style={columnStyle}>#</th>
-                                        <th className="text-black" style={columnStyle}>No. Adjusment</th>
-                                        <th className="text-black" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" style={columnStyle}>Operator</th>
-                                        <th className="text-black" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" style={columnStyle}>Keterangan</th>
-                                    </tr>
-                                    </thead>
-                                    {
-                                        !this.props.isLoading?(
-                                            <tbody>
-                                            {
-                                                (
-                                                    typeof data === 'object' ?
-                                                        data.map((v,i)=>{
-                                                            return(
-                                                                <tr key={i}>
-                                                                    <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
-                                                                    <td style={columnStyle}>{/* Example split danger button */}
-                                                                        <div className="btn-group">
-                                                                            <UncontrolledButtonDropdown>
-                                                                            <DropdownToggle caret>
-                                                                                Aksi
-                                                                            </DropdownToggle>
-                                                                            <DropdownMenu>
-                                                                                <DropdownItem onClick={(e)=>this.toggleModalDet(e,v.kd_trx)}>Detail</DropdownItem>
-                                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
-                                                                                <DropdownItem href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
-                                                                                <Link to={`../adjust3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link>
-                                                                            </DropdownMenu>
-                                                                            </UncontrolledButtonDropdown>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td style={columnStyle}>{v.kd_trx}</td>
-                                                                    <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
-                                                                    <td style={columnStyle}>{v.username}</td>
-                                                                    <td style={columnStyle}>{v.lokasi}</td>
-                                                                    <td style={columnStyle}>{v.keterangan}</td>
-                                                                </tr>
-                                                            )
-                                                        })
-                                                        : "No data."
+                <div style={{overflowX: "auto"}}>
+                    <table className="table table-hover table-bordered">
+                        <thead className="bg-light">
+                        <tr>
+                            <th className="text-black" style={columnStyle}>No</th>
+                            <th className="text-black" style={columnStyle}>#</th>
+                            <th className="text-black" style={columnStyle}>No. Adjusment</th>
+                            <th className="text-black" style={columnStyle}>Tanggal</th>
+                            <th className="text-black" style={columnStyle}>Operator</th>
+                            <th className="text-black" style={columnStyle}>Lokasi</th>
+                            <th className="text-black" style={columnStyle}>Keterangan</th>
+                        </tr>
+                        </thead>
+                        {
+                            
+                            <tbody>
+                                {
+                                    (
+                                        typeof data === 'object' ?
+                                            data.map((v,i)=>{
+                                                return(
+                                                    <tr key={i}>
+                                                        <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
+                                                        <td style={columnStyle}>{/* Example split danger button */}
+                                                            <div className="btn-group">
+                                                                <UncontrolledButtonDropdown>
+                                                                <DropdownToggle caret>
+                                                                    Aksi
+                                                                </DropdownToggle>
+                                                                <DropdownMenu>
+                                                                    <DropdownItem onClick={(e)=>this.toggleModalDet(e,v.kd_trx)}>Detail</DropdownItem>
+                                                                    <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem>
+                                                                    <DropdownItem href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem>
+                                                                    <Link to={`../adjust3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link>
+                                                                </DropdownMenu>
+                                                                </UncontrolledButtonDropdown>
+                                                            </div>
+                                                        </td>
+                                                        <td style={columnStyle}>{v.kd_trx}</td>
+                                                        <td style={columnStyle}>{moment(v.tgl).format("yyyy-MM-DD")}</td>
+                                                        <td style={columnStyle}>{v.username}</td>
+                                                        <td style={columnStyle}>{v.lokasi}</td>
+                                                        <td style={columnStyle}>{v.keterangan}</td>
+                                                    </tr>
                                                 )
-                                            }
-                                            </tbody>
-                                        ):<Preloader/>
-                                    }
-                                </table>
-                            </div>
-                            <div style={{"marginTop":"20px","float":"right"}}>
-                                <Paginationq
-                                    current_page={parseInt(current_page,10)}
-                                    per_page={parseInt(per_page,10)}
-                                    total={parseInt((per_page*last_page),10)}
-                                    callback={this.handlePageChange.bind(this)}
-                                />
-                            </div>
-                            <AdjustmentReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />
-                            <DetailAdjustment detail={this.props.adjustmentDetailSatuan} />
-                        </div>
-                    </div>
+                                            })
+                                            : <tr><td>No Data.</td></tr>
+                                    )
+                                }
+                                </tbody>
+                        }
+                    </table>
                 </div>
+                <div style={{"marginTop":"20px","float":"right"}}>
+                    <Paginationq
+                        current_page={parseInt(current_page,10)}
+                        per_page={parseInt(per_page,10)}
+                        total={parseInt((per_page*last_page),10)}
+                        callback={this.handlePageChange.bind(this)}
+                    />
+                </div>
+                
+                {
+                    this.state.isModalExcel?<AdjustmentReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />:null
+                }
+                
+                {
+                    this.state.isModalDetail?<DetailAdjustment detail={this.props.adjustmentDetailSatuan} />:null
+                }
+                        
             </Layout>
         );
     }

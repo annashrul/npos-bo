@@ -34,8 +34,14 @@ class OpnameReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            isModalExcel:false
         }
     }
+
+    componentWillUnmount(){
+        this.setState({isModalExcel:false})
+    }
+
     componentWillMount(){
         let page=localStorage.page_opname_report;
         this.handleParameter(page!==undefined&&page!==null?page:1);
@@ -72,6 +78,7 @@ class OpnameReport extends Component{
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
+        this.setState({isModalExcel:true})
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("detailOpname"));
@@ -244,10 +251,7 @@ class OpnameReport extends Component{
         } = this.props.opnameReport;
         return (
             <Layout page="Laporan Opname">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
+                <div className="row">
                                 <div className="col-md-10" style={{zoom:"85%"}}>
                                     <div className="row">
                                         <div className="col-6 col-xs-6 col-md-2">
@@ -259,7 +263,7 @@ class OpnameReport extends Component{
                                                     alwaysShowCalendars={true}
                                                     onEvent={this.handleEvent}
                                                 >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -402,13 +406,13 @@ class OpnameReport extends Component{
                                                             <td style={columnStyle}>{v.status==='0'?statusQ('danger','Belum Opname'):(v.status==='1'?statusQ('warning','Sudah Opname'):"")}</td>
                                                         </tr>
                                                     );
-                                                }) : "No data." : "No data."
+                                                }) : <tr><td>No Data</td></tr> : <tr><td>No Data</td></tr>
                                         }
                                         </tbody>
                                     }
                                 </table>
                                 {/*END DATA EXCEL*/}
-                            <div style={{overflowX: "auto",zoom:"85%"}}>
+                            <div style={{overflowX: "auto",zoom:"90%"}}>
                                 <table className="table table-hover table-bordered">
                                     <thead className="bg-light">
                                     <tr>
@@ -428,7 +432,7 @@ class OpnameReport extends Component{
                                     </tr>
                                     </thead>
                                     {
-                                        !this.props.isLoading?(
+                                      
                                             <tbody>
                                             {
                                                 (
@@ -466,11 +470,10 @@ class OpnameReport extends Component{
                                                                 </tr>
                                                             )
                                                         })
-                                                        : "No data." : "No data."
+                                                        : <tr><td>No Data</td></tr> : <tr><td>No Data</td></tr>
                                                 )
                                             }
                                             </tbody>
-                                        ):<Preloader/>
                                     }
                                 </table>
 
@@ -485,9 +488,7 @@ class OpnameReport extends Component{
                             </div>
                             {/* <DetailOpname opnameDetail={this.props.opnameDetail}/> */}
                             <OpnameReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />
-                        </div>
-                    </div>
-                </div>
+                        
             </Layout>
             );
     }

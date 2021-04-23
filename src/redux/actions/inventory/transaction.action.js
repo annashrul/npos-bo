@@ -5,7 +5,7 @@ import {
 import axios from "axios"
 import Swal from 'sweetalert2'
 import {setLoading} from "../masterdata/customer/customer.action";
-
+import {handleGet} from "../_interceptor"
 export function setLoadingApprovalTransaction(load) {
     return {
         type: TRANSACTION.APPROVAL_TRANSACTION_LOADING,
@@ -131,21 +131,15 @@ export const saveApprovalTransaction = (data) => {
 
 export const FetchTransaction = (page=1,where='')=>{
     return (dispatch) => {
-        dispatch(setLoadingApprovalTransaction(true));
         let url=`alokasi_trx/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
         if(where!==''){
             url+=where
         }
-        
-        axios.get(HEADERS.URL+url)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setTransaction(data));
-                dispatch(setLoadingApprovalTransaction(false));
-            }).catch(function(error){
-            
+        handleGet(url,(res)=>{
+            dispatch(setTransaction(res));
         })
+        
+       
     }
 }
 

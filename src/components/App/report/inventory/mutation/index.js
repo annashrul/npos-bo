@@ -38,8 +38,20 @@ class MutationReport extends Component{
             filter_data:[],
             status:"",
             status_data:[],
+            isModalDetail:false,
+            isModalExport:false
         }
     }
+    
+    componentWillUnmount(){
+        this.setState({
+            isModalDetail:false,
+            isModalExport:false
+        })
+    }
+    
+
+
     componentWillMount(){
         let page=localStorage.page_mutation_report;
         this.handleParameter(page!==undefined&&page!==null?page:1);
@@ -73,6 +85,7 @@ class MutationReport extends Component{
     }
     toggle(e,code,barcode,name){
         e.preventDefault();
+        this.setState({isModalDetail:true});
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
@@ -230,6 +243,7 @@ class MutationReport extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         // let range = total*perpage;
+        this.setState({isModalExport:true});
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formMutationExcel"));
         this.props.dispatch(FetchMutationExcel(1,this.state.where_data,total));
@@ -253,10 +267,7 @@ class MutationReport extends Component{
         } = this.props.mutationReport;
         return (
             <Layout page="Laporan Mutation">
-                <div className="col-12 box-margin">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="row">
+                <div className="row">
                                 <div className="col-md-10" style={{zoom:"85%"}}>
                                     <div className="row">
                                         <div className="col-6 col-xs-6 col-md-2">
@@ -268,7 +279,7 @@ class MutationReport extends Component{
                                                     alwaysShowCalendars={true}
                                                     onEvent={this.handleEvent}
                                                 >
-                                                    <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
+                                                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '10px',fontWeight:'bolder'}}/>
                                                 </DateRangePicker>
                                             </div>
                                         </div>
@@ -364,9 +375,7 @@ class MutationReport extends Component{
                                         <th className="text-black" style={columnStyle} rowSpan="2">Tanggal Mutasi</th>
                                     </tr>
                                     </thead>
-                                    {
-                                        !this.props.isLoading?(
-                                            <tbody>
+                                    <tbody>
                                             {
                                                 (
                                                     typeof data === 'object' ? data.length>0?
@@ -405,12 +414,10 @@ class MutationReport extends Component{
                                                                 </tr>
                                                             )
                                                         })
-                                                        : "No data." : "No data."
+                                                        : <tr><td>No Data.</td></tr> : <tr><td>No Data.</td></tr>
                                                 )
                                             }
                                             </tbody>
-                                        ):<Preloader/>
-                                    }
                                 </table>
 
                             </div>
@@ -422,11 +429,13 @@ class MutationReport extends Component{
                                     callback={this.handlePageChange.bind(this)}
                                 />
                             </div>
-                            <DetailMutation/>
-                            <MutationReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
-                        </div>
-                    </div>
-                </div>
+                            {
+                                this.state.isModalDetail?<DetailMutation/>:null
+                            }
+                            
+                            {
+                                this.state.isModalExport?<MutationReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />:null
+                            }
             </Layout>
             );
     }

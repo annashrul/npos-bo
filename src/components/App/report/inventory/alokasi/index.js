@@ -41,8 +41,20 @@ class AlokasiReport extends Component{
             sort_data:[],
             filter:"",
             filter_data:[],
+            isModalDetail:false,
+            isModalExccel:false,
+            isModalForm:false
         }
     }
+
+    componentWillUnmount(){
+        this.setState({
+            isModalDetail:false,
+            isModalExccel:false,
+            isModalForm:false
+        })
+    }
+
     componentWillMount(){
         let page=localStorage.page_alokasi_report;
         this.handleParameter(page!==undefined&&page!==null?page:1);
@@ -76,6 +88,7 @@ class AlokasiReport extends Component{
     }
     toggle(e,code,barcode,name){
         e.preventDefault();
+        this.setState({isModalDetail:true});
         localStorage.setItem("code",code);
         localStorage.setItem("barcode",barcode);
         localStorage.setItem("name",name);
@@ -86,6 +99,8 @@ class AlokasiReport extends Component{
     };
     handleEdit(e,data){
         e.preventDefault();
+        this.setState({isModalForm:true});
+
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formEditAlokasi"));
@@ -239,6 +254,8 @@ class AlokasiReport extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         // let range = total*perpage;
+        this.setState({isModalExccel:true});
+
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("formAlokasiExcel"));
         this.props.dispatch(FetchAlokasiExcel(1,this.state.where_data,total));
@@ -262,19 +279,14 @@ class AlokasiReport extends Component{
         } = this.props.alokasiReport;
         return (
             <Layout page="Laporan Alokasi">
-                <div className="card">
-                    <div className="card-header">
-                        <h5>Laporan Alokasi</h5>
-                    </div>
-                    <div className="card-body">
-                        <div className="row">
+                <div className="row">
                             <div className="col-md-10">
                                 <div className="row">
                                     <div className="col-6 col-xs-6 col-md-2" style={{zoom:"85%"}}>
                                         <div className="form-group">
                                             <label htmlFor=""> Periode </label>
                                             <DateRangePicker ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                                <input type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`}/>
                                             </DateRangePicker>
                                         </div>
                                     </div>
@@ -388,8 +400,7 @@ class AlokasiReport extends Component{
                                 </tr>
                                 </thead>
                                 {
-                                    !this.props.isLoading?(
-                                        <tbody>
+                                    <tbody>
                                         {
                                             (
                                                 typeof data === 'object' ? data.length>0?
@@ -435,7 +446,6 @@ class AlokasiReport extends Component{
                                             )
                                         }
                                         </tbody>
-                                    ):<Preloader/>
                                 }
                             </table>
 
@@ -451,8 +461,6 @@ class AlokasiReport extends Component{
                         <DetailAlokasi alokasiDetail={this.props.alokasiDetail}/>
                         <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} />
                         <FormAlokasi/>
-                    </div>
-                </div>
             </Layout>
             );
     }
