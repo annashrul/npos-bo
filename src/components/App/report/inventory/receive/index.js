@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import { FetchReport } from "redux/actions/purchase/receive/receive.action";
-import Preloader from "Preloader";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { rangeDate } from "helper";
 import Select from "react-select";
@@ -458,6 +457,7 @@ class ReceiveReport extends Component {
                     autoUpdateInput={true}
                   >
                     <input
+                      readOnly={true}
                       type="text"
                       className="form-control"
                       name="date_receive_report"
@@ -744,12 +744,12 @@ class ReceiveReport extends Component {
                   })
                 ) : (
                   <tr>
-                    <td>No Data.</td>
+                    <td colSpan={17}>No Data.</td>
                   </tr>
                 )
               ) : (
                 <tr>
-                  <td>No Data.</td>
+                  <td colSpan={17}>No Data.</td>
                 </tr>
               )}
             </tbody>

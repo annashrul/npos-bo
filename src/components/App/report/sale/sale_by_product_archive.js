@@ -560,80 +560,84 @@ class SaleByProductArchive extends Component {
                 </thead>
                 {!this.props.isLoadingReport ? (
                   <tbody>
-                    {typeof data === "object"
-                      ? data.length > 0
-                        ? data.map((v, i) => {
-                            return (
-                              <tr key={i}>
-                                <td style={columnStyle}>
-                                  {" "}
-                                  {i +
-                                    1 +
-                                    10 * (parseInt(current_page, 10) - 1)}
-                                </td>
-                                <td style={columnStyle}>
-                                  <div className="btn-group">
-                                    <UncontrolledButtonDropdown>
-                                      <DropdownToggle caret>
-                                        Aksi
-                                      </DropdownToggle>
-                                      <DropdownMenu>
-                                        <DropdownItem
-                                          onClick={(e) =>
-                                            this.handleDetail(
-                                              e,
-                                              btoa(v.barcode),
-                                              v.kd_brg,
-                                              v.nm_brg,
-                                              v.deskripsi,
-                                              v.satuan,
-                                              v.qty_jual,
-                                              v.gross_sales,
-                                              v.diskon_item,
-                                              v.tax,
-                                              v.service,
-                                              v.toko,
-                                              v.tgl
-                                            )
-                                          }
-                                        >
-                                          Detail
-                                        </DropdownItem>
-                                        {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
-                                        {/* <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem> */}
-                                        {/* <Link to={`../print3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link> */}
-                                      </DropdownMenu>
-                                    </UncontrolledButtonDropdown>
-                                  </div>
-                                </td>
-                                <td style={columnStyle}>{v.kd_brg}</td>
-                                <td style={columnStyle}>{v.nm_brg}</td>
-                                <td style={columnStyle}>{v.barcode}</td>
-                                <td style={columnStyle}>{v.deskripsi}</td>
-                                <td style={columnStyle}>{v.satuan}</td>
-                                <td style={{ textAlign: "right" }}>
-                                  {parseInt(v.qty_jual, 10)}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                  {toRp(parseInt(v.gross_sales, 10))}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                  {v.diskon_item}
-                                </td>
-                                <td style={{ textAlign: "right" }}>{v.tax}</td>
-                                <td style={{ textAlign: "right" }}>
-                                  {v.service}
-                                </td>
-                                {/* <td style={columnStyle}>{v.lokasi}</td> */}
-                                <td style={columnStyle}>{v.toko}</td>
-                                <td style={columnStyle}>
-                                  {moment(v.tgl).format("YYYY-MM-DD")}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        : "No data."
-                      : "No data."}
+                    {typeof data === "object" ? (
+                      data.length > 0 ? (
+                        data.map((v, i) => {
+                          return (
+                            <tr key={i}>
+                              <td style={columnStyle}>
+                                {" "}
+                                {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                              </td>
+                              <td style={columnStyle}>
+                                <div className="btn-group">
+                                  <UncontrolledButtonDropdown>
+                                    <DropdownToggle caret>Aksi</DropdownToggle>
+                                    <DropdownMenu>
+                                      <DropdownItem
+                                        onClick={(e) =>
+                                          this.handleDetail(
+                                            e,
+                                            btoa(v.barcode),
+                                            v.kd_brg,
+                                            v.nm_brg,
+                                            v.deskripsi,
+                                            v.satuan,
+                                            v.qty_jual,
+                                            v.gross_sales,
+                                            v.diskon_item,
+                                            v.tax,
+                                            v.service,
+                                            v.toko,
+                                            v.tgl
+                                          )
+                                        }
+                                      >
+                                        Detail
+                                      </DropdownItem>
+                                      {/* <DropdownItem onClick={(e)=>this.handleDelete(e,v.kd_trx)}>Delete</DropdownItem> */}
+                                      {/* <DropdownItem href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`} target="_blank">Nota</DropdownItem> */}
+                                      {/* <Link to={`../print3ply/${v.kd_trx}`}><DropdownItem>3ply</DropdownItem></Link> */}
+                                    </DropdownMenu>
+                                  </UncontrolledButtonDropdown>
+                                </div>
+                              </td>
+                              <td style={columnStyle}>{v.kd_brg}</td>
+                              <td style={columnStyle}>{v.nm_brg}</td>
+                              <td style={columnStyle}>{v.barcode}</td>
+                              <td style={columnStyle}>{v.deskripsi}</td>
+                              <td style={columnStyle}>{v.satuan}</td>
+                              <td style={{ textAlign: "right" }}>
+                                {parseInt(v.qty_jual, 10)}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {toRp(parseInt(v.gross_sales, 10))}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {v.diskon_item}
+                              </td>
+                              <td style={{ textAlign: "right" }}>{v.tax}</td>
+                              <td style={{ textAlign: "right" }}>
+                                {v.service}
+                              </td>
+                              {/* <td style={columnStyle}>{v.lokasi}</td> */}
+                              <td style={columnStyle}>{v.toko}</td>
+                              <td style={columnStyle}>
+                                {moment(v.tgl).format("YYYY-MM-DD")}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan={14}>No Data</td>
+                        </tr>
+                      )
+                    ) : (
+                      <tr>
+                        <td colSpan={14}>No Data</td>
+                      </tr>
+                    )}
                   </tbody>
                 ) : (
                   <Preloader />

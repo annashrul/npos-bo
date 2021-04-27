@@ -3400,33 +3400,24 @@ class FormProduct extends Component {
                   <div className="col-md-12">
                     <div className="row">
                       <div className="col-md-2">
-                        <label style={{ fontSize: "10px" }}>Lokasi</label>
+                        <label>Lokasi</label>
                       </div>
                       <div className="col-md-10">
                         <div className="row">
                           <div className="col-md-6">
                             <div className="row">
                               <div className="col-md-4">
-                                <label
-                                  className="control-label"
-                                  style={{ fontSize: "10px" }}
-                                >
+                                <label className="control-label">
                                   Harga Beli
                                 </label>
                               </div>
                               <div className="col-md-4">
-                                <label
-                                  className="control-label"
-                                  style={{ fontSize: "10px" }}
-                                >
+                                <label className="control-label">
                                   Margin %
                                 </label>
                               </div>
                               <div className="col-md-4">
-                                <label
-                                  className="control-label"
-                                  style={{ fontSize: "10px" }}
-                                >
+                                <label className="control-label">
                                   Harga Jual
                                 </label>
                               </div>
@@ -3435,20 +3426,12 @@ class FormProduct extends Component {
                           <div className="col-md-6">
                             <div className="row">
                               <div className="col-md-3">
-                                <label
-                                  className="control-label"
-                                  style={{ fontSize: "10px" }}
-                                >
+                                <label className="control-label">
                                   Service %
                                 </label>
                               </div>
                               <div className="col-md-3">
-                                <label
-                                  className="control-label"
-                                  style={{ fontSize: "10px" }}
-                                >
-                                  PPN %
-                                </label>
+                                <label className="control-label">PPN %</label>
                               </div>
                             </div>
                           </div>
@@ -3491,15 +3474,12 @@ class FormProduct extends Component {
                                 <div className="col-md-2">
                                   <div className="form-group">
                                     <div className="row">
-                                      <label
-                                        className="col-md-8"
-                                        style={{ fontSize: "10px" }}
-                                      >
+                                      <label className="col-md-8">
                                         Atur Semua ({lbl})
                                       </label>
                                       <input
                                         type="checkbox"
-                                        className="form-control col-md-2"
+                                        className="col-md-2"
                                         onChange={(e) =>
                                           this.handleAllCheckedSku(
                                             e,
@@ -3517,9 +3497,7 @@ class FormProduct extends Component {
                                       <div className="row">
                                         <div className="col-md-4">
                                           <div className="form-group">
-                                            <label style={{ fontSize: "8px" }}>
-                                              harga beli ({lbl})
-                                            </label>
+                                            <label>harga beli ({lbl})</label>
                                             <input
                                               type="text"
                                               placeholder={`hrg beli ${lbl}`}
@@ -3531,7 +3509,6 @@ class FormProduct extends Component {
                                               onChange={(e) =>
                                                 this.handleChangeMore(e)
                                               }
-                                              style={{ fontSize: "10px" }}
                                             />
                                           </div>
                                         </div>
@@ -3554,9 +3531,7 @@ class FormProduct extends Component {
                                                   className="form-group"
                                                   key={z}
                                                 >
-                                                  <label
-                                                    style={{ fontSize: "8px" }}
-                                                  >
+                                                  <label>
                                                     margin {z + 1} {lbl}
                                                   </label>
                                                   <input
@@ -3575,7 +3550,6 @@ class FormProduct extends Component {
                                                     onChange={(e) =>
                                                       this.handleChangeMore(e)
                                                     }
-                                                    style={{ fontSize: "10px" }}
                                                   />
                                                 </div>
                                               );
@@ -3603,9 +3577,7 @@ class FormProduct extends Component {
                                                   className="form-group"
                                                   key={z}
                                                 >
-                                                  <label
-                                                    style={{ fontSize: "8px" }}
-                                                  >
+                                                  <label>
                                                     harga jual{" "}
                                                     {this.state[place]}
                                                   </label>
@@ -3623,7 +3595,6 @@ class FormProduct extends Component {
                                                     onChange={(e) =>
                                                       this.handleChangeMore(e)
                                                     }
-                                                    style={{ fontSize: "10px" }}
                                                   />
                                                 </div>
                                               );
@@ -3638,9 +3609,7 @@ class FormProduct extends Component {
                                       <div className="row">
                                         <div className="col-md-3">
                                           <div className="form-group">
-                                            <label style={{ fontSize: "8px" }}>
-                                              service {lbl}
-                                            </label>
+                                            <label>service {lbl}</label>
                                             <input
                                               readOnly={
                                                 this.state.jenis === "4"
@@ -3653,15 +3622,12 @@ class FormProduct extends Component {
                                               onChange={(e) =>
                                                 this.handleChangeMore(e)
                                               }
-                                              style={{ fontSize: "10px" }}
                                             />
                                           </div>
                                         </div>
                                         <div className="col-md-3">
                                           <div className="form-group">
-                                            <label style={{ fontSize: "8px" }}>
-                                              PPN {lbl}
-                                            </label>
+                                            <label>PPN {lbl}</label>
                                             <input
                                               readOnly={
                                                 this.state.jenis === "4"
@@ -3674,7 +3640,6 @@ class FormProduct extends Component {
                                               onChange={(e) =>
                                                 this.handleChangeMore(e)
                                               }
-                                              style={{ fontSize: "10px" }}
                                             />
                                           </div>
                                         </div>
@@ -3754,11 +3719,7 @@ class FormProduct extends Component {
                                     <div className="col-md-2">
                                       <div className="form-group">
                                         <div className="row">
-                                          <label
-                                            className="col-md-8"
-                                            style={{ fontSize: "10px" }}
-                                          >
-                                            {" "}
+                                          <label className="col-md-8">
                                             {v[x].nama_toko} ( {lbl} )
                                           </label>
                                           <input
@@ -3782,11 +3743,7 @@ class FormProduct extends Component {
                                           <div className="row">
                                             <div className="col-md-4">
                                               <div className="form-group">
-                                                <label
-                                                  style={{ fontSize: "8px" }}
-                                                >
-                                                  harga beli{" "}
-                                                </label>
+                                                <label>harga beli </label>
                                                 <input
                                                   readOnly={
                                                     localStorage.getItem(
@@ -3806,7 +3763,6 @@ class FormProduct extends Component {
                                                       satuan
                                                     )
                                                   }
-                                                  style={{ fontSize: "10px" }}
                                                 />
                                               </div>
                                             </div>
@@ -3831,11 +3787,7 @@ class FormProduct extends Component {
                                                       className="form-group"
                                                       key={z}
                                                     >
-                                                      <label
-                                                        style={{
-                                                          fontSize: "8px",
-                                                        }}
-                                                      >
+                                                      <label>
                                                         margin {z + 1}
                                                       </label>
                                                       <input
@@ -3862,9 +3814,6 @@ class FormProduct extends Component {
                                                           )
                                                         }
                                                         value={marginValue}
-                                                        style={{
-                                                          fontSize: "10px",
-                                                        }}
                                                       />
                                                     </div>
                                                   );
@@ -3901,11 +3850,7 @@ class FormProduct extends Component {
                                                       className="form-group"
                                                       key={z}
                                                     >
-                                                      <label
-                                                        style={{
-                                                          fontSize: "8px",
-                                                        }}
-                                                      >
+                                                      <label>
                                                         harga jual{" "}
                                                         {this.state[place]}
                                                       </label>
@@ -3933,9 +3878,6 @@ class FormProduct extends Component {
                                                             satuan
                                                           )
                                                         }
-                                                        style={{
-                                                          fontSize: "10px",
-                                                        }}
                                                       />
                                                     </div>
                                                   );
@@ -3950,11 +3892,7 @@ class FormProduct extends Component {
                                           <div className="row">
                                             <div className="col-md-3">
                                               <div className="form-group">
-                                                <label
-                                                  style={{ fontSize: "8px" }}
-                                                >
-                                                  service
-                                                </label>
+                                                <label>service</label>
                                                 <input
                                                   readOnly={
                                                     this.state.jenis === "4"
@@ -3976,17 +3914,12 @@ class FormProduct extends Component {
                                                       satuan
                                                     )
                                                   }
-                                                  style={{ fontSize: "10px" }}
                                                 />
                                               </div>
                                             </div>
                                             <div className="col-md-3">
                                               <div className="form-group">
-                                                <label
-                                                  style={{ fontSize: "8px" }}
-                                                >
-                                                  PPN
-                                                </label>
+                                                <label>PPN</label>
                                                 <input
                                                   readOnly={
                                                     this.state.jenis === "4"
@@ -4008,7 +3941,6 @@ class FormProduct extends Component {
                                                       satuan
                                                     )
                                                   }
-                                                  style={{ fontSize: "10px" }}
                                                 />
                                               </div>
                                             </div>

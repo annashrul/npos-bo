@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Preloader from "Preloader";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";

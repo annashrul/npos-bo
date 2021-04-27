@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Preloader from "Preloader";
 import Layout from "../../Layout";
 import ListBank from "./src/list";
 import connect from "react-redux/es/connect/connect";

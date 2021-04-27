@@ -135,51 +135,55 @@ class ListSales extends Component {
               </tr>
             </thead>
             <tbody>
-              {typeof data === "object"
-                ? data.map((v, i) => {
-                    let getLok;
-                    if (this.props.auth.user.lokasi !== undefined)
-                      getLok = this.props.auth.user.lokasi.filter(
-                        (item) => item.kode === v.lokasi
-                      );
-                    return (
-                      <tr key={i}>
-                        <td style={columnStyle}>
-                          {/* Example split danger button */}
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) => this.toggleModal(e, i)}
-                                >
-                                  Edit
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => this.handleDelete(e, v.kode)}
-                                >
-                                  Delete
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        <td style={columnStyle}>{v.nama}</td>
-                        <td style={columnStyle}>
-                          {getLok === undefined
-                            ? "Location Not Found!"
-                            : getLok[0].nama}
-                        </td>
-                        <td style={columnStyle}>
-                          {v.status === "1"
-                            ? statusQ("success", "Active")
-                            : statusQ("danger", "In Active")}
-                        </td>
-                        {/* <td style={columnStyle}>{v.kode}</td> */}
-                      </tr>
+              {typeof data === "object" ? (
+                data.map((v, i) => {
+                  let getLok;
+                  if (this.props.auth.user.lokasi !== undefined)
+                    getLok = this.props.auth.user.lokasi.filter(
+                      (item) => item.kode === v.lokasi
                     );
-                  })
-                : "No data."}
+                  return (
+                    <tr key={i}>
+                      <td style={columnStyle}>
+                        {/* Example split danger button */}
+                        <div className="btn-group">
+                          <UncontrolledButtonDropdown>
+                            <DropdownToggle caret>Aksi</DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem
+                                onClick={(e) => this.toggleModal(e, i)}
+                              >
+                                Edit
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={(e) => this.handleDelete(e, v.kode)}
+                              >
+                                Delete
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledButtonDropdown>
+                        </div>
+                      </td>
+                      <td style={columnStyle}>{v.nama}</td>
+                      <td style={columnStyle}>
+                        {getLok === undefined
+                          ? "Location Not Found!"
+                          : getLok[0].nama}
+                      </td>
+                      <td style={columnStyle}>
+                        {v.status === "1"
+                          ? statusQ("success", "Active")
+                          : statusQ("danger", "In Active")}
+                      </td>
+                      {/* <td style={columnStyle}>{v.kode}</td> */}
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={4}>No Data</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

@@ -13,7 +13,6 @@ import { FetchStockReportDetailSatuan } from "redux/actions/report/inventory/sto
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { rangeDate } from "helper";
 import Select from "react-select";
-import Preloader from "Preloader";
 import { HEADERS } from "redux/actions/_constants";
 import Paginationq from "helper";
 import {
@@ -390,7 +389,7 @@ class InventoryReport extends Component {
                     <i className="fa fa-search" />
                   </button>
                   <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
+                    style={{ marginTop: "28px" }}
                     className="btn btn-primary"
                     onClick={(e) =>
                       this.toggleModal(e, last_page * per_page, per_page)
@@ -498,156 +497,148 @@ class InventoryReport extends Component {
             </thead>
             {
               <tbody>
-                {typeof data === "object"
-                  ? data.map((v, i) => {
-                      const stok_akhir =
-                        parseFloat(v.stock_awal) +
-                        parseFloat(v.stock_masuk) -
-                        parseFloat(v.stock_keluar);
-                      total_dn_per =
-                        total_dn_per + parseFloat(v.delivery_note, 10);
-                      total_first_stock_per =
-                        total_first_stock_per + parseFloat(v.stock_awal, 10);
-                      total_last_stock_per =
-                        total_last_stock_per +
-                        parseFloat(v.stock_awal) +
-                        parseFloat(v.stock_masuk) -
-                        parseFloat(v.stock_keluar);
-                      total_last_stock_per = total_last_stock_per + stok_akhir;
-                      total_stock_in_per =
-                        total_stock_in_per + parseFloat(v.stock_masuk, 10);
-                      total_stock_out_per =
-                        total_stock_out_per + parseFloat(v.stock_keluar, 10);
-                      total_jual_per += parseInt(v.harga_lokasi);
-                      total_beli_per += parseInt(v.harga_beli_lokasi);
-                      total_jual_qty_per += parseInt(
-                        v.harga_lokasi *
-                          (parseFloat(v.stock_awal) +
-                            parseFloat(v.stock_masuk)) -
-                          (parseFloat(v.stock_keluar) +
-                            parseFloat(v.stock_penjualan))
-                      );
-                      total_beli_qty_per += parseInt(
-                        v.harga_beli_lokasi *
-                          (parseFloat(v.stock_awal) +
-                            parseFloat(v.stock_masuk)) -
-                          (parseFloat(v.stock_keluar) +
-                            parseFloat(v.stock_penjualan))
-                      );
-                      total_stock_penjualan_per =
-                        total_stock_penjualan_per +
-                        parseFloat(v.stock_penjualan, 10);
-                      get_lokasi = v.lokasi === "-";
-                      return (
-                        <tr key={i}>
-                          <td style={columnStyle}>
-                            {" "}
-                            {i + 1 + 10 * (parseFloat(current_page, 10) - 1)}
-                          </td>
-                          <td style={columnStyle}>
-                            {/* Example split danger button */}
-                            <div className="btn-group">
-                              <UncontrolledButtonDropdown>
-                                <DropdownToggle caret>Aksi</DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`}
-                                    target="_blank"
-                                  >
-                                    Export
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.toggle(
-                                        e,
-                                        v.kd_brg,
-                                        v.barcode,
-                                        v.nm_brg
-                                      )
-                                    }
-                                  >
-                                    Detail
-                                  </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledButtonDropdown>
-                            </div>
-                          </td>
-                          <td style={columnStyle}>{v.kd_brg}</td>
-                          <td style={columnStyle}>{v.barcode}</td>
-                          <td style={columnStyle}>{v.satuan}</td>
-                          <td style={columnStyle}>{v.nm_brg}</td>
-                          <td style={columnStyle}>{v.supplier}</td>
-                          <td style={columnStyle}>{v.sub_dept}</td>
-                          <td style={columnStyle}>{v.nama_kel}</td>
-                          {/* <td style={{textAlign:"right"}}>{v.delivery_note}</td> */}
-                          <td
-                            className={`${
-                              !this.state.bukaHarga ? "d-none" : ""
-                            }`}
-                            style={{ textAlign: "right" }}
-                          >
-                            {get_lokasi ? 0 : toRp(v.harga_beli_lokasi)}
-                          </td>
-                          <td
-                            className={`${
-                              !this.state.bukaHarga ? "d-none" : ""
-                            }`}
-                            style={{ textAlign: "right" }}
-                          >
-                            {get_lokasi
-                              ? 0
-                              : toRp(
-                                  v.harga_beli_lokasi *
-                                    (parseFloat(v.stock_awal) +
-                                      parseFloat(v.stock_masuk)) -
-                                    (parseFloat(v.stock_keluar) +
-                                      parseFloat(v.stock_penjualan))
-                                )}
-                          </td>
-                          <td
-                            className={`${
-                              !this.state.bukaHarga ? "d-none" : ""
-                            }`}
-                            style={{ textAlign: "right" }}
-                          >
-                            {get_lokasi ? 0 : toRp(v.harga_lokasi)}
-                          </td>
-                          <td
-                            className={`${
-                              !this.state.bukaHarga ? "d-none" : ""
-                            }`}
-                            style={{ textAlign: "right" }}
-                          >
-                            {get_lokasi
-                              ? 0
-                              : toRp(
-                                  v.harga_lokasi *
-                                    (parseFloat(v.stock_awal) +
-                                      parseFloat(v.stock_masuk)) -
-                                    (parseFloat(v.stock_keluar) +
-                                      parseFloat(v.stock_penjualan))
-                                )}
-                          </td>
-                          <td style={{ textAlign: "right" }}>{v.stock_awal}</td>
-                          <td style={{ textAlign: "right" }}>
-                            {v.stock_masuk}
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            {v.stock_keluar}
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            {v.stock_penjualan}
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            {parseFloat(v.stock_awal) +
-                              parseFloat(v.stock_masuk) -
-                              (parseFloat(v.stock_keluar) +
-                                parseFloat(v.stock_penjualan))}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : "No data."}
+                {typeof data === "object" ? (
+                  data.map((v, i) => {
+                    const stok_akhir =
+                      parseFloat(v.stock_awal) +
+                      parseFloat(v.stock_masuk) -
+                      parseFloat(v.stock_keluar);
+                    total_dn_per =
+                      total_dn_per + parseFloat(v.delivery_note, 10);
+                    total_first_stock_per =
+                      total_first_stock_per + parseFloat(v.stock_awal, 10);
+                    total_last_stock_per =
+                      total_last_stock_per +
+                      parseFloat(v.stock_awal) +
+                      parseFloat(v.stock_masuk) -
+                      parseFloat(v.stock_keluar);
+                    total_last_stock_per = total_last_stock_per + stok_akhir;
+                    total_stock_in_per =
+                      total_stock_in_per + parseFloat(v.stock_masuk, 10);
+                    total_stock_out_per =
+                      total_stock_out_per + parseFloat(v.stock_keluar, 10);
+                    total_jual_per += parseInt(v.harga_lokasi, 10);
+                    total_beli_per += parseInt(v.harga_beli_lokasi, 10);
+                    total_jual_qty_per += parseInt(
+                      v.harga_lokasi *
+                        (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk)) -
+                        (parseFloat(v.stock_keluar) +
+                          parseFloat(v.stock_penjualan)),
+                      10
+                    );
+                    total_beli_qty_per += parseInt(
+                      v.harga_beli_lokasi *
+                        (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk)) -
+                        (parseFloat(v.stock_keluar) +
+                          parseFloat(v.stock_penjualan)),
+                      10
+                    );
+                    total_stock_penjualan_per =
+                      total_stock_penjualan_per +
+                      parseFloat(v.stock_penjualan, 10);
+                    get_lokasi = v.lokasi === "-";
+                    return (
+                      <tr key={i}>
+                        <td style={columnStyle}>
+                          {" "}
+                          {i + 1 + 10 * (parseFloat(current_page, 10) - 1)}
+                        </td>
+                        <td style={columnStyle}>
+                          {/* Example split danger button */}
+                          <div className="btn-group">
+                            <UncontrolledButtonDropdown>
+                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem
+                                  href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`}
+                                  target="_blank"
+                                >
+                                  Export
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.toggle(
+                                      e,
+                                      v.kd_brg,
+                                      v.barcode,
+                                      v.nm_brg
+                                    )
+                                  }
+                                >
+                                  Detail
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledButtonDropdown>
+                          </div>
+                        </td>
+                        <td style={columnStyle}>{v.kd_brg}</td>
+                        <td style={columnStyle}>{v.barcode}</td>
+                        <td style={columnStyle}>{v.satuan}</td>
+                        <td style={columnStyle}>{v.nm_brg}</td>
+                        <td style={columnStyle}>{v.supplier}</td>
+                        <td style={columnStyle}>{v.sub_dept}</td>
+                        <td style={columnStyle}>{v.nama_kel}</td>
+                        {/* <td style={{textAlign:"right"}}>{v.delivery_note}</td> */}
+                        <td
+                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
+                          style={{ textAlign: "right" }}
+                        >
+                          {get_lokasi ? 0 : toRp(v.harga_beli_lokasi)}
+                        </td>
+                        <td
+                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
+                          style={{ textAlign: "right" }}
+                        >
+                          {get_lokasi
+                            ? 0
+                            : toRp(
+                                v.harga_beli_lokasi *
+                                  (parseFloat(v.stock_awal) +
+                                    parseFloat(v.stock_masuk)) -
+                                  (parseFloat(v.stock_keluar) +
+                                    parseFloat(v.stock_penjualan))
+                              )}
+                        </td>
+                        <td
+                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
+                          style={{ textAlign: "right" }}
+                        >
+                          {get_lokasi ? 0 : toRp(v.harga_lokasi)}
+                        </td>
+                        <td
+                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
+                          style={{ textAlign: "right" }}
+                        >
+                          {get_lokasi
+                            ? 0
+                            : toRp(
+                                v.harga_lokasi *
+                                  (parseFloat(v.stock_awal) +
+                                    parseFloat(v.stock_masuk)) -
+                                  (parseFloat(v.stock_keluar) +
+                                    parseFloat(v.stock_penjualan))
+                              )}
+                        </td>
+                        <td style={{ textAlign: "right" }}>{v.stock_awal}</td>
+                        <td style={{ textAlign: "right" }}>{v.stock_masuk}</td>
+                        <td style={{ textAlign: "right" }}>{v.stock_keluar}</td>
+                        <td style={{ textAlign: "right" }}>
+                          {v.stock_penjualan}
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          {parseFloat(v.stock_awal) +
+                            parseFloat(v.stock_masuk) -
+                            (parseFloat(v.stock_keluar) +
+                              parseFloat(v.stock_penjualan))}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={14}>No Data</td>
+                  </tr>
+                )}
               </tbody>
             }
             <tfoot>

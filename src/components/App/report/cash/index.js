@@ -11,7 +11,6 @@ import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
-import Preloader from "../../../../Preloader";
 import { kassa, rangeDate, toRp } from "../../../../helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import CashReportExcel from "components/App/modals/report/cash/form_cash_excel";

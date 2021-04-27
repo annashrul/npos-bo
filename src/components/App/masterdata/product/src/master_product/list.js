@@ -65,7 +65,17 @@ class ListProduct extends Component {
       any_dept_barang: "",
       any_subdept_barang: "",
       any_kategori_barang: "",
+      isModalForm: false,
+      isModalDetail: false,
+      isModalCustomer: false,
     };
+  }
+  componentWillUnmount() {
+    this.setState({
+      isModalForm: false,
+      isModalDetail: false,
+      isModalCustomer: false,
+    });
   }
 
   componentWillMount() {
@@ -430,6 +440,7 @@ class ListProduct extends Component {
   }
   loc_detail(e, kode) {
     e.preventDefault();
+    this.setState({ isModalDetail: true });
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("detailProduct"));
@@ -437,6 +448,8 @@ class ListProduct extends Component {
   }
   handlePriceCustomer(e, kode, nm_brg) {
     e.preventDefault();
+    this.setState({ isModalCustomer: true });
+
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("CustomerPrice"));
@@ -446,6 +459,8 @@ class ListProduct extends Component {
   }
   toggleModal(e) {
     e.preventDefault();
+    this.setState({ isModalForm: true });
+
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProduct"));
@@ -458,6 +473,8 @@ class ListProduct extends Component {
   }
   handleEdit = (e, kode) => {
     e.preventDefault();
+    this.setState({ isModalForm: true });
+
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProduct"));
@@ -522,95 +539,100 @@ class ListProduct extends Component {
       <div>
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
-            <div className="col-6 col-xs-6 col-md-2">
-              <div className="form-group">
-                <label className="control-label font-12">Urutan Posisi</label>
-                <Select
-                  options={this.state.sort_by_data}
-                  onChange={this.HandleChangeSortBy}
-                  value={this.state.sort_by_data.find((op) => {
-                    return op.value === this.state.sort_by;
-                  })}
-                />
+            <div className="col-md-9">
+              <div className="row">
+                <div className="col-6 col-xs-6 col-md-3">
+                  <div className="form-group">
+                    <label className="control-label font-12">
+                      Urutan Posisi
+                    </label>
+                    <Select
+                      options={this.state.sort_by_data}
+                      onChange={this.HandleChangeSortBy}
+                      value={this.state.sort_by_data.find((op) => {
+                        return op.value === this.state.sort_by;
+                      })}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-6 col-xs-6 col-md-2">
+                  <div className="form-group">
+                    <label>Periode Input</label>
+                    <br />
+                    <label htmlFor="inputState" className="col-form-label">
+                      <input
+                        name="semua_periode"
+                        type="checkbox"
+                        checked={
+                          localStorage.semua_periode_barang === "true"
+                            ? true
+                            : false
+                        }
+                        onChange={this.handleChecked}
+                      />
+                      &nbsp; semua periode
+                    </label>
+                  </div>
+                </div>
+                <div className="col-6 col-xs-6 col-md-3">
+                  <div className="form-group">
+                    <label htmlFor=""> Periode </label>
+                    <DateRangePicker
+                      style={{ display: "unset" }}
+                      ranges={rangeDate}
+                      alwaysShowCalendars={true}
+                      onEvent={this.handleEvent}
+                    >
+                      <input
+                        readOnly={true}
+                        type="text"
+                        className="form-control"
+                        name="date_product"
+                        value={`${this.state.startDate} to ${this.state.endDate}`}
+                        style={{ padding: "9px", fontWeight: "bolder" }}
+                      />
+                    </DateRangePicker>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="col-6 col-xs-6 col-md-2">
-              <div className="form-group">
-                <label>Periode Input</label>
-                <br />
-                <label htmlFor="inputState" className="col-form-label">
-                  <input
-                    name="semua_periode"
-                    type="checkbox"
-                    checked={
-                      localStorage.semua_periode_barang === "true"
-                        ? true
-                        : false
-                    }
-                    onChange={this.handleChecked}
-                  />{" "}
-                  semua periode
-                </label>
-              </div>
-            </div>
-            <div className="col-6 col-xs-6 col-md-3">
-              <div className="form-group">
-                <label htmlFor=""> Periode </label>
-                <DateRangePicker
-                  style={{ display: "unset" }}
-                  ranges={rangeDate}
-                  alwaysShowCalendars={true}
-                  onEvent={this.handleEvent}
-                >
-                  <input
-                    readOnly={true}
-                    type="text"
-                    className="form-control"
-                    name="date_product"
-                    value={`${this.state.startDate} to ${this.state.endDate}`}
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                  />
-                </DateRangePicker>
-              </div>
-            </div>
-            <div className="col-12 col-xs-12 col-md-4">
-              <div className="form-group">
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e)}
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-plus"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="button"
-                  onClick={this.exportPDF}
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-file-pdf-o"></i>
-                </button>
-                <ReactHTMLTableToExcel
-                  className="btn btn-primary btnBrg"
-                  table="emp"
-                  filename="barang"
-                  sheet="barang"
-                  buttonText="export excel"
-                ></ReactHTMLTableToExcel>
-              </div>
+            <div className="col-12 col-xs-12 col-md-3 text-right">
+              <button
+                style={{ marginTop: "27px", marginRight: "2px" }}
+                type="submit"
+                className="btn btn-primary"
+              >
+                <i className="fa fa-search"></i>
+              </button>
+              <button
+                style={{ marginTop: "27px", marginRight: "2px" }}
+                type="button"
+                onClick={(e) => this.toggleModal(e)}
+                className="btn btn-primary"
+              >
+                <i className="fa fa-plus"></i>
+              </button>
+              <button
+                style={{ marginTop: "27px", marginRight: "2px" }}
+                type="button"
+                onClick={this.exportPDF}
+                className="btn btn-primary"
+              >
+                <i className="fa fa-file-pdf-o"></i>
+              </button>
+              <ReactHTMLTableToExcel
+                className="btn btn-primary btnBrg"
+                table="emp"
+                filename="barang"
+                sheet="barang"
+                buttonText="export excel"
+              ></ReactHTMLTableToExcel>
             </div>
           </div>
         </form>
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto", zoom: "90%" }}>
           {/*DATA EXCEL*/}
           <table
             className="table table-hover"
@@ -897,12 +919,12 @@ class ListProduct extends Component {
                   })
                 ) : (
                   <tr>
-                    <td>No data</td>
+                    <td colSpan={11}>No data</td>
                   </tr>
                 )
               ) : (
                 <tr>
-                  <td>No data</td>
+                  <td colSpan={11}>No data</td>
                 </tr>
               )}
             </tbody>
@@ -916,17 +938,23 @@ class ListProduct extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
+        {this.state.isModalForm ? (
+          <FormProduct
+            data={this.props.groupProduct}
+            dataLocation={this.props.location}
+            dataSupplier={this.props.supplier}
+            dataSubDept={this.props.subDept}
+            dataEdit={this.props.productEdit}
+            productCode={this.props.productCode}
+          />
+        ) : null}
 
-        <FormProduct
-          data={this.props.groupProduct}
-          dataLocation={this.props.location}
-          dataSupplier={this.props.supplier}
-          dataSubDept={this.props.subDept}
-          dataEdit={this.props.productEdit}
-          productCode={this.props.productCode}
-        />
-        <DetailProduct dataDetail={this.props.productDetail} />
-        <CustomerPrice dataCustomerPrice={this.props.customerPrice} />
+        {this.state.isModalDetail ? (
+          <DetailProduct dataDetail={this.props.productDetail} />
+        ) : null}
+        {this.state.isModalCustomer ? (
+          <CustomerPrice dataCustomerPrice={this.props.customerPrice} />
+        ) : null}
       </div>
     );
   }

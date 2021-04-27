@@ -13,8 +13,7 @@ import PurchaseBySupplierReportExcel from "components/App/modals/purchase/form_p
 import Select from "react-select";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import toCurrency, { rangeDate } from "helper";
-import Preloader from "Preloader";
+import { rangeDate } from "helper";
 class PurchaseBySupplierReport extends Component {
   constructor(props) {
     super(props);

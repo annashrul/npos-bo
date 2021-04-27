@@ -516,37 +516,43 @@ class SaleByCustArchive extends Component {
                 </thead>
                 {!this.props.isLoadingReport ? (
                   <tbody>
-                    {typeof data === "object"
-                      ? data.length > 0
-                        ? data.map((v, i) => {
-                            return (
-                              <tr key={i}>
-                                <td style={columnStyle}>
-                                  {i +
-                                    1 +
-                                    10 * (parseInt(current_page, 10) - 1)}
-                                </td>
+                    {typeof data === "object" ? (
+                      data.length > 0 ? (
+                        data.map((v, i) => {
+                          return (
+                            <tr key={i}>
+                              <td style={columnStyle}>
+                                {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                              </td>
 
-                                <td style={columnStyle}>{v.kd_cust}</td>
-                                <td style={columnStyle}>{v.nama}</td>
-                                <td style={{ textAlign: "right" }}>
-                                  {toRp(parseInt(v.gross_sales, 10))}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                  {toRp(parseInt(v.diskon_item, 10))}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                  {toRp(parseInt(v.diskon_trx, 10))}
-                                </td>
-                                <td style={{ textAlign: "right" }}>
-                                  {toRp(v.service)}
-                                </td>
-                                <td style={{ textAlign: "right" }}>{v.qty}</td>
-                              </tr>
-                            );
-                          })
-                        : "No data."
-                      : "No data."}
+                              <td style={columnStyle}>{v.kd_cust}</td>
+                              <td style={columnStyle}>{v.nama}</td>
+                              <td style={{ textAlign: "right" }}>
+                                {toRp(parseInt(v.gross_sales, 10))}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {toRp(parseInt(v.diskon_item, 10))}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {toRp(parseInt(v.diskon_trx, 10))}
+                              </td>
+                              <td style={{ textAlign: "right" }}>
+                                {toRp(v.service)}
+                              </td>
+                              <td style={{ textAlign: "right" }}>{v.qty}</td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan={8}>No Data</td>
+                        </tr>
+                      )
+                    ) : (
+                      <tr>
+                        <td colSpan={8}>No Data</td>
+                      </tr>
+                    )}
                   </tbody>
                 ) : (
                   <Preloader />

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import { FetchSales } from "redux/actions/masterdata/sales/sales.action";
-import Preloader from "Preloader";
 import ListSales from "./src/list";
 
 class Sales extends Component {

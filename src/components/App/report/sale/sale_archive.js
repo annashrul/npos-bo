@@ -4,7 +4,6 @@ import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
-import Preloader from "Preloader";
 import Paginationq, { rangeDate, toRp, CapitalizeEachWord } from "helper";
 import { FetchReportSale } from "redux/actions/sale/sale.action";
 import Swal from "sweetalert2";
@@ -43,10 +42,10 @@ class SaleArchive extends Component {
       prevLoc: [],
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
-      isModalDetail:false,
-      isModalExcel:false,
-      isModalOtorisasi:false,
-      totalExcel:0
+      isModalDetail: false,
+      isModalExcel: false,
+      isModalOtorisasi: false,
+      totalExcel: 0,
     };
     this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     this.HandleChangeType = this.HandleChangeType.bind(this);
@@ -134,7 +133,11 @@ class SaleArchive extends Component {
     }
   };
   componentWillUnmount() {
-    this.setState({isModalDetail:false,isModalExcel:false,isModalOtorisasi:false})
+    this.setState({
+      isModalDetail: false,
+      isModalExcel: false,
+      isModalOtorisasi: false,
+    });
     // localStorage.removeItem("date_from_sale_report");
     // localStorage.removeItem("date_to_sale_report");
     localStorage.removeItem("type_sale_report");
@@ -144,15 +147,7 @@ class SaleArchive extends Component {
     // localStorage.removeItem("pageNumber_sale_report");
   }
   componentWillMount() {
-    let where='';
     let page = localStorage.pageNumber_sale_report;
-    // let from = localStorage.date_from_sale_report;
-    // let to = localStorage.date_to_sale_report;
-    // if(page!==undefined&&page!==null){
-    //   where+=`page=${page}`
-    // }else{
-    //   where+=`page=${page}`
-    // }
     this.checkingParameter(page === undefined && page === null ? 1 : page);
   }
   componentDidMount() {
@@ -257,7 +252,10 @@ class SaleArchive extends Component {
       this.state.location === ""
         ? localStorage.getItem("location_sale_report")
         : this.state.location;
-    let any =this.state.any_sale_report === ""? localStorage.any_sale_report: this.state.any_sale_report;
+    let any =
+      this.state.any_sale_report === ""
+        ? localStorage.any_sale_report
+        : this.state.any_sale_report;
 
     if (dateFrom !== undefined && dateFrom !== null) {
       if (where !== "") {
@@ -288,7 +286,7 @@ class SaleArchive extends Component {
       }
       where += `lokasi=${lokasi}`;
     }
-    if (any !== undefined && any!==null && any !== "") {
+    if (any !== undefined && any !== null && any !== "") {
       if (where !== "") {
         where += "&";
       }
@@ -322,7 +320,7 @@ class SaleArchive extends Component {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.value) {
-        this.setState({isModalOtorisasi:true});
+        this.setState({ isModalOtorisasi: true });
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("modalOtorisasi"));
@@ -331,7 +329,7 @@ class SaleArchive extends Component {
   }
   handleDetail(e, kode) {
     e.preventDefault();
-    this.setState({isModalDetail:true});
+    this.setState({ isModalDetail: true });
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("detailSaleReport"));
@@ -340,7 +338,7 @@ class SaleArchive extends Component {
 
   toggleModal(e, total, perpage) {
     e.preventDefault();
-    this.setState({isModalExcel:true,totalExcel:total});
+    this.setState({ isModalExcel: true, totalExcel: total });
     const bool = !this.props.isOpen;
     // let range = total*perpage;
     this.props.dispatch(ModalToggle(bool));
@@ -394,8 +392,6 @@ class SaleArchive extends Component {
 
     return (
       <Layout page="Laporan Arsip Penjualan">
-        
-        
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">
@@ -436,9 +432,7 @@ class SaleArchive extends Component {
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">
-              <label className="control-label font-12">
-                Tipe Transaksi
-              </label>
+              <label className="control-label font-12">Tipe Transaksi</label>
               <Select
                 options={this.state.type_data}
                 placeholder="Pilih Tipe Transaksi"
@@ -464,46 +458,39 @@ class SaleArchive extends Component {
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">
-                  <label htmlFor="">Cari</label>
-                  <input
-                    type="text"
-                    name="any_sale_report"
-                    className="form-control"
-                    value={this.state.any_sale_report}
-                    placeholder="Kode/Kasir/Sales/Customer"
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              
-            
-          
+              <label htmlFor="">Cari</label>
+              <input
+                type="text"
+                name="any_sale_report"
+                className="form-control"
+                value={this.state.any_sale_report}
+                placeholder="Kode/Kasir/Sales/Customer"
+                onChange={(e) => this.handleChange(e)}
+              />
+            </div>
           </div>
-          <div
-                className="col-md-2 text-right"
-               
+          <div className="col-md-2 text-right">
+            <div className="form-group">
+              <button
+                style={{ marginTop: "28px", marginRight: "5px" }}
+                className="btn btn-primary"
+                onClick={this.handleSearch}
               >
-                <div className="form-group">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
-                    <i className="fa fa-print"></i> 
-                  </button>
-                </div>
-              </div>
+                <i className="fa fa-search" />
+              </button>
+              <button
+                style={{ marginTop: "28px", marginRight: "5px" }}
+                className="btn btn-primary"
+                onClick={(e) =>
+                  this.toggleModal(e, last_page * per_page, per_page)
+                }
+              >
+                <i className="fa fa-print"></i>
+              </button>
+            </div>
+          </div>
         </div>
-        
-        
+
         <div style={{ overflowX: "auto", zoom: "85%" }}>
           <table className="table table-hover ">
             <thead className="bg-light">
@@ -607,148 +594,143 @@ class SaleArchive extends Component {
             </thead>
             {
               <tbody>
-                {typeof data === "object"
-                  ? data.length > 0
-                    ? data.map((v, i) => {
-                        omset_per += parseFloat(v.omset);
-                        profit_per += parseFloat(v.profit);
-                        dis_item_per =
-                          dis_item_per + parseFloat(v.diskon_item);
-                        dis_persen_per =
-                          dis_persen_per + parseFloat(v.dis_persen);
-                        dis_rp_per = dis_rp_per + parseFloat(v.dis_rp);
-                        kas_lain_per =
-                          kas_lain_per + parseInt(v.kas_lain, 10);
-                        gt_per = gt_per + parseFloat(v.gt);
-                        bayar_per = bayar_per + parseInt(v.bayar, 10);
-                        jml_kartu_per =
-                          jml_kartu_per + parseFloat(v.jml_kartu);
-                        charge_per = charge_per + parseFloat(v.charge);
-                        change_per = change_per + parseFloat(v.change);
-                        voucher_per = voucher_per + parseInt(v.voucher, 10);
-                        rounding_per =
-                          rounding_per + parseInt(v.rounding, 10);
-                        hpp_per += parseFloat(v.hrg_beli);
-                        total_tunai +=
-                          parseFloat(v.bayar) - parseFloat(v.change);
+                {typeof data === "object" ? (
+                  data.length > 0 ? (
+                    data.map((v, i) => {
+                      omset_per += parseFloat(v.omset);
+                      profit_per += parseFloat(v.profit);
+                      dis_item_per = dis_item_per + parseFloat(v.diskon_item);
+                      dis_persen_per =
+                        dis_persen_per + parseFloat(v.dis_persen);
+                      dis_rp_per = dis_rp_per + parseFloat(v.dis_rp);
+                      kas_lain_per = kas_lain_per + parseInt(v.kas_lain, 10);
+                      gt_per = gt_per + parseFloat(v.gt);
+                      bayar_per = bayar_per + parseInt(v.bayar, 10);
+                      jml_kartu_per = jml_kartu_per + parseFloat(v.jml_kartu);
+                      charge_per = charge_per + parseFloat(v.charge);
+                      change_per = change_per + parseFloat(v.change);
+                      voucher_per = voucher_per + parseInt(v.voucher, 10);
+                      rounding_per = rounding_per + parseInt(v.rounding, 10);
+                      hpp_per += parseFloat(v.hrg_beli);
+                      total_tunai += parseFloat(v.bayar) - parseFloat(v.change);
 
-                        return (
-                          <tr key={i}>
-                            <td style={columnStyle}>
-                              {" "}
-                              {i +
-                                1 +
-                                10 * (parseInt(current_page, 10) - 1)}
-                            </td>
-                            <td style={columnStyle}>
-                              <div className="btn-group">
-                                <UncontrolledButtonDropdown>
-                                  <DropdownToggle caret>
-                                    Aksi
-                                  </DropdownToggle>
-                                  <DropdownMenu>
-                                    <DropdownItem
-                                      onClick={(e) =>
-                                        this.handleDetail(e, v.kd_trx)
-                                      }
-                                    >
-                                      Detail
-                                    </DropdownItem>
-                                    <DropdownItem
-                                      onClick={(e) =>
-                                        this.handleDelete(e, v.kd_trx)
-                                      }
-                                    >
-                                      Delete
-                                    </DropdownItem>
-                                    <DropdownItem
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        this.props.dispatch(
-                                          FetchNotaReceipt(v.kd_trx)
-                                        );
-                                      }}
-                                    >
-                                      Nota
-                                    </DropdownItem>
-                                    <Link to={`../print3ply/${v.kd_trx}`}>
-                                      <DropdownItem>3ply</DropdownItem>
-                                    </Link>
-                                  </DropdownMenu>
-                                </UncontrolledButtonDropdown>
-                              </div>
-                            </td>
-                            <td style={columnStyle}>{v.kd_trx}</td>
-                            <td style={columnStyle}>
-                              {moment(v.tgl).format("yyyy/MM/DD")}
-                            </td>
-                            <td style={columnStyle}>
-                              {moment(v.jam).format("hh:mm:ss")}
-                            </td>
-                            <td style={columnStyle}>{v.customer}</td>
-                            <td style={columnStyle}>{v.nama}</td>
-                            <td style={columnStyle}>{v.sales}</td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.omset))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.diskon_item))}
-                            </td>
-                            <td style={columnRight}>{toRp(v.dis_rp)}</td>
-                            <td style={columnRight}>
-                              {parseFloat(v.dis_persen).toFixed(2)}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.hrg_beli))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.hrg_jual))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.profit))}
-                            </td>
-                            <td style={columnStyle}>
-                              {v.regmember ? v.regmember : "-"}
-                            </td>
-                            <td style={columnStyle}>{v.kas_lain}</td>
-                            <td style={columnStyle}>{v.ket_kas_lain}</td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.gt))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.rounding))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.bayar))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.change))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(
-                                parseFloat(v.bayar) - parseFloat(v.change)
-                              )}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.jml_kartu))}
-                            </td>
-                            <td style={columnRight}>
-                              {toRp(parseFloat(v.charge))}
-                            </td>
-                            <td style={columnStyle}>{v.kartu}</td>
-                            <td style={columnStyle}>
-                              {CapitalizeEachWord(v.status)}
-                            </td>
-                            <td style={columnStyle}>{v.lokasi}</td>
-                            <td style={columnStyle}>{v.jenis_trx}</td>
-                          </tr>
-                        );
-                      })
-                    :<tr><td>No Data</td></tr>
-                  :<tr><td>No Data</td></tr>}
+                      return (
+                        <tr key={i}>
+                          <td style={columnStyle}>
+                            {" "}
+                            {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                          </td>
+                          <td style={columnStyle}>
+                            <div className="btn-group">
+                              <UncontrolledButtonDropdown>
+                                <DropdownToggle caret>Aksi</DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem
+                                    onClick={(e) =>
+                                      this.handleDetail(e, v.kd_trx)
+                                    }
+                                  >
+                                    Detail
+                                  </DropdownItem>
+                                  <DropdownItem
+                                    onClick={(e) =>
+                                      this.handleDelete(e, v.kd_trx)
+                                    }
+                                  >
+                                    Delete
+                                  </DropdownItem>
+                                  <DropdownItem
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      this.props.dispatch(
+                                        FetchNotaReceipt(v.kd_trx)
+                                      );
+                                    }}
+                                  >
+                                    Nota
+                                  </DropdownItem>
+                                  <Link to={`../print3ply/${v.kd_trx}`}>
+                                    <DropdownItem>3ply</DropdownItem>
+                                  </Link>
+                                </DropdownMenu>
+                              </UncontrolledButtonDropdown>
+                            </div>
+                          </td>
+                          <td style={columnStyle}>{v.kd_trx}</td>
+                          <td style={columnStyle}>
+                            {moment(v.tgl).format("yyyy/MM/DD")}
+                          </td>
+                          <td style={columnStyle}>
+                            {moment(v.jam).format("hh:mm:ss")}
+                          </td>
+                          <td style={columnStyle}>{v.customer}</td>
+                          <td style={columnStyle}>{v.nama}</td>
+                          <td style={columnStyle}>{v.sales}</td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.omset))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.diskon_item))}
+                          </td>
+                          <td style={columnRight}>{toRp(v.dis_rp)}</td>
+                          <td style={columnRight}>
+                            {parseFloat(v.dis_persen).toFixed(2)}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.hrg_beli))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.hrg_jual))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.profit))}
+                          </td>
+                          <td style={columnStyle}>
+                            {v.regmember ? v.regmember : "-"}
+                          </td>
+                          <td style={columnStyle}>{v.kas_lain}</td>
+                          <td style={columnStyle}>{v.ket_kas_lain}</td>
+                          <td style={columnRight}>{toRp(parseFloat(v.gt))}</td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.rounding))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.bayar))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.change))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.bayar) - parseFloat(v.change))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.jml_kartu))}
+                          </td>
+                          <td style={columnRight}>
+                            {toRp(parseFloat(v.charge))}
+                          </td>
+                          <td style={columnStyle}>{v.kartu}</td>
+                          <td style={columnStyle}>
+                            {CapitalizeEachWord(v.status)}
+                          </td>
+                          <td style={columnStyle}>{v.lokasi}</td>
+                          <td style={columnStyle}>{v.jenis_trx}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td>No Data</td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td>No Data</td>
+                  </tr>
+                )}
               </tbody>
             }
             <tfoot>
@@ -811,36 +793,36 @@ class SaleArchive extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-              <Paginationq
-                current_page={parseInt(current_page, 10)}
-                per_page={parseInt(per_page, 10)}
-                total={parseInt(per_page * last_page, 10)}
-                callback={this.handlePageChange.bind(this)}
-              />
-            </div>
-        {
-          this.state.isModalDetail?<DetailSaleReport detailSale={this.props.detailSale} />:null
-        }
-       {
-         this.state.isModalExcel?<SaleReportExcel
-         startDate={this.state.startDate}
-         endDate={this.state.endDate}
-         location={this.state.location}
-         totalPenjualan={this.props.totalPenjualan}
-         totalPenjualanExcel={this.props.totalPenjualanExcel}
-         totalRow={this.state.totalExcel}
-       />:null
-       }
-        {
-          this.state.isModalOtorisasi?<Otorisasi
-          datum={{
-            module: "arsip penjualan",
-            aksi: "delete",
-            id_trx: this.state.id_trx,
-          }}
-          onDone={this.onDone}
-        />:null
-        }
+          <Paginationq
+            current_page={parseInt(current_page, 10)}
+            per_page={parseInt(per_page, 10)}
+            total={parseInt(per_page * last_page, 10)}
+            callback={this.handlePageChange.bind(this)}
+          />
+        </div>
+        {this.state.isModalDetail ? (
+          <DetailSaleReport detailSale={this.props.detailSale} />
+        ) : null}
+        {this.state.isModalExcel ? (
+          <SaleReportExcel
+            startDate={this.state.startDate}
+            endDate={this.state.endDate}
+            location={this.state.location}
+            totalPenjualan={this.props.totalPenjualan}
+            totalPenjualanExcel={this.props.totalPenjualanExcel}
+            totalRow={this.state.totalExcel}
+          />
+        ) : null}
+        {this.state.isModalOtorisasi ? (
+          <Otorisasi
+            datum={{
+              module: "arsip penjualan",
+              aksi: "delete",
+              id_trx: this.state.id_trx,
+            }}
+            onDone={this.onDone}
+          />
+        ) : null}
       </Layout>
     );
   }

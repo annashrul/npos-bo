@@ -402,13 +402,13 @@ class PackingReport extends Component {
                     <i className="fa fa-search" />
                   </button>
                   <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
+                    style={{ marginTop: "28px" }}
                     className="btn btn-primary"
                     onClick={(e) =>
                       this.toggleModal(e, last_page * per_page, per_page)
                     }
                   >
-                    <i className="fa fa-print"></i> Export
+                    <i className="fa fa-print"></i>
                   </button>
                 </div>
               </div>
@@ -495,12 +495,12 @@ class PackingReport extends Component {
                   })
                 ) : (
                   <tr>
-                    <td>No Data</td>
+                    <td colSpan={9}>No Data</td>
                   </tr>
                 )
               ) : (
                 <tr>
-                  <td>No Data</td>
+                  <td colSpan={9}>No Data</td>
                 </tr>
               )}
             </tbody>

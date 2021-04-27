@@ -14,7 +14,6 @@ import PoReportExcel from "components/App/modals/report/purchase/purchase_order/
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import { rangeDate } from "helper";
-import Preloader from "Preloader";
 import {
   UncontrolledButtonDropdown,
   DropdownMenu,
@@ -346,7 +345,7 @@ class PoReport extends Component {
                       readOnly={true}
                       type="text"
                       className="form-control"
-                      defaultValue={`${this.state.startDate} to ${this.state.endDate}`}
+                      value={`${this.state.startDate} to ${this.state.endDate}`}
                       style={{ padding: "10px", fontWeight: "bolder" }}
                     />
                   </DateRangePicker>

@@ -14,7 +14,6 @@ import Select from "react-select";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { rangeDate } from "helper";
-import Preloader from "Preloader";
 class SaleReturReport extends Component {
   constructor(props) {
     super(props);
@@ -379,13 +378,13 @@ class SaleReturReport extends Component {
                 <i className="fa fa-search" />
               </button>
               <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
+                style={{ marginTop: "28px" }}
                 className="btn btn-primary"
                 onClick={(e) =>
                   this.toggleModal(e, last_page * per_page, per_page)
                 }
               >
-                <i className="fa fa-print" /> Export
+                <i className="fa fa-print" />
               </button>
             </div>
           </div>
@@ -419,28 +418,36 @@ class SaleReturReport extends Component {
             </thead>
             {
               <tbody>
-                {typeof data === "object"
-                  ? data.length > 0
-                    ? data.map((v, i) => {
-                        return (
-                          <tr key={i}>
-                            <td style={columnStyle}>
-                              {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                            </td>
-                            <td style={columnStyle}>{v.kd_trx}</td>
-                            <td style={columnStyle}>
-                              {moment(v.tgl).format("DD-MM-YYYY")}
-                            </td>
-                            {/* <td style={columnStyle}>{v.kd_kasir}</td> */}
-                            <td style={columnStyle}>{v.nama}</td>
-                            <td style={rightStyle}>{v.nilai_retur}</td>
-                            <td style={rightStyle}>{v.diskon_item}</td>
-                            {/* <td style={columnStyle}>{v.lokasi}</td> */}
-                          </tr>
-                        );
-                      })
-                    : "No data."
-                  : "No data."}
+                {typeof data === "object" ? (
+                  data.length > 0 ? (
+                    data.map((v, i) => {
+                      return (
+                        <tr key={i}>
+                          <td style={columnStyle}>
+                            {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                          </td>
+                          <td style={columnStyle}>{v.kd_trx}</td>
+                          <td style={columnStyle}>
+                            {moment(v.tgl).format("DD-MM-YYYY")}
+                          </td>
+                          {/* <td style={columnStyle}>{v.kd_kasir}</td> */}
+                          <td style={columnStyle}>{v.nama}</td>
+                          <td style={rightStyle}>{v.nilai_retur}</td>
+                          <td style={rightStyle}>{v.diskon_item}</td>
+                          {/* <td style={columnStyle}>{v.lokasi}</td> */}
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={6}>No Data</td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan={6}>No Data</td>
+                  </tr>
+                )}
               </tbody>
             }
           </table>

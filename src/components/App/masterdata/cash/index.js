@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Layout from "../../Layout";
 import ListCash from "./src/list";
 import connect from "react-redux/es/connect/connect";
-import Preloader from "Preloader";
 import {
   deleteCash,
   FetchCash,
@@ -89,18 +88,12 @@ class Cash extends Component {
   render() {
     return (
       <Layout page="Cash">
-        <div className="col-12 box-margin">
-          <div className="card">
-            <div className="card-body">
-              <ListCash
-                pagin={this.handlePagin}
-                data={this.props.cash}
-                type={this.state.type}
-                deletes={this.handleDelete}
-              />
-            </div>
-          </div>
-        </div>
+        <ListCash
+          pagin={this.handlePagin}
+          data={this.props.cash}
+          type={this.state.type}
+          deletes={this.handleDelete}
+        />
       </Layout>
     );
   }

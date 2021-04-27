@@ -95,7 +95,6 @@ class ListSupplier extends Component {
       whiteSpace: "nowrap",
       verticalAlign: "middle",
       textAlign: "right",
-      whiteSpace: "nowrap",
     };
     // const noWrap = {whiteSpace: "nowrap"};
     const { total, per_page, current_page, data } = this.props.data;
