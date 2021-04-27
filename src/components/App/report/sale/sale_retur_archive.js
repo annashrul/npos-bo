@@ -37,7 +37,11 @@ class SaleReturReport extends Component {
       filter_data: [],
       status: "",
       status_data: [],
+      isModalReport: false,
     };
+  }
+  componentWillUnmount() {
+    this.setState({ isModalReport: false });
   }
   componentWillMount() {
     let page = localStorage.page_sale_retur_report;
@@ -254,6 +258,7 @@ class SaleReturReport extends Component {
   }
   toggleModal(e, total, perpage) {
     e.preventDefault();
+    this.setState({ isModalReport: true });
     const bool = !this.props.isOpen;
     // let range = total*perpage;
     this.props.dispatch(ModalToggle(bool));
@@ -286,175 +291,175 @@ class SaleReturReport extends Component {
 
     return (
       <Layout page="Laporan SaleRetur">
-        <div className="col-12 box-margin">
-          <div className="row" style={{ zoom: "90%" }}>
-            <div className="col-md-10">
-              <div className="row">
-                <div className="col-6 col-xs-6 col-md-2">
-                  <div className="form-group">
-                    <label htmlFor=""> Periode </label>
-                    <DateRangePicker
-                      style={{ display: "unset" }}
-                      ranges={rangeDate}
-                      alwaysShowCalendars={true}
-                      onEvent={this.handleEvent}
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={`${this.state.startDate} to ${this.state.endDate}`}
-                        style={{ padding: "9px", fontWeight: "bolder" }}
-                      />
-                    </DateRangePicker>
-                  </div>
-                </div>
-
-                <div className="col-6 col-xs-6 col-md-2">
-                  <div className="form-group">
-                    <label htmlFor="">Lokasi</label>
-                    <Select
-                      options={this.state.location_data}
-                      onChange={this.HandleChangeLokasi}
-                      placeholder="Pilih Lokasi"
-                      value={this.state.location_data.find((op) => {
-                        return op.value === this.state.location;
-                      })}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-6 col-xs-6 col-md-2">
-                  <div className="form-group">
-                    <label className="control-label font-12">Filter</label>
-                    <Select
-                      options={this.state.filter_data}
-                      // placeholder="Pilih Tipe Kas"
-                      onChange={this.HandleChangeFilter}
-                      value={this.state.filter_data.find((op) => {
-                        return op.value === this.state.filter;
-                      })}
-                    />
-                  </div>
-                </div>
-                <div className="col-6 col-xs-6 col-md-2">
-                  <div className="form-group">
-                    <label className="control-label font-12">Sort</label>
-                    <Select
-                      options={this.state.sort_data}
-                      // placeholder="Pilih Tipe Kas"
-                      onChange={this.HandleChangeSort}
-                      value={this.state.sort_data.find((op) => {
-                        return op.value === this.state.sort;
-                      })}
-                    />
-                  </div>
-                </div>
-                <div className="col-12 col-xs-12 col-md-2">
-                  <div className="form-group">
-                    <label>Cari</label>
+        <div className="row" style={{ zoom: "90%" }}>
+          <div className="col-md-10">
+            <div className="row">
+              <div className="col-6 col-xs-6 col-md-2">
+                <div className="form-group">
+                  <label htmlFor=""> Periode </label>
+                  <DateRangePicker
+                    style={{ display: "unset" }}
+                    ranges={rangeDate}
+                    alwaysShowCalendars={true}
+                    onEvent={this.handleEvent}
+                  >
                     <input
-                      className="form-control"
+                      readOnly={true}
                       type="text"
+                      className="form-control"
+                      value={`${this.state.startDate} to ${this.state.endDate}`}
                       style={{ padding: "9px", fontWeight: "bolder" }}
-                      name="any"
-                      value={this.state.any}
-                      onChange={(e) => this.handleChange(e)}
                     />
-                  </div>
+                  </DateRangePicker>
+                </div>
+              </div>
+
+              <div className="col-6 col-xs-6 col-md-2">
+                <div className="form-group">
+                  <label htmlFor="">Lokasi</label>
+                  <Select
+                    options={this.state.location_data}
+                    onChange={this.HandleChangeLokasi}
+                    placeholder="Pilih Lokasi"
+                    value={this.state.location_data.find((op) => {
+                      return op.value === this.state.location;
+                    })}
+                  />
+                </div>
+              </div>
+
+              <div className="col-6 col-xs-6 col-md-2">
+                <div className="form-group">
+                  <label className="control-label font-12">Filter</label>
+                  <Select
+                    options={this.state.filter_data}
+                    // placeholder="Pilih Tipe Kas"
+                    onChange={this.HandleChangeFilter}
+                    value={this.state.filter_data.find((op) => {
+                      return op.value === this.state.filter;
+                    })}
+                  />
+                </div>
+              </div>
+              <div className="col-6 col-xs-6 col-md-2">
+                <div className="form-group">
+                  <label className="control-label font-12">Sort</label>
+                  <Select
+                    options={this.state.sort_data}
+                    // placeholder="Pilih Tipe Kas"
+                    onChange={this.HandleChangeSort}
+                    value={this.state.sort_data.find((op) => {
+                      return op.value === this.state.sort;
+                    })}
+                  />
+                </div>
+              </div>
+              <div className="col-12 col-xs-12 col-md-2">
+                <div className="form-group">
+                  <label>Cari</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    style={{ padding: "9px", fontWeight: "bolder" }}
+                    name="any"
+                    value={this.state.any}
+                    onChange={(e) => this.handleChange(e)}
+                  />
                 </div>
               </div>
             </div>
-            <div className="col-12 col-xs-12 col-md-2">
-              <div className="form-group text-right">
-                <button
-                  style={{ marginTop: "28px", marginRight: "5px" }}
-                  className="btn btn-primary"
-                  onClick={this.handleSearch}
-                >
-                  <i className="fa fa-search" />
-                </button>
-                <button
-                  style={{ marginTop: "28px", marginRight: "5px" }}
-                  className="btn btn-primary"
-                  onClick={(e) =>
-                    this.toggleModal(e, last_page * per_page, per_page)
-                  }
-                >
-                  <i className="fa fa-print" /> Export
-                </button>
-              </div>
+          </div>
+          <div className="col-12 col-xs-12 col-md-2">
+            <div className="form-group text-right">
+              <button
+                style={{ marginTop: "28px", marginRight: "5px" }}
+                className="btn btn-primary"
+                onClick={this.handleSearch}
+              >
+                <i className="fa fa-search" />
+              </button>
+              <button
+                style={{ marginTop: "28px", marginRight: "5px" }}
+                className="btn btn-primary"
+                onClick={(e) =>
+                  this.toggleModal(e, last_page * per_page, per_page)
+                }
+              >
+                <i className="fa fa-print" /> Export
+              </button>
             </div>
           </div>
-          <div style={{ overflowX: "auto" }}>
-            <table className="table table-hover">
-              <thead className="bg-light">
-                <tr>
-                  {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
-                  <th className="text-black" style={columnStyle} rowSpan="2">
-                    No
-                  </th>
-                  <th className="text-black" style={columnStyle} rowSpan="2">
-                    Kode Trx
-                  </th>
-                  <th className="text-black" style={columnStyle} rowSpan="2">
-                    Tanggal
-                  </th>
-                  {/* <th className="text-black" style={columnStyle} rowSpan="2">kasir</th> */}
-                  <th className="text-black" style={columnStyle} rowSpan="2">
-                    Nama
-                  </th>
-                  <th className="text-black" style={columnStyle} rowSpan="2">
-                    Nilai Retur
-                  </th>
-                  <th className="text-black" style={columnStyle} rowSpan="2">
-                    Diskon Item
-                  </th>
-                  {/* <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th> */}
-                </tr>
-              </thead>
-              {
-                <tbody>
-                  {typeof data === "object"
-                    ? data.length > 0
-                      ? data.map((v, i) => {
-                          return (
-                            <tr key={i}>
-                              <td style={columnStyle}>
-                                {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                              </td>
-                              <td style={columnStyle}>{v.kd_trx}</td>
-                              <td style={columnStyle}>
-                                {moment(v.tgl).format("DD-MM-YYYY")}
-                              </td>
-                              {/* <td style={columnStyle}>{v.kd_kasir}</td> */}
-                              <td style={columnStyle}>{v.nama}</td>
-                              <td style={rightStyle}>{v.nilai_retur}</td>
-                              <td style={rightStyle}>{v.diskon_item}</td>
-                              {/* <td style={columnStyle}>{v.lokasi}</td> */}
-                            </tr>
-                          );
-                        })
-                      : "No data."
-                    : "No data."}
-                </tbody>
-              }
-            </table>
-          </div>
-          <div style={{ marginTop: "20px", float: "right" }}>
-            <Paginationq
-              current_page={current_page}
-              per_page={per_page}
-              total={parseInt(per_page * last_page, 10)}
-              callback={this.handlePageChange.bind(this)}
-            />
-          </div>
-          {/* <DetailSaleRetur sale_returDetail={this.props.sale_returDetail}/> */}
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table className="table table-hover">
+            <thead className="bg-light">
+              <tr>
+                {/* <th className="text-black" style={columnStyle} rowSpan="2">#</th> */}
+                <th className="text-black" style={columnStyle} rowSpan="2">
+                  No
+                </th>
+                <th className="text-black" style={columnStyle} rowSpan="2">
+                  Kode Trx
+                </th>
+                <th className="text-black" style={columnStyle} rowSpan="2">
+                  Tanggal
+                </th>
+                {/* <th className="text-black" style={columnStyle} rowSpan="2">kasir</th> */}
+                <th className="text-black" style={columnStyle} rowSpan="2">
+                  Nama
+                </th>
+                <th className="text-black" style={columnStyle} rowSpan="2">
+                  Nilai Retur
+                </th>
+                <th className="text-black" style={columnStyle} rowSpan="2">
+                  Diskon Item
+                </th>
+                {/* <th className="text-black" style={columnStyle} rowSpan="2">Lokasi</th> */}
+              </tr>
+            </thead>
+            {
+              <tbody>
+                {typeof data === "object"
+                  ? data.length > 0
+                    ? data.map((v, i) => {
+                        return (
+                          <tr key={i}>
+                            <td style={columnStyle}>
+                              {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                            </td>
+                            <td style={columnStyle}>{v.kd_trx}</td>
+                            <td style={columnStyle}>
+                              {moment(v.tgl).format("DD-MM-YYYY")}
+                            </td>
+                            {/* <td style={columnStyle}>{v.kd_kasir}</td> */}
+                            <td style={columnStyle}>{v.nama}</td>
+                            <td style={rightStyle}>{v.nilai_retur}</td>
+                            <td style={rightStyle}>{v.diskon_item}</td>
+                            {/* <td style={columnStyle}>{v.lokasi}</td> */}
+                          </tr>
+                        );
+                      })
+                    : "No data."
+                  : "No data."}
+              </tbody>
+            }
+          </table>
+        </div>
+        <div style={{ marginTop: "20px", float: "right" }}>
+          <Paginationq
+            current_page={current_page}
+            per_page={per_page}
+            total={parseInt(per_page * last_page, 10)}
+            callback={this.handlePageChange.bind(this)}
+          />
+        </div>
+        {/* <DetailSaleRetur sale_returDetail={this.props.sale_returDetail}/> */}
+        {this.state.isModalReport ? (
           <SaleReturReportExcel
             startDate={this.state.startDate}
             endDate={this.state.endDate}
           />
-          {/* <ApproveSaleRetur/> */}
-        </div>
+        ) : null}
       </Layout>
     );
   }

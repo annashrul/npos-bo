@@ -39,6 +39,9 @@ class ReportCash extends Component {
       id_trx: "",
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
+      isModalExport: false,
+      isModalUpdate: false,
+      isModalOtorisasi: false,
     };
     this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     this.HandleChangeKassa = this.HandleChangeKassa.bind(this);
@@ -49,7 +52,13 @@ class ReportCash extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.onDone = this.onDone.bind(this);
   }
-
+  componentWillUnmount() {
+    this.setState({
+      isModalExport: false,
+      isModalUpdate: false,
+      isModalOtorisasi: false,
+    });
+  }
   onDone(id, id_trx) {
     this.props.dispatch(deleteCashTransaksi(id, id_trx));
     setTimeout(() => {
@@ -195,6 +204,7 @@ class ReportCash extends Component {
   }
   toggleModal(e, total, perpage) {
     e.preventDefault();
+    this.setState({ isModalExport: true });
     const bool = !this.props.isOpen;
     // let range = total*perpage;
     this.props.dispatch(ModalToggle(bool));
@@ -204,6 +214,8 @@ class ReportCash extends Component {
 
   handleUpdate(e, data) {
     e.preventDefault();
+    this.setState({ isModalUpdate: true });
+
     const bool = !this.props.isOpen;
     this.props.dispatch(setUpdate(data));
     this.props.dispatch(ModalToggle(bool));
@@ -225,6 +237,8 @@ class ReportCash extends Component {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.value) {
+        this.setState({ isModalOtorisasi: true });
+
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
         this.props.dispatch(ModalType("modalOtorisasi"));
@@ -360,13 +374,13 @@ class ReportCash extends Component {
                 <i className="fa fa-search"></i>
               </button>
               <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
+                style={{ marginTop: "28px" }}
                 className="btn btn-primary"
                 onClick={(e) =>
                   this.toggleModal(e, last_page * per_page, per_page)
                 }
               >
-                <i className="fa fa-print"></i> Export
+                <i className="fa fa-print"></i>
               </button>
             </div>
           </div>
@@ -407,56 +421,64 @@ class ReportCash extends Component {
             </thead>
             {
               <tbody>
-                {typeof data === "object"
-                  ? data.length > 0
-                    ? data.map((v, i) => {
-                        total_perpage += parseInt(v.jumlah, 10);
-                        return (
-                          <tr key={i}>
-                            <td style={columnStyle}>
-                              <UncontrolledButtonDropdown>
-                                <DropdownToggle caret>Aksi</DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    onClick={(event) => {
-                                      this.handleUpdate(event, {
-                                        kd_trx: v.kd_trx,
-                                        jumlah: v.jumlah,
-                                        keterangan: v.keterangan,
-                                        tgl: v.tgl,
-                                      });
-                                    }}
-                                  >
-                                    Edit
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handleDelete(e, v.kd_trx)
-                                    }
-                                  >
-                                    Delete
-                                  </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledButtonDropdown>
-                            </td>
-                            <td style={columnStyle}>{v.kd_trx}</td>
-                            <td style={columnStyle}>{v.type}</td>
-                            <td style={columnStyle}>{v.jenis}</td>
-                            <td style={columnStyle}>
-                              {v.lokasi} ({v.kassa})
-                            </td>
-                            <td style={columnStyle}>{v.kasir}</td>
-                            <td style={columnStyle}>{toRp(v.jumlah)}</td>
-                            <td style={columnStyle}>{v.keterangan}</td>
-                            <td style={columnStyle}>
-                              {moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}
-                            </td>
-                            {/* <td style={columnStyle}><button className="btn btn-success" ><i className="fa fa-edit"/></button></td> */}
-                          </tr>
-                        );
-                      })
-                    : "No data."
-                  : "No data."}
+                {typeof data === "object" ? (
+                  data.length > 0 ? (
+                    data.map((v, i) => {
+                      total_perpage += parseInt(v.jumlah, 10);
+                      return (
+                        <tr key={i}>
+                          <td style={columnStyle}>
+                            <UncontrolledButtonDropdown>
+                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem
+                                  onClick={(event) => {
+                                    this.handleUpdate(event, {
+                                      kd_trx: v.kd_trx,
+                                      jumlah: v.jumlah,
+                                      keterangan: v.keterangan,
+                                      tgl: v.tgl,
+                                    });
+                                  }}
+                                >
+                                  Edit
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handleDelete(e, v.kd_trx)
+                                  }
+                                >
+                                  Delete
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledButtonDropdown>
+                          </td>
+                          <td style={columnStyle}>{v.kd_trx}</td>
+                          <td style={columnStyle}>{v.type}</td>
+                          <td style={columnStyle}>{v.jenis}</td>
+                          <td style={columnStyle}>
+                            {v.lokasi} ({v.kassa})
+                          </td>
+                          <td style={columnStyle}>{v.kasir}</td>
+                          <td style={columnStyle}>{toRp(v.jumlah)}</td>
+                          <td style={columnStyle}>{v.keterangan}</td>
+                          <td style={columnStyle}>
+                            {moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}
+                          </td>
+                          {/* <td style={columnStyle}><button className="btn btn-success" ><i className="fa fa-edit"/></button></td> */}
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={10}>No Data</td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan={10}>No Data</td>
+                  </tr>
+                )}
               </tbody>
             }
             <tfoot className="bg-light">
@@ -484,6 +506,8 @@ class ReportCash extends Component {
             total={parseInt(per_page * last_page, 10)}
             callback={this.handlePageChange.bind(this)}
           />
+        </div>
+        {this.state.isModalExport ? (
           <CashReportExcel
             tipe={this.state.type}
             startDate={this.state.startDate}
@@ -491,17 +515,19 @@ class ReportCash extends Component {
             location={this.state.location}
             kassa={this.state.kassa}
           />
-          <Updates />
-        </div>
+        ) : null}
 
-        <Otorisasi
-          datum={{
-            module: "transaksi kas",
-            aksi: "delete",
-            id_trx: this.state.id_trx,
-          }}
-          onDone={this.onDone}
-        />
+        {this.state.isModalUpdate ? <Updates /> : null}
+        {this.state.isModalOtorisasi ? (
+          <Otorisasi
+            datum={{
+              module: "transaksi kas",
+              aksi: "delete",
+              id_trx: this.state.id_trx,
+            }}
+            onDone={this.onDone}
+          />
+        ) : null}
       </Layout>
     );
   }

@@ -237,7 +237,7 @@ export const poReportDetail = (page = 1, code) => {
 
 export const FetchPurchaseBySupplierReport = (page = 1, where = "") => {
   return (dispatch) => {
-    let que = `report/pembelian/by_supplier?page=${page}`;
+    let que = `report/pembelian/by_supplier?perpage=5&page=${page}`;
     if (where !== "") que += `${where}`;
     handleGet(que, (res) => {
       dispatch(setPBSupplierReport(res));

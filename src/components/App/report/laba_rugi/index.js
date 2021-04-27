@@ -258,6 +258,7 @@ class ReportLabaRugi extends Component {
                 onEvent={this.handleEvent}
               >
                 <input
+                  readOnly={true}
                   type="text"
                   className="form-control"
                   name="date_product"

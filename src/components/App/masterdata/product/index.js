@@ -132,74 +132,61 @@ class Product extends Component {
   render() {
     return (
       <Layout page="Product">
-        <div className="col-12 box-margin">
-          <div className="card">
-            <Tabs>
-              <div className="card-body d-flex align-items-center justify-content-between">
-                <TabList>
-                  <Tab
-                    label="Core Courses"
-                    onClick={() => this.handleSelect(0)}
-                  >
-                    Barang
-                  </Tab>
-                  <Tab
-                    label="Core Courses"
-                    onClick={() => this.handleSelect(1)}
-                  >
-                    Harga Barang
-                  </Tab>
-                  <Tab
-                    label="Core Courses"
-                    onClick={() => this.handleSelect(2)}
-                  >
-                    Kelompok Barang
-                  </Tab>
-                </TabList>
-                <div>
-                  <Link to="upload" className="btn btn-outline-info">
-                    <i className="fa fa-upload"></i>&nbsp;IMPORT FROM CSV
-                  </Link>
-                </div>
-              </div>
-              <div
-                className="card-header"
-                style={{ height: "5px", backgroundColor: "#f9fafb" }}
-              ></div>
-              <div className="card-body">
-                <TabPanel>
-                  {
-                    <ListProduct
-                      token={this.state.token}
-                      data={this.props.product}
-                      group={this.props.groupProduct}
-                    />
-                  }
-                </TabPanel>
-                <TabPanel>
-                  {!this.props.isLoading1 ? (
-                    <ListPriceProduct
-                      token={this.state.token}
-                      data={this.props.priceProduct}
-                    />
-                  ) : (
-                    <Preloader />
-                  )}
-                </TabPanel>
-                <TabPanel>
-                  {!this.props.isLoading2 ? (
-                    <ListGroupProduct
-                      token={this.state.token}
-                      data={this.props.groupProduct}
-                    />
-                  ) : (
-                    <Preloader />
-                  )}
-                </TabPanel>
-              </div>
-            </Tabs>
+        <Tabs>
+          <div className="card-body d-flex align-items-center justify-content-between">
+            <TabList>
+              <Tab label="Core Courses" onClick={() => this.handleSelect(0)}>
+                Barang
+              </Tab>
+              <Tab label="Core Courses" onClick={() => this.handleSelect(1)}>
+                Harga Barang
+              </Tab>
+              <Tab label="Core Courses" onClick={() => this.handleSelect(2)}>
+                Kelompok Barang
+              </Tab>
+            </TabList>
+            <div>
+              <Link to="upload" className="btn btn-outline-info">
+                <i className="fa fa-upload"></i>&nbsp;IMPORT FROM CSV
+              </Link>
+            </div>
           </div>
-        </div>
+          <div
+            className="card-header"
+            style={{ height: "5px", backgroundColor: "#f9fafb" }}
+          ></div>
+          <div className="card-body">
+            <TabPanel>
+              {
+                <ListProduct
+                  token={this.state.token}
+                  data={this.props.product}
+                  group={this.props.groupProduct}
+                />
+              }
+            </TabPanel>
+            <TabPanel>
+              {!this.props.isLoading1 ? (
+                <ListPriceProduct
+                  token={this.state.token}
+                  data={this.props.priceProduct}
+                />
+              ) : (
+                <Preloader />
+              )}
+            </TabPanel>
+            <TabPanel>
+              {!this.props.isLoading2 ? (
+                <ListGroupProduct
+                  token={this.state.token}
+                  data={this.props.groupProduct}
+                />
+              ) : (
+                <Preloader />
+              )}
+            </TabPanel>
+          </div>
+        </Tabs>
       </Layout>
     );
   }

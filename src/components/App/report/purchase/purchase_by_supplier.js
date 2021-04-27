@@ -45,8 +45,9 @@ class PurchaseBySupplierReport extends Component {
     this.setState({ isModalExport: false });
   }
   componentWillMount() {
-    let page = localStorage.page_purchase_by_supplier_report;
-    this.handleParameter(page !== undefined && page !== null ? page : 1);
+    this.props.dispatch(FetchPurchaseBySupplierReport(1));
+    // let page = localStorage.page_purchase_by_supplier_report;
+    // this.handleParameter(page !== undefined && page !== null ? page : 1);
   }
   componentDidMount() {
     if (
@@ -360,13 +361,13 @@ class PurchaseBySupplierReport extends Component {
                 <i className="fa fa-search" />
               </button>
               <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
+                style={{ marginTop: "28px" }}
                 className="btn btn-primary"
                 onClick={(e) =>
                   this.toggleModal(e, per_page * last_page, per_page)
                 }
               >
-                <i className="fa fa-print"></i> Export
+                <i className="fa fa-print"></i>
               </button>
             </div>
           </div>
@@ -407,12 +408,12 @@ class PurchaseBySupplierReport extends Component {
                   })
                 ) : (
                   <tr>
-                    <td>No Data.</td>
+                    <td colSpan={4}>No Data.</td>
                   </tr>
                 )
               ) : (
                 <tr>
-                  <td>No Data.</td>
+                  <td colSpan={4}>No Data.</td>
                 </tr>
               )}
             </tbody>
