@@ -375,10 +375,10 @@ class InventoryReport extends Component{
                                                             total_last_stock_per = total_last_stock_per + stok_akhir;
                                                             total_stock_in_per = total_stock_in_per+parseFloat(v.stock_masuk,10);
                                                             total_stock_out_per = total_stock_out_per+parseFloat(v.stock_keluar,10);
-                                                            total_jual_per += parseInt(v.harga_lokasi)
-                                                            total_beli_per += parseInt(v.harga_beli_lokasi)
-                                                            total_jual_qty_per += parseInt(v.harga_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))
-                                                            total_beli_qty_per += parseInt(v.harga_beli_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))
+                                                            total_jual_per += parseFloat(v.harga_lokasi)
+                                                            total_beli_per += parseFloat(v.harga_beli_lokasi)
+                                                            total_jual_qty_per += parseFloat(v.harga_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))
+                                                            total_beli_qty_per += parseFloat(v.harga_beli_lokasi*(parseFloat(v.stock_awal)+parseFloat(v.stock_masuk))-(parseFloat(v.stock_keluar)+parseFloat(v.stock_penjualan)))
                                                             total_stock_penjualan_per = total_stock_penjualan_per+parseFloat(v.stock_penjualan,10);
                                                             get_lokasi = v.lokasi==='-';
                                                             return(

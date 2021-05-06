@@ -13,9 +13,9 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import {rangeDate} from "helper";
 import Preloader from "Preloader";
 import Swal from 'sweetalert2'
-import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
+// import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from 'reactstrap';
 // import { Link } from 'react-router-dom';
-import { statusQ, toRp } from '../../../../helper';
+import { toRp } from '../../../../helper';
 import DetailHutang from '../../modals/hutang/detail_hutang_report'
 class HutangReport extends Component{
     constructor(props){
