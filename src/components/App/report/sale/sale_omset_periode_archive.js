@@ -17,6 +17,7 @@ import {ModalToggle, ModalType} from "redux/actions/modal.action";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
+import SaleOmsetPeriodeDetail from '../../modals/report/sale/form_sale_omset_periode_detail';
 
 class SaleOmsetPeriodeArchive extends Component{
     constructor(props){
@@ -206,20 +207,20 @@ class SaleOmsetPeriodeArchive extends Component{
 
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("detailSaleOmsetPeriodeReport"));
+        this.props.dispatch(ModalType("formSaleOmsetPeriodeExcelDetail"));
         let where=''
         let dateFrom = localStorage.getItem("date_from_saleOmsetPeriode_report");
         let dateTo = localStorage.getItem("date_to_saleOmsetPeriode_report");
-        let lokasi = localStorage.location_saleOmsetPeriode_report;
+        // let lokasi = localStorage.location_saleOmsetPeriode_report;
 
         if(dateFrom!==undefined&&dateFrom!==null){
             if(where!==''){where+='&'}where+=`datefrom=${dateFrom}&dateto=${dateTo}`
         }else{
             if(where!==''){where+='&'}where+=`datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
         }
-        if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
-            if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
-        }
+        // if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
+        //     if(where!==''){where+='&'}where+=`lokasi=${lokasi}`
+        // }
         this.props.dispatch(FetchReportDetailSaleOmsetPeriode(1, btoa(kode), where));
     }
 
@@ -408,7 +409,7 @@ class SaleOmsetPeriodeArchive extends Component{
                                                                                     >
                                                                                         Detail
                                                                                     </DropdownItem>
-                                                                                    <DropdownItem onClick={(e) => this.handleExport(e, v.kd_trx)}>Export</DropdownItem>
+                                                                                    {/* <DropdownItem onClick={(e) => this.handleExport(e, v.kd_trx)}>Export</DropdownItem> */}
                                                                                 </DropdownMenu>
                                                                             </UncontrolledButtonDropdown>
                                                                         </div>
@@ -456,8 +457,11 @@ class SaleOmsetPeriodeArchive extends Component{
                                     />
                                 </div>
                                 {this.props.saleOmsetPeriodeReportExcel.data!==undefined&&this.props.saleOmsetPeriodeReportExcel.data.length>0?
-                                <SaleOmsetPeriodeReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />:''
-                            }
+                                    <SaleOmsetPeriodeReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} />:''
+                                }
+                                { typeof this.props.detail === 'object'?
+                                    <SaleOmsetPeriodeDetail startDate={this.state.startDate} endDate={this.state.endDate} dataDetail={this.props.detail} />:''
+                                }
                             </div>
                         </div>
                     </div>
@@ -473,6 +477,7 @@ const mapStateToProps = (state) => {
     console.log(state.saleOmsetPeriodeReducer);
     return {
         data:state.saleOmsetPeriodeReducer.data,
+        detail:state.saleOmsetPeriodeReducer.detail,
         // totalPenjualan:state.saleOmsetPeriodeReducer.total_penjualan,
         saleOmsetPeriodeReportExcel:state.saleOmsetPeriodeReducer.report_excel,
         totalPenjualanExcel:state.saleOmsetPeriodeReducer.total_penjualan_excel,

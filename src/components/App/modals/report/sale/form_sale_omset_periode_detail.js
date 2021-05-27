@@ -1,36 +1,116 @@
-import React,{Component} from 'react';
-import {ModalToggle} from "redux/actions/modal.action";
+import React, { Component } from 'react';
+import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody} from "reactstrap";
-import {toRp, to_pdf} from 'helper'
-import imgExcel from 'assets/xls.png';
-import imgPdf from 'assets/pdf.png';
+import { ModalBody } from "reactstrap";
+import { toRp, to_pdf } from 'helper'
 import moment from "moment";
 import XLSX from 'xlsx'
-class SaleOmsetPeriodeReportExcel extends Component{
-    constructor(props){
+
+
+class SaleOmsetPeriodeReportExcel extends Component {
+    constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
         this.handleView = this.handleView.bind(this);
         this.printDocument = this.printDocument.bind(this);
         this.state = {
-            title:'',
+            title: '',
             jenis: '',
-            type:'',
-            view:false,
-            error:{
-                title:'',
+            type: '',
+            data_a: [
+                {
+                    'kd_brg': '1234a',
+                    'nm_brg': 'a1',
+                    'omset': '1',
+                },
+                {
+                    'kd_brg': '1234b',
+                    'nm_brg': 'a2',
+                    'omset': '1',
+                },
+                {
+                    'kd_brg': '1234c',
+                    'nm_brg': 'a3',
+                    'omset': '1',
+                },
+            ],
+            data_b: [
+                {
+                    'kd_brg': '1234a',
+                    'nm_brg': 'b1',
+                    'omset': '1',
+                },
+                {
+                    'kd_brg': '1234b',
+                    'nm_brg': 'b2',
+                    'omset': '1',
+                },
+            ],
+            data_c: [
+                {
+                    'kd_brg': '1234a',
+                    'nm_brg': 'c1',
+                    'omset': '1',
+                },
+                {
+                    'kd_brg': '1234b',
+                    'nm_brg': 'c2',
+                    'omset': '1',
+                },
+            ],
+            data_d: [
+                {
+                    'kd_brg': '1234a',
+                    'nm_brg': 'd1',
+                    'omset': '1',
+                },
+                {
+                    'kd_brg': '1234b',
+                    'nm_brg': 'd2',
+                    'omset': '1',
+                },
+                {
+                    'kd_brg': '1234c',
+                    'nm_brg': 'd3',
+                    'omset': '1',
+                },
+            ],
+            view: false,
+            error: {
+                title: '',
                 jenis: '',
-                type:'',
+                type: '',
             }
         };
 
     }
+    componentWillReceiveProps(nextProps){
+        if (typeof nextProps.dataDetail === 'object' && nextProps.dataDetail.top_brg_sebelum!==undefined){
+            this.setState({
+                data_a: nextProps.dataDetail.top_brg_sebelum
+            })
+        }
+        if (typeof nextProps.dataDetail === 'object' && nextProps.dataDetail.top_brg_sekarang!==undefined){
+            this.setState({
+                data_b: nextProps.dataDetail.top_brg_sekarang
+            })
+        }
+        if (typeof nextProps.dataDetail === 'object' && nextProps.dataDetail.top_value_sebelum!==undefined){
+            this.setState({
+                data_c: nextProps.dataDetail.top_value_sebelum
+            })
+        }
+        if (typeof nextProps.dataDetail === 'object' && nextProps.dataDetail.top_value_sekarang!==undefined){
+            this.setState({
+                data_d: nextProps.dataDetail.top_value_sekarang
+            })
+        }
+    }
     handleView = (e) => {
         e.preventDefault();
         this.setState({
-            view:!this.state.view
+            view: !this.state.view
         })
     }
     toggle = (e) => {
@@ -41,13 +121,13 @@ class SaleOmsetPeriodeReportExcel extends Component{
     printDocument = (e) => {
         e.preventDefault();
         let stringHtml = '';
-        stringHtml+=
-        '<div style="text-align:center>'+
-        '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
-        '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN OMSET PERIODE</center></h3>'+
-        '</div>';
-        
+        stringHtml +=
+            '<div style="text-align:center>' +
+            '<h3 align="center"><center>PERIODE : ' + this.props.startDate + ' - ' + this.props.endDate + '</center></h3>' +
+            '<h3 align="center"><center>&nbsp;</center></h3>' +
+            '<h3 style="text-align:center"><center>LAPORAN OMSET PERIODE</center></h3>' +
+            '</div>';
+
         const headers = [[
             "Omset Bulan Lalu",
             "Transaksi Bulan Lalu",
@@ -58,16 +138,16 @@ class SaleOmsetPeriodeReportExcel extends Component{
             "Pertumbuhan Trx",
             "Persentase",
         ]];
-        let data = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object'?this.props.saleOmsetPeriodeReportExcel.data.map(v=> [
-           toRp(parseInt(v.omset_sebelum,10)),
-           toRp(parseInt(v.transaksi_sebelum,10)),
-           toRp(parseInt(v.omset_sebelum / v.transaksi_sebelum,10)),
-           toRp(parseInt(v.omset_sekarang,10)),
-           toRp(parseInt(v.transaksi_sekarang,10)),
-           toRp(parseInt(v.omset_sekarang / v.transaksi_sekarang,10)),
-           toRp(parseInt(v.omset_sekarang - v.omset_sebelum,10)),
-           parseInt((v.omset_sekarang - v.omset_sebelum)/v.omset_sebelum * 100, 10),
-        ]):'';
+        let data = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object' ? this.props.saleOmsetPeriodeReportExcel.data.map(v => [
+            toRp(parseInt(v.omset_sebelum, 10)),
+            toRp(parseInt(v.transaksi_sebelum, 10)),
+            toRp(parseInt(v.omset_sebelum / v.transaksi_sebelum, 10)),
+            toRp(parseInt(v.omset_sekarang, 10)),
+            toRp(parseInt(v.transaksi_sekarang, 10)),
+            toRp(parseInt(v.omset_sekarang / v.transaksi_sekarang, 10)),
+            toRp(parseInt(v.omset_sekarang - v.omset_sebelum, 10)),
+            parseInt((v.omset_sekarang - v.omset_sebelum) / v.omset_sebelum * 100, 10),
+        ]) : '';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
             "saleOmsetPeriode_",
@@ -77,124 +157,133 @@ class SaleOmsetPeriodeReportExcel extends Component{
             // footer
         );
         this.toggle(e);
-      }
+    }
     printDocumentXLsx = (e, param) => {
         e.preventDefault();
 
-        let header = [
-            ['LAPORAN OMSET PERIODE'],
-            ['PERIODE : ' + this.props.startDate + ' - ' + this.props.endDate + ''],
-            [''],
-            [
-                'Omset Bulan Lalu',
-                'Transaksi Bulan Lalu',
-                'Rata - Rata Transaksi Bulan Lalu Sale',
-                'Omset Bulan Sekarang Sale',
-                'Transaksi Bulan Sekarang Total',
-                'Rata - Rata Transaksi Bulan Sekarang Item',
-                'Pertumbuhan Trx',
-                'Persentase']
-        ]
-        // let footer = [
-        //     [
-        //         'TOTAL'
-        //         , ''
-        //         , ''
-        //         , ''
-        //         , '', toRp(this.props.totalPenjualanExcel.omset), toRp(this.props.totalPenjualanExcel.dis_item), toRp(this.props.totalPenjualanExcel.dis_rp), this.props.totalPenjualanExcel.dis_persen
-        //         , ''
-        //         , ''
-        //         , ''
-        //         , '', toRp(this.props.totalPenjualanExcel.kas_lain)
-        //         , '', toRp(this.props.totalPenjualanExcel.gt), toRp(this.props.totalPenjualanExcel.rounding), toRp(this.props.totalPenjualanExcel.bayar), toRp(this.props.totalPenjualanExcel.change), toRp(this.props.totalPenjualanExcel.jml_kartu), toRp(this.props.totalPenjualanExcel.charge)
-        //         , ''
-        //         , ''
-        //         , ''
-        //         , ''
-        //     ]
-        // ]
-        // Kd Trx	Tanggal	Jam	Customer	Kasir	Omset	Diskon			HPP	Hrg Jual	Profit	Reg.Member	Trx Lain	Keterangan	Grand Total	Rounding	Tunai	Change	Transfer	Charge	Nama Kartu	Status	Lokasi	Jenis Trx
-        // Peritem(%)	Total(rp)	Total(%)																
-
-        let raw = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object' ? this.props.saleOmsetPeriodeReportExcel.data.map(v => [
-            toRp(parseInt(v.omset_sebelum,10)),
-            toRp(parseInt(v.transaksi_sebelum,10)),
-            toRp(parseInt(v.omset_sebelum / v.transaksi_sebelum,10)),
-            toRp(parseInt(v.omset_sekarang,10)),
-            toRp(parseInt(v.transaksi_sekarang,10)),
-            toRp(parseInt(v.omset_sekarang / v.transaksi_sekarang,10)),
-            toRp(parseInt(v.omset_sekarang - v.omset_sebelum,10)),
-            toRp(parseInt((v.omset_sekarang - v.omset_sebelum)/v.omset_sebelum * 100, 10)),
-        ]) : '';
-
-        let body = header.concat(raw);
-
-        let data = body;
-        // let data = body.concat(footer);
-
-        // let data = this.props.saleOmsetPeriodeReportExcel.data;
-
-        let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
-        // let ws = XLSX.utils.json_to_sheet(data, {header:header,skipHeader:true});
-        let merge = [
-            { s: { r: 0, c: 0 }, e: { r: 0, c: 24 } },
-            { s: { r: 1, c: 0 }, e: { r: 1, c: 24 } },
-            { s: { r: data.length - 1, c: 0 }, e: { r: data.length - 1, c: 4 } },
-            { s: { r: data.length - 1, c: 9 }, e: { r: data.length - 1, c: 12 } },
-            { s: { r: data.length - 1, c: 21 }, e: { r: data.length - 1, c: 24 } },
-        ];
-        if (!ws['!merges']) ws['!merges'] = [];
-        ws['!merges'] = merge;
-        ws['!ref'] = XLSX.utils.encode_range({
-            s: { c: 0, r: 0 },
-            e: { c: 24, r: 1 + data.length + 1 }
-        });
-        ws["A1"].s = {
-            alignment: {
-                vertical: 'center',
-            }
-        };
-
+        let ws = XLSX.utils.table_to_sheet(document.getElementById('laporan_sale_omset_periode'));
         let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
         let exportFileName = `Laporan__Omset_Periode_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
         XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
 
         this.toggle(e);
     }
-    render(){
+    render() {
+        console.log(this.props.dataDetail);
+        const columnStyle = { verticalAlign: "middle", textAlign: "center", whiteSpace: "nowrap" };
         return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleOmsetPeriodeExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
+            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleOmsetPeriodeExcelDetail"} size={'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
-                        <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
-                        <h3 className="text-center">Manage Export</h3>
-                        <div className="row mb-4">
-                            <div className="col-6">
-                                <div className="single-gallery--item">
-                                    <div className="gallery-thumb">
-                                        <img src={imgPdf} alt=""></img>
-                                    </div>
-                                    <div className="gallery-text-area">
-                                        <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e))}><i className="fa fa-print"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <div className="single-gallery--item">
-                                    <div className="gallery-thumb">
-                                        <img src={imgExcel} alt=""></img>
-                                    </div>
-                                    <div className="gallery-text-area">
-                                        <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e => this.printDocumentXLsx(e, 'xlsx'))}><i className="fa fa-print"></i></button>
-                                        </div>
-                                    </div>
+                        <button type="button" className="close"><span className="text-dark" aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
+                        <br/>
+                        <div className="row">
+                            <div className="col-12 col-xs-12 col-md-12">
+                                <div className="form-group text-right">
+                                    <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={(e => this.printDocumentXLsx(e, 'xlsx'))}>
+                                        <i className="fa fa-print" /> Export
+                                            </button>
                                 </div>
                             </div>
                         </div>
+                        <table className="table table-hover table-responsive" id="laporan_sale_omset_periode">
+                            <tbody>
+                                <tr style={{ height: 53 }}>
+                                    <td className="p-0 m-0" style={{border:'none'}} colSpan={4}>
+                                        <h4>Periode Bulan Lalu</h4>
+                                    </td>
+                                    <td style={{ width: '1%', border: 'none'}}>&nbsp;</td>
+                                    <td className="p-0 m-0" style={{border:'none'}} colSpan={4}>
+                                        <h4>Periode Bulan Sekarang</h4>
+                                    </td>
+                                </tr>
+                                <tr style={{ height: 18 }}>
+                                    <td style={{ width: '11.1111%', textAlign: 'center', height: 18 }} colSpan={4}>Top 100 Items By Qty</td>
+                                    <td style={{ border: 'none'}}>&nbsp;</td>
+                                    <td style={{ width: '11.1111%', textAlign: 'center', height: 18 }} colSpan={4}>Top 100 Items By Qty</td>
+                                </tr>
+                                <tr style={{ height: 36 }}>
+                                    <td style={columnStyle} ><strong>No</strong></td>
+                                    <td style={columnStyle} ><strong>Kode Barang</strong></td>
+                                    <td style={columnStyle} ><strong>Nama</strong></td>
+                                    <td style={columnStyle} ><strong>Omset</strong></td>
+                                    <td style={{ border: 'none'}} >&nbsp;</td>
+                                    <td style={columnStyle} ><strong>No</strong></td>
+                                    <td style={columnStyle} ><strong>Kode Barang</strong></td>
+                                    <td style={columnStyle} ><strong>Nama</strong></td>
+                                    <td style={columnStyle} ><strong>Omset</strong></td>
+                                </tr>
+                                {(() => {
+                                    const rows = [];
+                                    for (let i = 0; i < (this.state.data_a.length > this.state.data_b.length ? this.state.data_a.length : this.state.data_b.length); i++) {
+                                        rows.push(
+                                            <tr style={{ height: 18 }} key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>{this.state.data_a[i] !== undefined && this.state.data_a[i].kd_brg !== undefined ? this.state.data_a[i].kd_brg : ''}</td>
+                                                <td>{this.state.data_a[i] !== undefined && this.state.data_a[i].nm_brg !== undefined ? this.state.data_a[i].nm_brg : ''}</td>
+                                                <td>{this.state.data_a[i] !== undefined && this.state.data_a[i].omset !== undefined ? this.state.data_a[i].omset : ''}</td>
+                                                <td style={{ border: 'none'}}>&nbsp;</td>
+                                                <td>{i + 1}</td>
+                                                <td>{this.state.data_b[i] !== undefined && this.state.data_b[i].kd_brg ? this.state.data_b[i].kd_brg : ''}</td>
+                                                <td>{this.state.data_b[i] !== undefined && this.state.data_b[i].nm_brg ? this.state.data_b[i].nm_brg : ''}</td>
+                                                <td>{this.state.data_b[i] !== undefined && this.state.data_b[i].omset ? this.state.data_b[i].omset : ''}</td>
+                                            </tr>
+                                        );
+                                    }
+                                    return rows;
+                                })()}
+                                <tr style={{ height: 36 }}>
+                                    <td colSpan="9">&nbsp;</td>
+                                </tr>
+                                <tr style={{ height: 53 }}>
+                                    <td className="p-0 m-0" style={{ border: 'none' }} colSpan={4}>
+                                        <h4>Periode Bulan Lalu</h4>
+                                    </td>
+                                    <td style={{ width: '1%', border: 'none' }}>&nbsp;</td>
+                                    <td className="p-0 m-0" style={{ border: 'none' }} colSpan={4}>
+                                        <h4>Periode Bulan Sekarang</h4>
+                                    </td>
+                                </tr>
+                                <tr style={{ height: 18 }}>
+                                    <td style={{ width: '11.1111%', textAlign: 'center', height: 18 }} colSpan={4}>Top 100 Items By Qty</td>
+                                    <td style={{ border: 'none'}}>&nbsp;</td>
+                                    <td style={{ width: '11.1111%', textAlign: 'center', height: 18 }} colSpan={4}>Top 100 Items By Qty</td>
+                                </tr>
+                                <tr style={{ height: 36 }}>
+                                    <td><strong>No</strong></td>
+                                    <td><strong>Kode Barang</strong></td>
+                                    <td><strong>Nama</strong></td>
+                                    <td><strong>Omset</strong></td>
+                                    <td style={{ border: 'none'}}>&nbsp;</td>
+                                    <td><strong>No</strong></td>
+                                    <td><strong>Kode Barang</strong></td>
+                                    <td><strong>Nama</strong></td>
+                                    <td><strong>Omset</strong></td>
+                                </tr>
+                                {(() => {
+                                    const rows = [];
+                                    for (let i = 0; i < (this.state.data_c.length > this.state.data_d.length ? this.state.data_c.length : this.state.data_d.length); i++) {
+                                        rows.push(
+                                            <tr style={{ height: 18 }} key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>{this.state.data_c[i] !== undefined && this.state.data_c[i].kd_brg !== undefined ? this.state.data_c[i].kd_brg : ''}</td>
+                                                <td>{this.state.data_c[i] !== undefined && this.state.data_c[i].nm_brg !== undefined ? this.state.data_c[i].nm_brg : ''}</td>
+                                                <td>{this.state.data_c[i] !== undefined && this.state.data_c[i].omset !== undefined ? this.state.data_c[i].omset : ''}</td>
+                                                <td style={{ border: 'none'}}>&nbsp;</td>
+                                                <td>{i + 1}</td>
+                                                <td>{this.state.data_d[i] !== undefined && this.state.data_d[i].kd_brg ? this.state.data_d[i].kd_brg : ''}</td>
+                                                <td>{this.state.data_d[i] !== undefined && this.state.data_d[i].nm_brg ? this.state.data_d[i].nm_brg : ''}</td>
+                                                <td>{this.state.data_d[i] !== undefined && this.state.data_d[i].omset ? this.state.data_d[i].omset : ''}</td>
+                                            </tr>
+                                        );
+                                    }
+                                    return rows;
+                                })()}
+                            </tbody>
+                        </table>
+
                     </ModalBody>
                 </form>
             </WrapperModal>
@@ -204,7 +293,7 @@ class SaleOmsetPeriodeReportExcel extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        saleOmsetPeriodeReportExcel:state.saleOmsetPeriodeReducer.report_excel,
+        saleOmsetPeriodeReportExcel: state.saleOmsetPeriodeReducer.report_excel,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
     }
