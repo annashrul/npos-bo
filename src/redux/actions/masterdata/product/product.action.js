@@ -8,6 +8,9 @@ import { configure } from "../../_interceptor";
 export function setLoadingbrg(load) {
   return { type: PRODUCT.LOADING_BRG, load };
 }
+export function setLoadingbrgAll(load) {
+  return { type: PRODUCT.LOADING_BRG_ALL, load };
+}
 export function setLoadingBrgSale(load) {
   return { type: PRODUCT.LOADING_BRG_SALE, load };
 }
@@ -16,6 +19,9 @@ export function setProductDetail(data = []) {
 }
 export function setProductbrg(data = []) {
   return { type: PRODUCT.SUCCESS_BRG, data };
+}
+export function setProductbrgAll(data = []) {
+  return { type: PRODUCT.SUCCESS_BRG_ALL, data };
 }
 export function setProductbrgSale(data = []) {
   return { type: PRODUCT.SUCCESS_BRG_SALE, data };
@@ -208,6 +214,33 @@ export const FetchBrg = (
       })
       .catch(function (error) {
         dispatch(setLoadingbrg(false));
+
+        Swal.fire({
+          allowOutsideClick: false,
+          title: "failed",
+          type: "error",
+          // text: error.response === undefined?'error!':error.response.data.msg,
+        });
+      });
+  };
+};
+export const FetchBrgAll = (
+  lokasi
+) => {
+  return (dispatch) => {
+    dispatch(setLoadingbrgAll(true));
+    let url = `barang/getAll`;
+    if (lokasi !== null) url += `?lokasi=${lokasi}`;
+
+    axios
+      .get(HEADERS.URL + `${url}`)
+      .then(function (response) {
+        const data = response.data;
+          dispatch(setProductbrgAll(data));
+          dispatch(setLoadingbrgAll(false));
+      })
+      .catch(function (error) {
+        dispatch(setLoadingbrgAll(false));
 
         Swal.fire({
           allowOutsideClick: false,

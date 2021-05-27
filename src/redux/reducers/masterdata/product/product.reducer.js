@@ -4,6 +4,7 @@ import {PRODUCT} from "../../../actions/_constants";
 const initialState = {
     isLoading: true,
     isLoadingBrg: false,
+    isLoadingBrgAll: false,
     isLoadingBrgSale: false,
     status:"",
     msg:"",
@@ -11,6 +12,7 @@ const initialState = {
     dataEdit:[],
     dataDetail:[],
     result_brg:[],
+    result_brg_all:[],
     pagin_brg:[],
     msg_brg:"",
     status_brg:"",
@@ -51,6 +53,12 @@ export const productReducer = (state=initialState,action) => {
                  result_brg: action.data.result.data,
                  pagin_brg: action.data.result
              });
+        case PRODUCT.SUCCESS_BRG_ALL:
+             return Object.assign({}, state, {
+                 status_brg: action.data.status,
+                 msg_brg: action.data.msg,
+                 result_brg_all: action.data.result
+             });
         case PRODUCT.SUCCESS_BRG_SALE:
             return Object.assign({}, state, {
                 status_brg_sale: action.data.status,
@@ -71,6 +79,10 @@ export const productReducer = (state=initialState,action) => {
         case PRODUCT.LOADING_BRG:
             return Object.assign({}, state, {
                 isLoadingBrg: action.load
+            });
+        case PRODUCT.LOADING_BRG_ALL:
+            return Object.assign({}, state, {
+                isLoadingBrgAll: action.load
             });
         case PRODUCT.LOADING_BRG_SALE:
             return Object.assign({}, state, {

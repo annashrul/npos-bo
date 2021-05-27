@@ -102,7 +102,7 @@ class SaleByProductReportExcel extends Component{
                 {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update SaleByProductExcel"}</ModalHeader> */}
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
-                        <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
+                        <button type="button" className="close"><span className="text-dark" aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
                         <h3 className="text-center">Manage Export</h3>
                         <div className="row mb-4">
                             {/* <div className="col-4">

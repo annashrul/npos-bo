@@ -239,6 +239,15 @@ class SaleOmsetArchive extends Component{
             total_data
         } = this.props.data;
 
+        let tot_qty = 0;
+        let tot_gross_sales = 0;
+        let tot_net_sales = 0;
+        let tot_grand_total = 0;
+        let tot_diskon_item = 0;
+        let tot_diskon_trx = 0;
+        let tot_tax = 0;
+        let tot_service = 0;
+
         return (
             <Layout page="Laporan Arsip Penjualan">
                 <div className="card">
@@ -330,11 +339,11 @@ class SaleOmsetArchive extends Component{
                                             <th className="text-black" rowSpan="2" style={columnStyle}>QTY</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Gross Sale</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Net Sale</th>
-                                            <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Item</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Diskon Trx</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>TAX</th>
                                             <th className="text-black" rowSpan="2" style={columnStyle}>Service</th>
+                                            <th className="text-black" rowSpan="2" style={columnStyle}>Grand Total</th>
                                         </tr>
                                         </thead>
                                         {
@@ -344,19 +353,27 @@ class SaleOmsetArchive extends Component{
                                                     typeof data==='object'? data.length>0?
 
                                                         data.map((v,i)=>{
+                                                            tot_qty = tot_qty + parseFloat(v.qty);
+                                                            tot_gross_sales = tot_gross_sales+parseFloat(v.gross_sales);
+                                                            tot_net_sales = tot_net_sales+parseFloat(v.net_sales);
+                                                            tot_grand_total = tot_grand_total+parseFloat(v.grand_total);
+                                                            tot_diskon_item = tot_diskon_item+parseFloat(v.diskon_item);
+                                                            tot_diskon_trx = tot_diskon_trx+parseFloat(v.diskon_trx);
+                                                            tot_tax = tot_tax+parseFloat(v.tax);
+                                                            tot_service = tot_service+parseFloat(v.service);
                                                             return (
                                                                 <tr key={i}>
                                                                     <td style={columnStyle}> {i+1 + (10 * (parseInt(current_page,10)-1))}</td>
 
                                                                     <td style={columnStyle}>{moment(v.tanggal).format('YYYY-MM-DD')}</td>
-                                                                    <td style={columnStyle}>{v.qty}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.net_sales,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.grand_total,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_item,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.diskon_trx,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.tax,10))}</td>
-                                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.service,10))}</td>
+                                                                    <td style={columnStyle}>{parseFloat(v.qty).toFixed(2)}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.gross_sales).toFixed(2))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.net_sales).toFixed(2))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.diskon_item).toFixed(2))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.diskon_trx).toFixed(2))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.tax).toFixed(2))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.service).toFixed(2))}</td>
+                                                                    <td style={{textAlign:"right"}}>{toRp(parseFloat(v.grand_total).toFixed(2))}</td>
                                                                 </tr>
                                                             );
 
@@ -368,18 +385,30 @@ class SaleOmsetArchive extends Component{
                                         }
                                         {
                                             total_data!==undefined&&total_data.qty!==undefined?(
-                                                <tfoot>
+                                                <tfoot className="bg-light">
+                                                    <tr>
+                                                        <td style={columnStyle} colSpan={2}> Total Perpage</td>
+
+                                                        <td style={columnStyle}>{parseFloat(tot_qty).toFixed(2)}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_gross_sales).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_net_sales).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_diskon_item).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_diskon_trx).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_tax).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_service).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(tot_grand_total).toFixed(2))}</td>
+                                                    </tr>
                                                     <tr>
                                                         <td style={columnStyle} colSpan={2}> Total</td>
 
-                                                        <td style={columnStyle}>{total_data.qty}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.gross_sales,10))}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.net_sales,10))}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.grand_total,10))}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.diskon_item,10))}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.diskon_trx,10))}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.tax,10))}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(parseInt(total_data.service,10))}</td>
+                                                        <td style={columnStyle}>{parseFloat(total_data.qty).toFixed(2)}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.gross_sales).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.net_sales).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.grand_total).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.diskon_item).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.diskon_trx).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.tax).toFixed(2))}</td>
+                                                        <td style={{textAlign:"right"}}>{toRp(parseFloat(total_data.service).toFixed(2))}</td>
                                                     </tr>
                                                 </tfoot>
                                             ):''

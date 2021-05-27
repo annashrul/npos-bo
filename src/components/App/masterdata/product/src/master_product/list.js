@@ -3,7 +3,7 @@ import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import FormProduct from "components/App/modals/masterdata/product/form_product";
 import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_product.action";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+// import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import "jspdf-autotable";
 import { to_pdf } from "helper";
 import { FetchAllLocation } from "redux/actions/masterdata/location/location.action";
@@ -37,6 +37,7 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
+import FormProductExport from "../../../../modals/masterdata/product/form_product_export";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class ListProduct extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSearchBy = this.handleSearchBy.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
+    this.handleExport = this.handleExport.bind(this);
     this.state = {
       isExcel: false,
       array1: [],
@@ -438,6 +440,12 @@ class ListProduct extends Component {
       this.props.dispatch(FetchProduct(1, ""));
     }
   }
+  handleExport(e) {
+    e.preventDefault();
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+    this.props.dispatch(ModalType("formProductExcel"));
+  }
   loc_detail(e, kode) {
     e.preventDefault();
     this.setState({ isModalDetail: true });
@@ -622,13 +630,21 @@ class ListProduct extends Component {
               >
                 <i className="fa fa-file-pdf-o"></i>
               </button>
-              <ReactHTMLTableToExcel
+              <button
+                style={{ marginTop: "27px", marginRight: "2px" }}
+                type="button"
+                onClick={(e)=>this.handleExport(e)}
+                className="btn btn-primary"
+              >
+                Export<i className="fa fa-file-xlx-o"></i>
+              </button>
+              {/* <ReactHTMLTableToExcel
                 className="btn btn-primary btnBrg"
                 table="emp"
                 filename="barang"
                 sheet="barang"
                 buttonText="export excel"
-              ></ReactHTMLTableToExcel>
+              ></ReactHTMLTableToExcel> */}
             </div>
           </div>
         </form>
@@ -955,6 +971,7 @@ class ListProduct extends Component {
         {this.state.isModalCustomer ? (
           <CustomerPrice dataCustomerPrice={this.props.customerPrice} />
         ) : null}
+        <FormProductExport/>
       </div>
     );
   }

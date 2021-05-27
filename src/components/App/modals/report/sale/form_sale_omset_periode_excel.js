@@ -43,12 +43,13 @@ class SaleOmsetPeriodeReportExcel extends Component{
         let stringHtml = '';
         stringHtml+=
         '<div style="text-align:center>'+
-        '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
+        // '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
         '<h3 align="center"><center>&nbsp;</center></h3>'+
         '<h3 style="text-align:center"><center>LAPORAN OMSET PERIODE</center></h3>'+
         '</div>';
         
         const headers = [[
+            "Nama Toko",
             "Omset Bulan Lalu",
             "Transaksi Bulan Lalu",
             "Rata - Rata Transaksi Bulan Lalu Sale",
@@ -59,14 +60,15 @@ class SaleOmsetPeriodeReportExcel extends Component{
             "Persentase",
         ]];
         let data = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object'?this.props.saleOmsetPeriodeReportExcel.data.map(v=> [
-           toRp(parseInt(v.omset_sebelum,10)),
-           toRp(parseInt(v.transaksi_sebelum,10)),
-           toRp(parseInt(v.omset_sebelum / v.transaksi_sebelum,10)),
-           toRp(parseInt(v.omset_sekarang,10)),
-           toRp(parseInt(v.transaksi_sekarang,10)),
-           toRp(parseInt(v.omset_sekarang / v.transaksi_sekarang,10)),
-           toRp(parseInt(v.omset_sekarang - v.omset_sebelum,10)),
-           parseInt((v.omset_sekarang - v.omset_sebelum)/v.omset_sebelum * 100, 10),
+            v.nama_toko,
+            toRp(parseInt(v.omset_sebelum, 10)),
+            toRp(parseInt(v.transaksi_sebelum, 10)),
+            toRp(!Number.isNaN(parseInt(v.omset_sebelum, 10) / parseInt(v.transaksi_sebelum, 10)) ? parseInt(v.omset_sebelum, 10) / parseInt(v.transaksi_sebelum, 10) : 0),
+            toRp(parseInt(v.omset_sekarang, 10)),
+            toRp(parseInt(v.transaksi_sekarang, 10)),
+            toRp(!Number.isNaN(parseInt(v.omset_sekarang, 10) / parseInt(v.transaksi_sekarang, 10)) ? parseInt(v.omset_sekarang, 10) / parseInt(v.transaksi_sekarang, 10) : 0),
+            toRp(parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10)),
+            toRp(!Number.isNaN((parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10)) / parseInt(v.omset_sebelum, 10) * 100) ? (parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10)) / parseInt(v.omset_sebelum, 10) * 100 : 0),
         ]):'';
         // data +=["TOTAL","","","","","","","","",tprice];
         to_pdf(
@@ -86,6 +88,7 @@ class SaleOmsetPeriodeReportExcel extends Component{
             ['PERIODE : ' + this.props.startDate + ' - ' + this.props.endDate + ''],
             [''],
             [
+                'Nama Toko',
                 'Omset Bulan Lalu',
                 'Transaksi Bulan Lalu',
                 'Rata - Rata Transaksi Bulan Lalu Sale',
@@ -95,74 +98,24 @@ class SaleOmsetPeriodeReportExcel extends Component{
                 'Pertumbuhan Trx',
                 'Persentase']
         ]
-        // let footer = [
-        //     [
-        //         'TOTAL'
-        //         , ''
-        //         , ''
-        //         , ''
-        //         , '', toRp(this.props.totalPenjualanExcel.omset), toRp(this.props.totalPenjualanExcel.dis_item), toRp(this.props.totalPenjualanExcel.dis_rp), this.props.totalPenjualanExcel.dis_persen
-        //         , ''
-        //         , ''
-        //         , ''
-        //         , '', toRp(this.props.totalPenjualanExcel.kas_lain)
-        //         , '', toRp(this.props.totalPenjualanExcel.gt), toRp(this.props.totalPenjualanExcel.rounding), toRp(this.props.totalPenjualanExcel.bayar), toRp(this.props.totalPenjualanExcel.change), toRp(this.props.totalPenjualanExcel.jml_kartu), toRp(this.props.totalPenjualanExcel.charge)
-        //         , ''
-        //         , ''
-        //         , ''
-        //         , ''
-        //     ]
-        // ]
-        // Kd Trx	Tanggal	Jam	Customer	Kasir	Omset	Diskon			HPP	Hrg Jual	Profit	Reg.Member	Trx Lain	Keterangan	Grand Total	Rounding	Tunai	Change	Transfer	Charge	Nama Kartu	Status	Lokasi	Jenis Trx
-        // Peritem(%)	Total(rp)	Total(%)																
-
         let raw = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object' ? this.props.saleOmsetPeriodeReportExcel.data.map(v => [
+            v.nama_toko,
             toRp(parseInt(v.omset_sebelum,10)),
             toRp(parseInt(v.transaksi_sebelum,10)),
-            toRp(parseInt(v.omset_sebelum / v.transaksi_sebelum,10)),
+            toRp(!Number.isNaN(parseInt(v.omset_sebelum, 10) / parseInt(v.transaksi_sebelum, 10)) ? parseInt(v.omset_sebelum, 10) / parseInt(v.transaksi_sebelum, 10) : 0),
             toRp(parseInt(v.omset_sekarang,10)),
             toRp(parseInt(v.transaksi_sekarang,10)),
-            toRp(parseInt(v.omset_sekarang / v.transaksi_sekarang,10)),
-            toRp(parseInt(v.omset_sekarang - v.omset_sebelum,10)),
-            toRp(parseInt((v.omset_sekarang - v.omset_sebelum)/v.omset_sebelum * 100, 10)),
+            toRp(!Number.isNaN(parseInt(v.omset_sekarang, 10) / parseInt(v.transaksi_sekarang, 10)) ? parseInt(v.omset_sekarang, 10) / parseInt(v.transaksi_sekarang, 10):0),
+            toRp(parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum,10)),
+            toRp(!Number.isNaN((parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10)) / parseInt(v.omset_sebelum, 10) * 100) ? (parseInt(v.omset_sekarang, 10) - parseInt(v.omset_sebelum, 10)) / parseInt(v.omset_sebelum, 10) * 100:0),
         ]) : '';
 
         let body = header.concat(raw);
 
         let data = body;
-        // let data = body.concat(footer);
-
-        // let data = this.props.saleOmsetPeriodeReportExcel.data;
-
         let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
-        // let ws = XLSX.utils.json_to_sheet(data, {header:header,skipHeader:true});
-        let merge = [
-            { s: { r: 0, c: 0 }, e: { r: 0, c: 24 } },
-            { s: { r: 1, c: 0 }, e: { r: 1, c: 24 } },
-            { s: { r: data.length - 1, c: 0 }, e: { r: data.length - 1, c: 4 } },
-            { s: { r: data.length - 1, c: 9 }, e: { r: data.length - 1, c: 12 } },
-            { s: { r: data.length - 1, c: 21 }, e: { r: data.length - 1, c: 24 } },
-        ];
-        if (!ws['!merges']) ws['!merges'] = [];
-        ws['!merges'] = merge;
-        ws['!ref'] = XLSX.utils.encode_range({
-            s: { c: 0, r: 0 },
-            e: { c: 24, r: 1 + data.length + 1 }
-        });
-        ws["A1"].s = {
-            alignment: {
-                vertical: 'center',
-            }
-        };
-        // let ws = XLSX.utils.table_to_sheet(document.getElementById('laporan_sale_retur'));
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        // XLSX.writeFile(wb, 'SheetJS.xlsx');
-
-        // let wb = XLSX.utils.book_new();
-        // XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
         let exportFileName = `Laporan_Omset_Periode_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
         XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
 
@@ -175,7 +128,7 @@ class SaleOmsetPeriodeReportExcel extends Component{
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSaleOmsetPeriodeExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
                 <form onSubmit={this.handleSubmit}>
                     <ModalBody>
-                        <button type="button" className="close"><span aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
+                        <button type="button" className="close"><span className="text-dark" aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
                         <h3 className="text-center">Manage Export</h3>
                         <div className="row mb-4">
                             <div className="col-6">

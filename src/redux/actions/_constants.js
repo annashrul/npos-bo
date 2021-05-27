@@ -14,7 +14,8 @@ export const TOKEN = {
 
 export const HEADERS ={
     // URL: atob(document.getElementById("hellyeah").value),
-    URL: 'http://ptnetindo.com:6692/',
+    // URL: 'http://ptnetindo.com:6692/',
+    URL: 'http://192.168.100.10:6692/',
 //   URL: 'http://localhost:6692/',
   TOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",
@@ -158,8 +159,10 @@ export const PRODUCT = {
     FAILED: 'FAILED_PRODUCT',
     DETAIL: 'DETAIL_PRODUCT',
     LOADING_BRG: 'SET_BRG_LOADING',
+    LOADING_BRG_ALL: 'SET_BRG_LOADING',
     LOADING_BRG_SALE: 'SET_LOADING_BRG_SALE',
     SUCCESS_BRG: 'SET_BRG_SUCCESS',
+    SUCCESS_BRG_ALL: 'SET_BRG_SUCCESS',
     SUCCESS_BRG_SALE: 'SET_SUCCESS_BRG_SALE',
     EDIT_PRODUCT: 'SET_EDIT_PRODUCT',
     CODE_PRODUCT: 'SET_CODE_PRODUCT',
