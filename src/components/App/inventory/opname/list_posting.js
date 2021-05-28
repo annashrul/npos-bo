@@ -200,15 +200,11 @@ class ListPosting extends Component{
 
         return (
             <Layout page="List Posing">
-                <div className="card">
-                    <div className="card-header">
-                        <h4>List Posting</h4>
-                    </div>
-                    <div className="card-body">
+                    
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="row">
-                                    <div className="col-6 col-xs6 col-md-2">
+                                    <div className="col-6 col-xs-6 col-md-3">
                                         <div className="form-group">
                                             <label htmlFor=""> Periode </label>
                                             <DateRangePicker
@@ -216,7 +212,7 @@ class ListPosting extends Component{
                                                 alwaysShowCalendars={true}
                                                 onEvent={this.handleEvent}
                                             >
-                                                <input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
+                                                <input readOnly={true} type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>
                                                 {/*<input type="text" className="form-control" name="date_product" value={`${this.state.startDate} to ${this.state.endDate}`}/>*/}
                                             </DateRangePicker>
                                         </div>
@@ -239,18 +235,12 @@ class ListPosting extends Component{
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-md-2">
-                                        <div className="form-group">
-                                            <label htmlFor=""></label>
-                                            <button style={{marginTop:"28px"}} className="btn btn-primary" onClick={this.handleSearch}><i class="fa fa-search"></i></button>
-                                        </div>
+                                    <div className="col-md-4">
+                                        <button style={{marginTop:"28px",marginRight:"5px"}} className="btn btn-primary" onClick={this.handleSearch}><i class="fa fa-search"></i></button>
+                                        <button style={{marginTop:"28px"}} className="btn btn-info" onClick={this.handleAll}>Posting All</button>
+                                        
                                     </div>
-                                    <div className="col-md-2 offset-md-3">
-                                        <div className="form-group">
-                                            <label htmlFor=""></label>
-                                            <button style={{marginTop:"28px"}} className="btn btn-block btn-info" onClick={this.handleAll}>Posting All</button>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                 <div style={{overflowX:'auto',zoom:'85%'}}>
                                     <table className="table table-hover table-bordered">
@@ -344,8 +334,6 @@ class ListPosting extends Component{
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
             </Layout>
         );
     }

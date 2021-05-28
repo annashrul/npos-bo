@@ -8,7 +8,7 @@ import {
     destroy
 } from "components/model/app.model";
 
-
+import {handleGet} from '../_interceptor';
 export function setLoading(load) {
     return {
         type: DN.LOADING,
@@ -84,15 +84,11 @@ export const FetchDn = (page=1,where='')=>{
         if(where!==''){
             url+=where
         }
-        axios.get(HEADERS.URL+`${url}`)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setReport(data));
-                dispatch(setLoading(false));
-            }).catch(function(error){
-            
+
+        handleGet(url,(res)=>{
+            dispatch(setReport(res));
         })
+        
     }
 }
 

@@ -20,9 +20,14 @@ class ListCustomerType extends Component{
         super(props);
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state={
+            field_any:'',
             detail:{}
         }
+    }
+    handleChange = (e)=>{
+        this.setState({[e.target.name]:e.target.value})
     }
     handlePageChange(pageNumber){
     }
@@ -76,7 +81,7 @@ class ListCustomerType extends Component{
                         <div className="col-10 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
-                                <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_customer_type')}/>
+                                <input type="text" className="form-control" name="field_any" value={this.state.field_any} onChange={this.handleChange}/>
                             </div>
                         </div>
                         <div className="col-2 col-xs-4 col-md-4">
@@ -90,7 +95,7 @@ class ListCustomerType extends Component{
                     </div>
 
                 </form>
-                <div className="table-responsive" style={{overflowX: "auto"}}>
+                <div style={{overflowX: "auto"}}>
                     <table className="table table-hover table-bordered">
                         <thead className="bg-light">
                         <tr>
@@ -108,15 +113,15 @@ class ListCustomerType extends Component{
                                             <tr key={i}>
                                                 <td style={columnStyle}>{/* Example split danger button */}
                                                     <div className="btn-group">
-                                                            <UncontrolledButtonDropdown>
-                                                            <DropdownToggle caret>
-                                                                Aksi
-                                                            </DropdownToggle>
-                                                            <DropdownMenu>
-                                                                <DropdownItem onClick={(e)=>this.toggleModal(e,i)}>Edit</DropdownItem>
-                                                                <DropdownItem onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</DropdownItem>
-                                                            </DropdownMenu>
-                                                            </UncontrolledButtonDropdown>
+                                                        <UncontrolledButtonDropdown>
+                                                        <DropdownToggle caret>
+                                                            Aksi
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                            <DropdownItem onClick={(e)=>this.toggleModal(e,i)}>Edit</DropdownItem>
+                                                            <DropdownItem onClick={(e)=>this.handleDelete(e,v.kode)}>Delete</DropdownItem>
+                                                        </DropdownMenu>
+                                                        </UncontrolledButtonDropdown>
                                                     </div>
                                                 </td>
                                                 <td style={columnStyle}>{v.kode}</td>
@@ -124,7 +129,7 @@ class ListCustomerType extends Component{
                                             </tr>
                                         )
                                     })
-                                    : "No data."
+                                    : <tr><td>No Data.</td></tr>
                             )
                         }
                         </tbody>

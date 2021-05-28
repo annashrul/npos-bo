@@ -2,6 +2,8 @@ import {OPNAME, HEADERS} from "../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
+import Nprogress from "nprogress";
+import "nprogress/nprogress.css";
 
 export function setLoading(load){
     return {type : OPNAME.LOADING,load}
@@ -21,6 +23,7 @@ export function setOpnameFailed(data=[]){
 
 export const FetchPostingOpname = (page=1,where='')=>{
     return (dispatch) => {
+        Nprogress.start();
         dispatch(setLoading(true));
         let url=`opname/report?page=${page}&status=0`;
         if(where!==''){
@@ -30,16 +33,18 @@ export const FetchPostingOpname = (page=1,where='')=>{
         axios.get(HEADERS.URL+url)
             .then(function(response){
                 const data = response.data;
-                
                 dispatch(setPostingOpname(data));
                 dispatch(setLoading(false));
+                Nprogress.done();
             }).catch(function(error){
+                Nprogress.done();
             
         })
     }
 }
 export const FetchOpname = (page=1,where='')=>{
     return (dispatch) => {
+        Nprogress.start();
         dispatch(setLoading(true));
         let url=`opname/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
         if(where!==''){
@@ -52,8 +57,9 @@ export const FetchOpname = (page=1,where='')=>{
                 
                 dispatch(setOpname(data));
                 dispatch(setLoading(false));
+                Nprogress.done();
             }).catch(function(error){
-            
+                Nprogress.done();
         })
     }
 }

@@ -22,7 +22,7 @@ class FormBank extends Component{
             status: '',
             charge_debit:'',
             charge_kredit:'',
-            foto:"",
+            foto:"-",
             token:'',
             error:{
                 akun:'',

@@ -114,24 +114,7 @@ class ApprovalMutasi extends Component{
                     </div>
                     <div className="card-body">
                         <div className="row">
-                            {/* <div className="col-md-3">
-                                <div className="form-group">
-                                    <label className="control-label font-12">
-                                        Lokasi Tujuan
-                                    </label>
-                                    <Select
-                                        options={this.state.location_data}
-                                        placeholder="Pilih Lokasi Tujuan"
-                                        onChange={this.HandleChangeLokasi}
-                                        value={
-                                            this.state.location_data.find(op => {
-                                                return op.value === this.state.location
-                                            })
-                                        }
-
-                                    />
-                                </div>
-                            </div> */}
+                            
                             <div className="col-md-3">
                                 <div className="form-group">
                                     <label className="control-label font-12">

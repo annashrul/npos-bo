@@ -2,6 +2,7 @@ import {ADJUSTMENT, HEADERS} from "../_constants";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import {destroy} from "components/model/app.model";
+import { handleGet } from "../_interceptor"
 
 export function setLoading(load){
     return {type : ADJUSTMENT.LOADING,load}
@@ -28,20 +29,10 @@ export function setCodeAdjusment(data=[]){
 
 export const FetchAdjustment = (page=1,where='')=>{
     return (dispatch) => {
-        dispatch(setLoading(true));
-
         let url =  `adjustment/report?page=${page}`;
-        if(where!==''){
-            url+=where;
-        }
-        
-        axios.get(HEADERS.URL+url)
-            .then(function(response){
-                const data = response.data;
-                dispatch(setAdjustment(data));
-                dispatch(setLoading(false));
-            }).catch(function(error){
-            
+        if(where!=='') url+=where;
+        handleGet(url,(res)=>{
+            dispatch(setAdjustment(res));
         })
     }
 }

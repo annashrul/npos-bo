@@ -1,177 +1,198 @@
-import {CUSTOMER_TYPE, HEADERS} from "../../_constants";
-import axios from 'axios'
+import { CUSTOMER_TYPE, HEADERS } from "../../_constants";
+import axios from "axios";
 import Swal from "sweetalert2";
+import Nprogress from "nprogress";
+import "nprogress/nprogress.css";
 
-
-export function setLoading(load){
-    return {type : CUSTOMER_TYPE.LOADING,load}
+export function setLoading(load) {
+  return { type: CUSTOMER_TYPE.LOADING, load };
 }
 
-export function setCustomerType(data=[]){
-    return {type:CUSTOMER_TYPE.SUCCESS,data}
+export function setCustomerType(data = []) {
+  return { type: CUSTOMER_TYPE.SUCCESS, data };
 }
-export function setCustomerTypeAll(data=[]){
-    return {type:CUSTOMER_TYPE.ALL,data}
+export function setCustomerTypeAll(data = []) {
+  return { type: CUSTOMER_TYPE.ALL, data };
 }
-export function setCustomerTypeFailed(data=[]){
-    return {type:CUSTOMER_TYPE.FAILED,data}
+export function setCustomerTypeFailed(data = []) {
+  return { type: CUSTOMER_TYPE.FAILED, data };
 }
 
-export const FetchCustomerType = (page=1,q,perpage='')=>{
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        let url = '';
-        if(q===null||q===''||q===undefined){
-            url=`customerType?page=${page}`;
-        }else{
-            url=`customerType?page=${page}&q=${q}`;
-        }
-        if(perpage!==''){
-            url+=`&perpage=${perpage}`
-        }
-        axios.get(HEADERS.URL+url)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setCustomerType(data));
-                dispatch(setLoading(false));
-            }).catch(function(error){
-            
-        })
+export const FetchCustomerType = (page = 1, q, perpage = "") => {
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    Nprogress.start();
+    let url = "";
+    if (q === null || q === "" || q === undefined) {
+      url = `customerType?page=${page}`;
+    } else {
+      url = `customerType?page=${page}&q=${q}`;
     }
-}
-
-
-export const FetchCustomerTypeAll = ()=>{
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        
-        axios.get(HEADERS.URL+`customerType?page=1&perpage=100`)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setCustomerTypeAll(data));
-                dispatch(setLoading(false));
-            }).catch(function(error){
-            
-        })
+    if (perpage !== "") {
+      url += `&perpage=${perpage}`;
     }
-}
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        const data = response.data;
 
+        dispatch(setCustomerType(data));
+        dispatch(setLoading(false));
+        Nprogress.done();
+      })
+      .catch(function (error) {
+        Nprogress.done();
+      });
+  };
+};
+
+export const FetchCustomerTypeAll = () => {
+  return (dispatch) => {
+    dispatch(setLoading(true));
+
+    axios
+      .get(HEADERS.URL + `customerType?page=1&perpage=100`)
+      .then(function (response) {
+        const data = response.data;
+
+        dispatch(setCustomerTypeAll(data));
+        dispatch(setLoading(false));
+      })
+      .catch(function (error) {});
+  };
+};
 
 export const createCustomerType = (data) => {
-    return (dispatch) => {
-        dispatch(setLoading(true))
-        const url = HEADERS.URL + `customerType`;
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    const url = HEADERS.URL + `customerType`;
 
-        axios.post(url, data)
-            .then(function (response) {
-                const data = (response.data)
-                if (data.status === 'success') {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'Success',
-                        type: 'success',
-                        text: data.msg,
-                    });
-                } else {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'failed',
-                        type: 'error',
-                        text: data.msg,
-                    });
-                }
-                dispatch(setLoading(false));
-                dispatch(FetchCustomerType(1,''));
+    axios
+      .post(url, data)
+      .then(function (response) {
+        const data = response.data;
+        if (data.status === "success") {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Success",
+            type: "success",
+            text: data.msg,
+          });
+        } else {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "failed",
+            type: "error",
+            text: data.msg,
+          });
+        }
+        dispatch(setLoading(false));
+        dispatch(FetchCustomerType(1, ""));
+      })
+      .catch(function (error) {
+        dispatch(setLoading(false));
+        Swal.fire({
+          allowOutsideClick: false,
+          title: "failed",
+          type: "error",
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
+        });
 
-            })
-            .catch(function (error) {
-                dispatch(setLoading(false));
-                Swal.fire({allowOutsideClick: false,
-                    title: 'failed',
-                    type: 'error',
-                    text: error.response === undefined?'error!':error.response.data.msg,
-                });
+        if (error.response) {
+        }
+      });
+  };
+};
+export const updateCustomerType = (id, data) => {
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    const url = HEADERS.URL + `customerType/${id}`;
 
-                if (error.response) {
-                    
-                }
-            })
-    }
-}
-export const updateCustomerType = (id,data) => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        const url = HEADERS.URL + `customerType/${id}`;
+    axios
+      .put(url, data)
+      .then(function (response) {
+        const data = response.data;
+        if (data.status === "success") {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Success",
+            type: "success",
+            text: data.msg,
+          });
+        } else {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "failed",
+            type: "error",
+            text: data.msg,
+          });
+        }
+        dispatch(setLoading(false));
+        dispatch(FetchCustomerType(1, ""));
+      })
+      .catch(function (error) {
+        // handle error
+        dispatch(setLoading(false));
 
-        axios.put(url, data)
-            .then(function (response) {
-                const data = (response.data);
-                if (data.status === 'success') {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'Success',
-                        type: 'success',
-                        text: data.msg,
-                    });
-                } else {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'failed',
-                        type: 'error',
-                        text: data.msg,
-                    });
-                }
-                dispatch(setLoading(false));
-                dispatch(FetchCustomerType(1,''));
-            })
-            .catch(function (error) {
-                // handle error
-                dispatch(setLoading(false));
-                
-                Swal.fire({allowOutsideClick: false,
-                    title: 'failed',
-                    type: 'error',
-                    text: error.response === undefined?'error!':error.response.data.msg,
-                });
-                if (error.response) {
-                    
-                }
-            })
-    }
-}
+        Swal.fire({
+          allowOutsideClick: false,
+          title: "failed",
+          type: "error",
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
+        });
+        if (error.response) {
+        }
+      });
+  };
+};
 export const deleteCustomerType = (id) => {
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        const url = HEADERS.URL + `customerType/${id}`;
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    const url = HEADERS.URL + `customerType/${id}`;
 
-        axios.delete(url)
-            .then(function (response) {
-                const data = (response.data);
-                if (data.status === 'success') {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'Success',
-                        type: 'success',
-                        text: data.msg,
-                    });
-                } else {
-                    Swal.fire({allowOutsideClick: false,
-                        title: 'failed',
-                        type: 'error',
-                        text: data.msg,
-                    });
-                }
-                dispatch(setLoading(false));
-                dispatch(FetchCustomerType(localStorage.getItem("page_customer_type")?localStorage.getItem("page_customer_type"):1,''));
-            })
-            .catch(function (error) {
-                dispatch(setLoading(false));
-                
-                Swal.fire({allowOutsideClick: false,
-                    title: 'failed',
-                    type: 'error',
-                    text: error.response === undefined?'error!':error.response.data.msg,
-                });
-                if (error.response) {
-                    
-                }
-            })
-    }
-}
+    axios
+      .delete(url)
+      .then(function (response) {
+        const data = response.data;
+        if (data.status === "success") {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Success",
+            type: "success",
+            text: data.msg,
+          });
+        } else {
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "failed",
+            type: "error",
+            text: data.msg,
+          });
+        }
+        dispatch(setLoading(false));
+        dispatch(
+          FetchCustomerType(
+            localStorage.getItem("page_customer_type")
+              ? localStorage.getItem("page_customer_type")
+              : 1,
+            ""
+          )
+        );
+      })
+      .catch(function (error) {
+        dispatch(setLoading(false));
+
+        Swal.fire({
+          allowOutsideClick: false,
+          title: "failed",
+          type: "error",
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
+        });
+        if (error.response) {
+        }
+      });
+  };
+};

@@ -26,9 +26,14 @@ class ListCustomer extends Component{
         this.handlesearch = this.handlesearch.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.toggleModalEdit = this.toggleModalEdit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.state={
+            field_any:'',
             detail:{},
         }
+    }
+    handleChange = (e)=>{
+        this.setState({[e.target.name]:e.target.value})
     }
     handlePageChange(pageNumber){
         localStorage.setItem("page_customer",pageNumber);
@@ -91,7 +96,7 @@ class ListCustomer extends Component{
                         <div className="col-10 col-xs-10 col-md-3">
                             <div className="form-group">
                                 <label>Search</label>
-                                <input type="text" className="form-control" name="field_any" defaultValue={localStorage.getItem('any_customer')}/>
+                                <input type="text" className="form-control" name="field_any" value={this.state.field_any} onChange={this.handleChange}/>
                             </div>
                         </div>
                         <div className="col-2 col-xs-4 col-md-4">
@@ -102,7 +107,7 @@ class ListCustomer extends Component{
                         </div>
                     </div>
                 </form>
-                <div className="table-responsive" style={{overflowX: "auto"}}>
+                <div style={{overflowX: "auto"}}>
                     <table className="table table-hover table-bordered">
                         <thead className="bg-light">
                         <tr>
@@ -150,7 +155,7 @@ class ListCustomer extends Component{
                                             </tr>
                                         )
                                     })
-                                    : "No data."
+                                    : <tr><td>No Data.</td></tr>
                             )
                         }
                         </tbody>
