@@ -402,7 +402,7 @@ class PiutangReport extends Component {
       data,
       // total
     } = this.props.piutangReport;
-    console.log(data);
+    
     let totPerpage = 0;
     return (
       <Layout page="Laporan Piutang">

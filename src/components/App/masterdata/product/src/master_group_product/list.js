@@ -117,7 +117,7 @@ class ListGroupProduct extends Component{
                    </div>
 
                </form>
-               <div className="table-responsive" style={{overflowX: "auto"}}>
+               <div style={{overflowX: "auto"}}>
                    <table className="table table-hover table-bordered">
                        <thead className="bg-light">
                        <tr>

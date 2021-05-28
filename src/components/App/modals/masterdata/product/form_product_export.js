@@ -9,8 +9,13 @@ import imgPdf from 'assets/pdf.png';
 import moment from "moment";
 import XLSX from 'xlsx'
 import Select from "react-select";
-import { FetchBrgAll } from '../../../../../redux/actions/masterdata/product/product.action';
+import { FetchBrgAll, setProductbrgAll } from '../../../../../redux/actions/masterdata/product/product.action';
 import Spinner from '../../../../../Spinner';
+// import MyProgressbar from '../../../../../myProgressbar';
+import { RESET_PROPS_ARR } from '../../../../../redux/actions/_constants';
+
+// kategori 1 = Dijual, kategori 0 = TIdak Dijual
+// jenis 0 = Karton, jenis 1 = Satuan, jenis 2 = Paket, jenis 3 = Servis, jenis 4 = Bahan
 class FormProductExport extends Component{
     constructor(props){
         super(props);
@@ -35,10 +40,7 @@ class FormProductExport extends Component{
     }
     componentWillReceiveProps = (nextProps) => {
         if (nextProps.auth.user) {
-            let lk = [{
-                value: "",
-                label: "Semua Lokasi"
-            }];
+            let lk = [];
             let loc = nextProps.auth.user.lokasi;
             if(loc!==undefined){
                 loc.map((i) => {
@@ -58,6 +60,7 @@ class FormProductExport extends Component{
         this.setState({
           location: lk.value,
         });
+        this.props.dispatch(setProductbrgAll(RESET_PROPS_ARR));
         this.props.dispatch(FetchBrgAll(encodeURIComponent(lk.value)))
     }
     handleView = (e) => {
@@ -70,6 +73,7 @@ class FormProductExport extends Component{
         e.preventDefault();
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(setProductbrgAll(RESET_PROPS_ARR));
     };
     printDocument = (e) => {
         e.preventDefault();
@@ -82,39 +86,40 @@ class FormProductExport extends Component{
         '</div>';
         
         const headers = [[
-            'kd_brg',
-            'barcode',
-            'satuan',
-            'nm_brg',
-            'raw_nmbrg',
-            'harga',
-            'nama_toko',
-            'ppn Sale',
-            'service Sale',
-            'kel_brg Sale',
-            'hrg_beli Sale',
-            'stock Sale',
-            'kategori Sale',
-            'stock_min Total',
-            'subdept Total',
-            'supplier Total',
-            'deskripsi Item',
-            'gambar Item',
-            'jenis Item',
-            'kcp Trx',
-            'poin Trx',
+            'No',
+            'Kode Barang',
+            'Barcode',
+            'Satuan',
+            'Nama Barang',
+            'Raw Nama Barang',
+            'Harga',
+            'Lokasi',
+            'PPN Sale',
+            'Service Sale',
+            'Kel. Barang Sale',
+            'Harga Beli Sale',
+            'Stock Sale',
+            'Kategori Sale',
+            'Stock Min',
+            'Sub-Dept',
+            'Supplier',
+            'Deskripsi Item',
+            'Jenis Item',
+            'KCP Trx',
+            'Poin Trx',
             'online Trx',
-            'fav',
-            'berat',
-            'harga2',
-            'harga3',
-            'harga4',
-            'satuan_jual',
-            'qty_konversi',
-            'tgl_input',
-            'tgl_update',
+            'Favorit',
+            'Berat',
+            'Harga 2',
+            'Harga 3',
+            'Harga 4',
+            'Satuan Jual',
+            'Qty Konversi',
+            'Tanggal Input',
+            'Tanggal Update',
         ]];
-        let data = typeof this.props.resBarangAll === 'object'?this.props.resBarangAll.map(v=> [
+        let data = typeof this.props.resBarangAll === 'object'?this.props.resBarangAll.map((v,i)=> [
+            i+1,
             v.kd_brg,
             v.barcode,
             v.satuan,
@@ -127,13 +132,12 @@ class FormProductExport extends Component{
             v.kel_brg,
             v.hrg_beli,
             v.stock,
-            v.kategori,
+            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
             v.stock_min,
             v.subdept,
             v.supplier,
             v.deskripsi,
-            v.gambar,
-            v.jenis,
+            parseInt(v.jenis,10)===1?'Dijual':parseInt(v.jenis,10)===0?'Tidak dijual':'Tidak diketahui!',
             v.kcp,
             v.poin,
             v.online,
@@ -197,40 +201,41 @@ class FormProductExport extends Component{
             // ['PERIODE : ' + this.props.startDate + ' - ' + this.props.endDate + ''],
             [''],
             [
-                'kd_brg',
-                'barcode',
-                'satuan',
-                'nm_brg',
-                'raw_nmbrg',
-                'harga',
-                'nama_toko',
-                'ppn Sale',
-                'service Sale',
-                'kel_brg Sale',
-                'hrg_beli Sale',
-                'stock Sale',
-                'kategori Sale',
-                'stock_min Total',
-                'subdept Total',
-                'supplier Total',
-                'deskripsi Item',
-                'gambar Item',
-                'jenis Item',
-                'kcp Trx',
-                'poin Trx',
+                'No',
+                'Kode Barang',
+                'Barcode',
+                'Satuan',
+                'Nama Barang',
+                'Raw Nama Barang',
+                'Harga',
+                'Lokasi',
+                'PPN Sale',
+                'Service Sale',
+                'Kel. Barang Sale',
+                'Harga Beli Sale',
+                'Stock Sale',
+                'Kategori Sale',
+                'Stock Min',
+                'Sub-Dept',
+                'Supplier',
+                'Deskripsi Item',
+                'Jenis Item',
+                'KCP Trx',
+                'Poin Trx',
                 'online Trx',
-                'fav',
-                'berat',
-                'harga2',
-                'harga3',
-                'harga4',
-                'satuan_jual',
-                'qty_konversi',
-                'tgl_input',
-                'tgl_update',
+                'Favorit',
+                'Berat',
+                'Harga 2',
+                'Harga 3',
+                'Harga 4',
+                'Satuan Jual',
+                'Qty Konversi',
+                'Tanggal Input',
+                'Tanggal Update',
             ]
         ]
-        let raw = typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map(v => [
+        let raw = typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map((v,i) => [
+            i+1,
             v.kd_brg,
             v.barcode,
             v.satuan,
@@ -243,13 +248,12 @@ class FormProductExport extends Component{
             v.kel_brg,
             v.hrg_beli,
             v.stock,
-            v.kategori,
+            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
             v.stock_min,
             v.subdept,
             v.supplier,
             v.deskripsi,
-            v.gambar,
-            v.jenis,
+            parseInt(v.jenis,10)===1?'Dijual':parseInt(v.jenis,10)===0?'Tidak dijual':'Tidak diketahui!',
             v.kcp,
             v.poin,
             v.online,
@@ -271,7 +275,7 @@ class FormProductExport extends Component{
 
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-        let exportFileName = `Laporan__Omset_Penjualan_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
+        let exportFileName = `Semua_Data_Barang_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
         XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
 
         this.toggle(e);
@@ -287,9 +291,15 @@ class FormProductExport extends Component{
                             <div className="col-12">
                                 <div className="form-group">
                                     <label className="control-label font-12">
-                                        Lokasi
+                                        Pilih Lokasi
                                     </label>
                                     <Select
+                                        // menuPortalTarget={document.body}
+                                        // menuPosition={'fixed'} 
+                                        styles={{
+                                            // Fixes the overlapping problem of the component
+                                            menu: provided => ({ ...provided, zIndex: 9999 })
+                                          }}
                                         options={this.state.location_data}
                                         // placeholder="Pilih Tipe Kas"
                                         onChange={this.HandleChangeLokasi}
@@ -302,7 +312,13 @@ class FormProductExport extends Component{
                                 </div>
                             </div>
                         </div>
-                        {this.props.isLoadingBrgAll?<Spinner/>:''}
+                        {this.props.isLoadingBrgAll?
+                        <div>
+                            <Spinner/>
+                            <br/>
+                            {/* <MyProgressbar myprogressbarLabel={`Sedang memuat data ${this.props.persenDl}%`} myprogressbarPersen={this.props.persenDl+'%'}/> */}
+                            </div>
+                        :''}
                         {this.props.resBarangAll.length>0?
                         <div className="row mb-4">
                             <div className="col-6 d-none">
@@ -338,10 +354,11 @@ class FormProductExport extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.productReducer);
+    
     return {
         resBarangAll:state.productReducer.pagin_brg,
         isLoadingBrgAll:state.productReducer.isLoadingBrg,
+        persenDl:state.productReducer.persenDl,
         isOpen: state.modalReducer,
         type: state.modalTypeReducer,
         auth:state.auth

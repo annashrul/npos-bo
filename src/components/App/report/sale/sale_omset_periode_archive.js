@@ -181,7 +181,7 @@ class SaleOmsetPeriodeArchive extends Component {
     });
   };
   handleDate = (e, param) => {
-    console.log(moment(e._d).format("yyyy-MM"));
+    
     if (param === "old") {
       const old = moment(e._d).format("yyyy-MM");
       localStorage.setItem("date_from_saleOmsetPeriode_report", `${old}`);
@@ -591,8 +591,8 @@ class SaleOmsetPeriodeArchive extends Component {
                                         parseFloat(v.omset_sebelum, 10)) *
                                       100
                                     : 0);
-                                    // console.log(!Number.isNaN(parseFloat(v.omset_sekarang) / parseFloat(v.transaksi_sekarang)));
-                                    console.log(((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum) * 100)===Infinity);
+                                    
+                                    
                                 return (
                                   <tr key={i}>
                                     <td style={columnStyle}>
@@ -768,7 +768,7 @@ class SaleOmsetPeriodeArchive extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.saleOmsetPeriodeReducer);
+  
   return {
     data: state.saleOmsetPeriodeReducer.data,
     detail: state.saleOmsetPeriodeReducer.detail,

@@ -201,7 +201,7 @@ class SaleOmsetPeriodeReportExcel extends Component {
     this.toggle(e);
   };
   render() {
-    console.log(this.props.dataDetail);
+    
     const columnStyle = {
       verticalAlign: "middle",
       textAlign: "center",

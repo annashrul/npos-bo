@@ -192,7 +192,7 @@ export const FetchPackingExcel = (page = 1, where = "", perpage = 99999) => {
         : page
     }&perpage=${perpage}`;
     if (where !== "") url += where;
-    console.log(url);
+    
     handleGet(url, (res) => {
       dispatch(setPackingExcel(res));
     });

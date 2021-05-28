@@ -56,7 +56,7 @@ export default class File64 extends React.Component {
           return false;
         }
         const checkType = this.checkingType(file.type);
-        console.log(checkType);
+        
         if (!checkType) {
           this.setState({
             error: errMsg.type[this.props.lang]

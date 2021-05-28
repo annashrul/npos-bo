@@ -22,7 +22,9 @@ const initialState = {
     msg_brg_sale:"",
     status_brg_sale:"",
 
-    productCode:""
+    productCode:"",
+    
+    persenDl:0
 };
 
 export const productReducer = (state=initialState,action) => {
@@ -88,6 +90,10 @@ export const productReducer = (state=initialState,action) => {
             return Object.assign({}, state, {
                 isLoadingBrgSale: action.load
             });
+        case PRODUCT.SUCCESS_PERSEN:
+        return Object.assign({}, state, {
+            persenDl: action.data
+        });
         default:
             return state
     }

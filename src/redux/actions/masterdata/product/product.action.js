@@ -43,7 +43,12 @@ export function setProduct(data = []) {
 export function setProductFailed(data = []) {
   return { type: PRODUCT.FAILED, data };
 }
-
+export function setPersen(data = []) {
+  return {
+    type: PRODUCT.SUCCESS_PERSEN,
+    data,
+  };
+}
 export const FetchProduct = (page = 1, where, param = "", db = null) => {
   return (dispatch) => {
     Nprogress.start();
@@ -233,11 +238,20 @@ export const FetchBrgAll = (
     if (lokasi !== null) url += `?lokasi=${lokasi}`;
 
     axios
-      .get(HEADERS.URL + `${url}`)
+      .get(HEADERS.URL + `${url}`,{
+        onDownloadProgress: (progressEvent) => {
+          
+          const total = parseFloat(progressEvent.total);
+          const current = parseFloat(progressEvent.loaded);
+          let percentCompleted = Math.floor((current / total) * 100);
+          dispatch(setPersen(percentCompleted));
+        },
+      })
       .then(function (response) {
         const data = response.data;
           dispatch(setProductbrgAll(data));
           dispatch(setLoadingbrgAll(false));
+          dispatch(setPersen(0));
       })
       .catch(function (error) {
         dispatch(setLoadingbrgAll(false));

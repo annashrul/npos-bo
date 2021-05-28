@@ -49,7 +49,7 @@ class FormClosing extends Component{
     }
     getProps(props){
         // if(props.isLoading){
-            console.log(props.data);
+            
         // }
         let data_lokasi=[];
         if(props.auth.user){
@@ -68,7 +68,7 @@ class FormClosing extends Component{
     handleSubmit(){
         let data={};
         let dataUser={};
-        // console.log(this.props.auth);
+        
         data['kasir']=this.props.auth.user.id;
         data['kassa']='Z';
         data['tgl']=moment(this.state.tgl).format("yyyy-MM-DD HH:mm:ss");
@@ -79,7 +79,7 @@ class FormClosing extends Component{
         dataUser['nama'] = this.props.auth.user.nama;
         dataUser['site'] = this.props.auth.user.site_title;
 
-        console.log(data);
+        
         if(data['lokasi']===''){
             ToastQ.fire({icon:'error',title:`Lokasi tidak boleh kosong`});
             return false;

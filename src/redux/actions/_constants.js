@@ -156,6 +156,7 @@ export const PROMO = {
 export const PRODUCT = {
     LOADING: 'SET_PRODUCT_LOADING',
     SUCCESS: 'SUCCESS_PRODUCT',
+    SUCCESS_PERSEN: 'SUCCESS_PERSEN',
     FAILED: 'FAILED_PRODUCT',
     DETAIL: 'DETAIL_PRODUCT',
     LOADING_BRG: 'SET_BRG_LOADING',
@@ -685,4 +686,20 @@ export const PACKING = {
     SUCCESS_EXCEL:'SET_PACKING_SUCCESS_EXCEL',
     SUCCESS_DETAIL:'SET_PACKING_SUCCESS_DETAIL',
 
+}
+/****************
+ RESET PROPS
+ *****************/
+ export const RESET_PROPS = {
+    status:'',
+    msg:'',
+    result:{}
+}
+/****************
+ RESET PROPS
+ *****************/
+export const RESET_PROPS_ARR = {
+    status:'',
+    msg:'',
+    result:[]
 }

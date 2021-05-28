@@ -1766,6 +1766,44 @@ class SideMenu extends Component {
                       Penjualan by Barang
                     </Link>
                   </li>
+                  <li
+                    className={
+                      path === "/report/sale_by_product_archive" ? "active" : ""
+                    }
+                    style={
+                      this.state.r_penjualan_by_customer === "0"
+                        ? { display: "none" }
+                        : { display: "block" }
+                    }
+                  >
+                    <Link
+                      to="/report/sale_omset"
+                      style={{ width: "fit-content" }}
+                    >
+                      {" "}
+                      <i className="zmdi zmdi-assignment-check" />
+                      Omset Penjualan
+                    </Link>
+                  </li>
+                  <li
+                    className={
+                      path === "/report/sale_by_product_archive" ? "active" : ""
+                    }
+                    style={
+                      this.state.r_penjualan_by_customer === "0"
+                        ? { display: "none" }
+                        : { display: "block" }
+                    }
+                  >
+                    <Link
+                      to="/report/sale_omset_periode"
+                      style={{ width: "fit-content" }}
+                    >
+                      {" "}
+                      <i className="zmdi zmdi-assignment-check" />
+                      Omset Penj. Periode
+                    </Link>
+                  </li>
                 </ul>
               </li>
               {/* SUBLAPORAN TRANSAKSI MODUL END */}

@@ -636,7 +636,8 @@ class ListProduct extends Component {
                 onClick={(e)=>this.handleExport(e)}
                 className="btn btn-primary"
               >
-                Export<i className="fa fa-file-xlx-o"></i>
+                <i className="fa fa-file-excel-o"></i>&nbsp;
+                Export
               </button>
               {/* <ReactHTMLTableToExcel
                 className="btn btn-primary btnBrg"
