@@ -153,7 +153,7 @@ class Alokasi extends Component {
 
   componentDidUpdate(prevState) {
     if (this.props.alokasiDetail !== prevState.alokasiDetail) {
-      console.log("ALOKASI DETAIL");
+      
       // this.getProps(this.props)
       destroy(table);
       let param = this.props;

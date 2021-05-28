@@ -90,7 +90,7 @@ class ModalPin extends Component{
 
     
     render(){
-        console.log(this.props);
+        
         return (
             <WrapperModal isOpen={this.props.isOpen && this.props.type === "modalOtorisasi"} size="lg" style={{backgroundColor:"black"}}>
 

@@ -167,7 +167,7 @@ export const postClosing = (data, dataUser) => async (dispatch) => {
       setTimeout(function () {
         Swal.close();
         const response = res.data;
-        console.log(`&q=${btoa(response.result.id_setoran)}`);
+        
         if (response.status === "success") {
           dispatch(ModalToggle(false));
           Swal.fire({
@@ -182,7 +182,7 @@ export const postClosing = (data, dataUser) => async (dispatch) => {
             cancelButtonText: "Oke!",
           }).then((result) => {
             if (result.value) {
-              console.log(response);
+              
               dispatch(
                 FetchClosingPdf(1, `&q=${btoa(response.result.id_setoran)}`)
               );
@@ -219,7 +219,7 @@ export const FetchClosing = (page = 1, where = "") => {
     if (where !== "") {
       url += `${where}`;
     }
-    console.log(url);
+    
     axios
       .get(HEADERS.URL + url)
       .then(function (response) {
@@ -240,7 +240,7 @@ export const FetchClosingPdf = (page = 1, where = "") => {
     if (where !== "") {
       url += `${where}`;
     }
-    console.log(url);
+    
     axios
       .get(HEADERS.URL + url)
       .then(function (res) {
@@ -696,7 +696,7 @@ export const FetchClosingPdf = (page = 1, where = "") => {
             "",
           ],
         ];
-        // console.log(body);
+        
         const footer = [];
 
         to_pdf("closing", stringHtml, headers, body, footer, false);

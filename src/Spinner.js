@@ -4,7 +4,7 @@ export default class Spinner extends Component {
     return (
       <div className="card" style={{display:"table",width: "100%",height: "-webkit-fill-available"}}>
         <div className="animate__animated animate__bounceIn" style={{textAlign: "center",display: "table-cell",verticalAlign:"middle"}}>
-          <div className="spinner-border text-primary" role="status"></div>
+          <div className="spinner-border text-primary mt-3" role="status"></div>
           {
             (
               this.props.spinnerLabel!==''?

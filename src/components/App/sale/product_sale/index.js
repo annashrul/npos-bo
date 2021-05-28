@@ -345,7 +345,7 @@ class Sale extends Component {
       } else {
         val_final = val;
       }
-      console.log(val_final);
+      
 
       if (column === "discount_persen") {
         this.setState({
@@ -688,7 +688,7 @@ class Sale extends Component {
             if (ppnInt !== 0) {
               ppn = hrg * (ppnInt / 100);
             }
-            console.log("HARGA BELI", item.hrg_beli);
+            
 
             subtotal +=
               (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10);

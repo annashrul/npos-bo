@@ -46,6 +46,8 @@ import {packingReducer} from "./inventory/packing/packing.reducer";
 import {log_trxReducer} from "./report/log/log.reducer";
 import {log_actReducer} from "./report/log/log_act.reducer";
 import {saleBySalesReducer} from "./sale/sale_by_sales.reducer"
+import {saleOmsetReducer} from "./sale/sale_omset.reducer"
+import {saleOmsetPeriodeReducer} from "./sale/sale_omset_periode.reducer"
 
 export default combineReducers({
     modalReducer,
@@ -94,6 +96,8 @@ export default combineReducers({
     log_trxReducer,
     log_actReducer,
     saleBySalesReducer,
+    saleOmsetReducer,
+    saleOmsetPeriodeReducer,
 
     auth: authReducer,
     errors : errorsReducer

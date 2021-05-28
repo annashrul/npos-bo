@@ -190,7 +190,7 @@ class FormSale extends Component{
                 newparse['parsedata'] = parsedata;
                 newparse['alamat'] = this.props.lokasi.alamat;
                 newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
-                // console.log(newparse);
+                
                 this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
                 this.resetState()
             }
@@ -242,7 +242,7 @@ class FormSale extends Component{
             newparse['alamat'] = this.props.lokasi.alamat;
             newparse['site_title'] = this.props.auth.user.site_title === undefined?this.props.auth.user.title:this.props.auth.user.site_title;
 
-            // console.log(newparse);
+            
             this.props.dispatch(storeSale(newparse,(arr)=>this.props.history.push(arr)));
             this.resetState()
         }

@@ -46,6 +46,8 @@ import SaleArchive from '../report/sale/sale_archive'
 import SaleByCustArchive from '../report/sale/sale_by_cust_archive'
 import SaleByProductArchive from '../report/sale/sale_by_product_archive'
 import SaleBySalesArchive from '../report/sale/sale_by_sales_archive'
+import SaleOmsetArchive from '../report/sale/sale_omset_archive'
+import SaleOmsetPeriodeArchive from '../report/sale/sale_omset_periode_archive'
 import Sale from '../sale/product_sale'
 import CashTrx from '../sale/cash_trx'
 import Company from "../setting/company";
@@ -173,6 +175,8 @@ const Routes = (
             <PrivateRoute path="/report/sale_by_cust_archive" exact strict component={SaleByCustArchive} />
             <PrivateRoute path="/report/sale_by_product_archive" exact strict component={SaleByProductArchive} />
             <PrivateRoute path="/report/sale_by_sales_archive" exact strict component={SaleBySalesArchive} />
+            <PrivateRoute path="/report/sale_omset" exact strict component={SaleOmsetArchive} />
+            <PrivateRoute path="/report/sale_omset_periode" exact strict component={SaleOmsetPeriodeArchive} />
             <PrivateRoute path="/report/purchase_by_supplier" exact strict component={PurchaseBySupplierReport} />
             <PrivateRoute path="/report/sale_retur_archive" exact strict component={SaleReturReport} />
             <PrivateRoute path="/log/trx" exact strict component={LogTrxReport} />

@@ -529,7 +529,7 @@ class Receive extends Component {
       } else {
         val_final = val;
       }
-      console.log(val_final);
+      
 
       if (column === "discount_persen") {
         this.setState({
