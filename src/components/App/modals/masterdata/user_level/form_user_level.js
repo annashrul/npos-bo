@@ -115,6 +115,8 @@ class FormUserLevel extends Component{
                 {id: 77, value: "0", isChecked: false,label:'Pembelian By Supplier'},
                 {id: 78, value: "0", isChecked: false,label:'Hutang'},
                 {id: 79, value: "0", isChecked: false,label:'Piutang'},
+                {id: 80, value: "0", isChecked: false,label:'Omset Penjualan'},
+                {id: 81, value: "0", isChecked: false,label:'Omset Penj. Periode'},
             ],
             produksi        : [
                 {id: 100, value: "0", isChecked: false,label:'Produksi'},
@@ -243,6 +245,8 @@ class FormUserLevel extends Component{
                 {id: 77, value: "0", isChecked: false,label:'Pembelian By Supplier'},
                 {id: 78, value: "0", isChecked: false,label:'Hutang'},
                 {id: 79, value: "0", isChecked: false,label:'Piutang'},
+                {id: 80, value: "0", isChecked: false,label:'Omset Penjualan'},
+                {id: 81, value: "0", isChecked: false,label:'Omset Penj. Periode'},
             ],
             produksi        : [
                 {id: 100, value: "0", isChecked: false,label:'Produksi'},
