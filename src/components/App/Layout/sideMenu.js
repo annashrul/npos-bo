@@ -89,6 +89,8 @@ class SideMenu extends Component {
       r_arsip_penjualan: "",
       r_arsip_retur_penjualan: "",
       r_penjualan_by_customer: "",
+      r_sale_omset: "",
+      r_sale_omset_periode: "",
       r_stock: "",
       r_adjusment: "",
       r_alokasi: "",
@@ -497,9 +499,11 @@ class SideMenu extends Component {
         let r_piutang = akses[89]["value"] !== null ? akses[89]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_trx = akses[88]["value"] !== null ? akses[88]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_act = akses[89]["value"] !== null ? akses[89]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let r_sale_omset = akses[90]["value"] !== null ? akses[90]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let r_sale_omset_periode = akses[91]["value"] !== null ? akses[91]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //CETAK BARCODE
         let cetak_barcode =
-          akses[90]["value"] !== null ? akses[90]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+          akses[92]["value"] !== null ? akses[92]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         // start pengecekan apabila fitur bernilai 0
         //setting
         if (pengaturan_umum !== "0" || pengguna !== "0" || lokasi !== "0") {
@@ -591,13 +595,17 @@ class SideMenu extends Component {
           r_receive !== "0" ||
           r_arsip_pembelian_by_supplier !== "0" ||
           r_hutang !== "0" ||
-          r_piutang !== "0"
+          r_piutang !== "0" ||
+          r_sale_omset !== "0" ||
+          r_sale_omset_periode !== "0" 
         ) {
           this.setState({ modul_report: true });
         }
         if (
           r_arsip_penjualan !== "0" ||
           r_arsip_retur_penjualan !== "0" ||
+          r_sale_omset !== "0" ||
+          r_sale_omset_periode !== "0" ||
           r_penjualan_by_customer !== "0"
         ) {
           this.setState({ modul_report: true, modul_report_penjualan: true });
@@ -691,6 +699,8 @@ class SideMenu extends Component {
           r_piutang: r_piutang,
           r_trx: r_trx,
           r_act: r_act,
+          r_sale_omset: r_sale_omset,
+          r_sale_omset_periode: r_sale_omset_periode,
           //CETAK BARCODE
           cetak_barcode: cetak_barcode,
         });
@@ -800,6 +810,8 @@ class SideMenu extends Component {
       path === "/report/purchase_by_supplier" ||
       path === "/report/hutang" ||
       path === "/report/piutang" ||
+      path === "/report/sale_omset" ||
+      path === "/report/sale_omset_periode" ||
       path === "/log/trx" ||
       path === "/log/act"
     ) {
@@ -832,6 +844,8 @@ class SideMenu extends Component {
         path === "/report/sale_archive" ||
         path === "/report/sale_retur_archive" ||
         path === "/report/sale_by_cust_archive" ||
+        path === "/report/sale_omset" ||
+        path === "/report/sale_omset_periode" ||
         path === "/report/sale_by_product_archive"
       ) {
         this.setState({
@@ -1667,6 +1681,8 @@ class SideMenu extends Component {
                   path === "/report/sale_archive" ||
                   path === "/report/sale_retur_archive" ||
                   path === "/report/sale_by_cust_archive" ||
+                  path === "/report/sale_omset" ||
+                  path === "/report/sale_omset_periode" ||
                   path === "/report/sale_by_product_archive"
                     ? " active menu-open"
                     : "")
@@ -1768,10 +1784,10 @@ class SideMenu extends Component {
                   </li>
                   <li
                     className={
-                      path === "/report/sale_by_product_archive" ? "active" : ""
+                      path === "/report/sale_omset" ? "active" : ""
                     }
                     style={
-                      this.state.r_penjualan_by_customer === "0"
+                      this.state.r_sale_omset === "0"
                         ? { display: "none" }
                         : { display: "block" }
                     }
@@ -1787,10 +1803,10 @@ class SideMenu extends Component {
                   </li>
                   <li
                     className={
-                      path === "/report/sale_by_product_archive" ? "active" : ""
+                      path === "/report/sale_omset_periode" ? "active" : ""
                     }
                     style={
-                      this.state.r_penjualan_by_customer === "0"
+                      this.state.r_sale_omset_periode === "0"
                         ? { display: "none" }
                         : { display: "block" }
                     }

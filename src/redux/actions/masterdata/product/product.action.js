@@ -233,6 +233,15 @@ export const FetchBrgAll = (
   lokasi
 ) => {
   return (dispatch) => {
+    Swal.fire({
+      allowOutsideClick:false,
+      title: 'Mengambil data barang.',
+      html: 'Lamanya proses bergantung pada banyaknya data barang, jangan tutup halaman hingga proses selesai.',
+      onBeforeOpen: () => {
+          Swal.showLoading()
+      },
+      onClose: () => {}
+    })
     dispatch(setLoadingbrgAll(true));
     let url = `barang/getAll`;
     if (lokasi !== null) url += `?lokasi=${lokasi}`;
@@ -252,9 +261,22 @@ export const FetchBrgAll = (
           dispatch(setProductbrgAll(data));
           dispatch(setLoadingbrgAll(false));
           dispatch(setPersen(0));
+          if (data.status === "success") {
+            Toast.fire({
+                icon: 'success',
+                title: data.msg
+            })
+          } else {
+            Toast.fire({
+                icon: 'error',
+                title: data.msg
+            })
+          }
+          // Swal.close()
       })
       .catch(function (error) {
         dispatch(setLoadingbrgAll(false));
+        Swal.close()
 
         Swal.fire({
           allowOutsideClick: false,
@@ -463,3 +485,14 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
       });
   };
 };
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-end',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    onOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})

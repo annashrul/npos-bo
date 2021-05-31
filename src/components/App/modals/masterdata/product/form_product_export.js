@@ -56,6 +56,11 @@ class FormProductExport extends Component{
             }
         }
     }
+    componentDidUpdate(prevState) {
+        if (prevState.resBarangAll.length !== this.props.resBarangAll.length) {
+            this.printDocumentXLsx(null,'xlsx')
+        }
+    }
     HandleChangeLokasi(lk) {
         this.setState({
           location: lk.value,
@@ -70,9 +75,9 @@ class FormProductExport extends Component{
         })
     }
     toggle = (e) => {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
+        // e.preventDefault();
+        // const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(false));
         this.props.dispatch(setProductbrgAll(RESET_PROPS_ARR));
     };
     printDocument = (e) => {
@@ -91,30 +96,19 @@ class FormProductExport extends Component{
             'Barcode',
             'Satuan',
             'Nama Barang',
-            'Raw Nama Barang',
-            'Harga',
             'Lokasi',
-            'PPN Sale',
-            'Service Sale',
-            'Kel. Barang Sale',
-            'Harga Beli Sale',
-            'Stock Sale',
-            'Kategori Sale',
-            'Stock Min',
-            'Sub-Dept',
-            'Supplier',
-            'Deskripsi Item',
-            'Jenis Item',
-            'KCP Trx',
-            'Poin Trx',
-            'online Trx',
-            'Favorit',
-            'Berat',
+            'Harga Beli',
+            'Harga',
             'Harga 2',
             'Harga 3',
             'Harga 4',
-            'Satuan Jual',
-            'Qty Konversi',
+            'PPN',
+            'Service',
+            'Kel. Barang',
+            'Kategori',
+            'Sub-Dept',
+            'Supplier',
+            'Deskripsi Item',
             'Tanggal Input',
             'Tanggal Update',
         ]];
@@ -124,30 +118,19 @@ class FormProductExport extends Component{
             v.barcode,
             v.satuan,
             v.nm_brg,
-            v.raw_nmbrg,
-            v.harga,
             v.nama_toko,
-            v.ppn,
-            v.service,
-            v.kel_brg,
             v.hrg_beli,
-            v.stock,
-            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
-            v.stock_min,
-            v.subdept,
-            v.supplier,
-            v.deskripsi,
-            parseInt(v.jenis,10)===1?'Dijual':parseInt(v.jenis,10)===0?'Tidak dijual':'Tidak diketahui!',
-            v.kcp,
-            v.poin,
-            v.online,
-            v.fav,
-            v.berat,
+            v.harga,
             v.harga2,
             v.harga3,
             v.harga4,
-            v.satuan_jual,
-            v.qty_konversi,
+            v.ppn,
+            v.service,
+            v.kel_brg,
+            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
+            v.subdept,
+            v.supplier,
+            v.deskripsi,
             v.tgl_input,
             v.tgl_update,
         ]):'';
@@ -162,76 +145,33 @@ class FormProductExport extends Component{
         this.toggle(e);
       }
     printDocumentXLsx = (e, param) => {
-        e.preventDefault();
-        // {
-        //     "kd_brg": "420001",
-        //     "barcode": "WCAT1C999050",
-        //     "satuan": "PCS",
-        //     "nm_brg": "BARANG TEST",
-        //     "raw_nmbrg": "BARANG TEST",
-        //     "harga": "41000",
-        //     "nama_toko": "TOKO BANDUNG",
-        //     "ppn": 0,
-        //     "service": 0,
-        //     "kel_brg": "42",
-        //     "hrg_beli": "37500",
-        //     "stock": "0",
-        //     "kategori": "1",
-        //     "stock_min": "0",
-        //     "subdept": "Sub-Dept01",
-        //     "supplier": "FREEZE FRESH FOOD",
-        //     "deskripsi": "BARANG TEST",
-        //     "gambar": null,
-        //     "jenis": "1",
-        //     "kcp": "-",
-        //     "poin": "0",
-        //     "online": "0",
-        //     "fav": "0",
-        //     "berat": "0",
-        //     "harga2": "0",
-        //     "harga3": "0",
-        //     "harga4": "0",
-        //     "satuan_jual": 1,
-        //     "qty_konversi": 0,
-        //     "tgl_input": "2020-06-11T08:51:29.000Z",
-        //     "tgl_update": "2020-06-11T08:51:29.000Z"
-        //   }
+        // e.preventDefault();
+        
         let header = [
             ['SEMUA DATA BARANG'],
             // ['PERIODE : ' + this.props.startDate + ' - ' + this.props.endDate + ''],
             [''],
             [
-                'No',
-                'Kode Barang',
-                'Barcode',
-                'Satuan',
-                'Nama Barang',
-                'Raw Nama Barang',
-                'Harga',
-                'Lokasi',
-                'PPN Sale',
-                'Service Sale',
-                'Kel. Barang Sale',
-                'Harga Beli Sale',
-                'Stock Sale',
-                'Kategori Sale',
-                'Stock Min',
-                'Sub-Dept',
-                'Supplier',
-                'Deskripsi Item',
-                'Jenis Item',
-                'KCP Trx',
-                'Poin Trx',
-                'online Trx',
-                'Favorit',
-                'Berat',
-                'Harga 2',
-                'Harga 3',
-                'Harga 4',
-                'Satuan Jual',
-                'Qty Konversi',
-                'Tanggal Input',
-                'Tanggal Update',
+            'No',
+            'Kode Barang',
+            'Barcode',
+            'Satuan',
+            'Nama Barang',
+            'Lokasi',
+            'Harga Beli',
+            'Harga',
+            'Harga 2',
+            'Harga 3',
+            'Harga 4',
+            'PPN',
+            'Service',
+            'Kel. Barang',
+            'Kategori',
+            'Sub-Dept',
+            'Supplier',
+            'Deskripsi Item',
+            'Tanggal Input',
+            'Tanggal Update',
             ]
         ]
         let raw = typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map((v,i) => [
@@ -240,45 +180,36 @@ class FormProductExport extends Component{
             v.barcode,
             v.satuan,
             v.nm_brg,
-            v.raw_nmbrg,
-            v.harga,
             v.nama_toko,
-            v.ppn,
-            v.service,
-            v.kel_brg,
             v.hrg_beli,
-            v.stock,
-            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
-            v.stock_min,
-            v.subdept,
-            v.supplier,
-            v.deskripsi,
-            parseInt(v.jenis,10)===1?'Dijual':parseInt(v.jenis,10)===0?'Tidak dijual':'Tidak diketahui!',
-            v.kcp,
-            v.poin,
-            v.online,
-            v.fav,
-            v.berat,
+            v.harga,
             v.harga2,
             v.harga3,
             v.harga4,
-            v.satuan_jual,
-            v.qty_konversi,
+            v.ppn,
+            v.service,
+            v.kel_brg,
+            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
+            v.subdept,
+            v.supplier,
+            v.deskripsi,
             v.tgl_input,
             v.tgl_update,
         ]) : '';
 
-        let body = header.concat(raw);
+        if(this.props.resBarangAll.length>0){
+            let body = header.concat(raw);
 
-        let data = body;
-        let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+            let data = body;
+            let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
 
-        let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-        let exportFileName = `Semua_Data_Barang_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
-        XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+            let exportFileName = `Semua_Data_Barang_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
+            XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
 
-        this.toggle(e);
+            this.toggle(e);
+        }
     }
     render(){
         return (
