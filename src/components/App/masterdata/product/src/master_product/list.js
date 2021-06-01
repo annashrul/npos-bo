@@ -38,6 +38,8 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import FormProductExport from "../../../../modals/masterdata/product/form_product_export";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import MyPdfL from "../../../../../../myPdfL";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -542,6 +544,40 @@ class ListProduct extends Component {
       textAlign: "left",
     };
 
+    const headers = [
+      'No',
+      'Code',
+      'Name',
+      'Group',
+      'Supplier',
+      'Dept',
+      'Sub Dept',
+      'Purchase Price',
+      // 'Category',
+    ];
+
+    let body = []
+    if(typeof data === 'object'){
+      for (let i = 0; i < data.length; i++) {
+        const v = data[i];
+          body.push([
+            i+1,
+            v.kd_brg,
+            v.nm_brg,
+            v.kel_brg,
+            v.supplier,
+            v.dept,
+            v.subdept,
+            // v.kategori,
+          ])
+      }
+        
+      }
+
+    body.unshift(headers);
+
+      
+    console.log('body', body);
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -622,14 +658,29 @@ class ListProduct extends Component {
               >
                 <i className="fa fa-plus"></i>
               </button>
-              <button
+              <PDFDownloadLink
+                document={
+                  <MyPdfL
+                    title={['Data Barang per Halaman',`${this.state.startDate} sampai ${this.state.endDate}`]}
+                    result={body}
+                  />
+                }
+                style={{ marginTop: "27px", marginRight: "2px" }}
+                fileName="semua_barang.pdf"
+                className="btn btn-primary py-2 d-none"
+              >
+                {({ blob, url, loading, error }) =>
+                  loading ? <i className="spinner-border spinner-border-sm"></i> : <i className="fa fa-file-pdf-o"></i>
+                }
+              </PDFDownloadLink>
+              {/* <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
                 type="button"
                 onClick={this.exportPDF}
                 className="btn btn-primary"
               >
                 <i className="fa fa-file-pdf-o"></i>
-              </button>
+              </button> */}
               <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
                 type="button"
@@ -874,7 +925,7 @@ class ListProduct extends Component {
             </thead>
             <tbody>
               {typeof data === "object" ? (
-                data.length > 0 ? (
+                data !== undefined && data.length > 0 ? (
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
