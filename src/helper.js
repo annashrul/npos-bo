@@ -263,6 +263,21 @@ export const CapitalizeEachWord=(str)=>{
     }
     return splitStr.join(' ');
 }
+export const convertBase64 = (file) => {
+    console.log("convertBase64",file);
+    return new Promise((resolve, reject) => {
+        if(file!==undefined){
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            }
+            fileReader.onerror = (error) => {
+                reject(error);
+            }
+        }
+    })
+}
 
 
 class Paginationq extends Component{
