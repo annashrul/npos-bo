@@ -3,7 +3,7 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+// import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import {
   setProductEdit,
   createProduct,
@@ -17,11 +17,11 @@ import Select from "react-select";
 import moment from "moment";
 import { rmComma, toCurrency } from "../../../../../helper";
 import { isNaN } from "lodash";
-import FormSubDepartment from "components/App/modals/masterdata/department/form_sub_department";
-import FormGroupProduct from "components/App/modals/masterdata/group_product/form_group_product";
-import FormSupplier from "components/App/modals/masterdata/supplier/form_supplier";
-import Default from "../../../../../assets/default.png"
-import {convertBase64} from "helper"
+import FormSubDepartment from "../../../../../components/App/modals/masterdata/department/form_sub_department";
+import FormGroupProduct from "../../../../../components/App/modals/masterdata/group_product/form_group_product";
+import FormSupplier from "../../../../../components/App/modals/masterdata/supplier/form_supplier";
+import Default from "../../../../../assets/default.png";
+import { convertBase64 } from "helper";
 class FormProduct extends Component {
   constructor(props) {
     super(props);
@@ -503,7 +503,7 @@ class FormProduct extends Component {
       err = Object.assign({}, err, { kd_brg: "" });
       let genCode = `${moment(new Date()).format("YYMMDD")}${
         Math.floor(Math.random() * (10000 - 0 + 1)) + 0
-      }`
+      }`;
 
       this.setState({
         kd_brg: genCode,
@@ -520,11 +520,7 @@ class FormProduct extends Component {
         let brgSku = [];
         for (let i = 0; i < 3; i++) {
           let brcd =
-            i === 0
-              ? `${genCode}`
-              : i === 1
-              ? `${genCode}02`
-              : `${genCode}03`;
+            i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
           let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
           brgSku.push({
             barcode: brcd,
@@ -537,12 +533,7 @@ class FormProduct extends Component {
       } else if (this.state.jenis === "2") {
         let brgSku = [];
         for (let i = 0; i < 2; i++) {
-          let brcd =
-            i === 0
-              ? `${genCode}`
-              : i === 1
-              ? `${genCode}02`
-              : "";
+          let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
           brgSku.push({
             barcode: brcd,
             qty: "",
@@ -554,7 +545,12 @@ class FormProduct extends Component {
       } else {
         let brgSku = [];
         for (let i = 0; i < 1; i++) {
-          let satuan = this.state.jenis === "1" ? "" : this.state.jenis === "1" ? "Pcs" : "Pack";
+          let satuan =
+            this.state.jenis === "1"
+              ? ""
+              : this.state.jenis === "1"
+              ? "Pcs"
+              : "Pack";
           brgSku.push({
             barcode: `${genCode}`,
             qty: satuan,
@@ -568,7 +564,7 @@ class FormProduct extends Component {
       this.setState({
         kd_brg: "",
         jenis: "1",
-        barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }]
+        barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }],
       });
     }
   }
@@ -577,23 +573,22 @@ class FormProduct extends Component {
     window.scrollTo(0, 0);
     this.clearState();
   };
-  toggleModal(e,param) {
+  toggleModal(e, param) {
     e.preventDefault();
     // const bool = !this.props.isOpen;
-    // this.props.dispatch(ModalToggle(bool));
+    // this.props.dispatch(ModalToggle(true));
     this.props.dispatch(ModalType(param));
-    
-}
-handleKateBrg = (e) => {
+  }
+  handleKateBrg = (e) => {
     // e.preventDefault();
-    this.setState({kategori:this.state.kategori==='1'?'0':'1'});
-}
-handleFileRead = async (event) => {
-  const file = event.target.files[0]
-  const base64 = await convertBase64(file)
-  this.setState({gambar:base64})
-  console.log(base64)
-}
+    this.setState({ kategori: this.state.kategori === "1" ? "0" : "1" });
+  };
+  handleFileRead = async (event) => {
+    const file = event.target.files[0];
+    const base64 = await convertBase64(file);
+    this.setState({ gambar: base64 });
+    console.log(base64);
+  };
   getProps(param) {
     this.setState({
       nm_harga1: param.auth.user.harga1,
@@ -1877,8 +1872,8 @@ handleFileRead = async (event) => {
   }
   handleCheckChieldElementSku(e, i) {
     this.setState((state, props) => {
-      state.barangHarga[i][1].isCheckedPACK = !state.barangHarga[i][1]
-        .isCheckedPACK;
+      state.barangHarga[i][1].isCheckedPACK =
+        !state.barangHarga[i][1].isCheckedPACK;
       return {
         barangHarga: state.barangHarga,
       };
@@ -2951,160 +2946,233 @@ handleFileRead = async (event) => {
     });
   }
   render() {
+
+    let showPricing = false;
+    for (let i = 0; i < this.state.barangSku.length; i++) {
+      if(this.state.barangSku.length>0 && (this.state.jenis === "2" || this.state.jenis === "0")){
+          if (
+            parseInt(this.state.barangSku[i].konversi, 10) > 0 &&
+            this.state.barangSku[i].qty !== ""
+          ) {
+            showPricing = true;
+            // console.log("this.state.barangSku[i]",this.state.barangSku[i]);
+          } else {
+            if(i===0){
+              showPricing = true;
+            } else {
+              showPricing = false;
+              break;
+            }
+          }
+      } else {
+        if (
+          this.state.barangSku[i].qty !== ""
+        ) {
+          showPricing = true;
+          // console.log("this.state.barangSku[i]",this.state.barangSku[i]);
+        } else {
+          showPricing = false;
+          break;
+        }
+      }
+    }
+
+    // console.log("showPricing",showPricing);
+
     return (
-      <WrapperModal
-        // className="custom-map-modal"
-        isOpen={this.props.isOpen && this.props.type === "formProduct"}
-        size="lg"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.dataEdit === undefined ? "Tambah Barang" : "Ubah Barang"}
-          <br />
-          {this.state.selectedIndex === 0 ? (
-            <small>
-              {" "}
-              ( sebelum memilih jenis barang, pastikan anda sudah membuat kode
-              barang terlebih dahulu. tujuan ini untuk membuat barcode secara
-              otomatis )
-            </small>
-          ) : this.state.selectedIndex === 1 ? (
-            <small>
-              {" "}
-              ( barcode tidak boleh ada yang sama dengan yang lainnya )
-            </small>
-          ) : this.state.selectedIndex === 2 ? (
-            <small>
-              {" "}
-              ( ceklis atur semua untuk mengatur form yang lainnya )
-            </small>
-          ) : (
-            ""
-          )}
-        </ModalHeader>
+      <div>
+        <WrapperModal
+          // className="custom-map-modal"
+          isOpen={this.props.isOpen && this.props.type === "formProduct"}
+          size="lg"
+        >
+          <ModalHeader toggle={this.toggle}>
+            {this.props.dataEdit === undefined
+              ? "Tambah Barang"
+              : "Ubah Barang"}
+            <br />
+            {/* {this.state.selectedIndex === 0 ? (
+              <small>
+                {" "}
+                ( sebelum memilih jenis barang, pastikan anda sudah membuat kode
+                barang terlebih dahulu. tujuan ini untuk membuat barcode secara
+                otomatis )
+              </small>
+            ) : this.state.selectedIndex === 1 ? (
+              <small>
+                {" "}
+                ( barcode tidak boleh ada yang sama dengan yang lainnya )
+              </small>
+            ) : this.state.selectedIndex === 2 ? (
+              <small>
+                {" "}
+                ( ceklis atur semua untuk mengatur form yang lainnya )
+              </small>
+            ) : (
+              ""
+            )} */}
+          </ModalHeader>
 
-        <form onSubmit={this.handleSubmit}>
-          <ModalBody>
-            <Tabs
-              onSelect={this.handleSelect}
-              selectedIndex={this.state.selectedIndex}
-            >
-              <TabList>
-                <Tab label="Core Courses">Form 1</Tab>
-                <Tab label="Core Courses">Form 2</Tab>
-              </TabList>
-              <hr />
-              <TabPanel>
-                
-                <div className="row d-flex box-margin">
-                  <div className="col-md-5">
-                    <div className="border border-1 h-100 d-flex justify-content-center align-items-end" style={{ backgroundImage: `url('${this.state.gambar}'),url('${Default}')`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}>
-                      <label className="btn btn-primary btn-rounded" htmlFor="fileUpload">{this.state.gambar!==""?'Ubah Gambar':'Tambah Gambar'}</label>
-                    </div>
-                    <input hidden id="fileUpload" type="file" accept="image/*" onChange={e => this.handleFileRead(e)} />
-                  
+          <form onSubmit={this.handleSubmit}>
+            <ModalBody>
+              {/* <Tabs
+                onSelect={this.handleSelect}
+                selectedIndex={this.state.selectedIndex}
+              > */}
+              {/* <TabList>
+                  <Tab label="Core Courses">Form 1</Tab>
+                  <Tab label="Core Courses">Form 2</Tab>
+                </TabList> */}
+              {/* <hr /> */}
+              {/* <TabPanel> */}
+              <div className="row d-flex box-margin">
+                <div className="col-md-5">
+                  <div
+                    className="border border-1 h-100 d-flex justify-content-center align-items-end"
+                    style={{
+                      backgroundImage: `url('${this.state.gambar}'),url('${Default}')`,
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "cover",
+                    }}
+                  >
+                    <label
+                      className="btn btn-primary btn-rounded"
+                      htmlFor="fileUpload"
+                    >
+                      {this.state.gambar !== ""
+                        ? "Ubah Gambar"
+                        : "Tambah Gambar"}
+                    </label>
                   </div>
-                  <div className="col-md-7">
-                    <div className="h-100">
-                      <div className="form-group">
-                        <input
-                          readOnly={
-                            this.props.dataEdit === undefined ? false : true
-                          }
-                          type="text"
-                          className="form-control"
-                          name="kd_brg"
-                          placeholder="Kode Barang"
-                          value={this.state.kd_brg}
-                          onChange={(e) => this.handleChange(e, null)}
-                          required
-                        />
-                        <small htmlFor="inputState" className="col-form-label d-flex align-items-center p-0">
-                          {this.props.dataEdit === undefined ? (
-                            <input
-                              type="checkbox"
-                              className="mr-2"
-                              checked={this.state.generateCode}
-                              onChange={this.generateCode}
-                            />
-                          ) : (
-                            ""
-                          )}{" "}
-                          Generate Kode Barang <span className="text-danger">&#42;</span>
-                        </small>
-                        <div
-                          className="invalid-feedback"
-                          style={
-                            this.state.error.kd_brg ||
-                            this.props.checkKodeBarang === true
-                              ? { display: "block" }
-                              : { display: "none" }
-                          }
-                        >
-                          {this.state.kd_brg === "" ||
-                          this.state.kd_brg === undefined
-                            ? this.state.error.kd_brg
-                            : this.props.checkKodeBarang === true
-                            ? "kode barang sudah digunakan"
-                            : ""}
-                        </div>
+                  <input
+                    hidden
+                    id="fileUpload"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => this.handleFileRead(e)}
+                  />
+                </div>
+                <div className="col-md-7">
+                  <div className="h-100">
+                    <div className="form-group">
+                      <input
+                        readOnly={
+                          this.props.dataEdit === undefined ? false : true
+                        }
+                        type="text"
+                        className="form-control"
+                        name="kd_brg"
+                        placeholder="Kode Barang"
+                        value={this.state.kd_brg}
+                        onChange={(e) => this.handleChange(e, null)}
+                        required
+                      />
+                      <small
+                        htmlFor="inputState"
+                        className="col-form-label d-flex align-items-center p-0"
+                      >
+                        {this.props.dataEdit === undefined ? (
+                          <input
+                            type="checkbox"
+                            className="mr-2"
+                            checked={this.state.generateCode}
+                            onChange={this.generateCode}
+                          />
+                        ) : (
+                          ""
+                        )}{" "}
+                        Generate Kode Barang{" "}
+                        <span className="text-danger">&#42;</span>
+                      </small>
+                      <div
+                        className="invalid-feedback"
+                        style={
+                          this.state.error.kd_brg ||
+                          this.props.checkKodeBarang === true
+                            ? { display: "block" }
+                            : { display: "none" }
+                        }
+                      >
+                        {this.state.kd_brg === "" ||
+                        this.state.kd_brg === undefined
+                          ? this.state.error.kd_brg
+                          : this.props.checkKodeBarang === true
+                          ? "kode barang sudah digunakan"
+                          : ""}
                       </div>
+                    </div>
 
-                      <div className="form-group">
-                        {/* <label>Nama Barang <span className="text-danger">&#42;</span></label> */}
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Nama Barang"
-                          name="nm_brg"
-                          value={this.state.nm_brg}
-                          onChange={(e) => this.handleChange(e, null)}
-                          required
-                        />
-                        <div
-                          className="invalid-feedback"
-                          style={
-                            this.state.error.nm_brg !== ""
-                              ? { display: "block" }
-                              : { display: "none" }
-                          }
-                        >
-                          {this.state.error.nm_brg}
-                        </div>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Nama Barang"
+                        name="nm_brg"
+                        value={this.state.nm_brg}
+                        onChange={(e) => this.handleChange(e, null)}
+                        required
+                      />
+                      <div
+                        className="invalid-feedback"
+                        style={
+                          this.state.error.nm_brg !== ""
+                            ? { display: "block" }
+                            : { display: "none" }
+                        }
+                      >
+                        {this.state.error.nm_brg}
                       </div>
+                    </div>
 
-                      <div className="form-group">
-                        {/* <label>Kelompok Barang <span className="text-danger">&#42;</span></label> */}
-                        <div className="d-flex align-items-center">
-                          <div style={{width:'-webkit-fill-available', marginRight:'1%'}}>
-                            <Select
-                              options={this.state.kel_brg_data}
-                              placeholder="Pilih Kelompok Barang"
-                              onChange={this.handleKelompokBarang}
-                              value={this.state.kel_brg_data.find((op) => {
-                                return op.value === this.state.kel_brg;
-                              })}
-                            />
-                          </div>
-                          <div style={{width:'auto'}}>
-                              <button className="btn btn-primary btn-block" onClick={(e)=>this.toggleModal(e, 'formGroupProduct')}><i class="fa fa-plus"></i></button>
-                          </div>
+                    <div className="form-group">
+                      <div className="d-flex align-items-center">
+                        <div
+                          style={{
+                            width: "-webkit-fill-available",
+                            marginRight: "1%",
+                          }}
+                        >
+                          <Select
+                            options={this.state.kel_brg_data}
+                            placeholder="Pilih Kelompok Barang"
+                            onChange={this.handleKelompokBarang}
+                            value={this.state.kel_brg_data.find((op) => {
+                              return op.value === this.state.kel_brg;
+                            })}
+                          />
                         </div>
-                          <div
-                            className="invalid-feedback"
-                            style={
-                              this.state.error.kel_brg !== ""
-                                ? { display: "block" }
-                                : { display: "none" }
+                        <div style={{ width: "auto" }}>
+                          <button
+                            className="btn btn-primary btn-block"
+                            onClick={(e) =>
+                              this.toggleModal(e, "formGroupProduct")
                             }
                           >
-                            {this.state.error.kel_brg}
-                          </div>
+                            <i class="fa fa-plus"></i>
+                          </button>
+                        </div>
                       </div>
+                      <div
+                        className="invalid-feedback"
+                        style={
+                          this.state.error.kel_brg !== ""
+                            ? { display: "block" }
+                            : { display: "none" }
+                        }
+                      >
+                        {this.state.error.kel_brg}
+                      </div>
+                    </div>
 
-                      <div className="form-group">
-                        {/* <label>Supplier <span className="text-danger">&#42;</span></label> */}
-                        <div className="d-flex align-items-center">
-                          <div style={{width:'-webkit-fill-available', marginRight:'1%'}}>
+                    <div className="form-group">
+                      <div className="d-flex align-items-center">
+                        <div
+                          style={{
+                            width: "-webkit-fill-available",
+                            marginRight: "1%",
+                          }}
+                        >
                           <Select
                             options={this.state.group1_data}
                             placeholder="Pilih Supplier"
@@ -3113,558 +3181,399 @@ handleFileRead = async (event) => {
                               return op.value === this.state.group1;
                             })}
                           />
-                          </div>
-                          <div style={{width:'auto'}}>
-                              <button className="btn btn-primary btn-block" onClick={(e)=>this.toggleModal(e, 'formSupplier')}><i class="fa fa-plus"></i></button>
-                          </div>
                         </div>
-                        <div
-                          className="invalid-feedback"
-                          style={
-                            this.state.error.group1 !== ""
-                              ? { display: "block" }
-                              : { display: "none" }
-                          }
-                        >
-                          {this.state.error.group1}
+                        <div style={{ width: "auto" }}>
+                          <button
+                            className="btn btn-primary btn-block"
+                            onClick={(e) => this.toggleModal(e, "formSupplier")}
+                          >
+                            <i class="fa fa-plus"></i>
+                          </button>
                         </div>
                       </div>
+                      <div
+                        className="invalid-feedback"
+                        style={
+                          this.state.error.group1 !== ""
+                            ? { display: "block" }
+                            : { display: "none" }
+                        }
+                      >
+                        {this.state.error.group1}
+                      </div>
+                    </div>
 
-                      <div className="row no-gutters">
-                        <div className="col-md-4">
-                          <div class="new-checkbox">
-                            <label>Kategori Barang</label>
-                            <div className="d-flex align-items-center">
-                              <label class="switch mr-2">
-                                  <input type="checkbox" checked={this.state.kategori==="1"} onChange={(e)=>this.handleKateBrg(e)} />
-                                  <span class="slider round"></span>
-                              </label>
-                              <label>{this.state.kategori==="1"?'Dijual':'Tidak dijual'}</label>
-                            </div>
+                    <div className="row no-gutters">
+                      <div className="col-md-4">
+                        <div class="new-checkbox">
+                          <label>Kategori Barang</label>
+                          <div className="d-flex align-items-center">
+                            <label class="switch mr-2">
+                              <input
+                                type="checkbox"
+                                checked={this.state.kategori === "1"}
+                                onChange={(e) => this.handleKateBrg(e)}
+                              />
+                              <span class="slider round"></span>
+                            </label>
+                            <label>
+                              {this.state.kategori === "1"
+                                ? "Dijual"
+                                : "Tidak dijual"}
+                            </label>
                           </div>
-                          {/* <div className="form-group">
-                            <label>Kategori Barang</label>
-                            <select
-                              name="kategori"
-                              className="form-control form-control-lg"
-                              value={this.state.kategori}
-                              onChange={(e) => this.handleChange(e, null)}
-                            >
-                              <option value="1">Dijual</option>
-                              <option value="0">Tidak Dijual</option>
-                            </select>
-                            <div
-                              className="invalid-feedback"
-                              style={
-                                this.state.error.kategori !== ""
-                                  ? { display: "block" }
-                                  : { display: "none" }
-                              }
-                            >
-                              {this.state.error.kategori}
-                            </div>
-                          </div> */}
                         </div>
-                        <div className="col-md-7 offset-md-1">
-                          <div className="form-group">
-                            <label>Jenis Barang <span className="text-danger">&#42;</span></label>
-                            <select
-                              name="jenis"
-                              id="jenis"
-                              className="form-control form-control-lg"
-                              value={this.state.jenis}
-                              onChange={(e) => this.handleChange(e, null)}
-                            >
-                              <option value="1">Satuan</option>
-                              <option value="2">Paket</option>
-                              <option value="3">Servis</option>
-                              <option value="0">Karton</option>
-                              <option value="4">Bahan</option>
-                            </select>
-                            <div
-                              className="invalid-feedback"
-                              style={
-                                this.state.error.jenis !== ""
-                                  ? { display: "block" }
-                                  : { display: "none" }
-                              }
-                            >
-                              {this.state.error.jenis}
-                            </div>
+                      </div>
+                      <div className="col-md-7 offset-md-1">
+                        <div className="form-group">
+                          <label>
+                            Jenis Barang{" "}
+                            <span className="text-danger">&#42;</span>
+                          </label>
+                          <select
+                            name="jenis"
+                            id="jenis"
+                            className="form-control form-control-lg"
+                            value={this.state.jenis}
+                            onChange={(e) => this.handleChange(e, null)}
+                          >
+                            <option value="1">Satuan</option>
+                            <option value="2">Paket</option>
+                            <option value="3">Servis</option>
+                            <option value="0">Karton</option>
+                            <option value="4">Bahan</option>
+                          </select>
+                          <div
+                            className="invalid-feedback"
+                            style={
+                              this.state.error.jenis !== ""
+                                ? { display: "block" }
+                                : { display: "none" }
+                            }
+                          >
+                            {this.state.error.jenis}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="row">
-                  <div className="col-md-4 offset-md-2">
-                    
-                    
-                    
-
-                    
-                  </div>
-                  <div className="col-md-4">
-                    {/* <div className="form-group">
-                      <label>Stock Min</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="stock_min"
-                        value={this.state.stock_min}
-                        onChange={(e) => this.handleChange(e, null)}
-                        required
-                      />
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.stock_min !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.stock_min}
-                      </div>
-                    </div> */}
-                    
-                    {/* <div className="form-group">
-                      <label>Sub Dept <span className="text-danger">&#42;</span></label>
-                      <div className="d-flex align-items-center">
-                        <div style={{width:'-webkit-fill-available', marginRight:'1%'}}>
-                          <Select
-                            options={this.state.group2_data}
-                            placeholder="Pilih Sub Dept"
-                            onChange={this.handleGroup2}
-                            value={this.state.group2_data.find((op) => {
-                              return op.value === this.state.group2;
-                            })}
-                          />
-                        </div>
-                        <div style={{width:'auto'}}>
-                            <button className="btn btn-primary btn-block" onClick={(e)=>this.toggleModal(e, 'formSubDepartment')}><i class="fa fa-plus"></i></button>
-                        </div>
-                      </div>
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.group2 !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.group2}
-                      </div>
-                    </div> */}
-                    {/* <div className="form-group">
-                      <label>Deskripsi</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="deskripsi"
-                        value={this.state.deskripsi}
-                        onChange={(e) => this.handleChange(e, null)}
-                        required
-                      />
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.deskripsi !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.deskripsi}
-                      </div>
-                    </div> */}
-                    {/* <div className="form-group">
-                      <label htmlFor="inputState" className="col-form-label">
-                        Gambar
-                      </label>
-                      <br />
-                      <FileBase64
-                        multiple={false}
-                        onDone={this.getFiles.bind(this)}
-                      />
-                    </div> */}
-                    
-                  </div>
-                  <div className="col-md-4 d-none">
-                    {/* <div className="form-group">
-                      <label>KCP</label>
-                      <select
-                        name="kcp"
-                        id="kcp"
-                        className="form-control form-control-lg"
-                        value={this.state.kcp}
-                        onChange={(e) => this.handleChange(e, null)}
-                      >
-                        <option value="">Pilih Kcp</option>
-                        <option value="-">-</option>
-                        <option value="0">Kitchen 1</option>
-                        <option value="1">Kitchen 2</option>
-                        <option value="2">Kitchen 3</option>
-                      </select>
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.kcp !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.kcp}
-                      </div>
-                    </div> */}
-                    {/* <div className="form-group">
-                      <label>Poin</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="poin"
-                        value={this.state.poin}
-                        onChange={(e) => this.handleChange(e, null)}
-                        required
-                      />
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.poin !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.poin}
-                      </div>
-                    </div> */}
-                    {/* <div className="form-group">
-                      <label>Status Barang</label>
-                      <select
-                        name="online"
-                        className="form-control form-control-lg"
-                        value={this.state.online}
-                        onChange={(e) => this.handleChange(e, null)}
-                      >
-                        <option value="">Pilih Status</option>
-                        <option value="0">Offline</option>
-                        <option value="1">Online</option>
-                      </select>
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.online !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.online}
-                      </div>
-                    </div> */}
-                    {/* <div className="form-group">
-                      <label>Berat</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="berat"
-                        value={this.state.berat}
-                        onChange={(e) => this.handleChange(e, null)}
-                        required
-                      />
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.berat !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.berat}
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-                <div className="row mt-2" style={{display:this.state.jenis!==""?'':'none'}}>
-                  <div className="col-md-12">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th style={{whiteSpace:'no-wrap' }}>Barcode</th>
-                          <th style={{whiteSpace:'no-wrap' }}>Satuan</th>
-                          <th style={{display:(this.state.jenis==="2"||this.state.jenis==="0")?'':'none', whiteSpace:'no-wrap'}}>Konversi Qty</th>
-                          <th style={{display:(this.state.jenis==="2"||this.state.jenis==="0")?'':'none', whiteSpace:'no-wrap'}}>Tampilkan di POS ?</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {(() => {
-                          let container = [];
-                          for (
-                            let x = 0;
-                            x < this.state.barangSku.length;
-                            x++
-                          ) {
-                            // let satuan=(x===0)?"Pcs":(x===1?"Pack":"Karton");
-                            container.push(
-                              <tr key={x}>
-                                <td>
-                                  <input
-                                    readOnly={
-                                      this.props.dataEdit === undefined
-                                        ? false
-                                        : true
-                                    }
-                                    type="text"
-                                    className="form-control"
-                                    name="barcode"
-                                    id={`${
-                                      x === 0
-                                        ? "barcode1"
-                                        : x === 1
-                                        ? "barcode2"
-                                        : "barcode3"
-                                    }`}
-                                    value={this.state.barangSku[x].barcode}
-                                    onChange={(e) => this.handleChange(e, x)}
-                                    onBlur={(e) => this.checkData(e, x)}
-                                    required
-                                  />
-                                  {x === 0 ? (
-                                    this.state.error_barcode1 === true ? (
-                                      <small
-                                        style={{
-                                          color: "red",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                                        {this.state.pesan_barcode1}
-                                      </small>
-                                    ) : (
-                                      ""
-                                    )
-                                  ) : (
-                                    ""
-                                  )}
-                                  {x === 1 ? (
-                                    this.state.error_barcode2 === true ? (
-                                      <small
-                                        style={{
-                                          color: "red",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                                        {this.state.pesan_barcode2}
-                                      </small>
-                                    ) : (
-                                      ""
-                                    )
-                                  ) : (
-                                    ""
-                                  )}
-                                  {x === 2 ? (
-                                    this.state.error_barcode3 === true ? (
-                                      <small
-                                        style={{
-                                          color: "red",
-                                          fontWeight: "bold",
-                                        }}
-                                      >
-                                        {this.state.pesan_barcode3}
-                                      </small>
-                                    ) : (
-                                      ""
-                                    )
-                                  ) : (
-                                    ""
-                                  )}
-
-                                  {/*<small>{this.props.checkBarcode1 === true ? "barcode 1 sudah digunakan" : (this.props.checkBarcode2 === true ? "barcode 2 sudah digunakan" : this.props.checkBarcode3 === true ? "barcode 3 sudah digunakan" : "")}</small>*/}
-                                </td>
-                                <td>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    name="qty"
-                                    value={this.state.barangSku[x].qty}
-                                    onChange={(e) => this.handleChange(e, x)}
-                                    required
-                                  />
-                                </td>
-                                <td style={{display:(this.state.jenis==="2"||this.state.jenis==="0")?'':'none'}}>
-                                  <input
-                                    readOnly={x === 0 ? true : false}
-                                    type="text"
-                                    className="form-control"
-                                    name="konversi"
-                                    value={this.state.barangSku[x].konversi}
-                                    onChange={(e) => this.handleChange(e, x)}
-                                    required
-                                  />
-                                </td>
-                                <td style={{display:(this.state.jenis==="2"||this.state.jenis==="0")?'':'none'}}>
-                                  <select
-                                    name="satuan_jual"
-                                    id="satuan_jual"
-                                    className="form-control"
-                                    value={this.state.barangSku[x].satuan_jual}
-                                    defaultValue={
-                                      this.state.barangSku[x].satuan_jual
-                                    }
-                                    onChange={(e) => this.handleChange(e, x)}
-                                  >
-                                    <option value="">Pilih Opsi</option>
-                                    <option value="1">Tampilkan</option>
-                                    <option value="0">Sembunyikan</option>
-                                  </select>
-                                </td>
-                              </tr>
-                            );
-                          }
-                          return container;
-                        })()}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </TabPanel>
-              <TabPanel>
-                <div className="row">
-                  <div className="col-md-12">
-                    <div className="row">
-                      <div className="col-md-2">
-                        <label>Lokasi</label>
-                      </div>
-                      <div className="col-md-10">
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="row">
-                              <div className="col-md-4">
-                                <label className="control-label">
-                                  Harga Beli
-                                </label>
-                              </div>
-                              <div className="col-md-4">
-                                <label className="control-label">
-                                  Margin %
-                                </label>
-                              </div>
-                              <div className="col-md-4">
-                                <label className="control-label">
-                                  Harga Jual
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="row">
-                              <div className="col-md-3">
-                                <label className="control-label">
-                                  Service %
-                                </label>
-                              </div>
-                              <div className="col-md-3">
-                                <label className="control-label">PPN %</label>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      {/*END LABEL*/}
-                      <div className="col-md-12">
-                        <hr />
-                      </div>
-                      {/*ATUR SEMUA*/}
-                      {/*DIDIEU*/}
+              <div
+                className="row mt-2"
+                style={{ display: this.state.jenis !== "" && this.state.kd_brg !== "" ? "" : "none" }}
+              >
+                <div className="col-md-12">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th style={{ whiteSpace: "no-wrap" }}>Barcode</th>
+                        <th style={{ whiteSpace: "no-wrap" }}>Satuan</th>
+                        <th
+                          style={{
+                            display:
+                              this.state.jenis === "2" ||
+                              this.state.jenis === "0"
+                                ? ""
+                                : "none",
+                            whiteSpace: "no-wrap",
+                          }}
+                        >
+                          Konversi Qty
+                        </th>
+                        <th
+                          style={{
+                            display:
+                              this.state.jenis === "2" ||
+                              this.state.jenis === "0"
+                                ? ""
+                                : "none",
+                            whiteSpace: "no-wrap",
+                          }}
+                        >
+                          Tampilkan di POS ?
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
                       {(() => {
                         let container = [];
-                        for (let i = 0; i < this.state.barangSku.length; i++) {
-                          let lbl = this.state.barangSku[i].qty;
-                          let stateHargaBeli =
-                            i === 0
-                              ? "hrg_beli"
-                              : i === 1
-                              ? "hrg_beli_pack"
-                              : "hrg_beli_karton";
-                          let stateService =
-                            i === 0
-                              ? "service"
-                              : i === 1
-                              ? "service_pack"
-                              : "service_karton";
-                          let statePpn =
-                            i === 0
-                              ? "ppn"
-                              : i === 1
-                              ? "ppn_pack"
-                              : "ppn_karton";
-                          let satuan =
-                            i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
-
+                        for (let x = 0; x < this.state.barangSku.length; x++) {
+                          // let satuan=(x===0)?"Pcs":(x===1?"Pack":"Karton");
                           container.push(
-                            <div className="col-md-12" key={i}>
-                              <div className="row">
-                                <div className="col-md-2">
-                                  <div className="form-group">
-                                    <div className="row">
-                                      <label className="col-md-8">
-                                        Atur Semua ({lbl})
-                                      </label>
-                                      <input
-                                        type="checkbox"
-                                        className="col-md-2"
-                                        onChange={(e) =>
-                                          this.handleAllCheckedSku(
-                                            e,
-                                            i,
-                                            satuan.toUpperCase()
-                                          )
-                                        }
-                                      />
+                            <tr key={x}>
+                              <td>
+                                <input
+                                  readOnly={
+                                    this.props.dataEdit === undefined
+                                      ? false
+                                      : true
+                                  }
+                                  type="text"
+                                  className="form-control"
+                                  name="barcode"
+                                  id={`${
+                                    x === 0
+                                      ? "barcode1"
+                                      : x === 1
+                                      ? "barcode2"
+                                      : "barcode3"
+                                  }`}
+                                  value={this.state.barangSku[x].barcode}
+                                  onChange={(e) => this.handleChange(e, x)}
+                                  onBlur={(e) => this.checkData(e, x)}
+                                  required
+                                />
+                                {x === 0 ? (
+                                  this.state.error_barcode1 === true ? (
+                                    <small
+                                      style={{
+                                        color: "red",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {this.state.pesan_barcode1}
+                                    </small>
+                                  ) : (
+                                    ""
+                                  )
+                                ) : (
+                                  ""
+                                )}
+                                {x === 1 ? (
+                                  this.state.error_barcode2 === true ? (
+                                    <small
+                                      style={{
+                                        color: "red",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {this.state.pesan_barcode2}
+                                    </small>
+                                  ) : (
+                                    ""
+                                  )
+                                ) : (
+                                  ""
+                                )}
+                                {x === 2 ? (
+                                  this.state.error_barcode3 === true ? (
+                                    <small
+                                      style={{
+                                        color: "red",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {this.state.pesan_barcode3}
+                                    </small>
+                                  ) : (
+                                    ""
+                                  )
+                                ) : (
+                                  ""
+                                )}
+
+                                {/*<small>{this.props.checkBarcode1 === true ? "barcode 1 sudah digunakan" : (this.props.checkBarcode2 === true ? "barcode 2 sudah digunakan" : this.props.checkBarcode3 === true ? "barcode 3 sudah digunakan" : "")}</small>*/}
+                              </td>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  name="qty"
+                                  value={this.state.barangSku[x].qty}
+                                  onChange={(e) => this.handleChange(e, x)}
+                                  required
+                                />
+                              </td>
+                              <td
+                                style={{
+                                  display:
+                                    this.state.jenis === "2" ||
+                                    this.state.jenis === "0"
+                                      ? ""
+                                      : "none",
+                                }}
+                              >
+                                <input
+                                  readOnly={x === 0 ? true : false}
+                                  type="text"
+                                  className="form-control"
+                                  name="konversi"
+                                  value={this.state.barangSku[x].konversi}
+                                  onChange={(e) => this.handleChange(e, x)}
+                                  required
+                                />
+                              </td>
+                              <td
+                                style={{
+                                  display:
+                                    this.state.jenis === "2" ||
+                                    this.state.jenis === "0"
+                                      ? ""
+                                      : "none",
+                                }}
+                              >
+                                <select
+                                  name="satuan_jual"
+                                  id="satuan_jual"
+                                  className="form-control"
+                                  value={this.state.barangSku[x].satuan_jual}
+                                  defaultValue={
+                                    this.state.barangSku[x].satuan_jual
+                                  }
+                                  onChange={(e) => this.handleChange(e, x)}
+                                >
+                                  <option value="">Pilih Opsi</option>
+                                  <option value="1">Tampilkan</option>
+                                  <option value="0">Sembunyikan</option>
+                                </select>
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return container;
+                      })()}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="row mt-2" style={{display:showPricing?'':'none'}}>
+                <div className="col-md-12">
+                  <p className="mb-0">Set Harga</p>
+                  <hr className="mt-0" />
+                </div>
+                <div className="col-md-12">
+                  <div className="row d-none">
+                    <div className="col-md-2">
+                      <label>Lokasi</label>
+                    </div>
+                    <div className="col-md-10">
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="row">
+                            <div className="col-md-4">
+                              <label className="control-label">
+                                Harga Beli
+                              </label>
+                            </div>
+                            <div className="col-md-4">
+                              <label className="control-label">Margin %</label>
+                            </div>
+                            <div className="col-md-4">
+                              <label className="control-label">
+                                Harga Jual
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="row">
+                            <div className="col-md-3">
+                              <label className="control-label">Service %</label>
+                            </div>
+                            <div className="col-md-3">
+                              <label className="control-label">PPN %</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/*END LABEL*/}
+
+                  <div className="row">
+                    {/*ATUR SEMUA*/}
+                    {/*DIDIEU*/}
+                    {(() => {
+                      let container = [];
+                      for (let i = 0; i < this.state.barangSku.length; i++) {
+                        let lbl = this.state.barangSku[i].qty;
+                        let stateHargaBeli =
+                          i === 0
+                            ? "hrg_beli"
+                            : i === 1
+                            ? "hrg_beli_pack"
+                            : "hrg_beli_karton";
+                        let stateService =
+                          i === 0
+                            ? "service"
+                            : i === 1
+                            ? "service_pack"
+                            : "service_karton";
+                        let statePpn =
+                          i === 0 ? "ppn" : i === 1 ? "ppn_pack" : "ppn_karton";
+                        let satuan =
+                          i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
+
+                        container.push(
+                          <div className="col-md-12" key={i}>
+                            <div className="row">
+                              <div className="col-md-12">
+                                <div className="row">
+                                  <div className="col-md-12">
+                                    <div className="form-group">
+                                      <div className="d-flex align-items-center">
+                                        <input
+                                          type="checkbox"
+                                          className="mr-2"
+                                          onChange={(e) =>
+                                            this.handleAllCheckedSku(
+                                              e,
+                                              i,
+                                              satuan.toUpperCase()
+                                            )
+                                          }
+                                        />
+                                        <label className="mb-0">
+                                          Atur Semua ({lbl})
+                                        </label>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                                <div className="col-md-10">
-                                  <div className="row">
-                                    <div className="col-md-6">
-                                      <div className="row">
-                                        <div className="col-md-4">
-                                          <div className="form-group">
-                                            <label>harga beli ({lbl})</label>
-                                            <input
-                                              type="text"
-                                              placeholder={`hrg beli ${lbl}`}
-                                              className="form-control"
-                                              name={stateHargaBeli}
-                                              value={toCurrency(
-                                                this.state[stateHargaBeli]
-                                              )}
-                                              onChange={(e) =>
-                                                this.handleChangeMore(e)
-                                              }
-                                            />
-                                          </div>
+                                  <div className="col-md-12">
+                                    <div className="row">
+                                      <div className="col-md-4">
+                                        <div className="form-group">
+                                          <label>Harga Beli ({lbl})</label>
+                                          <input
+                                            type="text"
+                                            placeholder={`hrg beli ${lbl}`}
+                                            className="form-control"
+                                            name={stateHargaBeli}
+                                            value={toCurrency(
+                                              this.state[stateHargaBeli]
+                                            )}
+                                            onChange={(e) =>
+                                              this.handleChangeMore(e)
+                                            }
+                                          />
                                         </div>
-                                        <div className="col-md-4">
-                                          {(() => {
-                                            let containers = [];
-                                            for (
-                                              let z = 0;
-                                              z < this.state.set_harga;
-                                              z++
-                                            ) {
-                                              let stateMargin =
-                                                i === 0
-                                                  ? `margin${z + 1}`
-                                                  : i === 1
-                                                  ? `margin${z + 1}_pack`
-                                                  : `margin${z + 1}_karton`;
-                                              containers.push(
-                                                <div
-                                                  className="form-group"
-                                                  key={z}
-                                                >
-                                                  <label>
-                                                    margin {z + 1} {lbl}
-                                                  </label>
+                                      </div>
+                                      <div className="col-md-4">
+                                        {(() => {
+                                          let containers = [];
+                                          for (
+                                            let z = 0;
+                                            z < this.state.set_harga;
+                                            z++
+                                          ) {
+                                            let stateMargin =
+                                              i === 0
+                                                ? `margin${z + 1}`
+                                                : i === 1
+                                                ? `margin${z + 1}_pack`
+                                                : `margin${z + 1}_karton`;
+                                            let place = `nm_harga${z + 1}`;
+                                            containers.push(
+                                              <div
+                                                className="form-group"
+                                                key={z}
+                                              >
+                                                <label>
+                                                  Margin {this.state[place]}
+                                                </label>
+                                                <div className="input-group">
                                                   <input
                                                     readOnly={
                                                       this.state.jenis === "4"
@@ -3682,97 +3591,97 @@ handleFileRead = async (event) => {
                                                       this.handleChangeMore(e)
                                                     }
                                                   />
+                                                  <div className="input-group-append">
+                                                    <span className="input-group-text">
+                                                      %
+                                                    </span>
+                                                  </div>
                                                 </div>
-                                              );
-                                            }
-                                            return containers;
-                                          })()}
-                                        </div>
-                                        <div className="col-md-4">
-                                          {(() => {
-                                            let containers = [];
-                                            for (
-                                              let z = 0;
-                                              z < this.state.set_harga;
-                                              z++
-                                            ) {
-                                              let place = `nm_harga${z + 1}`;
-                                              let stateHargaJual =
-                                                i === 0
-                                                  ? `hrgjual${z + 1}`
-                                                  : i === 1
-                                                  ? `hrgjual${z + 1}_pack`
-                                                  : `hrgjual${z + 1}_karton`;
-                                              containers.push(
-                                                <div
-                                                  className="form-group"
-                                                  key={z}
-                                                >
-                                                  <label>
-                                                    harga jual{" "}
-                                                    {this.state[place]}
-                                                  </label>
-                                                  <input
-                                                    readOnly={
-                                                      this.state.jenis === "4"
-                                                    }
-                                                    type="text"
-                                                    placeholder={`hrg jual ${this.state[place]} ${lbl}`}
-                                                    className="form-control"
-                                                    name={stateHargaJual}
-                                                    value={toCurrency(
-                                                      this.state[stateHargaJual]
-                                                    )}
-                                                    onChange={(e) =>
-                                                      this.handleChangeMore(e)
-                                                    }
-                                                  />
-                                                </div>
-                                              );
-                                            }
-                                            return containers;
-                                          })()}
-                                        </div>
+                                              </div>
+                                            );
+                                          }
+                                          return containers;
+                                        })()}
+                                      </div>
+                                      <div className="col-md-4">
+                                        {(() => {
+                                          let containers = [];
+                                          for (
+                                            let z = 0;
+                                            z < this.state.set_harga;
+                                            z++
+                                          ) {
+                                            let place = `nm_harga${z + 1}`;
+                                            let stateHargaJual =
+                                              i === 0
+                                                ? `hrgjual${z + 1}`
+                                                : i === 1
+                                                ? `hrgjual${z + 1}_pack`
+                                                : `hrgjual${z + 1}_karton`;
+                                            containers.push(
+                                              <div
+                                                className="form-group"
+                                                key={z}
+                                              >
+                                                <label>
+                                                  Harga Jual {this.state[place]}
+                                                </label>
+                                                <input
+                                                  readOnly={
+                                                    this.state.jenis === "4"
+                                                  }
+                                                  type="text"
+                                                  placeholder={`hrg jual ${this.state[place]} ${lbl}`}
+                                                  className="form-control"
+                                                  name={stateHargaJual}
+                                                  value={toCurrency(
+                                                    this.state[stateHargaJual]
+                                                  )}
+                                                  onChange={(e) =>
+                                                    this.handleChangeMore(e)
+                                                  }
+                                                />
+                                              </div>
+                                            );
+                                          }
+                                          return containers;
+                                        })()}
                                       </div>
                                     </div>
-                                    {/*service,ppn,stock min,stock max */}
-                                    <div className="col-md-6">
-                                      <div className="row">
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>service {lbl}</label>
-                                            <input
-                                              readOnly={
-                                                this.state.jenis === "4"
-                                              }
-                                              type="text"
-                                              placeholder={`service ${lbl}`}
-                                              className="form-control"
-                                              name={stateService}
-                                              value={this.state[stateService]}
-                                              onChange={(e) =>
-                                                this.handleChangeMore(e)
-                                              }
-                                            />
-                                          </div>
+                                  </div>
+                                  {/*service,ppn,stock min,stock max */}
+                                  <div className="col-md-6 d-none">
+                                    <div className="row">
+                                      <div className="col-md-6">
+                                        <div className="form-group">
+                                          <label>Service {lbl}</label>
+                                          <input
+                                            readOnly={this.state.jenis === "4"}
+                                            type="text"
+                                            placeholder={`service ${lbl}`}
+                                            className="form-control"
+                                            name={stateService}
+                                            value={this.state[stateService]}
+                                            onChange={(e) =>
+                                              this.handleChangeMore(e)
+                                            }
+                                          />
                                         </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>PPN {lbl}</label>
-                                            <input
-                                              readOnly={
-                                                this.state.jenis === "4"
-                                              }
-                                              type="text"
-                                              placeholder={`ppn ${lbl}`}
-                                              className="form-control"
-                                              name={statePpn}
-                                              value={this.state[statePpn]}
-                                              onChange={(e) =>
-                                                this.handleChangeMore(e)
-                                              }
-                                            />
-                                          </div>
+                                      </div>
+                                      <div className="col-md-6">
+                                        <div className="form-group">
+                                          <label>PPN {lbl}</label>
+                                          <input
+                                            readOnly={this.state.jenis === "4"}
+                                            type="text"
+                                            placeholder={`ppn ${lbl}`}
+                                            className="form-control"
+                                            name={statePpn}
+                                            value={this.state[statePpn]}
+                                            onChange={(e) =>
+                                              this.handleChangeMore(e)
+                                            }
+                                          />
                                         </div>
                                       </div>
                                     </div>
@@ -3780,21 +3689,24 @@ handleFileRead = async (event) => {
                                 </div>
                               </div>
                             </div>
-                          );
-                        }
-                        return container;
-                      })()}
-                      {/*END ATUR SEMUA*/}
-                      <div className="col-md-12">
-                        <hr />
-                      </div>
-                      <div className="col-md-12">
-                        <hr />
-                      </div>
+                          </div>
+                        );
+                      }
+                      return container;
+                    })()}
+                    {/*END ATUR SEMUA*/}
+                    <div className="col-md-12">
+                      <hr />
+                    </div>
 
-                      {this.state.barangHarga.map((v, i) => {
-                        return (
-                          <div className="col-md-12" key={i}>
+                    {this.state.barangHarga.map((v, i) => {
+                      return (
+                        <div className="col-md-12" key={i}>
+                          <div
+                            className={`border border-1 mx-0 p-2 rounded-lg mb-2 ${
+                              i % 2 === 0 ? "bg-light" : ""
+                            }`}
+                          >
                             {(() => {
                               let containers = [];
                               for (
@@ -3847,13 +3759,11 @@ handleFileRead = async (event) => {
                                 }
                                 containers.push(
                                   <div className="row" key={x}>
-                                    <div className="col-md-2">
+                                    <div className="col-md-12">
                                       <div className="form-group">
-                                        <div className="row">
-                                          <label className="col-md-8">
-                                            {v[x].nama_toko} ( {lbl} )
-                                          </label>
+                                        <div className="d-flex align-items-center">
                                           <input
+                                            className="mr-2"
                                             type="checkbox"
                                             name="lokasi"
                                             value={v[x].lokasi}
@@ -3865,16 +3775,19 @@ handleFileRead = async (event) => {
                                               )
                                             }
                                           />
+                                          <label className="mb-0">
+                                            {v[x].nama_toko} ( {lbl} )
+                                          </label>
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="col-md-10">
+                                    <div className="col-md-12">
                                       <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-12">
                                           <div className="row">
                                             <div className="col-md-4">
                                               <div className="form-group">
-                                                <label>harga beli </label>
+                                                <label>Harga Beli </label>
                                                 <input
                                                   readOnly={
                                                     localStorage.getItem(
@@ -3911,6 +3824,9 @@ handleFileRead = async (event) => {
                                                       : x === 1
                                                       ? `margin${z + 1}PACK`
                                                       : `margin${z + 1}KARTON`;
+                                                  let place = `nm_harga${
+                                                    z + 1
+                                                  }`;
                                                   let marginValue =
                                                     v[x][marginName];
                                                   container.push(
@@ -3919,33 +3835,41 @@ handleFileRead = async (event) => {
                                                       key={z}
                                                     >
                                                       <label>
-                                                        margin {z + 1}
+                                                        Margin{" "}
+                                                        {this.state[place]}
                                                       </label>
-                                                      <input
-                                                        readOnly={
-                                                          this.state.jenis ===
-                                                          "4"
-                                                            ? true
-                                                            : localStorage.getItem(
-                                                                `${isReadonly}`
-                                                              ) === "true"
-                                                        }
-                                                        type="text"
-                                                        placeholder={`margin ${
-                                                          z + 1
-                                                        }`}
-                                                        className="form-control"
-                                                        name={marginName}
-                                                        onChange={(e) =>
-                                                          this.onHandleChangeChildSku(
-                                                            e,
-                                                            i,
-                                                            x,
-                                                            satuan
-                                                          )
-                                                        }
-                                                        value={marginValue}
-                                                      />
+                                                      <div className="input-group">
+                                                        <input
+                                                          readOnly={
+                                                            this.state.jenis ===
+                                                            "4"
+                                                              ? true
+                                                              : localStorage.getItem(
+                                                                  `${isReadonly}`
+                                                                ) === "true"
+                                                          }
+                                                          type="text"
+                                                          placeholder={`margin ${
+                                                            z + 1
+                                                          }`}
+                                                          className="form-control"
+                                                          name={marginName}
+                                                          onChange={(e) =>
+                                                            this.onHandleChangeChildSku(
+                                                              e,
+                                                              i,
+                                                              x,
+                                                              satuan
+                                                            )
+                                                          }
+                                                          value={marginValue}
+                                                        />
+                                                        <div className="input-group-append">
+                                                          <span className="input-group-text">
+                                                            %
+                                                          </span>
+                                                        </div>
+                                                      </div>
                                                     </div>
                                                   );
                                                 }
@@ -3982,7 +3906,7 @@ handleFileRead = async (event) => {
                                                       key={z}
                                                     >
                                                       <label>
-                                                        harga jual{" "}
+                                                        Harga Jual{" "}
                                                         {this.state[place]}
                                                       </label>
                                                       <input
@@ -4019,11 +3943,11 @@ handleFileRead = async (event) => {
                                           </div>
                                         </div>
                                         {/*service,ppn,stock min,stock max */}
-                                        <div className="col-md-6">
+                                        <div className="col-md-6 d-none">
                                           <div className="row">
-                                            <div className="col-md-3">
+                                            <div className="col-md-6">
                                               <div className="form-group">
-                                                <label>service</label>
+                                                <label>Service</label>
                                                 <input
                                                   readOnly={
                                                     this.state.jenis === "4"
@@ -4048,7 +3972,7 @@ handleFileRead = async (event) => {
                                                 />
                                               </div>
                                             </div>
-                                            <div className="col-md-3">
+                                            <div className="col-md-6">
                                               <div className="form-group">
                                                 <label>PPN</label>
                                                 <input
@@ -4085,39 +4009,38 @@ handleFileRead = async (event) => {
                               return containers;
                             })()}
 
-                            <hr />
+                            {/* <hr /> */}
                           </div>
-                        );
-                      })}
-                      {/*END DYNAMIC  */}
-                    </div>
-                  </div>
-                  <div className="col-md-12">
-                    <div className="form-group" style={{ textAlign: "right" }}>
-                      <button
-                        type="button"
-                        className="btn btn-warning mb-2 mr-2"
-                        onClick={this.toggle}
-                      >
-                        <i className="ti-close" /> Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="btn btn-primary mb-2 mr-2"
-                      >
-                        <i className="ti-save" /> Simpan
-                      </button>
-                    </div>
+                        </div>
+                      );
+                    })}
+                    {/*END DYNAMIC  */}
                   </div>
                 </div>
-              </TabPanel>
-            </Tabs>
-          </ModalBody>
-        </form>
-        <FormSupplier fastAdd={true}/>
-        <FormSubDepartment fastAdd={true}/>
-        <FormGroupProduct group2={this.props.group2} fastAdd={true}/>
-      </WrapperModal>
+                <div className="col-md-12">
+                  <div className="form-group" style={{ textAlign: "right" }}>
+                    <button
+                      type="button"
+                      className="btn btn-warning mb-2 mr-2"
+                      onClick={this.toggle}
+                    >
+                      <i className="ti-close" /> Cancel
+                    </button>
+                    <button type="submit" className="btn btn-primary mb-2 mr-2">
+                      <i className="ti-save" /> Simpan
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* </TabPanel>
+              </Tabs> */}
+            </ModalBody>
+          </form>
+        </WrapperModal>
+        <FormSupplier fastAdd={true} />
+        <FormSubDepartment fastAdd={true} />
+        <FormGroupProduct group2={this.props.group2} fastAdd={true} />
+      </div>
     );
   }
 }
@@ -4131,7 +4054,7 @@ const mapStateToProps = (state) => {
     checkBarcode1: state.siteReducer.check,
     isLoadingCheck: state.siteReducer.isLoading,
     auth: state.auth,
-    group2:state.subDepartmentReducer.all,
+    group2: state.subDepartmentReducer.all,
 
     // group:state.groupProductReducer.data
   };
