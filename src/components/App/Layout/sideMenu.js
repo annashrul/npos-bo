@@ -499,8 +499,10 @@ class SideMenu extends Component {
         let r_piutang = akses[89]["value"] !== null ? akses[89]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_trx = akses[88]["value"] !== null ? akses[88]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let r_act = akses[89]["value"] !== null ? akses[89]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
-        let r_sale_omset = akses[90]["value"] !== null ? akses[90]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
-        let r_sale_omset_periode = akses[91]["value"] !== null ? akses[91]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let r_sale_omset =
+          akses[90]["value"] !== null ? akses[90]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let r_sale_omset_periode =
+          akses[91]["value"] !== null ? akses[91]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //CETAK BARCODE
         let cetak_barcode =
           akses[92]["value"] !== null ? akses[92]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
@@ -597,7 +599,7 @@ class SideMenu extends Component {
           r_hutang !== "0" ||
           r_piutang !== "0" ||
           r_sale_omset !== "0" ||
-          r_sale_omset_periode !== "0" 
+          r_sale_omset_periode !== "0"
         ) {
           this.setState({ modul_report: true });
         }
@@ -1088,13 +1090,67 @@ class SideMenu extends Component {
                 </Link>
               </li>
 
-              {/* <li className={"treeview" + (this.state.isArea===true || path==='/area'|| path==='/meja'?" active menu-open" : "")} style={modul_masterdata===true?{display:'block'}:{display:'none'}}>
-                                <a href="!#" onClick={(e) => this.changeMenu(e,'area')}><i className="fa fa-map" /> <span>Data Area</span> <i className="fa fa-angle-right"/></a>
-                                <ul className={"treeview-menu animate__animated" + (this.state.isArea===true ?" animate__bounceInRight " : " animate__fadeOutLeft ") + "animate__faster"} style={{display:this.state.isArea===true ?"block" : "none"}}>
-                                    <li className={path==='/area'?"active":''} style={this.state.area==="0"?{"display":"none"}:{"display":"block"}}><Link to="/area" style={{width:'fit-content'}}> <i className="zmdi zmdi-balance" />Area </Link></li>
-                                    <li className={path==='/meja'?"active":''} style={this.state.meja==="0"?{"display":"none"}:{"display":"block"}}><Link to="/meja" style={{width:'fit-content'}}> <i className="zmdi zmdi-panorama-wide-angle" />Meja </Link></li>
-                                </ul>
-                            </li> */}
+              <li
+                className={
+                  "treeview" +
+                  (this.state.isArea === true ||
+                  path === "/area" ||
+                  path === "/meja"
+                    ? " active menu-open"
+                    : "")
+                }
+                style={
+                  modul_masterdata === true
+                    ? { display: "block" }
+                    : { display: "none" }
+                }
+              >
+                <a href="!#" onClick={(e) => this.changeMenu(e, "area")}>
+                  <i className="fa fa-map" /> <span>Data Area</span>{" "}
+                  <i className="fa fa-angle-right" />
+                </a>
+                <ul
+                  className={
+                    "treeview-menu animate__animated" +
+                    (this.state.isArea === true
+                      ? " animate__bounceInRight "
+                      : " animate__fadeOutLeft ") +
+                    "animate__faster"
+                  }
+                  style={{
+                    display: this.state.isArea === true ? "block" : "none",
+                  }}
+                >
+                  <li
+                    className={path === "/area" ? "active" : ""}
+                    style={
+                      this.state.area === "0"
+                        ? { display: "none" }
+                        : { display: "block" }
+                    }
+                  >
+                    <Link to="/area" style={{ width: "fit-content" }}>
+                      {" "}
+                      <i className="zmdi zmdi-balance" />
+                      Area{" "}
+                    </Link>
+                  </li>
+                  <li
+                    className={path === "/meja" ? "active" : ""}
+                    style={
+                      this.state.meja === "0"
+                        ? { display: "none" }
+                        : { display: "block" }
+                    }
+                  >
+                    <Link to="/meja" style={{ width: "fit-content" }}>
+                      {" "}
+                      <i className="zmdi zmdi-panorama-wide-angle" />
+                      Meja{" "}
+                    </Link>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </li>
           {/* MASTERDATA MODUL END */}
@@ -1783,9 +1839,7 @@ class SideMenu extends Component {
                     </Link>
                   </li>
                   <li
-                    className={
-                      path === "/report/sale_omset" ? "active" : ""
-                    }
+                    className={path === "/report/sale_omset" ? "active" : ""}
                     style={
                       this.state.r_sale_omset === "0"
                         ? { display: "none" }
