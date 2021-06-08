@@ -23,6 +23,7 @@ import FormSupplier from "../../../../../components/App/modals/masterdata/suppli
 import Default from "../../../../../assets/default.png";
 import { convertBase64 } from "helper";
 import FormProductPricing from "./form_product_pricing";
+import Swal from "sweetalert2";
 class FormProduct extends Component {
   constructor(props) {
     super(props);
@@ -503,11 +504,11 @@ class FormProduct extends Component {
   generateCode(e) {
     // this.setState({ generateCode: e.target.checked });
     if (e.target.name === 'generate') {
-      let err = this.state.error;
-      err = Object.assign({}, err, { kd_brg: "" });
       let genCode = `${moment(new Date()).format("YYMMDD")}${
         Math.floor(Math.random() * (10000 - 0 + 1)) + 0
       }`;
+      let err = this.state.error;
+      err = Object.assign({}, err, { kd_brg: "" });
 
       this.setState({
         kd_brg: genCode,
@@ -520,50 +521,59 @@ class FormProduct extends Component {
           value: genCode,
         })
       );
-      if (this.state.jenis === "0") {
-        let brgSku = [];
-        for (let i = 0; i < 3; i++) {
-          let brcd =
-            i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
-          let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
-          brgSku.push({
-            barcode: brcd,
-            qty: satuan,
-            konversi: "0",
-            satuan_jual: "1",
-          });
+    } else if(e.target.name === 'gnBcd'){
+      this.setState({ generateCode: e.target.checked });
+      let genCode = this.state.kd_brg;
+
+      if (!this.state.generateCode) {
+        if (this.state.jenis === "0") {
+          let brgSku = [];
+          for (let i = 0; i < 3; i++) {
+            let brcd =
+              i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
+            let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
+            brgSku.push({
+              barcode: brcd,
+              qty: satuan,
+              konversi: "0",
+              satuan_jual: "1",
+            });
+          }
+          this.setState({ barangSku: brgSku });
+        } else if (this.state.jenis === "2") {
+          let brgSku = [];
+          for (let i = 0; i < 2; i++) {
+            let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
+            brgSku.push({
+              barcode: brcd,
+              qty: "",
+              konversi: "0",
+              satuan_jual: "1",
+            });
+          }
+          this.setState({ barangSku: brgSku });
+        } else {
+          let brgSku = [];
+          for (let i = 0; i < 1; i++) {
+            let satuan =
+              this.state.jenis === "1"
+                ? ""
+                : this.state.jenis === "1"
+                ? "Pcs"
+                : "Pack";
+            brgSku.push({
+              barcode: `${genCode}`,
+              qty: satuan,
+              konversi: "0",
+              satuan_jual: "1",
+            });
+          }
+          this.setState({ barangSku: brgSku });
         }
-        this.setState({ barangSku: brgSku });
-      } else if (this.state.jenis === "2") {
-        let brgSku = [];
-        for (let i = 0; i < 2; i++) {
-          let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
-          brgSku.push({
-            barcode: brcd,
-            qty: "",
-            konversi: "0",
-            satuan_jual: "1",
-          });
-        }
-        this.setState({ barangSku: brgSku });
       } else {
-        let brgSku = [];
-        for (let i = 0; i < 1; i++) {
-          let satuan =
-            this.state.jenis === "1"
-              ? ""
-              : this.state.jenis === "1"
-              ? "Pcs"
-              : "Pack";
-          brgSku.push({
-            barcode: `${genCode}`,
-            qty: satuan,
-            konversi: "0",
-            satuan_jual: "1",
-          });
-        }
-        this.setState({ barangSku: brgSku });
+        this.setState({ barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }] });
       }
+
     } else {
       this.setState({
         kd_brg: "",
@@ -589,9 +599,17 @@ class FormProduct extends Component {
   };
   handleFileRead = async (event) => {
     const file = event.target.files[0];
-    const base64 = await convertBase64(file);
-    this.setState({ gambar: base64 });
-    console.log(base64);
+    const fileSize = event.target.files[0].size / 1024 / 1024; // in MiB
+    if (fileSize > 2) {
+      // alert('File size exceeds 2 MiB');
+      Swal.fire("Error", "Ukuran gambar yang diperbolehkan harus dibawah 2MB!!")
+      // $(file).val(''); //for clearing with Jquery
+    } else {
+      // Proceed further
+      const base64 = await convertBase64(file);
+      this.setState({ gambar: base64 });
+      console.log(base64);
+    }
   };
   getProps(param) {
     this.setState({
@@ -3047,7 +3065,7 @@ class FormProduct extends Component {
                     onMouseEnter={this.mouseEnter}
                     onMouseLeave={this.mouseLeave}
                     style={{
-                      backgroundImage: `url('${this.state.gambar}'),url('${Default}')`,
+                      backgroundImage: `url('${this.state.gambar}'),url('${this.state.gambar===''?Default:this.state.gambar}')`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
@@ -3055,12 +3073,10 @@ class FormProduct extends Component {
                   >
                     <label
                       className="w-100 h-100 bg-light m-0 p-0 align-items-center justify-content-center"
-                      style={{display:this.state.display, cursor:'pointer'}}
+                      style={{display:this.state.display, cursor:'pointer', opacity:'0.7'}}
                       htmlFor="fileUpload"
                     >
-                      {this.state.gambar !== ""
-                        ? "Ubah Gambar"
-                        : "Tambah Gambar"}
+                      <p className="text-center"><i className="fa fa-cloud-upload font-40"/><br/>Unggah Gambar</p>
                     </label>
                   </div>
                   <input
@@ -3288,7 +3304,7 @@ class FormProduct extends Component {
 
               <div
                 className="row mt-2"
-                style={{ display: this.state.jenis !== "" && this.state.kd_brg !== "" ? "" : "none" }}
+                // style={{ display: this.state.jenis !== "" && this.state.kd_brg !== "" ? "" : "none" }}
               >
                 <div className="col-md-12">
                   <table className="table table-hover">
@@ -3322,7 +3338,22 @@ class FormProduct extends Component {
                         </th>
                       </tr>
                       <tr>
-                        <th colSpan="4" className="mb-0 pb-0" style={{borderBottomStyle:'hidden', whiteSpace: "no-wrap" }}>Generate Barcode</th>
+                        <th colSpan="4" className="mb-0 pb-0" style={{borderBottomStyle:'hidden', whiteSpace: "no-wrap" }}>
+                          {this.props.dataEdit === undefined ? (
+                            <div>
+                            <input
+                              type="checkbox"
+                              className="mr-1"
+                              checked={this.state.generateCode}
+                              name="gnBcd"
+                              id="gnBcd"
+                              onChange={this.generateCode}
+                            />
+                             <label for="gnBcd">Generate Barcode</label>
+                             </div>
+                          ) : (
+                            ""
+                          )}</th>
                       </tr>
                     </thead>
                     <tbody>
