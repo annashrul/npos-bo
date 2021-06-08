@@ -13,6 +13,8 @@ import { FetchBrgAll, setProductbrgAll } from '../../../../../redux/actions/mast
 import Spinner from '../../../../../Spinner';
 // import MyProgressbar from '../../../../../myProgressbar';
 import { RESET_PROPS_ARR } from '../../../../../redux/actions/_constants';
+import MyPdfL from '../../../../../myPdfL';
+import { pdf } from '@react-pdf/renderer';
 
 // kategori 1 = Dijual, kategori 0 = TIdak Dijual
 // jenis 0 = Karton, jenis 1 = Satuan, jenis 2 = Paket, jenis 3 = Servis, jenis 4 = Bahan
@@ -28,8 +30,10 @@ class FormProductExport extends Component{
             jenis: '',
             type:'',
             view:false,
+            pdfToo:false,
             location_data:[],
             location:"",
+            location_lbl:"",
             error:{
                 title:'',
                 jenis: '',
@@ -61,9 +65,15 @@ class FormProductExport extends Component{
             this.printDocumentXLsx(null,'xlsx')
         }
     }
+    
+    handleCb = (e,param) => {
+        // e.preventDefault();
+        this.setState({[param]:!this.state[param]});
+    }
     HandleChangeLokasi(lk) {
         this.setState({
           location: lk.value,
+          location_lbl: lk.label,
         });
         this.props.dispatch(setProductbrgAll(RESET_PROPS_ARR));
         this.props.dispatch(FetchBrgAll(encodeURIComponent(lk.value)))
@@ -150,8 +160,73 @@ class FormProductExport extends Component{
         let header = [
             ['SEMUA DATA BARANG'],
             // ['PERIODE : ' + this.props.startDate + ' - ' + this.props.endDate + ''],
-            [''],
+            ['LOKASI : '+this.state.location_lbl],
             [
+            'No',
+            'Kode Barang',
+            'Barcode',
+            'Satuan',
+            'Nama Barang',
+            // 'Lokasi',
+            'Harga Beli',
+            'Harga',
+            'Harga 2',
+            'Harga 3',
+            'Harga 4',
+            'PPN',
+            'Service',
+            'Kel. Barang',
+            'Kategori',
+            'Sub-Dept',
+            'Supplier',
+            'Deskripsi Item',
+            'Tanggal Input',
+            'Tanggal Update',
+            ]
+        ]
+        let raw = typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map((v,i) => [
+            i+1,
+            v.kd_brg,
+            v.barcode,
+            v.satuan,
+            v.nm_brg,
+            // v.nama_toko,
+            v.hrg_beli,
+            v.harga,
+            v.harga2,
+            v.harga3,
+            v.harga4,
+            v.ppn,
+            v.service,
+            v.kel_brg,
+            parseInt(v.kategori,10)===0?'Kartonan':parseInt(v.kategori,10)===1?'Satuan':parseInt(v.kategori,10)===2?'Paket':parseInt(v.kategori,10)===3?'Servis':parseInt(v.kategori,10)===4?'Bahan':'Tidak diketahui!',
+            v.subdept,
+            v.supplier,
+            v.deskripsi,
+            v.tgl_input,
+            v.tgl_update,
+        ]) : '';
+
+        if(this.props.resBarangAll.length>0){
+            let body = header.concat(raw);
+
+            let data = body;
+            let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+            let exportFileName = `Semua_Data_Barang_${this.state.location_lbl}_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
+            XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
+            
+            this.toggle(e);
+            // if (this.state.pdfToo) {
+            //     this.printDocumentPdf()
+            // }
+        }
+    }
+    printDocumentPdf = () => {
+        
+        let header = [[
             'No',
             'Kode Barang',
             'Barcode',
@@ -171,8 +246,7 @@ class FormProductExport extends Component{
             'Supplier',
             'Deskripsi Item',
             'Tanggal Input',
-            'Tanggal Update',
-            ]
+            'Tanggal Update']
         ]
         let raw = typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map((v,i) => [
             i+1,
@@ -200,15 +274,19 @@ class FormProductExport extends Component{
         if(this.props.resBarangAll.length>0){
             let body = header.concat(raw);
 
-            let data = body;
-            let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+            const blob = pdf(<MyPdfL
+                title={['Data Barang per Halaman',`${this.state.startDate} sampai ${this.state.endDate}`]}
+                result={body}
+              />).toBlob();
 
-            let wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-            let exportFileName = `Semua_Data_Barang_${moment(new Date()).format('YYYYMMDDHHMMss')}.${param === 'csv' ? `csv` : `xlsx`}`;
-            XLSX.writeFile(wb, exportFileName, { type: 'file', bookType: param === 'csv' ? "csv" : "xlsx" });
+            console.log('asdasdasd',blob)
+            // window.location.href = blob;
+            blob.then(function(myBlob) {
+                
+            console.log('asdasdasd',myBlob)
+                // do something with myBlob
 
-            this.toggle(e);
+              });
         }
     }
     render(){
@@ -240,6 +318,13 @@ class FormProductExport extends Component{
                                             })
                                         }
                                     />
+                                </div>
+                                <div class="new-checkbox d-none">
+                                    <p>Export Juga Untuk PDF</p>
+                                    <label class="switch">
+                                        <input type="checkbox" checked={this.state.pdfToo} onChange={(e)=>{this.handleCb(e, 'pdfToo')}}/>
+                                        <span class="slider"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>

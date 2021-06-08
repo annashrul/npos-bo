@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { ModalToggle } from "redux/actions/modal.action";
+import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
 import {
   createSupplier,
-  updateSupplier,
+  updateSupplier, FetchSupplierAll
 } from "redux/actions/masterdata/supplier/supplier.action";
+
 class FormSupplier extends Component {
   constructor(props) {
     super(props);
@@ -77,8 +78,15 @@ class FormSupplier extends Component {
   };
   toggle(e) {
     e.preventDefault();
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
+    if(this.props.fastAdd===undefined){
+      const bool = !this.props.isOpen;
+      this.props.dispatch(ModalToggle(bool));
+    }
+    if(this.props.fastAdd===true){
+        this.props.dispatch(ModalType('formProduct'));
+        // this.props.dispatch(supp(1,'','999'));
+        this.props.dispatch(FetchSupplierAll());
+    }
   }
 
   handleSubmit(e) {
