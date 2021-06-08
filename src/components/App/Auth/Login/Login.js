@@ -15,10 +15,6 @@ class Login extends Component {
       email: "",
       password: "",
       rememberme: false,
-      // disableButton:false,
-      // server_price:0,
-      // acc_name:"",
-      // acc_number:0,
       errors: {},
       logo: "-",
       width: "-",
@@ -30,17 +26,17 @@ class Login extends Component {
     return document.getElementById("favicon");
   }
 
-  getSubdomain() {
-    // let host = window.location.host;
-    // let parts = host.split(".");
-    // const subdomains = btoa(parts[0]);
-    // const subdomains = btoa(document.getElementById("coolyeah").value);
-    const subdomains = btoa("npos");
-    Cookies.set("tnt=", btoa(subdomains), {
-      expires: 365,
-    });
-    return subdomains;
-  }
+    getSubdomain(){
+        // let host = window.location.host;
+        // let parts = host.split(".");
+        // const subdomains = btoa(parts[0]);
+        // const subdomains = btoa(document.getElementById("coolyeah").value);
+        const subdomains = btoa('npos');
+        Cookies.set('tnt=', btoa(subdomains), {
+            expires: 365
+        });
+        return subdomains;
+    }
 
   componentDidMount() {
     this.getSubdomain();
