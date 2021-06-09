@@ -246,6 +246,8 @@ class FormProductPricing extends Component {
       purchasePrice: {},
       generateCode: false,
       codeServer: 0,
+      zoom: 13,
+      isFill: false,
     };
     this.handleKelompokBarang = this.handleKelompokBarang.bind(this);
     this.handleGroup1 = this.handleGroup1.bind(this);
@@ -571,8 +573,14 @@ class FormProductPricing extends Component {
   toggle = (e) => {
     e.preventDefault();
     window.scrollTo(0, 0);
-    // this.clearState();
-    this.props.dispatch(ModalType('formProduct'));
+    console.log('this.props.allState',this.props.allState);
+    if(this.props.allState!==undefined){
+      this.props.dispatch(ModalType('formProduct'));
+    }else{
+      this.clearState();
+      const bool = !this.props.isOpen;
+      this.props.dispatch(ModalToggle(bool));
+    }
   };
   toggleModal(e, param) {
     e.preventDefault();
@@ -591,7 +599,12 @@ class FormProductPricing extends Component {
     console.log(base64);
   };
   getProps(param) {
-    this.setState(this.props.allState)
+    if(this.props.allState!==undefined){
+      if(!this.state.isFill){
+        this.setState(this.props.allState)
+        console.log("this.props.allState",this.props.allState);
+      }
+    }
     this.setState({
       nm_harga1: param.auth.user.harga1,
       nm_harga2: param.auth.user.harga2,
@@ -1386,9 +1399,27 @@ class FormProductPricing extends Component {
     }
     this.setState({ barangHarga });
   }
+  
+  passToParent(event, i, x, lbl){
+    console.log('passToParent-asda5s6a',event.target.value);
+    console.log('passToParent-iasda5s6a',i);
+    console.log('passToParent-xasda5s6a',x);
+    console.log('passToParent-lblasda5s6a',lbl);
+    
+    if(this.props.allState!==undefined){
+      this.props.onHandleChangeChildSku_(event, i, x, lbl)
+    }
+
+  }
   onHandleChangeChildSku(event, i, x, lbl) {
+    // this.passToParent(event, i, x, lbl)
+    console.log('child-asda5s6a',event.target.value);
+    console.log('child-iasda5s6a',i);
+    console.log('child-xasda5s6a',x);
+    console.log('child-lblasda5s6a',lbl);
     let column = event.target.name;
     let value = event.target.value;
+    this.setState({isFill:value!==''})
     this.setState({ [column]: value });
     let barangHarga = [...this.state.barangHarga];
     if (
@@ -2936,11 +2967,20 @@ class FormProductPricing extends Component {
     parseData["barang_sku"] = barangSku;
     parseData["barang_harga"] = barangHarga;
     if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
-      this.props.dispatch(updateProduct(this.state.kd_brg, parseData));
+      if(this.props.allState===undefined){
+        let newParseData = {}
+        newParseData["barang_harga"] = parseData.barang_harga
+        this.props.dispatch(updateProduct(this.state.kd_brg, newParseData));
+      }
+      console.log('af4a98f9a8s4fsdfasf4849asf',parseData);
+      this.clearState();
     } else {
-      this.props.dispatch(createProduct(parseData));
+      // this.props.dispatch(createProduct(parseData));
+      // this.props.handler({dataEdit:{barang_harga:parseData.barang_harga,barang_sku:parseData.barang_sku}})
+      this.props.handler({barangHarga_:this.state.barangHarga,barangSku_:this.state.barangSku})
+      console.log('af4a98f9a8s4fsdfasf4849asf',parseData);
+      this.props.dispatch(ModalType('formProduct'));
     }
-    this.clearState();
   }
   getFiles(files) {
     this.setState({
@@ -2978,8 +3018,6 @@ class FormProductPricing extends Component {
         }
       }
     }
-
-    // console.log("showPricing",showPricing);
 
     return (
       <div>
@@ -3034,12 +3072,18 @@ class FormProductPricing extends Component {
               </div>
               <div className="row mt-2" style={{display:showPricing?'':'none'}}>
                 <div className="col-md-12">
-                  <p className="mb-0">Set Harga</p>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <p className="mb-2">Set Harga</p>
+                    <div className="form-group">
+                      <label htmlFor="zoom" className="m-0 p-0">Zoom in/out table</label>
+                      <input className="custom-range border-0" id="zoom" type="range" name="zoom" onChange={e=>this.handleChange(e)} value={this.state.zoom} min={0} max={25} step={1} />
+                    </div>
+                  </div>
                   <hr className="mt-0" />
                 </div>
                 <div className="col-md-12">
-                  <table className="table table-hover table-bordered" style={{tableLayout:'fixed'}}>
-                    <thead className="bg-light">
+                  <table className="table table-hover table-bordered" style={{tableLayout:'fixed', zoom:(75+parseInt(this.state.zoom,10))+'%'}}>
+                    <thead className="bg-light d-none">
                       <tr>
                         <div>
                           <tr>
@@ -3167,6 +3211,7 @@ class FormProductPricing extends Component {
                                   <tr>
                                     <td className="text-black" style={{verticalAlign: 'middle', textAlign: 'center'}}>
                                       <div className="form-group">
+                                        <label className="font-11 text-secondary float-left">Harga Beli</label>
                                         <input
                                           readOnly={
                                             localStorage.getItem(
@@ -3213,6 +3258,7 @@ class FormProductPricing extends Component {
                                                 className="form-group"
                                                 key={z}
                                               >
+                                                <label className="font-11 text-secondary float-left">Margin {z+1}</label>
                                                 <div className="input-group">
                                                   <input
                                                     readOnly={
@@ -3282,6 +3328,7 @@ class FormProductPricing extends Component {
                                               className="form-group"
                                               key={z}
                                             >
+                                              <label className="font-11 text-secondary float-left">Harga Jual {z+1}</label>
                                               <input
                                                 readOnly={
                                                   this.state.jenis ===
@@ -3626,7 +3673,7 @@ class FormProductPricing extends Component {
                   </div>
                   {/*END LABEL*/}
 
-                  <div className="row">
+                  <div className="row d-none">
 
                     {this.state.barangHarga.map((v, i) => {
                       return (
@@ -3953,11 +4000,17 @@ class FormProductPricing extends Component {
                       className="btn btn-warning mb-2 mr-2"
                       onClick={this.toggle}
                     >
-                      <i className="ti-close" /> Cancel
+                      <i className="ti-close" /> Batal
                     </button>
-                    <button type="submit" className="btn btn-primary mb-2 mr-2">
-                      <i className="ti-save" /> Simpan
-                    </button>
+                    {this.props.allState===undefined?
+                      <button type="submit" className="btn btn-primary mb-2 mr-2">
+                        <i className="ti-save" /> Simpan
+                      </button>
+                      :
+                      <button type="submit" className="btn btn-primary mb-2 mr-2">
+                        <i className="ti-save" /> Terapkan
+                      </button>
+                    }
                   </div>
                 </div>
               </div>

@@ -40,6 +40,7 @@ import {
 import FormProductExport from "../../../../modals/masterdata/product/form_product_export";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
+import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -70,6 +71,7 @@ class ListProduct extends Component {
       any_subdept_barang: "",
       any_kategori_barang: "",
       isModalForm: false,
+      isModalFormPer: false,
       isModalDetail: false,
       isModalCustomer: false,
     };
@@ -77,6 +79,7 @@ class ListProduct extends Component {
   componentWillUnmount() {
     this.setState({
       isModalForm: false,
+      isModalFormPer: false,
       isModalDetail: false,
       isModalCustomer: false,
     });
@@ -481,13 +484,17 @@ class ListProduct extends Component {
     this.props.dispatch(setProductEdit([]));
     // this.props.dispatch(FetchProductCode());
   }
-  handleEdit = (e, kode) => {
+  handleEdit = (e, kode,pricing) => {
     e.preventDefault();
-    this.setState({ isModalForm: true });
+    if(pricing){
+      this.setState({ isModalFormPer: true });
+    }else{
+      this.setState({ isModalForm: true });
+    }
 
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formProduct"));
+    this.props.dispatch(ModalType(pricing?"formProductPricing":"formProduct"));
     this.props.dispatch(FetchGroupProduct(1, "", "1000"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
@@ -532,6 +539,7 @@ class ListProduct extends Component {
   render() {
     const loc_delete = this.handleDelete;
     const loc_edit = this.handleEdit;
+    const loc_edit_per = this.handleEdit;
     const { total, per_page, current_page, data } = this.props.data;
     const centerStyle = {
       whiteSpace: "nowrap",
@@ -787,7 +795,10 @@ class ListProduct extends Component {
           <table className="table table-hover table-bordered">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={centerStyle} colSpan={1} />
+                <th className="text-black" style={centerStyle} rowSpan={2}>No</th>
+                <th className="text-black" style={centerStyle} rowSpan={2}>
+                  #
+                </th>
                 <th className="text-black" style={centerStyle}>
                   Kode Barang
                 </th>
@@ -800,7 +811,7 @@ class ListProduct extends Component {
                 <th className="text-black" width="10%" style={centerStyle}>
                   Supplier
                 </th>
-                <th className="text-black" width="10%" style={centerStyle}>
+                <th className="text-black" width="10%" style={centerStyle} rowSpan={2}>
                   Dept
                 </th>
                 <th className="text-black" width="10%" style={centerStyle}>
@@ -809,12 +820,16 @@ class ListProduct extends Component {
                 <th className="text-black" width="10%" style={centerStyle}>
                   Kategori
                 </th>
-                <th className="text-black" style={centerStyle} colSpan={3} />
+                <td className="text-black" style={centerStyle} rowSpan={2}>
+                  Jenis
+                </td>
+                <td className="text-black" style={centerStyle} rowSpan={2}>
+                  Stock
+                  <br />
+                  Min
+                </td>
               </tr>
               <tr>
-                <td className="text-black" style={centerStyle}>
-                  No
-                </td>
                 <td>
                   <input
                     name="any_kode_barang"
@@ -880,7 +895,6 @@ class ListProduct extends Component {
                     placeholder="Supplier"
                   />
                 </td>
-                <td />
                 <td>
                   <input
                     name="any_subdept_barang"
@@ -913,17 +927,6 @@ class ListProduct extends Component {
                     placeholder="Kategori"
                   />
                 </td>
-                <td className="text-black" style={centerStyle}>
-                  Jenis
-                </td>
-                <td className="text-black" style={centerStyle}>
-                  Stock
-                  <br />
-                  Min
-                </td>
-                <td className="text-black" style={centerStyle}>
-                  #
-                </td>
               </tr>
             </thead>
             <tbody>
@@ -935,21 +938,6 @@ class ListProduct extends Component {
                         <td style={centerStyle}>
                           {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
                         </td>
-                        <td style={leftStyle}>{v.kd_brg}</td>
-                        <td style={leftStyle}>{v.nm_brg}</td>
-                        <td style={leftStyle}>{v.kel_brg}</td>
-                        <td style={leftStyle}>{v.supplier}</td>
-                        <td style={leftStyle}>{v.dept}</td>
-                        <td style={leftStyle}>{v.subdept}</td>
-                        <td style={leftStyle}>{v.kategori}</td>
-                        <td style={centerStyle}>
-                          {v.jenis === "0" ? (
-                            <img alt="netindo" src={imgT} width="20px" />
-                          ) : (
-                            <img alt="netindo" src={imgY} width="20px" />
-                          )}
-                        </td>
-                        <td style={centerStyle}>{v.stock_min}</td>
                         <td style={centerStyle}>
                           <div className="btn-group mb-2 mr-2">
                             <UncontrolledButtonDropdown>
@@ -977,6 +965,11 @@ class ListProduct extends Component {
                                   Edit
                                 </DropdownItem>
                                 <DropdownItem
+                                  onClick={(e) => loc_edit_per(e, v.kd_brg,true)}
+                                >
+                                  Edit Harga per Lokasi
+                                </DropdownItem>
+                                <DropdownItem
                                   onClick={(e) => loc_delete(e, v.kd_brg)}
                                 >
                                   Delete
@@ -985,6 +978,21 @@ class ListProduct extends Component {
                             </UncontrolledButtonDropdown>
                           </div>
                         </td>
+                        <td style={leftStyle}>{v.kd_brg}</td>
+                        <td style={leftStyle}>{v.nm_brg}</td>
+                        <td style={leftStyle}>{v.kel_brg}</td>
+                        <td style={leftStyle}>{v.supplier}</td>
+                        <td style={leftStyle}>{v.dept}</td>
+                        <td style={leftStyle}>{v.subdept}</td>
+                        <td style={leftStyle}>{v.kategori}</td>
+                        <td style={centerStyle}>
+                          {v.jenis === "0" ? (
+                            <img alt="netindo" src={imgT} width="20px" />
+                          ) : (
+                            <img alt="netindo" src={imgY} width="20px" />
+                          )}
+                        </td>
+                        <td style={centerStyle}>{v.stock_min}</td>
                       </tr>
                     );
                   })
@@ -1018,6 +1026,17 @@ class ListProduct extends Component {
             dataEdit={this.props.productEdit}
             productCode={this.props.productCode}
           />
+        ) : null}
+        {this.state.isModalFormPer ? (
+          <FormProductPricing
+              // allState={this.state}
+              data={this.props.groupProduct}
+              dataLocation={this.props.location}
+              dataSupplier={this.props.supplier}
+              dataSubDept={this.props.subDept}
+              dataEdit={this.props.productEdit}
+              productCode={this.props.productCode}
+              />
         ) : null}
 
         {this.state.isModalDetail ? (

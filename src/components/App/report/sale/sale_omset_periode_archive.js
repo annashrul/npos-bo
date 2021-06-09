@@ -23,6 +23,7 @@ import {
   UncontrolledButtonDropdown,
 } from "reactstrap";
 import SaleOmsetPeriodeDetail from "../../modals/report/sale/form_sale_omset_periode_detail";
+import Swal from "sweetalert2";
 
 class SaleOmsetPeriodeArchive extends Component {
   constructor(props) {
@@ -37,14 +38,14 @@ class SaleOmsetPeriodeArchive extends Component {
     this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
     this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
     this.state = {
-      where_data: "",
+      where_data: `sebelum=2021-05&sekarang=2021-06`,
       type_data: [],
       type: "",
       location_data: [],
       location: "",
       any_saleOmsetPeriode_report: "",
-      startDate: moment(new Date()).subtract(1, "months"),
-      endDate: new Date(),
+      startDate: moment(new Date()).subtract(1, "months").utc(),
+      endDate: moment(new Date()).utc(),
       sort: "",
       sort_data: [],
       filter: "",
@@ -105,7 +106,7 @@ class SaleOmsetPeriodeArchive extends Component {
   };
   componentWillMount() {
     let page = localStorage.getItem("pageNumber_saleOmsetPeriode_report");
-    this.checkingParameter(page === undefined && page === null ? 1 : page);
+    this.checkingParameter(page === undefined && page === null ? 1 : page,this.state.startDate,this.state.endDate);
   }
   componentDidMount() {
     if (
@@ -125,22 +126,22 @@ class SaleOmsetPeriodeArchive extends Component {
         any: localStorage.any_saleOmsetPeriode_report,
       });
     }
-    if (
-      localStorage.date_from_saleOmsetPeriode_report !== undefined &&
-      localStorage.date_from_saleOmsetPeriode_report !== null
-    ) {
-      this.setState({
-        startDate: localStorage.date_from_saleOmsetPeriode_report,
-      });
-    }
-    if (
-      localStorage.date_to_saleOmsetPeriode_report !== undefined &&
-      localStorage.date_to_saleOmsetPeriode_report !== null
-    ) {
-      this.setState({
-        endDate: localStorage.date_to_saleOmsetPeriode_report,
-      });
-    }
+    // if (
+    //   localStorage.date_from_saleOmsetPeriode_report !== undefined &&
+    //   localStorage.date_from_saleOmsetPeriode_report !== null
+    // ) {
+    //   this.setState({
+    //     startDate: localStorage.date_from_saleOmsetPeriode_report,
+    //   });
+    // }
+    // if (
+    //   localStorage.date_to_saleOmsetPeriode_report !== undefined &&
+    //   localStorage.date_to_saleOmsetPeriode_report !== null
+    // ) {
+    //   this.setState({
+    //     endDate: localStorage.date_to_saleOmsetPeriode_report,
+    //   });
+    // }
 
     if (
       localStorage.filter_saleOmsetPeriode_report !== undefined &&
@@ -181,19 +182,30 @@ class SaleOmsetPeriodeArchive extends Component {
     });
   };
   handleDate = (e, param) => {
+    console.log(param,e);
     
     if (param === "old") {
-      const old = moment(e._d).format("yyyy-MM");
-      localStorage.setItem("date_from_saleOmsetPeriode_report", `${old}`);
-      this.setState({
-        startDate: moment(e._d).utc(),
-      });
+      // const old =  moment(e._d).utc();
+      // localStorage.setItem("date_from_saleOmsetPeriode_report", `${old}`);
+      if(moment(e._d).utc()<moment(this.state.endDate).utc()){
+        this.setState({
+          startDate: moment(e._d).utc(),
+        });
+        this.checkingParameter(1,moment(e._d).utc(),this.state.endDate);
+      } else {
+        Swal.fire("Error", "Bulan yang dipilih tidak boleh melebihi bulan sekarang")
+      }
     } else if (param === "now") {
-      const now = moment(e._d).format("yyyy-MM");
-      localStorage.setItem("date_to_saleOmsetPeriode_report", `${now}`);
-      this.setState({
-        endDate: moment(e._d).utc(),
-      });
+      // const now =  moment(e._d).utc();
+      // localStorage.setItem("date_to_saleOmsetPeriode_report", `${now}`);
+      if(moment(e._d).utc()>moment(this.state.startDate).utc()){
+        this.setState({
+          endDate: moment(e._d).utc(),
+        });
+        this.checkingParameter(1,this.state.startDate,moment(e._d).utc());
+      } else {
+        Swal.fire("Error", "Bulan yang dipilih tidak boleh kurang dari bulan sebelum")
+      }
     }
   };
   handleSearch(e) {
@@ -204,13 +216,15 @@ class SaleOmsetPeriodeArchive extends Component {
     );
     this.checkingParameter(1);
   }
-  checkingParameter(pageNumber) {
+  checkingParameter(pageNumber, startDate, endDate) {
     let where = "";
-    let dateFrom = localStorage.getItem("date_from_saleOmsetPeriode_report");
-    let dateTo = localStorage.getItem("date_to_saleOmsetPeriode_report");
-    let any = localStorage.getItem("any_saleOmsetPeriode_report");
-    let filter = localStorage.filter_saleOmsetPeriode_report;
-    let lokasi = localStorage.location_saleOmsetPeriode_report;
+    let dateFrom = moment.unix(startDate/1000).format('yyyy-MM');
+    let dateTo = moment.unix(endDate/1000).format('yyyy-MM');
+    // let dateFrom = moment.unix(this.state.startDate/1000).format('yyyy-MM');
+    // let dateTo = moment.unix(this.state.endDate/1000).format('yyyy-MM');
+    // let any = localStorage.getItem("any_saleOmsetPeriode_report");
+    // let filter = localStorage.filter_saleOmsetPeriode_report;
+    // let lokasi = localStorage.location_saleOmsetPeriode_report;
     if (dateFrom !== undefined && dateFrom !== null) {
       if (where !== "") {
         where += "&";
@@ -222,25 +236,25 @@ class SaleOmsetPeriodeArchive extends Component {
       }
       where += `sebelum=${this.state.startDate}&sekarang=${this.state.endDate}`;
     }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `lokasi=${lokasi}`;
-    }
+    // if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
+    //   if (where !== "") {
+    //     where += "&";
+    //   }
+    //   where += `lokasi=${lokasi}`;
+    // }
 
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `sort=${filter}`;
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `q=${any}`;
-    }
+    // if (filter !== undefined && filter !== null && filter !== "") {
+    //   if (where !== "") {
+    //     where += "&";
+    //   }
+    //   where += `sort=${filter}`;
+    // }
+    // if (any !== undefined && any !== null && any !== "") {
+    //   if (where !== "") {
+    //     where += "&";
+    //   }
+    //   where += `q=${any}`;
+    // }
     this.setState({
       where_data: where,
     });
@@ -298,6 +312,7 @@ class SaleOmsetPeriodeArchive extends Component {
   }
   toggleModal(e, total, perpage) {
     e.preventDefault();
+    console.log(this.state.where_data);
     const bool = !this.props.isOpen;
     // let range = total*perpage;
     this.setState({ export: true });
@@ -420,13 +435,13 @@ class SaleOmsetPeriodeArchive extends Component {
                 <div className="row">
                   <div className="col-12 col-xs-12 col-md-12">
                     <div className="form-group text-right">
-                      <button
+                      {/* <button
                         style={{ marginTop: "28px", marginRight: "5px" }}
                         className="btn btn-primary"
                         onClick={this.handleSearch}
                       >
                         <i className="fa fa-search" />
-                      </button>
+                      </button> */}
                       <button
                         style={{ marginTop: "28px", marginRight: "5px" }}
                         className="btn btn-primary"
@@ -741,8 +756,8 @@ class SaleOmsetPeriodeArchive extends Component {
                 {this.props.saleOmsetPeriodeReportExcel.data !== undefined &&
                 this.props.saleOmsetPeriodeReportExcel.data.length > 0 ? (
                   <SaleOmsetPeriodeReportExcel
-                    startDate={this.state.startDate}
-                    endDate={this.state.endDate}
+                    startDate={moment.unix(this.state.startDate/1000).format('yyyy-MM-DD')}
+                    endDate={moment.unix(this.state.endDate/1000).format('yyyy-MM-DD')}
                     location={this.state.location}
                   />
                 ) : (
@@ -750,8 +765,8 @@ class SaleOmsetPeriodeArchive extends Component {
                 )}
                 {typeof this.props.detail === "object" ? (
                   <SaleOmsetPeriodeDetail
-                    startDate={this.state.startDate}
-                    endDate={this.state.endDate}
+                    startDate={moment.unix(this.state.startDate/1000).format('yyyy-MM-DD')}
+                    endDate={moment.unix(this.state.endDate/1000).format('yyyy-MM-DD')}
                     dataDetail={this.props.detail}
                   />
                 ) : (
