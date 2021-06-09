@@ -249,6 +249,7 @@ class FormProduct extends Component {
       generateCode: false,
       codeServer: 0,
       display: 'none',
+      filled: false,
     };
     this.handleKelompokBarang = this.handleKelompokBarang.bind(this);
     this.handleGroup1 = this.handleGroup1.bind(this);
@@ -263,6 +264,7 @@ class FormProduct extends Component {
     this.handleKateBrg = this.handleKateBrg.bind(this);
     this.mouseEnter = this.mouseEnter.bind(this);
     this.mouseLeave = this.mouseLeave.bind(this);
+    this.handler = this.handler.bind(this);
   }
 
   clearState() {
@@ -591,6 +593,8 @@ class FormProduct extends Component {
     e.preventDefault();
     // const bool = !this.props.isOpen;
     // this.props.dispatch(ModalToggle(true));
+    
+    this.setState({filled:true});
     this.props.dispatch(ModalType(param));
   }
   handleKateBrg = (e) => {
@@ -888,74 +892,76 @@ class FormProduct extends Component {
         barangHarga: barangHrg,
       });
     } else {
-      const { data } = param.dataLocation;
-      this.setState({
-        check: param.dataLocation,
-      });
-      let brgHrg = [];
-      if (typeof data === "object") {
-        data.map((v) => {
-          Object.assign(v, {
-            isChecked: false,
-            PACK: false,
-            KARTON: false,
-            hrg_beli: "0",
-          });
-          brgHrg.push([
-            {
-              nama_toko: v.nama_toko,
-              lokasi: v.kode,
-              isCheckedPCS: false,
-              hrgBeliPCS: 0,
-              margin1PCS: "0",
-              margin2PCS: "0",
-              margin3PCS: "0",
-              margin4PCS: "0",
-              hrgJual1PCS: "0",
-              hrgJual2PCS: "0",
-              hrgJual3PCS: "0",
-              hrgJual4PCS: "0",
-              ppnPCS: "0",
-              servicePCS: "0",
-            },
-            {
-              nama_toko: v.nama_toko,
-              lokasi: v.kode,
-              isCheckedPACK: false,
-              hrgBeliPACK: 0,
-              margin1PACK: "0",
-              margin2PACK: "0",
-              margin3PACK: "0",
-              margin4PACK: "0",
-              hrgJual1PACK: "0",
-              hrgJual2PACK: "0",
-              hrgJual3PACK: "0",
-              hrgJual4PACK: "0",
-              ppnPACK: "0",
-              servicePACK: "0",
-            },
-            {
-              nama_toko: v.nama_toko,
-              lokasi: v.kode,
-              isCheckedKARTON: false,
-              hrgBeliKARTON: 0,
-              margin1KARTON: "0",
-              margin2KARTON: "0",
-              margin3KARTON: "0",
-              margin4KARTON: "0",
-              hrgJual1KARTON: "0",
-              hrgJual2KARTON: "0",
-              hrgJual3KARTON: "0",
-              hrgJual4KARTON: "0",
-              ppnKARTON: "0",
-              serviceKARTON: "0",
-            },
-          ]);
-          return null;
-        });
+      if(!this.state.filled){
+        const { data } = param.dataLocation;
         this.setState({
-          barangHarga: brgHrg,
+          check: param.dataLocation,
         });
+        let brgHrg = [];
+        if (typeof data === "object") {
+          data.map((v) => {
+            Object.assign(v, {
+              isChecked: false,
+              PACK: false,
+              KARTON: false,
+              hrg_beli: "0",
+            });
+            brgHrg.push([
+              {
+                nama_toko: v.nama_toko,
+                lokasi: v.kode,
+                isCheckedPCS: false,
+                hrgBeliPCS: 0,
+                margin1PCS: "0",
+                margin2PCS: "0",
+                margin3PCS: "0",
+                margin4PCS: "0",
+                hrgJual1PCS: "0",
+                hrgJual2PCS: "0",
+                hrgJual3PCS: "0",
+                hrgJual4PCS: "0",
+                ppnPCS: "0",
+                servicePCS: "0",
+              },
+              {
+                nama_toko: v.nama_toko,
+                lokasi: v.kode,
+                isCheckedPACK: false,
+                hrgBeliPACK: 0,
+                margin1PACK: "0",
+                margin2PACK: "0",
+                margin3PACK: "0",
+                margin4PACK: "0",
+                hrgJual1PACK: "0",
+                hrgJual2PACK: "0",
+                hrgJual3PACK: "0",
+                hrgJual4PACK: "0",
+                ppnPACK: "0",
+                servicePACK: "0",
+              },
+              {
+                nama_toko: v.nama_toko,
+                lokasi: v.kode,
+                isCheckedKARTON: false,
+                hrgBeliKARTON: 0,
+                margin1KARTON: "0",
+                margin2KARTON: "0",
+                margin3KARTON: "0",
+                margin4KARTON: "0",
+                hrgJual1KARTON: "0",
+                hrgJual2KARTON: "0",
+                hrgJual3KARTON: "0",
+                hrgJual4KARTON: "0",
+                ppnKARTON: "0",
+                serviceKARTON: "0",
+              },
+            ]);
+            return null;
+          });
+          this.setState({
+            barangHarga: brgHrg,
+          });
+        }
       }
     }
     let kel_brg = [];
@@ -1034,6 +1040,14 @@ class FormProduct extends Component {
       .catch(function (error) {
         if (error.response) {
         }
+      });
+  }
+  handler(value) {
+    console.log("handler val", value);
+    
+      this.setState({
+        barangHarga: value.barangHarga_,
+        barangSku: value.barangSku_,
       });
   }
   checkData(event, i) {
@@ -3010,8 +3024,9 @@ class FormProduct extends Component {
       }
     }
 
-    // console.log("showPricing",showPricing);
 
+    console.log("this.state.barangSku",this.state.barangSku);
+    console.log("this.state.barangHarga",this.state.barangHarga);
     return (
       <div>
         <WrapperModal
@@ -3498,49 +3513,26 @@ class FormProduct extends Component {
                   </table>
                 </div>
               </div>
-              <div className="row mt-2" style={{display:showPricing?'':'none'}}>
+              <div
+                className="row m-1 border border-1 rounded-lg bg-light px-0 py-3"
+                // style={{display:showPricing?'':'none'}}
+              >
                 <div className="col-md-12">
-                  <p className="mb-0">Set Harga</p>
-                  <hr className="mt-0" />
+                  <div className="d-flex justify-content-between align-items-center">
+                    <p className="mb-0">Set Harga Semua Lokasi</p>
+                    {this.props.dataEdit === undefined?
+                    <button
+                      type="button"
+                      className="btn btn-info"
+                      onClick={e=>this.toggleModal(e,'formProductPricing')}
+                    >
+                      <i className="fa fa-pencil" /> Atur masing-masing Harga Lokasi
+                    </button>
+                    :''}
+                    </div>
+                  <hr className="mt-2" />
                 </div>
                 <div className="col-md-12">
-                  <div className="row d-none">
-                    <div className="col-md-2">
-                      <label>Lokasi</label>
-                    </div>
-                    <div className="col-md-10">
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="row">
-                            <div className="col-md-4">
-                              <label className="control-label">
-                                Harga Beli
-                              </label>
-                            </div>
-                            <div className="col-md-4">
-                              <label className="control-label">Margin %</label>
-                            </div>
-                            <div className="col-md-4">
-                              <label className="control-label">
-                                Harga Jual
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="row">
-                            <div className="col-md-3">
-                              <label className="control-label">Service %</label>
-                            </div>
-                            <div className="col-md-3">
-                              <label className="control-label">PPN %</label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/*END LABEL*/}
 
                   <div className="row">
                     {/*ATUR SEMUA*/}
@@ -3761,7 +3753,7 @@ class FormProduct extends Component {
 
                     {this.state.barangHarga.map((v, i) => {
                       return (
-                        <div className="col-md-12 d-none" key={i}>
+                        <div className="col-md-12" key={i}>
                           <div
                             className={`border border-1 mx-0 p-2 rounded-lg mb-2 ${
                               i % 2 === 0 ? "bg-light" : ""
@@ -4077,23 +4069,18 @@ class FormProduct extends Component {
                     {/*END DYNAMIC  */}
                   </div>
                 </div>
+              </div>
+              <div className="row">
                 <div className="col-md-12">
-                  <div className="form-group" style={{ textAlign: "right" }}>
+                  <div className="mt-2" style={{ textAlign: "right" }}>
                     <button
                       type="button"
-                      className="btn btn-warning mb-2 mr-2"
-                      onClick={e=>this.toggleModal(e,'formProductPricing')}
-                    >
-                      <i className="ti-close" /> test
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-warning mb-2 mr-2"
+                      className="btn btn-warning mr-2"
                       onClick={this.toggle}
                     >
                       <i className="ti-close" /> Cancel
                     </button>
-                    <button type="submit" className="btn btn-primary mb-2 mr-2">
+                    <button type="submit" className="btn btn-primary mr-1">
                       <i className="ti-save" /> Simpan
                     </button>
                   </div>
@@ -4109,6 +4096,8 @@ class FormProduct extends Component {
         <FormGroupProduct group2={this.props.group2} fastAdd={true} />
         <FormProductPricing
           allState={this.state}
+          handler = {this.handler}
+          onHandleChangeChildSku_ = {this.onHandleChangeChildSku}
           data={this.props.data}
           dataLocation={this.props.dataLocation}
           dataSupplier={this.props.dataSupplier}

@@ -23,6 +23,7 @@ import {
   UncontrolledButtonDropdown,
 } from "reactstrap";
 import SaleOmsetPeriodeDetail from "../../modals/report/sale/form_sale_omset_periode_detail";
+import Swal from "sweetalert2";
 
 class SaleOmsetPeriodeArchive extends Component {
   constructor(props) {
@@ -192,7 +193,7 @@ class SaleOmsetPeriodeArchive extends Component {
         });
         this.checkingParameter(1,moment(e._d).utc(),this.state.endDate);
       } else {
-        alert("asdas")
+        Swal.fire("Error", "Bulan yang dipilih tidak boleh melebihi bulan sekarang")
       }
     } else if (param === "now") {
       // const now =  moment(e._d).utc();
@@ -203,7 +204,7 @@ class SaleOmsetPeriodeArchive extends Component {
         });
         this.checkingParameter(1,this.state.startDate,moment(e._d).utc());
       } else {
-        alert("gsdfgd")
+        Swal.fire("Error", "Bulan yang dipilih tidak boleh kurang dari bulan sebelum")
       }
     }
   };
@@ -366,7 +367,7 @@ class SaleOmsetPeriodeArchive extends Component {
                       <Datetime
                         dateFormat="YYYY-MM"
                         timeFormat={false}
-                        closeOnSelect={false}
+                        closeOnSelect={true}
                         value={this.state.startDate}
                         onChange={(e) => this.handleDate(e, "old")}
                       />
@@ -381,7 +382,7 @@ class SaleOmsetPeriodeArchive extends Component {
                       <Datetime
                         dateFormat="YYYY-MM"
                         timeFormat={false}
-                        closeOnSelect={false}
+                        closeOnSelect={true}
                         value={this.state.endDate}
                         onChange={(e) => this.handleDate(e, "now")}
                       />
