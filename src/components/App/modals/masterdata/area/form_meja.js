@@ -79,7 +79,10 @@ class FormMeja extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.detail !== [] && nextProps.detail !== undefined) {
       let data = nextProps.area.filter(
-        (item) => item.id_area === nextProps.detail.area
+        (item) => item.id_area === nextProps.detail.id_area
+      );
+      let dataBentuk = this.state.bentuk_data.filter(
+        (item) => item.value === nextProps.detail.bentuk
       );
 
       this.setState({
@@ -90,7 +93,10 @@ class FormMeja extends Component {
         },
         height: nextProps.detail.height,
         width: nextProps.detail.width,
-        bentuk: nextProps.detail.bentuk,
+        bentuk: {
+          value: dataBentuk[0] === undefined ? "" : dataBentuk[0].value,
+          label: dataBentuk[0] === undefined ? "" : dataBentuk[0].label,
+        },
         id: nextProps.detail.id,
       });
     } else {
@@ -124,43 +130,33 @@ class FormMeja extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    let parseData = {};
     let parseDataU = {};
-    // let jml = [];
-    // for (let i = 0; i < parseInt(this.state.jumlah, 10); i++) {
-    //   jml.push({
-    //     nama: this.state.nama + " " + (i + 1),
-    //     kapasitas: this.state.kapasitas,
-    //     area: this.state.area.value,
-    //     height: this.state.height,
-    //     width: this.state.width,
-    //     bentuk: this.state.bentuk,
-    //   });
-    // }
-    // parseData["master"] = jml;
+    if (this.props.detail === undefined) {
+      parseDataU["jumlah"] = parseInt(this.state.jumlah, 10);
+      parseDataU["area"] = this.state.area.value;
+    }
 
-    parseDataU["jumlah"] = parseInt(this.state.jumlah, 10);
     parseDataU["kapasitas"] = parseInt(this.state.kapasitas, 10);
-    parseDataU["area"] = this.state.area.value;
     parseDataU["height"] = parseInt(this.state.height, 10);
     parseDataU["width"] = parseInt(this.state.width, 10);
     parseDataU["bentuk"] = this.state.bentuk.value;
-
     let err = this.state.error;
-    console.log(parseDataU);
-    if (parseDataU["area"] === undefined) {
-      err = Object.assign({}, err, {
-        area: "area tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (isNaN(parseDataU["jumlah"]) || parseDataU["jumlah"] < 1) {
-      err = Object.assign({}, err, {
-        jumlah: "jumlah meja tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
+
+    if (this.props.detail === undefined) {
+      if (parseDataU["area"] === undefined) {
+        err = Object.assign({}, err, {
+          area: "area tidak boleh kosong",
+        });
+        this.setState({ error: err });
+        return;
+      }
+      if (isNaN(parseDataU["jumlah"]) || parseDataU["jumlah"] < 1) {
+        err = Object.assign({}, err, {
+          jumlah: "jumlah meja tidak boleh kosong",
+        });
+        this.setState({ error: err });
+        return;
+      }
     }
     if (isNaN(parseDataU["width"]) || parseDataU["width"] < 1) {
       err = Object.assign({}, err, {
@@ -190,23 +186,12 @@ class FormMeja extends Component {
       this.setState({ error: err });
       return;
     }
-    // if (this.state.jumlah === "" || this.state.jumlah === undefined) {
-    // err = Object.assign({}, err, { nama: "nama tidak boleh kosong" });
-    // this.setState({ error: err });
-    // return;
-    // } else if (this.state.area === "" || this.state.area === undefined) {
-    //   err = Object.assign({}, err, { area: "lokasi tidak boleh kosong" });
-    //   this.setState({ error: err });
-    //   return;
-    // } else {
+
     if (this.props.detail === undefined) {
       this.props.dispatch(createMeja(parseDataU));
-      // this.props.dispatch(ModalToggle(false));
     } else {
       this.props.dispatch(updateMeja(this.state.id, parseDataU));
-      // this.props.dispatch(ModalToggle(false));
     }
-    // }
   }
 
   getFiles(files) {
@@ -225,7 +210,12 @@ class FormMeja extends Component {
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
-            <div className="form-group">
+            <div
+              className="form-group"
+              style={{
+                display: this.props.detail === undefined ? "block" : "none",
+              }}
+            >
               <label>
                 Area <span className="text-danger">*</span>
               </label>
@@ -269,7 +259,12 @@ class FormMeja extends Component {
                   </div>
                 </div>
               </div> */}
-              <div className="col-12">
+              <div
+                className="col-12"
+                style={{
+                  display: this.props.detail === undefined ? "block" : "none",
+                }}
+              >
                 <div className="form-group">
                   <label>
                     Jumlah Meja <span className="text-danger">*</span>

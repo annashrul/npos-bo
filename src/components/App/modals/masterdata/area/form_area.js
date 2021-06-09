@@ -118,10 +118,8 @@ class FormArea extends Component {
     } else {
       if (this.props.detail === undefined) {
         this.props.dispatch(createArea(parseData));
-        this.props.dispatch(ModalToggle(false));
       } else {
         this.props.dispatch(updateArea(this.state.id, parseData));
-        this.props.dispatch(ModalToggle(false));
       }
     }
   }

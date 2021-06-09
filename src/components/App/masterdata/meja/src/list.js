@@ -24,6 +24,7 @@ class ListMeja extends Component {
       detail: {},
     };
   }
+
   handlePageChange(pageNumber) {
     localStorage.setItem("page_customer", pageNumber);
     this.props.dispatch(FetchMeja(pageNumber, ""));
@@ -52,7 +53,8 @@ class ListMeja extends Component {
         detail: {
           nama: this.props.data.data[i].nama,
           kapasitas: this.props.data.data[i].kapasitas,
-          area: this.props.data.data[i].area,
+          id_area: this.props.data.data[i].id_area,
+          nama_area: this.props.data.data[i].nama_area,
           height: this.props.data.data[i].height,
           width: this.props.data.data[i].width,
           bentuk: this.props.data.data[i].bentuk,
@@ -63,20 +65,21 @@ class ListMeja extends Component {
   }
   handleDelete(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deleteMeja(id, this.props.token));
-      }
-    });
+    this.props.dispatch(deleteMeja(id));
+    // Swal.fire({
+    //   allowOutsideClick: false,
+    //   title: "Are you sure?",
+    //   text: "You won't be able to revert this!",
+    //   type: "warning",
+    //   showCancelButton: true,
+    //   confirmButtonColor: "#3085d6",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Yes, delete it!",
+    // }).then((result) => {
+    //   if (result.value) {
+    //     this.props.dispatch(deleteMeja(id, this.props.token));
+    //   }
+    // });
   }
   render() {
     const columnStyle = { verticalAlign: "middle", textAlign: "left" };
@@ -186,11 +189,13 @@ class ListMeja extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
-        <FormMeja
-          token={this.props.token}
-          detail={this.state.detail}
-          area={this.props.area}
-        />
+        {!this.props.isOpen && (
+          <FormMeja
+            token={this.props.token}
+            detail={this.state.detail}
+            area={this.props.area}
+          />
+        )}
       </div>
     );
   }

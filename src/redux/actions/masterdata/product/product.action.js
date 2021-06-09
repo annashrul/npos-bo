@@ -1,9 +1,10 @@
 import { PRODUCT, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Nprogress  from "nprogress";
+import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import { configure } from "../../_interceptor";
+import { handleGet } from "../../handleHttp";
 
 export function setLoadingbrg(load) {
   return { type: PRODUCT.LOADING_BRG, load };
@@ -51,8 +52,6 @@ export function setPersen(data = []) {
 }
 export const FetchProduct = (page = 1, where, param = "", db = null) => {
   return (dispatch) => {
-    Nprogress.start();
-    dispatch(setLoading(true));
     let url = ``;
     if (param === "") {
       if (where !== "") {
@@ -66,33 +65,53 @@ export const FetchProduct = (page = 1, where, param = "", db = null) => {
         url = `barang?page=${page}&${where}`;
       }
     }
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
+        if (db !== null) {
+          const barang = data.result.data;
+          const cek = db(barang[0].kd_brg, barang);
+          cek.then((re) => {
+            dispatch(setProductbrg(data));
+            dispatch(setLoadingbrg(false));
+          });
+        } else {
+          dispatch(setProduct(data));
+          dispatch(setLoading(false));
+        }
+      },
+      true
+    );
+    // Nprogress.start();
+    // dispatch(setLoading(true));
 
-    configure().then(async (api) => {
-      const response = await api.get(url)
-      const data = response.data;
-      if (db !== null) {
-        const barang = data.result.data;
-        const cek = db(barang[0].kd_brg, barang);
-        cek.then((re) => {
-          dispatch(setProductbrg(data));
-          dispatch(setLoadingbrg(false));
-        });
-      } else {
-        dispatch(setProduct(data));
-        dispatch(setLoading(false));
-      }
-      Nprogress.done();
-    }).catch(function (error) {
-      Nprogress.done();
-      dispatch(setLoading(false));
-      Swal.fire({
-        allowOutsideClick: false,
-        title: "failed",
-        type: "error",
-        text:
-          error.response === undefined ? "error!" : error.response.data.msg,
-      });
-    });
+    // configure().then(async (api) => {
+    //   const response = await api.get(url)
+    //   const data = response.data;
+    // if (db !== null) {
+    //   const barang = data.result.data;
+    //   const cek = db(barang[0].kd_brg, barang);
+    //   cek.then((re) => {
+    //     dispatch(setProductbrg(data));
+    //     dispatch(setLoadingbrg(false));
+    //   });
+    // } else {
+    //   dispatch(setProduct(data));
+    //   dispatch(setLoading(false));
+    // }
+    //   Nprogress.done();
+    // }).catch(function (error) {
+    //   Nprogress.done();
+    //   dispatch(setLoading(false));
+    //   Swal.fire({
+    //     allowOutsideClick: false,
+    //     title: "failed",
+    //     type: "error",
+    //     text:
+    //       error.response === undefined ? "error!" : error.response.data.msg,
+    //   });
+    // });
   };
 };
 
@@ -229,27 +248,24 @@ export const FetchBrg = (
       });
   };
 };
-export const FetchBrgAll = (
-  lokasi
-) => {
+export const FetchBrgAll = (lokasi) => {
   return (dispatch) => {
     Swal.fire({
-      allowOutsideClick:false,
-      title: 'Mengambil data barang.',
-      html: 'Lamanya proses bergantung pada banyaknya data barang, jangan tutup halaman hingga proses selesai.',
+      allowOutsideClick: false,
+      title: "Mengambil data barang.",
+      html: "Lamanya proses bergantung pada banyaknya data barang, jangan tutup halaman hingga proses selesai.",
       onBeforeOpen: () => {
-          Swal.showLoading()
+        Swal.showLoading();
       },
-      onClose: () => {}
-    })
+      onClose: () => {},
+    });
     dispatch(setLoadingbrgAll(true));
     let url = `barang/getAll`;
     if (lokasi !== null) url += `?lokasi=${lokasi}`;
 
     axios
-      .get(HEADERS.URL + `${url}`,{
+      .get(HEADERS.URL + `${url}`, {
         onDownloadProgress: (progressEvent) => {
-          
           const total = parseFloat(progressEvent.total);
           const current = parseFloat(progressEvent.loaded);
           let percentCompleted = Math.floor((current / total) * 100);
@@ -258,25 +274,25 @@ export const FetchBrgAll = (
       })
       .then(function (response) {
         const data = response.data;
-          dispatch(setProductbrgAll(data));
-          dispatch(setLoadingbrgAll(false));
-          dispatch(setPersen(0));
-          if (data.status === "success") {
-            Toast.fire({
-                icon: 'success',
-                title: data.msg
-            })
-          } else {
-            Toast.fire({
-                icon: 'error',
-                title: data.msg
-            })
-          }
-          // Swal.close()
+        dispatch(setProductbrgAll(data));
+        dispatch(setLoadingbrgAll(false));
+        dispatch(setPersen(0));
+        if (data.status === "success") {
+          Toast.fire({
+            icon: "success",
+            title: data.msg,
+          });
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: data.msg,
+          });
+        }
+        // Swal.close()
       })
       .catch(function (error) {
         dispatch(setLoadingbrgAll(false));
-        Swal.close()
+        Swal.close();
 
         Swal.fire({
           allowOutsideClick: false,
@@ -486,13 +502,13 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
   };
 };
 const Toast = Swal.mixin({
-    toast: true,
-    position: 'bottom-end',
-    showConfirmButton: false,
-    timer: 1000,
-    timerProgressBar: true,
-    onOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
+  toast: true,
+  position: "bottom-end",
+  showConfirmButton: false,
+  timer: 1000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener("mouseenter", Swal.stopTimer);
+    toast.addEventListener("mouseleave", Swal.resumeTimer);
+  },
+});

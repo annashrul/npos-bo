@@ -44,6 +44,7 @@ class SideMenu extends Component {
       promo: "",
       area: "",
       meja: "",
+      printer: "",
       //PRODUKSI
       modul_produksi: false,
       produksi: "",
@@ -435,6 +436,7 @@ class SideMenu extends Component {
         let sales = akses[15]["value"] !== null ? akses[15]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let bank = akses[16]["value"] !== null ? akses[16]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let promo = akses[17]["value"] !== null ? akses[17]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let printer = akses[18]["value"] !== null ? akses[18]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //PRODUKSI
         let produksi = akses[20]["value"] !== null ? akses[20]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //INVENTORY
@@ -520,7 +522,8 @@ class SideMenu extends Component {
           kas !== "0" ||
           sales !== "0" ||
           bank !== "0" ||
-          promo !== "0"
+          promo !== "0" ||
+          printer !== "0"
         ) {
           this.setState({ modul_masterdata: true });
         }
@@ -656,6 +659,7 @@ class SideMenu extends Component {
           sales: sales,
           bank: bank,
           promo: promo,
+          printer: printer,
           // //PRODUKSI
           produksi: produksi,
           //INVENTORY
@@ -728,7 +732,8 @@ class SideMenu extends Component {
       path === "/promo" ||
       path === "/bank" ||
       path === "/area" ||
-      path === "/meja"
+      path === "/meja" ||
+      path === "/printer"
     ) {
       this.setState({
         isMasterdata: true,
@@ -1089,6 +1094,20 @@ class SideMenu extends Component {
                   Promo{" "}
                 </Link>
               </li>
+              <li
+                className={path === "/printer" ? "active" : ""}
+                style={
+                  this.state.printer === "0"
+                    ? { display: "none" }
+                    : { display: "block" }
+                }
+              >
+                <Link to="/printer" style={{ width: "fit-content" }}>
+                  {" "}
+                  <i className="fa fa-ticket" />
+                  Printer{" "}
+                </Link>
+              </li>
 
               <li
                 className={
@@ -1110,13 +1129,7 @@ class SideMenu extends Component {
                   <i className="fa fa-angle-right" />
                 </a>
                 <ul
-                  className={
-                    "treeview-menu animate__animated" +
-                    (this.state.isArea === true
-                      ? " animate__bounceInRight "
-                      : " animate__fadeOutLeft ") +
-                    "animate__faster"
-                  }
+                  className={"treeview-menu"}
                   style={{
                     display: this.state.isArea === true ? "block" : "none",
                   }}
@@ -1398,13 +1411,7 @@ class SideMenu extends Component {
                   <i className="fa fa-angle-right" />
                 </a>
                 <ul
-                  className={
-                    "treeview-menu animate__animated" +
-                    (this.state.isTrxMutasi === true
-                      ? " animate__bounceInRight "
-                      : " animate__fadeOutLeft ") +
-                    "animate__faster"
-                  }
+                  className={"treeview-menu"}
                   style={{
                     display: this.state.isTrxMutasi === true ? "block" : "none",
                   }}

@@ -545,39 +545,36 @@ class ListProduct extends Component {
     };
 
     const headers = [
-      'No',
-      'Code',
-      'Name',
-      'Group',
-      'Supplier',
-      'Dept',
-      'Sub Dept',
-      'Purchase Price',
+      "No",
+      "Code",
+      "Name",
+      "Group",
+      "Supplier",
+      "Dept",
+      "Sub Dept",
+      "Purchase Price",
       // 'Category',
     ];
 
-    let body = []
-    if(typeof data === 'object'){
+    let body = [];
+    if (typeof data === "object") {
       for (let i = 0; i < data.length; i++) {
         const v = data[i];
-          body.push([
-            i+1,
-            v.kd_brg,
-            v.nm_brg,
-            v.kel_brg,
-            v.supplier,
-            v.dept,
-            v.subdept,
-            // v.kategori,
-          ])
+        body.push([
+          i + 1,
+          v.kd_brg,
+          v.nm_brg,
+          v.kel_brg,
+          v.supplier,
+          v.dept,
+          v.subdept,
+          // v.kategori,
+        ]);
       }
-        
-      }
+    }
 
     body.unshift(headers);
 
-      
-    console.log('body', body);
     // const rightStyle = {verticalAlign: "middle", textAlign: "right",whiteSpace: "nowrap"};
     return (
       <div>
@@ -661,7 +658,10 @@ class ListProduct extends Component {
               <PDFDownloadLink
                 document={
                   <MyPdfL
-                    title={['Data Barang per Halaman',`${this.state.startDate} sampai ${this.state.endDate}`]}
+                    title={[
+                      "Data Barang per Halaman",
+                      `${this.state.startDate} sampai ${this.state.endDate}`,
+                    ]}
                     result={body}
                   />
                 }
@@ -670,7 +670,11 @@ class ListProduct extends Component {
                 className="btn btn-primary py-2 d-none"
               >
                 {({ blob, url, loading, error }) =>
-                  loading ? <i className="spinner-border spinner-border-sm"></i> : <i className="fa fa-file-pdf-o"></i>
+                  loading ? (
+                    <i className="spinner-border spinner-border-sm"></i>
+                  ) : (
+                    <i className="fa fa-file-pdf-o"></i>
+                  )
                 }
               </PDFDownloadLink>
               {/* <button
@@ -684,11 +688,10 @@ class ListProduct extends Component {
               <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
                 type="button"
-                onClick={(e)=>this.handleExport(e)}
+                onClick={(e) => this.handleExport(e)}
                 className="btn btn-primary"
               >
-                <i className="fa fa-file-excel-o"></i>&nbsp;
-                Export
+                <i className="fa fa-file-excel-o"></i>&nbsp; Export
               </button>
               {/* <ReactHTMLTableToExcel
                 className="btn btn-primary btnBrg"
@@ -1023,7 +1026,7 @@ class ListProduct extends Component {
         {this.state.isModalCustomer ? (
           <CustomerPrice dataCustomerPrice={this.props.customerPrice} />
         ) : null}
-        <FormProductExport/>
+        <FormProductExport />
       </div>
     );
   }

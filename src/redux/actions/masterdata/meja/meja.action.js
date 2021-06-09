@@ -2,6 +2,13 @@ import { MEJA, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { ModalToggle } from "redux/actions/modal.action";
+import {
+  handleDelete,
+  handleGet,
+  handlePost,
+  handlePut,
+} from "../../handleHttp";
+import { swal } from "../../../../helper";
 
 export function setLoading(load) {
   return { type: MEJA.LOADING, load };
@@ -19,24 +26,20 @@ export function setMejaFailed(data = []) {
 
 export const FetchMeja = (page = 1, q = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-
     let url = "";
     if (q === "") {
       url = `meja?page=${page}`;
     } else {
       url = `meja?page=${page}&q=${q}`;
     }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
         dispatch(setMeja(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+      },
+      true
+    );
   };
 };
 export const FetchMejaAll = () => {
@@ -57,82 +60,33 @@ export const FetchMejaAll = () => {
 
 export const createMeja = (data) => {
   return (dispatch) => {
-    console.log(data);
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `meja`;
-
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-          dispatch(ModalToggle(false));
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-          dispatch(ModalToggle(true));
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchMeja(
-            localStorage.getItem("page_meja")
-              ? localStorage.getItem("page_meja")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
+    const url = `meja`;
+    handlePost(url, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+      } else {
         dispatch(ModalToggle(true));
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
+      }
+      dispatch(
+        FetchMeja(
+          localStorage.getItem("page_meja")
+            ? localStorage.getItem("page_meja")
+            : 1,
+          ""
+        )
+      );
+    });
   };
 };
 export const updateMeja = (id, data, token) => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    const url = HEADERS.URL + `meja/${id}`;
-
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
+    const url = `meja/${id}`;
+    handlePut(url, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
         dispatch(
           FetchMeja(
             localStorage.getItem("page_meja")
@@ -141,69 +95,33 @@ export const updateMeja = (id, data, token) => {
             ""
           )
         );
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+      }
+    });
   };
 };
-export const deleteMeja = (id, token) => {
+export const deleteMeja = (id) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `meja/${id}`;
+    const url = `meja/${id}`;
+    handleDelete(url, () => {
+      dispatch(
+        FetchMeja(
+          localStorage.getItem("page_meja")
+            ? localStorage.getItem("page_meja")
+            : 1,
+          ""
+        )
+      );
+    });
+  };
+};
 
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchMeja(
-            localStorage.getItem("page_meja")
-              ? localStorage.getItem("page_meja")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+export const clearAllMeja = (idArea) => {
+  return (dispatch) => {
+    const url = `area/clear/meja/${idArea}`;
+    handlePost(url, {}, (data, msg) => {
+      console.log(data);
+      console.log(msg);
+      swal(msg);
+    });
   };
 };

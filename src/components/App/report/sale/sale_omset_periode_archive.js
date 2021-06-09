@@ -181,6 +181,7 @@ class SaleOmsetPeriodeArchive extends Component {
     });
   };
   handleDate = (e, param) => {
+    
     if (param === "old") {
       const old = moment(e._d).format("yyyy-MM");
       localStorage.setItem("date_from_saleOmsetPeriode_report", `${old}`);
