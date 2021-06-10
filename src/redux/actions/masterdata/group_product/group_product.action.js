@@ -38,7 +38,7 @@ export const FetchGroupProduct = (page=1,q='',perpage='')=>{
 }
 
 
-export const createGroupProduct = (data) => {
+export const createGroupProduct = (data, fastAdd=false) => {
     return (dispatch) => {
         dispatch(setLoading(true))
         const url = HEADERS.URL + `kelompokBrg`;
@@ -59,7 +59,13 @@ export const createGroupProduct = (data) => {
                     });
                 }
                 dispatch(setLoading(false));
-                dispatch(FetchGroupProduct(localStorage.getItem("page_group_product")?localStorage.getItem("page_group_product"):1,''));
+                if (fastAdd) {
+                    dispatch(FetchGroupProduct(1,'',9999));
+                } else {
+                    dispatch(FetchGroupProduct(localStorage.getItem("page_group_product")?localStorage.getItem("page_group_product"):1,''));
+                }
+                
+                
 
             })
             .catch(function (error) {

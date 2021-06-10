@@ -250,6 +250,8 @@ class FormProduct extends Component {
       codeServer: 0,
       display: 'none',
       filled: false,
+      swPrice: '1',
+      summary: false,
     };
     this.handleKelompokBarang = this.handleKelompokBarang.bind(this);
     this.handleGroup1 = this.handleGroup1.bind(this);
@@ -259,9 +261,11 @@ class FormProduct extends Component {
     this.onHandleChangeChildSku = this.onHandleChangeChildSku.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.generateCode = this.generateCode.bind(this);
+    this.generateBrcd = this.generateBrcd.bind(this);
     this.checkData = this.checkData.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.handleKateBrg = this.handleKateBrg.bind(this);
+    this.switchPrice = this.switchPrice.bind(this);
     this.mouseEnter = this.mouseEnter.bind(this);
     this.mouseLeave = this.mouseLeave.bind(this);
     this.handler = this.handler.bind(this);
@@ -489,6 +493,10 @@ class FormProduct extends Component {
       purchasePrice: {},
       generateCode: false,
       codeServer: 0,
+      display: 'none',
+      filled: false,
+      swPrice: '1',
+      summary: false,
     });
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
@@ -559,7 +567,7 @@ class FormProduct extends Component {
           for (let i = 0; i < 1; i++) {
             let satuan =
               this.state.jenis === "1"
-                ? ""
+                ? "Pcs"
                 : this.state.jenis === "1"
                 ? "Pcs"
                 : "Pack";
@@ -584,6 +592,78 @@ class FormProduct extends Component {
       });
     }
   }
+  generateBrcd(e,i) {
+    // this.setState({ generateCode: e.target.checked });
+    if(e.target.name === 'generate'){
+      this.setState({ generateCode: e.target.checked });
+      let genCode = this.state.kd_brg;
+
+      if (!this.state.generateCode) {
+        if (this.state.jenis === "0") {
+          let brgSku = [];
+          for (let i = 0; i < 3; i++) {
+            let brcd =
+              i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
+            let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
+            brgSku.push({
+              barcode: brcd,
+              qty: satuan,
+              konversi: "0",
+              satuan_jual: "1",
+            });
+          }
+          this.setState({ barangSku: brgSku });
+        } else if (this.state.jenis === "2") {
+          let brgSku = [];
+          for (let i = 0; i < 2; i++) {
+            let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
+            brgSku.push({
+              barcode: brcd,
+              qty: "",
+              konversi: "0",
+              satuan_jual: "1",
+            });
+          }
+          this.setState({ barangSku: brgSku });
+        } else {
+          let brgSku = [];
+          for (let i = 0; i < 1; i++) {
+            let satuan =
+              this.state.jenis === "1"
+                ? "Pcs"
+                : this.state.jenis === "1"
+                ? "Pcs"
+                : "Pack";
+            brgSku.push({
+              barcode: `${genCode}`,
+              qty: satuan,
+              konversi: "0",
+              satuan_jual: "1",
+            });
+          }
+          this.setState({ barangSku: brgSku });
+        }
+      } else {
+        this.setState({ barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }] });
+      }
+
+    } else {
+      // this.setState({
+      //   kd_brg: "",
+      //   jenis: "1",
+      //   barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }],
+      // });
+      
+      if (i !== null) {
+        let barangSku = [...this.state.barangSku];
+        barangSku[i] = {
+          ...barangSku[i],
+          ['barcode']: '',
+        };
+        this.setState({ barangSku });
+      }
+    }
+  }
   toggle = (e) => {
     e.preventDefault();
     window.scrollTo(0, 0);
@@ -600,6 +680,13 @@ class FormProduct extends Component {
   handleKateBrg = (e) => {
     // e.preventDefault();
     this.setState({ kategori: this.state.kategori === "1" ? "0" : "1" });
+  };
+  switchPrice = (e) => {
+    // e.preventDefault();
+    this.setState({
+      swPrice: this.state.swPrice === "1" ? "0" : "1" ,
+      summary: !this.state.swPrice === "1"
+    });
   };
   handleFileRead = async (event) => {
     const file = event.target.files[0];
@@ -1048,6 +1135,8 @@ class FormProduct extends Component {
       this.setState({
         barangHarga: value.barangHarga_,
         barangSku: value.barangSku_,
+        summary: true,
+        swPrice:"0"
       });
   }
   checkData(event, i) {
@@ -1856,7 +1945,8 @@ class FormProduct extends Component {
     this.setState({ barangHarga });
   }
   handleAllCheckedSku(event, i, lbl) {
-    let checked = event.target.checked;
+    // let checked = event.target.checked;
+    let checked = event.target.value!=='';
     if (lbl === "PCS") {
       checked === true
         ? localStorage.setItem("isReadonly", "true")
@@ -2199,7 +2289,7 @@ class FormProduct extends Component {
       }
     }
   }
-  handleChangeMore(e) {
+  handleChangeMore(e,i,lbl) {
     e.preventDefault();
     let hrg_jual_1_pcs = 0;
     let margin1_pcs = 0;
@@ -2211,6 +2301,11 @@ class FormProduct extends Component {
     let margin4_pcs = 0;
     let column = e.target.name;
     let value = e.target.value;
+    
+    if(value!==''&&lbl!==undefined){
+      this.handleAllCheckedSku(e,i,lbl)
+    }    
+
     this.setState({ [column]: value });
     let qty_konversi = [];
     for (let i = 0; i < this.state.barangSku.length; i++) {
@@ -3032,7 +3127,7 @@ class FormProduct extends Component {
         <WrapperModal
           // className="custom-map-modal"
           isOpen={this.props.isOpen && this.props.type === "formProduct"}
-          size="lg"
+          size={this.props.auth.user.is_resto!==1?"lg":"xl"}
         >
           <ModalHeader toggle={this.toggle}>
             {this.props.dataEdit === undefined
@@ -3118,6 +3213,7 @@ class FormProduct extends Component {
                         onChange={(e) => this.handleChange(e, null)}
                         onBlur={(e) => this.handleChange(e, null, 'onBlur')}
                         required
+                        max
                       />
                       <div className="input-group-append">
                         {this.props.dataEdit === undefined ?
@@ -3207,7 +3303,7 @@ class FormProduct extends Component {
                               this.toggleModal(e, "formGroupProduct")
                             }
                           >
-                            <i class="fa fa-plus"></i>
+                            <i className="fa fa-plus"></i>
                           </button>
                         </div>
                       </div>
@@ -3245,7 +3341,7 @@ class FormProduct extends Component {
                             className="btn btn-primary btn-block"
                             onClick={(e) => this.toggleModal(e, "formSupplier")}
                           >
-                            <i class="fa fa-plus"></i>
+                            <i className="fa fa-plus"></i>
                           </button>
                         </div>
                       </div>
@@ -3263,16 +3359,16 @@ class FormProduct extends Component {
 
                     <div className="row no-gutters">
                       <div className="col-md-4">
-                        <div class="new-checkbox">
-                          <label>Kategori Barang</label>
+                        <div className="new-checkbox">
+                          <label>Jenis Barang</label>
                           <div className="d-flex align-items-center">
-                            <label class="switch mr-2">
+                            <label className="switch mr-2">
                               <input
                                 type="checkbox"
                                 checked={this.state.kategori === "1"}
                                 onChange={(e) => this.handleKateBrg(e)}
                               />
-                              <span class="slider round"></span>
+                              <span className="slider round"></span>
                             </label>
                             <label>
                               {this.state.kategori === "1"
@@ -3285,7 +3381,7 @@ class FormProduct extends Component {
                       <div className="col-md-7 offset-md-1">
                         <div className="form-group">
                           <label>
-                            Jenis Barang
+                            Kategori Barang
                           </label>
                           <select
                             name="jenis"
@@ -3352,7 +3448,7 @@ class FormProduct extends Component {
                           Tampilkan di POS ?
                         </th>
                       </tr>
-                      <tr>
+                      {/* <tr>
                         <th colSpan="4" className="mb-0 pb-0" style={{borderBottomStyle:'hidden', whiteSpace: "no-wrap" }}>
                           {this.props.dataEdit === undefined ? (
                             <div>
@@ -3369,7 +3465,7 @@ class FormProduct extends Component {
                           ) : (
                             ""
                           )}</th>
-                      </tr>
+                      </tr> */}
                     </thead>
                     <tbody>
                       {(() => {
@@ -3379,6 +3475,7 @@ class FormProduct extends Component {
                           container.push(
                             <tr key={x}>
                               <td>
+                                <div className="input-group">
                                 <input
                                   readOnly={
                                     this.props.dataEdit === undefined
@@ -3400,6 +3497,13 @@ class FormProduct extends Component {
                                   onBlur={(e) => this.checkData(e, x)}
                                   required
                                 />
+                                  <div className="input-group-append">
+                                    {this.props.dataEdit === undefined ?
+                                      this.state.barangSku[x].barcode === '' ?
+                                      <button className="btn btn-primary" name="generate" type="button" onClick={e=>this.generateBrcd(e,x)}>GENERATE</button> : <button className="btn btn-danger" type="button" onClick={e=>this.generateBrcd(e,x)}><i className="fa fa-close"/></button>
+                                    :''}
+                                  </div>
+                                </div>
                                 {x === 0 ? (
                                   this.state.error_barcode1 === true ? (
                                     <small
@@ -3454,6 +3558,7 @@ class FormProduct extends Component {
                               <td>
                                 <input
                                   type="text"
+                                  placeholder="ex. PCS"
                                   className="form-control"
                                   name="qty"
                                   value={this.state.barangSku[x].qty}
@@ -3519,21 +3624,33 @@ class FormProduct extends Component {
               >
                 <div className="col-md-12">
                   <div className="d-flex justify-content-between align-items-center">
-                    <p className="mb-0">Set Harga Semua Lokasi</p>
+                    <div className="new-checkbox">
+                      <div className="d-flex align-items-center">
+                        <label className="mb-0">Set Harga Semua Lokasi</label>
+                        <label className="switch ml-2 mb-0">
+                          <input
+                            type="checkbox"
+                            checked={this.state.swPrice === "1"}
+                            onChange={(e) => this.switchPrice(e)}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      </div>
+                    </div>
+                    {/* <p className="mb-0">Set Harga Semua Lokasi</p> */}
                     {this.props.dataEdit === undefined?
                     <button
                       type="button"
                       className="btn btn-info"
                       onClick={e=>this.toggleModal(e,'formProductPricing')}
                     >
-                      <i className="fa fa-pencil" /> Atur masing-masing Harga Lokasi
+                      <i className="fa fa-pencil" /> Atur {this.state.summary?'kembali':''} harga per lokasi
                     </button>
                     :''}
                     </div>
-                  <hr className="mt-2" />
                 </div>
-                <div className="col-md-12">
-
+                <div className="col-md-12" style={{display:this.state.swPrice === "1"?'block':'none'}}>
+                  <hr className="mt-2" />
                   <div className="row">
                     {/*ATUR SEMUA*/}
                     {/*DIDIEU*/}
@@ -3563,7 +3680,7 @@ class FormProduct extends Component {
                             <div className="row">
                               <div className="col-md-12">
                                 <div className="row">
-                                  <div className="col-md-12">
+                                  {/* <div className="col-md-12">
                                     <div className="form-group">
                                       <div className="d-flex align-items-center">
                                         <input
@@ -3582,8 +3699,8 @@ class FormProduct extends Component {
                                         </label>
                                       </div>
                                     </div>
-                                  </div>
-                                  <div className="col-md-12">
+                                  </div> */}
+                                  <div className={this.props.auth.user.is_resto!==1?"col-md-12":"col-md-8"}>
                                     <div className="row">
                                       <div className="col-md-4">
                                         <div className="form-group">
@@ -3597,7 +3714,7 @@ class FormProduct extends Component {
                                               this.state[stateHargaBeli]
                                             )}
                                             onChange={(e) =>
-                                              this.handleChangeMore(e)
+                                              this.handleChangeMore(e,i,satuan.toUpperCase())
                                             }
                                           />
                                         </div>
@@ -3623,7 +3740,7 @@ class FormProduct extends Component {
                                                 key={z}
                                               >
                                                 <label>
-                                                  Margin {this.state[place]}
+                                                  Margin{this.state.set_harga>1?` ${this.state[place]}`:''}
                                                 </label>
                                                 <div className="input-group">
                                                   <input
@@ -3676,7 +3793,7 @@ class FormProduct extends Component {
                                                 key={z}
                                               >
                                                 <label>
-                                                  Harga Jual {this.state[place]}
+                                                  Harga Jual{this.state.set_harga>1?` ${this.state[place]}`:''}
                                                 </label>
                                                 <input
                                                   readOnly={
@@ -3702,7 +3819,7 @@ class FormProduct extends Component {
                                     </div>
                                   </div>
                                   {/*service,ppn,stock min,stock max */}
-                                  <div className="col-md-6 d-none">
+                                  <div className={this.props.auth.user.is_resto!==1?"d-none":"col-md-4"}>
                                     <div className="row">
                                       <div className="col-md-6">
                                         <div className="form-group">
@@ -3747,10 +3864,13 @@ class FormProduct extends Component {
                       return container;
                     })()}
                     {/*END ATUR SEMUA*/}
-                    <div className="col-md-12">
-                      <hr />
-                    </div>
+                    <strong className="text-secondary ml-3"><i>Note : </i>Harga untuk setiap lokasi otomatis akan sama dengan yang telah di input pada kolom-kolom tersebut.</strong>
+                  </div>
+                </div>
 
+                <div className="col-md-12 mt-3" style={{display:this.state.summary?'block':'none'}}>
+                  <h4><strong>Harga per lokasi</strong></h4>
+                  <div className="row" style={{height:'200px',overflow:'auto'}}>
                     {this.state.barangHarga.map((v, i) => {
                       return (
                         <div className="col-md-12" key={i}>
@@ -3812,9 +3932,9 @@ class FormProduct extends Component {
                                 containers.push(
                                   <div className="row" key={x}>
                                     <div className="col-md-12">
-                                      <div className="form-group">
+                                      <div className="mb-1">
                                         <div className="d-flex align-items-center">
-                                          <input
+                                          {/* <input
                                             className="mr-2"
                                             type="checkbox"
                                             name="lokasi"
@@ -3826,7 +3946,7 @@ class FormProduct extends Component {
                                                 i
                                               )
                                             }
-                                          />
+                                          /> */}
                                           <label className="mb-0">
                                             {v[x].nama_toko} ( {lbl} )
                                           </label>
@@ -3835,31 +3955,11 @@ class FormProduct extends Component {
                                     </div>
                                     <div className="col-md-12">
                                       <div className="row">
-                                        <div className="col-md-12">
+                                        <div className={this.props.auth.user.is_resto!==1?"col-md-12":"col-md-8"}>
                                           <div className="row">
                                             <div className="col-md-4">
-                                              <div className="form-group">
-                                                <label>Harga Beli </label>
-                                                <input
-                                                  readOnly={
-                                                    localStorage.getItem(
-                                                      `${isReadonly}`
-                                                    ) === "true"
-                                                  }
-                                                  type="text"
-                                                  placeholder="hrg beli"
-                                                  className="form-control"
-                                                  name={nameHargaBeli}
-                                                  value={toCurrency(hargaBeli)}
-                                                  onChange={(e) =>
-                                                    this.onHandleChangeChildSku(
-                                                      e,
-                                                      i,
-                                                      x,
-                                                      satuan
-                                                    )
-                                                  }
-                                                />
+                                              <div className="">
+                                                <label>Harga Beli : <strong>{toCurrency(hargaBeli)}</strong></label>
                                               </div>
                                             </div>
                                             <div className="col-md-4">
@@ -3883,45 +3983,13 @@ class FormProduct extends Component {
                                                     v[x][marginName];
                                                   container.push(
                                                     <div
-                                                      className="form-group"
+                                                      className=""
                                                       key={z}
                                                     >
                                                       <label>
                                                         Margin{" "}
-                                                        {this.state[place]}
+                                                        {this.state.set_harga>1?` ${this.state[place]}`:''} : <strong>{marginValue}%</strong>
                                                       </label>
-                                                      <div className="input-group">
-                                                        <input
-                                                          readOnly={
-                                                            this.state.jenis ===
-                                                            "4"
-                                                              ? true
-                                                              : localStorage.getItem(
-                                                                  `${isReadonly}`
-                                                                ) === "true"
-                                                          }
-                                                          type="text"
-                                                          placeholder={`margin ${
-                                                            z + 1
-                                                          }`}
-                                                          className="form-control"
-                                                          name={marginName}
-                                                          onChange={(e) =>
-                                                            this.onHandleChangeChildSku(
-                                                              e,
-                                                              i,
-                                                              x,
-                                                              satuan
-                                                            )
-                                                          }
-                                                          value={marginValue}
-                                                        />
-                                                        <div className="input-group-append">
-                                                          <span className="input-group-text">
-                                                            %
-                                                          </span>
-                                                        </div>
-                                                      </div>
                                                     </div>
                                                   );
                                                 }
@@ -3954,38 +4022,12 @@ class FormProduct extends Component {
                                                   let hrgValue = v[x][hrg];
                                                   container.push(
                                                     <div
-                                                      className="form-group"
+                                                      className=""
                                                       key={z}
                                                     >
                                                       <label>
-                                                        Harga Jual{" "}
-                                                        {this.state[place]}
+                                                        Harga Jual{this.state.set_harga>1?` ${this.state[place]}`:''} : <strong>{toCurrency(hrgValue)}</strong>
                                                       </label>
-                                                      <input
-                                                        readOnly={
-                                                          this.state.jenis ===
-                                                          "4"
-                                                            ? true
-                                                            : localStorage.getItem(
-                                                                `${isReadonly}`
-                                                              ) === "true"
-                                                        }
-                                                        type="text"
-                                                        placeholder={`hrg jual ${this.state[place]}`}
-                                                        className="form-control"
-                                                        name={hrgName}
-                                                        value={toCurrency(
-                                                          hrgValue
-                                                        )}
-                                                        onChange={(e) =>
-                                                          this.onHandleChangeChildSku(
-                                                            e,
-                                                            i,
-                                                            x,
-                                                            satuan
-                                                          )
-                                                        }
-                                                      />
                                                     </div>
                                                   );
                                                 }
@@ -3995,60 +4037,16 @@ class FormProduct extends Component {
                                           </div>
                                         </div>
                                         {/*service,ppn,stock min,stock max */}
-                                        <div className="col-md-6 d-none">
+                                        <div className={this.props.auth.user.is_resto!==1?"d-none":"col-md-4"}>
                                           <div className="row">
                                             <div className="col-md-6">
                                               <div className="form-group">
-                                                <label>Service</label>
-                                                <input
-                                                  readOnly={
-                                                    this.state.jenis === "4"
-                                                      ? true
-                                                      : localStorage.getItem(
-                                                          `${isReadonly}`
-                                                        ) === "true"
-                                                  }
-                                                  type="text"
-                                                  placeholder="service"
-                                                  className="form-control"
-                                                  name={serviceName}
-                                                  value={service}
-                                                  onChange={(e) =>
-                                                    this.onHandleChangeChildSku(
-                                                      e,
-                                                      i,
-                                                      x,
-                                                      satuan
-                                                    )
-                                                  }
-                                                />
+                                                <label>Service : <strong>{service}</strong></label>
                                               </div>
                                             </div>
                                             <div className="col-md-6">
                                               <div className="form-group">
-                                                <label>PPN</label>
-                                                <input
-                                                  readOnly={
-                                                    this.state.jenis === "4"
-                                                      ? true
-                                                      : localStorage.getItem(
-                                                          `${isReadonly}`
-                                                        ) === "true"
-                                                  }
-                                                  type="text"
-                                                  placeholder="PPN"
-                                                  className="form-control"
-                                                  name={ppnName}
-                                                  value={ppn}
-                                                  onChange={(e) =>
-                                                    this.onHandleChangeChildSku(
-                                                      e,
-                                                      i,
-                                                      x,
-                                                      satuan
-                                                    )
-                                                  }
-                                                />
+                                                <label>PPN : <strong>{ppn}</strong></label>
                                               </div>
                                             </div>
                                           </div>

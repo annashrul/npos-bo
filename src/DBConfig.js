@@ -26,6 +26,7 @@ export const DBConfig = {
                 { name: 'site_title',keypath:'site_title',options:{unique:false}},
                 { name: 'use_supplier',keypath:'use_supplier',options:{unique:false}},
                 { name: 'is_public',keypath:'is_public',options:{unique:false}},
+                { name: 'is_resto',keypath:'is_resto',options:{unique:false}},
             ]
         },
         {

@@ -132,8 +132,13 @@ class FormGroupProduct extends Component{
                 this.props.dispatch(updateGroupProduct(this.props.detail.kel_brg,parseData));
                 this.props.dispatch(ModalToggle(false));
             }else{
-                this.props.dispatch(createGroupProduct(parseData));
-                this.props.dispatch(ModalToggle(false));
+                this.props.dispatch(createGroupProduct(parseData,this.props.fastAdd!==undefined));
+                if(this.props.fastAdd===undefined){
+                    this.props.dispatch(ModalToggle(false));
+                }
+                if(this.props.fastAdd===true){
+                    this.props.dispatch(ModalType('formProduct'));
+                }
             }
         }
 

@@ -59,7 +59,7 @@ export const FetchSupplierAll = () => {
   };
 };
 
-export const createSupplier = (data, token) => {
+export const createSupplier = (data, token, fastAdd=false) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     const url = HEADERS.URL + `supplier`;
@@ -84,14 +84,18 @@ export const createSupplier = (data, token) => {
           });
         }
         dispatch(setLoading(false));
-        dispatch(
-          FetchSupplier(
-            localStorage.getItem("page_supplier")
-              ? localStorage.getItem("page_supplier")
-              : 1,
-            ""
-          )
-        );
+        if (fastAdd) {
+          dispatch(FetchSupplierAll());
+        } else {
+          dispatch(
+            FetchSupplier(
+              localStorage.getItem("page_supplier")
+                ? localStorage.getItem("page_supplier")
+                : 1,
+              ""
+            )
+          );
+        }
       })
       .catch(function (error) {
         dispatch(setLoading(false));
