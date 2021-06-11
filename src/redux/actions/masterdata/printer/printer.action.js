@@ -18,7 +18,7 @@ export function setDataFailed(data = []) {
   return { type: PRINTER.GET_PRINTER_FAILED, data };
 }
 
-export const readPrinter = (where = "") => {
+export const readPrinter = (where = "", fastAdd=false) => {
   return (dispatch) => {
     let url = baseUrl;
     if (where !== "") url += `?${where}`;
@@ -27,6 +27,7 @@ export const readPrinter = (where = "") => {
       (res) => {
         const data = res.data;
         dispatch(setDataSuccess(data));
+        if(fastAdd)dispatch(readPrinter("page=1&perpage=99999"));
       },
       true
     );

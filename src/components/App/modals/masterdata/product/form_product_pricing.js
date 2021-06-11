@@ -1817,38 +1817,38 @@ class FormProductPricing extends Component {
       column === "servicePACK" ||
       column === "serviceKARTON"
     ) {
-      barangHarga[i][x] = { ...barangHarga[i][x], [column]: value };
+      barangHarga[i][x] = { ...barangHarga[i][x], [column]: parseFloat(value)>100?100:value };
       if (column === "servicePCS") {
         this.setState({
-          servicePCS: value,
+          servicePCS: parseFloat(value)>100?100:value,
         });
       }
       if (column === "servicePACK") {
         this.setState({
-          servicePACK: value,
+          servicePACK: parseFloat(value)>100?100:value,
         });
       }
       if (column === "serviceKARTON") {
         this.setState({
-          serviceKARTON: value,
+          serviceKARTON: parseFloat(value)>100?100:value,
         });
       }
     }
     if (column === "ppnPCS" || column === "ppnPACK" || column === "ppnKARTON") {
-      barangHarga[i][x] = { ...barangHarga[i][x], [column]: value };
+      barangHarga[i][x] = { ...barangHarga[i][x], [column]: parseFloat(value)>100?100:value };
       if (column === "ppnPCS") {
         this.setState({
-          ppnPCS: value,
+          ppnPCS: parseFloat(value)>100?100:value,
         });
       }
       if (column === "ppnPACK") {
         this.setState({
-          ppnPACK: value,
+          ppnPACK: parseFloat(value)>100?100:value,
         });
       }
       if (column === "ppnKARTON") {
         this.setState({
-          ppnKARTON: value,
+          ppnKARTON: parseFloat(value)>100?100:value,
         });
       }
     }
@@ -3338,28 +3338,35 @@ class FormProductPricing extends Component {
                                     <td className="text-black" style={{verticalAlign: 'top', textAlign: 'center'}}>
                                       <div className="form-group">
                                         <label className="font-11 text-secondary float-left">Service</label>
-                                        <input
-                                          // readOnly={
-                                          //   this.state.jenis === "4"
-                                          //     ? true
-                                          //     : localStorage.getItem(
-                                          //         `${isReadonly}`
-                                          //       ) === "true"
-                                          // }
-                                          type="text"
-                                          placeholder="service"
-                                          className="form-control"
-                                          name={serviceName}
-                                          value={service}
-                                          onChange={(e) =>
-                                            this.onHandleChangeChildSku(
-                                              e,
-                                              i,
-                                              x,
-                                              satuan
-                                            )
-                                          }
-                                        />
+                                        <div className="input-group">
+                                          <input
+                                            // readOnly={
+                                            //   this.state.jenis === "4"
+                                            //     ? true
+                                            //     : localStorage.getItem(
+                                            //         `${isReadonly}`
+                                            //       ) === "true"
+                                            // }
+                                            type="text"
+                                            placeholder="service"
+                                            className="form-control"
+                                            name={serviceName}
+                                            value={service}
+                                            onChange={(e) =>
+                                              this.onHandleChangeChildSku(
+                                                e,
+                                                i,
+                                                x,
+                                                satuan
+                                              )
+                                            }
+                                          />
+                                          <div className="input-group-append">
+                                            <span className="input-group-text">
+                                              %
+                                            </span>
+                                          </div>
+                                        </div>
                                       </div>
                                     </td>
                                     :''}
@@ -3367,6 +3374,7 @@ class FormProductPricing extends Component {
                                     <td className="text-black" style={{verticalAlign: 'top', textAlign: 'center'}}>
                                       <div className="form-group">
                                         <label className="font-11 text-secondary float-left">PPN</label>
+                                        <div className="input-group">
                                           <input
                                             // readOnly={
                                             //   this.state.jenis === "4"
@@ -3389,6 +3397,12 @@ class FormProductPricing extends Component {
                                               )
                                             }
                                           />
+                                          <div className="input-group-append">
+                                                <span className="input-group-text">
+                                                  %
+                                                </span>
+                                              </div>
+                                            </div>
                                       </div>
                                     </td>
                                     :''}

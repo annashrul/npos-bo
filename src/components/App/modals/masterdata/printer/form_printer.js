@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { ModalToggle } from "redux/actions/modal.action";
+import { ModalToggle,ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
 import {
   createPrinter,
   updatePrinter,
+  readPrinter
 } from "redux/actions/masterdata/printer/printer.action";
 import Select from "react-select";
 
@@ -69,13 +70,22 @@ class FormPrinter extends Component {
   };
   toggle = (e) => {
     e.preventDefault();
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
+    
+    if(this.props.fastAdd===undefined){
+      const bool = !this.props.isOpen;
+      this.props.dispatch(ModalToggle(bool));
+    }
+    
+    if(this.props.fastAdd===true){
+      this.props.dispatch(ModalType('formProduct'));
+      this.props.dispatch(readPrinter('page=1&perpage=99999',true));
+    }
+    
     this.clearState();
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.detail.id_printer !== "") {
+    if (this.props.detail !== undefined) {
       if (this.props.detail.id_printer !== prevProps.detail.id_printer) {
         this.setState({
           nama: this.props.detail.nama,
@@ -133,15 +143,21 @@ class FormPrinter extends Component {
       }
     }
 
-    if (this.props.detail.id_printer === "") {
+    if (this.props.detail === undefined) {
       this.props.dispatch(
         createPrinter(parseData, (status) => {
           if (status) {
             this.clearState();
-            this.props.dispatch(ModalToggle(false));
+            // this.props.dispatch(ModalToggle,ModalType(false));
           }
         })
       );
+      if(this.props.fastAdd===undefined){
+        this.props.dispatch(ModalToggle(false));
+      }
+      if(this.props.fastAdd===true){
+          this.props.dispatch(ModalType('formProduct'));
+      }
     } else {
       this.props.dispatch(
         updatePrinter(this.props.detail.id_printer, parseData, (status) => {
@@ -170,7 +186,7 @@ class FormPrinter extends Component {
         size="md"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id_printer === ""
+          {this.props.detail === undefined
             ? "Add Printer"
             : "Update Printer"}
         </ModalHeader>

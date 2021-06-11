@@ -41,6 +41,7 @@ import FormProductExport from "../../../../modals/masterdata/product/form_produc
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
+import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -478,6 +479,7 @@ class ListProduct extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProduct"));
     this.props.dispatch(FetchGroupProduct(1, "", "1000"));
+    this.props.dispatch(readPrinter("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
     this.props.dispatch(FetchSubDepartmentAll());
