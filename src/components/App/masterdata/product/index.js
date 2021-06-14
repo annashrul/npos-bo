@@ -42,14 +42,8 @@ class Product extends Component {
     let anyPriceProduct = localStorage.getItem("any_price_product");
     let pageGroupProduct = localStorage.getItem("page_group_product");
     let pagePriceProduct = localStorage.getItem("page_price_product");
-    // this.props.dispatch(FetchProduct(1, by===''||by===null||by===undefined?'':by, any===''||any===null||any===undefined?'':any));
-    this.checkingProduct();
-    this.props.dispatch(
-      FetchPriceProduct(
-        pagePriceProduct ? pagePriceProduct : 1,
-        anyPriceProduct ? anyPriceProduct : ""
-      )
-    );
+    this.props.dispatch(FetchProduct());
+    this.props.dispatch(FetchPriceProduct("page=1"));
     this.props.dispatch(
       FetchGroupProduct(
         pageGroupProduct ? pageGroupProduct : 1,
@@ -58,71 +52,7 @@ class Product extends Component {
     );
   }
   checkingProduct() {
-    let where = "";
-    let que = "any_master";
-    let kode = localStorage.getItem(`${que}_kode_barang`);
-    let nama = localStorage.getItem(`${que}_nama_barang`);
-    let kelompok = localStorage.getItem(`${que}_kelompok_barang`);
-    let supplier = localStorage.getItem(`${que}_supplier_barang`);
-    let subdept = localStorage.getItem(`${que}_subdept_barang`);
-    let kategori = localStorage.getItem(`${que}_kategori_barang`);
-    let dateFrom = localStorage.getItem(`date_from_master_barang`);
-    let dateTo = localStorage.getItem(`date_to_master_barang`);
-    if (kode !== undefined && kode !== null && kode !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=kd_brg&q=${btoa(kode)}`;
-    }
-    if (nama !== undefined && nama !== null && nama !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=nm_brg&q=${btoa(nama)}`;
-    }
-    if (kelompok !== undefined && kelompok !== null && kelompok !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=kel_brg&q=${btoa(kelompok)}`;
-    }
-    if (supplier !== undefined && supplier !== null && supplier !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=supplier&q=${btoa(supplier)}`;
-    }
-    if (subdept !== undefined && subdept !== null && subdept !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=subdept&q=${btoa(subdept)}`;
-    }
-    if (kategori !== undefined && kategori !== null && kategori !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=kategori&q=${btoa(kategori)}`;
-    }
-    if (localStorage.semuaPeriode === "false") {
-      if (dateFrom !== undefined && dateFrom !== null && dateFrom !== "") {
-        if (where !== "") {
-          where += "&";
-        }
-        where += `datefrom=${dateFrom}&dateto=${dateTo}`;
-      }
-    }
-
-    if (localStorage.semuaPeriode === undefined) {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `datefrom=${moment(new Date()).format(
-        "YYYY-MM-DD"
-      )}&dateto=${moment(new Date()).format("YYYY-MM-DD")}`;
-    }
-
-    this.props.dispatch(FetchProduct(1, where));
+    this.props.dispatch(FetchProduct(1));
   }
   //Use arrow functions to avoid binding
   handleSelect = (index) => {
@@ -133,7 +63,7 @@ class Product extends Component {
     return (
       <Layout page="Product">
         <Tabs>
-          <div className="card-body d-flex align-items-center justify-content-between">
+          <div className="card-header d-flex align-items-center justify-content-between">
             <TabList>
               <Tab label="Core Courses" onClick={() => this.handleSelect(0)}>
                 Barang
@@ -145,16 +75,13 @@ class Product extends Component {
                 Kelompok Barang
               </Tab>
             </TabList>
-            <div>
+            <div className={`${this.state.selectedIndex !== 0 && "none"}`}>
               <Link to="upload" className="btn btn-outline-info">
                 <i className="fa fa-upload"></i>&nbsp;IMPORT FROM CSV
               </Link>
             </div>
           </div>
-          <div
-            className="card-header"
-            style={{ height: "5px", backgroundColor: "#f9fafb" }}
-          ></div>
+
           <div className="card-body">
             <TabPanel>
               {
@@ -166,14 +93,10 @@ class Product extends Component {
               }
             </TabPanel>
             <TabPanel>
-              {!this.props.isLoading1 ? (
-                <ListPriceProduct
-                  token={this.state.token}
-                  data={this.props.priceProduct}
-                />
-              ) : (
-                <Preloader />
-              )}
+              <ListPriceProduct
+                token={this.state.token}
+                data={this.props.priceProduct}
+              />
             </TabPanel>
             <TabPanel>
               {!this.props.isLoading2 ? (

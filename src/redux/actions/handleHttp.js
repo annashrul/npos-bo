@@ -10,10 +10,10 @@ const strServerError = "a server error occurred.";
 const strSuccessSaved = "Data has been saved.";
 const strFailedSaved = "Oppss .. data failed to saved.";
 
-export const loading = (isStatus = true) => {
+export const loading = (isStatus = true, title = "Silahkan tunggu.") => {
   Swal.fire({
     allowOutsideClick: false,
-    title: "",
+    title: title,
     html: "",
     onBeforeOpen: () => {
       Swal.showLoading();
@@ -52,8 +52,13 @@ export const handleGet = async (url, callback, isLoading = true) => {
     });
 };
 
-export const handlePost = async (url, data, callback) => {
-  loading(true);
+export const handlePost = async (
+  url,
+  data,
+  callback,
+  title = "Silahkan tunggu."
+) => {
+  loading(true, title);
   axios
     .post(HEADERS.URL + url, data)
     .then(function (response) {
@@ -74,8 +79,13 @@ export const handlePost = async (url, data, callback) => {
     });
 };
 
-export const handlePut = async (url, data, callback) => {
-  loading(true);
+export const handlePut = async (
+  url,
+  data,
+  callback,
+  title = "Silahkan tunggu."
+) => {
+  loading(true, title);
   axios
     .put(HEADERS.URL + url, data)
     .then(function (response) {
@@ -97,9 +107,13 @@ export const handlePut = async (url, data, callback) => {
     });
 };
 
-export const handleDelete = async (url, callback) => {
-  swallOption("Are you sure ?", async () => {
-    loading(true);
+export const handleDelete = async (
+  url,
+  callback,
+  title = "Silahkan tunggu."
+) => {
+  swallOption("Anda yakin akan menghapus data ini ?", async () => {
+    loading(true, title);
     axios
       .delete(HEADERS.URL + url)
       .then(function (response) {

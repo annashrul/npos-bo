@@ -210,57 +210,37 @@ class FormMeja extends Component {
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
-            <div
-              className="form-group"
-              style={{
-                display: this.props.detail === undefined ? "block" : "none",
-              }}
-            >
-              <label>
-                Area <span className="text-danger">*</span>
-              </label>
-              <Select
-                options={this.state.area_data}
-                placeholder="Pilih Area"
-                onChange={this.HandleChangeArea}
-                value={this.state.area}
-              />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.area !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.area}
-              </div>
-            </div>
             <div className="row">
-              {/* <div className="col-8">
+              <div
+                className="col-md-6"
+                style={{
+                  display: this.props.detail === undefined ? "block" : "none",
+                }}
+              >
                 <div className="form-group">
-                  <label>Nama Meja</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="nama"
-                    value={this.state.nama}
-                    onChange={this.handleChange}
+                  <label>
+                    Area <span className="text-danger">*</span>
+                  </label>
+                  <Select
+                    options={this.state.area_data}
+                    placeholder="Pilih Area"
+                    onChange={this.HandleChangeArea}
+                    value={this.state.area}
                   />
                   <div
                     className="invalid-feedback"
                     style={
-                      this.state.error.nama !== ""
+                      this.state.error.area !== ""
                         ? { display: "block" }
                         : { display: "none" }
                     }
                   >
-                    {this.state.error.nama}
+                    {this.state.error.area}
                   </div>
                 </div>
-              </div> */}
+              </div>
               <div
-                className="col-12"
+                className="col-md-6"
                 style={{
                   display: this.props.detail === undefined ? "block" : "none",
                 }}
@@ -289,9 +269,7 @@ class FormMeja extends Component {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
+              <div className="col-md-6">
                 <div className="form-group">
                   <label>
                     Lebar <span className="text-danger">*</span>
@@ -315,7 +293,7 @@ class FormMeja extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-12">
+              <div className="col-md-6">
                 <div className="form-group">
                   <label>
                     Panjang <span className="text-danger">*</span>
@@ -339,9 +317,7 @@ class FormMeja extends Component {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
+              <div className="col-md-6">
                 <div className="form-group">
                   <label>
                     Kapasitas <span className="text-danger">*</span>
@@ -365,7 +341,7 @@ class FormMeja extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-12">
+              <div className="col-md-6">
                 <div className="form-group">
                   <label>
                     Bentuk <span className="text-danger">*</span>

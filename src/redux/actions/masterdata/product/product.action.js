@@ -50,7 +50,7 @@ export function setPersen(data = []) {
     data,
   };
 }
-export const FetchProduct = (page = 1, where, param = "", db = null) => {
+export const FetchProduct = (page = 1, where = "", param = "", db = null) => {
   return (dispatch) => {
     let url = ``;
     if (param === "") {

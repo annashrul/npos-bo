@@ -4,6 +4,9 @@ import Pagination from "react-js-pagination";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
 import Swal from "sweetalert2";
+import Select from "react-select";
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import "bootstrap-daterangepicker/daterangepicker.css";
 
 export const groupByArray = (list, keyGetter) => {
   const map = new Map();
@@ -305,12 +308,16 @@ export const statusQ = (lbl, txt) => {
   }
 };
 
-export const getMargin = (hrg_jual, hrg_beli) => {
-  return (
-    ((parseInt(hrg_jual, 10) - parseInt(hrg_beli, 10)) /
-      parseInt(hrg_beli, 10)) *
-    100
-  ).toFixed(2);
+export const getMargin = (field1, field2, name = "") => {
+  field1 = parseInt(rmComma(field1));
+  field2 = parseInt(rmComma(field2));
+  if (name === "margin") {
+    //jika yang diinput margin
+    return field1 * (field2 / 100) + field1;
+  } else {
+    //jika yang diinput selain margin
+    return ((field1 - field2) / field2) * 100;
+  }
 };
 
 export const kassa = (param = "") => {
@@ -419,27 +426,116 @@ export const swal = (msg) => {
   });
 };
 
+export const btnSave = (className = "", callback, title = "Simpan") => {
+  return (
+    <button
+      onClick={(e) => callback(e)}
+      className={`btn btn-save ${className}`}
+    >
+      {title}
+    </button>
+  );
+};
+export const btnSCancel = (className = "", callback, title = "Batal") => {
+  return (
+    <button
+      onClick={(e) => callback(e)}
+      className={`btn btn-cancel ${className}`}
+    >
+      {title}
+    </button>
+  );
+};
+
+export const select2Group = (
+  value,
+  onChange,
+  options,
+  onClick,
+  placeholder = "",
+  icon = "fa-plus"
+) => {
+  return (
+    <div className="d-flex align-items-center">
+      <div style={{ width: "-webkit-fill-available" }}>
+        <Select
+          options={options}
+          placeholder={`Pilih ${placeholder}`}
+          onChange={(value, actionMeta) => onChange(value, actionMeta)}
+          value={value}
+        />
+      </div>
+      <div style={{ width: "auto", marginLeft: "-2px", zIndex: "99" }}>
+        <button
+          style={{
+            height: "38px",
+            borderRadius: "0px 4px 4px 0px",
+          }}
+          className="btn btn-primary btn-block"
+          onClick={(e) => onClick(e)}
+        >
+          <i className={`fa ${icon}`}></i>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export const dateRange = (onApply, onEvent, value, isShow = true) => {
+  return (
+    <div className={`form-group ${!isShow && "none"}`}>
+      <label htmlFor=""> Periode </label>
+      <DateRangePicker
+        style={{ display: "unset" }}
+        ranges={rangeDate}
+        alwaysShowCalendars={true}
+        onEvent={(event, picker) => {
+          // event.preventDefault();
+          // const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
+          // const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
+          // onEvent(firstDate, lastDate);
+        }}
+        onApply={(event, picker) => {
+          const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
+          const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
+          onApply(firstDate, lastDate);
+        }}
+      >
+        <input
+          readOnly={true}
+          type="text"
+          className={`form-control`}
+          name="date"
+          value={value}
+        />
+      </DateRangePicker>
+    </div>
+  );
+};
+
 class Paginationq extends Component {
   // constructor(props){
   //     super(props);
   // }
   render() {
     return (
-      <Pagination
-        activePage={parseInt(this.props.current_page, 10)}
-        itemsCountPerPage={parseInt(this.props.per_page, 10)}
-        totalItemsCount={parseInt(this.props.total, 10)}
-        pageRangeDisplayed={5}
-        onChange={this.props.callback}
-        itemClass="page-item"
-        linkClass="page-link"
-        activeClass="page-item active"
-        disabledClass="page-item disabled"
-        prevPageText="prev"
-        nextPageText="next"
-        firstPageText="first"
-        lastPageText="last"
-      />
+      <div style={{ marginBottom: "20px" }}>
+        <Pagination
+          activePage={parseInt(this.props.current_page, 10)}
+          itemsCountPerPage={parseInt(this.props.per_page, 10)}
+          totalItemsCount={parseInt(this.props.total, 10)}
+          pageRangeDisplayed={5}
+          onChange={this.props.callback}
+          itemClass="page-item"
+          linkClass="page-link"
+          activeClass="page-item active"
+          disabledClass="page-item disabled"
+          prevPageText="Kembali"
+          nextPageText="Lanjut"
+          firstPageText="Pertama"
+          lastPageText="Terakhir"
+        />
+      </div>
     );
   }
 }

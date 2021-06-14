@@ -25,6 +25,7 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { swallOption } from "../../../../helper";
 
 class SaleArchive extends Component {
   constructor(props) {
@@ -309,22 +310,11 @@ class SaleArchive extends Component {
     this.setState({
       id_trx: id,
     });
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Apakah anda yakin?",
-      text: "Data yang telah dihapus tidak bisa dikembalikan.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.setState({ isModalOtorisasi: true });
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.props.dispatch(ModalType("modalOtorisasi"));
-      }
+    swallOption("Data yang telah dihapus tidak bisa dikembalikan.", () => {
+      this.setState({ isModalOtorisasi: true });
+      const bool = !this.props.isOpen;
+      this.props.dispatch(ModalToggle(bool));
+      this.props.dispatch(ModalType("modalOtorisasi"));
     });
   }
   handleDetail(e, kode) {
@@ -492,7 +482,7 @@ class SaleArchive extends Component {
         </div>
 
         <div style={{ overflowX: "auto", zoom: "85%" }}>
-          <table className="table table-hover ">
+          <table className="table table-hover table-bordered">
             <thead className="bg-light">
               <tr>
                 <th className="text-black" rowSpan="2" style={columnStyle}>
@@ -800,6 +790,7 @@ class SaleArchive extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
+
         {this.state.isModalDetail ? (
           <DetailSaleReport detailSale={this.props.detailSale} />
         ) : null}

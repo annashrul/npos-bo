@@ -3,10 +3,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import moment from "moment";
-import {configure, handleGet} from "../_interceptor";
+import { handleDelete, handleGet, handlePost, handlePut } from "../handleHttp";
 import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
-
 
 export function setLoading(load) {
   return {
@@ -223,164 +222,86 @@ export const FetchReportSale = (page = 1, where = "") => {
   return (dispatch) => {
     let url = `report/arsip_penjualan?page=${page}`;
     if (where !== "") url += `&${where}`;
-    handleGet(url,(data)=>{
-      dispatch(setLoadingReport(false));
-      dispatch(setReport(data));
-    })
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
+        dispatch(setReport(data));
+      },
+      true
+    );
   };
 };
 
-
-
-
 export const FetchReportSaleExcel = (where = "", perpage = "") => {
   return (dispatch) => {
-    dispatch(setLoadingReport(true));
-    Nprogress.start();
     let url = `report/arsip_penjualan?page=1&perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
-    
-    configure().then(async (api) => {
-      const response = await api.get(url)
-      const data = response.data;
-      dispatch(setLoadingReport(false));
-      dispatch(setReportExcel(data));
-      Nprogress.done();
-    }).catch(function (error) {
-      Nprogress.done();
-      dispatch(setLoadingReport(false));
-      Swal.fire({
-        title: "Terjadi Kesalahan",
-        type: "error",
-        text:"cek koneksi internet anda"
-      });
-    });
-
-    // axios
-    //   .get(HEADERS.URL + url)
-    //   .then(function (response) {
-    //     const data = response.data;
-    //     dispatch(setLoadingReport(false));
-    //     dispatch(setReportExcel(data));
-    //     Nprogress.done();
-    //   })
-    //   .catch(function (error) {
-    //     Nprogress.done();
-    //   });
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
+        dispatch(setReportExcel(data));
+      },
+      true
+    );
   };
 };
 
 export const FetchReportDetailSale = (kd_trx) => {
   return (dispatch) => {
-    dispatch(setLoadingDetail(true));
-
-    axios
-      .get(HEADERS.URL + `report/arsip_penjualan/${kd_trx}`)
-      .then(function (response) {
-        const data = response.data;
-
+    handleGet(
+      `report/arsip_penjualan/${kd_trx}`,
+      (res) => {
+        const data = res.data;
         dispatch(setSaleReportData(data));
-        dispatch(setLoadingDetail(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+      },
+      true
+    );
   };
 };
 
 export const deleteReportSale = (id, id_trx) => {
   const kd_trx = btoa(id + "|" + id_trx);
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Silahkan tunggu.",
-      html: "Memproses permintaan..",
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-      onClose: () => {},
+    handleDelete(`pos/remove_penjualan/${kd_trx}`, () => {
+      let dateFrom = localStorage.getItem("date_from_sale_report");
+      let dateTo = localStorage.getItem("date_to_sale_report");
+      let where = "";
+      if (dateFrom !== undefined && dateFrom !== null) {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `datefrom=${dateFrom}&dateto=${dateTo}`;
+      } else {
+        if (where !== "") {
+          where += "&";
+        }
+        where += `datefrom=${moment(new Date()).format(
+          "yyyy-MM-DD"
+        )}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`;
+      }
+      dispatch(FetchReportSale(1, where));
     });
-    const url = HEADERS.URL + `pos/remove_penjualan/${kd_trx}`;
-    axios
-      .delete(url)
-      .then(function (response) {
-        Swal.close();
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoadingReport(false));
-        let dateFrom = localStorage.getItem("date_from_sale_report");
-        let dateTo = localStorage.getItem("date_to_sale_report");
-        let where = "";
-        if (dateFrom !== undefined && dateFrom !== null) {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `datefrom=${dateFrom}&dateto=${dateTo}`;
-        } else {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `datefrom=${moment(new Date()).format(
-            "yyyy-MM-DD"
-          )}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`;
-        }
-        dispatch(FetchReportSale(1, where));
-      })
-      .catch(function (error) {
-        Swal.close();
-        dispatch(setLoadingReport(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
   };
 };
 
 export const FetchSaleReturReport = (page = 1, where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Nprogress.start();
-    // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-    let que = `report/penjualan/retur?page=${page}`;
+    let url = `report/penjualan/retur?page=${page}`;
     if (where !== "") {
-      que += `${where}`;
+      url += `${where}`;
     }
-
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
         dispatch(setSaleReturReport(data));
-        dispatch(setLoading(false));
-        Nprogress.done()
-      })
-      .catch(function (error) { Nprogress.done()});
+      },
+      true
+    );
   };
 };
 
@@ -391,7 +312,7 @@ export const FetchSaleReturReportExcel = (
 ) => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    Nprogress.start()
+    Nprogress.start();
     // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
     let que = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
     if (where !== "") {
@@ -405,8 +326,10 @@ export const FetchSaleReturReportExcel = (
 
         dispatch(setSaleReturReportExcel(data));
         dispatch(setLoading(false));
-        Nprogress.done()
+        Nprogress.done();
       })
-      .catch(function (error) { Nprogress.done()});
+      .catch(function (error) {
+        Nprogress.done();
+      });
   };
 };

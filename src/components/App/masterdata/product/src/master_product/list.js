@@ -3,7 +3,6 @@ import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import FormProduct from "components/App/modals/masterdata/product/form_product";
 import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_product.action";
-// import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import "jspdf-autotable";
 import { to_pdf } from "helper";
 import { FetchAllLocation } from "redux/actions/masterdata/location/location.action";
@@ -42,18 +41,17 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
+import { dateRange } from "../../../../../../helper";
 
 class ListProduct extends Component {
   constructor(props) {
     super(props);
-    this.HandleChangeSortBy = this.HandleChangeSortBy.bind(this);
     this.handlesearch = this.handlesearch.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
-    this.handleChecked = this.handleChecked.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSearchBy = this.handleSearchBy.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleExport = this.handleExport.bind(this);
+    this.handlePeriode = this.handlePeriode.bind(this);
     this.state = {
       isExcel: false,
       array1: [],
@@ -62,7 +60,7 @@ class ListProduct extends Component {
       endDate: moment(new Date()).format("yyyy-MM-DD"),
       sort_by_data: [],
       sort_by: "",
-      semua_periode: false,
+      semua_periode: true,
       detail: {},
       any_kode_barang: "",
       any_nama_barang: "",
@@ -86,132 +84,24 @@ class ListProduct extends Component {
     });
   }
 
-  componentWillMount() {
-    let sort_by = [];
-
-    let sort_by_data = [
-      { value: "asc", label: "Teratas" },
-      { value: "desc", label: "Terbawah" },
-    ];
-
-    sort_by_data.map((i) => {
-      sort_by.push({
-        value: i.value,
-        label: i.label,
-      });
-      return null;
-    });
-    this.setState({
-      sort_by_data: sort_by,
-    });
-  }
-
-  componentDidMount() {
-    if (
-      localStorage.any_master_kode_barang !== undefined &&
-      localStorage.any_master_kode_barang !== null &&
-      localStorage.any_master_kode_barang !== ""
-    ) {
-      this.setState({ any_kode_barang: localStorage.any_master_kode_barang });
-    }
-    if (
-      localStorage.any_master_nama_barang !== undefined &&
-      localStorage.any_master_nama_barang !== null &&
-      localStorage.any_master_nama_barang !== ""
-    ) {
-      this.setState({ any_nama_barang: localStorage.any_master_nama_barang });
-    }
-    if (
-      localStorage.any_master_kelompok_barang !== undefined &&
-      localStorage.any_master_kelompok_barang !== null &&
-      localStorage.any_master_kelompok_barang !== ""
-    ) {
-      this.setState({
-        any_kelompok_barang: localStorage.any_master_kelompok_barang,
-      });
-    }
-    if (
-      localStorage.any_master_supplier_barang !== undefined &&
-      localStorage.any_master_supplier_barang !== null &&
-      localStorage.any_master_supplier_barang !== ""
-    ) {
-      this.setState({
-        any_supplier_barang: localStorage.any_master_supplier_barang,
-      });
-    }
-    if (
-      localStorage.any_master_subdept_barang !== undefined &&
-      localStorage.any_master_subdept_barang !== null &&
-      localStorage.any_master_subdept_barang !== ""
-    ) {
-      this.setState({
-        any_subdept_barang: localStorage.any_master_subdept_barang,
-      });
-    }
-    if (
-      localStorage.any_master_dept_barang !== undefined &&
-      localStorage.any_master_dept_barang !== null &&
-      localStorage.any_master_dept_barang !== ""
-    ) {
-      this.setState({ any_dept_barang: localStorage.any_master_dept_barang });
-    }
-    if (
-      localStorage.any_master_kategori_barang !== undefined &&
-      localStorage.any_master_kategori_barang !== null &&
-      localStorage.any_master_kategori_barang !== ""
-    ) {
-      this.setState({
-        any_kategori_barang: localStorage.any_master_kategori_barang,
-      });
-    }
-    if (
-      localStorage.date_from_master_product !== undefined &&
-      localStorage.date_from_master_product !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_master_product });
-    }
-    if (
-      localStorage.date_to_master_product !== undefined &&
-      localStorage.date_to_master_product !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_master_product });
-    }
-    if (
-      localStorage.semua_periode_barang !== undefined &&
-      localStorage.semua_periode_barang !== null
-    ) {
-      this.setState({ semua_periode: localStorage.semua_periode_barang });
-    }
-    if (
-      localStorage.sort_by_barang !== undefined &&
-      localStorage.sort_by_barang !== ""
-    ) {
-      this.setState({
-        sort_by: localStorage.sort_by_barang,
-      });
-    }
-  }
-  handleChecked(event) {
-    localStorage.setItem("semua_periode_barang", event.target.checked);
-
-    let column = event.target.name;
-    // let value=event.target.name;
-    this.setState({
-      [column]: event.target.checked,
-    });
-  }
   handleChange(event) {
     let column = event.target.name;
     let value = event.target.value;
+    let checked = event.target.checked;
+    if (checked && column === "semua_periode") {
+      this.props.dispatch(FetchProduct());
+    }
+    if (!checked && column === "semua_periode") {
+      this.props.dispatch(
+        FetchProduct(
+          1,
+          `datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
+        )
+      );
+    }
     this.setState({
-      [column]: value,
+      [column]: column === "semua_periode" ? checked : value,
     });
-  }
-  HandleChangeSortBy(type) {
-    this.setState({
-      sort_by: type.value,
-    });
-    localStorage.setItem("sort_by_barang", type.value);
   }
 
   handlePageChange(pageNumber) {
@@ -311,31 +201,7 @@ class ListProduct extends Component {
       }
     });
   };
-  handleSearchBy(event) {
-    let column = event.target.name;
-    let val = event.target.value;
-    let where = "";
-    if (column === "kategori_barang") {
-      localStorage.removeItem("jenis_barang");
-      localStorage.removeItem("kelompok_barang");
-      localStorage.setItem("kategori_barang", val);
-    }
-    if (column === "jenis_barang") {
-      localStorage.removeItem("kelompok_barang");
-      localStorage.removeItem("kategori_barang");
-      let jenis = localStorage.setItem("jenis_barang", val);
-      if (where !== "") {
-        where += "&";
-      }
-      where += `searchby=jenis&q=${jenis}`;
-    }
-    if (column === "kelompok_barang") {
-      localStorage.removeItem("kategori_barang");
-      localStorage.removeItem("jenis_barang");
-      localStorage.setItem("kelompok_barang", val);
-    }
-    this.props.dispatch(FetchProduct(1, where));
-  }
+
   handlesearch(event) {
     event.preventDefault();
     const form = event.target;
@@ -351,10 +217,7 @@ class ListProduct extends Component {
 
     let where = "";
 
-    if (
-      this.state.semua_periode === false ||
-      this.state.semua_periode === "false"
-    ) {
+    if (this.state.semua_periode === false) {
       if (dateFrom !== null && dateTo !== null) {
         if (where !== "") {
           where += "&";
@@ -486,17 +349,19 @@ class ListProduct extends Component {
     this.props.dispatch(setProductEdit([]));
     // this.props.dispatch(FetchProductCode());
   }
-  handleEdit = (e, kode,pricing) => {
+  handleEdit = (e, kode, pricing) => {
     e.preventDefault();
-    if(pricing){
+    if (pricing) {
       this.setState({ isModalFormPer: true });
-    }else{
+    } else {
       this.setState({ isModalForm: true });
     }
 
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType(pricing?"formProductPricing":"formProduct"));
+    this.props.dispatch(
+      ModalType(pricing ? "formProductPricing" : "formProduct")
+    );
     this.props.dispatch(FetchGroupProduct(1, "", "1000"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
@@ -528,16 +393,31 @@ class ListProduct extends Component {
     const footer = ["TOTAL", "", "", "", "", tprice];
     to_pdf("product_report", stringHtml, headers, data, footer);
   };
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_master_product", `${awal}`);
-    localStorage.setItem("date_to_master_product", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
+
+  handleInput(name) {
+    return (
+      <input
+        name={name}
+        value={this.state[name]}
+        onChange={this.handleChange}
+        onKeyPress={(event) => {
+          if (event.key === "Enter") {
+            this.handleEnter(`${name}`);
+          }
+        }}
+        style={{ width: "-webkit-fill-available", marginTop: "2px" }}
+        type="text"
+        className="form-control"
+        placeholder={`${name}`.replaceAll("_", " ").replaceAll("any ", "")}
+      />
+    );
+  }
+
+  handlePeriode(first, last) {
+    this.props.dispatch(FetchProduct(1, `datefrom=${first}&dateto=${last}`));
+    this.setState({ startDate: first, endDate: last });
+  }
+
   render() {
     const loc_delete = this.handleDelete;
     const loc_edit = this.handleEdit;
@@ -592,59 +472,31 @@ class ListProduct extends Component {
           <div className="row">
             <div className="col-md-9">
               <div className="row">
-                <div className="col-6 col-xs-6 col-md-3">
-                  <div className="form-group">
-                    <label className="control-label font-12">
-                      Urutan Posisi
-                    </label>
-                    <Select
-                      options={this.state.sort_by_data}
-                      onChange={this.HandleChangeSortBy}
-                      value={this.state.sort_by_data.find((op) => {
-                        return op.value === this.state.sort_by;
-                      })}
-                    />
-                  </div>
-                </div>
-
                 <div className="col-6 col-xs-6 col-md-2">
                   <div className="form-group">
                     <label>Periode Input</label>
                     <br />
+
                     <label htmlFor="inputState" className="col-form-label">
                       <input
                         name="semua_periode"
                         type="checkbox"
-                        checked={
-                          localStorage.semua_periode_barang === "true"
-                            ? true
-                            : false
-                        }
-                        onChange={this.handleChecked}
+                        checked={this.state.semua_periode}
+                        onChange={this.handleChange}
                       />
                       &nbsp; semua periode
                     </label>
                   </div>
                 </div>
                 <div className="col-6 col-xs-6 col-md-3">
-                  <div className="form-group">
-                    <label htmlFor=""> Periode </label>
-                    <DateRangePicker
-                      style={{ display: "unset" }}
-                      ranges={rangeDate}
-                      alwaysShowCalendars={true}
-                      onEvent={this.handleEvent}
-                    >
-                      <input
-                        readOnly={true}
-                        type="text"
-                        className="form-control"
-                        name="date_product"
-                        value={`${this.state.startDate} to ${this.state.endDate}`}
-                        style={{ padding: "9px", fontWeight: "bolder" }}
-                      />
-                    </DateRangePicker>
-                  </div>
+                  {dateRange(
+                    (first, last) => {
+                      this.handlePeriode(first, last);
+                    },
+                    () => {},
+                    `${this.state.startDate} to ${this.state.endDate}`,
+                    !this.state.semua_periode ? true : false
+                  )}
                 </div>
               </div>
             </div>
@@ -701,7 +553,7 @@ class ListProduct extends Component {
                 onClick={(e) => this.handleExport(e)}
                 className="btn btn-primary"
               >
-                <i className="fa fa-file-excel-o"></i>&nbsp; Export
+                <i className="fa fa-file-excel-o"></i>
               </button>
               {/* <ReactHTMLTableToExcel
                 className="btn btn-primary btnBrg"
@@ -713,222 +565,52 @@ class ListProduct extends Component {
             </div>
           </div>
         </form>
-        <div style={{ overflowX: "auto", zoom: "90%" }}>
-          {/*DATA EXCEL*/}
-          <table
-            className="table table-hover"
-            id="emp"
-            style={{ display: "none" }}
-          >
+        <div style={{ overflowX: "auto" }}>
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
                 <th className="text-black" style={centerStyle}>
-                  Code
+                  No
                 </th>
                 <th className="text-black" style={centerStyle}>
-                  Name
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Group
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Supplier
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Dept
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Sub Dept
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Purchase Price
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Category
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Stock
-                  <br />
-                  Min
-                </th>
-                <th className="text-black" style={centerStyle}>
-                  Product Type
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.map((v, i) => {
-                  return (
-                    <tr key={i}>
-                      <td style={centerStyle}>{v.kd_brg}</td>
-                      <td style={centerStyle}>{v.nm_brg}</td>
-                      <td style={centerStyle}>{v.kel_brg}</td>
-                      <td style={centerStyle}>{v.supplier}</td>
-                      <td style={centerStyle}>{v.dept}</td>
-                      <td style={centerStyle}>{v.subdept}</td>
-                      <td style={centerStyle}>{v.kategori}</td>
-                      <td style={centerStyle}>
-                        {v.jenis === "0" ? (
-                          <img alt="netindo" src={imgT} width="20px" />
-                        ) : (
-                          <img alt="netindo" src={imgY} width="20px" />
-                        )}
-                      </td>
-                      <td style={centerStyle}>{v.stock_min}</td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td>No data</td>
-                </tr>
-              )}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="7"></td>
-                <td>0</td>
-                <td></td>
-              </tr>
-            </tfoot>
-          </table>
-          {/*END DATA EXCEL*/}
-          <table className="table table-hover table-bordered">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black" style={centerStyle} rowSpan={2}>No</th>
-                <th className="text-black" style={centerStyle} rowSpan={2}>
                   #
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  Kode Barang
+                <th className="text-black middle">
+                  Kode Barang <br />
+                  {this.handleInput("any_kode_barang")}
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  Nama Barang
+                <th className="text-black">
+                  Nama Barang <br />
+                  {this.handleInput("any_nama_barang")}
                 </th>
-                <th className="text-black" width="10%" style={centerStyle}>
-                  Kelompok
+                <th className="text-black" width="10%">
+                  Kelompok <br />
+                  {this.handleInput("any_kelompok_barang")}
                 </th>
-                <th className="text-black" width="10%" style={centerStyle}>
+                <th className="text-black" width="10%">
                   Supplier
+                  <br />
+                  {this.handleInput("any_supplier_barang")}
                 </th>
-                <th className="text-black" width="10%" style={centerStyle} rowSpan={2}>
+                <th className="text-black middle" width="10%">
                   Dept
                 </th>
-                <th className="text-black" width="10%" style={centerStyle}>
+                <th className="text-black" width="10%">
                   Sub Dept
+                  <br />
+                  {this.handleInput("any_subdept_barang")}
                 </th>
-                <th className="text-black" width="10%" style={centerStyle}>
+                <th className="text-black" width="10%">
                   Kategori
+                  <br />
+                  {this.handleInput("any_kategori_barang")}
                 </th>
-                <td className="text-black" style={centerStyle} rowSpan={2}>
-                  Jenis
-                </td>
-                <td className="text-black" style={centerStyle} rowSpan={2}>
+                <th className="text-black middle">Jenis</th>
+                <th className="text-black middle">
                   Stock
                   <br />
                   Min
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <input
-                    name="any_kode_barang"
-                    value={this.state.any_kode_barang}
-                    onChange={this.handleChange}
-                    onKeyPress={(event) => {
-                      // event.preventDefault();
-                      if (event.key === "Enter") {
-                        this.handleEnter("any_kode_barang");
-                      }
-                    }}
-                    style={{ width: "-webkit-fill-available" }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Kode Barang"
-                  />
-                </td>
-                <td>
-                  <input
-                    name="any_nama_barang"
-                    value={this.state.any_nama_barang}
-                    onChange={this.handleChange}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        this.handleEnter("any_nama_barang");
-                      }
-                    }}
-                    style={{ width: "-webkit-fill-available" }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Nama Barang"
-                  />
-                </td>
-                <td>
-                  <input
-                    name="any_kelompok_barang"
-                    value={this.state.any_kelompok_barang}
-                    onChange={this.handleChange}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        this.handleEnter("any_kelompok_barang");
-                      }
-                    }}
-                    style={{ minWidth: "100px", maxWidth: "max-content" }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Kelompok"
-                  />
-                </td>
-                <td>
-                  <input
-                    name="any_supplier_barang"
-                    value={this.state.any_supplier_barang}
-                    onChange={this.handleChange}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        this.handleEnter("any_supplier_barang");
-                      }
-                    }}
-                    style={{ minWidth: "100px", maxWidth: "max-content" }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Supplier"
-                  />
-                </td>
-                <td>
-                  <input
-                    name="any_subdept_barang"
-                    value={this.state.any_subdept_barang}
-                    onChange={this.handleChange}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        this.handleEnter("any_subdept_barang");
-                      }
-                    }}
-                    style={{ minWidth: "100px", maxWidth: "max-content" }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Sub Dept"
-                  />
-                </td>
-                <td>
-                  <input
-                    name="any_kategori_barang"
-                    value={this.state.any_kategori_barang}
-                    onChange={this.handleChange}
-                    onKeyPress={(event) => {
-                      if (event.key === "Enter") {
-                        this.handleEnter("any_kategori_barang");
-                      }
-                    }}
-                    style={{ minWidth: "100px", maxWidth: "max-content" }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Kategori"
-                  />
-                </td>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -941,7 +623,7 @@ class ListProduct extends Component {
                           {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
                         </td>
                         <td style={centerStyle}>
-                          <div className="btn-group mb-2 mr-2">
+                          <div className="btn-group">
                             <UncontrolledButtonDropdown>
                               <DropdownToggle caret>Aksi</DropdownToggle>
                               <DropdownMenu>
@@ -967,7 +649,9 @@ class ListProduct extends Component {
                                   Edit
                                 </DropdownItem>
                                 <DropdownItem
-                                  onClick={(e) => loc_edit_per(e, v.kd_brg,true)}
+                                  onClick={(e) =>
+                                    loc_edit_per(e, v.kd_brg, true)
+                                  }
                                 >
                                   Edit Harga per Lokasi
                                 </DropdownItem>
@@ -1031,14 +715,14 @@ class ListProduct extends Component {
         ) : null}
         {this.state.isModalFormPer ? (
           <FormProductPricing
-              // allState={this.state}
-              data={this.props.groupProduct}
-              dataLocation={this.props.location}
-              dataSupplier={this.props.supplier}
-              dataSubDept={this.props.subDept}
-              dataEdit={this.props.productEdit}
-              productCode={this.props.productCode}
-              />
+            // allState={this.state}
+            data={this.props.groupProduct}
+            dataLocation={this.props.location}
+            dataSupplier={this.props.supplier}
+            dataSubDept={this.props.subDept}
+            dataEdit={this.props.productEdit}
+            productCode={this.props.productCode}
+          />
         ) : null}
 
         {this.state.isModalDetail ? (

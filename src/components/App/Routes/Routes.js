@@ -80,6 +80,7 @@ import Pembelian3ply from "../print/pembelian3ply";
 import Retur3ply from "../print/retur3ply";
 import Po3ply from "../print/po3ply";
 import priceTagPrint from "../print/priceTag";
+import paket from "../masterdata/paket";
 // import approvalAlokasi3ply from "../print/approvalAlokasi3ply";
 
 const Routes = (
@@ -133,6 +134,7 @@ const Routes = (
       <PrivateRoute path="/area" exact strict component={Area} />
       <PrivateRoute path="/meja" exact strict component={Meja} />
       <PrivateRoute path="/printer" exact strict component={Printer} />
+      <PrivateRoute path="/paket" exact strict component={paket} />
       {/* MASTERDATA SECTION END */}
 
       {/* PRODUCTION SECTION START */}

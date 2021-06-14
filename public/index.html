@@ -34,6 +34,111 @@
 
 
   <style>
+    ul.pagination>li.disabled{
+      cursor: not-allowed !important;
+    }
+ .page-item.active .page-link {
+            z-index: 1;
+            color: #fff !important;
+            background-color: #283593!important;
+           
+        }
+        
+        .page-link {
+            position: relative;
+            display: block;
+            padding: .5rem .75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #283593!important;
+            background-color: transparent!important;
+            border: 1px solid #283593!important;
+            cursor: pointer;
+        }
+        
+        .page-item:first-child .page-link {
+            margin-left: 0;
+        }
+        
+        .page-link:hover {
+            background-color: #283593!important;
+           
+            z-index: 1;
+            color: #fff !important;
+        }
+        
+        .page-link:focus {
+            z-index: 2;
+            outline: 0;
+            box-shadow: none!important;
+        }
+        
+
+    .new-checkbox input:checked+.slider {
+    background-color: #283593!important;
+    }
+       
+    .css-9gakcf-option {
+        background-color: #283593!important;
+        color: hsl(0, 0%, 100%);
+        cursor: default;
+        display: block;
+        font-size: inherit;
+        width: 100%;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        box-sizing: border-box;
+    }
+    
+    .css-1n7v3ny-option:active {
+      color: hsl(0, 0%, 100%);
+        background-color: #283593!important;
+    }
+    
+    .css-yt9ioa-option:active {
+        background-color: red!important;
+        color: hsl(0, 0%, 100%);
+    }
+    
+    .css-tlfecz-indicatorContainer:hover {
+        color: hsl(0, 0%, 100%);
+    }
+        
+       
+    .css-1pahdxg-control:hover{
+      border:1px solid #283593!important;
+    }
+    .css-1pahdxg-control {
+      border: 1px solid #283593!important;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: hsl(0,0%,100%);
+    border-radius: 4px;
+    box-shadow: 0 0 0 0px #283593!important;
+    cursor: default;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0 !important;
+    position: relative;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    box-sizing: border-box;
+}
     span.circle {
       background: #5d78ff;
       border-radius: 50%;
@@ -62,7 +167,7 @@
       /*min-width: 1520px;*/
       border-radius: 0;
     }
-
+   
 
     .customDatePickerWidth,
     .customDatePickerWidth>div.react-datepicker-wrapper,
@@ -70,7 +175,14 @@
       width: 100%;
       height: 100%;
     }
-
+  .daterangepicker td.active, .daterangepicker td.active:hover {
+    background-color: #283593 !important;
+    border-color: transparent;
+    color: #fff;
+}
+    .ranges>ul>li.active{
+      background-color: #283593 !important;
+    }
     .react-datepicker__input-container {
       width: inherit;
       height: inherit;
@@ -103,16 +215,16 @@
 
     .react-tabs__tab--selected {
       /*background: #fff;*/
-      border-color: white !important;
+      border-color: #283593 !important;
       /*color: black;*/
       color: #fff !important;
-      background-color: #1e88e5 !important;
-      border-radius: 5px 5px 5px 5px !important;
+      background-color: #283593 !important;
+      border-radius: 4px !important;
     }
 
     .react-tabs__tab {
       display: inline-block !important;
-      border: 1px solid #1e88e5 !important;
+      border: 1px solid #283593 !important;
       /*border-bottom: none!important;*/
       bottom: -1px !important;
       position: relative !important;
@@ -129,46 +241,136 @@
       height: 100% !important;
     }
     .modal-header{
-      background-color: #5d78ff!important;
+      background-color: #283593!important;
     }
     .modal-title,.close{
       color:white!important;
     }
-    input{
-      border:1px solid #e8ebf1!important;
+    .modal-content{
+      border-color: #283593!important;
+    }
+   
+    .nowrap{
+      white-space: nowrap!important;
+    }
+    .middle{
+      vertical-align: middle!important;
     }
     input[type="file"] {
-      padding:2px;
+      border-radius: 4px !important;
+      border:1px solid hsl(0,0%,80%) !important;
+      padding-top:5px;
+      padding-left: 5px;
+      width: 100%!important;
+       height: 38px!important;
     }
     input.form-control {
-      margin-top: -1px!important;
+      color: #333333 !important;
+      font-size: 14px !important;
+      border-radius: 4px !important;
+      border:1px solid hsl(0,0%,80%) !important;
+      /* margin-top: 1px!important; */
       width: 100%;
-      height: 39px!important;
+      height: 38px!important;
     }
     select.form-control {
+       color: #333333 !important;
+      font-size: 14px !important;
+      border-radius: 4px !important;
+      border:1px solid hsl(0,0%,80%) !important;
       width: 100%;
-      height: 39px!important;
+      height: 38px!important;
     }
+    
+    select option:hover,
+    select option:focus,
+    select option:checked,
+    select option:active {
+        background: linear-gradient(#000000, #000000);
+        background-color: #283593 !important;
+        color: #fff !important;
+    }
+
+    input.form-control:focus{
+      border: 1px solid #283593!important;
+    }
+    select.form-control:focus{
+      border: 1px solid #283593!important;
+    }
+   input[type=checkbox]:focus
+{
+    outline: 1px solid transparent!important;
+}
+input[readonly] {
+    background-color: #EEEEEE !important;
+}
+
+input[type=checkbox]
+{
+    background-color: #DDD;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+    position: relative;
+    top: 5px;
+}
+.table-bordered{
+  border:1px solid hsl(0,0%,80%) !important;
+}
+.bg-light {
+  border:1px solid hsl(0,0%,80%) !important;
+    background-color: transparent!important;
+}
+
+table.table-noborder>tbody>tr>td{
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    /* border-top: none !important;
+    border-left: none !important;
+    border-right: none !important; */
+    border: 1px solid hsl(0,0%,80%) !important;
+}
+table.table-noborder>tbody{
+    border: 1px solid hsl(0,0%,80%) !important;
+}
+table.table-noborder>thead>tr>th{
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    border: 1px solid hsl(0,0%,80%) !important;
+}
+
+
+input[type=checkbox]:checked
+{
+    background-color: #283593!important;
+    background: #283593 url("data:image/gif;base64,R0lGODlhCwAKAIABAP////3cnSH5BAEKAAEALAAAAAALAAoAAAIUjH+AC73WHIsw0UCjglraO20PNhYAOw==") 3px 3px no-repeat;
+}
+   
     img{
       border-radius: 10%!important;
     }
-    button.btn-warning{color:white!important;}
+    
     button.cancelBtn{
       /*color*/
-      background-color: #5d78ff!important;
+      background-color: #D4AF37!important;
       color: white!important;
     }
     button.cancelBtn,button.applyBtn{
       font-family: 'Rubik', sans-serif !important;
-      font-weight: bold !important;
     }
     .off, .ends, .available,.month,.drp-selected,.swal2-html-container,.swal2-title{
       font-family: 'Rubik', sans-serif !important;
-      font-weight: bold !important;
     }
     .calendar-table>table{
       font-family: 'Rubik', sans-serif !important;
-      font-weight: bold !important;
     }
    html,
         body,
@@ -208,36 +410,16 @@
       overflow: inherit !important;
     }
 
-   ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-            background-color: #1a1c23!important;
-        }
-        
-         ::-webkit-scrollbar-button {
-            width: 5px;
-            height: 5px;
-        }
-        
-         ::-webkit-scrollbar-track {
-            background: #1a1c23!important;
-            border: thin solid #1a1c23!important;
-            box-shadow: 0px 0px 3px #1a1c23 inset;
-            border-radius: 10px;
-        }
-        
-         ::-webkit-scrollbar-thumb {
-            background: #999;
-            border: thin solid gray;
-            border-radius: 10px;
-        }
-        
-         ::-webkit-scrollbar-thumb:hover {
-            background: #7d7d7d;
-        }
-
+   
     .react-bootstrap-daterangepicker-container {
       display: unset !important;
+    }
+
+    .none{
+      display: none !important;
+    }
+    .block{
+      display: block !important;
     }
 
 
@@ -253,6 +435,9 @@
       border-radius: 2px;
       outline: none;
     }
+    .btn{
+      border-radius: 4px ;
+    }
 
     .autocomplete-dropdown-container {
       border-bottom: honeydew;
@@ -264,11 +449,51 @@
       z-index: 1000;
       border-radius: 0 0 2px 2px;
     }
+    .input-group>input.form-control{
+      border-right: none !important;
+      border-radius: 4px 0px 0px 4px !important;
+    }
 
+
+    .btn-save{
+      background-color: #283593!important;
+      color: #fff;
+    }
+    .btn-cancel{
+
+      color: #fff !important;
+      background-color: #D4AF37!important;
+      border-color:#D4AF37!important;
+    }
+  
+
+    button.btn-primary, button.btn-secondary{
+      background-color: #283593;
+      border-color: #283593;
+      color: #fff;
+    }
+button.btn-warning{
+            background-color: #D4AF37!important;
+      border-color:#D4AF37!important;
+      color:#fff!important;
+
+      }
+      .btn-outline-info {
+        border-radius: 4px !important;
+    color: #283593 !important;
+    border-color: #283593 !important;
+}
+.btn-outline-info:hover {
+  background-color: transparent !important;
+        border-radius: 4px !important;
+    color: #283593 !important;
+    border-color: #283593 !important;
+}
   </style>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqD1Z03FoLnIGJTbpAgRvjcchrR-NiICk&libraries=places"
     async defer></script>
 
+  
 </head>
 
 <body class="load" style="zoom:90%">

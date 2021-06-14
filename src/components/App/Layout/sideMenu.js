@@ -45,6 +45,7 @@ class SideMenu extends Component {
       area: "",
       meja: "",
       printer: "",
+      paket: "",
       //PRODUKSI
       modul_produksi: false,
       produksi: "",
@@ -437,6 +438,7 @@ class SideMenu extends Component {
         let bank = akses[16]["value"] !== null ? akses[16]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let promo = akses[17]["value"] !== null ? akses[17]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         let printer = akses[18]["value"] !== null ? akses[18]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
+        let paket = akses[19]["value"] !== null ? akses[19]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //PRODUKSI
         let produksi = akses[20]["value"] !== null ? akses[20]["value"] : "0"; //cek varaibale akses apabila tidak bernilai null
         //INVENTORY
@@ -523,7 +525,8 @@ class SideMenu extends Component {
           sales !== "0" ||
           bank !== "0" ||
           promo !== "0" ||
-          printer !== "0"
+          printer !== "0" ||
+          paket !== "0"
         ) {
           this.setState({ modul_masterdata: true });
         }
@@ -660,6 +663,7 @@ class SideMenu extends Component {
           bank: bank,
           promo: promo,
           printer: printer,
+          paket: paket,
           // //PRODUKSI
           produksi: produksi,
           //INVENTORY
@@ -733,7 +737,8 @@ class SideMenu extends Component {
       path === "/bank" ||
       path === "/area" ||
       path === "/meja" ||
-      path === "/printer"
+      path === "/printer" ||
+      path === "/paket"
     ) {
       this.setState({
         isMasterdata: true,
@@ -962,7 +967,9 @@ class SideMenu extends Component {
               path === "/customer" ||
               path === "/product" ||
               path === "/promo" ||
-              path === "/bank"
+              path === "/bank" ||
+              path === "/printer" ||
+              path === "/paket"
                 ? " active menu-open"
                 : "")
             }
@@ -1104,8 +1111,22 @@ class SideMenu extends Component {
               >
                 <Link to="/printer" style={{ width: "fit-content" }}>
                   {" "}
-                  <i className="fa fa-ticket" />
+                  <i className="fa fa-print" />
                   Printer{" "}
+                </Link>
+              </li>
+              <li
+                className={path === "/paket" ? "active" : ""}
+                style={
+                  this.state.paket === "0"
+                    ? { display: "none" }
+                    : { display: "block" }
+                }
+              >
+                <Link to="/paket" style={{ width: "fit-content" }}>
+                  {" "}
+                  <i className="fa fa-object-group" />
+                  Paket{" "}
                 </Link>
               </li>
 
