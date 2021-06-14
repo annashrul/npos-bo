@@ -50,6 +50,7 @@ export const loginUser = (userData,expire=1) =>
                     site_title:res.data.result.title,
                     use_supplier:res.data.result.use_supplier,
                     is_public: res.data.result.is_public,
+                    is_resto: res.data.result.is_resto,
                 })
             
                 // Set token to Auth Header 

@@ -22,7 +22,7 @@ class FormSupplier extends Component {
       telp: "",
       penanggung_jawab: "",
       no_penanggung_jawab: "",
-      status: "",
+      status: "1",
       email: "",
       error: {
         kode: "",
@@ -59,7 +59,7 @@ class FormSupplier extends Component {
         telp: "",
         penanggung_jawab: "",
         no_penanggung_jawab: "",
-        status: "",
+        status: "1",
         email: "",
       });
     }
@@ -106,19 +106,23 @@ class FormSupplier extends Component {
     if (parseData["nama"] === "" || parseData["nama"] === undefined) {
       err = Object.assign({}, err, { nama: "nama tidak boleh kosong" });
       this.setState({ error: err });
-    } else if (
-      parseData["alamat"] === "" ||
-      parseData["alamat"] === undefined
-    ) {
-      err = Object.assign({}, err, { alamat: "alamat tidak boleh kosong" });
-      this.setState({ error: err });
-    } else if (parseData["kota"] === "" || parseData["kota"] === undefined) {
-      err = Object.assign({}, err, { kota: "kota tidak boleh kosong" });
-      this.setState({ error: err });
-    } else if (parseData["telp"] === "" || parseData["telp"] === undefined) {
-      err = Object.assign({}, err, { telp: "telepon tidak boleh kosong" });
-      this.setState({ error: err });
-    } else if (
+    }
+    // else if (
+    //   parseData["alamat"] === "" ||
+    //   parseData["alamat"] === undefined
+    // ) {
+    //   err = Object.assign({}, err, { alamat: "alamat tidak boleh kosong" });
+    //   this.setState({ error: err });
+    // }
+    // else if (parseData["kota"] === "" || parseData["kota"] === undefined) {
+    //   err = Object.assign({}, err, { kota: "kota tidak boleh kosong" });
+    //   this.setState({ error: err });
+    // }
+    // else if (parseData["telp"] === "" || parseData["telp"] === undefined) {
+    //   err = Object.assign({}, err, { telp: "telepon tidak boleh kosong" });
+    //   this.setState({ error: err });
+    // }
+    else if (
       parseData["penanggung_jawab"] === "" ||
       parseData["penanggung_jawab"] === undefined
     ) {
@@ -134,10 +138,12 @@ class FormSupplier extends Component {
         no_penanggung_jawab: "no penanggung jawab tidak boleh kosong",
       });
       this.setState({ error: err });
-    } else if (parseData["email"] === "" || parseData["email"] === undefined) {
-      err = Object.assign({}, err, { email: "email tidak boleh kosong" });
-      this.setState({ error: err });
-    } else if (
+    }
+    // else if (parseData["email"] === "" || parseData["email"] === undefined) {
+    //   err = Object.assign({}, err, { email: "email tidak boleh kosong" });
+    //   this.setState({ error: err });
+    // }
+    else if (
       parseData["status"] === "" ||
       parseData["status"] === undefined
     ) {
@@ -148,8 +154,14 @@ class FormSupplier extends Component {
         this.props.dispatch(updateSupplier(this.state.kode, parseData));
         this.props.dispatch(ModalToggle(false));
       } else {
-        this.props.dispatch(createSupplier(parseData));
-        this.props.dispatch(ModalToggle(false));
+        this.props.dispatch(createSupplier(parseData,'',this.props.fastAdd!==undefined));
+        if(this.props.fastAdd===undefined){
+          this.props.dispatch(ModalToggle(false));
+        }
+
+        if(this.props.fastAdd===true){
+          this.props.dispatch(ModalType('formProduct'));
+      }
       }
     }
   }
@@ -170,9 +182,10 @@ class FormSupplier extends Component {
             <div className="row">
               <div className="col-6">
                 <div className="form-group">
-                  <label>Nama</label>
+                  <label>Nama Supplier <span className="text-danger">*</span></label>
                   <input
                     type="text"
+                    placeholder="Isi nama supplier"
                     className="form-control"
                     name="nama"
                     value={this.state.nama}
@@ -193,6 +206,7 @@ class FormSupplier extends Component {
                   <label>Alamat</label>
                   <input
                     type="text"
+                    placeholder="Isi alamat lengkap"
                     className="form-control"
                     name="alamat"
                     value={this.state.alamat}
@@ -213,6 +227,7 @@ class FormSupplier extends Component {
                   <label>Kota</label>
                   <input
                     type="text"
+                    placeholder="Isi nama kota"
                     className="form-control"
                     name="kota"
                     value={this.state.kota}
@@ -233,6 +248,7 @@ class FormSupplier extends Component {
                   <label>Telepon</label>
                   <input
                     type="number"
+                    placeholder="ex. 6281324654665"
                     className="form-control"
                     name="telp"
                     value={this.state.telp}
@@ -252,9 +268,10 @@ class FormSupplier extends Component {
               </div>
               <div className="col-6">
                 <div className="form-group">
-                  <label>Penanggung Jawab</label>
+                  <label>Penanggung Jawab <span className="text-danger">*</span></label>
                   <input
                     type="text"
+                    placeholder="Isi nama penanggung jawab"
                     className="form-control"
                     name="penanggung_jawab"
                     value={this.state.penanggung_jawab}
@@ -272,9 +289,10 @@ class FormSupplier extends Component {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>No Penanggung Jawab</label>
+                  <label>No Penanggung Jawab <span className="text-danger">*</span></label>
                   <input
                     type="text"
+                    placeholder="ex. 628513456789"
                     className="form-control"
                     name="no_penanggung_jawab"
                     value={this.state.no_penanggung_jawab}
@@ -295,6 +313,7 @@ class FormSupplier extends Component {
                   <label>Email</label>
                   <input
                     type="email"
+                    placeholder="ex. example@mail.com"
                     className="form-control"
                     name="email"
                     value={this.state.email}
@@ -312,7 +331,7 @@ class FormSupplier extends Component {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Status</label>
+                  <label>Status <span className="text-danger">*</span></label>
                   <select
                     name="status"
                     className="form-control"
@@ -320,9 +339,8 @@ class FormSupplier extends Component {
                     value={this.state.status}
                     onChange={this.handleChange}
                   >
-                    <option value="">Pilih Status</option>
-                    <option value="0">Tidak Aktif</option>
                     <option value="1">Aktif</option>
+                    <option value="0">Tidak Aktif</option>
                   </select>
                   <div
                     className="invalid-feedback"
