@@ -36,11 +36,11 @@ export const FetchPriceProduct = (where = "") => {
   };
 };
 
-export const updatePriceProduct = (id, data) => {
+export const updatePriceProduct = (id, data, where) => {
   return (dispatch) => {
     handlePut(`barangHarga/${id}`, data, (data, msg, status) => {
       swal(msg);
-      dispatch(FetchPriceProduct(1, ""));
+      dispatch(FetchPriceProduct(where));
     });
   };
 };

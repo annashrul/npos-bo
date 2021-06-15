@@ -8,6 +8,10 @@ import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 
+export const generateNo = (i, current_page) => {
+  return i + 1 + 10 * (parseInt(current_page, 10) - 1);
+};
+
 export const groupByArray = (list, keyGetter) => {
   const map = new Map();
   list.forEach((item) => {
@@ -530,10 +534,10 @@ class Paginationq extends Component {
           linkClass="page-link"
           activeClass="page-item active"
           disabledClass="page-item disabled"
-          prevPageText="Kembali"
-          nextPageText="Lanjut"
-          firstPageText="Pertama"
-          lastPageText="Terakhir"
+          // prevPageText="Kembali"
+          // nextPageText="Lanjut"
+          // firstPageText="Pertama"
+          // lastPageText="Terakhir"
         />
       </div>
     );

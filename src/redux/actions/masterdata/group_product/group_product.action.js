@@ -1,13 +1,12 @@
 import { GROUP_PRODUCT, HEADERS } from "../../_constants";
-import axios from "axios";
-import Swal from "sweetalert2";
 import {
   handleDelete,
   handleGet,
   handlePost,
   handlePut,
 } from "../../handleHttp";
-
+import { swal } from "../../../../helper";
+const baseUrl = "kelompokBrg";
 export function setLoading(load) {
   return { type: GROUP_PRODUCT.LOADING, load };
 }
@@ -21,7 +20,7 @@ export function setGroupProductFailed(data = []) {
 export const FetchGroupProduct = (where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    let url = "kelompokBrg";
+    let url = baseUrl;
     if (where !== "") {
       url += `?${where}`;
     }
@@ -38,148 +37,29 @@ export const FetchGroupProduct = (where = "") => {
 
 export const createGroupProduct = (data, fastAdd = false) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `kelompokBrg`;
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        if (fastAdd) {
-          dispatch(FetchGroupProduct(1, "", 9999));
-        } else {
-          dispatch(
-            FetchGroupProduct(
-              localStorage.getItem("page_group_product")
-                ? localStorage.getItem("page_group_product")
-                : 1,
-              ""
-            )
-          );
-        }
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
+    handlePost(baseUrl, data, (res, msg, status) => {
+      swal(msg);
+      if (fastAdd) {
+        dispatch(FetchGroupProduct("page=1&perpage=9999"));
+      } else {
+        dispatch(FetchGroupProduct("page=1"));
+      }
+    });
   };
 };
-export const updateGroupProduct = (id, data) => {
+export const updateGroupProduct = (id, data, where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `kelompokBrg/${id}`;
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchGroupProduct(
-            localStorage.getItem("page_group_product")
-              ? localStorage.getItem("page_group_product")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        // Swal.fire({allowOutsideClick: false,
-        //     title: 'failed',
-        //     type: 'error',
-        //     text: error.response === undefined?'error!':error.response.data.msg,
-        // });
-        if (error.response) {
-        }
-      });
+    handlePut(baseUrl + "/" + id, data, (res, msg, status) => {
+      swal(msg);
+      dispatch(FetchGroupProduct(where !== "" ? where : "page=1"));
+    });
   };
 };
-export const deleteGroupProduct = (id) => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `kelompokBrg/${id}`;
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchGroupProduct(
-            localStorage.getItem("page_group_product")
-              ? localStorage.getItem("page_group_product")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
 
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+export const deleteGroupProduct = (id, where) => {
+  return (dispatch) => {
+    handleDelete(`${baseUrl}/${id}`, () => {
+      dispatch(FetchGroupProduct(where));
+    });
   };
 };

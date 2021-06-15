@@ -4,7 +4,14 @@ import Swal from "sweetalert2";
 import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import { configure } from "../../_interceptor";
-import { handleGet } from "../../handleHttp";
+import {
+  handleDelete,
+  handleGet,
+  handlePost,
+  handlePut,
+} from "../../handleHttp";
+import { ModalToggle } from "../../modal.action";
+import { swal } from "../../../../helper";
 
 export function setLoadingbrg(load) {
   return { type: PRODUCT.LOADING_BRG, load };
@@ -115,90 +122,65 @@ export const FetchProduct = (page = 1, where = "", param = "", db = null) => {
   };
 };
 
-export const createProduct = (data) => {
+export const createProduct = (data, callback) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `barang`;
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            icon: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            icon: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
+    handlePost("barang", data, (res, msg, status) => {
+      swal(msg);
+      callback(status);
+      if (status) {
+        dispatch(ModalToggle(false));
         dispatch(FetchProduct(1, "", ""));
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
+      } else {
+        dispatch(ModalToggle(true));
+      }
+    });
+    // dispatch(setLoading(true));
+    // const url = HEADERS.URL + `barang`;
+    // axios
+    //   .post(url, data)
+    //   .then(function (response) {
+    //     const data = response.data;
 
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          icon: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    //     if (data.status === "success") {
+    //       Swal.fire({
+    //         allowOutsideClick: false,
+    //         title: "Success",
+    //         icon: "success",
+    //         text: data.msg,
+    //       });
+    //     } else {
+    //       Swal.fire({
+    //         allowOutsideClick: false,
+    //         title: "failed",
+    //         icon: "error",
+    //         text: data.msg,
+    //       });
+    //     }
+    //     dispatch(setLoading(false));
+    //     dispatch(FetchProduct(1, "", ""));
+    //   })
+    //   .catch(function (error) {
+    //     // handle error
+    //     dispatch(setLoading(false));
+
+    //     Swal.fire({
+    //       allowOutsideClick: false,
+    //       title: "failed",
+    //       icon: "error",
+    //       text:
+    //         error.response === undefined ? "error!" : error.response.data.msg,
+    //     });
+    //     if (error.response) {
+    //     }
+    //   });
   };
 };
 
 export const deleteProduct = (id) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `barang/${btoa(id)}`;
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchProduct(1, ""));
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(`barang/${btoa(id)}`, () => {
+      dispatch(FetchProduct(1, ""));
+    });
   };
 };
 
@@ -375,48 +357,18 @@ export const FetchProductEdit = (kode) => {
   };
 };
 
-export const updateProduct = (id, data) => {
+export const updateProduct = (id, data, callback) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `barang/${btoa(id)}`;
-
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
+    handlePut(`barang/${btoa(id)}`, data, (res, msg, status) => {
+      swal(msg);
+      callback(status);
+      if (status) {
+        dispatch(ModalToggle(false));
         dispatch(FetchProduct(1, "", ""));
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+      } else {
+        dispatch(ModalToggle(true));
+      }
+    });
   };
 };
 
