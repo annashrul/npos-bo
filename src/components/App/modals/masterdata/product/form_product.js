@@ -27,13 +27,7 @@ import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import FormPrinter from "../printer/form_printer";
 
-<<<<<<< HEAD
-const tenantBool =
-  atob(atob(Cookies.get("tnt="))) === "giandy-pusat" ||
-  atob(atob(Cookies.get("tnt="))) === "giandy-cabang01";
-=======
 const tenantBool = Cookies.get('tnt=')!==undefined?atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01':false;
->>>>>>> d74cba723262662d3b0ee506c9a3a89f9b0f5d40
 class FormProduct extends Component {
   constructor(props) {
     super(props);
@@ -523,6 +517,40 @@ class FormProduct extends Component {
     localStorage.removeItem("samarata_karton");
   }
 
+  genBrcd(val){
+    const headers = {
+      'Authorization': atob(Cookies.get('datum_exp')),
+      'username': atob(Cookies.get('tnt=')),
+      'password': HEADERS.PASSWORD,
+      'Content-Type': `application/json`
+    }
+    const requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        'kolom': 'barcode',
+        'table': 'barang_sku',
+        'value': val,
+      })
+    };
+
+    return fetch(HEADERS.URL + `site/cekdata`, requestOptions)
+      .then(res => res.json())
+      .then(
+        (data) => {
+          console.log(data);
+          if(data.result===0){
+            return val;
+          } else {
+            Swal.fire('Informasi','Barcode '+val+' sudah digunakan!')
+            return 0;
+          }
+        },
+        (error) => {
+          Swal.fire('Peringatan','Terjadi kesalahan, coba kembali.')
+        }
+    )
+  }
   generateCode(e) {
     // this.setState({ generateCode: e.target.checked });
     if (e.target.name === "generate") {
@@ -609,11 +637,11 @@ class FormProduct extends Component {
       });
     }
   }
-  generateBrcd(e, idx) {
+  async generateBrcd(e, idx) {
     // this.setState({ generateCode: e.target.checked });
     if (e.target.name === "generate") {
       this.setState({ generateCode: e.target.checked });
-      let genCode = this.state.kd_brg;
+      let genCode = await this.genBrcd(this.state.kd_brg);
 
       if (!this.state.generateCode) {
         if (this.state.jenis === "0") {
@@ -4032,7 +4060,9 @@ class FormProduct extends Component {
                                                       this.state[stateMargin]
                                                     }
                                                     onChange={(e) =>
-                                                      this.handleChangeMore(e)
+                                                      this.handleChangeMore(e,
+                                                        i,
+                                                        satuan.toUpperCase())
                                                     }
                                                   />
                                                   <div className="input-group-append">
@@ -4085,7 +4115,9 @@ class FormProduct extends Component {
                                                     this.state[stateHargaJual]
                                                   )}
                                                   onChange={(e) =>
-                                                    this.handleChangeMore(e)
+                                                    this.handleChangeMore(e,
+                                                      i,
+                                                      satuan.toUpperCase())
                                                   }
                                                 />
                                               </div>
@@ -4119,7 +4151,9 @@ class FormProduct extends Component {
                                               name={stateService}
                                               value={this.state[stateService]}
                                               onChange={(e) =>
-                                                this.handleChangeMore(e)
+                                                this.handleChangeMore(e,
+                                                  i,
+                                                  satuan.toUpperCase())
                                               }
                                             />
                                             <div className="input-group-append">
@@ -4144,7 +4178,9 @@ class FormProduct extends Component {
                                               name={statePpn}
                                               value={this.state[statePpn]}
                                               onChange={(e) =>
-                                                this.handleChangeMore(e)
+                                                this.handleChangeMore(e,
+                                                  i,
+                                                  satuan.toUpperCase())
                                               }
                                             />
                                             <div className="input-group-append">
