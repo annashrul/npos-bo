@@ -504,13 +504,6 @@ class ListProduct extends Component {
             <div className="col-12 col-xs-12 col-md-3 text-right">
               <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
-                type="submit"
-                className="btn btn-primary"
-              >
-                <i className="fa fa-search"></i>
-              </button>
-              <button
-                style={{ marginTop: "27px", marginRight: "2px" }}
                 type="button"
                 onClick={(e) => this.toggleModal(e)}
                 className="btn btn-primary"

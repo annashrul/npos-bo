@@ -27,13 +27,11 @@ import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import FormPrinter from "../printer/form_printer";
 
-<<<<<<< HEAD
 const tenantBool =
-  atob(atob(Cookies.get("tnt="))) === "giandy-pusat" ||
-  atob(atob(Cookies.get("tnt="))) === "giandy-cabang01";
-=======
-const tenantBool = Cookies.get('tnt=')!==undefined?atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01':false;
->>>>>>> d74cba723262662d3b0ee506c9a3a89f9b0f5d40
+  Cookies.get("tnt=") !== undefined
+    ? atob(atob(Cookies.get("tnt="))) === "giandy-pusat" ||
+      atob(atob(Cookies.get("tnt="))) === "giandy-cabang01"
+    : false;
 class FormProduct extends Component {
   constructor(props) {
     super(props);
