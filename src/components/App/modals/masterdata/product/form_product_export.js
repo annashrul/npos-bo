@@ -184,7 +184,7 @@ class FormProductExport extends Component{
             'Tanggal Update',
             ]
         ]
-        let raw = typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map((v,i) => [
+        let raw = this.props.resBarangAll !== undefined && typeof this.props.resBarangAll === 'object' ? this.props.resBarangAll.map((v, i) => [
             i+1,
             v.kd_brg,
             v.barcode,
