@@ -26,12 +26,19 @@ import FormProductPricing from "./form_product_pricing";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import FormPrinter from "../printer/form_printer";
+import Preloader from "Preloader";
 
-const tenantBool = Cookies.get('tnt=')!==undefined?atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01':false;
+const tenantBool =
+  Cookies.get("tnt=") !== undefined
+    ? atob(atob(Cookies.get("tnt="))) === "giandy-pusat" ||
+      atob(atob(Cookies.get("tnt="))) === "giandy-cabang01"
+    : false;
 class FormProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isModalFormGroupProduct: false,
+      detail: {},
       nm_harga1: "1",
       nm_harga2: "2",
       nm_harga3: "3",
@@ -257,6 +264,7 @@ class FormProduct extends Component {
       filled: false,
       swPrice: "1",
       summary: false,
+      isLoadingGenerateBarcode: false,
     };
     this.handleKelompokBarang = this.handleKelompokBarang.bind(this);
     this.handleKcp = this.handleKcp.bind(this);
@@ -279,6 +287,8 @@ class FormProduct extends Component {
 
   clearState() {
     this.setState({
+      isModalFormGroupProduct: false,
+      detail: {},
       nm_harga1: "1",
       nm_harga2: "2",
       nm_harga3: "3",
@@ -504,8 +514,7 @@ class FormProduct extends Component {
       swPrice: "1",
       summary: false,
     });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
+
     this.props.dispatch(setProductEdit([]));
     localStorage.removeItem("isReadonly");
     localStorage.removeItem("samarata");
@@ -517,133 +526,82 @@ class FormProduct extends Component {
     localStorage.removeItem("samarata_karton");
   }
 
-  genBrcd(val){
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
+    this.setState({ isModalFormGroupProduct: false });
+  }
+
+  genBrcd(val) {
+    this.setState({ isLoadingGenerateBarcode: true });
     const headers = {
-      'Authorization': atob(Cookies.get('datum_exp')),
-      'username': atob(Cookies.get('tnt=')),
-      'password': HEADERS.PASSWORD,
-      'Content-Type': `application/json`
-    }
+      Authorization: atob(Cookies.get("datum_exp")),
+      username: atob(Cookies.get("tnt=")),
+      password: HEADERS.PASSWORD,
+      "Content-Type": `application/json`,
+    };
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: headers,
       body: JSON.stringify({
-        'kolom': 'barcode',
-        'table': 'barang_sku',
-        'value': val,
-      })
+        kolom: "barcode",
+        table: "barang_sku",
+        value: val,
+      }),
     };
 
     return fetch(HEADERS.URL + `site/cekdata`, requestOptions)
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(
         (data) => {
-          console.log(data);
-          if(data.result===0){
+          this.setState({ isLoadingGenerateBarcode: false });
+          if (data.result === 0) {
             return val;
           } else {
-            Swal.fire('Informasi','Barcode '+val+' sudah digunakan!')
+            Swal.fire("Informasi", "Barcode " + val + " sudah digunakan!");
             return 0;
           }
         },
         (error) => {
-          Swal.fire('Peringatan','Terjadi kesalahan, coba kembali.')
+          this.setState({ isLoadingGenerateBarcode: false });
+          Swal.fire("Peringatan", "Terjadi kesalahan, coba kembali.");
         }
-    )
+      );
   }
-  generateCode(e) {
+  generateCode(e, action = "add") {
     // this.setState({ generateCode: e.target.checked });
-    if (e.target.name === "generate") {
+    if (e === "generate") {
       let genCode = `${moment(new Date()).format("YYMMDD")}${
         Math.floor(Math.random() * (10000 - 0 + 1)) + 0
       }`;
       let err = this.state.error;
       err = Object.assign({}, err, { kd_brg: "" });
-
-      this.setState({
-        kd_brg: genCode,
-        error: err,
-      });
-      this.props.dispatch(
-        FetchCheck({
-          table: "barang",
-          kolom: "kd_brg",
-          value: genCode,
-        })
-      );
-    } else if (e.target.name === "gnBcd") {
-      this.setState({ generateCode: e.target.checked });
-      let genCode = this.state.kd_brg;
-
-      if (!this.state.generateCode) {
-        if (this.state.jenis === "0") {
-          let brgSku = [];
-          for (let i = 0; i < 3; i++) {
-            let brcd =
-              i === 0
-                ? `${genCode}`
-                : i === 1
-                ? `${genCode}02`
-                : `${genCode}03`;
-            let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
-            brgSku.push({
-              barcode: brcd,
-              qty: satuan,
-              konversi: "0",
-              satuan_jual: "1",
-            });
-          }
-          this.setState({ barangSku: brgSku });
-        } else if (this.state.jenis === "2") {
-          let brgSku = [];
-          for (let i = 0; i < 2; i++) {
-            let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
-            brgSku.push({
-              barcode: brcd,
-              qty: "",
-              konversi: "0",
-              satuan_jual: "1",
-            });
-          }
-          this.setState({ barangSku: brgSku });
-        } else {
-          let brgSku = [];
-          for (let i = 0; i < 1; i++) {
-            let satuan =
-              this.state.jenis === "1"
-                ? "Pcs"
-                : this.state.jenis === "1"
-                ? "Pcs"
-                : "Pack";
-            brgSku.push({
-              barcode: `${genCode}`,
-              qty: satuan,
-              konversi: "0",
-              satuan_jual: "1",
-            });
-          }
-          this.setState({ barangSku: brgSku });
-        }
-      } else {
+      if (action === "add") {
         this.setState({
-          barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }],
+          kd_brg: genCode,
+          error: err,
         });
+        this.props.dispatch(
+          FetchCheck({
+            table: "barang",
+            kolom: "kd_brg",
+            value: genCode,
+          })
+        );
+      } else {
+        this.setState({ kd_brg: "" });
       }
-    } else {
-      this.setState({
-        kd_brg: "",
-        jenis: "1",
-        barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }],
-      });
     }
   }
   async generateBrcd(e, idx) {
-    // this.setState({ generateCode: e.target.checked });
+    // console.log(e.target.bat)
     if (e.target.name === "generate") {
       this.setState({ generateCode: e.target.checked });
-      let genCode = await this.genBrcd(this.state.kd_brg);
 
       if (!this.state.generateCode) {
+        let genCode = "";
+        if (this.state.kd_brg !== "") {
+          genCode = await this.genBrcd(this.state.kd_brg);
+        }
         if (this.state.jenis === "0") {
           let brgSku = [];
           for (let i = 0; i < 3; i++) {
@@ -696,7 +654,9 @@ class FormProduct extends Component {
         }
       } else {
         this.setState({
-          barangSku: [{ barcode: "", qty: "", konversi: "", satuan_jual: "1" }],
+          barangSku: [
+            { barcode: "adsdasdasd", qty: "", konversi: "", satuan_jual: "1" },
+          ],
         });
       }
     } else {
@@ -719,6 +679,7 @@ class FormProduct extends Component {
   toggle = (e) => {
     e.preventDefault();
     window.scrollTo(0, 0);
+    this.props.dispatch(ModalToggle(false));
     this.clearState();
   };
   toggleModal(e, param) {
@@ -726,7 +687,11 @@ class FormProduct extends Component {
     // const bool = !this.props.isOpen;
     // this.props.dispatch(ModalToggle(true));
 
-    this.setState({ filled: true });
+    this.setState({
+      detail: { kel_brg: "" },
+      filled: true,
+      isModalFormGroupProduct: true,
+    });
     this.props.dispatch(ModalType(param));
   }
   handleKateBrg = (e) => {
@@ -754,7 +719,6 @@ class FormProduct extends Component {
       // Proceed further
       const base64 = await convertBase64(file);
       this.setState({ gambar: base64 });
-      console.log(base64);
     }
   };
   getProps(param) {
@@ -1015,6 +979,7 @@ class FormProduct extends Component {
           ]);
         }
       }
+      console.log("props", param.dateEdit);
       this.setState({
         kd_brg: param.dataEdit.kd_brg,
         nm_brg: param.dataEdit.nm_brg,
@@ -1122,13 +1087,7 @@ class FormProduct extends Component {
           return null;
         });
       }
-      // typeof param.data.data === 'object' ? param.data.data.map((v)=>{
-      //     kel_brg.push({
-      //         value:v.kel_brg,
-      //         label:v.nm_kel_brg,
-      //     })
-      //     return null;
-      // }): "no data"
+
       this.setState({
         kel_brg_data: kel_brg,
       });
@@ -1145,7 +1104,6 @@ class FormProduct extends Component {
         group1_data: group1,
       });
     }
-    console.log("param.dataPrinter", param.dataPrinter);
     if (param.dataPrinter.data !== undefined) {
       param.dataPrinter.data.map((v) => {
         kcp.push({
@@ -1201,8 +1159,6 @@ class FormProduct extends Component {
       });
   }
   handler(value) {
-    console.log("handler val", value);
-
     this.setState({
       barangHarga: value.barangHarga_,
       barangSku: value.barangSku_,
@@ -3027,6 +2983,7 @@ class FormProduct extends Component {
     let barangSku = [];
     let barangHarga = [];
     let barcode = [];
+
     parseData["kd_brg"] = this.state.kd_brg;
     parseData["nm_brg"] = this.state.nm_brg;
     parseData["kel_brg"] = this.state.kel_brg;
@@ -3093,18 +3050,7 @@ class FormProduct extends Component {
       this.setState({ error: err });
       return;
     }
-    // if (this.state.group2 === "" || this.state.group2 === undefined) {
-    //   err = Object.assign({}, err, { group2: "sub dept tidak boleh kosong" });
-    //   this.setState({ error: err });
-    //   return;
-    // }
-    // if (this.state.deskripsi === "" || this.state.deskripsi === undefined) {
-    //   err = Object.assign({}, err, {
-    //     deskripsi: "deskripsi tidak boleh kosong",
-    //   });
-    //   this.setState({ error: err });
-    //   return;
-    // }
+
     if (this.state.jenis === "" || this.state.jenis === undefined) {
       err = Object.assign({}, err, { jenis: "jenis tidak boleh kosong" });
       this.setState({ error: err });
@@ -3115,21 +3061,6 @@ class FormProduct extends Component {
       this.setState({ error: err });
       return;
     }
-    // if (this.state.poin === "" || this.state.poin === undefined) {
-    //   err = Object.assign({}, err, { poin: "poin tidak boleh kosong" });
-    //   this.setState({ error: err });
-    //   return;
-    // }
-    // if (this.state.online === "" || this.state.online === undefined) {
-    //   err = Object.assign({}, err, { online: "online tidak boleh kosong" });
-    //   this.setState({ error: err });
-    //   return;
-    // }
-    // if (this.state.berat === "" || this.state.berat === undefined) {
-    //   err = Object.assign({}, err, { berat: "berat tidak boleh kosong" });
-    //   this.setState({ error: err });
-    //   return;
-    // }
 
     for (let sku = 0; sku < this.state.barangSku.length; sku++) {
       let stateSku = this.state.barangSku[sku];
@@ -3149,6 +3080,7 @@ class FormProduct extends Component {
         qty_konversi: stateSku.konversi,
         satuan_jual: stateSku.satuan_jual,
       });
+
       barcode.push(stateSku.barcode);
       for (let brgHrg = 0; brgHrg < this.state.barangHarga.length; brgHrg++) {
         let stateBrgHrg = this.state.barangHarga[brgHrg][sku];
@@ -3159,6 +3091,11 @@ class FormProduct extends Component {
         let hrgJual2 = `hrgJual2${satuan}`;
         let hrgJual3 = `hrgJual3${satuan}`;
         let hrgJual4 = `hrgJual4${satuan}`;
+
+        if (this.state[`error_barcode${brgHrg + 1}`]) {
+          alert(`terjadi kesalahan pada form barcode`);
+          return false;
+        }
         for (let setHrg = 0; setHrg < this.state.set_harga; setHrg++) {
           let valHrgJual = `hrgJual${setHrg + 1}${satuan}`;
           let valMargin = `margin${setHrg + 1}${satuan}`;
@@ -3169,38 +3106,15 @@ class FormProduct extends Component {
             stateBrgHrg[hrgbeli] === ""
           ) {
             alert(`harga beli tidak boleh atau kurang dari 0`);
-            // alert(
-            //   `harga beli ${
-            //     stateSku.qty !== undefined ? `jenis barang ${stateSku.qty}` : ""
-            //   } di lokasi ${
-            //     stateBrgHrg.nama_toko
-            //   } tidak boleh atau kurang dari 0`
-            // );
             return false;
           }
           if (this.state.jenis !== "4") {
             if (parseInt(rmComma(stateBrgHrg[valMargin]), 10) < 0) {
               alert(`margin tidak boleh kurang dari 0`);
-              // alert(
-              //   `margin ${setHrg + 1} ${
-              //     stateSku.qty !== undefined
-              //       ? `jenis barang ${stateSku.qty}`
-              //       : ""
-              //   }  di lokasi ${stateBrgHrg.nama_toko} tidak boleh kurang dari 0`
-              // );
               return false;
             }
             if (stateBrgHrg[valHrgJual] === "") {
               alert(`harga jual tidak boleh atau kurang dari 0`);
-              // alert(
-              //   `harga jual ${this.state[lblHrg]} ${
-              //     stateSku.qty !== undefined
-              //       ? `jenis barang ${stateSku.qty}`
-              //       : ""
-              //   }  di lokasi ${
-              //     stateBrgHrg.nama_toko
-              //   } tidak boleh atau kurang dari 0`
-              // );
               return false;
             }
             if (
@@ -3208,15 +3122,6 @@ class FormProduct extends Component {
               stateBrgHrg[service] === ""
             ) {
               alert(`service tidak boleh atau kurang dari 0`);
-              // alert(
-              //   `service ${
-              //     stateSku.qty !== undefined
-              //       ? `jenis barang ${stateSku.qty}`
-              //       : ""
-              //   } di lokasi ${
-              //     stateBrgHrg.nama_toko
-              //   } tidak boleh atau kurang dari 0`
-              // );
               return false;
             }
             if (
@@ -3224,15 +3129,6 @@ class FormProduct extends Component {
               stateBrgHrg[hrgbeli] === ""
             ) {
               alert(`ppn tidak boleh atau kurang dari 0`);
-              // alert(
-              //   `ppn ${
-              //     stateSku.qty !== undefined
-              //       ? `jenis barang ${stateSku.qty}`
-              //       : ""
-              //   } di lokasi ${
-              //     stateBrgHrg.nama_toko
-              //   } tidak boleh atau kurang dari 0`
-              // );
               return false;
             }
           }
@@ -3276,15 +3172,22 @@ class FormProduct extends Component {
         });
       }
     }
-
+    console.log(barangSku);
     parseData["barang_sku"] = barangSku;
     parseData["barang_harga"] = barangHarga;
     if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
-      this.props.dispatch(updateProduct(this.state.kd_brg, parseData));
+      this.props.dispatch(
+        updateProduct(this.state.kd_brg, parseData, (status) => {
+          if (status) this.clearState();
+        })
+      );
     } else {
-      this.props.dispatch(createProduct(parseData));
+      this.props.dispatch(
+        createProduct(parseData, (status) => {
+          if (status) this.clearState();
+        })
+      );
     }
-    this.clearState();
   }
   getFiles(files) {
     this.setState({
@@ -3292,12 +3195,10 @@ class FormProduct extends Component {
     });
   }
   mouseEnter() {
-    console.log("mouse enter");
     this.setState({ display: "flex" });
   }
 
   mouseLeave() {
-    console.log("mouse leave");
     this.setState({ display: "none" });
   }
   render() {
@@ -3312,7 +3213,6 @@ class FormProduct extends Component {
           this.state.barangSku[i].qty !== ""
         ) {
           showPricing = true;
-          // console.log("this.state.barangSku[i]",this.state.barangSku[i]);
         } else {
           if (i === 0) {
             showPricing = true;
@@ -3324,16 +3224,12 @@ class FormProduct extends Component {
       } else {
         if (this.state.barangSku[i].qty !== "") {
           showPricing = true;
-          // console.log("this.state.barangSku[i]",this.state.barangSku[i]);
         } else {
           showPricing = false;
           break;
         }
       }
     }
-
-    console.log("this.state.barangSku", this.state.barangSku);
-    console.log("this.state.barangHarga", this.state.barangHarga);
     return (
       <div>
         <WrapperModal
@@ -3341,6 +3237,7 @@ class FormProduct extends Component {
           isOpen={this.props.isOpen && this.props.type === "formProduct"}
           size={this.props.auth.user.is_resto !== 1 ? "lg" : "xl"}
         >
+          {this.state.isLoadingGenerateBarcode && <Preloader />}
           <ModalHeader toggle={this.toggle}>
             {this.props.dataEdit === undefined
               ? "Tambah Barang"
@@ -3445,17 +3342,28 @@ class FormProduct extends Component {
                                 className="btn btn-primary"
                                 name="generate"
                                 type="button"
-                                onClick={(e) => this.generateCode(e)}
+                                onClick={(e) => this.generateCode("generate")}
                               >
-                                <i className="fa fa-refresh" />
+                                <i
+                                  onClick={(e) => this.generateCode("generate")}
+                                  className="fa fa-refresh"
+                                />
                               </button>
                             ) : (
                               <button
+                                name="generate"
                                 className="btn btn-danger"
                                 type="button"
-                                onClick={(e) => this.generateCode(e)}
+                                onClick={(e) =>
+                                  this.generateCode("generate", "delete")
+                                }
                               >
-                                <i className="fa fa-close" />
+                                <i
+                                  onClick={(e) =>
+                                    this.generateCode("generate", "delete")
+                                  }
+                                  className="fa fa-close"
+                                />
                               </button>
                             )
                           ) : (
@@ -3545,7 +3453,7 @@ class FormProduct extends Component {
                     <div className="form-group">
                       {select2Group(
                         this.state.group1_data.find((op) => {
-                          return op.value === this.state.kel_brg;
+                          return op.value === this.state.group1;
                         }),
                         (any, action) => this.handleGroup1(any, action),
                         this.state.group1_data,
@@ -3698,24 +3606,6 @@ class FormProduct extends Component {
                           Tampilkan di POS ?
                         </th>
                       </tr>
-                      {/* <tr>
-                        <th colSpan="4" className="mb-0 pb-0" style={{borderBottomStyle:'hidden', whiteSpace: "no-wrap" }}>
-                          {this.props.dataEdit === undefined ? (
-                            <div>
-                            <input
-                              type="checkbox"
-                              className="mr-1"
-                              checked={this.state.generateCode}
-                              name="gnBcd"
-                              id="gnBcd"
-                              onChange={this.generateCode}
-                            />
-                             <label for="gnBcd">Generate Barcode</label>
-                             </div>
-                          ) : (
-                            ""
-                          )}</th>
-                      </tr> */}
                     </thead>
                     <tbody>
                       {(() => {
@@ -4060,9 +3950,11 @@ class FormProduct extends Component {
                                                       this.state[stateMargin]
                                                     }
                                                     onChange={(e) =>
-                                                      this.handleChangeMore(e,
+                                                      this.handleChangeMore(
+                                                        e,
                                                         i,
-                                                        satuan.toUpperCase())
+                                                        satuan.toUpperCase()
+                                                      )
                                                     }
                                                   />
                                                   <div className="input-group-append">
@@ -4115,9 +4007,11 @@ class FormProduct extends Component {
                                                     this.state[stateHargaJual]
                                                   )}
                                                   onChange={(e) =>
-                                                    this.handleChangeMore(e,
+                                                    this.handleChangeMore(
+                                                      e,
                                                       i,
-                                                      satuan.toUpperCase())
+                                                      satuan.toUpperCase()
+                                                    )
                                                   }
                                                 />
                                               </div>
@@ -4151,9 +4045,11 @@ class FormProduct extends Component {
                                               name={stateService}
                                               value={this.state[stateService]}
                                               onChange={(e) =>
-                                                this.handleChangeMore(e,
+                                                this.handleChangeMore(
+                                                  e,
                                                   i,
-                                                  satuan.toUpperCase())
+                                                  satuan.toUpperCase()
+                                                )
                                               }
                                             />
                                             <div className="input-group-append">
@@ -4178,9 +4074,11 @@ class FormProduct extends Component {
                                               name={statePpn}
                                               value={this.state[statePpn]}
                                               onChange={(e) =>
-                                                this.handleChangeMore(e,
+                                                this.handleChangeMore(
+                                                  e,
                                                   i,
-                                                  satuan.toUpperCase())
+                                                  satuan.toUpperCase()
+                                                )
                                               }
                                             />
                                             <div className="input-group-append">
@@ -4458,6 +4356,7 @@ class FormProduct extends Component {
                     >
                       <i className="ti-close" /> Batal
                     </button>
+
                     {this.state.swPrice === "1" ? (
                       <button type="submit" className="btn btn-primary mr-1">
                         <i className="ti-save" /> Simpan
@@ -4466,7 +4365,10 @@ class FormProduct extends Component {
                       <button
                         type="submit"
                         className="btn btn-primary mr-1"
-                        disabled={this.state.summary === false}
+                        disabled={
+                          this.props.dataEdit === undefined &&
+                          this.state.summary === false
+                        }
                       >
                         <i className="ti-save" /> Simpan
                       </button>
@@ -4481,7 +4383,13 @@ class FormProduct extends Component {
         </WrapperModal>
         <FormSupplier fastAdd={true} />
         <FormSubDepartment fastAdd={true} />
-        <FormGroupProduct group2={this.props.group2} fastAdd={true} />
+        {this.state.isModalFormGroupProduct && this.props.isOpen ? (
+          <FormGroupProduct
+            detail={this.state.detail}
+            group2={this.props.group2}
+            fastAdd={true}
+          />
+        ) : null}
         <FormProductPricing
           allState={this.state}
           handler={this.handler}

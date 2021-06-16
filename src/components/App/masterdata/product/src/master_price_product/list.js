@@ -5,7 +5,7 @@ import { FetchPriceProduct } from "redux/actions/masterdata/price_product/price_
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq from "helper";
 import FormPriceProduct from "../../../../modals/masterdata/price_product/form_price_product";
-import { toCurrency } from "../../../../../../helper";
+import { generateNo, toCurrency } from "../../../../../../helper";
 
 class ListPriceProduct extends Component {
   constructor(props) {
@@ -15,17 +15,17 @@ class ListPriceProduct extends Component {
     this.handleGet = this.handleGet.bind(this);
     this.state = {
       detail: {},
+      isActive: "",
       any: "",
       page: 1,
+      where: "",
     };
   }
 
   handleGet(any, page) {
     let where = `page=${page}`;
-    if (any !== "") {
-      where += `&q=${any}`;
-    }
-
+    if (any !== "") where += `&q=${any}`;
+    this.setState({ where: where });
     this.props.dispatch(FetchPriceProduct(where));
   }
 
@@ -39,7 +39,7 @@ class ListPriceProduct extends Component {
     const data = new FormData(form);
     let any = data.get("field_any");
     this.setState({ any: any });
-    this.handleGet(any, this.state.page);
+    this.handleGet(any, 1);
   }
   handleDelete = (e, kode) => {
     e.preventDefault();
@@ -60,7 +60,9 @@ class ListPriceProduct extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formPriceProduct"));
     this.setState({
+      isActive: id,
       detail: {
+        where: this.state.where,
         id: id,
         harga: harga,
         ppn: ppn,
@@ -75,21 +77,8 @@ class ListPriceProduct extends Component {
   };
 
   render() {
-    const centerStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "center",
-    };
-    const leftStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "left",
-    };
-    const rightStyle = {
-      verticalAlign: "middle",
-      textAlign: "right",
-      whiteSpace: "nowrap",
-    };
+    console.log(this.state.isActive);
+
     const {
       total,
       // last_page,
@@ -110,7 +99,7 @@ class ListPriceProduct extends Component {
                     type="text"
                     name="field_any"
                     className="form-control form-control-sm"
-                    placeholder="Search"
+                    placeholder="cari berdasarkan nama barang"
                     defaultValue={localStorage.getItem("any_price_product")}
                   />
                   <span className="input-group-append">
@@ -127,46 +116,67 @@ class ListPriceProduct extends Component {
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black middle text-center" rowSpan="2">
+                <th
+                  className="text-black middle nowrap text-center"
+                  rowSpan="2"
+                >
+                  No
+                </th>
+                <th
+                  className="text-black middle nowrap text-center"
+                  rowSpan="2"
+                >
                   #
                 </th>
-                <th className="text-black middle" rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Kode
                 </th>
-                <th className="text-black middle" rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Barcode
                 </th>
-                <th className="text-black middle" rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Nama
                 </th>
-                <th className="text-black middle" rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Lokasi
                 </th>
-                <th className="text-black middle" rowSpan="2">
-                  Harga Beli
+                <th className="text-black middle nowrap" rowSpan="2">
+                  Harga beli
                 </th>
-                <th className="text-black middle text-center" colSpan="4">
-                  Harga Jual
+                <th
+                  className="text-black middle nowrap text-center"
+                  colSpan="4"
+                >
+                  Harga jual
                 </th>
-                <th className="text-black middle" rowSpan="2">
-                  PPN
+                <th className="text-black middle nowrap" rowSpan="2">
+                  Ppn
                 </th>
-                <th className="text-black middle" rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Servis
                 </th>
               </tr>
               <tr>
-                <th className="text-black middle text-center">1</th>
-                <th className="text-black middle text-center">2</th>
-                <th className="text-black middle text-center">3</th>
-                <th className="text-black middle text-center">4</th>
+                <th className="text-black middle nowrap text-center">1</th>
+                <th className="text-black middle nowrap text-center">2</th>
+                <th className="text-black middle nowrap text-center">3</th>
+                <th className="text-black middle nowrap text-center">4</th>
               </tr>
             </thead>
             <tbody>
               {typeof data === "object"
                 ? data.map((v, i) => {
                     return (
-                      <tr key={i}>
+                      <tr
+                        key={i}
+                        style={{
+                          backgroundColor:
+                            this.state.isActive === v.id ? "#EEEEEE" : "",
+                        }}
+                      >
+                        <td className="text-center middle nowrap">
+                          {generateNo(i, current_page)}
+                        </td>
                         <td>
                           {/* Example split danger button */}
                           <div className="btn-group">
@@ -191,19 +201,35 @@ class ListPriceProduct extends Component {
                             </button>
                           </div>
                         </td>
-                        <td style={leftStyle}>{v.kd_brg}</td>
-                        <td style={leftStyle}>{v.barcode ? v.barcode : "-"}</td>
-                        <td style={leftStyle}>{v.nm_brg ? v.nm_brg : "-"}</td>
-                        <td style={leftStyle}>
+                        <td className="text-left middle nowrap">{v.kd_brg}</td>
+                        <td className="text-left middle nowrap">
+                          {v.barcode ? v.barcode : "-"}
+                        </td>
+                        <td className="text-left middle nowrap">
+                          {v.nm_brg ? v.nm_brg : "-"}
+                        </td>
+                        <td className="text-left middle nowrap">
                           {v.nama_toko ? v.nama_toko : "-"}
                         </td>
-                        <td style={rightStyle}>{toCurrency(v.harga_beli)}</td>
-                        <td style={rightStyle}>{toRp(v.harga)}</td>
-                        <td style={rightStyle}>{toRp(v.harga2)}</td>
-                        <td style={rightStyle}>{toRp(v.harga3)}</td>
-                        <td style={rightStyle}>{toRp(v.harga4)}</td>
-                        <td style={rightStyle}>{v.ppn}</td>
-                        <td style={rightStyle}>{v.service}</td>
+                        <td className="text-right middle nowrap">
+                          {toCurrency(v.harga_beli)}
+                        </td>
+                        <td className="text-right middle nowrap">
+                          {toRp(v.harga)}
+                        </td>
+                        <td className="text-right middle nowrap">
+                          {toRp(v.harga2)}
+                        </td>
+                        <td className="text-right middle nowrap">
+                          {toRp(v.harga3)}
+                        </td>
+                        <td className="text-right middle nowrap">
+                          {toRp(v.harga4)}
+                        </td>
+                        <td className="text-right middle nowrap">{v.ppn} %</td>
+                        <td className="text-right middle nowrap">
+                          {v.service} %
+                        </td>
                       </tr>
                     );
                   })
@@ -219,7 +245,14 @@ class ListPriceProduct extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
-        <FormPriceProduct detail={this.state.detail} />
+        {this.props.isOpen && (
+          <FormPriceProduct
+            callback={(id) => {
+              this.setState({ isActive: id });
+            }}
+            detail={this.state.detail}
+          />
+        )}
       </div>
     );
   }

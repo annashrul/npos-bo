@@ -71,6 +71,7 @@ class FormPriceProduct extends Component {
     e.preventDefault();
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
+    this.props.callback("");
   }
 
   handleSubmit(e) {
@@ -146,7 +147,10 @@ class FormPriceProduct extends Component {
         });
         this.setState({ error: err });
       } else {
-        this.props.dispatch(updatePriceProduct(this.state.id, parseData));
+        this.props.dispatch(
+          updatePriceProduct(this.state.id, parseData, this.props.detail.where)
+        );
+        this.props.callback(this.props.detail.id);
         this.props.dispatch(ModalToggle(false));
       }
 

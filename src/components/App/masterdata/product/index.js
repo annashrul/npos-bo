@@ -38,22 +38,11 @@ class Product extends Component {
     }
   };
   componentWillMount() {
-    let anyGroupProduct = localStorage.getItem("any_group_product");
-    let anyPriceProduct = localStorage.getItem("any_price_product");
-    let pageGroupProduct = localStorage.getItem("page_group_product");
-    let pagePriceProduct = localStorage.getItem("page_price_product");
     this.props.dispatch(FetchProduct());
     this.props.dispatch(FetchPriceProduct("page=1"));
-    this.props.dispatch(
-      FetchGroupProduct(
-        pageGroupProduct ? pageGroupProduct : 1,
-        anyGroupProduct ? anyGroupProduct : ""
-      )
-    );
+    this.props.dispatch(FetchGroupProduct("page=1"));
   }
-  checkingProduct() {
-    this.props.dispatch(FetchProduct(1));
-  }
+
   //Use arrow functions to avoid binding
   handleSelect = (index) => {
     this.setState({ selectedIndex: index }, () => {});
@@ -84,13 +73,11 @@ class Product extends Component {
 
           <div className="card-body">
             <TabPanel>
-              {
-                <ListProduct
-                  token={this.state.token}
-                  data={this.props.product}
-                  group={this.props.groupProduct}
-                />
-              }
+              <ListProduct
+                token={this.state.token}
+                data={this.props.product}
+                group={this.props.groupProduct}
+              />
             </TabPanel>
             <TabPanel>
               <ListPriceProduct
@@ -99,14 +86,10 @@ class Product extends Component {
               />
             </TabPanel>
             <TabPanel>
-              {!this.props.isLoading2 ? (
-                <ListGroupProduct
-                  token={this.state.token}
-                  data={this.props.groupProduct}
-                />
-              ) : (
-                <Preloader />
-              )}
+              <ListGroupProduct
+                token={this.state.token}
+                data={this.props.groupProduct}
+              />
             </TabPanel>
           </div>
         </Tabs>

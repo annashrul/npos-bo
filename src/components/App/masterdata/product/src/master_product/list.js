@@ -41,7 +41,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
-import { dateRange } from "../../../../../../helper";
+import { dateRange, generateNo } from "../../../../../../helper";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -186,20 +186,7 @@ class ListProduct extends Component {
   }
   handleDelete = (e, kode) => {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deleteProduct(kode));
-      }
-    });
+    this.props.dispatch(deleteProduct(kode));
   };
 
   handlesearch(event) {
@@ -375,7 +362,7 @@ class ListProduct extends Component {
     stringHtml += `<h3 align="center"><center>PRODUCT REPORT</center></h3>`;
     stringHtml += `<h3 align="center">PT NETINDO MEDIATAMA PERKASA</h3>`;
     const headers = [
-      ["CODE", "NAME", "GROUP", "SUPPLIER", "SUB DEPT", "PRICE"],
+      ["CODE", "NAME", "GROUP", "SUPPLIER", "SUB DEPARTEMEN", "PRICE"],
     ];
     const data =
       typeof this.props.data.data === "object"
@@ -504,13 +491,6 @@ class ListProduct extends Component {
             <div className="col-12 col-xs-12 col-md-3 text-right">
               <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
-                type="submit"
-                className="btn btn-primary"
-              >
-                <i className="fa fa-search"></i>
-              </button>
-              <button
-                style={{ marginTop: "27px", marginRight: "2px" }}
                 type="button"
                 onClick={(e) => this.toggleModal(e)}
                 className="btn btn-primary"
@@ -576,11 +556,11 @@ class ListProduct extends Component {
                   #
                 </th>
                 <th className="text-black middle">
-                  Kode Barang <br />
+                  Kode barang <br />
                   {this.handleInput("any_kode_barang")}
                 </th>
                 <th className="text-black">
-                  Nama Barang <br />
+                  Nama barang <br />
                   {this.handleInput("any_nama_barang")}
                 </th>
                 <th className="text-black" width="10%">
@@ -593,10 +573,10 @@ class ListProduct extends Component {
                   {this.handleInput("any_supplier_barang")}
                 </th>
                 <th className="text-black middle" width="10%">
-                  Dept
+                  Departemen
                 </th>
                 <th className="text-black" width="10%">
-                  Sub Dept
+                  Sub departemen
                   <br />
                   {this.handleInput("any_subdept_barang")}
                 </th>
@@ -620,7 +600,7 @@ class ListProduct extends Component {
                     return (
                       <tr key={i}>
                         <td style={centerStyle}>
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                          {generateNo(i, current_page)}
                         </td>
                         <td style={centerStyle}>
                           <div className="btn-group">
@@ -705,6 +685,7 @@ class ListProduct extends Component {
         </div>
         {this.state.isModalForm ? (
           <FormProduct
+            detail={{ kel_brg: "" }}
             data={this.props.groupProduct}
             dataLocation={this.props.location}
             dataSupplier={this.props.supplier}
