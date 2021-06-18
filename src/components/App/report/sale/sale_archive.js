@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
-import Paginationq, { rangeDate, toRp, CapitalizeEachWord } from "helper";
+import Paginationq, { toRp, CapitalizeEachWord } from "helper";
 import { FetchReportSale } from "redux/actions/sale/sale.action";
-import Swal from "sweetalert2";
 import {
   deleteReportSale,
   FetchReportDetailSale,
@@ -25,8 +23,8 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import { swallOption } from "../../../../helper";
-
+import { dateRange, generateNo, swallOption } from "../../../../helper";
+import LokasiCommon from "../../common/LokasiCommon";
 class SaleArchive extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +34,6 @@ class SaleArchive extends Component {
       type: "",
       status_data: [],
       status: "",
-      location_data: [],
       location: "",
       any_sale_report: "",
       id_trx: "",
@@ -102,36 +99,6 @@ class SaleArchive extends Component {
     this.setState({
       status_data: data_status,
     });
-
-    if (nextProps.auth.user) {
-      let lk = [];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        if (loc !== this.state.prevLoc) {
-          if (loc.length === 1) {
-            this.setState({
-              location: loc[0].kode,
-            });
-          } else {
-            lk.push({
-              value: "-",
-              label: "Semua Lokasi",
-            });
-          }
-          loc.map((i) => {
-            lk.push({
-              value: i.kode,
-              label: i.nama,
-            });
-            return null;
-          });
-          this.setState({
-            location_data: lk,
-            prevLoc: loc,
-          });
-        }
-      }
-    }
   };
   componentWillUnmount() {
     this.setState({
@@ -139,8 +106,6 @@ class SaleArchive extends Component {
       isModalExcel: false,
       isModalOtorisasi: false,
     });
-    // localStorage.removeItem("date_from_sale_report");
-    // localStorage.removeItem("date_to_sale_report");
     localStorage.removeItem("type_sale_report");
     localStorage.removeItem("status_sale_report");
     localStorage.removeItem("location_sale_report");
@@ -222,14 +187,12 @@ class SaleArchive extends Component {
     });
     localStorage.setItem("location_sale_report", lk.value);
   }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_sale_report", `${awal}`);
-    localStorage.setItem("date_to_sale_report", `${akhir}`);
+  handleEvent = (first, last) => {
+    localStorage.setItem("date_from_sale_report", `${first}`);
+    localStorage.setItem("date_to_sale_report", `${last}`);
     this.setState({
-      startDate: awal,
-      endDate: akhir,
+      startDate: first,
+      endDate: last,
     });
   };
   handleSearch(e) {
@@ -337,16 +300,6 @@ class SaleArchive extends Component {
   }
 
   render() {
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
-    const columnRight = {
-      verticalAlign: "middle",
-      textAlign: "right",
-      whiteSpace: "nowrap",
-    };
     const { last_page, per_page, current_page, data } = this.props.saleReport;
     const {
       omset,
@@ -384,45 +337,23 @@ class SaleArchive extends Component {
       <Layout page="Laporan Arsip Penjualan">
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
-            <div className="form-group">
-              <label className="control-label font-12" htmlFor="">
-                {" "}
-                Periode
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{" "}
-              </label>
-              <DateRangePicker
-                style={{ display: "unset" }}
-                ranges={rangeDate}
-                alwaysShowCalendars={true}
-                onEvent={this.handleEvent}
-              >
-                <input
-                  readOnly={true}
-                  type="text"
-                  className="form-control"
-                  name="date_sale_report"
-                  value={`${this.state.startDate} to ${this.state.endDate}`}
-                  style={{ padding: "9px", fontWeight: "bolder" }}
-                />
-              </DateRangePicker>
-            </div>
+            {dateRange(
+              (first, last) => this.handleEvent(first, last),
+              `${this.state.startDate} to ${this.state.endDate}`
+            )}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">
-              <label className="control-label font-12">Lokasi</label>
-              <Select
-                options={this.state.location_data}
-                placeholder="Pilih Lokasi"
-                onChange={this.HandleChangeLokasi}
-                value={this.state.location_data.find((op) => {
-                  return op.value === this.state.location;
-                })}
+              <label>Lokasi</label>
+              <LokasiCommon
+                callback={(res) => this.HandleChangeLokasi(res)}
+                isAll={true}
               />
             </div>
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">
-              <label className="control-label font-12">Tipe Transaksi</label>
+              <label>Tipe Transaksi</label>
               <Select
                 options={this.state.type_data}
                 placeholder="Pilih Tipe Transaksi"
@@ -435,7 +366,7 @@ class SaleArchive extends Component {
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">
-              <label className="control-label font-12">Status</label>
+              <label>Status</label>
               <Select
                 options={this.state.status_data}
                 placeholder="Pilih Status Transaksi"
@@ -481,103 +412,104 @@ class SaleArchive extends Component {
           </div>
         </div>
 
-        <div style={{ overflowX: "auto", zoom: "85%" }}>
-          <table className="table table-hover table-bordered">
+        <div style={{ overflowX: "auto" }}>
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2" width="1%">
                   No
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2" width="1%">
                   #
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Kd Trx
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Tanggal
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Jam
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Customer
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Kasir
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Sales
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Omset
                 </th>
-                <th className="text-black" colSpan={3} style={columnStyle}>
+                <th
+                  className="text-black middle nowrap text-center"
+                  colSpan={3}
+                >
                   Diskon
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Pajak
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   HPP
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Subtotal
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Profit
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Reg.Member
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Trx Lain
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Keterangan
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Grand Total
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Rounding
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Tunai
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Change
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Total Tunai
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Transfer
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Charge
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Nama Kartu
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Status
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Lokasi
                 </th>
-                <th className="text-black" rowSpan="2" style={columnStyle}>
+                <th className="text-black middle nowrap" rowSpan="2">
                   Jenis Trx
                 </th>
               </tr>
               <tr>
-                <th className="text-black" style={columnStyle}>
-                  Item
-                </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap text-center">Item</th>
+                <th className="text-black middle nowrap text-center">
                   Total ( rp )
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap text-center">
                   Total ( % )
                 </th>
               </tr>
@@ -606,108 +538,109 @@ class SaleArchive extends Component {
 
                       return (
                         <tr key={i}>
-                          <td style={columnStyle}>
-                            {" "}
-                            {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                          <td className="middle nowrap text-center">
+                            {generateNo(i, current_page)}
                           </td>
-                          <td style={columnStyle}>
-                            <div className="btn-group">
-                              <UncontrolledButtonDropdown>
-                                <DropdownToggle caret>Aksi</DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handleDetail(e, v.kd_trx)
-                                    }
-                                  >
-                                    Detail
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handleDelete(e, v.kd_trx)
-                                    }
-                                  >
-                                    Delete
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      this.props.dispatch(
-                                        FetchNotaReceipt(v.kd_trx)
-                                      );
-                                    }}
-                                  >
-                                    Nota
-                                  </DropdownItem>
-                                  <Link to={`../print3ply/${v.kd_trx}`}>
-                                    <DropdownItem>3ply</DropdownItem>
-                                  </Link>
-                                </DropdownMenu>
-                              </UncontrolledButtonDropdown>
-                            </div>
+                          <td className="middle nowrap text-center">
+                            <UncontrolledButtonDropdown>
+                              <DropdownToggle caret></DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handleDetail(e, v.kd_trx)
+                                  }
+                                >
+                                  Detail
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handleDelete(e, v.kd_trx)
+                                  }
+                                >
+                                  Delete
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    this.props.dispatch(
+                                      FetchNotaReceipt(v.kd_trx)
+                                    );
+                                  }}
+                                >
+                                  Nota
+                                </DropdownItem>
+                                <Link to={`../print3ply/${v.kd_trx}`}>
+                                  <DropdownItem>3ply</DropdownItem>
+                                </Link>
+                              </DropdownMenu>
+                            </UncontrolledButtonDropdown>
                           </td>
-                          <td style={columnStyle}>{v.kd_trx}</td>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap">{v.kd_trx}</td>
+                          <td className="middle nowrap">
                             {moment(v.tgl).format("yyyy/MM/DD")}
                           </td>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap">
                             {moment(v.jam).format("hh:mm:ss")}
                           </td>
-                          <td style={columnStyle}>{v.customer}</td>
-                          <td style={columnStyle}>{v.nama}</td>
-                          <td style={columnStyle}>{v.sales}</td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap">{v.customer}</td>
+                          <td className="middle nowrap">{v.nama}</td>
+                          <td className="middle nowrap">{v.sales}</td>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.omset))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.diskon_item))}
                           </td>
-                          <td style={columnRight}>{toRp(v.dis_rp)}</td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
+                            {toRp(v.dis_rp)}
+                          </td>
+                          <td className="middle nowrap text-right">
                             {parseFloat(v.dis_persen).toFixed(2)}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.hrg_beli))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.hrg_jual))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.profit))}
                           </td>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap">
                             {v.regmember ? v.regmember : "-"}
                           </td>
-                          <td style={columnStyle}>{v.kas_lain}</td>
-                          <td style={columnStyle}>{v.ket_kas_lain}</td>
-                          <td style={columnRight}>{toRp(parseFloat(v.gt))}</td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap">{v.kas_lain}</td>
+                          <td className="middle nowrap">{v.ket_kas_lain}</td>
+                          <td className="middle nowrap text-right">
+                            {toRp(parseFloat(v.gt))}
+                          </td>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.rounding))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.bayar))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.change))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.bayar) - parseFloat(v.change))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.jml_kartu))}
                           </td>
-                          <td style={columnRight}>
+                          <td className="middle nowrap text-right">
                             {toRp(parseFloat(v.charge))}
                           </td>
-                          <td style={columnStyle}>{v.kartu}</td>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap">{v.kartu}</td>
+                          <td className="middle nowrap">
                             {CapitalizeEachWord(v.status)}
                           </td>
-                          <td style={columnStyle}>{v.lokasi}</td>
-                          <td style={columnStyle}>{v.jenis_trx}</td>
+                          <td className="middle nowrap">{v.lokasi}</td>
+                          <td className="middle nowrap">{v.jenis_trx}</td>
                         </tr>
                       );
                     })
@@ -725,58 +658,58 @@ class SaleArchive extends Component {
             }
             <tfoot>
               <tr style={{ backgroundColor: "#EEEEEE" }}>
-                <td colSpan="8">TOTAL PERPAGE</td>
-                <td style={columnRight}>{toRp(omset_per)}</td>
-                <td style={columnRight}>{toRp(dis_item_per)}</td>
-                <td style={columnRight}>{toRp(dis_rp_per)}</td>
-                <td style={columnRight}>{dis_persen_per}</td>
+                <td colSpan="8">Total perhalaman</td>
+                <td className="text-right">{toRp(omset_per)}</td>
+                <td className="text-right">{toRp(dis_item_per)}</td>
+                <td className="text-right">{toRp(dis_rp_per)}</td>
+                <td className="text-right">{dis_persen_per}</td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>{toRp(hpp_per)}</td>
+                <td className="text-right">{toRp(hpp_per)}</td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>{toRp(profit_per)}</td>
+                <td className="text-right">{toRp(profit_per)}</td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>{toRp(kas_lain_per)}</td>
+                <td className="text-right">{toRp(kas_lain_per)}</td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>{toRp(gt_per)}</td>
-                <td style={columnRight}>{toRp(rounding_per)}</td>
-                <td style={columnRight}>{toRp(bayar_per)}</td>
-                <td style={columnRight}>{toRp(change_per)}</td>
-                <td style={columnRight}>{toRp(total_tunai)}</td>
-                <td style={columnRight}>{toRp(jml_kartu_per)}</td>
-                <td style={columnRight}>{toRp(charge_per)}</td>
+                <td className="text-right">{toRp(gt_per)}</td>
+                <td className="text-right">{toRp(rounding_per)}</td>
+                <td className="text-right">{toRp(bayar_per)}</td>
+                <td className="text-right">{toRp(change_per)}</td>
+                <td className="text-right">{toRp(total_tunai)}</td>
+                <td className="text-right">{toRp(jml_kartu_per)}</td>
+                <td className="text-right">{toRp(charge_per)}</td>
                 <td colSpan="4"></td>
               </tr>
               <tr style={{ backgroundColor: "#EEEEEE" }}>
-                <td colSpan="8">TOTAL</td>
-                <td style={columnRight}>{toRp(omset)}</td>
-                <td style={columnRight}>
+                <td colSpan="8">Total keseluruhan</td>
+                <td className="text-right">{toRp(omset)}</td>
+                <td className="text-right">
                   {toRp(dis_item === null ? 0 : dis_item.toFixed(0))}
                 </td>
-                <td style={columnRight}>
+                <td className="text-right">
                   {toRp(dis_rp === null ? 0 : dis_rp.toFixed(0))}
                 </td>
-                <td style={columnRight}>
+                <td className="text-right">
                   {dis_persen === null ? 0 : dis_persen.toFixed(0)}
                 </td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>
+                <td className="text-right">
                   {hpp === undefined && hpp === "" ? 0 : toRp(hpp)}
                 </td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>
+                <td className="text-right">
                   {profit === undefined && profit === "" ? 0 : toRp(profit)}
                 </td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>{toRp(kas_lain)}</td>
+                <td className="text-right">{toRp(kas_lain)}</td>
                 <td colSpan="1"></td>
-                <td style={columnRight}>{toRp(gt)}</td>
-                <td style={columnRight}>{toRp(rounding)}</td>
-                <td style={columnRight}>{toRp(bayar)}</td>
-                <td style={columnRight}>{toRp(change)}</td>
-                <td style={columnRight}>{toRp(total_tunai_all)}</td>
+                <td className="text-right">{toRp(gt)}</td>
+                <td className="text-right">{toRp(rounding)}</td>
+                <td className="text-right">{toRp(bayar)}</td>
+                <td className="text-right">{toRp(change)}</td>
+                <td className="text-right">{toRp(total_tunai_all)}</td>
 
-                <td style={columnRight}>{toRp(jml_kartu)}</td>
-                <td style={columnRight}>{toRp(charge)}</td>
+                <td className="text-right">{toRp(jml_kartu)}</td>
+                <td className="text-right">{toRp(charge)}</td>
                 <td colSpan="4"></td>
               </tr>
             </tfoot>

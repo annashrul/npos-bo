@@ -6,6 +6,12 @@ import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq from "helper";
 import FormPriceProduct from "../../../../modals/masterdata/price_product/form_price_product";
 import { generateNo, toCurrency } from "../../../../../../helper";
+import {
+  UncontrolledButtonDropdown,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+} from "reactstrap";
 
 class ListPriceProduct extends Component {
   constructor(props) {
@@ -177,29 +183,29 @@ class ListPriceProduct extends Component {
                         <td className="text-center middle nowrap">
                           {generateNo(i, current_page)}
                         </td>
-                        <td>
-                          {/* Example split danger button */}
-                          <div className="btn-group">
-                            <button
-                              className="btn btn-primary btn-sm"
-                              type="button"
-                              onClick={(e) =>
-                                this.handleEdit(
-                                  e,
-                                  v.id,
-                                  v.harga,
-                                  v.ppn,
-                                  v.service,
-                                  v.harga2,
-                                  v.harga3,
-                                  v.harga4,
-                                  v.harga_beli
-                                )
-                              }
-                            >
-                              Edit
-                            </button>
-                          </div>
+                        <td className="middle text-center nowrap">
+                          <UncontrolledButtonDropdown>
+                            <DropdownToggle caret></DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem
+                                onClick={(e) =>
+                                  this.handleEdit(
+                                    e,
+                                    v.id,
+                                    v.harga,
+                                    v.ppn,
+                                    v.service,
+                                    v.harga2,
+                                    v.harga3,
+                                    v.harga4,
+                                    v.harga_beli
+                                  )
+                                }
+                              >
+                                Edit
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledButtonDropdown>
                         </td>
                         <td className="text-left middle nowrap">{v.kd_brg}</td>
                         <td className="text-left middle nowrap">

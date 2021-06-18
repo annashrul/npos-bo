@@ -15,7 +15,13 @@ import { HEADERS } from "redux/actions/_constants";
 import Select from "react-select";
 // import FileBase64 from "react-file-base64";
 import moment from "moment";
-import { rmComma, select2Group, toCurrency } from "../../../../../helper";
+import {
+  handleError,
+  rmComma,
+  select2Group,
+  setFocus,
+  toCurrency,
+} from "../../../../../helper";
 import { isNaN } from "lodash";
 import FormSubDepartment from "../../../../../components/App/modals/masterdata/department/form_sub_department";
 import FormGroupProduct from "../../../../../components/App/modals/masterdata/group_product/form_group_product";
@@ -38,6 +44,7 @@ class FormProduct extends Component {
     super(props);
     this.state = {
       isModalFormGroupProduct: false,
+      isModalFormPrinter: false,
       detail: {},
       nm_harga1: "1",
       nm_harga2: "2",
@@ -82,7 +89,7 @@ class FormProduct extends Component {
       deskripsi: "-",
       gambar: "",
       jenis: "1",
-      kcp: "-",
+      kcp: "",
       kcp_data: [],
       poin: "0",
       online: "0",
@@ -288,6 +295,7 @@ class FormProduct extends Component {
   clearState() {
     this.setState({
       isModalFormGroupProduct: false,
+      isModalFormPrinter: false,
       detail: {},
       nm_harga1: "1",
       nm_harga2: "2",
@@ -332,7 +340,7 @@ class FormProduct extends Component {
       deskripsi: "-",
       gambar: "",
       jenis: "1",
-      kcp: "-",
+      kcp: "",
       poin: "0",
       online: "0",
       berat: "0",
@@ -528,7 +536,10 @@ class FormProduct extends Component {
 
   componentWillUnmount() {
     console.log("componentWillUnmount");
-    this.setState({ isModalFormGroupProduct: false });
+    this.setState({
+      isModalFormGroupProduct: false,
+      isModalFormPrinter: false,
+    });
   }
 
   genBrcd(val) {
@@ -684,9 +695,6 @@ class FormProduct extends Component {
   };
   toggleModal(e, param) {
     e.preventDefault();
-    // const bool = !this.props.isOpen;
-    // this.props.dispatch(ModalToggle(true));
-
     this.setState({
       detail: { kel_brg: "" },
       filled: true,
@@ -721,7 +729,19 @@ class FormProduct extends Component {
       this.setState({ gambar: base64 });
     }
   };
+
   getProps(param) {
+    let kel_brg = [],
+      group1 = [],
+      group2 = [],
+      kcp = [];
+
+    if (param.checkKodeBarang) {
+      handleError("", "kode barang sudah digunakan");
+      this.setState({ kd_brg: "" });
+      setFocus(this, "kd_brg");
+      return;
+    }
     this.setState({
       nm_harga1: param.auth.user.harga1,
       nm_harga2: param.auth.user.harga2,
@@ -1072,10 +1092,7 @@ class FormProduct extends Component {
         }
       }
     }
-    let kel_brg = [];
-    let group1 = [];
-    let group2 = [];
-    let kcp = [];
+
     if (param.data.data !== undefined) {
       if (typeof param.data.data === "object") {
         param.data.data.map((v) => {
@@ -1284,134 +1301,7 @@ class FormProduct extends Component {
       error: err,
     });
   }
-  handleSelect = (index) => {
-    let err = this.state.error;
-    if (this.props.checkKodeBarang !== false) {
-      this.setState({
-        kd_brg: "0",
-      });
-      return;
-    }
-    if (this.state.kd_brg === "" || this.state.kd_brg === undefined) {
-      err = Object.assign({}, err, {
-        kd_brg: "kode barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.nm_brg === "" || this.state.nm_brg === undefined) {
-      err = Object.assign({}, err, {
-        nm_brg: "nama barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.kel_brg === "" || this.state.kel_brg === undefined) {
-      err = Object.assign({}, err, {
-        kel_brg: "kelompok barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.kategori === "" || this.state.kategori === undefined) {
-      err = Object.assign({}, err, {
-        kategori: "kategori barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.stock_min === "" || this.state.stock_min === undefined) {
-      err = Object.assign({}, err, { stock_min: "Stock tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.group1 === "" || this.state.group1 === undefined) {
-      err = Object.assign({}, err, { group1: "supplier tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.group2 === "" || this.state.group2 === undefined) {
-      err = Object.assign({}, err, { group2: "sub dept tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.deskripsi === "" || this.state.deskripsi === undefined) {
-      err = Object.assign({}, err, {
-        deskripsi: "deskripsi tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.jenis === "" || this.state.jenis === undefined) {
-      err = Object.assign({}, err, { jenis: "jenis tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.kcp === "" || this.state.kcp === undefined) {
-      err = Object.assign({}, err, { kcp: "kcp tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.poin === "" || this.state.poin === undefined) {
-      err = Object.assign({}, err, { poin: "poin tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.online === "" || this.state.online === undefined) {
-      err = Object.assign({}, err, { online: "online tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.berat === "" || this.state.berat === undefined) {
-      err = Object.assign({}, err, { berat: "berat tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (index === 1) {
-      for (let i = 0; i < this.state.barangSku.length; i++) {
-        if (
-          this.state.barangSku[i].barcode === "0" ||
-          this.state.barangSku[i].barcode === "" ||
-          this.state.barangSku[i].barcode === undefined
-        ) {
-          alert(`barcode ${i + 1} tidak boleh kosong atau tidak boleh 0`);
-          return;
-        }
-        if (
-          this.state.barangSku[i].satuan_jual === "" ||
-          this.state.barangSku[i].satuan_jual === undefined
-        ) {
-          alert(`form tampilkan di pos index ke ${i + 1} tidak boleh kosong`);
-          return;
-        }
-        if (this.state.barangSku[i].qty === "") {
-          alert(`Satuan tidak boleh kosong`);
-          return;
-        }
-      }
 
-      for (let i = 1; i < this.state.barangSku.length; i++) {
-        if (
-          parseInt(this.state.barangSku[i].konversi, 10) <= 0 ||
-          this.state.barangSku[i].konversi === ""
-        ) {
-          alert(
-            `Konversi Qty pada barcode ${this.state.barangSku[i].barcode} tidak boleh kosong atau kurang dari = 0`
-          );
-          return;
-        }
-      }
-    }
-    if (
-      this.state.error_barcode1 === true ||
-      this.state.error_barcode2 === true ||
-      this.state.error_barcode3 === true
-    ) {
-      return;
-    }
-
-    this.setState({ selectedIndex: index }, () => {});
-  };
   onHandleChangeChild(event, i) {
     event.preventDefault();
     this.setState({ [event.target.name]: event.target.value });
@@ -2129,7 +2019,7 @@ class FormProduct extends Component {
       } else {
         let brgSku = [];
         for (let i = 0; i < 1; i++) {
-          let satuan = val === "1" ? "" : val === "1" ? "Pcs" : "Pack";
+          let satuan = val === "1" ? "" : val === "1" ? "" : "";
           brgSku.push({
             barcode: `${this.state.kd_brg}`,
             qty: satuan,
@@ -2977,6 +2867,16 @@ class FormProduct extends Component {
       }
     }
   }
+  handleEmptyOrUndefined(val, msg = "", isFocus = true) {
+    if (this.state[val] === "" || this.state[val] === undefined) {
+      handleError(msg);
+      if (isFocus) {
+        setFocus(this, val);
+      }
+      return false;
+    }
+    return true;
+  }
   handleSubmit(e) {
     e.preventDefault();
     let parseData = {};
@@ -3000,79 +2900,35 @@ class FormProduct extends Component {
     parseData["berat"] = this.state.berat;
     parseData["gambar"] =
       parseData["gambar"] === "" ? "-" : this.state.gambar.base64;
-
+    console.log(this.state.kcp);
     let err = this.state.error;
     if (this.props.checkKodeBarang !== false) {
-      err = Object.assign({}, err, {
-        kd_brg: "kode barang sudah digunakan",
-      });
-      this.setState({
-        kd_brg: "0",
-        error: err,
-      });
+      handleError("", "kode barang sudah digunakan");
+      this.setState({ kd_brg: "" });
+      setFocus(this, "kd_brg");
       return;
     }
-    if (this.state.kd_brg === "" || this.state.kd_brg === undefined) {
-      err = Object.assign({}, err, {
-        kd_brg: "kode barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
+    if (!this.handleEmptyOrUndefined("kd_brg", "kode barang")) return;
+    if (!this.handleEmptyOrUndefined("nm_brg", "nama barang")) return;
+    if (!this.handleEmptyOrUndefined("kel_brg", "kelompok barang", false))
       return;
-    }
-    if (this.state.nm_brg === "" || this.state.nm_brg === undefined) {
-      err = Object.assign({}, err, {
-        nm_brg: "nama barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.kel_brg === "" || this.state.kel_brg === undefined) {
-      err = Object.assign({}, err, {
-        kel_brg: "kelompok barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.kategori === "" || this.state.kategori === undefined) {
-      err = Object.assign({}, err, {
-        kategori: "kategori barang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.stock_min === "" || this.state.stock_min === undefined) {
-      err = Object.assign({}, err, { stock_min: "Stock tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.group1 === "" || this.state.group1 === undefined) {
-      err = Object.assign({}, err, { group1: "supplier tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-
-    if (this.state.jenis === "" || this.state.jenis === undefined) {
-      err = Object.assign({}, err, { jenis: "jenis tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    }
-    if (this.state.kcp === "" || this.state.kcp === undefined) {
-      err = Object.assign({}, err, { kcp: "printer tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
+    if (!this.handleEmptyOrUndefined("group1", "supplier", false)) return;
+    if (this.props.auth.user.is_resto === 1 && this.state.jenis === "5") {
+      if (!this.handleEmptyOrUndefined("kcp", "printer", false)) return;
     }
 
     for (let sku = 0; sku < this.state.barangSku.length; sku++) {
       let stateSku = this.state.barangSku[sku];
-      let satuan = "";
-      if (sku === 0) {
-        satuan = `PCS`;
+      let satuan = sku === 0 ? "PCS" : sku === 1 ? "PACK" : "KARTON";
+
+      // satuan = sku === 0 && "PCS" ? sku === 1 && "PACK" : sku === 2 && "KARTON";
+      if (stateSku.barcode === "" || stateSku.barcode === undefined) {
+        handleError("barcode");
+        return;
       }
-      if (sku === 1) {
-        satuan = `PACK`;
-      }
-      if (sku === 2) {
-        satuan = `KARTON`;
+      if (stateSku.qty === "" || stateSku.qty === undefined) {
+        handleError("satuan");
+        return;
       }
       barangSku.push({
         barcode: stateSku.barcode,
@@ -3091,30 +2947,25 @@ class FormProduct extends Component {
         let hrgJual2 = `hrgJual2${satuan}`;
         let hrgJual3 = `hrgJual3${satuan}`;
         let hrgJual4 = `hrgJual4${satuan}`;
-
-        if (this.state[`error_barcode${brgHrg + 1}`]) {
-          alert(`terjadi kesalahan pada form barcode`);
-          return false;
+        if (
+          stateBrgHrg[hrgbeli] === undefined ||
+          parseInt(rmComma(stateBrgHrg[hrgbeli]), 10) < 1
+        ) {
+          handleError("harga beli");
+          return;
         }
+
         for (let setHrg = 0; setHrg < this.state.set_harga; setHrg++) {
           let valHrgJual = `hrgJual${setHrg + 1}${satuan}`;
           let valMargin = `margin${setHrg + 1}${satuan}`;
-          let lblHrg = `nm_harga${setHrg + 1}`;
-          if (
-            parseInt(rmComma(stateBrgHrg[hrgbeli]), 10) === 0 ||
-            parseInt(rmComma(stateBrgHrg[hrgbeli]), 10) < 0 ||
-            stateBrgHrg[hrgbeli] === ""
-          ) {
-            alert(`harga beli tidak boleh atau kurang dari 0`);
-            return false;
-          }
+
           if (this.state.jenis !== "4") {
             if (parseInt(rmComma(stateBrgHrg[valMargin]), 10) < 0) {
-              alert(`margin tidak boleh kurang dari 0`);
+              handleError("margin");
               return false;
             }
             if (stateBrgHrg[valHrgJual] === "") {
-              alert(`harga jual tidak boleh atau kurang dari 0`);
+              handleError("harga jual");
               return false;
             }
             if (
@@ -3172,22 +3023,22 @@ class FormProduct extends Component {
         });
       }
     }
-    console.log(barangSku);
-    parseData["barang_sku"] = barangSku;
-    parseData["barang_harga"] = barangHarga;
-    if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
-      this.props.dispatch(
-        updateProduct(this.state.kd_brg, parseData, (status) => {
-          if (status) this.clearState();
-        })
-      );
-    } else {
-      this.props.dispatch(
-        createProduct(parseData, (status) => {
-          if (status) this.clearState();
-        })
-      );
-    }
+    // console.log(barangSku);
+    // parseData["barang_sku"] = barangSku;
+    // parseData["barang_harga"] = barangHarga;
+    // if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
+    //   this.props.dispatch(
+    //     updateProduct(this.state.kd_brg, parseData, (status) => {
+    //       if (status) this.clearState();
+    //     })
+    //   );
+    // } else {
+    //   this.props.dispatch(
+    //     createProduct(parseData, (status) => {
+    //       if (status) this.clearState();
+    //     })
+    //   );
+    // }
   }
   getFiles(files) {
     this.setState({
@@ -3321,6 +3172,7 @@ class FormProduct extends Component {
                     <div className="form-group">
                       <div className="input-group">
                         <input
+                          ref={(input) => (this[`kd_brg`] = input)}
                           readOnly={
                             this.props.dataEdit === undefined ? false : true
                           }
@@ -3332,7 +3184,6 @@ class FormProduct extends Component {
                           value={this.state.kd_brg}
                           onChange={(e) => this.handleChange(e, null)}
                           onBlur={(e) => this.handleChange(e, null, "onBlur")}
-                          required
                           max
                         />
                         <div className="input-group-append">
@@ -3371,61 +3222,18 @@ class FormProduct extends Component {
                           )}
                         </div>
                       </div>
-                      {/* <small
-                        htmlFor="inputState"
-                        className="col-form-label d-flex align-items-center p-0"
-                      >
-                        {this.props.dataEdit === undefined ? (
-                          <input
-                            type="checkbox"
-                            className="mr-2"
-                            checked={this.state.generateCode}
-                            onChange={this.generateCode}
-                          />
-                        ) : (
-                          ""
-                        )}{" "}
-                        Generate Kode Barang{" "}
-                        <span className="text-danger">&#42;</span>
-                      </small> */}
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.kd_brg ||
-                          this.props.checkKodeBarang === true
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.kd_brg === "" ||
-                        this.state.kd_brg === undefined
-                          ? this.state.error.kd_brg
-                          : this.props.checkKodeBarang === true
-                          ? "kode barang sudah digunakan"
-                          : ""}
-                      </div>
                     </div>
 
                     <div className="form-group">
                       <input
                         type="text"
+                        ref={(input) => (this[`nm_brg`] = input)}
                         className="form-control"
                         placeholder="Nama Barang"
                         name="nm_brg"
                         value={this.state.nm_brg}
                         onChange={(e) => this.handleChange(e, null)}
-                        required
                       />
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.nm_brg !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.nm_brg}
-                      </div>
                     </div>
 
                     <div className="form-group">
@@ -3438,16 +3246,6 @@ class FormProduct extends Component {
                         (e) => this.toggleModal(e, "formGroupProduct"),
                         "kelompok barang"
                       )}
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.kel_brg !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.kel_brg}
-                      </div>
                     </div>
 
                     <div className="form-group">
@@ -3460,62 +3258,7 @@ class FormProduct extends Component {
                         (e) => this.toggleModal(e, "formSupplier"),
                         "supplier"
                       )}
-
-                      <div
-                        className="invalid-feedback"
-                        style={
-                          this.state.error.group1 !== ""
-                            ? { display: "block" }
-                            : { display: "none" }
-                        }
-                      >
-                        {this.state.error.group1}
-                      </div>
                     </div>
-
-                    {this.props.auth.user.is_resto === 1 ? (
-                      <div className="form-group">
-                        <div className="d-flex align-items-center">
-                          <div
-                            style={{
-                              width: "-webkit-fill-available",
-                              marginRight: "1%",
-                            }}
-                          >
-                            <Select
-                              options={this.state.kcp_data}
-                              placeholder="Pilih Printer"
-                              onChange={this.handleKcp}
-                              value={this.state.kcp_data.find((op) => {
-                                return op.value === this.state.kcp;
-                              })}
-                            />
-                          </div>
-                          <div style={{ width: "auto" }}>
-                            <button
-                              className="btn btn-primary btn-block"
-                              onClick={(e) =>
-                                this.toggleModal(e, "formPrinter")
-                              }
-                            >
-                              <i className="fa fa-plus"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <div
-                          className="invalid-feedback"
-                          style={
-                            this.state.error.kcp !== ""
-                              ? { display: "block" }
-                              : { display: "none" }
-                          }
-                        >
-                          {this.state.error.kcp}
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )}
 
                     <div className="row no-gutters">
                       <div className="col-md-4">
@@ -3553,20 +3296,25 @@ class FormProduct extends Component {
                             <option value="3">Servis</option>
                             <option value="0">Karton</option>
                             <option value="4">Bahan</option>
+                            <option value="5">Menu paket</option>
                           </select>
-                          <div
-                            className="invalid-feedback"
-                            style={
-                              this.state.error.jenis !== ""
-                                ? { display: "block" }
-                                : { display: "none" }
-                            }
-                          >
-                            {this.state.error.jenis}
-                          </div>
                         </div>
                       </div>
                     </div>
+                    {this.props.auth.user.is_resto === 1 &&
+                      this.state.jenis === "5" && (
+                        <div className="form-group">
+                          {select2Group(
+                            this.state.kcp_data.find((op) => {
+                              return op.value === this.state.kcp;
+                            }),
+                            (any, action) => this.handleKcp(any, action),
+                            this.state.kcp_data,
+                            (e) => this.toggleModal(e, "formPrinter"),
+                            "printer"
+                          )}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -3637,7 +3385,6 @@ class FormProduct extends Component {
                                     value={this.state.barangSku[x].barcode}
                                     onChange={(e) => this.handleChange(e, x)}
                                     onBlur={(e) => this.checkData(e, x)}
-                                    required
                                   />
                                   <div
                                     className="input-group-append"
@@ -3671,56 +3418,6 @@ class FormProduct extends Component {
                                     )}
                                   </div>
                                 </div>
-                                {x === 0 ? (
-                                  this.state.error_barcode1 === true ? (
-                                    <small
-                                      style={{
-                                        color: "red",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {this.state.pesan_barcode1}
-                                    </small>
-                                  ) : (
-                                    ""
-                                  )
-                                ) : (
-                                  ""
-                                )}
-                                {x === 1 ? (
-                                  this.state.error_barcode2 === true ? (
-                                    <small
-                                      style={{
-                                        color: "red",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {this.state.pesan_barcode2}
-                                    </small>
-                                  ) : (
-                                    ""
-                                  )
-                                ) : (
-                                  ""
-                                )}
-                                {x === 2 ? (
-                                  this.state.error_barcode3 === true ? (
-                                    <small
-                                      style={{
-                                        color: "red",
-                                        fontWeight: "bold",
-                                      }}
-                                    >
-                                      {this.state.pesan_barcode3}
-                                    </small>
-                                  ) : (
-                                    ""
-                                  )
-                                ) : (
-                                  ""
-                                )}
-
-                                {/*<small>{this.props.checkBarcode1 === true ? "barcode 1 sudah digunakan" : (this.props.checkBarcode2 === true ? "barcode 2 sudah digunakan" : this.props.checkBarcode3 === true ? "barcode 3 sudah digunakan" : "")}</small>*/}
                               </td>
                               <td>
                                 <input
@@ -3730,7 +3427,6 @@ class FormProduct extends Component {
                                   name="qty"
                                   value={this.state.barangSku[x].qty}
                                   onChange={(e) => this.handleChange(e, x)}
-                                  required
                                 />
                               </td>
                               <td
@@ -3749,7 +3445,6 @@ class FormProduct extends Component {
                                   name="konversi"
                                   value={this.state.barangSku[x].konversi}
                                   onChange={(e) => this.handleChange(e, x)}
-                                  required
                                 />
                               </td>
                               <td
@@ -3890,11 +3585,13 @@ class FormProduct extends Component {
                                     <div className="row">
                                       <div className="col-md-4">
                                         <div className="form-group">
-                                          <label>Harga Beli ({lbl})</label>
+                                          <label>
+                                            Harga Beli ({lbl}) {i}
+                                          </label>
                                           <input
                                             type="text"
                                             placeholder={`hrg beli ${lbl}`}
-                                            className="form-control"
+                                            className={`form-control`}
                                             name={stateHargaBeli}
                                             value={toCurrency(
                                               this.state[stateHargaBeli]
@@ -3993,7 +3690,8 @@ class FormProduct extends Component {
                                                   Harga Jual
                                                   {this.state.set_harga > 1
                                                     ? ` ${this.state[place]}`
-                                                    : ""}
+                                                    : ""}{" "}
+                                                  {`hrgjual${z}`}
                                                 </label>
                                                 <input
                                                   readOnly={
@@ -4401,7 +4099,9 @@ class FormProduct extends Component {
           dataEdit={this.props.dataEdit}
           productCode={this.props.productCode}
         />
-        <FormPrinter fastAdd={true} />
+        {this.props.auth.user.is_resto === 1 && (
+          <FormPrinter detail={{ id_printer: "" }} fastAdd={true} />
+        )}
       </div>
     );
   }

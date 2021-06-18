@@ -158,37 +158,36 @@ class ListGroupProduct extends Component {
                 data.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td className="middle">{generateNo(i, current_page)}</td>
-                      <td className="middle">
-                        {/* Example split danger button */}
-                        <div className="btn-group">
-                          <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>Aksi</DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleEdit(
-                                    e,
-                                    v.kel_brg,
-                                    v.nm_kel_brg,
-                                    v.group2,
-                                    v.margin,
-                                    v.dis_persen,
-                                    v.status,
-                                    "-"
-                                  )
-                                }
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleDelete(e, v.kel_brg)}
-                              >
-                                Delete
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledButtonDropdown>
-                        </div>
+                      <td className="middle text-center nowrap">
+                        {generateNo(i, current_page)}
+                      </td>
+                      <td className="middle text-center nowrap">
+                        <UncontrolledButtonDropdown>
+                          <DropdownToggle caret></DropdownToggle>
+                          <DropdownMenu>
+                            <DropdownItem
+                              onClick={(e) =>
+                                this.handleEdit(
+                                  e,
+                                  v.kel_brg,
+                                  v.nm_kel_brg,
+                                  v.group2,
+                                  v.margin,
+                                  v.dis_persen,
+                                  v.status,
+                                  "-"
+                                )
+                              }
+                            >
+                              Edit
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={(e) => this.handleDelete(e, v.kel_brg)}
+                            >
+                              Delete
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                       </td>
                       <td className="middle">{v.nm_kel_brg}</td>
                       <td className="middle">{v.subdept}</td>

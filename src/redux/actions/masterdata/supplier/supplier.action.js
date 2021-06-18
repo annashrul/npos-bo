@@ -3,6 +3,15 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
+
+import {
+  handleDelete,
+  handleGet,
+  handlePost,
+  handlePut,
+} from "../../handleHttp";
+import { swal } from "../../../../helper";
+const baseUrl = "supplier";
 export function setLoading(load) {
   return { type: SUPPLIER.LOADING, load };
 }
@@ -17,197 +26,57 @@ export function setSupplierFailed(data = []) {
   return { type: SUPPLIER.FAILED, data };
 }
 
-export const FetchSupplier = (page = 1, q = "") => {
+export const FetchSupplier = (where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Nprogress.start();
-
-    let url = "";
-    if (q === "") {
-      url = `supplier?page=${page}`;
-    } else {
-      url = `supplier?page=${page}&q=${q}`;
-    }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
+    let url = baseUrl;
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
         dispatch(setSupplier(data));
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+      },
+      true
+    );
   };
 };
 export const FetchSupplierAll = () => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-
-    axios
-      .get(HEADERS.URL + `supplier?page=1&perpage=9999999`)
-      .then(function (response) {
-        const data = response.data;
-
+    handleGet(
+      baseUrl + "?page=1&perpage=9999999",
+      (res) => {
+        const data = res.data;
         dispatch(setSupplierAll(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+      },
+      true
+    );
   };
 };
 
-export const createSupplier = (data, token, fastAdd=false) => {
+export const createSupplier = (data, fastAdd = false, where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `supplier`;
-
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        if (fastAdd) {
-          dispatch(FetchSupplierAll());
-        } else {
-          dispatch(
-            FetchSupplier(
-              localStorage.getItem("page_supplier")
-                ? localStorage.getItem("page_supplier")
-                : 1,
-              ""
-            )
-          );
-        }
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
+    handlePost(baseUrl, data, (res, msg, status) => {
+      swal(msg);
+      if (fastAdd) dispatch(FetchSupplierAll());
+      dispatch(FetchSupplier(where));
+    });
   };
 };
-export const updateSupplier = (id, data, token) => {
+
+export const updateSupplier = (id, data, where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `supplier/${id}`;
-
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchSupplier(
-            localStorage.getItem("page_supplier")
-              ? localStorage.getItem("page_supplier")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handlePut(baseUrl + "/" + id, data, (res, msg, status) => {
+      swal(msg);
+      dispatch(FetchSupplier(where));
+    });
   };
 };
-export const deleteSupplier = (id, token) => {
+
+export const deleteSupplier = (id, where) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `supplier/${id}`;
-
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchSupplier(
-            localStorage.getItem("page_supplier")
-              ? localStorage.getItem("page_supplier")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(baseUrl + "/" + id, () => {
+      if (where.total === 1) dispatch(FetchSupplier("page=1"));
+      dispatch(FetchSupplier(where.where));
+    });
   };
 };

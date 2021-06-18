@@ -11,9 +11,7 @@ class Area extends Component {
     this.state = { token: "" };
   }
   componentWillMount() {
-    let any = localStorage.getItem("any_area");
-    let page = localStorage.getItem("page_area");
-    this.props.dispatch(FetchArea(page ? page : 1, any ? any : ""));
+    this.props.dispatch(FetchArea("page=1"));
   }
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.auth.user) {

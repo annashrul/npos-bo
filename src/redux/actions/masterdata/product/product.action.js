@@ -12,9 +12,14 @@ import {
 } from "../../handleHttp";
 import { ModalToggle } from "../../modal.action";
 import { swal } from "../../../../helper";
+import { actionDataCommon } from "../../../../components/App/common/FlowTrxCommon";
+import { update } from "lodash";
 
 export function setLoadingbrg(load) {
   return { type: PRODUCT.LOADING_BRG, load };
+}
+export function setLoadingDataTrx(load) {
+  return { type: PRODUCT.LOADING_DATA_PRODUCT_TRX, load };
 }
 export function setLoadingbrgAll(load) {
   return { type: PRODUCT.LOADING_BRG_ALL, load };
@@ -24,6 +29,9 @@ export function setLoadingBrgSale(load) {
 }
 export function setProductDetail(data = []) {
   return { type: PRODUCT.DETAIL, data };
+}
+export function setDataTrx(data = []) {
+  return { type: PRODUCT.DATA_PRODUCT_TRX, data };
 }
 export function setProductbrg(data = []) {
   return { type: PRODUCT.SUCCESS_BRG, data };
@@ -453,6 +461,28 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
       });
   };
 };
+
+export const readProductTrx = (where = "", callback) => {
+  let url = `barang/get`;
+  if (where !== "") url += `?${where}`;
+  return (dispatch) => {
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
+        if (data.result.data.length === 1) {
+          const barang = data.result.data;
+          callback(barang);
+          dispatch(setDataTrx(data));
+        } else {
+          dispatch(setDataTrx(data));
+        }
+      },
+      true
+    );
+  };
+};
+
 const Toast = Swal.mixin({
   toast: true,
   position: "bottom-end",

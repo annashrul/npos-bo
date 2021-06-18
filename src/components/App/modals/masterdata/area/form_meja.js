@@ -8,6 +8,7 @@ import {
   updateMeja,
 } from "redux/actions/masterdata/meja/meja.action";
 import Select from "react-select";
+import { handleError } from "../../../../../helper";
 
 class FormMeja extends Component {
   constructor(props) {
@@ -32,24 +33,10 @@ class FormMeja extends Component {
       ],
       id: "",
       user: "",
-      error: {
-        kapasitas: "",
-        width: "",
-        height: "",
-        bentuk: "",
-        area: "",
-        jumlah: "",
-      },
     };
   }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    let err = Object.assign({}, this.state.error, {
-      [event.target.name]: "",
-    });
-    this.setState({
-      error: err,
-    });
   };
   toggle = (e) => {
     e.preventDefault();
@@ -58,46 +45,37 @@ class FormMeja extends Component {
     this.setState({});
   };
   HandleChangeArea(ar) {
-    let err = Object.assign({}, this.state.error, {
-      area: "",
-    });
     this.setState({
       area: ar,
-      error: err,
     });
-    localStorage.setItem("area_meja", ar);
   }
   HandleChangeBentuk(ar) {
-    let err = Object.assign({}, this.state.error, {
-      bentuk: "",
-    });
     this.setState({
       bentuk: ar,
-      error: err,
     });
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.detail !== [] && nextProps.detail !== undefined) {
-      let data = nextProps.area.filter(
-        (item) => item.id_area === nextProps.detail.id_area
+  getProps(props) {
+    if (props.detail !== [] && props.detail !== undefined) {
+      let data = props.area.filter(
+        (item) => item.id_area === props.detail.id_area
       );
       let dataBentuk = this.state.bentuk_data.filter(
-        (item) => item.value === nextProps.detail.bentuk
+        (item) => item.value === props.detail.bentuk
       );
 
       this.setState({
-        kapasitas: nextProps.detail.kapasitas,
+        kapasitas: props.detail.kapasitas,
         area: {
           value: data[0] === undefined ? "" : data[0].id_area,
           label: data[0] === undefined ? "" : data[0].nama,
         },
-        height: nextProps.detail.height,
-        width: nextProps.detail.width,
+        height: props.detail.height,
+        width: props.detail.width,
         bentuk: {
           value: dataBentuk[0] === undefined ? "" : dataBentuk[0].value,
           label: dataBentuk[0] === undefined ? "" : dataBentuk[0].label,
         },
-        id: nextProps.detail.id,
+        id: props.detail.id,
       });
     } else {
       this.setState({
@@ -110,9 +88,9 @@ class FormMeja extends Component {
         id: "",
       });
     }
-    if (nextProps.auth.user) {
+    if (props.auth.user) {
       let ar = [];
-      let are = nextProps.area;
+      let are = props.area;
       if (are !== undefined) {
         are.map((i) => {
           ar.push({
@@ -123,75 +101,68 @@ class FormMeja extends Component {
         });
         this.setState({
           area_data: ar,
-          userid: nextProps.auth.user.id,
+          userid: props.auth.user.id,
         });
       }
     }
   }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
   handleSubmit(e) {
     e.preventDefault();
+    let parseDataU = this.validError();
+    if (this.props.detail === undefined) {
+      this.props.dispatch(createMeja(parseDataU));
+    } else {
+      this.props.dispatch(
+        updateMeja(this.state.id, parseDataU, this.props.detail.where)
+      );
+    }
+  }
+  validError() {
     let parseDataU = {};
     if (this.props.detail === undefined) {
       parseDataU["jumlah"] = parseInt(this.state.jumlah, 10);
       parseDataU["area"] = this.state.area.value;
     }
-
     parseDataU["kapasitas"] = parseInt(this.state.kapasitas, 10);
     parseDataU["height"] = parseInt(this.state.height, 10);
     parseDataU["width"] = parseInt(this.state.width, 10);
     parseDataU["bentuk"] = this.state.bentuk.value;
-    let err = this.state.error;
-
     if (this.props.detail === undefined) {
       if (parseDataU["area"] === undefined) {
-        err = Object.assign({}, err, {
-          area: "area tidak boleh kosong",
-        });
-        this.setState({ error: err });
-        return;
+        handleError("area");
+        return false;
       }
       if (isNaN(parseDataU["jumlah"]) || parseDataU["jumlah"] < 1) {
-        err = Object.assign({}, err, {
-          jumlah: "jumlah meja tidak boleh kosong",
-        });
-        this.setState({ error: err });
-        return;
+        handleError("jumlah meja");
+        return false;
       }
     }
     if (isNaN(parseDataU["width"]) || parseDataU["width"] < 1) {
-      err = Object.assign({}, err, {
-        width: "lebar tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
+      handleError("lebar");
+      return false;
     }
     if (isNaN(parseDataU["height"]) || parseDataU["height"] < 1) {
-      err = Object.assign({}, err, {
-        height: "panjang tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
+      handleError("tinggi meja");
+      return false;
     }
     if (isNaN(parseDataU["kapasitas"]) || parseDataU["kapasitas"] < 1) {
-      err = Object.assign({}, err, {
-        kapasitas: "kapasitas tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
+      handleError("kapasitas");
+      return false;
     }
     if (parseDataU["bentuk"] === "" || parseDataU["bentuk"] === undefined) {
-      err = Object.assign({}, err, {
-        bentuk: "bentuk tidak boleh kosong",
-      });
-      this.setState({ error: err });
-      return;
+      handleError("bentuk");
+      return false;
     }
-
-    if (this.props.detail === undefined) {
-      this.props.dispatch(createMeja(parseDataU));
-    } else {
-      this.props.dispatch(updateMeja(this.state.id, parseDataU));
-    }
+    return parseDataU;
   }
 
   getFiles(files) {
@@ -206,7 +177,7 @@ class FormMeja extends Component {
         size="md"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined ? "Add Meja" : "Update Meja"}
+          {this.props.detail === undefined ? "Tambah Meja" : "Ubah Meja"}
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
@@ -227,16 +198,6 @@ class FormMeja extends Component {
                     onChange={this.HandleChangeArea}
                     value={this.state.area}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.area !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.area}
-                  </div>
                 </div>
               </div>
               <div
@@ -257,16 +218,6 @@ class FormMeja extends Component {
                     value={this.state.jumlah}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.jumlah !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.jumlah}
-                  </div>
                 </div>
               </div>
               <div className="col-md-6">
@@ -281,16 +232,6 @@ class FormMeja extends Component {
                     value={this.state.width}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.width !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.width}
-                  </div>
                 </div>
               </div>
               <div className="col-md-6">
@@ -305,16 +246,6 @@ class FormMeja extends Component {
                     value={this.state.height}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.height !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.height}
-                  </div>
                 </div>
               </div>
               <div className="col-md-6">
@@ -329,16 +260,6 @@ class FormMeja extends Component {
                     value={this.state.kapasitas}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.kapasitas !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.kapasitas}
-                  </div>
                 </div>
               </div>
               <div className="col-md-6">
@@ -352,16 +273,6 @@ class FormMeja extends Component {
                     onChange={this.HandleChangeBentuk}
                     value={this.state.bentuk}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.bentuk !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.bentuk}
-                  </div>
                 </div>
               </div>
             </div>
@@ -373,7 +284,7 @@ class FormMeja extends Component {
                 className="btn btn-warning mb-2 mr-2"
                 onClick={this.toggle}
               >
-                Cancel
+                Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
                 Simpan

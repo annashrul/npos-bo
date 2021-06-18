@@ -480,7 +480,6 @@ class ListProduct extends Component {
                     (first, last) => {
                       this.handlePeriode(first, last);
                     },
-                    () => {},
                     `${this.state.startDate} to ${this.state.endDate}`,
                     !this.state.semua_periode ? true : false
                   )}
@@ -605,7 +604,7 @@ class ListProduct extends Component {
                         <td style={centerStyle}>
                           <div className="btn-group">
                             <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem
                                   onClick={(e) =>

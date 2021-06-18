@@ -23,9 +23,18 @@ class ListArea extends Component {
     this.handlesearch = this.handlesearch.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.state = {
+      any: "",
       detail: {},
       lokasi_data: [],
+      where: "",
     };
+  }
+
+  handleGet(any, page) {
+    let where = `page=${page}`;
+    if (any !== "") where += `&q=${any}`;
+    this.setState({ where: where });
+    this.props.dispatch(FetchArea(where));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -34,20 +43,15 @@ class ListArea extends Component {
     });
   }
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_customer", pageNumber);
-    this.props.dispatch(FetchArea(pageNumber, ""));
+    this.handleGet(this.state.any, pageNumber);
   }
   handlesearch(e) {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    let any = data.get("field_any");
-    localStorage.setItem("any_customer", any);
-    if (any === "" || any === null || any === undefined) {
-      this.props.dispatch(FetchArea(1, ""));
-    } else {
-      this.props.dispatch(FetchArea(1, any));
-    }
+    let any = data.get("any");
+    this.setState({ any: any });
+    this.handleGet(any, 1);
   }
   toggleModal(e, i) {
     e.preventDefault();
@@ -55,11 +59,13 @@ class ListArea extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formArea"));
     if (i === null) {
-      this.setState({ detail: undefined });
+      this.setState({ detail: { id: "" } });
     } else {
       this.setState({
         detail: {
+          where: this.state.where,
           lokasi: this.props.data.data[i].lokasi,
+          id_lokasi: this.props.data.data[i].id_lokasi,
           nama: this.props.data.data[i].nama,
           gambar: this.props.data.data[i].gambar,
           id: this.props.data.data[i].id_area,
@@ -68,7 +74,7 @@ class ListArea extends Component {
     }
   }
   handleDelete(e, id) {
-    this.props.dispatch(deleteArea(id, this.props.token));
+    this.props.dispatch(deleteArea(id, this.state.where));
   }
   handleClearAllMeja(e, id) {
     e.preventDefault();
@@ -96,32 +102,33 @@ class ListArea extends Component {
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
-              <div className="form-group">
-                <label>Search</label>
+              <div className="input-group input-group-sm">
                 <input
-                  type="text"
-                  className="form-control"
-                  name="field_any"
-                  defaultValue={localStorage.getItem("any_customer")}
+                  type="search"
+                  name="any"
+                  className="form-control form-control-sm"
+                  placeholder="cari berdasarkan nama area"
+                  value={this.state.any}
+                  onChange={(e) => {
+                    this.setState({ any: e.target.value });
+                  }}
                 />
+                <span className="input-group-append">
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fa fa-search" />
+                  </button>
+                </span>
               </div>
             </div>
-            <div className="col-2 col-xs-4 col-md-4">
-              <div className="form-group">
+            <div className="col-2 col-xs-2 col-md-9">
+              <div className="form-group text-right">
                 <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
+                  style={{ height: "38px" }}
                   type="button"
                   onClick={(e) => this.toggleModal(e, null)}
                   className="btn btn-primary"
                 >
-                  <i className="fa fa-plus"></i>
+                  <i className="fa fa-plus" />
                 </button>
               </div>
             </div>
@@ -187,12 +194,15 @@ class ListArea extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
-        {!this.props.isOpen && (
-          <FormArea token={this.props.token} detail={this.state.detail} />
-        )}
+        {this.props.isOpen && <FormArea detail={this.state.detail} />}
       </div>
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    isOpen: state.modalReducer,
+  };
+};
 
-export default connect()(ListArea);
+export default connect(mapStateToProps)(ListArea);

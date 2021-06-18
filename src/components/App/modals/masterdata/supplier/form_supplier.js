@@ -6,8 +6,10 @@ import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
 import {
   createSupplier,
-  updateSupplier, FetchSupplierAll
+  updateSupplier,
+  FetchSupplierAll,
 } from "redux/actions/masterdata/supplier/supplier.action";
+import { isEmptyOrUndefined } from "../../../../../helper";
 
 class FormSupplier extends Component {
   constructor(props) {
@@ -38,7 +40,7 @@ class FormSupplier extends Component {
     };
   }
   getProps(param) {
-    if (param.detail !== [] && param.detail !== undefined) {
+    if (param.detail.id) {
       this.setState({
         kode: param.detail.kode,
         nama: param.detail.nama,
@@ -78,14 +80,14 @@ class FormSupplier extends Component {
   };
   toggle(e) {
     e.preventDefault();
-    if(this.props.fastAdd===undefined){
+    if (this.props.fastAdd === undefined) {
       const bool = !this.props.isOpen;
       this.props.dispatch(ModalToggle(bool));
     }
-    if(this.props.fastAdd===true){
-        this.props.dispatch(ModalType('formProduct'));
-        // this.props.dispatch(supp(1,'','999'));
-        this.props.dispatch(FetchSupplierAll());
+    if (this.props.fastAdd === true) {
+      this.props.dispatch(ModalType("formProduct"));
+      // this.props.dispatch(supp(1,'','999'));
+      this.props.dispatch(FetchSupplierAll());
     }
   }
 
@@ -102,66 +104,37 @@ class FormSupplier extends Component {
     parseData["no_penanggung_jawab"] = this.state.no_penanggung_jawab;
     parseData["status"] = this.state.status;
     parseData["email"] = this.state.email;
-    let err = this.state.error;
-    if (parseData["nama"] === "" || parseData["nama"] === undefined) {
-      err = Object.assign({}, err, { nama: "nama tidak boleh kosong" });
-      this.setState({ error: err });
-    }
-    // else if (
-    //   parseData["alamat"] === "" ||
-    //   parseData["alamat"] === undefined
-    // ) {
-    //   err = Object.assign({}, err, { alamat: "alamat tidak boleh kosong" });
-    //   this.setState({ error: err });
-    // }
-    // else if (parseData["kota"] === "" || parseData["kota"] === undefined) {
-    //   err = Object.assign({}, err, { kota: "kota tidak boleh kosong" });
-    //   this.setState({ error: err });
-    // }
-    // else if (parseData["telp"] === "" || parseData["telp"] === undefined) {
-    //   err = Object.assign({}, err, { telp: "telepon tidak boleh kosong" });
-    //   this.setState({ error: err });
-    // }
-    else if (
-      parseData["penanggung_jawab"] === "" ||
-      parseData["penanggung_jawab"] === undefined
-    ) {
-      err = Object.assign({}, err, {
-        penanggung_jawab: "penanggung jawab tidak boleh kosong",
-      });
-      this.setState({ error: err });
-    } else if (
-      parseData["no_penanggung_jawab"] === "" ||
-      parseData["no_penanggung_jawab"] === undefined
-    ) {
-      err = Object.assign({}, err, {
-        no_penanggung_jawab: "no penanggung jawab tidak boleh kosong",
-      });
-      this.setState({ error: err });
-    }
-    // else if (parseData["email"] === "" || parseData["email"] === undefined) {
-    //   err = Object.assign({}, err, { email: "email tidak boleh kosong" });
-    //   this.setState({ error: err });
-    // }
-    else if (
-      parseData["status"] === "" ||
-      parseData["status"] === undefined
-    ) {
-      err = Object.assign({}, err, { status: "status tidak boleh kosong" });
-      this.setState({ error: err });
-    } else {
-      if (this.props.detail !== undefined) {
-        this.props.dispatch(updateSupplier(this.state.kode, parseData));
-        this.props.dispatch(ModalToggle(false));
-      } else {
-        this.props.dispatch(createSupplier(parseData,'',this.props.fastAdd!==undefined));
-        if(this.props.fastAdd===undefined){
-          this.props.dispatch(ModalToggle(false));
-        }
 
-        if(this.props.fastAdd===true){
-          this.props.dispatch(ModalType('formProduct'));
+    if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
+    if (!isEmptyOrUndefined(parseData["penanggung_jawab"], "penanggun jawab"))
+      return;
+    if (
+      !isEmptyOrUndefined(
+        parseData["no_penanggung_jawab"],
+        "no penanggun jawab"
+      )
+    )
+      return;
+    if (!isEmptyOrUndefined(parseData["status"], "status")) return;
+    let where = "";
+    if (this.props.fastAdd === undefined) {
+      where = this.props.detail.where;
+    } else {
+      where = "page=1";
+    }
+    if (this.props.detail.id !== "") {
+      this.props.dispatch(updateSupplier(this.state.kode, parseData, where));
+      this.props.dispatch(ModalToggle(false));
+    } else {
+      this.props.dispatch(
+        createSupplier(parseData, this.props.fastAdd !== undefined, where)
+      );
+      if (this.props.fastAdd === undefined) {
+        this.props.dispatch(ModalToggle(false));
       }
+
+      if (this.props.fastAdd === true) {
+        this.props.dispatch(ModalType("formProduct"));
       }
     }
   }
@@ -173,7 +146,7 @@ class FormSupplier extends Component {
         size="lg"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined
+          {this.props.detail.id === undefined
             ? "Tambah Supplier"
             : "Ubah Supplier"}
         </ModalHeader>
@@ -182,7 +155,9 @@ class FormSupplier extends Component {
             <div className="row">
               <div className="col-6">
                 <div className="form-group">
-                  <label>Nama Supplier <span className="text-danger">*</span></label>
+                  <label>
+                    Nama Supplier <span className="text-danger">*</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="Isi nama supplier"
@@ -191,16 +166,6 @@ class FormSupplier extends Component {
                     value={this.state.nama}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.nama !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.nama}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>Alamat</label>
@@ -212,16 +177,6 @@ class FormSupplier extends Component {
                     value={this.state.alamat}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.alamat !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.alamat}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>Kota</label>
@@ -233,16 +188,6 @@ class FormSupplier extends Component {
                     value={this.state.kota}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.kota !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.kota}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>Telepon</label>
@@ -254,21 +199,13 @@ class FormSupplier extends Component {
                     value={this.state.telp}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.telp !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.telp}
-                  </div>
                 </div>
               </div>
               <div className="col-6">
                 <div className="form-group">
-                  <label>Penanggung Jawab <span className="text-danger">*</span></label>
+                  <label>
+                    Penanggung Jawab <span className="text-danger">*</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="Isi nama penanggung jawab"
@@ -277,19 +214,11 @@ class FormSupplier extends Component {
                     value={this.state.penanggung_jawab}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.penanggung_jawab !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.penanggung_jawab}
-                  </div>
                 </div>
                 <div className="form-group">
-                  <label>No Penanggung Jawab <span className="text-danger">*</span></label>
+                  <label>
+                    No Penanggung Jawab <span className="text-danger">*</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="ex. 628513456789"
@@ -298,16 +227,6 @@ class FormSupplier extends Component {
                     value={this.state.no_penanggung_jawab}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.no_penanggung_jawab !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.no_penanggung_jawab}
-                  </div>
                 </div>
                 <div className="form-group">
                   <label>Email</label>
@@ -319,19 +238,11 @@ class FormSupplier extends Component {
                     value={this.state.email}
                     onChange={this.handleChange}
                   />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.email !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.email}
-                  </div>
                 </div>
                 <div className="form-group">
-                  <label>Status <span className="text-danger">*</span></label>
+                  <label>
+                    Status <span className="text-danger">*</span>
+                  </label>
                   <select
                     name="status"
                     className="form-control"
@@ -342,16 +253,6 @@ class FormSupplier extends Component {
                     <option value="1">Aktif</option>
                     <option value="0">Tidak Aktif</option>
                   </select>
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.status !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.status}
-                  </div>
                 </div>
               </div>
             </div>
@@ -363,7 +264,7 @@ class FormSupplier extends Component {
                 className="btn btn-warning mb-2 mr-2"
                 onClick={this.toggle}
               >
-                <i className="ti-close" /> Cancel
+                <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
                 <i className="ti-save" /> Simpan

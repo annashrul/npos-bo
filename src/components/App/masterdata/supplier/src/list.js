@@ -22,23 +22,26 @@ class ListSupplier extends Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.state = {
       detail: {},
+      any: "",
+      where: "",
     };
   }
+  handleGet(any, page) {
+    let where = `page=${page}`;
+    if (any !== "") where += `&q=${any}`;
+    this.setState({ where: where });
+    this.props.dispatch(FetchSupplier(where));
+  }
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_customer", pageNumber);
-    this.props.dispatch(FetchSupplier(pageNumber, ""));
+    this.handleGet(this.state.any, pageNumber);
   }
   handlesearch(e) {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    let any = data.get("field_any");
-    localStorage.setItem("any_customer", any);
-    if (any === "" || any === null || any === undefined) {
-      this.props.dispatch(FetchSupplier(1, ""));
-    } else {
-      this.props.dispatch(FetchSupplier(1, any));
-    }
+    let any = data.get("any");
+    this.setState({ any: any });
+    this.handleGet(any, 1);
   }
   toggleModal(e, i) {
     e.preventDefault();
@@ -46,10 +49,12 @@ class ListSupplier extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formSupplier"));
     if (i === null) {
-      this.setState({ detail: undefined });
+      this.setState({ detail: { id: "", where: this.state.where } });
     } else {
       this.setState({
         detail: {
+          id: "-",
+          where: this.state.where,
           kode: this.props.data.data[i].kode,
           nama: this.props.data.data[i].nama,
           alamat: this.props.data.data[i].alamat,
@@ -65,111 +70,105 @@ class ListSupplier extends Component {
   }
   handleDelete(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deleteSupplier(id, this.props.token));
-      }
-    });
+    if (this.props.data.total === 1) {
+      this.setState({ any: "" });
+    }
+    this.props.dispatch(
+      deleteSupplier(id, {
+        where: this.state.where,
+        total: this.props.data.total,
+      })
+    );
   }
   render() {
-    const centerStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "center",
-    };
-    const leftStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "left",
-    };
-    const rightStyle = {
-      whiteSpace: "nowrap",
-      verticalAlign: "middle",
-      textAlign: "right",
-    };
-    // const noWrap = {whiteSpace: "nowrap"};
     const { total, per_page, current_page, data } = this.props.data;
     return (
       <div>
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
-              <div className="form-group">
-                <label>Search</label>
+              <div className="input-group input-group-sm">
                 <input
-                  type="text"
-                  className="form-control"
-                  name="field_any"
-                  defaultValue={localStorage.getItem("any_customer")}
+                  type="search"
+                  name="any"
+                  className="form-control form-control-sm"
+                  placeholder="tulis sesuatu disini"
+                  value={this.state.any}
+                  onChange={(e) => {
+                    this.setState({ any: e.target.value });
+                  }}
                 />
+                <span className="input-group-append">
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fa fa-search" />
+                  </button>
+                </span>
               </div>
             </div>
-            <div className="col-2 col-xs-4 col-md-4">
-              <div className="form-group">
+            <div className="col-2 col-xs-2 col-md-9">
+              <div className="form-group text-right">
                 <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
+                  style={{ height: "38px" }}
                   type="button"
                   onClick={(e) => this.toggleModal(e, null)}
                   className="btn btn-primary"
                 >
-                  <i className="fa fa-plus"></i>
+                  <i className="fa fa-plus" />
                 </button>
               </div>
             </div>
           </div>
         </form>
         <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={centerStyle}>
+                <th
+                  className="text-black middle nowrap text-center"
+                  width="1%"
+                  rowSpan={2}
+                >
                   No
                 </th>
-                <th className="text-black" style={centerStyle}>
+                <th
+                  className="text-black middle nowrap text-center"
+                  width="1%"
+                  rowSpan={2}
+                >
                   #
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  Code
+                <th className="text-black middle nowrap" rowSpan={2}>
+                  Kode
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  Name
+                <th className="text-black middle nowrap" rowSpan={2}>
+                  Nama
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  Address
+                <th className="text-black middle nowrap" rowSpan={2}>
+                  Alamat
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  City
+                <th className="text-black middle nowrap" rowSpan={2}>
+                  Kota
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  Phone
+                <th className="text-black middle nowrap" rowSpan={2}>
+                  Telepon
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  responsible
+                <th
+                  className="text-black middle text-center nowrap"
+                  colSpan={2}
+                >
+                  Penaggung jawab
                 </th>
-                <th className="text-black" style={centerStyle}>
-                  responsible No
-                </th>
-                <th className="text-black" style={centerStyle}>
+                <th className="text-black middle nowrap" rowSpan={2}>
                   Status
                 </th>
-                <th className="text-black" style={centerStyle}>
+                <th className="text-black middle nowrap" rowSpan={2}>
                   Email
+                </th>
+              </tr>
+              <tr>
+                <th className="text-black middle nowrap text-center">Nama</th>
+                <th className="text-black middle nowrap text-center">
+                  Telepon
                 </th>
               </tr>
             </thead>
@@ -178,48 +177,45 @@ class ListSupplier extends Component {
                 data.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td style={centerStyle}>
+                      <td className="text-center middle">
                         {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
                       </td>
-                      <td style={centerStyle}>
-                        {/* Example split danger button */}
-                        <div className="btn-group">
-                          <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>Aksi</DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggleModal(e, i)}
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleDelete(e, v.kode)}
-                              >
-                                Delete
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledButtonDropdown>
-                        </div>
+                      <td className="text-center middle">
+                        <UncontrolledButtonDropdown>
+                          <DropdownToggle caret></DropdownToggle>
+                          <DropdownMenu>
+                            <DropdownItem
+                              onClick={(e) => this.toggleModal(e, i)}
+                            >
+                              Edit
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={(e) => this.handleDelete(e, v.kode)}
+                            >
+                              Delete
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </UncontrolledButtonDropdown>
                       </td>
-                      <td style={leftStyle}>{v.kode}</td>
-                      <td style={leftStyle}>{v.nama}</td>
-                      <td style={leftStyle}>{v.alamat}</td>
-                      <td style={leftStyle}>{v.kota}</td>
-                      <td style={rightStyle}>{v.telp}</td>
-                      <td style={leftStyle}>{v.penanggung_jawab}</td>
-                      <td style={rightStyle}>{v.no_penanggung_jawab}</td>
-                      <td style={centerStyle}>
+                      <td className="middle nowrap">{v.kode}</td>
+                      <td className="middle nowrap">{v.nama}</td>
+                      <td className="middle nowrap">{v.alamat}</td>
+                      <td className="middle nowrap">{v.kota}</td>
+                      <td className="middle nowrap">{v.telp}</td>
+                      <td className="middle nowrap">{v.penanggung_jawab}</td>
+                      <td className="middle nowrap">{v.no_penanggung_jawab}</td>
+                      <td className="middle nowrap">
                         {v.status === "1"
                           ? statusQ("success", "Active")
                           : statusQ("danger", "In Active")}
                       </td>
-                      <td style={leftStyle}>{v.email}</td>
+                      <td className="middle nowrap">{v.email}</td>
                     </tr>
                   );
                 })
               ) : (
                 <tr>
-                  <td>No data.</td>
+                  <td colSpan={11}>No data.</td>
                 </tr>
               )}
             </tbody>

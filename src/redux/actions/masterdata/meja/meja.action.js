@@ -24,13 +24,11 @@ export function setMejaFailed(data = []) {
   return { type: MEJA.FAILED, data };
 }
 
-export const FetchMeja = (page = 1, q = "") => {
+export const FetchMeja = (where = "") => {
   return (dispatch) => {
-    let url = "";
-    if (q === "") {
-      url = `meja?page=${page}`;
-    } else {
-      url = `meja?page=${page}&q=${q}`;
+    let url = "meja";
+    if (where !== "") {
+      url += `?${where}`;
     }
     handleGet(
       url,
@@ -68,18 +66,11 @@ export const createMeja = (data) => {
       } else {
         dispatch(ModalToggle(true));
       }
-      dispatch(
-        FetchMeja(
-          localStorage.getItem("page_meja")
-            ? localStorage.getItem("page_meja")
-            : 1,
-          ""
-        )
-      );
+      dispatch(FetchMeja("page=1"));
     });
   };
 };
-export const updateMeja = (id, data, token) => {
+export const updateMeja = (id, data, where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
     const url = `meja/${id}`;
@@ -87,30 +78,16 @@ export const updateMeja = (id, data, token) => {
       swal(msg);
       if (status) {
         dispatch(ModalToggle(false));
-        dispatch(
-          FetchMeja(
-            localStorage.getItem("page_meja")
-              ? localStorage.getItem("page_meja")
-              : 1,
-            ""
-          )
-        );
+        dispatch(FetchMeja(where));
       }
     });
   };
 };
-export const deleteMeja = (id) => {
+export const deleteMeja = (id, where = "") => {
   return (dispatch) => {
     const url = `meja/${id}`;
     handleDelete(url, () => {
-      dispatch(
-        FetchMeja(
-          localStorage.getItem("page_meja")
-            ? localStorage.getItem("page_meja")
-            : 1,
-          ""
-        )
-      );
+      dispatch(FetchMeja(where));
     });
   };
 };

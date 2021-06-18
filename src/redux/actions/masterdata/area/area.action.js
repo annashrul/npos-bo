@@ -24,13 +24,11 @@ export function setAreaFailed(data = []) {
   return { type: AREA.FAILED, data };
 }
 
-export const FetchArea = (page = 1, q = "") => {
+export const FetchArea = (where = "") => {
   return (dispatch) => {
-    let url = "";
-    if (q === "") {
-      url = `area?page=${page}`;
-    } else {
-      url = `area?page=${page}&q=${q}`;
+    let url = "area";
+    if (where !== "") {
+      url += `?${where}`;
     }
     handleGet(
       url,
@@ -75,7 +73,7 @@ export const createArea = (data, token) => {
     });
   };
 };
-export const updateArea = (id, data) => {
+export const updateArea = (id, data, where = "") => {
   return (dispatch) => {
     handlePut(`area/${id}`, data, (res, msg, status) => {
       swal(msg);
@@ -84,30 +82,16 @@ export const updateArea = (id, data) => {
       } else {
         dispatch(ModalToggle(true));
       }
-      dispatch(
-        FetchArea(
-          localStorage.getItem("page_area")
-            ? localStorage.getItem("page_area")
-            : 1,
-          ""
-        )
-      );
+      dispatch(FetchArea(where !== "" ? where : "page=1"));
     });
   };
 };
-export const deleteArea = (id) => {
+export const deleteArea = (id, where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
     const url = HEADERS.URL + `area/${id}`;
     handleDelete(`area/${id}`, () => {
-      dispatch(
-        FetchArea(
-          localStorage.getItem("page_area")
-            ? localStorage.getItem("page_area")
-            : 1,
-          ""
-        )
-      );
+      dispatch(FetchArea(where !== "" ? where : "page=1"));
     });
   };
 };

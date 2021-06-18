@@ -430,22 +430,24 @@ export const swal = (msg) => {
   });
 };
 
-export const btnSave = (className = "", callback, title = "Simpan") => {
+export const btnSave = (className = "", callback, title = "") => {
   return (
     <button
       onClick={(e) => callback(e)}
       className={`btn btn-save ${className}`}
     >
+      <i className="fa fa-save"></i>
       {title}
     </button>
   );
 };
-export const btnSCancel = (className = "", callback, title = "Batal") => {
+export const btnSCancel = (className = "", callback, title = "") => {
   return (
     <button
       onClick={(e) => callback(e)}
       className={`btn btn-cancel ${className}`}
     >
+      <i className="fa fa-close"></i>
       {title}
     </button>
   );
@@ -463,6 +465,7 @@ export const select2Group = (
     <div className="d-flex align-items-center">
       <div style={{ width: "-webkit-fill-available" }}>
         <Select
+          autoFocus={true}
           options={options}
           placeholder={`Pilih ${placeholder}`}
           onChange={(value, actionMeta) => onChange(value, actionMeta)}
@@ -485,7 +488,7 @@ export const select2Group = (
   );
 };
 
-export const dateRange = (onApply, onEvent, value, isShow = true) => {
+export const dateRange = (onApply, value, isShow = true) => {
   return (
     <div className={`form-group ${!isShow && "none"}`}>
       <label htmlFor=""> Periode </label>
@@ -517,10 +520,27 @@ export const dateRange = (onApply, onEvent, value, isShow = true) => {
   );
 };
 
+export const handleError = (val, msg = "tidak boleh kosong") => {
+  return ToastQ.fire({ icon: "error", title: `${val} ${msg}` });
+};
+
+export const rmSpaceToStrip = (val) => {
+  return val === "" ? "-" : val;
+};
+
+export const setFocus = (thist, column) => {
+  return column && setTimeout(() => thist && thist[column].focus(), 500);
+};
+
+export const isEmptyOrUndefined = (val, col) => {
+  if (val === "" || val === undefined) {
+    handleError(col);
+    return false;
+  }
+  return true;
+};
+
 class Paginationq extends Component {
-  // constructor(props){
-  //     super(props);
-  // }
   render() {
     return (
       <div style={{ marginBottom: "20px" }}>
