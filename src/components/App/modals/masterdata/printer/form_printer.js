@@ -10,17 +10,23 @@ import {
   readPrinter,
 } from "redux/actions/masterdata/printer/printer.action";
 import Select from "react-select";
-import { handleError, rmSpaceToStrip } from "../../../../../helper";
-
+import {
+  handleError,
+  isEmptyOrUndefined,
+  rmSpaceToStrip,
+} from "../../../../../helper";
+import SelectCommon from "../../../common/SelectCommon";
+import LokasiCommon from "../../../common/LokasiCommon";
 class FormPrinter extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleChangeKonektor = this.handleChangeKonektor.bind(this);
+    this.handleChangeSelect = this.handleChangeSelect.bind(this);
     this.state = {
       id_printer: "",
+      lokasi: "",
       pid: "",
       vid: "",
       konektor: "",
@@ -30,20 +36,24 @@ class FormPrinter extends Component {
       ],
       ip: "",
       nama: "",
+      ukuran_kertas: "",
+      ukuran_kertas_data: [
+        { value: "32", label: "32" },
+        { value: "33", label: "33" },
+        { value: "48", label: "48" },
+      ],
     };
   }
   clearState() {
     this.setState({
+      lokasi: "",
       pid: "",
       vid: "",
       konektor: "",
-      konektor_data: [
-        { value: "lan", label: "lan" },
-        { value: "usb", label: "usb" },
-      ],
       ip: "",
       nama: "",
       id_printer: "",
+      ukuran_kertas: "",
     });
   }
 
@@ -68,10 +78,9 @@ class FormPrinter extends Component {
     if (props.detail.id_printer !== "") {
       this.setState({
         nama: props.detail.nama,
-        konektor: {
-          value: `${props.detail.konektor}`.toLowerCase(),
-          label: `${props.detail.konektor}`.toLowerCase(),
-        },
+        ukuran_kertas: props.detail.paper_size,
+        konektor: props.detail.konektor,
+        lokasi: props.detail.lokasi,
         pid: props.detail.pid,
         vid: props.detail.vid,
         ip: props.detail.ip,
@@ -96,35 +105,24 @@ class FormPrinter extends Component {
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
     let state = this.state;
+    parseData["nama"] = state.nama;
+    parseData["lokasi"] = state.lokasi;
+    parseData["konektor"] = state.konektor;
     parseData["pid"] = rmSpaceToStrip(state.pid);
     parseData["vid"] = rmSpaceToStrip(state.vid);
-    parseData["konektor"] = state.konektor.value;
     parseData["ip"] = rmSpaceToStrip(state.ip);
-    parseData["nama"] = state.nama;
+    parseData["paper_size"] = state.ukuran_kertas;
 
-    if (state.nama === "" || state.nama === undefined) {
-      handleError("nama");
-      return;
+    if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
+    if (!isEmptyOrUndefined(parseData["lokasi"], "lokasi")) return;
+    if (!isEmptyOrUndefined(parseData["paper_size"], "ukuran kertas")) return;
+    if (!isEmptyOrUndefined(parseData["konektor"], "konektor")) return;
+    if (parseData["konektor"] === "usb") {
+      if (!isEmptyOrUndefined(state.vid, "vid")) return;
+      if (!isEmptyOrUndefined(state.pid, "pid")) return;
     }
-    if (state.konektor.value === "" || state.konektor.value === undefined) {
-      handleError("konektor");
-      return;
-    }
-    if (state.konektor.value === "usb") {
-      if (state.vid === "" || state.vid === undefined) {
-        handleError("vid");
-        return;
-      }
-      if (state.pid === "" || state.pid === undefined) {
-        handleError("pid");
-        return;
-      }
-    }
-    if (state.konektor.value === "lan") {
-      if (state.ip === "" || state.ip === undefined) {
-        handleError("ip");
-        return;
-      }
+    if (parseData["konektor"] === "lan") {
+      if (!isEmptyOrUndefined(state.ip, "ip")) return;
     }
 
     if (this.props.detail.id_printer === "") {
@@ -158,16 +156,17 @@ class FormPrinter extends Component {
     }
   }
 
-  handleChangeKonektor(lk) {
-    let setState = { konektor: lk };
-    if (lk.value === "lan") {
+  handleChangeSelect(state, val) {
+    let setState = { [state]: val.value };
+    if (val.value === "lan") {
       Object.assign(setState, { pid: "", vid: "" });
     }
-    if (lk.value === "usb") {
+    if (val.value === "usb") {
       Object.assign(setState, { ip: "" });
     }
     this.setState(setState);
   }
+
   render() {
     return (
       <WrapperModal
@@ -181,26 +180,49 @@ class FormPrinter extends Component {
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
-            <div className="form-group">
-              <label>Nama</label>
-              <input
-                type="text"
-                className="form-control"
-                name="nama"
-                value={this.state.nama}
-                onChange={this.handleChange}
-              />
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label>Nama</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="nama"
+                    value={this.state.nama}
+                    onChange={this.handleChange}
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <LokasiCommon
+                  callback={(res) => this.handleChangeSelect("lokasi", res)}
+                  isRequired={true}
+                  dataEdit={this.state.lokasi}
+                />
+              </div>
+              <div className="col-md-6">
+                <SelectCommon
+                  label="Ukuran kertas"
+                  options={this.state.ukuran_kertas_data}
+                  callback={(res) =>
+                    this.handleChangeSelect("ukuran_kertas", res)
+                  }
+                  isRequired={true}
+                  dataEdit={this.state.ukuran_kertas}
+                />
+              </div>
+              <div className="col-md-6">
+                <SelectCommon
+                  label="Konektor"
+                  options={this.state.konektor_data}
+                  callback={(res) => this.handleChangeSelect("konektor", res)}
+                  isRequired={true}
+                  dataEdit={this.state.konektor}
+                />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Konektor</label>
-              <Select
-                options={this.state.konektor_data}
-                placeholder="Pilih konektor"
-                onChange={this.handleChangeKonektor}
-                value={this.state.konektor}
-              />
-            </div>
-            {this.state.konektor.value === "lan" && (
+
+            {this.state.konektor === "lan" && (
               <div className="form-group">
                 <label>IP address</label>
                 <input
@@ -212,7 +234,7 @@ class FormPrinter extends Component {
                 />
               </div>
             )}
-            {this.state.konektor.value === "usb" && (
+            {this.state.konektor === "usb" && (
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group">
@@ -245,12 +267,12 @@ class FormPrinter extends Component {
             <div className="form-group" style={{ textAlign: "right" }}>
               <button
                 type="button"
-                className="btn btn-warning mb-2 mr-2"
+                className="btn btn-warning mr-2"
                 onClick={this.toggle}
               >
                 <i className="ti-close" /> Batal
               </button>
-              <button type="submit" className="btn btn-primary mb-2 mr-2">
+              <button type="submit" className="btn btn-primary">
                 <i className="ti-save" /> Simpan
               </button>
             </div>

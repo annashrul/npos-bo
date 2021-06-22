@@ -9,7 +9,8 @@ import {
   updateSupplier,
   FetchSupplierAll,
 } from "redux/actions/masterdata/supplier/supplier.action";
-import { isEmptyOrUndefined } from "../../../../../helper";
+import { isEmptyOrUndefined, setFocus } from "../../../../../helper";
+import SelectCommon from "../../../common/SelectCommon";
 
 class FormSupplier extends Component {
   constructor(props) {
@@ -17,6 +18,10 @@ class FormSupplier extends Component {
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
+      statusData: [
+        { value: "0", label: "Tidak aktif" },
+        { value: "1", label: "Aktif" },
+      ],
       kode: "",
       nama: "",
       alamat: "",
@@ -40,30 +45,33 @@ class FormSupplier extends Component {
     };
   }
   getProps(param) {
-    if (param.detail.id) {
-      this.setState({
-        kode: param.detail.kode,
-        nama: param.detail.nama,
-        alamat: param.detail.alamat,
-        kota: param.detail.kota,
-        telp: param.detail.telp,
-        penanggung_jawab: param.detail.penanggung_jawab,
-        no_penanggung_jawab: param.detail.no_penanggung_jawab,
-        status: param.detail.status,
-        email: param.detail.email,
-      });
-    } else {
-      this.setState({
-        kode: "",
-        nama: "",
-        alamat: "",
-        kota: "",
-        telp: "",
-        penanggung_jawab: "",
-        no_penanggung_jawab: "",
-        status: "1",
-        email: "",
-      });
+    if (param.detail !== undefined) {
+      if (param.detail.id !== "") {
+        console.log(param.detail);
+        this.setState({
+          kode: param.detail.kode,
+          nama: param.detail.nama,
+          alamat: param.detail.alamat,
+          kota: param.detail.kota,
+          telp: param.detail.telp,
+          penanggung_jawab: param.detail.penanggung_jawab,
+          no_penanggung_jawab: param.detail.no_penanggung_jawab,
+          status: param.detail.status,
+          email: param.detail.email,
+        });
+      } else {
+        this.setState({
+          kode: "",
+          nama: "",
+          alamat: "",
+          kota: "",
+          telp: "",
+          penanggung_jawab: "",
+          no_penanggung_jawab: "",
+          status: "",
+          email: "",
+        });
+      }
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -104,17 +112,25 @@ class FormSupplier extends Component {
     parseData["no_penanggung_jawab"] = this.state.no_penanggung_jawab;
     parseData["status"] = this.state.status;
     parseData["email"] = this.state.email;
-
-    if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
-    if (!isEmptyOrUndefined(parseData["penanggung_jawab"], "penanggun jawab"))
+    console.log(parseData["status"]);
+    if (!isEmptyOrUndefined(parseData["nama"], "nama")) {
+      setFocus(this, "nama");
       return;
+    }
+    if (!isEmptyOrUndefined(parseData["penanggung_jawab"], "penanggun jawab")) {
+      setFocus(this, "penanggung_jawab");
+      return;
+    }
     if (
       !isEmptyOrUndefined(
         parseData["no_penanggung_jawab"],
         "no penanggun jawab"
       )
-    )
+    ) {
+      setFocus(this, "no_penanggung_jawab");
       return;
+    }
+
     if (!isEmptyOrUndefined(parseData["status"], "status")) return;
     let where = "";
     if (this.props.fastAdd === undefined) {
@@ -146,19 +162,20 @@ class FormSupplier extends Component {
         size="lg"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id === undefined
+          {this.props.detail === undefined
             ? "Tambah Supplier"
             : "Ubah Supplier"}
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="row">
-              <div className="col-6">
+              <div className="col-6 col-md-6">
                 <div className="form-group">
                   <label>
                     Nama Supplier <span className="text-danger">*</span>
                   </label>
                   <input
+                    ref={(input) => (this[`nama`] = input)}
                     type="text"
                     placeholder="Isi nama supplier"
                     className="form-control"
@@ -201,12 +218,13 @@ class FormSupplier extends Component {
                   />
                 </div>
               </div>
-              <div className="col-6">
+              <div className="col-6 col-md-6">
                 <div className="form-group">
                   <label>
                     Penanggung Jawab <span className="text-danger">*</span>
                   </label>
                   <input
+                    ref={(input) => (this[`penanggung_jawab`] = input)}
                     type="text"
                     placeholder="Isi nama penanggung jawab"
                     className="form-control"
@@ -220,6 +238,7 @@ class FormSupplier extends Component {
                     No Penanggung Jawab <span className="text-danger">*</span>
                   </label>
                   <input
+                    ref={(input) => (this[`no_penanggung_jawab`] = input)}
                     type="text"
                     placeholder="ex. 628513456789"
                     className="form-control"
@@ -239,21 +258,15 @@ class FormSupplier extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label>
-                    Status <span className="text-danger">*</span>
-                  </label>
-                  <select
-                    name="status"
-                    className="form-control"
-                    id="type"
-                    value={this.state.status}
-                    onChange={this.handleChange}
-                  >
-                    <option value="1">Aktif</option>
-                    <option value="0">Tidak Aktif</option>
-                  </select>
-                </div>
+                <SelectCommon
+                  label="status"
+                  options={this.state.statusData}
+                  callback={(res) => {
+                    this.setState({ status: res.value });
+                  }}
+                  isRequired={true}
+                  dataEdit={this.state.status}
+                />
               </div>
             </div>
           </ModalBody>

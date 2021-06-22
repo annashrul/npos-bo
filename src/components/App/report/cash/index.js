@@ -36,7 +36,11 @@ class ReportCash extends Component {
     super(props);
     this.state = {
       where_data: "",
-      type_data: [],
+      type_data: [
+        { value: "", label: "Semua Tipe" },
+        { value: "masuk", label: "Kas Masuk" },
+        { value: "keluar", label: "Kas Keluar" },
+      ],
       type: "",
       location_data: [],
       location: "",
@@ -74,25 +78,6 @@ class ReportCash extends Component {
       id_trx: "",
     });
   }
-  componentWillReceiveProps = (nextProps) => {
-    let type = [
-      { kode: "", value: "Semua Tipe" },
-      { kode: "masuk", value: "Kas Masuk" },
-      { kode: "keluar", value: "Kas Keluar" },
-    ];
-    let data_type = [];
-    type.map((i) => {
-      data_type.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-
-    this.setState({
-      type_data: data_type,
-    });
-  };
 
   componentWillMount() {
     let page = localStorage.getItem("pageNumber_cash_report");
@@ -223,12 +208,13 @@ class ReportCash extends Component {
     });
   }
   checkingParameter(pageNumber) {
-    let where = "";
+    let where = `page=${pageNumber}`;
     let dateFrom = localStorage.getItem("date_from_cash_report");
     let dateTo = localStorage.getItem("date_to_cash_report");
     let tipe = localStorage.getItem("type_cash_report");
     let lokasi = localStorage.getItem("location_cash_report");
     let kassa = localStorage.getItem("kassa_cash_report");
+
     if (dateFrom !== undefined && dateFrom !== null) {
       if (where !== "") {
         where += "&";
@@ -258,7 +244,7 @@ class ReportCash extends Component {
       where_data: where,
     });
 
-    this.props.dispatch(FetchCashReport(pageNumber, where));
+    this.props.dispatch(FetchCashReport(where));
     // this.props.dispatch(FetchCashReportExcel(where));
   }
   handlePageChange(pageNumber) {
@@ -281,21 +267,10 @@ class ReportCash extends Component {
                 )}
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label>Lokasi</label>
-                  <LokasiCommon
-                    callback={(res) => this.HandleChangeLokasi(res)}
-                    isAll={true}
-                  />
-                  {/* <Select
-                    options={this.state.location_data}
-                    placeholder="Pilih Lokasi"
-                    onChange={this.HandleChangeLokasi}
-                    value={this.state.location_data.find((op) => {
-                      return op.value === this.state.location;
-                    })}
-                  /> */}
-                </div>
+                <LokasiCommon
+                  callback={(res) => this.HandleChangeLokasi(res)}
+                  isAll={true}
+                />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">

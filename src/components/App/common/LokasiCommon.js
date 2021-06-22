@@ -9,43 +9,45 @@ import Select from "react-select";
 class LokasiCommon extends Component {
   constructor(props) {
     super(props);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     this.state = {
-      location_data: [],
-      location: "",
+      dataArray: [],
+      dataObject: "",
     };
   }
 
   getProps(props) {
+    let state = {};
     if (props.auth.user) {
-      let lk = [];
-      if (this.props.isAll !== undefined && this.props.isAll) {
-        lk.push({ value: "", label: "Semua lokasi" });
+      let arrLokasi = [];
+      if (props.isAll !== undefined && props.isAll) {
+        arrLokasi.push({ value: "", label: "Semua lokasi" });
       }
-      let loc = props.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
+      let propsLokasi = props.auth.user.lokasi;
+      if (propsLokasi !== undefined) {
+        propsLokasi.map((i) => {
+          arrLokasi.push({
             value: i.kode,
             label: i.nama,
           });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
         });
       }
+      Object.assign(state, { dataArray: arrLokasi });
     }
 
     // jika kondisi edit
-    if (props.dataEdit !== undefined) {
-      if (props.dataEdit.value !== undefined) {
-        let data = this.state.location_data.filter(
-          (item) => item.value === props.dataEdit.value
+    if (props.dataEdit !== undefined || props.dataEdit !== "") {
+      if (props.dataEdit === "-") {
+        Object.assign(state, { dataObject: "" });
+      } else {
+        const stateLokasi = this.state.dataArray.filter(
+          (item) => item.value === props.dataEdit
         );
-        this.setState({ location: data });
+        if (stateLokasi[0] !== undefined) {
+          Object.assign(state, { dataObject: stateLokasi[0] });
+        }
       }
     }
+    this.setState(state);
   }
   componentDidMount() {
     this.getProps(this.props);
@@ -56,21 +58,32 @@ class LokasiCommon extends Component {
   componentWillMount() {
     this.getProps(this.props);
   }
-  HandleChangeLokasi(val) {
-    this.setState({
-      location: val,
-    });
-    this.props.callback(val);
+  onChange(value) {
+    this.setState({ dataObject: value });
+    this.props.callback(value);
   }
 
   render() {
     return (
-      <Select
-        options={this.state.location_data}
-        placeholder="Pilih Lokasi"
-        onChange={this.HandleChangeLokasi}
-        value={this.state.location}
-      />
+      <div className="form-group">
+        <label
+          style={{
+            display:
+              this.props.isRequired || this.props.isLable === undefined
+                ? "block"
+                : "none",
+          }}
+        >
+          Lokasi{" "}
+          <span className="text-danger">{this.props.isRequired && "*"}</span>
+        </label>
+        <Select
+          options={this.state.dataArray}
+          placeholder={`Pilih lokasi`}
+          onChange={(value, actionMeta) => this.onChange(value)}
+          value={this.state.dataObject}
+        />
+      </div>
     );
   }
 }

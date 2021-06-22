@@ -432,6 +432,8 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
       }
     }
 
+    console.log(url);
+
     axios
       .get(HEADERS.URL + `${url}`)
       .then(function (response) {

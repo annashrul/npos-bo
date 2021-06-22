@@ -394,7 +394,7 @@ class ListProduct extends Component {
         }}
         style={{ width: "-webkit-fill-available", marginTop: "2px" }}
         type="text"
-        className="form-control"
+        className="form-control in-table"
         placeholder={`${name}`.replaceAll("_", " ").replaceAll("any ", "")}
       />
     );
@@ -459,11 +459,8 @@ class ListProduct extends Component {
           <div className="row">
             <div className="col-md-9">
               <div className="row">
-                <div className="col-6 col-xs-6 col-md-2">
+                <div className="col-6 col-xs-6 col-md-3">
                   <div className="form-group">
-                    <label>Periode Input</label>
-                    <br />
-
                     <label htmlFor="inputState" className="col-form-label">
                       <input
                         name="semua_periode"
@@ -473,23 +470,25 @@ class ListProduct extends Component {
                       />
                       &nbsp; semua periode
                     </label>
+                    {dateRange(
+                      (first, last) => {
+                        this.handlePeriode(first, last);
+                      },
+                      `${this.state.startDate} s/d ${this.state.endDate}`,
+                      !this.state.semua_periode ? true : false,
+                      false
+                    )}
                   </div>
-                </div>
-                <div className="col-6 col-xs-6 col-md-3">
-                  {dateRange(
-                    (first, last) => {
-                      this.handlePeriode(first, last);
-                    },
-                    `${this.state.startDate} to ${this.state.endDate}`,
-                    !this.state.semua_periode ? true : false
-                  )}
                 </div>
               </div>
             </div>
 
             <div className="col-12 col-xs-12 col-md-3 text-right">
               <button
-                style={{ marginTop: "27px", marginRight: "2px" }}
+                style={{
+                  marginTop: !this.state.semua_periode ? "27px" : "0px",
+                  marginRight: "2px",
+                }}
                 type="button"
                 onClick={(e) => this.toggleModal(e)}
                 className="btn btn-primary"
@@ -506,7 +505,7 @@ class ListProduct extends Component {
                     result={body}
                   />
                 }
-                style={{ marginTop: "27px", marginRight: "2px" }}
+                style={{ marginRight: "2px" }}
                 fileName="semua_barang.pdf"
                 className="btn btn-primary py-2 d-none"
               >
@@ -527,7 +526,10 @@ class ListProduct extends Component {
                 <i className="fa fa-file-pdf-o"></i>
               </button> */}
               <button
-                style={{ marginTop: "27px", marginRight: "2px" }}
+                style={{
+                  marginTop: !this.state.semua_periode ? "27px" : "0px",
+                  marginRight: "2px",
+                }}
                 type="button"
                 onClick={(e) => this.handleExport(e)}
                 className="btn btn-primary"

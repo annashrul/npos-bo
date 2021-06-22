@@ -488,20 +488,20 @@ export const select2Group = (
   );
 };
 
-export const dateRange = (onApply, value, isShow = true) => {
+export const dateRange = (onApply, value, isShow = true, isLabel = true) => {
   return (
     <div className={`form-group ${!isShow && "none"}`}>
-      <label htmlFor=""> Periode </label>
+      <label
+        style={{ display: isLabel || isLabel === undefined ? "block" : "none" }}
+      >
+        {" "}
+        Periode{" "}
+      </label>
       <DateRangePicker
         style={{ display: "unset" }}
         ranges={rangeDate}
         alwaysShowCalendars={true}
-        onEvent={(event, picker) => {
-          // event.preventDefault();
-          // const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
-          // const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
-          // onEvent(firstDate, lastDate);
-        }}
+        onEvent={(event, picker) => {}}
         onApply={(event, picker) => {
           const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
           const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
@@ -509,6 +509,7 @@ export const dateRange = (onApply, value, isShow = true) => {
         }}
       >
         <input
+          style={{ fontSize: "12px" }}
           readOnly={true}
           type="text"
           className={`form-control`}
@@ -527,17 +528,39 @@ export const handleError = (val, msg = "tidak boleh kosong") => {
 export const rmSpaceToStrip = (val) => {
   return val === "" ? "-" : val;
 };
+export const rmSpace = (val) => {
+  if (val === "" || val === "0" || val === undefined) {
+    return false;
+  }
+  return true;
+};
 
 export const setFocus = (thist, column) => {
   return column && setTimeout(() => thist && thist[column].focus(), 500);
 };
 
-export const isEmptyOrUndefined = (val, col) => {
+export const isEmptyOrUndefined = (val, col, isShowError = true) => {
   if (val === "" || val === undefined) {
-    handleError(col);
+    isShowError && handleError(col);
     return false;
   }
   return true;
+};
+
+export const setStorage = (key, val) => {
+  return localStorage.setItem(key, val);
+};
+
+export const getStorage = (key) => {
+  return localStorage.getItem(key);
+};
+
+export const handleDataSelect = (props, value, label) => {
+  let data = [];
+  props.map((val) => {
+    data.push({ value: val[value], label: val[label] });
+  });
+  return data;
 };
 
 class Paginationq extends Component {

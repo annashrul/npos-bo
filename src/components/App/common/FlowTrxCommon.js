@@ -22,7 +22,7 @@ export const fieldDataCommon = (item) => {
     group1: item.group1,
     group2: item.group2,
     stock: item.stock,
-    qty_adjust: parseInt(item.qty_adjust, 10) + 1,
+    qty: parseInt(item.qty, 10) + 1,
     status: item.status,
     saldo_stock: item.stock,
     tambahan: item.tambahan,
@@ -70,6 +70,7 @@ export const handleInputOnBlurCommon = (e, data, callback) => {
           final[column] = val;
         }
       });
+
       update(data.table, final);
       ToastQ.fire({
         icon: "success",

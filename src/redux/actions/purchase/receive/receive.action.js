@@ -2,7 +2,7 @@ import { RECEIVE, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../../_interceptor";
+import { handleGet } from "../../handleHttp";
 export function setLoading(load) {
   return {
     type: RECEIVE.LOADING,
@@ -215,13 +215,17 @@ export const updateReceive = (data, kode) => {
   };
 };
 
-export const FetchReport = (page = 1, where = "") => {
+export const FetchReport = (where = "") => {
   return (dispatch) => {
-    let url = `receive/report?page=${page === "NaN" || isNaN(page) ? 1 : page}`;
-    if (where !== "") url += `&${where}`;
-    handleGet(url, (res) => {
-      dispatch(setPO(res));
-    });
+    let url = `receive/report`;
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setPO(res));
+      },
+      true
+    );
   };
 };
 

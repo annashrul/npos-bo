@@ -3,82 +3,81 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import { stringifyFormData } from "helper";
 import {
   createGroupProduct,
   updateGroupProduct,
   FetchGroupProduct,
 } from "redux/actions/masterdata/group_product/group_product.action";
-import Select from "react-select";
 import FileBase64 from "react-file-base64";
+import {
+  isEmptyOrUndefined,
+  setFocus,
+  stringifyFormData,
+} from "../../../../../helper";
+import SelectCommon from "../../../common/SelectCommon";
+
+const kel_brg = "kel_brg";
+const nm_kel_brg = "nm_kel_brg";
+const status = "status";
+const group2 = "group2";
+const gambar = "gambar";
+
 class FormGroupProduct extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.HandleChangeGroup2 = this.HandleChangeGroup2.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.state = {
-      kel_brg: "",
-      nm_kel_brg: "",
-      margin: "",
-      status: "1",
+      [kel_brg]: "",
+      [nm_kel_brg]: "",
+      [status]: "",
+      [group2]: "",
+      [gambar]: "",
+      group2_data: [],
       status_data: [
         { value: "0", label: "Tidak aktif" },
         { value: "1", label: "Aktif" },
       ],
-      group2: "",
-      dis_persen: "",
-      gambar: "",
-      group2_data: [],
-      error: {
-        kel_brg: "",
-        nm_kel_brg: "",
-        margin: "",
-        status: "",
-        group2: "",
-        dis_persen: "",
-        gambar: "",
-      },
     };
   }
   getProps(param) {
-    let group2 = [];
-    if (param.group2.data !== undefined) {
-      if (typeof param.group2.data === "object") {
-        param.group2.data.map((v, i) => {
-          group2.push({
+    let detail = param.detail;
+    let stateGroup = [];
+    let propsGroup = param.group2;
+    let nama = "";
+    let status = "";
+    let group2 = "";
+    let gambar = "-";
+
+    if (propsGroup.data !== undefined) {
+      if (typeof propsGroup.data === "object") {
+        propsGroup.data.map((v, i) => {
+          stateGroup.push({
             value: v.kode,
             label: v.nama,
           });
-          return null;
         });
       }
     }
 
-    this.setState({ group2_data: group2 });
-    if (this.props.detail !== undefined && this.props.detail.kel_brg !== "") {
-      this.setState({
-        kel_brg: param.detail.kel_brg,
-        nm_kel_brg: param.detail.nm_kel_brg,
-        margin: param.detail.margin,
-        status: param.detail.status,
-        group2: param.detail.group2,
-        dis_persen: param.detail.dis_persen,
-        gambar: param.detail.gambar,
-      });
-    } else {
-      this.setState({
-        kel_brg: "",
-        nm_kel_brg: "",
-        margin: "",
-        status: "1",
-        group2: "",
-        dis_persen: "",
-        gambar: "",
-      });
+    if (detail !== undefined && detail[nm_kel_brg] !== "") {
+      nama = detail.nm_kel_brg;
+      status = detail.status;
+      group2 = detail.group2;
+      gambar = detail.gambar;
     }
+
+    this.setState({
+      group2_data: stateGroup,
+      nm_kel_brg: nama,
+      status: status,
+      group2: group2,
+      gambar: gambar,
+    });
+  }
+  componentDidMount() {
+    this.getProps(this.props);
   }
   componentWillMount() {
     this.getProps(this.props);
@@ -87,18 +86,8 @@ class FormGroupProduct extends Component {
     this.getProps(nextProps);
   }
 
-  HandleChangeGroup2(sp) {
-    let err = Object.assign({}, this.state.error, { group2: "" });
-    this.setState({ group2: sp.value, error: err });
-  }
-  HandleChangeStatus(sp) {
-    let err = Object.assign({}, this.state.error, { status: "" });
-    this.setState({ status: sp.value, error: err });
-  }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    let err = Object.assign({}, this.state.error, { [event.target.name]: "" });
-    this.setState({ error: err });
   };
   toggle(e) {
     e.preventDefault();
@@ -117,64 +106,46 @@ class FormGroupProduct extends Component {
     const form = e.target;
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
-    parseData["nm_kel_brg"] = this.state.nm_kel_brg;
-    // parseData['margin'] = this.state.margin;
+    parseData["nm_kel_brg"] = this.state["nm_kel_brg"];
     parseData["status"] = this.state.status;
     parseData["group2"] = this.state.group2;
-    // parseData['dis_persen'] = this.state.dis_persen;
-    // parseData['gambar'] = this.state.gambar;
-    let err = this.state.error;
-
-    if (
-      parseData["nm_kel_brg"] === "" ||
-      parseData["nm_kel_brg"] === undefined
-    ) {
-      err = Object.assign({}, err, { nm_kel_brg: "nama tidak boleh kosong" });
-      this.setState({ error: err });
-    } else if (
-      parseData["group2"] === "" ||
-      parseData["group2"] === undefined
-    ) {
-      err = Object.assign({}, err, {
-        group2: "sub departemen tidak boleh kosong",
-      });
-      this.setState({ error: err });
-    } else if (
-      parseData["status"] === "" ||
-      parseData["status"] === undefined
-    ) {
-      err = Object.assign({}, err, { status: "status tidak boleh kosong" });
-      this.setState({ error: err });
+    parseData["gambar"] = this.state.gambar;
+    if (parseData["gambar"] === undefined || parseData["gambar"] === "-") {
+      parseData["gambar"] = "-";
     } else {
-      if (parseData["gambar"] !== "") {
-        parseData["gambar"] = this.state.gambar.base64;
-      }
-      if (this.props.detail) {
-        if (this.props.detail.kel_brg !== "") {
-          this.props.dispatch(
-            updateGroupProduct(
-              this.props.detail.kel_brg,
-              parseData,
-              this.props.detail.where
-            )
-          );
-        } else {
-          this.props.dispatch(
-            createGroupProduct(parseData, this.props.fastAdd !== undefined)
-          );
-        }
-        this.props.dispatch(ModalToggle(false));
-      } else {
-        this.props.dispatch(
-          createGroupProduct(parseData, this.props.fastAdd !== undefined)
-        );
-      }
-      if (this.props.fastAdd === undefined) {
-        this.props.dispatch(ModalToggle(false));
-      }
-      if (this.props.fastAdd === true) {
-        this.props.dispatch(ModalType("formProduct"));
-      }
+      parseData["gambar"] = parseData["gambar"].base64;
+    }
+
+    if (!isEmptyOrUndefined(parseData["nm_kel_brg"], "nama kelompok barang")) {
+      setFocus(this, "nm_kel_brg");
+      return;
+    }
+    if (!isEmptyOrUndefined(parseData["group2"], "sub departemen")) {
+      return;
+    }
+    if (!isEmptyOrUndefined(parseData["status"], "status")) {
+      return;
+    }
+
+    if (this.props.detail.kel_brg !== "") {
+      this.props.dispatch(
+        updateGroupProduct(
+          this.props.detail.kel_brg,
+          parseData,
+          this.props.detail.where
+        )
+      );
+    } else {
+      this.props.dispatch(
+        createGroupProduct(parseData, this.props.fastAdd !== undefined)
+      );
+    }
+
+    if (this.props.fastAdd === undefined) {
+      this.props.dispatch(ModalToggle(false));
+    }
+    if (this.props.fastAdd === true) {
+      this.props.dispatch(ModalType("formProduct"));
     }
   }
   handleChangeImage(files) {
@@ -183,7 +154,7 @@ class FormGroupProduct extends Component {
     });
   }
   render() {
-    console.log("props detail", this.props.detail);
+    console.log("state", this.state.group2);
     return (
       <WrapperModal
         isOpen={this.props.isOpen && this.props.type === "formGroupProduct"}
@@ -203,70 +174,33 @@ class FormGroupProduct extends Component {
                 Nama <span className="text-danger">*</span>
               </label>
               <input
+                ref={(input) => (this["nm_kel_brg"] = input)}
                 placeholder="Masukan nama kelompok barang"
                 type="text"
                 className="form-control"
-                name="nm_kel_brg"
+                name={"nm_kel_brg"}
                 value={this.state.nm_kel_brg}
                 onChange={this.handleChange}
               />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.nm_kel_brg !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.nm_kel_brg}
-              </div>
             </div>
-            <div className="form-group">
-              <label>
-                Sub departemen <span className="text-danger">*</span>
-              </label>
-              <Select
-                options={this.state.group2_data}
-                placeholder="Pilih sub departemen"
-                onChange={this.HandleChangeGroup2}
-                value={this.state.group2_data.find((op) => {
-                  return op.value === this.state.group2;
-                })}
-              />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.group2 !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.group2}
-              </div>
-            </div>
-            <div className="form-group">
-              <label>
-                Status <span className="text-danger">*</span>
-              </label>
-              <Select
-                options={this.state.status_data}
-                placeholder="Pilih status"
-                onChange={this.HandleChangeStatus}
-                value={this.state.status_data.find((op) => {
-                  return op.value === this.state.status;
-                })}
-              />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.status !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.status}
-              </div>
-            </div>
+            <SelectCommon
+              label="Sub departemen"
+              options={this.state.group2_data}
+              callback={(res) => {
+                this.setState({ group2: res.value });
+              }}
+              isRequired={true}
+              dataEdit={this.state.group2}
+            />
+            <SelectCommon
+              label="Status"
+              options={this.state.status_data}
+              callback={(res) => {
+                this.setState({ status: res.value });
+              }}
+              isRequired={true}
+              dataEdit={this.state.status}
+            />
 
             <div className="form-group">
               <label htmlFor="inputState" className="col-form-label">
@@ -287,24 +221,17 @@ class FormGroupProduct extends Component {
                 onDone={this.handleChangeImage}
               />
             </div>
-            {/*<div className="form-group">*/}
-            {/*<label>Diskon (%)</label>*/}
-            {/*<input type="number" className="form-control" name="dis_persen" value={this.state.dis_persen} onChange={this.handleChange}  />*/}
-            {/*<div className="invalid-feedback" style={this.state.error.dis_persen!==""?{display:'block'}:{display:'none'}}>*/}
-            {/*{this.state.error.dis_persen}*/}
-            {/*</div>*/}
-            {/*</div>*/}
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
               <button
                 type="button"
-                className="btn btn-warning mb-2 mr-2"
+                className="btn btn-warning mr-2"
                 onClick={this.toggle}
               >
-                <i className="ti-close" /> Cancel
+                <i className="ti-close" /> Batal
               </button>
-              <button type="submit" className="btn btn-primary mb-2 mr-2">
+              <button type="submit" className="btn btn-primary">
                 <i className="ti-save" /> Simpan
               </button>
             </div>

@@ -2,7 +2,7 @@ import { PO, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../../_interceptor";
+import { handleGet } from "../../handleHttp";
 
 export function setLoading(load) {
   return {
@@ -203,9 +203,13 @@ export const fetchPoReport = (page = 1, where = "") => {
     if (where !== "") {
       url += `${where}`;
     }
-    handleGet(url, (res) => {
-      dispatch(setPoReport(res));
-    });
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setPoReport(res));
+      },
+      true
+    );
   };
 };
 
@@ -215,9 +219,13 @@ export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
     if (where !== "") {
       url += `${where}`;
     }
-    handleGet(url, (res) => {
-      dispatch(setPoReportExcel(res));
-    });
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setPoReportExcel(res));
+      },
+      true
+    );
   };
 };
 export const poReportDetail = (page = 1, code) => {
@@ -239,9 +247,13 @@ export const FetchPurchaseBySupplierReport = (page = 1, where = "") => {
   return (dispatch) => {
     let que = `report/pembelian/by_supplier?perpage=5&page=${page}`;
     if (where !== "") que += `${where}`;
-    handleGet(que, (res) => {
-      dispatch(setPBSupplierReport(res));
-    });
+    handleGet(
+      que,
+      (res) => {
+        dispatch(setPBSupplierReport(res));
+      },
+      true
+    );
   };
 };
 
@@ -255,8 +267,12 @@ export const FetchPurchaseBySupplierReportExcel = (
     if (where !== "") {
       que += `${where}`;
     }
-    handleGet(que, (res) => {
-      dispatch(setPBSupplierReportExcel(res));
-    });
+    handleGet(
+      que,
+      (res) => {
+        dispatch(setPBSupplierReportExcel(res));
+      },
+      true
+    );
   };
 };

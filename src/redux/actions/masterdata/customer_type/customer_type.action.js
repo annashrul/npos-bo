@@ -1,8 +1,14 @@
 import { CUSTOMER_TYPE, HEADERS } from "../../_constants";
-import axios from "axios";
-import Swal from "sweetalert2";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import {
+  handleDelete,
+  handleGet,
+  handlePost,
+  handlePut,
+} from "../../handleHttp";
+import { ModalToggle } from "../../modal.action";
+import { swal } from "../../../../helper";
+
+const baseUrl = "customerType";
 
 export function setLoading(load) {
   return { type: CUSTOMER_TYPE.LOADING, load };
@@ -18,181 +24,69 @@ export function setCustomerTypeFailed(data = []) {
   return { type: CUSTOMER_TYPE.FAILED, data };
 }
 
-export const FetchCustomerType = (page = 1, q, perpage = "") => {
+export const FetchCustomerType = (where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Nprogress.start();
-    let url = "";
-    if (q === null || q === "" || q === undefined) {
-      url = `customerType?page=${page}`;
-    } else {
-      url = `customerType?page=${page}&q=${q}`;
-    }
-    if (perpage !== "") {
-      url += `&perpage=${perpage}`;
-    }
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
+    let url = baseUrl;
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
         dispatch(setCustomerType(data));
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+      },
+      true
+    );
   };
 };
 
 export const FetchCustomerTypeAll = () => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-
-    axios
-      .get(HEADERS.URL + `customerType?page=1&perpage=100`)
-      .then(function (response) {
-        const data = response.data;
-
+    let url = baseUrl + "?page=1&perpage=100";
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
         dispatch(setCustomerTypeAll(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+      },
+      true
+    );
   };
 };
 
 export const createCustomerType = (data) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `customerType`;
-
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchCustomerType(1, ""));
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
+    handlePost(baseUrl, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchCustomerType("page=1"));
+      } else {
+        dispatch(ModalToggle(true));
+      }
+    });
   };
 };
-export const updateCustomerType = (id, data) => {
+export const updateCustomerType = (id, data, where = "page=1") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `customerType/${id}`;
-
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchCustomerType(1, ""));
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handlePut(baseUrl + "/" + id, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchCustomerType(where));
+      } else {
+        dispatch(ModalToggle(true));
+      }
+    });
   };
 };
-export const deleteCustomerType = (id) => {
+export const deleteCustomerType = (id, detail) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `customerType/${id}`;
-
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchCustomerType(
-            localStorage.getItem("page_customer_type")
-              ? localStorage.getItem("page_customer_type")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(baseUrl + "/" + id, () => {
+      if (detail.total === 1) {
+        dispatch(FetchCustomerType("page=1"));
+      } else {
+        dispatch(FetchCustomerType(detail.where));
+      }
+    });
   };
 };
