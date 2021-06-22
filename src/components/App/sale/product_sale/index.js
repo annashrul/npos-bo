@@ -33,6 +33,9 @@ import {
   getStorage,
   handleDataSelect,
   isEmptyOrUndefined,
+  onHandleKeyboard,
+  onHandleKeyboardChar,
+  setFocus,
   setStorage,
   swal,
   swallOption,
@@ -44,6 +47,7 @@ import {
 } from "../../common/FlowTrxCommon";
 import FormHoldBill from "../../modals/sale/form_hold_bill";
 import ListHoldBill from "../../modals/sale/list_hold_bill";
+import KeyboardEventHandler from "react-keyboard-event-handler";
 
 const table = "sale";
 const Toast = Swal.mixin({
@@ -57,6 +61,13 @@ const Toast = Swal.mixin({
     toast.addEventListener("mouseleave", Swal.resumeTimer);
   },
 });
+
+const save = "ctrl+s";
+const closing = "c";
+const reset = "r";
+const focusSearch = "f";
+const holdBill = "h";
+const listHoldBill = "l";
 
 class Sale extends Component {
   constructor(props) {
@@ -113,6 +124,7 @@ class Sale extends Component {
       modalClosing: false,
       modalHoldBill: false,
       modalListHoldBill: false,
+      idxQty: 0,
     };
     this.HandleRemove = this.HandleRemove.bind(this);
     this.HandleAddBrg = this.HandleAddBrg.bind(this);
@@ -128,6 +140,54 @@ class Sale extends Component {
     this.handleClosing = this.handleClosing.bind(this);
     this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this);
     this.handleHoldBill = this.handleHoldBill.bind(this);
+
+    // set focus search
+    onHandleKeyboardChar("f", (e) => {
+      e.preventDefault();
+      setFocus(this, "search");
+    });
+    // closing
+    onHandleKeyboardChar("c", (e) => {
+      e.preventDefault();
+      this.handleClosing(e);
+    });
+    // form hold bill
+    onHandleKeyboardChar("h", (e) => {
+      e.preventDefault();
+      this.handleHoldBill(e, "formHoldBill");
+    });
+    // list hold bill
+    onHandleKeyboardChar("l", (e) => {
+      e.preventDefault();
+      this.handleHoldBill(e, "listHoldBill");
+    });
+    //simpan transaksi
+    onHandleKeyboardChar("s", (e) => {
+      e.preventDefault();
+      this.HandleSubmit(e);
+    });
+    //reset transaksi
+    onHandleKeyboardChar("x", (e) => {
+      e.preventDefault();
+      this.HandleReset(e);
+    });
+    // set focus qty
+    onHandleKeyboard(9, (e) => {
+      e.preventDefault();
+      let x = this.state.idxQty;
+      if (this.state.databrg.length > 0) {
+        if (x < this.state.databrg.length) {
+          setFocus(this, `qty-${x}`);
+          x += 1;
+          this.setState({ idxQty: x });
+          return;
+        } else {
+          setFocus(this, `qty-${0}`);
+          this.setState({ idxQty: 1 });
+          return;
+        }
+      }
+    });
   }
 
   handleClickToggle(e) {
@@ -161,15 +221,14 @@ class Sale extends Component {
       Object.assign(setState, { sales: sales });
       where += `&sales=${sales}`;
     }
-
     this.setState(setState);
     if (val !== "sales" || customer !== "1000001") {
-      console.log("fetching");
       this.props.dispatch(FetchProductSale(1, where, "sale", this.autoSetQty));
     }
   }
 
   componentDidMount() {
+    setStorage("key", "");
     this.getData();
     this.setState({
       modalClosing: false,
@@ -179,7 +238,6 @@ class Sale extends Component {
     this.fetchProduct();
   }
   getProps(props) {
-    console.log("this.state.search", this.state.search);
     let state = {};
     if (props.barang.length > 0) this.getData();
     if (props.sales !== undefined) {
@@ -235,7 +293,6 @@ class Sale extends Component {
 
   handleCheckData(key, item) {
     const cek = cekData("barcode", key, table);
-    console.log("cek", cek);
     cek.then((res) => {
       if (res === undefined) {
         if (item !== undefined) {
@@ -307,15 +364,6 @@ class Sale extends Component {
     } else {
       this.setState({
         [column]: val,
-      });
-    }
-
-    if (errs) {
-      let err = Object.assign({}, this.state.error, {
-        [column]: "",
-      });
-      this.setState({
-        error: err,
       });
     }
   }
@@ -393,14 +441,14 @@ class Sale extends Component {
       });
     });
   }
-  HanldeSetAddBrg(item, param) {
+  HanldeSetAddBrg(item, param, index) {
     if (param === "hold") {
       Object.assign(item, { isOpenPrice: false, qty: 0 });
     } else {
       Object.assign(item, { isOpenPrice: false });
     }
     this.handleCheckData(item.barcode, item);
-    setTimeout(() => this[`qty-${btoa(item.barcode)}`].focus(), 500);
+    setTimeout(() => this[`qty-${index}`].focus(), 500);
   }
   HandleAddBrg(e, item, index) {
     e.preventDefault();
@@ -408,7 +456,7 @@ class Sale extends Component {
       isScroll: false,
       isClick: index,
     });
-    this.HanldeSetAddBrg(item, "");
+    this.HanldeSetAddBrg(item, "", index);
   }
   HandleReset(e) {
     e.preventDefault();
@@ -734,6 +782,7 @@ class Sale extends Component {
       });
     }
     if (param === "listHoldBill") {
+      setStorage("key", "-");
       this.setState({ modalListHoldBill: true });
       this.props.dispatch(ModalToggle(true));
       this.props.dispatch(ModalType("listHoldBill"));
@@ -741,12 +790,32 @@ class Sale extends Component {
     }
   }
 
+  // handleKeyBoard(key, e) {
+  //   if (key === closing) this.handleClosing(e);
+  //   if (key === reset) this.HandleReset(e);
+  //   if (key === save) this.HandleSubmit(e);
+  //   if (key === focusSearch) setFocus(this, "search");
+  //   if (key === holdBill) this.handleHoldBill(e, "formHoldBill");
+  //   if (key === listHoldBill) this.handleHoldBill(e, "listHoldBill");
+  // }
+
   render() {
     if (this.state.isScroll === true) this.handleScroll();
     let totalsub = 0;
-    console.log("red", this.props);
+    console.log("this.props.isOpen", getStorage("key"));
     return (
       <Layout page="Penjualan Barang">
+        {/* <KeyboardEventHandler
+          handleKeys={[
+            closing,
+            reset,
+            save,
+            focusSearch,
+            holdBill,
+            listHoldBill,
+          ]}
+          onKeyEvent={(key, e) => this.handleKeyBoard(key, e)}
+        /> */}
         <div className="card">
           <div className="card-header">
             <h4 style={{ float: "left" }}>
@@ -829,7 +898,11 @@ class Sale extends Component {
                         type="text"
                         id="chat-search"
                         name="search"
-                        ref={(input) => (this[`search`] = input)}
+                        ref={(input) => {
+                          if (input !== null) {
+                            this[`search`] = input;
+                          }
+                        }}
                         className="form-control form-control-sm"
                         placeholder={`Search ${
                           localStorage.anySaleTrx !== undefined
@@ -1029,17 +1102,13 @@ class Sale extends Component {
                       <thead>
                         <tr>
                           <th className="middle nowrap text-center">#</th>
-                          <th className="middle nowrap text-center">
-                            Open Price
-                          </th>
                           <th className="middle nowrap">barang</th>
-                          <th className="middle nowrap">barcode</th>
                           <th className="middle nowrap">satuan</th>
                           <th className="middle nowrap">harga</th>
                           <th className="middle nowrap">disc 1 (%)</th>
+                          <th className="middle nowrap">qty</th>
                           <th className="middle nowrap">ppn</th>
                           <th className="middle nowrap">stock</th>
-                          <th className="middle nowrap">qty</th>
                           <th className="middle nowrap">Subtotal</th>
                         </tr>
                       </thead>
@@ -1080,17 +1149,26 @@ class Sale extends Component {
 
                           return (
                             <tr key={index}>
-                              <td className="middle nowrap text-center">
+                              <td className="middle nowrap">
                                 <a
+                                  style={{
+                                    height: "20px",
+                                    width: "20px",
+                                    padding: "0px",
+                                    margin: "0px",
+                                  }}
                                   href="about:blank"
-                                  className="btn btn-danger btn-sm"
+                                  className="btn btn-danger btn-sm mr-1"
                                   onClick={(e) => this.HandleRemove(e, item.id)}
                                 >
                                   <i className="fa fa-trash" />
                                 </a>
-                              </td>
-                              <td className="middle nowrap text-center">
                                 <input
+                                  style={{
+                                    height: "20px",
+                                    width: "20px",
+                                    // paddingTop: "10px",
+                                  }}
                                   type="checkbox"
                                   name="isOpenPrice"
                                   checked={this.state.brgval[index].isOpenPrice}
@@ -1099,8 +1177,14 @@ class Sale extends Component {
                                   }
                                 />
                               </td>
-                              <td className="middle nowrap">{item.nm_brg}</td>
-                              <td className="middle nowrap">{item.barcode}</td>
+                              <td
+                                className="middle nowrap"
+                                style={{ zoom: "80%" }}
+                              >
+                                {item.nm_brg}
+                                <br />
+                                {item.barcode}
+                              </td>
                               <td className="middle nowrap">{item.satuan}</td>
                               <td className="middle nowrap">
                                 {this.state.brgval[index].isOpenPrice ? (
@@ -1235,34 +1319,14 @@ class Sale extends Component {
                               </td>
                               <td className="middle nowrap">
                                 <input
-                                  type="number"
-                                  name="ppn"
-                                  style={{ width: "70px" }}
-                                  className="form-control in-table text-right"
-                                  onBlur={(e) => this.HandleOnBlur(e, index)}
-                                  onChange={(e) =>
-                                    this.HandleChangeInputValue(e, index)
-                                  }
-                                  value={this.state.brgval[index].ppn}
-                                />
-                              </td>
-                              <td className="middle nowrap">
-                                <input
-                                  readOnly={true}
-                                  type="number"
-                                  value={item.stock}
-                                  className="form-control text-right in-table"
-                                  style={{ width: "100px" }}
-                                />
-                              </td>
-                              <td className="middle nowrap">
-                                <input
                                   type="text"
                                   name="qty"
                                   style={{ width: "70px" }}
-                                  ref={(input) =>
-                                    (this[`qty-${btoa(item.barcode)}`] = input)
-                                  }
+                                  ref={(input) => {
+                                    if (input !== null) {
+                                      this[`qty-${index}`] = input;
+                                    }
+                                  }}
                                   onFocus={(e) =>
                                     this.HandleFocusInputReset(e, index)
                                   }
@@ -1290,16 +1354,36 @@ class Sale extends Component {
                                   Qty Melebihi Stock.
                                 </div>
                               </td>
-                              <td>
+                              <td className="middle nowrap">
+                                <input
+                                  type="number"
+                                  name="ppn"
+                                  style={{ width: "70px" }}
+                                  className="form-control in-table text-right"
+                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleChangeInputValue(e, index)
+                                  }
+                                  value={this.state.brgval[index].ppn}
+                                />
+                              </td>
+                              <td className="middle nowrap">
+                                <input
+                                  readOnly={true}
+                                  type="number"
+                                  value={item.stock}
+                                  className="form-control text-right in-table"
+                                  style={{ width: "100px" }}
+                                />
+                              </td>
+
+                              <td className="middle nowrap">
                                 <input
                                   readOnly={true}
                                   type="text"
                                   value={toCurrency(subtot)}
-                                  className="form-control in-table"
-                                  style={{
-                                    width: "100px",
-                                    textAlign: "right",
-                                  }}
+                                  className="form-control text-right in-table"
+                                  style={{ width: "100px" }}
                                 />
                               </td>
                               {/*<td>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>*/}
@@ -1481,13 +1565,26 @@ class Sale extends Component {
         {this.state.modalListHoldBill && this.props.isOpen ? (
           <ListHoldBill
             callback={(res) => {
+              setStorage("key", "");
+              this.setState({ modalListHoldBill: false });
               if (res !== "close") {
                 destroy("sale");
                 res.detail.map((val, index) => {
-                  console.log(val);
-                  this.HanldeSetAddBrg(val, "hold");
+                  this.HanldeSetAddBrg(val, "hold", index);
                 });
-                console.log(res);
+                setStorage("location", res.master.lokasi);
+                setStorage("sales", res.master.kd_sales);
+                setStorage("customer", res.master.kd_cust);
+                this.setState({
+                  location: res.master.lokasi,
+                  customer: res.master.kd_cust,
+                  sales: res.master.kd_sales,
+                });
+                setTimeout(() => {
+                  this.fetchProduct();
+                }, 500);
+
+                // !this.props.loadingbrg &&this.props.dispatch(ModalToggle(false));
               }
             }}
           />

@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
+import { isError } from "lodash";
 
 export const generateNo = (i, current_page) => {
   return i + 1 + 10 * (parseInt(current_page, 10) - 1);
@@ -536,12 +537,35 @@ export const rmSpace = (val) => {
 };
 
 export const setFocus = (thist, column) => {
-  return column && setTimeout(() => thist && thist[column].focus(), 500);
+  return setTimeout(
+    () => thist && thist[column].focus(),
+    thist[column] !== undefined ? 100 : 300
+  );
+};
+export const onHandleKeyboard = function (key, callback) {
+  window &&
+    window.addEventListener("keydown", (e) => {
+      // e.preventDefault();
+      if (e.keyCode === key) {
+        callback(e);
+      }
+    });
+};
+export const onHandleKeyboardChar = function (key, callback) {
+  window &&
+    window.addEventListener("keydown", (e) => {
+      // e.preventDefault();
+      if (e.ctrlKey && e.key === key) {
+        callback(e);
+      }
+    });
 };
 
 export const isEmptyOrUndefined = (val, col, isShowError = true) => {
-  if (val === "" || val === undefined) {
-    isShowError && handleError(col);
+  if (val === "" || val === undefined || val === null || val === "null") {
+    if (col !== undefined && isShowError === true) {
+      handleError(col);
+    }
     return false;
   }
   return true;

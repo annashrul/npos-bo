@@ -19,15 +19,30 @@ import {
 } from "components/model/app.model";
 import {
   isEmptyOrUndefined,
+  setFocus,
   swallOption,
   swalWithCallback,
 } from "../../../../helper";
 import { ModalType } from "../../../../redux/actions/modal.action";
+
 class FormHoldBill extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  getProps(props, inState) {
+    // console.log(inState, this);
+    props.type === "formHoldBill" && setFocus(this, "nama");
+  }
+  componentDidMount() {
+    this.getProps(this.props, "componentDidMount");
+  }
+  componentWillMount() {
+    this.getProps(this.props, "componentWillMount");
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps, "componentWillReceiveProps");
   }
   toggle = (e) => {
     e.preventDefault();
@@ -41,7 +56,10 @@ class FormHoldBill extends Component {
     const form = e.target;
     const data = new FormData(form);
     let nama = data.get("nama");
-    if (!isEmptyOrUndefined(nama, "atas nama")) return;
+    if (!isEmptyOrUndefined(nama, "atas nama")) {
+      setFocus(this, "nama");
+      return;
+    }
     store("hold", {
       nama: nama,
       master: JSON.stringify(this.props.master),
@@ -68,10 +86,21 @@ class FormHoldBill extends Component {
           <form onSubmit={this.handleSubmit} noValidate>
             <div className="form-group">
               <label>Atas nama</label>
-              <input type="text" name="nama" className="form-control" />
+              <input
+                autoFocus
+                type="text"
+                name="nama"
+                className="form-control"
+                ref={(input) => {
+                  // this[`nama`] = input;
+                  if (input !== null) {
+                    this[`nama`] = input;
+                  }
+                }}
+              />
             </div>
             <hr />
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary text-right">
               Simpan
             </button>
           </form>

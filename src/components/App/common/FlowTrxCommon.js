@@ -72,10 +72,10 @@ export const handleInputOnBlurCommon = (e, data, callback) => {
       });
 
       update(data.table, final);
-      ToastQ.fire({
-        icon: "success",
-        title: `${column} has been changed.`,
-      });
+      // ToastQ.fire({
+      //   icon: "success",
+      //   title: `${column} has been changed.`,
+      // });
     }
     callback();
   });
