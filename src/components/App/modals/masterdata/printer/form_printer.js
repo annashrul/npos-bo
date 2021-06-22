@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { ModalToggle,ModalType } from "redux/actions/modal.action";
+import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
 import {
   createPrinter,
   updatePrinter,
-  readPrinter
+  readPrinter,
 } from "redux/actions/masterdata/printer/printer.action";
 import Select from "react-select";
+import { handleError, rmSpaceToStrip } from "../../../../../helper";
 
 class FormPrinter extends Component {
   constructor(props) {
@@ -29,13 +30,6 @@ class FormPrinter extends Component {
       ],
       ip: "",
       nama: "",
-      error: {
-        pid: "",
-        vid: "",
-        konektor: "",
-        ip: "",
-        nama: "",
-      },
     };
   }
   clearState() {
@@ -49,135 +43,130 @@ class FormPrinter extends Component {
       ],
       ip: "",
       nama: "",
-      error: {
-        pid: "",
-        vid: "",
-        konektor: "",
-        ip: "",
-        nama: "",
-      },
+      id_printer: "",
     });
   }
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    let err = Object.assign({}, this.state.error, {
-      [event.target.name]: "",
-    });
-    this.setState({
-      error: err,
-    });
   };
   toggle = (e) => {
     e.preventDefault();
-    
-    if(this.props.fastAdd===undefined){
+    if (this.props.fastAdd === undefined) {
       const bool = !this.props.isOpen;
       this.props.dispatch(ModalToggle(bool));
     }
-    
-    if(this.props.fastAdd===true){
-      this.props.dispatch(ModalType('formProduct'));
-      this.props.dispatch(readPrinter('page=1&perpage=99999',true));
+
+    if (this.props.fastAdd === true) {
+      this.props.dispatch(ModalType("formProduct"));
+      this.props.dispatch(readPrinter("page=1&perpage=99999", true));
     }
-    
+
     this.clearState();
   };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.detail !== undefined) {
-      if (this.props.detail.id_printer !== prevProps.detail.id_printer) {
-        this.setState({
-          nama: this.props.detail.nama,
-          konektor: {
-            value: `${this.props.detail.konektor}`.toLowerCase(),
-            label: `${this.props.detail.konektor}`.toLowerCase(),
-          },
-          pid: this.props.detail.pid,
-          vid: this.props.detail.vid,
-          ip: this.props.detail.ip,
-        });
-      }
+  getProps(props) {
+    if (props.detail.id_printer !== "") {
+      this.setState({
+        nama: props.detail.nama,
+        konektor: {
+          value: `${props.detail.konektor}`.toLowerCase(),
+          label: `${props.detail.konektor}`.toLowerCase(),
+        },
+        pid: props.detail.pid,
+        vid: props.detail.vid,
+        ip: props.detail.ip,
+        id_printer: props.detail.id_printer,
+      });
     }
   }
 
-  handleError(state) {
-    let err = state.error;
-    err = Object.assign({}, err, { [state]: state + " tidak boleh kosong" });
-    this.setState({ error: err });
+  componentWillMount() {
+    this.getProps(this.props);
   }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
     let data = new FormData(form);
     let parseData = stringifyFormData(data);
     let state = this.state;
-    parseData["pid"] = state.pid;
-    parseData["vid"] = state.vid;
+    parseData["pid"] = rmSpaceToStrip(state.pid);
+    parseData["vid"] = rmSpaceToStrip(state.vid);
     parseData["konektor"] = state.konektor.value;
-    parseData["ip"] = state.ip;
+    parseData["ip"] = rmSpaceToStrip(state.ip);
     parseData["nama"] = state.nama;
 
     if (state.nama === "" || state.nama === undefined) {
-      this.handleError("nama");
+      handleError("nama");
       return;
     }
     if (state.konektor.value === "" || state.konektor.value === undefined) {
-      this.handleError("konektor");
+      handleError("konektor");
       return;
     }
     if (state.konektor.value === "usb") {
       if (state.vid === "" || state.vid === undefined) {
-        this.handleError("vid");
+        handleError("vid");
         return;
       }
       if (state.pid === "" || state.pid === undefined) {
-        this.handleError("pid");
+        handleError("pid");
         return;
       }
     }
     if (state.konektor.value === "lan") {
       if (state.ip === "" || state.ip === undefined) {
-        this.handleError("ip");
+        handleError("ip");
         return;
       }
     }
 
-    if (this.props.detail === undefined) {
+    if (this.props.detail.id_printer === "") {
       this.props.dispatch(
         createPrinter(parseData, (status) => {
           if (status) {
             this.clearState();
-            // this.props.dispatch(ModalToggle,ModalType(false));
           }
         })
       );
-      if(this.props.fastAdd===undefined){
+      if (this.props.fastAdd === undefined) {
         this.props.dispatch(ModalToggle(false));
       }
-      if(this.props.fastAdd===true){
-          this.props.dispatch(ModalType('formProduct'));
+      if (this.props.fastAdd === true) {
+        this.props.dispatch(ModalType("formProduct"));
       }
     } else {
       this.props.dispatch(
-        updatePrinter(this.props.detail.id_printer, parseData, (status) => {
-          if (status) {
-            this.clearState();
-            this.props.dispatch(ModalToggle(false));
-          }
-        })
+        updatePrinter(
+          this.props.detail.id_printer,
+          parseData,
+          (status) => {
+            if (status) {
+              this.clearState();
+              this.props.dispatch(ModalToggle(false));
+            }
+          },
+          this.props.detail.where
+        )
       );
     }
   }
 
   handleChangeKonektor(lk) {
-    let err = Object.assign({}, this.state.error, {
-      konektor: "",
-    });
-    this.setState({
-      konektor: lk,
-      error: err,
-    });
+    let setState = { konektor: lk };
+    if (lk.value === "lan") {
+      Object.assign(setState, { pid: "", vid: "" });
+    }
+    if (lk.value === "usb") {
+      Object.assign(setState, { ip: "" });
+    }
+    this.setState(setState);
   }
   render() {
     return (
@@ -186,9 +175,9 @@ class FormPrinter extends Component {
         size="md"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined
-            ? "Add Printer"
-            : "Update Printer"}
+          {this.props.detail.id_printer === ""
+            ? "Tambah Printer"
+            : "Ubah Printer"}
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
@@ -201,16 +190,6 @@ class FormPrinter extends Component {
                 value={this.state.nama}
                 onChange={this.handleChange}
               />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.nama !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.nama}
-              </div>
             </div>
             <div className="form-group">
               <label>Konektor</label>
@@ -220,16 +199,6 @@ class FormPrinter extends Component {
                 onChange={this.handleChangeKonektor}
                 value={this.state.konektor}
               />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.konektor !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.konektor}
-              </div>
             </div>
             {this.state.konektor.value === "lan" && (
               <div className="form-group">
@@ -241,16 +210,6 @@ class FormPrinter extends Component {
                   value={this.state.ip}
                   onChange={this.handleChange}
                 />
-                <div
-                  className="invalid-feedback"
-                  style={
-                    this.state.error.ip !== ""
-                      ? { display: "block" }
-                      : { display: "none" }
-                  }
-                >
-                  {this.state.error.ip}
-                </div>
               </div>
             )}
             {this.state.konektor.value === "usb" && (
@@ -265,16 +224,6 @@ class FormPrinter extends Component {
                       value={this.state.vid}
                       onChange={this.handleChange}
                     />
-                    <div
-                      className="invalid-feedback"
-                      style={
-                        this.state.error.vid !== ""
-                          ? { display: "block" }
-                          : { display: "none" }
-                      }
-                    >
-                      {this.state.error.vid}
-                    </div>
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -287,16 +236,6 @@ class FormPrinter extends Component {
                       value={this.state.pid}
                       onChange={this.handleChange}
                     />
-                    <div
-                      className="invalid-feedback"
-                      style={
-                        this.state.error.pid !== ""
-                          ? { display: "block" }
-                          : { display: "none" }
-                      }
-                    >
-                      {this.state.error.pid}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -309,7 +248,7 @@ class FormPrinter extends Component {
                 className="btn btn-warning mb-2 mr-2"
                 onClick={this.toggle}
               >
-                <i className="ti-close" /> Cancel
+                <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
                 <i className="ti-save" /> Simpan

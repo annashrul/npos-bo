@@ -12,12 +12,27 @@ const baseUrl = "printer";
 export function setDataSuccess(data = []) {
   return { type: PRINTER.GET_PRINTER_SUCCESS, data };
 }
+export function setDataTestPrint(data = []) {
+  return { type: PRINTER.TEST_PRINTER_SUCCESS, data };
+}
 
 export function setDataFailed(data = []) {
   return { type: PRINTER.GET_PRINTER_FAILED, data };
 }
-
-export const readPrinter = (where = "", fastAdd=false) => {
+export const testPrinter = (where = "") => {
+  return (dispatch) => {
+    let url = baseUrl + "/test/" + where;
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
+        dispatch(setDataTestPrint(data));
+      },
+      true
+    );
+  };
+};
+export const readPrinter = (where = "", fastAdd = false) => {
   return (dispatch) => {
     let url = baseUrl;
     if (where !== "") url += `?${where}`;
@@ -26,7 +41,7 @@ export const readPrinter = (where = "", fastAdd=false) => {
       (res) => {
         const data = res.data;
         dispatch(setDataSuccess(data));
-        if(fastAdd)dispatch(readPrinter("page=1&perpage=99999"));
+        if (fastAdd) dispatch(readPrinter("page=1&perpage=99999"));
       },
       true
     );
@@ -42,19 +57,19 @@ export const createPrinter = (data, callback) => {
     });
   };
 };
-export const updatePrinter = (id, data, callback) => {
+export const updatePrinter = (id, data, callback, where = "") => {
   return (dispatch) => {
     handlePut(`${baseUrl}/${id}`, data, (res, msg, status) => {
       swal(msg);
       callback(true);
-      dispatch(readPrinter("page=1"));
+      dispatch(readPrinter(where));
     });
   };
 };
-export const deletePrinter = (id) => {
+export const deletePrinter = (id, where = "") => {
   return (dispatch) => {
     handleDelete(`${baseUrl}/${id}`, () => {
-      dispatch(readPrinter("page=1"));
+      dispatch(readPrinter(where));
     });
   };
 };

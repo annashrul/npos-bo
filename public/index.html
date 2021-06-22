@@ -271,7 +271,7 @@
       border:1px solid hsl(0,0%,80%) !important;
       /* margin-top: 1px!important; */
       width: 100%;
-      height: 38px!important;
+      height: 38px !important;
     }
     select.form-control {
        color: #333333 !important;
@@ -303,6 +303,9 @@
 }
 input[readonly] {
     background-color: #EEEEEE !important;
+}
+input.in-table{
+  height:31px !important;
 }
 
 input[type=checkbox]
@@ -467,20 +470,42 @@ input[type=checkbox]:checked
     }
   
 
-    button.btn-primary, button.btn-secondary{
+    button.btn-secondary{
       background-color: #283593;
       border-color: #283593;
       color: #fff;
     }
-    button.btn-secondary{
-      padding: .25rem .5rem;
+    button.btn-primary{
+      background-color: #283593;
+      border-color: #283593;
+      color: #fff;
+      height:38px;
+    }
+
+    /* button.btn-sm{
+      padding-left: 2px;
+      padding-right: 6px;
+      padding-top: 2px;
+      padding-bottom: 0px;
       line-height: 1.5;
+    } */
+
+    button.btn-secondary{
+      /* padding: .25rem .5rem; */
+      padding-left: 2px;
+      padding-right: 6px;
+      padding-top: 2px;
+      padding-bottom: 0px;
+      line-height: 1.5;
+    }
+    span.input-group-text{
+      border:1px solid hsl(0,0%,80%) !important;
     }
 button.btn-warning{
             background-color: #D4AF37!important;
       border-color:#D4AF37!important;
       color:#fff!important;
-
+height:38px;
       }
       .btn-outline-info {
         border-radius: 4px !important;

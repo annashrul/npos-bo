@@ -9,90 +9,64 @@ import {
   createArea,
   updateArea,
 } from "redux/actions/masterdata/area/area.action";
-import Select from "react-select";
+import LokasiCommon from "../../../common/LokasiCommon";
+import { handleError } from "../../../../../helper";
 
 class FormArea extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.state = {
       nama: "",
-      location_data: [],
       location: "",
       gambar: "",
       id: "",
-      user: "",
-      error: {
-        nama: "",
-        location: "",
-        gambar: "",
-      },
     };
   }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    let err = Object.assign({}, this.state.error, {
-      [event.target.name]: "",
-    });
-    this.setState({
-      error: err,
-    });
   };
+
   toggle = (e) => {
     e.preventDefault();
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
-    this.setState({});
+    this.clearState();
   };
-  HandleChangeLokasi(lk) {
-    let err = Object.assign({}, this.state.error, {
-      location: "",
-    });
+  clearState() {
     this.setState({
-      location: lk,
-      error: err,
+      nama: "",
+      id: "",
+      location: "",
+      gambar: "",
     });
-    localStorage.setItem("location_area", lk);
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.detail !== [] && nextProps.detail !== undefined) {
-      let data = this.state.location_data.filter(
-        (item) => item.value === nextProps.detail.lokasi
-      );
-
+  getProps(props) {
+    if (props.detail.id !== "") {
       this.setState({
-        nama: nextProps.detail.nama,
-        location: data,
-        gambar: nextProps.detail.gambar,
-        id: nextProps.detail.id,
+        location: {
+          value: props.detail.id_lokasi,
+          label: props.detail.lokasi,
+        },
+        nama: props.detail.nama,
+        gambar: props.detail.gambar,
+        id: props.detail.id,
       });
     } else {
-      this.setState({
-        nama: "",
-        id: "",
-      });
+      this.clearState();
     }
+  }
 
-    if (nextProps.auth.user) {
-      let lk = [];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-          userid: nextProps.auth.user.id,
-        });
-      }
-    }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  componentDidMount() {
+    this.getProps(this.props);
   }
   handleSubmit(e) {
     e.preventDefault();
@@ -103,23 +77,17 @@ class FormArea extends Component {
     parseData["gambar"] =
       this.state.gambar === undefined ? "-" : this.state.gambar.base64;
     parseData["lokasi"] = this.state.location.value;
-    let err = this.state.error;
-    if (this.state.nama === "" || this.state.nama === undefined) {
-      err = Object.assign({}, err, { nama: "nama tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
-    } else if (
-      this.state.location === "" ||
-      this.state.location === undefined
-    ) {
-      err = Object.assign({}, err, { location: "lokasi tidak boleh kosong" });
-      this.setState({ error: err });
-      return;
+    if (parseData["lokasi"] === undefined) {
+      return handleError("lokasi");
+    } else if (this.state.nama === undefined || this.state.nama === "") {
+      return handleError("nama");
     } else {
       if (this.props.detail === undefined) {
         this.props.dispatch(createArea(parseData));
       } else {
-        this.props.dispatch(updateArea(this.state.id, parseData));
+        this.props.dispatch(
+          updateArea(this.state.id, parseData, this.props.detail.where)
+        );
       }
     }
   }
@@ -136,31 +104,25 @@ class FormArea extends Component {
         size="md"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined ? "Add Area" : "Update Area"}
+          {this.props.detail.id === "" ? "Tambah Area" : "Ubah Area"}
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
-              <label>Lokasi</label>
-              <Select
-                options={this.state.location_data}
-                placeholder="Pilih Lokasi"
-                onChange={this.HandleChangeLokasi}
-                value={this.state.location}
+              <label>
+                Lokasi <span className="text-danger">*</span>
+              </label>
+              <LokasiCommon
+                callback={(val) => {
+                  this.setState({ location: val });
+                }}
+                dataEdit={this.state.location}
               />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.location !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.location}
-              </div>
             </div>
             <div className="form-group">
-              <label>Nama</label>
+              <label>
+                Nama <span className="text-danger">*</span>
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -168,16 +130,6 @@ class FormArea extends Component {
                 value={this.state.nama}
                 onChange={this.handleChange}
               />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.nama !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.nama}
-              </div>
             </div>
             <div className="form-group">
               <label htmlFor="inputState" className="col-form-label">
@@ -195,16 +147,6 @@ class FormArea extends Component {
                 className="mr-3 form-control-file"
                 onDone={this.getFiles.bind(this)}
               />
-              <div
-                className="invalid-feedback"
-                style={
-                  this.state.error.gambar !== ""
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
-              >
-                {this.state.error.gambar}
-              </div>
             </div>
           </ModalBody>
           <ModalFooter>
@@ -214,7 +156,7 @@ class FormArea extends Component {
                 className="btn btn-warning mb-2 mr-2"
                 onClick={this.toggle}
               >
-                <i className="ti-close" /> Cancel
+                <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
                 <i className="ti-save" /> Simpan

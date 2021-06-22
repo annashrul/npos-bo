@@ -14,6 +14,8 @@ import {
 } from "reactstrap";
 import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
+import { generateNo } from "../../../../helper";
+import { testPrinter } from "../../../../redux/actions/masterdata/printer/printer.action";
 
 class Printer extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class Printer extends Component {
     this.state = {
       any: "",
       detail: {},
+      where: "",
     };
   }
   checkingParam(page = 1) {
@@ -32,6 +35,7 @@ class Printer extends Component {
     if (state.any !== "") {
       where += `&q=${state.any}`;
     }
+    this.setState({ where: where });
     this.props.dispatch(readPrinter(where));
   }
   componentWillMount() {
@@ -46,7 +50,9 @@ class Printer extends Component {
       this.setState({ detail: { id_printer: "" } });
     } else {
       this.setState({
-        detail: this.props.data.data[i],
+        detail: Object.assign(this.props.data.data[i], {
+          where: this.state.where,
+        }),
       });
     }
   }
@@ -63,101 +69,125 @@ class Printer extends Component {
   }
   handleDelete(e, id) {
     e.preventDefault();
-    this.props.dispatch(deletePrinter(id));
+    this.props.dispatch(deletePrinter(id, this.state.where));
+  }
+  handleTestPrint(e, i) {
+    e.preventDefault();
+    this.props.dispatch(testPrinter(this.props.data.data[i].id_printer));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
-
     return (
       <Layout page="Printer">
         <div className="col-12 box-margin">
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
-              <div className="form-group">
-                <label>Search</label>
+              <div className="input-group input-group-sm">
                 <input
-                  type="text"
-                  className="form-control"
+                  type="search"
                   name="any"
+                  className="form-control form-control-sm"
+                  placeholder="cari berdasarkan nama printer"
                   value={this.state.any}
-                  onChange={(e) => this.handleChange(e)}
+                  onChange={(e) => {
+                    this.setState({ any: e.target.value });
+                  }}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {
                       this.handlesearch();
                     }
                   }}
                 />
+                <span className="input-group-append">
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fa fa-search" />
+                  </button>
+                </span>
               </div>
             </div>
-            <div className="col-2 col-xs-4 col-md-4">
-              <div className="form-group">
+            <div className="col-2 col-xs-2 col-md-9">
+              <div className="form-group text-right">
                 <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={this.handlesearch}
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
+                  style={{ height: "38px" }}
                   type="button"
                   onClick={(e) => this.toggleModal(e, null)}
                   className="btn btn-primary"
                 >
-                  <i className="fa fa-plus"></i>
+                  <i className="fa fa-plus" />
                 </button>
               </div>
             </div>
           </div>
-          <div className="table-responsive" style={{ overflowX: "auto" }}>
-            <table className="table table-hover table-bordered">
+          <div style={{ overflowX: "auto" }}>
+            <table className="table table-hover table-noborder">
               <thead className="bg-light">
                 <tr>
-                  <th className="text-black">#</th>
-                  <th className="text-black">Nama</th>
-                  <th className="text-black">IP</th>
-                  <th className="text-black">Konektor</th>
-                  <th className="text-black">Vid</th>
-                  <th className="text-black">Pid</th>
+                  <th className="text-black middle text-center" width="1%">
+                    No
+                  </th>
+
+                  <th className="text-black middle">Nama</th>
+                  <th className="text-black middle" width="1%">
+                    IP
+                  </th>
+                  <th className="text-black middle" width="5%">
+                    Konektor
+                  </th>
+                  <th className="text-black middle" width="5%">
+                    Vid
+                  </th>
+                  <th className="text-black middle" width="5%">
+                    Pid
+                  </th>
+                  <th className="text-black middle text-center" width="12%">
+                    #
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {typeof data === "object"
-                  ? data.map((v, i) => {
-                      return (
-                        <tr key={i}>
-                          <td>
-                            {/* Example split danger button */}
-                            <div className="btn-group">
-                              <UncontrolledButtonDropdown>
-                                <DropdownToggle caret>Aksi</DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    onClick={(e) => this.toggleModal(e, i)}
-                                  >
-                                    Edit
-                                  </DropdownItem>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handleDelete(e, v.id_printer)
-                                    }
-                                  >
-                                    Delete
-                                  </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledButtonDropdown>
-                            </div>
-                          </td>
-                          <td>{v.nama}</td>
-                          <td>{`${v.konektor}`.toLowerCase()}</td>
-                          <td>{v.ip !== "" ? v.ip : "-"}</td>
-                          <td>{v.vid !== "" ? v.vid : "-"}</td>
-                          <td>{v.pid !== "" ? v.pid : "-"}</td>
-                        </tr>
-                      );
-                    })
-                  : "No data."}
+                {typeof data === "object" ? (
+                  data.map((v, i) => {
+                    console.log(v);
+                    return (
+                      <tr key={i}>
+                        <td className="middle text-center">
+                          {generateNo(i, current_page)}
+                        </td>
+                        <td className="middle">{v.nama}</td>
+                        <td className="middle">
+                          {`${v.konektor}`.toLowerCase()}
+                        </td>
+                        <td className="middle">{v.ip !== "" ? v.ip : "-"}</td>
+                        <td className="middle">{v.vid !== "" ? v.vid : "-"}</td>
+                        <td className="middle">{v.pid !== "" ? v.pid : "-"}</td>
+                        <td className="middle">
+                          <button
+                            className="btn btn-primary btn-sm mr-1"
+                            onClick={(e) => this.handleDelete(e, v.id_printer)}
+                          >
+                            <i className="fa fa-trash"></i>
+                          </button>
+                          <button
+                            className="btn btn-primary btn-sm mr-1"
+                            onClick={(e) => this.toggleModal(e, i)}
+                          >
+                            <i className="fa fa-pencil"></i>
+                          </button>
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={(e) => this.handleTestPrint(e, i)}
+                          >
+                            <i className="fa fa-print"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={7}>Tidak ada data . </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -169,7 +199,7 @@ class Printer extends Component {
               callback={this.handlePageChange.bind(this)}
             />
           </div>
-          {!this.props.isOpen && <FormPrinter detail={this.state.detail} />}
+          {this.props.isOpen && <FormPrinter detail={this.state.detail} />}
         </div>
       </Layout>
     );
@@ -178,8 +208,10 @@ class Printer extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    isOpen: state.modalReducer,
     data: state.printerReducer.data,
     auth: state.auth,
+    testPrinter: state.printerReducer.testPrinter,
   };
 };
 

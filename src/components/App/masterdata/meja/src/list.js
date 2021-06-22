@@ -7,13 +7,13 @@ import {
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq from "helper";
 import FormMeja from "components/App/modals/masterdata/area/form_meja";
-import Swal from "sweetalert2";
 import {
   UncontrolledButtonDropdown,
   DropdownMenu,
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
+import { generateNo } from "../../../../../helper";
 
 class ListMeja extends Component {
   constructor(props) {
@@ -21,25 +21,29 @@ class ListMeja extends Component {
     this.handlesearch = this.handlesearch.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.state = {
+      any: "",
       detail: {},
+      where: "",
     };
   }
 
+  handleGet(any, page) {
+    let where = `page=${page}`;
+    if (any !== "") where += `&q=${any}`;
+    this.setState({ where: where });
+    this.props.dispatch(FetchMeja(where));
+  }
+
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_customer", pageNumber);
-    this.props.dispatch(FetchMeja(pageNumber, ""));
+    this.handleGet(this.state.any, pageNumber);
   }
   handlesearch(e) {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    let any = data.get("field_any");
-    localStorage.setItem("any_customer", any);
-    if (any === "" || any === null || any === undefined) {
-      this.props.dispatch(FetchMeja(1, ""));
-    } else {
-      this.props.dispatch(FetchMeja(1, any));
-    }
+    let any = data.get("any");
+    this.setState({ any: any });
+    this.handleGet(any, 1);
   }
   toggleModal(e, i) {
     e.preventDefault();
@@ -51,6 +55,7 @@ class ListMeja extends Component {
     } else {
       this.setState({
         detail: {
+          where: this.state.where,
           nama: this.props.data.data[i].nama,
           kapasitas: this.props.data.data[i].kapasitas,
           id_area: this.props.data.data[i].id_area,
@@ -65,21 +70,7 @@ class ListMeja extends Component {
   }
   handleDelete(e, id) {
     e.preventDefault();
-    this.props.dispatch(deleteMeja(id));
-    // Swal.fire({
-    //   allowOutsideClick: false,
-    //   title: "Are you sure?",
-    //   text: "You won't be able to revert this!",
-    //   type: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Yes, delete it!",
-    // }).then((result) => {
-    //   if (result.value) {
-    //     this.props.dispatch(deleteMeja(id, this.props.token));
-    //   }
-    // });
+    this.props.dispatch(deleteMeja(id, this.state.where));
   }
   render() {
     const columnStyle = { verticalAlign: "middle", textAlign: "left" };
@@ -89,95 +80,102 @@ class ListMeja extends Component {
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
-              <div className="form-group">
-                <label>Search</label>
+              <div className="input-group input-group-sm">
                 <input
-                  type="text"
-                  className="form-control"
-                  name="field_any"
-                  defaultValue={localStorage.getItem("any_customer")}
+                  type="search"
+                  name="any"
+                  className="form-control form-control-sm"
+                  placeholder="cari berdasarkan meja"
+                  value={this.state.any}
+                  onChange={(e) => {
+                    this.setState({ any: e.target.value });
+                  }}
                 />
+                <span className="input-group-append">
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fa fa-search" />
+                  </button>
+                </span>
               </div>
             </div>
-            <div className="col-2 col-xs-4 col-md-4">
-              <div className="form-group">
+            <div className="col-2 col-xs-2 col-md-9">
+              <div className="form-group text-right">
                 <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
+                  style={{ height: "38px" }}
                   type="button"
                   onClick={(e) => this.toggleModal(e, null)}
                   className="btn btn-primary"
                 >
-                  <i className="fa fa-plus"></i>
+                  <i className="fa fa-plus" />
                 </button>
               </div>
             </div>
           </div>
         </form>
         <div className="table-responsive" style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black text-center middle" width="1%">
+                  No
+                </th>
+                <th className="text-black text-center middle" width="1%">
                   #
                 </th>
-                {/* <th className="text-black" style={columnStyle}>Area</th> */}
-                <th className="text-black" style={columnStyle}>
-                  Area
-                </th>
-                <th className="text-black" style={columnStyle}>
+                {/* <th className="text-black" className="middle">Area</th> */}
+                <th className="text-black middle">Area</th>
+                <th className="text-black middle" width="5%">
                   Meja
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle" width="5%">
                   Kapasitas
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle" width="20%">
                   Bentuk Meja
                 </th>
               </tr>
             </thead>
             <tbody>
-              {typeof data === "object"
-                ? data.map((v, i) => {
-                    return (
-                      <tr key={i}>
-                        <td style={columnStyle}>
-                          {/* Example split danger button */}
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) => this.toggleModal(e, i)}
-                                >
-                                  Edit
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.handleDelete(e, v.id_meja)
-                                  }
-                                >
-                                  Delete
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        {/* <td style={columnStyle}>{v.area}</td> */}
-                        <td style={columnStyle}>{v.nama_area}</td>
-                        <td style={columnStyle}>{v.nama_meja}</td>
-                        <td style={columnStyle}>{v.kapasitas}</td>
-                        <td style={columnStyle}>{v.bentuk}</td>
-                      </tr>
-                    );
-                  })
-                : "No data."}
+              {typeof data === "object" ? (
+                data.map((v, i) => {
+                  return (
+                    <tr key={i}>
+                      <td className="midde text-center">
+                        {generateNo(i, current_page)}
+                      </td>
+                      <td className="middle">
+                        {/* Example split danger button */}
+                        <div className="btn-group">
+                          <UncontrolledButtonDropdown>
+                            <DropdownToggle caret>Aksi</DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem
+                                onClick={(e) => this.toggleModal(e, i)}
+                              >
+                                Edit
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={(e) => this.handleDelete(e, v.id_meja)}
+                              >
+                                Delete
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledButtonDropdown>
+                        </div>
+                      </td>
+                      {/* <td className="middle">{v.area}</td> */}
+                      <td className="middle">{v.nama_area}</td>
+                      <td className="middle">{v.nama_meja}</td>
+                      <td className="middle">{v.kapasitas}</td>
+                      <td className="middle">{v.bentuk}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={6}>No data</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -189,7 +187,7 @@ class ListMeja extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
-        {!this.props.isOpen && (
+        {this.props.isOpen && (
           <FormMeja
             token={this.props.token}
             detail={this.state.detail}
@@ -200,5 +198,10 @@ class ListMeja extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    isOpen: state.modalReducer,
+  };
+};
 
-export default connect()(ListMeja);
+export default connect(mapStateToProps)(ListMeja);

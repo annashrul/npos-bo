@@ -37,7 +37,7 @@ export const handleError = (err) => {
   }
 };
 
-export const handleGet = async (url, callback, isLoading = true) => {
+export const handleGet = (url, callback, isLoading = true) => {
   if (isLoading) Nprogress.start();
   axios
     .get(HEADERS.URL + url)

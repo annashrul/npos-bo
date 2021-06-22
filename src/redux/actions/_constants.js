@@ -14,7 +14,7 @@ export const TOKEN = {
 
 export const HEADERS = {
   // URL: atob(document.getElementById("hellyeah").value),
-  // URL: 'http://ptnetindo.com:6692/',
+  // URL: "http://ptnetindo.com:6692/",
   URL: "http://192.168.100.10:6692/",
   //   URL: 'http://localhost:6692/',
   TOKEN:
@@ -168,6 +168,9 @@ export const PRODUCT = {
   SUCCESS_BRG_SALE: "SET_SUCCESS_BRG_SALE",
   EDIT_PRODUCT: "SET_EDIT_PRODUCT",
   CODE_PRODUCT: "SET_CODE_PRODUCT",
+
+  DATA_PRODUCT_TRX: "DATA_PRODUCT_TRX",
+  LOADING_DATA_PRODUCT_TRX: "LOADING_DATA_PRODUCT_TRX",
 };
 
 /****************
@@ -682,6 +685,7 @@ export const PACKING = {
 };
 export const PRINTER = {
   GET_PRINTER_SUCCESS: "SET_PRINTER_SUCCESS",
+  TEST_PRINTER_SUCCESS: "TEST_PRINTER_SUCCESS",
   GET_PRINTER_FAILED: "SET_PRINTER_FAILED",
 };
 /****************

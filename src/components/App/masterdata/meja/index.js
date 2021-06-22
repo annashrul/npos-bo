@@ -12,9 +12,7 @@ class Meja extends Component {
     this.state = { token: "" };
   }
   componentWillMount() {
-    let any = localStorage.getItem("any_meja");
-    let page = localStorage.getItem("page_meja");
-    this.props.dispatch(FetchMeja(page ? page : 1, any ? any : ""));
+    this.props.dispatch(FetchMeja("page=1"));
     this.props.dispatch(FetchAreaAll());
   }
   componentWillReceiveProps = (nextProps) => {

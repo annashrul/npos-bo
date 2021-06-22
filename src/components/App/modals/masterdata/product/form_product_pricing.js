@@ -573,7 +573,6 @@ class FormProductPricing extends Component {
   toggle = (e) => {
     e.preventDefault();
     window.scrollTo(0, 0);
-    console.log('this.props.allState',this.props.allState);
     if(this.props.allState!==undefined){
       this.props.dispatch(ModalType('formProduct'));
     }else{
@@ -596,13 +595,11 @@ class FormProductPricing extends Component {
     const file = event.target.files[0];
     const base64 = await convertBase64(file);
     this.setState({ gambar: base64 });
-    console.log(base64);
   };
   getProps(param) {
     if(this.props.allState!==undefined){
       if(!this.state.isFill){
         this.setState(this.props.allState)
-        console.log("this.props.allState",this.props.allState);
       }
     }
     this.setState({
@@ -1403,22 +1400,12 @@ class FormProductPricing extends Component {
   }
   
   passToParent(event, i, x, lbl){
-    console.log('passToParent-asda5s6a',event.target.value);
-    console.log('passToParent-iasda5s6a',i);
-    console.log('passToParent-xasda5s6a',x);
-    console.log('passToParent-lblasda5s6a',lbl);
-    
     if(this.props.allState!==undefined){
       this.props.onHandleChangeChildSku_(event, i, x, lbl)
     }
 
   }
   onHandleChangeChildSku(event, i, x, lbl) {
-    // this.passToParent(event, i, x, lbl)
-    console.log('child-asda5s6a',event.target.value);
-    console.log('child-iasda5s6a',i);
-    console.log('child-xasda5s6a',x);
-    console.log('child-lblasda5s6a',lbl);
     let column = event.target.name;
     let value = event.target.value;
     this.setState({isFill:value!==''})
@@ -2974,13 +2961,11 @@ class FormProductPricing extends Component {
         newParseData["barang_harga"] = parseData.barang_harga
         this.props.dispatch(updateProduct(this.state.kd_brg, newParseData));
       }
-      console.log('af4a98f9a8s4fsdfasf4849asf',parseData);
       this.clearState();
     } else {
       // this.props.dispatch(createProduct(parseData));
       // this.props.handler({dataEdit:{barang_harga:parseData.barang_harga,barang_sku:parseData.barang_sku}})
       this.props.handler({barangHarga_:this.state.barangHarga,barangSku_:this.state.barangSku})
-      console.log('af4a98f9a8s4fsdfasf4849asf',parseData);
       this.setState({isFill:false})
       this.props.dispatch(ModalType('formProduct'));
     }

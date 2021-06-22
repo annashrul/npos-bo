@@ -10,9 +10,7 @@ class Supplier extends Component {
     this.state = { token: "" };
   }
   componentWillMount() {
-    let any = localStorage.getItem("any_supplier");
-    let page = localStorage.getItem("page_supplier");
-    this.props.dispatch(FetchSupplier(page ? page : 1, any ? any : ""));
+    this.props.dispatch(FetchSupplier(1));
   }
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.auth.user) {

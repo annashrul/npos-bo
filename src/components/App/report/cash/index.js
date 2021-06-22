@@ -11,7 +11,14 @@ import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
-import { kassa, rangeDate, toRp } from "../../../../helper";
+import {
+  dateRange,
+  generateNo,
+  kassa,
+  rangeDate,
+  toCurrency,
+  toRp,
+} from "../../../../helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import CashReportExcel from "components/App/modals/report/cash/form_cash_excel";
 import Updates from "components/App/modals/report/cash/update";
@@ -23,7 +30,7 @@ import {
 } from "reactstrap";
 import Otorisasi from "../../modals/otorisasi.modal";
 import Swal from "sweetalert2";
-
+import LokasiCommon from "../../common/LokasiCommon";
 class ReportCash extends Component {
   constructor(props) {
     super(props);
@@ -85,33 +92,6 @@ class ReportCash extends Component {
     this.setState({
       type_data: data_type,
     });
-    if (nextProps.auth.user) {
-      let lk = [];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        if (loc.length === 1) {
-          this.setState({
-            location: loc[0].kode,
-          });
-        } else {
-          lk.push({
-            value: "-",
-            label: "Semua Lokasi",
-          });
-        }
-        // loc.push({"kode":"","nama":"Semua Lokasi"});
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
   };
 
   componentWillMount() {
@@ -182,14 +162,12 @@ class ReportCash extends Component {
     });
     localStorage.setItem("kassa_cash_report", ks.value);
   }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_cash_report", `${awal}`);
-    localStorage.setItem("date_to_cash_report", `${akhir}`);
+  handleEvent = (first, last) => {
+    localStorage.setItem("date_from_cash_report", `${first}`);
+    localStorage.setItem("date_to_cash_report", `${last}`);
     this.setState({
-      startDate: awal,
-      endDate: akhir,
+      startDate: first,
+      endDate: last,
     });
   };
   handleSearch(e) {
@@ -288,14 +266,8 @@ class ReportCash extends Component {
     this.checkingParameter(pageNumber);
   }
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
-    const {
-      last_page,
-      per_page,
-      current_page,
-      total_kas,
-      data,
-    } = this.props.cashReport;
+    const { last_page, per_page, current_page, total_kas, data } =
+      this.props.cashReport;
     let total_perpage = 0;
     return (
       <Layout page="Laporan Kas">
@@ -303,40 +275,31 @@ class ReportCash extends Component {
           <div className="col-md-10">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      name="date_product"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
+                {dateRange(
+                  (first, last) => this.handleEvent(first, last),
+                  `${this.state.startDate} to ${this.state.endDate}`
+                )}
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
-                  <label className="control-label font-12">Lokasi</label>
-                  <Select
+                  <label>Lokasi</label>
+                  <LokasiCommon
+                    callback={(res) => this.HandleChangeLokasi(res)}
+                    isAll={true}
+                  />
+                  {/* <Select
                     options={this.state.location_data}
                     placeholder="Pilih Lokasi"
                     onChange={this.HandleChangeLokasi}
                     value={this.state.location_data.find((op) => {
                       return op.value === this.state.location;
                     })}
-                  />
+                  /> */}
                 </div>
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
-                  <label className="control-label font-12">Kassa</label>
+                  <label>Kassa</label>
                   <Select
                     options={kassa("semua")}
                     placeholder="Pilih Kassa"
@@ -349,7 +312,7 @@ class ReportCash extends Component {
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
-                  <label className="control-label font-12">Tipe Kas</label>
+                  <label>Tipe Kas</label>
                   <Select
                     options={this.state.type_data}
                     placeholder="Pilih Tipe Kas"
@@ -364,7 +327,6 @@ class ReportCash extends Component {
           </div>
           <div className="col-12 col-xs-12 col-md-2 text-right">
             <div className="form-group">
-              <label className="control-label font-12"></label>
               <button
                 style={{ marginTop: "28px", marginRight: "5px" }}
                 className="btn btn-primary"
@@ -384,38 +346,40 @@ class ReportCash extends Component {
             </div>
           </div>
         </div>
-        <div style={{ overflowX: "auto", zoom: "85%" }}>
-          <table className="table table-hover table-bordered">
+        <div style={{ overflowX: "auto" }}>
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle text-center nowrap" width="1%">
+                  No
+                </th>
+                <th className="text-black middle nowrap text-center" width="1%">
                   #
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap" width="5%">
                   Kode Transaksi
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap" width="5%">
                   Tipe
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap" width="5%">
                   Jenis
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap" width="5%">
                   Lokasi
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap" width="5%">
                   Kasir
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap" width="5%">
                   Jumlah
                 </th>
-                <th className="text-black" style={columnStyle}>
-                  Keterangan
-                </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black middle nowrap">Keterangan</th>
+                <th className="text-black middle nowrap" width="5%">
                   Tanggal
                 </th>
-                {/* <th className="text-black" style={columnStyle}>Aksi</th> */}
+
+                {/* <th className="text-black">Aksi</th> */}
               </tr>
             </thead>
             {
@@ -426,9 +390,12 @@ class ReportCash extends Component {
                       total_perpage += parseInt(v.jumlah, 10);
                       return (
                         <tr key={i}>
-                          <td style={columnStyle}>
+                          <td className="middle text-center nowrap">
+                            {generateNo(i, current_page)}
+                          </td>
+                          <td className="middle nowrap text-center">
                             <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem
                                   onClick={(event) => {
@@ -452,19 +419,20 @@ class ReportCash extends Component {
                               </DropdownMenu>
                             </UncontrolledButtonDropdown>
                           </td>
-                          <td style={columnStyle}>{v.kd_trx}</td>
-                          <td style={columnStyle}>{v.type}</td>
-                          <td style={columnStyle}>{v.jenis}</td>
-                          <td style={columnStyle}>
+                          <td className="middle nowrap">{v.kd_trx}</td>
+                          <td className="middle nowrap">{v.type}</td>
+                          <td className="middle nowrap">{v.jenis}</td>
+                          <td className="middle nowrap">
                             {v.lokasi} ({v.kassa})
                           </td>
-                          <td style={columnStyle}>{v.kasir}</td>
-                          <td style={columnStyle}>{toRp(v.jumlah)}</td>
-                          <td style={columnStyle}>{v.keterangan}</td>
-                          <td style={columnStyle}>
-                            {moment(v.tgl).format("yyyy-MM-DD hh:mm:ss")}
+                          <td className="middle nowrap">{v.kasir}</td>
+                          <td className="middle nowrap text-right">
+                            {toRp(parseFloat(v.jumlah))}
                           </td>
-                          {/* <td style={columnStyle}><button className="btn btn-success" ><i className="fa fa-edit"/></button></td> */}
+                          <td className="middle nowrap">{v.keterangan}</td>
+                          <td className="middle nowrap">
+                            {moment(v.tgl).format("yyyy-MM-DD")}
+                          </td>
                         </tr>
                       );
                     })
@@ -482,16 +450,18 @@ class ReportCash extends Component {
             }
             <tfoot className="bg-light">
               <tr style={{ backgroundColor: "rgb(238, 238, 238)" }}>
-                <td colSpan="6">TOTAL PERPAGE</td>
-                <td style={columnStyle} colSpan="">
-                  {toRp(total_perpage)}
+                <td colSpan="7">Total perhalaman</td>
+                <td className="middle text-right" colSpan="">
+                  {toRp(parseFloat(total_perpage))}
                 </td>
                 <td colSpan="2"></td>
               </tr>
               <tr style={{ backgroundColor: "rgb(238, 238, 238)" }}>
-                <td colSpan="6">TOTAL</td>
-                <td style={columnStyle} colSpan="">
-                  {total_kas === undefined ? 0 : toRp(total_kas.jumlah)}
+                <td colSpan="7">Total keseluruhan</td>
+                <td className="middle text-right" colSpan="">
+                  {total_kas === undefined
+                    ? 0
+                    : toRp(parseFloat(total_kas.jumlah))}
                 </td>
                 <td colSpan="2" />
               </tr>
