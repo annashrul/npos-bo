@@ -755,7 +755,7 @@ class Sale extends Component {
             kode_trx: this.props.nota,
             subtotal: subtotal,
             lokasi: this.state.location,
-            kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? "Z" : "Q",
+            kassa: atob(atob(Cookies.get("tnt="))) === "npos" ? "Z" : "Q",
             jns_kartu: "Debit",
             status: "LUNAS",
             optional_note: this.state.catatan,
@@ -1059,7 +1059,7 @@ class Sale extends Component {
               </button>
               Penjualan Barang
             </h4>
-            {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? (
+            {atob(atob(Cookies.get("tnt="))) === "npos" ? (
               <h4 style={{ float: "right" }}>
                 <button
                   className={"btn btn-primary"}
@@ -1068,9 +1068,7 @@ class Sale extends Component {
                   Closing
                 </button>
               </h4>
-            ) : (
-              ""
-            )}
+            ) : ""}
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             <StickyBox
