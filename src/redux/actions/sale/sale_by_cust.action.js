@@ -3,8 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import moment from "moment";
-import { handleGet } from "../_interceptor";
-
+import {handleGet} from "../handleHttp"
 export function setLoading(load) {
   return {
     type: SALE_BY_CUST.LOADING,
@@ -76,18 +75,9 @@ export function setLoadingReport(load) {
 }
 export const FetchNotaSaleByCust = () => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `pos/getcode`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setCode(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+    handleGet(`pos/getcode`, (data) => {
+      dispatch(setCode(data));
+    });
   };
 };
 export const storeSaleByCust = (data) => {

@@ -12,7 +12,9 @@ class LokasiCommon extends Component {
     this.state = {
       dataArray: [],
       dataObject: "",
+      isChecked:false,
     };
+    this.toggleChange = this.toggleChange.bind(this)
   }
 
   getProps(props) {
@@ -33,19 +35,27 @@ class LokasiCommon extends Component {
       }
       Object.assign(state, { dataArray: arrLokasi });
     }
+    
 
     // jika kondisi edit
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
-      if (props.dataEdit === "-") {
+     
+      if (props.isMulti && props.dataEdit.length > 0) {
+        Object.assign(state, { dataObject: props.dataEdit,isChecked:true })
+      }
+      else {
+        if (props.dataEdit === "-") {
         Object.assign(state, { dataObject: "" });
-      } else {
-        const stateLokasi = this.state.dataArray.filter(
-          (item) => item.value === props.dataEdit
-        );
-        if (stateLokasi[0] !== undefined) {
-          Object.assign(state, { dataObject: stateLokasi[0] });
+        } else {
+          const stateLokasi = this.state.dataArray.filter(
+            (item) => item.value === props.dataEdit
+          );
+          if (stateLokasi[0] !== undefined) {
+            Object.assign(state, { dataObject: stateLokasi[0] });
+          }
         }
       }
+      
     }
     this.setState(state);
   }
@@ -62,10 +72,23 @@ class LokasiCommon extends Component {
     this.setState({ dataObject: value });
     this.props.callback(value);
   }
+  toggleChange(e) {
+    let state = {isChecked:e.target.checked};
+    if (e.target.checked) {
+      this.onChange(this.state.dataArray)
+    } else {
+      this.onChange("")
+    }
+    this.setState(state);
+    
+
+    
+  }
 
   render() {
     return (
-      <div className="form-group">
+      this.props.isMulti === undefined ? (
+        <div className="form-group">
         <label
           style={{
             display:
@@ -83,6 +106,16 @@ class LokasiCommon extends Component {
           onChange={(value, actionMeta) => this.onChange(value)}
           value={this.state.dataObject}
         />
+      </div>
+      ) : <div className="form-group">
+          <label htmlFor="inputState" className="col-form-label">Lokasi&nbsp;<input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange}/> Pilih Semua </label>
+           <Select
+            isMulti={true}
+            options={this.state.dataArray}
+            placeholder={`Pilih lokasi`}
+            onChange={(value, actionMeta) => this.onChange(value)}
+            value={this.state.dataObject}
+          />
       </div>
     );
   }
