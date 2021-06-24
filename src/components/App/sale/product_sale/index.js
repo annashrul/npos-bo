@@ -297,7 +297,7 @@ class Sale extends Component {
 
   HandleChangeSelect(state, res) {
     setStorage(state, res.value);
-    if (state === "sales_tr" || res.value === "1000001") return;
+    if (state === "sales_tr") return;
     if (state === "location_tr") {
       destroy(table);
       this.getData();
@@ -1525,9 +1525,11 @@ class Sale extends Component {
               this.setState({ modalListHoldBill: false });
               if (res !== "close") {
                 destroy("sale");
-                res.detail.map((val, index) => {
-                  this.HanldeSetAddBrg(val, "hold", index);
-                });
+                if (res.detail!==undefined){
+                  res.detail.map((val, index) => {
+                    this.HanldeSetAddBrg(val, "hold", index);
+                  });
+                }
                 setStorage("location", res.master.lokasi);
                 setStorage("sales", res.master.kd_sales);
                 setStorage("customer", res.master.kd_cust);
