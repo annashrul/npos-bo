@@ -158,183 +158,182 @@ class FormUserList extends Component {
     e.preventDefault();
     let err = this.state.error;
 
-    if (!isEmptyOrUndefined())
+    if (
+      this.state.nama === "" ||
+      this.state.nama === undefined ||
+      this.state.error.username !== ""
+    ) {
+      if (this.state.nama === "" || this.state.nama === undefined) {
+        err = Object.assign({}, err, {
+          nama: "nama tidak boleh kosong.",
+        });
+        this.setState({
+          error: err,
+        });
+      }
+    } else if (
+      this.state.username === "" ||
+      this.state.username === undefined
+    ) {
+      err = Object.assign({}, err, {
+        username: "username tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (
+      this.state.location.length <= 0 ||
+      this.state.location === "" ||
+      this.state.location === undefined
+    ) {
+      err = Object.assign({}, err, {
+        location: "lokasi tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (
+      this.state.user_lvl === "" ||
+      this.state.user_lvl === undefined
+    ) {
+      err = Object.assign({}, err, {
+        user_lvl: "level user tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (this.state.foto === "" || this.state.foto === undefined) {
+      err = Object.assign({}, err, {
+        foto: "foto user tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (this.state.nohp === "" || this.state.nohp === undefined) {
+      err = Object.assign({}, err, {
+        nohp: "no hp tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (this.state.email === "" || this.state.email === undefined) {
+      err = Object.assign({}, err, {
+        email: "email tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (
+      this.state.tgl_lahir === "" ||
+      this.state.tgl_lahir === undefined
+    ) {
+      err = Object.assign({}, err, {
+        tgl_lahir: "tgl_lahir tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else if (this.state.alamat === "" || this.state.alamat === undefined) {
+      err = Object.assign({}, err, {
+        alamat: "alamat tidak boleh kosong.",
+      });
+      this.setState({
+        error: err,
+      });
+    } else {
+      const form = e.target;
+      let data = new FormData(form);
+      let parseData = stringifyFormData(data);
+      parseData["username"] = this.state.username;
+      parseData["user_lvl"] = this.state.user_lvl;
+      parseData["lokasi"] = lok;
+      parseData["status"] =
+        this.state.status === undefined ? 1 : this.state.status;
+      parseData["nama"] = this.state.nama;
+      parseData["alamat"] =
+        this.state.alamat === undefined ? "-" : this.state.alamat;
+      parseData["email"] =
+        this.state.email === undefined ? "-" : this.state.email;
+      parseData["nohp"] = this.state.nohp === undefined ? 0 : this.state.nohp;
+      parseData["tgl_lahir"] = this.state.tgl_lahir;
+      parseData["password"] =
+        parseInt(this.state.password.length, 10) > 0
+          ? this.state.password
+          : "-";
+      parseData["password_confirmation"] =
+        parseInt(this.state.password_confirmation.length, 10) > 0
+          ? this.state.password_confirmation
+          : "-";
+      parseData["password_otorisasi"] =
+        parseInt(this.state.password_otorisasi.length, 10) > 0
+          ? this.state.password_otorisasi
+          : "-";
+      let lok = [];
+      for (let i = 0; i < this.state.location.length; i++) {
+        lok.push({ kode: this.state.location[i].value });
+      }
+
+      if (this.state.foto !== undefined) {
+        if (this.state.foto.base64 !== undefined) {
+          parseData["foto"] = this.state.foto.base64;
+        }
+      } else {
+        parseData["foto"] = "-";
+      }
       if (
-        this.state.nama === "" ||
-        this.state.nama === undefined ||
-        this.state.error.username !== ""
+        this.props.userListEdit !== undefined &&
+        this.props.userListEdit !== []
       ) {
-        if (this.state.nama === "" || this.state.nama === undefined) {
+        if (parseData.password === "-") {
+          delete parseData.password;
+        }
+        if (parseData.password_confirmation === "-") {
+          delete parseData.password_confirmation;
+        }
+        if (parseData.password_otorisasi === "-") {
+          delete parseData.password_otorisasi;
+        }
+        if (parseData.foto === "-") {
+          delete parseData.foto;
+        }
+        this.props.dispatch(
+          updateUserList(this.props.userListEdit.id, parseData)
+        );
+        this.props.dispatch(ModalToggle(false));
+      } else {
+        if (this.state.password === "" || this.state.password === undefined) {
           err = Object.assign({}, err, {
-            nama: "nama tidak boleh kosong.",
+            password: "password tidak boleh kosong.",
           });
           this.setState({
             error: err,
           });
-        }
-      } else if (
-        this.state.username === "" ||
-        this.state.username === undefined
-      ) {
-        err = Object.assign({}, err, {
-          username: "username tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (
-        this.state.location.length <= 0 ||
-        this.state.location === "" ||
-        this.state.location === undefined
-      ) {
-        err = Object.assign({}, err, {
-          location: "lokasi tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (
-        this.state.user_lvl === "" ||
-        this.state.user_lvl === undefined
-      ) {
-        err = Object.assign({}, err, {
-          user_lvl: "level user tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (this.state.foto === "" || this.state.foto === undefined) {
-        err = Object.assign({}, err, {
-          foto: "foto user tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (this.state.nohp === "" || this.state.nohp === undefined) {
-        err = Object.assign({}, err, {
-          nohp: "no hp tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (this.state.email === "" || this.state.email === undefined) {
-        err = Object.assign({}, err, {
-          email: "email tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (
-        this.state.tgl_lahir === "" ||
-        this.state.tgl_lahir === undefined
-      ) {
-        err = Object.assign({}, err, {
-          tgl_lahir: "tgl_lahir tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else if (this.state.alamat === "" || this.state.alamat === undefined) {
-        err = Object.assign({}, err, {
-          alamat: "alamat tidak boleh kosong.",
-        });
-        this.setState({
-          error: err,
-        });
-      } else {
-        const form = e.target;
-        let data = new FormData(form);
-        let parseData = stringifyFormData(data);
-        parseData["username"] = this.state.username;
-        parseData["user_lvl"] = this.state.user_lvl;
-        parseData["lokasi"] = lok;
-        parseData["status"] =
-          this.state.status === undefined ? 1 : this.state.status;
-        parseData["nama"] = this.state.nama;
-        parseData["alamat"] =
-          this.state.alamat === undefined ? "-" : this.state.alamat;
-        parseData["email"] =
-          this.state.email === undefined ? "-" : this.state.email;
-        parseData["nohp"] = this.state.nohp === undefined ? 0 : this.state.nohp;
-        parseData["tgl_lahir"] = this.state.tgl_lahir;
-        parseData["password"] =
-          parseInt(this.state.password.length, 10) > 0
-            ? this.state.password
-            : "-";
-        parseData["password_confirmation"] =
-          parseInt(this.state.password_confirmation.length, 10) > 0
-            ? this.state.password_confirmation
-            : "-";
-        parseData["password_otorisasi"] =
-          parseInt(this.state.password_otorisasi.length, 10) > 0
-            ? this.state.password_otorisasi
-            : "-";
-        let lok = [];
-        for (let i = 0; i < this.state.location.length; i++) {
-          lok.push({ kode: this.state.location[i].value });
-        }
-
-        if (this.state.foto !== undefined) {
-          if (this.state.foto.base64 !== undefined) {
-            parseData["foto"] = this.state.foto.base64;
-          }
-        } else {
-          parseData["foto"] = "-";
-        }
-        if (
-          this.props.userListEdit !== undefined &&
-          this.props.userListEdit !== []
+        } else if (
+          this.state.password_confirmation === "" ||
+          this.state.password_confirmation === undefined
         ) {
-          if (parseData.password === "-") {
-            delete parseData.password;
-          }
-          if (parseData.password_confirmation === "-") {
-            delete parseData.password_confirmation;
-          }
-          if (parseData.password_otorisasi === "-") {
-            delete parseData.password_otorisasi;
-          }
-          if (parseData.foto === "-") {
-            delete parseData.foto;
-          }
-          this.props.dispatch(
-            updateUserList(this.props.userListEdit.id, parseData)
-          );
-          this.props.dispatch(ModalToggle(false));
+          err = Object.assign({}, err, {
+            password_confirmation: "konfirmasi password tidak boleh kosong.",
+          });
+          this.setState({
+            error: err,
+          });
+        } else if (
+          this.state.password_otorisasi === "" ||
+          this.state.password_otorisasi === undefined
+        ) {
+          err = Object.assign({}, err, {
+            password_otorisasi: "otorisasi password tidak boleh kosong.",
+          });
+          this.setState({
+            error: err,
+          });
         } else {
-          if (this.state.password === "" || this.state.password === undefined) {
-            err = Object.assign({}, err, {
-              password: "password tidak boleh kosong.",
-            });
-            this.setState({
-              error: err,
-            });
-          } else if (
-            this.state.password_confirmation === "" ||
-            this.state.password_confirmation === undefined
-          ) {
-            err = Object.assign({}, err, {
-              password_confirmation: "konfirmasi password tidak boleh kosong.",
-            });
-            this.setState({
-              error: err,
-            });
-          } else if (
-            this.state.password_otorisasi === "" ||
-            this.state.password_otorisasi === undefined
-          ) {
-            err = Object.assign({}, err, {
-              password_otorisasi: "otorisasi password tidak boleh kosong.",
-            });
-            this.setState({
-              error: err,
-            });
-          } else {
-            this.props.dispatch(sendUserList(parseData));
-            this.props.dispatch(ModalToggle(false));
-          }
+          this.props.dispatch(sendUserList(parseData));
+          this.props.dispatch(ModalToggle(false));
         }
       }
+    }
   }
   getFiles(files) {
     this.setState({
