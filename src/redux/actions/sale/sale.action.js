@@ -162,6 +162,7 @@ export const storeSale = (data, param) => {
       .then(function (response) {
         Swal.close();
         const datum = response.data;
+        destroy("sale");
         const goSwal=()=>{
           Swal.fire({
             allowOutsideClick: false,
@@ -178,7 +179,6 @@ export const storeSale = (data, param) => {
             cancelButtonText: 'Selesai',
             showConfirmButton: false,
           }).then((result) => {
-            destroy("sale");
             if (result.dismiss === "cancel") {
               dispatch(ModalToggle(false))
               dispatch(FetchNotaSale(datum.result.lokasi))
