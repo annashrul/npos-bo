@@ -14,17 +14,15 @@ import FileBase64 from "react-file-base64";
 import { ModalToggle } from "redux/actions/modal.action";
 import axios from "axios";
 import { HEADERS } from "redux/actions/_constants";
-import SelectCommon from "../../../common/SelectCommon";
-import LokasiCommon from "../../../common/LokasiCommon";
-import IsActiveCommon from "../../../common/IsActiveCommon";
 
 class FormUserList extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChangeSelect = this.handleChangeSelect.bind(this);
+    this.HandleChangeUserLevel = this.HandleChangeUserLevel.bind(this);
     this.state = {
       show: false,
       nama: "",
@@ -41,7 +39,7 @@ class FormUserList extends Component {
       user_lvl: "0",
       status: "1",
       user_lvl_data: [],
-      location: [],
+      selectedOption: [],
       isChecked: false,
       opt: [],
       opt1: [],
@@ -58,7 +56,7 @@ class FormUserList extends Component {
         foto: "",
         nohp: "",
         lokasi: "",
-        location: "",
+        selectedOption: "",
         user_lvl: "",
         status: "",
       },
@@ -67,6 +65,7 @@ class FormUserList extends Component {
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
+
     if (event.target.name === "username") {
       const data = this.fetchData({
         table: "user_akun",
@@ -114,6 +113,21 @@ class FormUserList extends Component {
       });
   }
 
+  toggleChange = (e) => {
+    this.setState({ isChecked: e.target.checked });
+    if (e.target.checked === true) {
+      this.setState({
+        opt: [],
+        selectedOption: this.state.opt,
+      });
+    } else {
+      this.setState({
+        opt: this.state.opt1,
+        selectedOption: [],
+      });
+    }
+  };
+
   componentDidMount() {
     if (
       this.props.userListEdit !== undefined &&
@@ -147,7 +161,7 @@ class FormUserList extends Component {
         ),
         foto: this.props.userListEdit.foto,
         nohp: this.props.userListEdit.nohp,
-        location: loc,
+        selectedOption: loc,
         opt: val,
         user_lvl: this.props.userListEdit.user_lvl,
         status: this.props.userListEdit.status,
@@ -157,7 +171,6 @@ class FormUserList extends Component {
   handleSubmit(e) {
     e.preventDefault();
     let err = this.state.error;
-
     if (
       this.state.nama === "" ||
       this.state.nama === undefined ||
@@ -182,12 +195,12 @@ class FormUserList extends Component {
         error: err,
       });
     } else if (
-      this.state.location.length <= 0 ||
-      this.state.location === "" ||
-      this.state.location === undefined
+      this.state.selectedOption.length <= 0 ||
+      this.state.selectedOption === "" ||
+      this.state.selectedOption === undefined
     ) {
       err = Object.assign({}, err, {
-        location: "lokasi tidak boleh kosong.",
+        selectedOption: "lokasi tidak boleh kosong.",
       });
       this.setState({
         error: err,
@@ -244,6 +257,10 @@ class FormUserList extends Component {
       const form = e.target;
       let data = new FormData(form);
       let parseData = stringifyFormData(data);
+      let lok = [];
+      for (let i = 0; i < this.state.selectedOption.length; i++) {
+        lok.push({ kode: this.state.selectedOption[i].value });
+      }
       parseData["username"] = this.state.username;
       parseData["user_lvl"] = this.state.user_lvl;
       parseData["lokasi"] = lok;
@@ -268,11 +285,6 @@ class FormUserList extends Component {
         parseInt(this.state.password_otorisasi.length, 10) > 0
           ? this.state.password_otorisasi
           : "-";
-      let lok = [];
-      for (let i = 0; i < this.state.location.length; i++) {
-        lok.push({ kode: this.state.location[i].value });
-      }
-
       if (this.state.foto !== undefined) {
         if (this.state.foto.base64 !== undefined) {
           parseData["foto"] = this.state.foto.base64;
@@ -346,7 +358,17 @@ class FormUserList extends Component {
       error: err,
     });
   }
-
+  handleOnChange = (selectedOption) => {
+    this.setState({
+      selectedOption: selectedOption,
+    });
+    let err = Object.assign({}, this.state.error, {
+      selectedOption: "",
+    });
+    this.setState({
+      error: err,
+    });
+  };
   toggle(e) {
     e.preventDefault();
     const bool = !this.props.isOpen;
@@ -374,7 +396,17 @@ class FormUserList extends Component {
       token: "",
     });
   }
-
+  HandleChangeUserLevel(val) {
+    this.setState({
+      user_lvl: val.value,
+    });
+    let err = Object.assign({}, this.state.error, {
+      user_lvl: "",
+    });
+    this.setState({
+      error: err,
+    });
+  }
   static getDerivedStateFromProps(props, state) {
     let userLevel =
       typeof props.userLevel.data === "object" ? props.userLevel.data : [];
@@ -390,9 +422,6 @@ class FormUserList extends Component {
     state.opt = locG;
     state.user_lvl_data = userG;
     return null;
-  }
-  handleChangeSelect(state, val) {
-    this.setState({ [state]: state === "location" ? val : val.value });
   }
   render() {
     const curr = new Date();
@@ -416,9 +445,7 @@ class FormUserList extends Component {
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
-                  <label>
-                    Nama <span className="text-danger">*</span>
-                  </label>
+                  <label>Nama</label>
                   <input
                     type="text"
                     className="form-control"
@@ -438,9 +465,7 @@ class FormUserList extends Component {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>
-                    Username <span className="text-danger">*</span>
-                  </label>
+                  <label>Username</label>
                   <input
                     type="text"
                     className="form-control"
@@ -461,7 +486,7 @@ class FormUserList extends Component {
                 </div>
                 <div className="form-group">
                   <label>
-                    Password <span className="text-danger">*</span>{" "}
+                    Password{" "}
                     <small>
                       {this.props.userListEdit !== undefined &&
                       this.props.userListEdit !== []
@@ -489,7 +514,7 @@ class FormUserList extends Component {
                 </div>
                 <div className="form-group">
                   <label>
-                    Konfirmasi Password <span className="text-danger">*</span>
+                    Konfirmasi Password
                     <small>
                       {this.props.userListEdit !== undefined &&
                       this.props.userListEdit !== []
@@ -517,7 +542,7 @@ class FormUserList extends Component {
                 </div>
                 <div className="form-group">
                   <label>
-                    Otorisasi Password <span className="text-danger">*</span>
+                    Otorisasi Password
                     <small>
                       {this.props.userListEdit !== undefined &&
                       this.props.userListEdit !== []
@@ -543,19 +568,79 @@ class FormUserList extends Component {
                     {this.state.error.password_otorisasi}
                   </div>
                 </div>
-                <LokasiCommon
-                  callback={(res) => this.handleChangeSelect("location", res)}
-                  isMulti={true}
-                  dataEdit={this.state.location}
-                />
-                <SelectCommon
-                  label="User level"
+                <div className="form-group">
+                  <label htmlFor="inputState" className="col-form-label">
+                    Lokasi&nbsp;
+                    <input
+                      type="checkbox"
+                      name="checked_lokasi"
+                      checked={this.state.isChecked}
+                      onChange={this.toggleChange}
+                    />{" "}
+                    Pilih Semua{" "}
+                  </label>
+                  <Select
+                    required
+                    disabled
+                    isMulti
+                    value={this.state.selectedOption}
+                    onChange={this.handleOnChange}
+                    options={this.state.opt}
+                    name="lokasi"
+                  />
+                  <div
+                    className="invalid-feedback"
+                    style={
+                      this.state.error.selectedOption !== ""
+                        ? { display: "block" }
+                        : { display: "none" }
+                    }
+                  >
+                    {this.state.error.selectedOption}
+                  </div>
+                </div>
+                <label className="control-label font-12">User Level</label>
+                <Select
                   options={this.state.user_lvl_data}
-                  callback={(res) => this.handleChangeSelect("user_lvl", res)}
-                  dataEdit={this.state.user_lvl}
+                  placeholder="Pilih User Level"
+                  onChange={this.HandleChangeUserLevel}
+                  value={this.state.user_lvl_data.find((op) => {
+                    return op.value === this.state.user_lvl;
+                  })}
                 />
+                <div
+                  className="invalid-feedback"
+                  style={
+                    this.state.error.user_lvl !== ""
+                      ? { display: "block" }
+                      : { display: "none" }
+                  }
+                >
+                  {this.state.error.user_lvl}
+                </div>
               </div>
               <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="inputState" className="col-form-label">
+                    Photo
+                  </label>
+                  <br />
+                  <FileBase64
+                    multiple={false}
+                    className="mr-3 form-control-file"
+                    onDone={this.getFiles.bind(this)}
+                  />
+                  <div
+                    className="invalid-feedback"
+                    style={
+                      this.state.error.foto !== ""
+                        ? { display: "block" }
+                        : { display: "none" }
+                    }
+                  >
+                    {this.state.error.foto}
+                  </div>
+                </div>
                 <div className="form-group">
                   <label>No. Hp</label>
                   <input
@@ -622,10 +707,31 @@ class FormUserList extends Component {
                     {this.state.error.tgl_lahir}
                   </div>
                 </div>
-                <IsActiveCommon
-                  callback={(res) => this.handleChangeSelect("status", res)}
-                />
-
+                <div className="form-group">
+                  <label htmlFor="inputState" className="col-form-label">
+                    Status
+                  </label>
+                  <select
+                    className="form-control"
+                    name="status"
+                    defaultValue={this.state.status}
+                    value={this.state.status}
+                    onChange={this.handleChange}
+                  >
+                    <option value="1">Aktif</option>
+                    <option value="0">Tidak Aktif</option>
+                  </select>
+                  <div
+                    className="invalid-feedback"
+                    style={
+                      this.state.error.status !== ""
+                        ? { display: "block" }
+                        : { display: "none" }
+                    }
+                  >
+                    {this.state.error.status}
+                  </div>
+                </div>
                 <div className="form-group">
                   <label>Alamat</label>
                   <textarea
@@ -647,27 +753,6 @@ class FormUserList extends Component {
                     }
                   >
                     {this.state.error.alamat}
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="inputState" className="col-form-label">
-                    Photo
-                  </label>
-                  <br />
-                  <FileBase64
-                    multiple={false}
-                    className="mr-3 form-control-file"
-                    onDone={this.getFiles.bind(this)}
-                  />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.foto !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {this.state.error.foto}
                   </div>
                 </div>
               </div>
