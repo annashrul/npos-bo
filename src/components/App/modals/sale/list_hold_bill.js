@@ -4,14 +4,12 @@ import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
-import { get } from "components/model/app.model";
-
-import KeyboardEventHandler from "react-keyboard-event-handler";
+import { get, del, destroy } from "components/model/app.model";
 import {
-  getStorage,
   onHandleKeyboard,
   setFocus,
   swallOption,
+  swalWithCallback,
 } from "../../../../helper";
 // const onEscape = function (action) {
 //   window &&
@@ -34,15 +32,16 @@ class ListHoldBill extends Component {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.state = {
       data: [],
-      idx: 1,
+      idx: 0,
     };
     onHandleKeyboard(18, (e) => {
+      e.preventDefault();
       let x = this.state.idx;
       if (this.state.data.length > 0) {
         if (x < this.state.data.length) {
-          console.log("if", x);
           setFocus(this, `nama-${x}`);
           x += 1;
           this.setState({ idx: x });
@@ -62,13 +61,17 @@ class ListHoldBill extends Component {
       return false;
     });
 
-    onHandleKeyboard(13, (e) => {
-      this.handleSave(this.state.data[this.state.idx]);
-    });
+    // onHandleKeyboard(13, (e) => {
+    //   if (this.state.data.length > 0) {
+    //     this.handleSave(this.state.data[this.state.idx]);
+    //   }
+    // });
   }
   getProps(props) {
-    setFocus(this, `nama-${0}`);
     const table = "hold";
+    if (this.state.data.length > 0) {
+      setFocus(this, `nama-${0}`);
+    }
     const data = get(table);
     data.then((res) => {
       let dataArray = [];
@@ -102,27 +105,61 @@ class ListHoldBill extends Component {
     e.preventDefault();
     this.handleSave(val);
   }
+  getData() {
+    get("hold").then((res) => {
+      let data = [];
+      res.map((val) => {
+        data.push(val);
+      });
+      this.setState({ data: data });
+    });
+  }
 
   handleSave(val) {
-    const dataSale = get("sale");
-    dataSale.then((res) => {
-      if (res.length > 0) {
-        swallOption(
-          "transaksi yang sudah ada akan ditimpa oleh transaksi dengan a/n " +
-            val.nama,
+    if (this.state.data.length > 0) {
+      const dataSale = get("sale");
+      dataSale.then((res) => {
+        if (res.length > 0) {
+          swallOption(
+            "transaksi yang sudah ada akan ditimpa oleh transaksi dengan a/n " +
+              val.nama,
+            () => {
+              this.setState({ data: [] });
+              this.props.callback(val);
+              this.props.dispatch(ModalToggle(false));
+            }
+          );
+        } else {
+          this.setState({ data: [] });
+          this.props.callback(val);
+          this.props.dispatch(ModalToggle(false));
+        }
+      });
+    }
+  }
+
+  handleDelete(e, val) {
+    e.preventDefault();
+    swalWithCallback("anda yakin akan menghapus transaksi ini ??", () => {
+      if (this.props.objectHoldBill.id === val.id) {
+        swalWithCallback(
+          "transaksi atas nama ini sedang berlangsung. jika anda menghapusnya sistem otomatis akan mereset transaksi ini",
           () => {
-            this.props.callback(val);
+            del("hold", val.id).then((res) => {
+              this.getData();
+            });
+            this.props.callback("delete");
           }
         );
       } else {
-        this.props.callback(val);
+        del("hold", val.id).then((res) => {
+          this.getData();
+        });
       }
     });
-    this.props.dispatch(ModalToggle(false));
   }
 
   render() {
-    console.log("state", this.state.idx);
     return (
       <div>
         <WrapperModal
@@ -134,33 +171,32 @@ class ListHoldBill extends Component {
             {this.state.data.length > 0
               ? this.state.data.map((val, key) => {
                   return (
-                    <input
-                      key={key}
-                      value={val.nama}
-                      className="form-control input-custom mb-1"
-                      type="text"
-                      ref={(input) => {
-                        if (input !== null) {
-                          this[`nama-${key}`] = input;
-                        }
-                      }}
-                      readOnly={true}
-                      onClick={(e) => this.handleSubmit(e, val)}
-                      // onFocus={(e) => this.handleSubmit(e, val)}
-                    />
-                    // <button
-                    //   key={key}
-                    //   className="btn btn-block btn-outline-info text-left"
-                    //   onClick={(e) => this.handleSubmit(e, val)}
-                    // >
-                    //   {val.nama}{" "}
-                    //   <span style={{ float: "right" }}>
-                    //     {val.detail.length} item
-                    //   </span>
-                    // </button>
+                    <div key={key} className="input-group input-group-sm">
+                      <input
+                        value={val.nama}
+                        className="form-control input-custom mb-1"
+                        type="text"
+                        ref={(input) => {
+                          if (input !== null) {
+                            this[`nama-${key}`] = input;
+                          }
+                        }}
+                        readOnly={true}
+                        onClick={(e) => this.handleSubmit(e, val)}
+                      />
+                      <span className="input-group-append">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={(event) => this.handleDelete(event, val)}
+                        >
+                          <i className="fa fa-trash" />
+                        </button>
+                      </span>
+                    </div>
                   );
                 })
-              : ""}
+              : "tidak ada list hold bill"}
           </ModalBody>
         </WrapperModal>
       </div>
