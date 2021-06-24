@@ -357,7 +357,7 @@ class Sale extends Component {
         return;
       }
     }
-    handleInputOnBlurCommon(
+  handleInputOnBlurCommon(
       e,
       { id: this.state.databrg[i].barcode, table: table, where: "barcode" },
       () => {
@@ -381,6 +381,8 @@ class Sale extends Component {
         else if (parseFloat(val) > 100) {
           values = 100;
         }
+      }else if(column==="qty"){
+        values = isNaN(val) ? 1 : val
       }
       brgval[i] = { ...brgval[i], [column]: values };
       this.setState({ brgval });
@@ -544,7 +546,7 @@ class Sale extends Component {
           kode_trx: this.props.nota,
           subtotal: subtotal,
           lokasi: this.state.location,
-          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? "Z" : "Q",
+          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? "Z" : "Q",
           jns_kartu: "Debit",
           status: "LUNAS",
           optional_note: this.state.catatan,
@@ -794,7 +796,7 @@ class Sale extends Component {
               </button>
               Penjualan Barang
             </h4>
-            {/* {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? ( */}
+            {atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? (
             <h4 style={{ float: "right" }}>
               <button
                 className={"btn btn-primary"}
@@ -810,9 +812,8 @@ class Sale extends Component {
               </button>
             </h4>
 
-            {/* ) : (
-              ""
-            )} */}
+            ) : ""
+            }
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             <StickyBox
@@ -1256,7 +1257,7 @@ class Sale extends Component {
                                   onChange={(e) =>
                                     this.handleChecked(e, index, item.barcode)
                                   }
-                                /> <span style={{fontSize:'10px'}}>Open Price</span>
+                                /> <label for="isOpenPrice" style={{fontSize:'10px'}}>Open Price</label >
                               </td>
                                <td className="middle nowrap">
                                 <input
