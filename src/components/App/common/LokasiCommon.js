@@ -32,6 +32,12 @@ class LokasiCommon extends Component {
             label: i.nama,
           });
         });
+
+        if(propsLokasi.length===1){
+          Object.assign(state, { dataObject: arrLokasi[0] });
+          localStorage.setItem("location_tr",arrLokasi[0].value)
+
+        }
       }
       Object.assign(state, { dataArray: arrLokasi });
     }

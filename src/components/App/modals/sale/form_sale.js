@@ -292,10 +292,7 @@ class FormSale extends Component {
 
   render() {
     const { data } = this.props.bank;
-    // let styleBtn={display:'block'};
-    // if(this.state.jenis_trx==='Tunai'){
-    //     styleBtn = parseInt(this.state.change,10)>=0?{display:'block'}:{display:'none'}
-    // }
+
     return (
       <div>
         <WrapperModal
@@ -342,14 +339,6 @@ class FormSale extends Component {
                   }
                   return this.isTunai(label, name);
                 })()}
-                {/*<div className="form-group">*/}
-                {/*<label htmlFor="">{this.state.jenis_trx==='Kredit'?'Jumlah DP':'Jumlah Uang'}</label>*/}
-                {/*<input type="text" name={this.state.jenis_trx==='Kredit'?'dp':'tunai'} id={this.state.jenis_trx==='Kredit'?'dp':'tunai'} className="form-control" value={toCurrency(this.state.tunai)} onFocus={function(e){e.currentTarget.select()}} onKeyUp={this.handleChange} onChange={this.handleChange}/>*/}
-                {/*<div className="invalid-feedback"*/}
-                {/*style={this.state.error.tunai !== "" || this.state.error.tunai !== "0" ? {display: 'block'} : {display: 'none'}}>*/}
-                {/*{this.state.error.tunai}*/}
-                {/*</div>*/}
-                {/*</div>*/}
                 <div
                   className="form-group"
                   style={{

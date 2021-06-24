@@ -6,6 +6,10 @@ import moment from "moment";
 import { handleDelete, handleGet, handlePost, handlePut } from "../handleHttp";
 import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
+import { ModalToggle } from "redux/actions/modal.action";
+import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
+import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
+import {ToastQ} from '../../../helper'
 
 export function setLoading(load) {
   return {
@@ -157,47 +161,62 @@ export const storeSale = (data, param) => {
       .post(url, data.parsedata)
       .then(function (response) {
         Swal.close();
-        const data = response.data;
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "Transaksi berhasil.",
-          type: "info",
-          html:
-            "Terimakasih Telah Melakukan Transaksi Di Toko Kami" +
-            "<br><br>" +
-            '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
-            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>',
-          showCancelButton: true,
-          showConfirmButton: false,
-        }).then((result) => {
-          destroy("sale");
-          localStorage.removeItem("cs");
-          localStorage.removeItem("lk");
-          if (result.dismiss === "cancel") {
-            window.location.reload(false);
-          }
-        });
-        document.getElementById("btnNotaPdf").addEventListener("click", () => {
-          const win = window.open(data.result.nota, "_blank");
-          if (win != null) {
-            win.focus();
-          }
-        });
-        document.getElementById("btnNota3ply").addEventListener("click", () => {
-          // param({
-          //     pathname: `/print3ply/${data.result.kode}`,
-          //     state: {
-          //         data: rawdata,
-          //         nota: data.result.kode
-          //     }
-          // })
-          const win = window.open(`/print3ply/${data.result.kode}`, "_blank");
-          if (win != null) {
-            win.focus();
-          }
-          //Swal.closeModal();==
-          return false;
-        });
+        const datum = response.data;
+        destroy("sale");
+        const goSwal=()=>{
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Transaksi berhasil.",
+            type: "info",
+            html:
+              "<br>" +
+              '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
+              '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
+              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning">Re-Print</button>'
+  
+              ,
+            showCancelButton: true,
+            cancelButtonText: 'Selesai',
+            showConfirmButton: false,
+          }).then((result) => {
+            if (result.dismiss === "cancel") {
+              dispatch(ModalToggle(false))
+              dispatch(FetchNotaSale(datum.result.lokasi))
+              dispatch(FetchCustomerAll(datum.result.lokasi))
+              dispatch(FetchSalesAll(datum.result.lokasi))
+            }
+          });
+          document.getElementById("btnReprint").addEventListener("click", () => {
+              handlePost(
+                "pos/reprint/" + btoa(datum.result.kode),
+                [],
+                (res,msg,status) => {
+                  const data = res.data;
+                  ToastQ.fire({
+                    icon: "success",
+                    title: msg
+                  });
+                  goSwal();
+                }
+              );
+          });
+          document.getElementById("btnNotaPdf").addEventListener("click", () => {
+            const win = window.open(datum.result.nota, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+          });
+          document.getElementById("btnNota3ply").addEventListener("click", () => {
+  
+            const win = window.open(`/print3ply/${datum.result.kode}`, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+            return false;
+          });
+          
+        }
+        goSwal();
 
         dispatch(setLoading(false));
       })

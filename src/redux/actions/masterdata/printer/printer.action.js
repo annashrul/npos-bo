@@ -6,7 +6,6 @@ import {
   handlePut,
 } from "../../handleHttp";
 import { swal } from "../../../../helper";
-import { ModalToggle } from "redux/actions/modal.action";
 
 const baseUrl = "printer";
 

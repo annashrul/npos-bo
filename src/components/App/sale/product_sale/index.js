@@ -1,23 +1,12 @@
 import React, { Component } from "react";
-import {
-  store,
-  get,
-  update,
-  destroy,
-  cekData,
-  del,
-} from "components/model/app.model";
+import {store,get,update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout";
-import Select from "react-select";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import {
-  setProductbrg,
-  FetchProductSale,
-} from "redux/actions/masterdata/product/product.action";
+import {  setProductbrg,  FetchProductSale } from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
 import FormClosing from "../../modals/sale/form_closing";
@@ -25,7 +14,6 @@ import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import { FetchNotaSale } from "redux/actions/sale/sale.action";
 import { toRp, toCurrency, rmComma } from "helper";
 import Spinner from "Spinner";
-import { HEADERS } from "../../../../redux/actions/_constants";
 import Cookies from "js-cookie";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
@@ -47,7 +35,6 @@ import {
 } from "../../common/FlowTrxCommon";
 import FormHoldBill from "../../modals/sale/form_hold_bill";
 import ListHoldBill from "../../modals/sale/list_hold_bill";
-import KeyboardEventHandler from "react-keyboard-event-handler";
 
 const table = "sale";
 const Toast = Swal.mixin({
@@ -171,23 +158,6 @@ class Sale extends Component {
       e.preventDefault();
       this.HandleReset(e);
     });
-    // set focus qty
-    onHandleKeyboard(9, (e) => {
-      e.preventDefault();
-      let x = this.state.idxQty;
-      if (this.state.databrg.length > 0) {
-        if (x < this.state.databrg.length) {
-          setFocus(this, `qty-${x}`);
-          x += 1;
-          this.setState({ idxQty: x });
-          return;
-        } else {
-          setFocus(this, `qty-${0}`);
-          this.setState({ idxQty: 1 });
-          return;
-        }
-      }
-    });
   }
 
   handleClickToggle(e) {
@@ -203,9 +173,9 @@ class Sale extends Component {
     this.props.dispatch(FetchSalesAll(val));
   }
   fetchProduct(val = "") {
-    let customer = getStorage("customer");
-    let location = getStorage("location");
-    let sales = getStorage("sales");
+    let customer = getStorage("customer_tr");
+    let location = getStorage("location_tr");
+    let sales = getStorage("sales_tr");
     let where = `perpage=5`;
     let setState = {};
     if (isEmptyOrUndefined(customer)) {
@@ -222,8 +192,10 @@ class Sale extends Component {
       where += `&sales=${sales}`;
     }
     this.setState(setState);
-    if (val !== "sales" || customer !== "1000001") {
-      this.props.dispatch(FetchProductSale(1, where, "sale", this.autoSetQty));
+    if (location!==null){
+      if (val !== "sales" || customer !== "1000001") {
+        this.props.dispatch(FetchProductSale(1, where, "sale", this.autoSetQty));
+      }
     }
   }
 
@@ -254,6 +226,13 @@ class Sale extends Component {
         Object.assign(state, { customer_data: customer });
       }
     }
+
+    if (props.auth.user) {
+      Object.assign(state, {
+        userid: props.auth.user.id
+      });
+    }
+
     this.setState(state);
   }
   componentWillReceiveProps = (nextProps) => {
@@ -318,8 +297,8 @@ class Sale extends Component {
 
   HandleChangeSelect(state, res) {
     setStorage(state, res.value);
-    if (state === "sales" || res.value === "1000001") return;
-    if (state === "location") {
+    if (state === "sales_tr") return;
+    if (state === "location_tr") {
       destroy(table);
       this.getData();
     }
@@ -378,7 +357,7 @@ class Sale extends Component {
         return;
       }
     }
-    handleInputOnBlurCommon(
+  handleInputOnBlurCommon(
       e,
       { id: this.state.databrg[i].barcode, table: table, where: "barcode" },
       () => {
@@ -402,6 +381,8 @@ class Sale extends Component {
         else if (parseFloat(val) > 100) {
           values = 100;
         }
+      }else if(column==="qty"){
+        values = isNaN(val) ? 1 : val
       }
       brgval[i] = { ...brgval[i], [column]: values };
       this.setState({ brgval });
@@ -448,7 +429,8 @@ class Sale extends Component {
       Object.assign(item, { isOpenPrice: false });
     }
     this.handleCheckData(item.barcode, item);
-    setTimeout(() => this[`qty-${index}`].focus(), 500);
+    setTimeout(() => this[`qty-${btoa(item.barcode)}`].focus(), 500);
+
   }
   HandleAddBrg(e, item, index) {
     e.preventDefault();
@@ -505,8 +487,7 @@ class Sale extends Component {
             (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10);
           detail.push({
             kode_trx: this.props.nota,
-            subtotal:
-              (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10),
+            subtotal:(disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10),
             price: rmComma(item.harga),
             qty: item.qty,
             diskon: item.diskon_persen,
@@ -565,7 +546,7 @@ class Sale extends Component {
           kode_trx: this.props.nota,
           subtotal: subtotal,
           lokasi: this.state.location,
-          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? "Z" : "Q",
+          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? "Z" : "Q",
           jns_kartu: "Debit",
           status: "LUNAS",
           optional_note: this.state.catatan,
@@ -613,7 +594,7 @@ class Sale extends Component {
     if (this.state.customer === "" || this.state.location === "") {
       Swal.fire(
         "Gagal!",
-        "Pilih lokasi dan customer terlebih dahulu.",
+        "Pilih lokasi terlebih dahulu.",
         "error"
       );
     } else {
@@ -790,32 +771,12 @@ class Sale extends Component {
     }
   }
 
-  // handleKeyBoard(key, e) {
-  //   if (key === closing) this.handleClosing(e);
-  //   if (key === reset) this.HandleReset(e);
-  //   if (key === save) this.HandleSubmit(e);
-  //   if (key === focusSearch) setFocus(this, "search");
-  //   if (key === holdBill) this.handleHoldBill(e, "formHoldBill");
-  //   if (key === listHoldBill) this.handleHoldBill(e, "listHoldBill");
-  // }
 
   render() {
     if (this.state.isScroll === true) this.handleScroll();
     let totalsub = 0;
-    console.log("this.props.isOpen", getStorage("key"));
     return (
       <Layout page="Penjualan Barang">
-        {/* <KeyboardEventHandler
-          handleKeys={[
-            closing,
-            reset,
-            save,
-            focusSearch,
-            holdBill,
-            listHoldBill,
-          ]}
-          onKeyEvent={(key, e) => this.handleKeyBoard(key, e)}
-        /> */}
         <div className="card">
           <div className="card-header">
             <h4 style={{ float: "left" }}>
@@ -835,7 +796,7 @@ class Sale extends Component {
               </button>
               Penjualan Barang
             </h4>
-            {/* {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? ( */}
+            {atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? (
             <h4 style={{ float: "right" }}>
               <button
                 className={"btn btn-primary"}
@@ -851,9 +812,8 @@ class Sale extends Component {
               </button>
             </h4>
 
-            {/* ) : (
-              ""
-            )} */}
+            ) : ""
+            }
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             <StickyBox
@@ -1056,17 +1016,17 @@ class Sale extends Component {
                       <div className="col-md-2">
                         <LokasiCommon
                           callback={(res) =>
-                            this.HandleChangeSelect("location", res)
+                            this.HandleChangeSelect("location_tr", res)
                           }
                           dataEdit={this.state.location}
                         />
                       </div>
                       <div className="col-md-2">
                         <SelectCommon
-                          label="Kustomer"
+                          label="Customer"
                           options={this.state.customer_data}
                           callback={(res) =>
-                            this.HandleChangeSelect("customer", res)
+                            this.HandleChangeSelect("customer_tr", res)
                           }
                           dataEdit={this.state.customer}
                         />
@@ -1076,7 +1036,7 @@ class Sale extends Component {
                           label="Sales"
                           options={this.state.opSales}
                           callback={(res) =>
-                            this.HandleChangeSelect("sales", res)
+                            this.HandleChangeSelect("sales_tr", res)
                           }
                           dataEdit={this.state.sales}
                         />
@@ -1105,10 +1065,10 @@ class Sale extends Component {
                           <th className="middle nowrap">barang</th>
                           <th className="middle nowrap">satuan</th>
                           <th className="middle nowrap">harga</th>
-                          <th className="middle nowrap">disc 1 (%)</th>
-                          <th className="middle nowrap">qty</th>
-                          <th className="middle nowrap">ppn</th>
                           <th className="middle nowrap">stock</th>
+                          <th className="middle nowrap">qty</th>
+                          <th className="middle nowrap">disc 1 (%)</th>
+                          <th className="middle nowrap">ppn</th>
                           <th className="middle nowrap">Subtotal</th>
                         </tr>
                       </thead>
@@ -1163,19 +1123,6 @@ class Sale extends Component {
                                 >
                                   <i className="fa fa-trash" />
                                 </a>
-                                <input
-                                  style={{
-                                    height: "20px",
-                                    width: "20px",
-                                    // paddingTop: "10px",
-                                  }}
-                                  type="checkbox"
-                                  name="isOpenPrice"
-                                  checked={this.state.brgval[index].isOpenPrice}
-                                  onChange={(e) =>
-                                    this.handleChecked(e, index, item.barcode)
-                                  }
-                                />
                               </td>
                               <td
                                 className="middle nowrap"
@@ -1279,7 +1226,7 @@ class Sale extends Component {
                                 <div
                                   className="row"
                                   style={{
-                                    marginTop: "5px",
+                                    marginTop: "1px",
                                   }}
                                 >
                                   <div
@@ -1298,25 +1245,30 @@ class Sale extends Component {
                                     }}
                                   ></div>
                                 </div>
-
-                                {/* <input type='text' className="form-control" name='harga'
-                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                       value={toCurrency(this.state.brgval[index].harga)}/> */}
-                              </td>
-                              <td className="middle nowrap">
-                                <input
-                                  type="number"
-                                  name="diskon_persen"
-                                  style={{ width: "70px" }}
-                                  className="form-control in-table text-right"
-                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                 <input
+                                  style={{
+                                    height: "17px",
+                                    width: "17px",
+                                    // paddingTop: "10px",
+                                  }}
+                                  type="checkbox"
+                                  name="isOpenPrice"
+                                  checked={this.state.brgval[index].isOpenPrice}
                                   onChange={(e) =>
-                                    this.HandleChangeInputValue(e, index)
+                                    this.handleChecked(e, index, item.barcode)
                                   }
-                                  value={this.state.brgval[index].diskon_persen}
+                                /> <label for="isOpenPrice" style={{fontSize:'10px'}}>Open Price</label >
+                              </td>
+                               <td className="middle nowrap">
+                                <input
+                                  readOnly={true}
+                                  type="number"
+                                  value={item.stock}
+                                  className="form-control text-right in-table"
+                                  style={{ width: "100px" }}
                                 />
                               </td>
+                              
                               <td className="middle nowrap">
                                 <input
                                   type="text"
@@ -1324,7 +1276,7 @@ class Sale extends Component {
                                   style={{ width: "70px" }}
                                   ref={(input) => {
                                     if (input !== null) {
-                                      this[`qty-${index}`] = input;
+                                      this[`qty-${btoa(item.barcode)}`] = input;
                                     }
                                   }}
                                   onFocus={(e) =>
@@ -1357,6 +1309,19 @@ class Sale extends Component {
                               <td className="middle nowrap">
                                 <input
                                   type="number"
+                                  name="diskon_persen"
+                                  style={{ width: "70px" }}
+                                  className="form-control in-table text-right"
+                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleChangeInputValue(e, index)
+                                  }
+                                  value={this.state.brgval[index].diskon_persen}
+                                />
+                              </td>
+                              <td className="middle nowrap">
+                                <input
+                                  type="number"
                                   name="ppn"
                                   style={{ width: "70px" }}
                                   className="form-control in-table text-right"
@@ -1367,15 +1332,7 @@ class Sale extends Component {
                                   value={this.state.brgval[index].ppn}
                                 />
                               </td>
-                              <td className="middle nowrap">
-                                <input
-                                  readOnly={true}
-                                  type="number"
-                                  value={item.stock}
-                                  className="form-control text-right in-table"
-                                  style={{ width: "100px" }}
-                                />
-                              </td>
+                             
 
                               <td className="middle nowrap">
                                 <input
@@ -1569,9 +1526,11 @@ class Sale extends Component {
               this.setState({ modalListHoldBill: false });
               if (res !== "close") {
                 destroy("sale");
-                res.detail.map((val, index) => {
-                  this.HanldeSetAddBrg(val, "hold", index);
-                });
+                if (res.detail!==undefined){
+                  res.detail.map((val, index) => {
+                    this.HanldeSetAddBrg(val, "hold", index);
+                  });
+                }
                 setStorage("location", res.master.lokasi);
                 setStorage("sales", res.master.kd_sales);
                 setStorage("customer", res.master.kd_cust);

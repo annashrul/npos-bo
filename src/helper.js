@@ -538,7 +538,7 @@ export const rmSpace = (val) => {
 
 export const setFocus = (thist, column) => {
   return setTimeout(
-    () => thist && thist[column].focus(),
+    () => thist!== undefined? thist && thist[column].focus():"",
     thist[column] !== undefined ? 100 : 300
   );
 };
@@ -581,6 +581,17 @@ export const getStorage = (key) => {
 
 export const handleDataSelect = (props, value, label) => {
   let data = [];
+  if(value=='kd_cust'){
+    data.push({
+      value: "1000001",
+      label: "UMUM",
+    });
+  }else{
+    data.push({
+      value: "1",
+      label: "UMUM",
+    })
+  }
   props.map((val) => {
     data.push({ value: val[value], label: val[label] });
   });
