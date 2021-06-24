@@ -1,33 +1,40 @@
 import React, { Component } from "react";
-import {
-  store,
-  get,
-  update,
-  destroy,
-  cekData,
-  del,
-} from "components/model/app.model";
+import {store,get,update,destroy,cekData,del} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout";
-import Select from "react-select";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import {
-  setProductbrg,
-  FetchProductSale,
-} from "redux/actions/masterdata/product/product.action";
+import {  setProductbrg,  FetchProductSale } from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
 import FormClosing from "../../modals/sale/form_closing";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import { FetchNotaSale } from "redux/actions/sale/sale.action";
-import { FetchDetailLocation } from "redux/actions/masterdata/location/location.action";
 import { toRp, toCurrency, rmComma } from "helper";
 import Spinner from "Spinner";
-import { HEADERS } from "../../../../redux/actions/_constants";
 import Cookies from "js-cookie";
+import LokasiCommon from "../../common/LokasiCommon";
+import SelectCommon from "../../common/SelectCommon";
+import {
+  getStorage,
+  handleDataSelect,
+  isEmptyOrUndefined,
+  onHandleKeyboard,
+  onHandleKeyboardChar,
+  setFocus,
+  setStorage,
+  swal,
+  swallOption,
+  swalWithCallback,
+} from "../../../../helper";
+import {
+  getDataCommon,
+  handleInputOnBlurCommon,
+} from "../../common/FlowTrxCommon";
+import FormHoldBill from "../../modals/sale/form_hold_bill";
+import ListHoldBill from "../../modals/sale/list_hold_bill";
 
 const table = "sale";
 const Toast = Swal.mixin({
@@ -42,10 +49,16 @@ const Toast = Swal.mixin({
   },
 });
 
+const save = "ctrl+s";
+const closing = "c";
+const reset = "r";
+const focusSearch = "f";
+const holdBill = "h";
+const listHoldBill = "l";
+
 class Sale extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       isOpenPrice: false,
       addingItemName: "",
@@ -57,10 +70,15 @@ class Sale extends Component {
       diskon: 0,
       ppn: 0,
       qty: 0,
-      location_data: [],
       location: "",
       sales: "1",
       customer: "1000001",
+      customer_data: [
+        {
+          value: "1000001",
+          label: "UMUM",
+        },
+      ],
       catatan: "-",
       jenis_trx: "Tunai",
       userid: 0,
@@ -89,15 +107,17 @@ class Sale extends Component {
           label: "UMUM",
         },
       ],
+      dataHoldBill: [],
       modalClosing: false,
+      modalHoldBill: false,
+      modalListHoldBill: false,
+      idxQty: 0,
     };
     this.HandleRemove = this.HandleRemove.bind(this);
     this.HandleAddBrg = this.HandleAddBrg.bind(this);
-    this.HandleChangeInput = this.HandleChangeInput.bind(this);
+    this.HandleOnBlur = this.HandleOnBlur.bind(this);
     this.HandleChangeInputValue = this.HandleChangeInputValue.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.HandleChangeSales = this.HandleChangeSales.bind(this);
-    this.HandleChangeCustomer = this.HandleChangeCustomer.bind(this);
+    this.HandleChangeSelect = this.HandleChangeSelect.bind(this);
     this.setTglOrder = this.setTglOrder.bind(this);
     this.HandleReset = this.HandleReset.bind(this);
     this.HandleSearch = this.HandleSearch.bind(this);
@@ -106,6 +126,38 @@ class Sale extends Component {
     this.handleClickToggle = this.handleClickToggle.bind(this);
     this.handleClosing = this.handleClosing.bind(this);
     this.HandleFocusInputReset = this.HandleFocusInputReset.bind(this);
+    this.handleHoldBill = this.handleHoldBill.bind(this);
+
+    // set focus search
+    onHandleKeyboardChar("f", (e) => {
+      e.preventDefault();
+      setFocus(this, "search");
+    });
+    // closing
+    onHandleKeyboardChar("c", (e) => {
+      e.preventDefault();
+      this.handleClosing(e);
+    });
+    // form hold bill
+    onHandleKeyboardChar("h", (e) => {
+      e.preventDefault();
+      this.handleHoldBill(e, "formHoldBill");
+    });
+    // list hold bill
+    onHandleKeyboardChar("l", (e) => {
+      e.preventDefault();
+      this.handleHoldBill(e, "listHoldBill");
+    });
+    //simpan transaksi
+    onHandleKeyboardChar("s", (e) => {
+      e.preventDefault();
+      this.HandleSubmit(e);
+    });
+    //reset transaksi
+    onHandleKeyboardChar("x", (e) => {
+      e.preventDefault();
+      this.HandleReset(e);
+    });
   }
 
   handleClickToggle(e) {
@@ -115,82 +167,73 @@ class Sale extends Component {
     });
   }
 
+  fetchByLocation(val) {
+    this.props.dispatch(FetchNotaSale(val));
+    this.props.dispatch(FetchCustomerAll(val));
+    this.props.dispatch(FetchSalesAll(val));
+  }
+  fetchProduct(val = "") {
+    let customer = getStorage("customer_tr");
+    let location = getStorage("location_tr");
+    let sales = getStorage("sales_tr");
+    let where = `perpage=5`;
+    let setState = {};
+    if (isEmptyOrUndefined(customer)) {
+      Object.assign(setState, { customer: customer });
+      where += `&customer=${customer}`;
+    }
+    if (isEmptyOrUndefined(location)) {
+      this.fetchByLocation(location);
+      Object.assign(setState, { location: location });
+      where += `&lokasi=${location}`;
+    }
+    if (isEmptyOrUndefined(sales)) {
+      Object.assign(setState, { sales: sales });
+      where += `&sales=${sales}`;
+    }
+    this.setState(setState);
+    if (location!==null){
+      if (val !== "sales" || customer !== "1000001") {
+        this.props.dispatch(FetchProductSale(1, where, "sale", this.autoSetQty));
+      }
+    }
+  }
+
   componentDidMount() {
+    setStorage("key", "");
     this.getData();
-    this.setState({ modalClosing: false });
-    if (localStorage.lk !== undefined && localStorage.lk !== "") {
-      this.props.dispatch(FetchNotaSale(localStorage.lk));
-      this.props.dispatch(FetchCustomerAll(localStorage.lk));
-      this.props.dispatch(FetchSalesAll(localStorage.lk));
-      this.setState({
-        location: localStorage.lk,
-      });
-    }
-    if (localStorage.cs !== undefined && localStorage.cs !== "") {
-      this.setState({
-        customer: localStorage.cs,
-      });
-    }
-    if (localStorage.sl !== undefined && localStorage.sl !== "") {
-      this.setState({
-        sales: localStorage.sl,
-      });
-    }
-    if (localStorage.cs !== undefined && localStorage.lk !== undefined) {
-      let where = `lokasi=${localStorage.lk}&customer=${localStorage.cs}`;
-
-      if (localStorage.anySaleTrx !== undefined) {
-        if (where !== "") {
-          where += "&";
-        }
-        where += `q=${localStorage.anySaleTrx}`;
-        if (parseInt(this.state.searchby, 10) === 1) {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `searchby=kd_brg`;
-        }
-        if (parseInt(this.state.searchby, 10) === 2) {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `searchby=barcode`;
-        }
-        if (parseInt(this.state.searchby, 10) === 3) {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `searchby=deskripsi`;
+    this.setState({
+      modalClosing: false,
+      modalHoldBill: false,
+      modalListHoldBill: false,
+    });
+    this.fetchProduct();
+  }
+  getProps(props) {
+    let state = {};
+    if (props.barang.length > 0) this.getData();
+    if (props.sales !== undefined) {
+      if (props.sales.data !== undefined) {
+        if (props.sales.data.length > 0) {
+          let sales = handleDataSelect(props.sales.data, "kode", "nama");
+          Object.assign(state, { opSales: sales });
         }
       }
-      this.props.dispatch(
-        FetchProductSale(
-          1,
-          `${where}&perpage=${this.state.perpage}`,
-          "sale",
-          this.autoSetQty
-        )
-      );
     }
-
-    const nextProps = this.props;
-    if (nextProps.auth.user) {
-      let lk = [];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return true;
-        });
-        this.setState({
-          location_data: lk,
-          userid: nextProps.auth.user.id,
-        });
+    if (props.customer !== undefined) {
+      if (props.customer.length > 0) {
+        let customer = handleDataSelect(props.customer, "kd_cust", "nama");
+        Object.assign(state, { customer_data: customer });
       }
     }
+
+    if (props.auth.user) {
+      Object.assign(state, {
+        userid: props.auth.user.id
+      });
+    }
+
+    this.setState(state);
   }
   componentWillReceiveProps = (nextProps) => {
     let perpage = this.state.perpage;
@@ -199,144 +242,73 @@ class Sale extends Component {
         perpage: perpage + 5,
       });
     }
-    if (nextProps.auth.user) {
-      let lk = [];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        if (loc.length === 1) {
-          this.setState({
-            location: loc[0].kode,
+    this.getProps(nextProps);
+  };
+
+  handleField(item) {
+    const finaldt = {
+      kd_brg: item.kd_brg,
+      nm_brg: item.nm_brg,
+      barcode: item.barcode,
+      satuan: item.satuan,
+      harga_old: item.harga,
+      harga: item.harga,
+      harga2: item.harga2,
+      harga3: item.harga3,
+      harga4: item.harga4,
+      stock: item.stock,
+      diskon_persen: item.diskon_persen,
+      diskon_nominal: 0,
+      ppn: item.ppn,
+      qty: item.qty,
+      hrg_beli: parseFloat(item.hrg_beli),
+      kategori: item.kategori,
+      services: item.services,
+      tambahan: item.tambahan,
+      isOpenPrice: item.isOpenPrice,
+    };
+    return finaldt;
+  }
+
+  handleCheckData(key, item) {
+    const cek = cekData("barcode", key, table);
+    cek.then((res) => {
+      if (res === undefined) {
+        if (item !== undefined) {
+          let finaldt = this.handleField(item);
+          store(table, finaldt);
+        } else {
+          Toast.fire({
+            icon: "error",
+            title: `not found.`,
           });
         }
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return true;
+      } else {
+        Object.assign(res, {
+          id: res.id,
+          qty: isNaN(res.qty) ? 1 : parseFloat(res.qty) + 1,
         });
-        this.setState({
-          location_data: lk,
-          userid: nextProps.auth.user.id,
-        });
+        update(table, res);
       }
-    }
-    if (nextProps.barang.length > 0) {
+
+      this.getData();
+    });
+  }
+
+  HandleChangeSelect(state, res) {
+    setStorage(state, res.value);
+    if (state === "sales_tr" || res.value === "1000001") return;
+    if (state === "location_tr") {
+      destroy(table);
       this.getData();
     }
-    if (nextProps.sales.data !== undefined) {
-      const opSales = [
-        {
-          value: "1",
-          label: "UMUM",
-        },
-      ];
-      nextProps.sales.data.map((i) => {
-        if (i.nama !== "UMUM") {
-          opSales.push({
-            value: i.kode,
-            label: i.nama,
-          });
-        }
-        return null;
-      });
-      this.setState({
-        opSales: opSales,
-      });
-    }
-  };
-  componentWillUnmount() {
-    this.props.dispatch(
-      setProductbrg({ status: "", msg: "", result: { data: [] } })
-    );
-    destroy(table);
-    localStorage.removeItem("cs");
-    localStorage.removeItem("lk");
-    localStorage.removeItem("sl");
-    localStorage.removeItem("anySaleTrx");
-  }
-  HandleChangeLokasi(lk) {
-    let err = Object.assign({}, this.state.error, {
-      location: "",
-    });
-    this.setState({
-      location: lk.value,
-      error: err,
-    });
-    localStorage.setItem("lk", lk.value);
-    this.props.dispatch(FetchNotaSale(lk.value));
-    this.props.dispatch(FetchDetailLocation(lk.value));
-    this.props.dispatch(FetchCustomerAll(lk.value));
-    this.props.dispatch(FetchSalesAll(lk.value));
-
-    if (this.state.customer !== "") {
-      let where = ``;
-
-      if (lk.value !== "" || this.state.location !== "") {
-        if (where !== "") {
-          where += "&";
-        }
-        where += `lokasi=${lk.value}`;
-      }
-      if (this.state.customer !== "" && this.state.customer !== "1000001") {
-        if (where !== "") {
-          where += "&";
-        }
-        where += `customer=${this.state.customer}`;
-      }
-      this.props.dispatch(
-        FetchProductSale(1, `${where}&perpage=5`, "sale", this.autoSetQty)
-      );
-    }
-    destroy(table);
-    this.getData();
-  }
-  HandleChangeCustomer(cs) {
-    let err = Object.assign({}, this.state.error, {
-      customer: "",
-    });
-    this.setState({
-      customer: cs.value,
-      error: err,
-      scrollPage: 5,
-    });
-    localStorage.setItem("cs", cs.value);
-    if (this.state.location !== "") {
-      let where = ``;
-      if (where !== "") {
-        where += "&";
-      }
-      where += `lokasi=${this.state.location}`;
-
-      if (this.state.customer !== "") {
-        if (cs.value !== "1000001") {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `customer=${cs.value}`;
-        }
-      }
-      this.props.dispatch(
-        FetchProductSale(1, `${where}&perpage=5`, "sale", this.autoSetQty)
-      );
-    }
-    destroy(table);
-    this.getData();
+    this.fetchProduct(state);
   }
 
-  HandleChangeSales(sl) {
-    let err = Object.assign({}, this.state.error, {
-      sales: "",
-    });
-    this.setState({
-      sales: sl.value,
-      error: err,
-    });
-    localStorage.setItem("sl", sl.value);
-  }
   HandleCommonInputChange(e, errs = true, st = 0) {
     const column = e.target.name;
     const val = e.target.value;
+
     if (column === "discount_persen" || column === "pajak") {
       let val_final = 0;
       if (val < 0 || val === "") val_final = 0;
@@ -345,8 +317,6 @@ class Sale extends Component {
       } else {
         val_final = val;
       }
-      
-
       if (column === "discount_persen") {
         this.setState({
           discount_harga: st * (rmComma(val_final) / 100),
@@ -375,57 +345,27 @@ class Sale extends Component {
         [column]: val,
       });
     }
-
-    if (errs) {
-      let err = Object.assign({}, this.state.error, {
-        [column]: "",
-      });
-      this.setState({
-        error: err,
-      });
-    }
   }
-  HandleChangeInput(e, id) {
+  HandleOnBlur(e, i) {
     const column = e.target.name;
-    const val = e.target.value;
-
-    const cek = cekData("barcode", id, table);
-    cek.then((res) => {
-      if (res === undefined) {
-        Toast.fire({
-          icon: "error",
-          title: `not found.`,
-        });
-      } else {
-        let final = {};
-        if (column === "qty") {
-          Object.keys(res).forEach((k, i) => {
-            if (k !== "qty") {
-              final[k] = res[k];
-            } else {
-              final["qty"] = val === "" ? 1 : val;
-            }
-          });
-        } else {
-          Object.keys(res).forEach((k, i) => {
-            if (k !== column) {
-              final[k] = res[k];
-            } else {
-              final[column] = val;
-            }
-          });
-        }
-
-        update(table, final);
-        Toast.fire({
-          icon: "success",
-          title: `${column} has been changed.`,
-        });
+    const value = e.target.value;
+    if (column === "qty") {
+      let val = parseInt(value, 10);
+      if (isNaN(val) || val < 1) {
+        Object.assign(this.state.brgval[i], { qty: 1 });
+        this.handleCheckData(this.state.databrg[i].barcode);
+        return;
       }
-      this.getData();
-    });
+    }
+    handleInputOnBlurCommon(
+      e,
+      { id: this.state.databrg[i].barcode, table: table, where: "barcode" },
+      () => {
+        this.getData();
+      }
+    );
   }
-  HandleChangeInputValue(e, i, barcode = null, datas = []) {
+  HandleChangeInputValue(e, i) {
     const column = e.target.name;
     const val = e.target.value;
     if (
@@ -444,47 +384,6 @@ class Sale extends Component {
       }
       brgval[i] = { ...brgval[i], [column]: values };
       this.setState({ brgval });
-    }
-
-    const cek = cekData("barcode", barcode, table);
-    if (column === "satuan") {
-      cek.then((res) => {
-        if (res === undefined) {
-          Toast.fire({
-            icon: "error",
-            title: `not found.`,
-          });
-        } else {
-          let final = {
-            id: res.id,
-            kd_brg: res.kd_brg,
-            nm_brg: res.nm_brg,
-            barcode: res.barcode,
-            satuan: res.satuan,
-            harga: res.harga,
-            harga2: res.harga2,
-            harga3: res.harga3,
-            harga4: res.harga4,
-            harga_old: res.harga,
-            hrg_beli: res.hrg_beli,
-            stock: res.stock,
-            diskon_persen: res.diskon_persen,
-            diskon_nominal: 0,
-            ppn: res.ppn,
-            qty: 1,
-            kategori: res.kategori,
-            services: res.services,
-            tambahan: res.tambahan,
-            isOpenPrice: res.isOpenPrice,
-          };
-          update(table, final);
-          Toast.fire({
-            icon: "success",
-            title: `${column} has been changed.`,
-          });
-        }
-        this.getData();
-      });
     }
   }
 
@@ -511,26 +410,25 @@ class Sale extends Component {
   }
   HandleRemove(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.setState({
-          subtotal: 0,
-        });
-        del(table, id).then((res) => {
-          this.getData();
-          Swal.fire("Deleted!", "Your data has been deleted.", "success");
-        });
-      }
+    swallOption("anda yakin akan menghapus barang ini ?", () => {
+      this.setState({
+        subtotal: 0,
+      });
+      del(table, id).then((res) => {
+        this.getData();
+        Swal.fire("Deleted!", "Your data has been deleted.", "success");
+      });
     });
+  }
+  HanldeSetAddBrg(item, param, index) {
+    if (param === "hold") {
+      Object.assign(item, { isOpenPrice: false, qty: 0 });
+    } else {
+      Object.assign(item, { isOpenPrice: false });
+    }
+    this.handleCheckData(item.barcode, item);
+    setTimeout(() => this[`qty-${btoa(item.barcode)}`].focus(), 500);
+
   }
   HandleAddBrg(e, item, index) {
     e.preventDefault();
@@ -538,283 +436,154 @@ class Sale extends Component {
       isScroll: false,
       isClick: index,
     });
-    const finaldt = {
-      kd_brg: item.kd_brg,
-      nm_brg: item.nm_brg,
-      barcode: item.barcode,
-      satuan: item.satuan,
-      harga_old: item.harga,
-      harga: item.harga,
-      harga2: item.harga2,
-      harga3: item.harga3,
-      harga4: item.harga4,
-      stock: item.stock,
-      diskon_persen: item.diskon_persen,
-      diskon_nominal: 0,
-      ppn: item.ppn,
-      qty: item.qty,
-      hrg_beli: parseFloat(item.hrg_beli),
-      kategori: item.kategori,
-      services: item.services,
-      tambahan: item.tambahan,
-      isOpenPrice: item.isOpenPrice,
-    };
-    const cek = cekData("barcode", item.barcode, table);
-    cek.then((res) => {
-      if (res === undefined) {
-        store(table, finaldt);
-      } else {
-        update(table, {
-          id: res.id,
-          kd_brg: res.kd_brg,
-          nm_brg: res.nm_brg,
-          barcode: res.barcode,
-          satuan: res.satuan,
-          harga: res.harga,
-          harga2: res.harga2,
-          harga3: res.harga3,
-          harga4: res.harga4,
-          harga_old: res.harga,
-          hrg_beli: res.hrg_beli,
-          stock: res.stock,
-          diskon_persen: res.diskon_persen,
-          diskon_nominal: 0,
-          ppn: res.ppn,
-          qty: parseFloat(res.qty) + 1,
-          kategori: res.kategori,
-          services: res.services,
-          tambahan: res.tambahan,
-          isOpenPrice: res.isOpenPrice,
-        });
-      }
-
-      this.getData();
-      setTimeout(() => this[`qty-${btoa(finaldt.barcode)}`].focus(), 500);
-    });
+    this.HanldeSetAddBrg(item, "", index);
   }
   HandleReset(e) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes!",
-    }).then((result) => {
-      if (result.value) {
-        destroy(table);
-        localStorage.removeItem("cs");
-        localStorage.removeItem("lk");
-        localStorage.removeItem("anySaleTrx");
-        window.location.reload(false);
+    swallOption("anda yakin akan membatalkan transaksi ini ?", () => {
+      this.handleClear();
+    });
+  }
+
+  handleMasterDetail(callback) {
+    const data = get(table);
+    data.then((res) => {
+      if (res.length === 0) {
+        swal("Pilih barang untuk melanjutkan Penjualan.");
+        callback(false);
+      } else {
+        let subtotal = 0;
+        let detail = [];
+        let hold = [];
+        res.map((item) => {
+          hold.push(item);
+          let disc1 = 0;
+          let disc2 = 0;
+          let ppn = 0;
+          let hrg = parseInt(rmComma(item.harga), 10);
+          let ppnInt = parseInt(item.ppn, 10);
+          let disc_rp = parseInt(item.diskon_nominal, 10);
+          let disc_per = parseInt(item.diskon_persen, 10);
+          if (disc_per !== 0) {
+            disc1 = hrg - hrg * (disc_per / 100);
+            disc2 = disc1;
+            if (disc_rp !== 0) {
+              disc2 = disc1 - disc1 * (disc_rp / 100);
+            }
+          } else if (disc_rp !== 0) {
+            disc1 = hrg - hrg * (disc_rp / 100);
+            disc2 = disc1;
+            if (disc_per !== 0) {
+              disc2 = disc1 - disc1 * (disc_per / 100);
+            }
+          }
+          if (ppnInt !== 0) {
+            ppn = hrg * (ppnInt / 100);
+          }
+
+          subtotal +=
+            (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10);
+          detail.push({
+            kode_trx: this.props.nota,
+            subtotal:(disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10),
+            price: rmComma(item.harga),
+            qty: item.qty,
+            diskon: item.diskon_persen,
+            kategori: item.kategori,
+            tax: item.ppn,
+            services: item.services,
+            sku: item.barcode,
+            open_price:
+              rmComma(item.harga) === rmComma(item.harga_old)
+                ? 0
+                : rmComma(item.harga),
+            hrg_beli: item.hrg_beli,
+            nm_brg: item.nm_brg,
+            satuan: item.satuan,
+          });
+          return null;
+        });
+        moment.locale("id");
+        let master = {
+          cetak_nota: true,
+          tempo: moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
+          hr: "S",
+          kartu: "-",
+          dis_persen: this.state.discount_persen,
+          dis_rp:
+            this.state.discount_harga === 0
+              ? 0
+              : rmComma(this.state.discount_harga),
+          kd_sales: this.state.sales,
+          jam: moment(new Date()).format("HH:mm:ss"),
+          tgl: moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
+          compliment: "-",
+          kd_kasir: this.state.userid,
+          no_kartu: "0",
+          id_hold: "-",
+          diskon:
+            this.state.discount_harga === 0
+              ? 0
+              : rmComma(this.state.discount_harga),
+          compliment_rp: "0",
+          jml_kartu: 0,
+          charge: 0,
+          change: 0,
+          rounding: 0,
+          tax: this.state.pajak,
+          nominal_poin: 0,
+          tunai: 0,
+          poin_tukar: 0,
+          gt:
+            subtotal -
+            subtotal * (parseFloat(this.state.discount_persen) / 100) +
+            subtotal * (parseFloat(this.state.pajak) / 100),
+          pemilik_kartu: "-",
+          jenis_trx: "TUNAI",
+          kd_cust: this.state.customer,
+          kode_trx: this.props.nota,
+          subtotal: subtotal,
+          lokasi: this.state.location,
+          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? "Z" : "Q",
+          jns_kartu: "Debit",
+          status: "LUNAS",
+          optional_note: this.state.catatan,
+        };
+
+        this.setState({
+          dataHoldBill: hold,
+          master: master,
+          detail: detail,
+        });
+        callback(true);
       }
     });
   }
+
   HandleSubmit(e) {
     e.preventDefault();
-    // validator head form
-    let err = this.state.error;
-    if (
-      this.state.catatan === "" ||
-      this.state.location === "" ||
-      this.state.customer === "" ||
-      this.state.sales === ""
-    ) {
-      if (this.state.catatan === "") {
-        err = Object.assign({}, err, {
-          catatan: "Catatan tidak boleh kosong.",
-        });
+    if (!isEmptyOrUndefined(this.state.catatan, "catatan")) return;
+    if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
+    if (!isEmptyOrUndefined(this.state.customer, "customer")) return;
+    if (!isEmptyOrUndefined(this.state.sales, "sales")) return;
+    this.handleMasterDetail((res) => {
+      if (res) {
+        const bool = !this.props.isOpen;
+        this.props.dispatch(ModalToggle(bool));
+        this.props.dispatch(ModalType("formSale"));
       }
-      if (this.state.location === "") {
-        err = Object.assign({}, err, {
-          location: "Lokasi tidak boleh kosong.",
-        });
-      }
-
-      if (this.state.customer === "") {
-        err = Object.assign({}, err, {
-          customer: "customer tidak boleh kosong.",
-        });
-      }
-
-      if (this.state.sales === "") {
-        err = Object.assign({}, err, {
-          sales: "sales tidak boleh kosong.",
-        });
-      }
-      this.setState({
-        error: err,
-      });
-    } else {
-      const data = get(table);
-      data.then((res) => {
-        if (res.length === 0) {
-          Swal.fire(
-            "Error!",
-            "Pilih barang untuk melanjutkan Penjualan.",
-            "error"
-          );
-        } else {
-          const bool = !this.props.isOpen;
-          this.props.dispatch(ModalToggle(bool));
-          this.props.dispatch(ModalType("formSale"));
-          let subtotal = 0;
-          let detail = [];
-
-          res.map((item) => {
-            let disc1 = 0;
-            let disc2 = 0;
-            let ppn = 0;
-            let hrg = parseInt(rmComma(item.harga), 10);
-            let ppnInt = parseInt(item.ppn, 10);
-            let disc_rp = parseInt(item.diskon_nominal, 10);
-            let disc_per = parseInt(item.diskon_persen, 10);
-            if (disc_per !== 0) {
-              disc1 = hrg - hrg * (disc_per / 100);
-              disc2 = disc1;
-              if (disc_rp !== 0) {
-                disc2 = disc1 - disc1 * (disc_rp / 100);
-              }
-            } else if (disc_rp !== 0) {
-              disc1 = hrg - hrg * (disc_rp / 100);
-              disc2 = disc1;
-              if (disc_per !== 0) {
-                disc2 = disc1 - disc1 * (disc_per / 100);
-              }
-            }
-            if (ppnInt !== 0) {
-              ppn = hrg * (ppnInt / 100);
-            }
-            
-
-            subtotal +=
-              (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10);
-            detail.push({
-              kode_trx: this.props.nota,
-              subtotal:
-                (disc2 === 0 ? hrg + ppn : disc2 + ppn) *
-                parseInt(item.qty, 10),
-              price: rmComma(item.harga),
-              qty: item.qty,
-              diskon: disc2,
-              kategori: item.kategori,
-              tax: item.ppn,
-              services: item.services,
-              sku: item.barcode,
-              open_price:
-                rmComma(item.harga) === rmComma(item.harga_old)
-                  ? 0
-                  : rmComma(item.harga),
-              hrg_beli: item.hrg_beli,
-              nm_brg: item.nm_brg,
-              satuan: item.satuan,
-            });
-            return null;
-          });
-          moment.locale("id");
-          let master = {
-            cetak_nota: true,
-            tempo: moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
-            hr: "S",
-            kartu: "-",
-            dis_persen: this.state.discount_persen,
-            dis_rp:
-              this.state.discount_harga === 0
-                ? 0
-                : rmComma(this.state.discount_harga),
-            kd_sales: this.state.sales,
-            jam: moment(new Date()).format("HH:mm:ss"),
-            tgl: moment(new Date()).format("yyyy-MM-DD HH:mm:ss"),
-            compliment: "-",
-            kd_kasir: this.state.userid,
-            no_kartu: "0",
-            id_hold: "-",
-            diskon:
-              this.state.discount_harga === 0
-                ? 0
-                : rmComma(this.state.discount_harga),
-            compliment_rp: "0",
-            jml_kartu: 0,
-            charge: 0,
-            change: 0,
-            rounding: 0,
-            tax: this.state.pajak,
-            nominal_poin: 0,
-            tunai: 0,
-            poin_tukar: 0,
-            gt:
-              subtotal -
-              subtotal * (parseFloat(this.state.discount_persen) / 100) +
-              subtotal * (parseFloat(this.state.pajak) / 100),
-            pemilik_kartu: "-",
-            jenis_trx: "TUNAI",
-            kd_cust: this.state.customer,
-            kode_trx: this.props.nota,
-            subtotal: subtotal,
-            lokasi: this.state.location,
-            kassa: atob(atob(Cookies.get("tnt="))) === "npos" ? "Z" : "Q",
-            jns_kartu: "Debit",
-            status: "LUNAS",
-            optional_note: this.state.catatan,
-          };
-          this.setState({
-            master: master,
-            detail: detail,
-          });
-        }
-      });
-    }
+    });
   }
+
   autoSetQty(kode, data) {
     const cek = cekData("barcode", kode, table);
     return cek.then((res) => {
       if (res === undefined) {
-        store(table, {
-          kd_brg: data[0].kd_brg,
-          nm_brg: data[0].nm_brg,
-          barcode: data[0].barcode,
-          satuan: data[0].satuan,
-          harga_old: data[0].harga,
-          harga: data[0].harga,
-          harga2: data[0].harga2,
-          harga3: data[0].harga3,
-          harga4: data[0].harga4,
-          stock: data[0].stock,
-          diskon_persen: data[0].diskon_persen,
-          diskon_nominal: data[0].diskon_nominal,
-          ppn: data[0].ppn,
-          qty: 1,
-          hrg_beli: data[0].hrg_beli,
-          kategori: data[0].kategori,
-          services: data[0].service,
-          tambahan: data[0].tambahan,
-          isOpenPrice: false,
-        });
+        Object.assign(data[0], { isOpenPrice: false, qty: 1 });
+        store(table, data[0]);
       } else {
-        update(table, {
-          id: res.id,
-          kd_brg: res.kd_brg,
-          nm_brg: res.nm_brg,
-          barcode: res.barcode,
-          satuan: res.satuan,
-          harga: res.harga,
-          harga2: res.harga2,
-          harga3: res.harga3,
-          harga4: res.harga4,
-          stock: res.stock,
-          diskon_persen: res.diskon_persen,
-          diskon_nominal: res.diskon_nominal,
-          ppn: res.ppn,
-          hrg_beli: res.hrg_beli,
-          kategori: res.kategori,
-          services: res.service,
-          isOpenPrice: res.isOpenPrice,
-          qty: parseFloat(res.qty) + 1,
-          tambahan: res.tambahan,
-        });
+        Object.assign(res, { id: res.id, qty: parseFloat(res.qty) + 1 });
+        update(table, res);
       }
       return true;
     });
@@ -823,7 +592,7 @@ class Sale extends Component {
     if (this.state.customer === "" || this.state.location === "") {
       Swal.fire(
         "Gagal!",
-        "Pilih lokasi dan customer terlebih dahulu.",
+        "Pilih lokasi terlebih dahulu.",
         "error"
       );
     } else {
@@ -859,9 +628,9 @@ class Sale extends Component {
       this.setState({ search: "" });
     }
   }
+
   getData() {
     const data = get(table);
-
     data.then((res) => {
       let brg = [];
       res.map((i) => {
@@ -952,9 +721,6 @@ class Sale extends Component {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    // this.setState({
-    //     [name]: value,
-    // });
     let brgval = [...this.state.brgval];
     brgval[i] = { ...brgval[i], [name]: value };
     this.setState({ brgval });
@@ -962,41 +728,17 @@ class Sale extends Component {
     if (name === "isOpenPrice") {
       cek.then((res) => {
         if (res === undefined) {
-          Toast.fire({
-            icon: "error",
-            title: `not found.`,
-          });
         } else {
-          update(table, {
-            id: res.id,
-            kd_brg: res.kd_brg,
-            nm_brg: res.nm_brg,
-            barcode: res.barcode,
-            satuan: res.satuan,
-            harga: res.harga,
-            harga2: res.harga2,
-            harga3: res.harga3,
-            harga4: res.harga4,
-            harga_old: res.harga,
-            hrg_beli: res.hrg_beli,
-            stock: res.stock,
-            diskon_persen: res.diskon_persen,
-            diskon_nominal: 0,
-            ppn: res.ppn,
-            qty: res.qty,
-            kategori: res.kategori,
-            services: res.services,
-            tambahan: res.tambahan,
-            isOpenPrice: value,
-          });
-          Toast.fire({
-            icon: "success",
-            title: `${name} has been changed.`,
-          });
+          Object.assign(res, { isOpenPrice: value });
+          update(table, res);
         }
         this.getData();
       });
     }
+  }
+  handleClear() {
+    destroy(table);
+    this.getData();
   }
   handleClosing(e) {
     e.preventDefault();
@@ -1006,38 +748,31 @@ class Sale extends Component {
     this.props.dispatch(ModalType("formClosing"));
   }
 
-  render() {
-    if (this.state.isScroll === true) this.handleScroll();
-
-    let opCustomer = [
-      {
-        value: "1000001",
-        label: "UMUM",
-      },
-    ];
-
-    if (this.props.customer !== undefined && this.props.customer !== []) {
-      this.props.customer.map((i) => {
-        opCustomer.push({
-          value: i.kd_cust,
-          label: i.nama,
-        });
-        return null;
+  handleHoldBill(e, param) {
+    e.preventDefault();
+    if (param === "formHoldBill") {
+      this.handleMasterDetail((res) => {
+        if (res) {
+          this.setState({ modalHoldBill: true });
+          this.props.dispatch(ModalToggle(true));
+          this.props.dispatch(ModalType("formHoldBill"));
+          return;
+        }
       });
     }
+    if (param === "listHoldBill") {
+      setStorage("key", "-");
+      this.setState({ modalListHoldBill: true });
+      this.props.dispatch(ModalToggle(true));
+      this.props.dispatch(ModalType("listHoldBill"));
+      return;
+    }
+  }
 
+
+  render() {
+    if (this.state.isScroll === true) this.handleScroll();
     let totalsub = 0;
-    const centerStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
-    const leftStyle = {
-      verticalAlign: "middle",
-      textAlign: "left",
-      whiteSpace: "nowrap",
-    };
-
     return (
       <Layout page="Penjualan Barang">
         <div className="card">
@@ -1059,16 +794,25 @@ class Sale extends Component {
               </button>
               Penjualan Barang
             </h4>
-            {atob(atob(Cookies.get("tnt="))) === "npos" ? (
-              <h4 style={{ float: "right" }}>
-                <button
-                  className={"btn btn-primary"}
-                  onClick={(e) => this.handleClosing(e)}
-                >
-                  Closing
-                </button>
-              </h4>
-            ) : ""}
+            {/* {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ? ( */}
+            <h4 style={{ float: "right" }}>
+              <button
+                className={"btn btn-primary"}
+                onClick={(e) => this.handleClosing(e)}
+              >
+                Closing
+              </button>
+              <button
+                className="btn btn-outline-info ml-1"
+                onClick={(e) => this.handleHoldBill(e, "listHoldBill")}
+              >
+                List Hold bill
+              </button>
+            </h4>
+
+            {/* ) : (
+              ""
+            )} */}
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             <StickyBox
@@ -1076,8 +820,8 @@ class Sale extends Component {
               offsetBottom={20}
               style={
                 this.state.toggleSide
-                  ? { display: "none", width: "25%", marginRight: "10px" }
-                  : { display: "block", width: "25%", marginRight: "10px" }
+                  ? { display: "none", width: "30%", marginRight: "10px" }
+                  : { display: "block", width: "30%", marginRight: "10px" }
               }
             >
               <div className="card">
@@ -1109,10 +853,15 @@ class Sale extends Component {
                   <div className="form-group">
                     <div className="input-group input-group-sm">
                       <input
-                        autoFocus
+                        autoFocus={true}
                         type="text"
                         id="chat-search"
                         name="search"
+                        ref={(input) => {
+                          if (input !== null) {
+                            this[`search`] = input;
+                          }
+                        }}
                         className="form-control form-control-sm"
                         placeholder={`Search ${
                           localStorage.anySaleTrx !== undefined
@@ -1144,7 +893,6 @@ class Sale extends Component {
                   <div
                     className="people-list"
                     style={{
-                      zoom: "80%",
                       height: "300px",
                       maxHeight: "100%",
                       overflowY: "scroll",
@@ -1167,40 +915,11 @@ class Sale extends Component {
                                   id={`item${inx}`}
                                   className="clearfix"
                                   key={inx}
-                                  onClick={(e) =>
-                                    this.HandleAddBrg(
-                                      e,
-                                      {
-                                        kd_brg: i.kd_brg,
-                                        nm_brg: i.nm_brg,
-                                        barcode: i.barcode,
-                                        satuan: i.satuan,
-                                        harga_old: i.harga,
-                                        harga: i.harga,
-                                        harga2: i.harga2,
-                                        harga3: i.harga3,
-                                        harga4: i.harga4,
-                                        stock: i.stock,
-                                        diskon_persen: i.diskon_persen,
-                                        diskon_nominal: i.diskon_nominal,
-                                        ppn: i.ppn,
-                                        qty: 1,
-                                        hrg_beli: i.hrg_beli,
-                                        kategori: i.kategori,
-                                        services: i.service,
-                                        tambahan: i.tambahan,
-                                        isOpenPrice: false,
-                                      },
-                                      inx
-                                    )
-                                  }
+                                  onClick={(e) => {
+                                    // let field = this.handleField(i);
+                                    this.HandleAddBrg(e, i, inx);
+                                  }}
                                 >
-                                  {i.gambar.replace(" ", "") ===
-                                  `${HEADERS.URL}images/barang/default.png` ? (
-                                    <span class="circle">{inx + 1}</span>
-                                  ) : (
-                                    <img src={i.gambar} alt="avatar" />
-                                  )}
                                   <div className="about">
                                     <div
                                       className="status"
@@ -1222,7 +941,7 @@ class Sale extends Component {
                                         fontSize: "12px",
                                       }}
                                     >
-                                      ({i.kd_brg}) {toRp(i.harga)}
+                                      ({i.kd_brg})
                                     </div>
                                   </div>
                                 </li>
@@ -1262,20 +981,16 @@ class Sale extends Component {
             </StickyBox>
             <div
               style={
-                this.state.toggleSide
-                  ? { width: "100%", zoom: "85%" }
-                  : { width: "75%", zoom: "85%" }
+                this.state.toggleSide ? { width: "100%" } : { width: "70%" }
               }
             >
               <div className="card">
                 <div className="card-body">
                   <form className="">
-                    <div className="row">
+                    <div className="row" style={{ zoom: "80%" }}>
                       <div className="col-md-2">
                         <div className="form-group">
-                          <label className="control-label font-12">
-                            No. Transaksi
-                          </label>
+                          <label>No. Transaksi</label>
                           <input
                             type="text"
                             readOnly
@@ -1287,9 +1002,7 @@ class Sale extends Component {
                       </div>
                       <div className="col-md-2">
                         <div className="form-group">
-                          <label className="control-label font-12">
-                            Tanggal Order
-                          </label>
+                          <label>Tanggal Order</label>
                           <input
                             type="date"
                             name={"tgl_order"}
@@ -1300,83 +1013,36 @@ class Sale extends Component {
                         </div>
                       </div>
                       <div className="col-md-2">
-                        <div className="form-group">
-                          <label className="control-label font-12">
-                            Lokasi
-                          </label>
-                          <Select
-                            options={this.state.location_data}
-                            placeholder="Pilih Lokasi"
-                            onChange={this.HandleChangeLokasi}
-                            value={this.state.location_data.find((op) => {
-                              return op.value === this.state.location;
-                            })}
-                          />
-                          <div
-                            className="invalid-feedback"
-                            style={
-                              this.state.error.location !== ""
-                                ? { display: "block" }
-                                : { display: "none" }
-                            }
-                          >
-                            {this.state.error.location}
-                          </div>
-                        </div>
+                        <LokasiCommon
+                          callback={(res) =>
+                            this.HandleChangeSelect("location_tr", res)
+                          }
+                          dataEdit={this.state.location}
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <SelectCommon
+                          label="Customer"
+                          options={this.state.customer_data}
+                          callback={(res) =>
+                            this.HandleChangeSelect("customer_tr", res)
+                          }
+                          dataEdit={this.state.customer}
+                        />
+                      </div>
+                      <div className="col-md-2">
+                        <SelectCommon
+                          label="Sales"
+                          options={this.state.opSales}
+                          callback={(res) =>
+                            this.HandleChangeSelect("sales_tr", res)
+                          }
+                          dataEdit={this.state.sales}
+                        />
                       </div>
                       <div className="col-md-2">
                         <div className="form-group">
-                          <label className="control-label font-12">
-                            Customer
-                          </label>
-                          <Select
-                            options={opCustomer}
-                            placeholder="Pilih Customer"
-                            onChange={this.HandleChangeCustomer}
-                            value={opCustomer.find((op) => {
-                              return op.value === this.state.customer;
-                            })}
-                          />
-                          <div
-                            className="invalid-feedback"
-                            style={
-                              this.state.error.customer !== ""
-                                ? { display: "block" }
-                                : { display: "none" }
-                            }
-                          >
-                            {this.state.error.customer}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-2">
-                        <div className="form-group">
-                          <label className="control-label font-12">Sales</label>
-                          <Select
-                            options={this.state.opSales}
-                            placeholder="Pilih Sales"
-                            onChange={this.HandleChangeSales}
-                            value={this.state.opSales.find((op) => {
-                              return op.value === this.state.sales;
-                            })}
-                          />
-                          <div
-                            className="invalid-feedback"
-                            style={
-                              this.state.error.sales !== ""
-                                ? { display: "block" }
-                                : { display: "none" }
-                            }
-                          >
-                            {this.state.error.sales}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-2">
-                        <div className="form-group">
-                          <label className="control-label font-12">
-                            Catatan
-                          </label>
+                          <label>Catatan</label>
                           <textarea
                             style={{ height: "39px" }}
                             className="form-control"
@@ -1386,36 +1052,23 @@ class Sale extends Component {
                             onChange={(e) => this.HandleCommonInputChange(e)}
                             name="catatan"
                           />
-                          <div
-                            className="invalid-feedback"
-                            style={
-                              this.state.error.catatan !== ""
-                                ? { display: "block" }
-                                : { display: "none" }
-                            }
-                          >
-                            {this.state.error.catatan}
-                          </div>
                         </div>
                       </div>
                     </div>
                   </form>
                   <div style={{ overflowX: "auto" }}>
-                    <table className="table table-hover">
+                    <table className="table table-hover table-noborder">
                       <thead>
                         <tr>
-                          <th style={centerStyle}>#</th>
-                          <th style={centerStyle}>Open Price</th>
-                          <th style={centerStyle}>barang</th>
-                          <th style={centerStyle}>barcode</th>
-                          <th style={centerStyle}>satuan</th>
-                          <th style={centerStyle}>harga</th>
-                          <th style={centerStyle}>disc 1 (%)</th>
-                          {/* <th style={centerStyle}>disc 2 (%)</th> */}
-                          <th style={centerStyle}>ppn</th>
-                          <th style={centerStyle}>stock</th>
-                          <th style={centerStyle}>qty</th>
-                          <th style={centerStyle}>Subtotal</th>
+                          <th className="middle nowrap text-center">#</th>
+                          <th className="middle nowrap">barang</th>
+                          <th className="middle nowrap">satuan</th>
+                          <th className="middle nowrap">harga</th>
+                          <th className="middle nowrap">stock</th>
+                          <th className="middle nowrap">qty</th>
+                          <th className="middle nowrap">disc 1 (%)</th>
+                          <th className="middle nowrap">ppn</th>
+                          <th className="middle nowrap">Subtotal</th>
                         </tr>
                       </thead>
 
@@ -1455,60 +1108,51 @@ class Sale extends Component {
 
                           return (
                             <tr key={index}>
-                              <td style={centerStyle}>
+                              <td className="middle nowrap">
                                 <a
+                                  style={{
+                                    height: "20px",
+                                    width: "20px",
+                                    padding: "0px",
+                                    margin: "0px",
+                                  }}
                                   href="about:blank"
-                                  className="btn btn-danger btn-sm"
+                                  className="btn btn-danger btn-sm mr-1"
                                   onClick={(e) => this.HandleRemove(e, item.id)}
                                 >
                                   <i className="fa fa-trash" />
                                 </a>
                               </td>
-                              <td style={centerStyle}>
-                                <input
-                                  type="checkbox"
-                                  className="form-control"
-                                  name="isOpenPrice"
-                                  checked={this.state.brgval[index].isOpenPrice}
-                                  onChange={(e) =>
-                                    this.handleChecked(e, index, item.barcode)
-                                  }
-                                />
+                              <td
+                                className="middle nowrap"
+                                style={{ zoom: "80%" }}
+                              >
+                                {item.nm_brg}
+                                <br />
+                                {item.barcode}
                               </td>
-                              <td style={leftStyle}>{item.nm_brg}</td>
-                              <td style={leftStyle}>{item.barcode}</td>
-                              <td style={leftStyle}>{item.satuan}</td>
-                              <td style={centerStyle}>
-                                {/*<label>Open Price <input style={{float:"right!important"}} type="checkbox" className={"form-control"} name={"isOpenPrice"} checked={this.state.brgval[index].isOpenPrice} onChange={(e) => this.handleChecked(e, index)}/></label>*/}
-
+                              <td className="middle nowrap">{item.satuan}</td>
+                              <td className="middle nowrap">
                                 {this.state.brgval[index].isOpenPrice ? (
                                   <input
                                     type="text"
-                                    className={"form-control"}
+                                    style={{ width: "100px" }}
+                                    className={"form-control in-table"}
                                     value={toCurrency(
                                       this.state.brgval[index].harga
                                     )}
-                                    style={{
-                                      width: "100px",
-                                    }}
                                     name="harga"
-                                    onBlur={(e) =>
-                                      this.HandleChangeInput(e, item.barcode)
-                                    }
+                                    onBlur={(e) => this.HandleOnBlur(e, index)}
                                     onChange={(e) =>
                                       this.HandleChangeInputValue(e, index)
                                     }
                                   />
                                 ) : (
                                   <select
-                                    className="form-control"
+                                    className="form-control in-table"
+                                    style={{ width: "100px" }}
                                     name="harga"
-                                    style={{
-                                      width: "100px",
-                                    }}
-                                    onBlur={(e) =>
-                                      this.HandleChangeInput(e, item.barcode)
-                                    }
+                                    onBlur={(e) => this.HandleOnBlur(e, index)}
                                     onChange={(e) =>
                                       this.HandleChangeInputValue(e, index)
                                     }
@@ -1581,7 +1225,7 @@ class Sale extends Component {
                                 <div
                                   className="row"
                                   style={{
-                                    marginTop: "5px",
+                                    marginTop: "1px",
                                   }}
                                 >
                                   <div
@@ -1600,84 +1244,45 @@ class Sale extends Component {
                                     }}
                                   ></div>
                                 </div>
-
-                                {/* <input type='text' className="form-control" name='harga'
-                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                       value={toCurrency(this.state.brgval[index].harga)}/> */}
-                              </td>
-                              <td style={centerStyle}>
-                                <input
-                                  type="number"
-                                  name="diskon_persen"
+                                 <input
                                   style={{
-                                    width: "100px",
-                                    textAlign: "right",
+                                    height: "17px",
+                                    width: "17px",
+                                    // paddingTop: "10px",
                                   }}
-                                  className="form-control"
-                                  onBlur={(e) =>
-                                    this.HandleChangeInput(e, item.barcode)
-                                  }
+                                  type="checkbox"
+                                  name="isOpenPrice"
+                                  checked={this.state.brgval[index].isOpenPrice}
                                   onChange={(e) =>
-                                    this.HandleChangeInputValue(e, index)
+                                    this.handleChecked(e, index, item.barcode)
                                   }
-                                  value={this.state.brgval[index].diskon_persen}
-                                />
+                                /> <span style={{fontSize:'10px'}}>Open Price</span>
                               </td>
-                              {/* <td><input type='text' name='diskon_nominal'
-                                                                       className="form-control"
-                                                                       onBlur={(e) => this.HandleChangeInput(e, item.barcode)}
-                                                                       onChange={(e) => this.HandleChangeInputValue(e, index)}
-                                                                       value={this.state.brgval[index].diskon_nominal}/>
-                                                            </td> */}
-                              <td style={centerStyle}>
-                                <input
-                                  type="number"
-                                  name="ppn"
-                                  style={{
-                                    width: "100px",
-                                    textAlign: "right",
-                                  }}
-                                  className="form-control"
-                                  onBlur={(e) =>
-                                    this.HandleChangeInput(e, item.barcode)
-                                  }
-                                  onChange={(e) =>
-                                    this.HandleChangeInputValue(e, index)
-                                  }
-                                  value={this.state.brgval[index].ppn}
-                                />
-                              </td>
-                              <td style={centerStyle}>
+                               <td className="middle nowrap">
                                 <input
                                   readOnly={true}
                                   type="number"
                                   value={item.stock}
-                                  className="form-control"
-                                  style={{
-                                    width: "100px",
-                                    textAlign: "right",
-                                  }}
+                                  className="form-control text-right in-table"
+                                  style={{ width: "100px" }}
                                 />
                               </td>
-                              <td style={centerStyle}>
+                              
+                              <td className="middle nowrap">
                                 <input
                                   type="text"
                                   name="qty"
-                                  style={{
-                                    width: "100px",
-                                    textAlign: "right",
+                                  style={{ width: "70px" }}
+                                  ref={(input) => {
+                                    if (input !== null) {
+                                      this[`qty-${btoa(item.barcode)}`] = input;
+                                    }
                                   }}
-                                  ref={(input) =>
-                                    (this[`qty-${btoa(item.barcode)}`] = input)
-                                  }
                                   onFocus={(e) =>
                                     this.HandleFocusInputReset(e, index)
                                   }
-                                  onBlur={(e) =>
-                                    this.HandleChangeInput(e, item.barcode)
-                                  }
-                                  className="form-control"
+                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                  className="form-control text-right in-table"
                                   onChange={(e) =>
                                     this.HandleChangeInputValue(e, index)
                                   }
@@ -1700,19 +1305,44 @@ class Sale extends Component {
                                   Qty Melebihi Stock.
                                 </div>
                               </td>
-                              <td style={centerStyle}>
+                              <td className="middle nowrap">
+                                <input
+                                  type="number"
+                                  name="diskon_persen"
+                                  style={{ width: "70px" }}
+                                  className="form-control in-table text-right"
+                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleChangeInputValue(e, index)
+                                  }
+                                  value={this.state.brgval[index].diskon_persen}
+                                />
+                              </td>
+                              <td className="middle nowrap">
+                                <input
+                                  type="number"
+                                  name="ppn"
+                                  style={{ width: "70px" }}
+                                  className="form-control in-table text-right"
+                                  onBlur={(e) => this.HandleOnBlur(e, index)}
+                                  onChange={(e) =>
+                                    this.HandleChangeInputValue(e, index)
+                                  }
+                                  value={this.state.brgval[index].ppn}
+                                />
+                              </td>
+                             
+
+                              <td className="middle nowrap">
                                 <input
                                   readOnly={true}
                                   type="text"
                                   value={toCurrency(subtot)}
-                                  className="form-control"
-                                  style={{
-                                    width: "100px",
-                                    textAlign: "right",
-                                  }}
+                                  className="form-control text-right in-table"
+                                  style={{ width: "100px" }}
                                 />
                               </td>
-                              {/*<td style={centerStyle}>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>*/}
+                              {/*<td>{toCurrency((disc2===0?hrg+ppn:disc2+ppn)*parseInt(item.qty,10))}</td>*/}
                             </tr>
                           );
                         })}
@@ -1726,20 +1356,26 @@ class Sale extends Component {
                   <div className="row">
                     <div className="col-md-7">
                       <div className="dashboard-btn-group d-flex align-items-center">
-                        <a
-                          href="about:blank"
+                        <button
                           onClick={(e) => this.HandleSubmit(e)}
                           className="btn btn-primary ml-1"
                         >
-                          Simpan
-                        </a>
-                        <a
-                          href="about:blank"
+                          Bayar
+                        </button>
+                        <button
                           onClick={(e) => this.HandleReset(e)}
-                          className="btn btn-danger ml-1"
+                          className="btn btn-warning ml-1"
                         >
                           Reset
-                        </a>
+                        </button>
+                        <button
+                          className={"btn btn-primary  ml-1"}
+                          onClick={(e) =>
+                            this.handleHoldBill(e, "formHoldBill")
+                          }
+                        >
+                          Hold bill
+                        </button>
                       </div>
                     </div>
                     <div className="col-md-5">
@@ -1868,13 +1504,55 @@ class Sale extends Component {
           lokasi={this.props.dataDetailLocation}
         />
 
-        {this.state.modalClosing ? <FormClosing /> : null}
+        {this.state.modalClosing && this.props.isOpen ? <FormClosing /> : null}
+        {this.state.modalHoldBill && this.props.isOpen ? (
+          <FormHoldBill
+            dataHoldBill={this.state.dataHoldBill}
+            master={this.state.master}
+            detail={this.state.detail}
+            callback={(res) => {
+              if (res === "submit") {
+                this.handleClear();
+              }
+            }}
+          />
+        ) : null}
+
+        {this.state.modalListHoldBill && this.props.isOpen ? (
+          <ListHoldBill
+            callback={(res) => {
+              setStorage("key", "");
+              this.setState({ modalListHoldBill: false });
+              if (res !== "close") {
+                destroy("sale");
+                res.detail.map((val, index) => {
+                  this.HanldeSetAddBrg(val, "hold", index);
+                });
+                setStorage("location", res.master.lokasi);
+                setStorage("sales", res.master.kd_sales);
+                setStorage("customer", res.master.kd_cust);
+                this.setState({
+                  location: res.master.lokasi,
+                  customer: res.master.kd_cust,
+                  sales: res.master.kd_sales,
+                });
+                setTimeout(() => {
+                  this.fetchProduct();
+                }, 500);
+
+                // !this.props.loadingbrg &&this.props.dispatch(ModalToggle(false));
+              }
+            }}
+          />
+        ) : null}
       </Layout>
     );
   }
 }
 
 const mapStateToPropsCreateItem = (state) => ({
+  isOpen: state.modalReducer,
+
   barang: state.productReducer.result_brg_sale,
   loadingbrg: state.productReducer.isLoadingBrgSale,
   pagin_brg_sale: state.productReducer.pagin_brg_sale,

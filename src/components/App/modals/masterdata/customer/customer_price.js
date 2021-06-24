@@ -8,7 +8,7 @@ import {
   FetchCustomerPrice,
 } from "redux/actions/masterdata/customer/customer.action";
 import Paginationq from "helper";
-import { rmComma, toCurrency } from "../../../../../helper";
+import { generateNo, rmComma, toCurrency } from "../../../../../helper";
 
 class CustomerPrice extends Component {
   constructor(props) {
@@ -127,10 +127,18 @@ class CustomerPrice extends Component {
           <table className="table table-hover table-noborder">
             <thead>
               <tr>
-                <th className="text-left middle">No</th>
-                <th className="text-left middle">Lokasi</th>
-                <th className="text-left middle">Customer</th>
-                <th className="text-left middle">Harga</th>
+                <th className="text-left middle text-center" width="1%">
+                  No
+                </th>
+                <th className="text-left middle" width="30%">
+                  Lokasi
+                </th>
+                <th className="text-left middle" width="29%">
+                  Customer
+                </th>
+                <th className="text-left middle" width="40%">
+                  Harga
+                </th>
                 {/* <th>Satuan</th> */}
               </tr>
             </thead>
@@ -139,16 +147,17 @@ class CustomerPrice extends Component {
                 this.state.dataCustomer.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td className="middle">{i + 1}</td>
+                      <td className="middle nowrap text-center">
+                        {generateNo(i, current_page)}
+                      </td>
                       <td className="middle nowrap">{v.nama_toko}</td>
                       <td className="middle nowrap">{v.nama}</td>
-                      <td className="middle">
+                      <td className="middle nowrap">
                         <div class="input-group">
                           <input
                             type="text"
-                            class="form-control"
                             name="harga"
-                            className="form-control"
+                            className="form-control in-table"
                             value={toCurrency(v.harga)}
                             onChange={(e) => this.handleChange(e, i)}
                             onKeyPress={(event) => {
@@ -157,8 +166,8 @@ class CustomerPrice extends Component {
                               }
                             }}
                           />
-                          <div class="input-group-append">
-                            <span class="input-group-text">{v.satuan}</span>
+                          <div className="input-group-append  in-table">
+                            <span className="input-group-text">{v.satuan}</span>
                           </div>
                         </div>
                       </td>
@@ -177,7 +186,7 @@ class CustomerPrice extends Component {
           </table>
         </ModalBody>
         <ModalFooter>
-          <div style={{ marginTop: "20px", float: "right" }}>
+          <div style={{ float: "right" }}>
             <Paginationq
               current_page={current_page}
               per_page={per_page}

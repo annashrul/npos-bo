@@ -30,22 +30,8 @@ class Customer extends Component {
   };
 
   componentWillMount() {
-    let anyCustomer = localStorage.getItem("any_customer");
-    let anyCustomerType = localStorage.getItem("any_customer_type");
-    let pageCustomer = localStorage.getItem("page_customer");
-    let pageCustomerType = localStorage.getItem("page_customer_type");
-    this.props.dispatch(
-      FetchCustomer(
-        pageCustomer ? pageCustomer : 1,
-        anyCustomer ? anyCustomer : ""
-      )
-    );
-    this.props.dispatch(
-      FetchCustomerType(
-        pageCustomerType ? pageCustomerType : 1,
-        anyCustomerType ? anyCustomerType : ""
-      )
-    );
+    this.props.dispatch(FetchCustomer("page=1"));
+    this.props.dispatch(FetchCustomerType("page=1"));
   }
   handleSelect = (index) => {
     this.setState({ selectedIndex: index }, () => {});
@@ -57,10 +43,8 @@ class Customer extends Component {
         <div className="col-12 box-margin">
           <Tabs>
             <TabList>
-              <Tab onClick={() => this.handleSelect(0)}>Master Customer</Tab>
-              <Tab onClick={() => this.handleSelect(1)}>
-                Master Customer Type
-              </Tab>
+              <Tab onClick={() => this.handleSelect(0)}>Kustomer</Tab>
+              <Tab onClick={() => this.handleSelect(1)}>Tipe Kustomer</Tab>
             </TabList>
             <TabPanel>
               <ListCustomer

@@ -132,10 +132,10 @@ class Paket extends Component {
     this.handleGetDataObject(column, val, i);
   }
   HandleOnBlur(e, i) {
-    if (e.target.name === "qty_adjust") {
+    if (e.target.name === "qty") {
       let val = parseInt(e.target.value, 10);
       if (isNaN(val) || val < 1) {
-        Object.assign(this.state.brgval[i], { qty_adjust: 1 });
+        Object.assign(this.state.brgval[i], { qty: 1 });
         actionDataCommon(table, this.state.brgval[i], (res) => {
           if (res !== undefined) {
             update(table, this.state.brgval[i]);
@@ -158,7 +158,7 @@ class Paket extends Component {
   HandleFocusInputReset(e, i) {
     let col = e.target.name;
     let val = e.target.value;
-    if (col === "qty_adjust") {
+    if (col === "qty") {
       val = parseInt(val);
       if (val < 2) {
         this.handleGetDataObject(col, "", i);
@@ -183,12 +183,9 @@ class Paket extends Component {
     for (let i = 0; i < brgval.length; i++) {
       listBahan.push({
         kd_brg: brgval[i].kd_brg,
-        qty: brgval[i].qty_adjust,
+        qty: brgval[i].qty,
       });
-      if (
-        isNaN(parseFloat(brgval[i].qty_adjust)) ||
-        parseFloat(brgval[i].qty_adjust) < 1
-      ) {
+      if (isNaN(parseFloat(brgval[i].qty)) || parseFloat(brgval[i].qty) < 1) {
         handleError("qty");
         setTimeout(
           () => this && this[`qty-adjust-${btoa(brgval[i].barcode)}`].focus(),
@@ -290,14 +287,12 @@ class Paket extends Component {
                 <div className="card-body">
                   <div className="row">
                     <div className="col-md-3">
-                      <div className="form-group">
-                        <label>Lokasi</label>
-                        <LokasiCommon
-                          callback={(val) =>
-                            this.HandleChangeSelect(val, "lokasi")
-                          }
-                        />
-                      </div>
+                      <LokasiCommon
+                        callback={(val) =>
+                          this.HandleChangeSelect(val, "lokasi")
+                        }
+                        isRequired={true}
+                      />
                     </div>
                     <div className="col-md-3">
                       <div className="form-group">
@@ -373,7 +368,7 @@ class Paket extends Component {
                           {this.state.databrg.map((item, index) => {
                             totHargaBeli +=
                               parseInt(item.harga_beli, 10) *
-                              parseInt(item.qty_adjust, 10);
+                              parseInt(item.qty, 10);
                             return (
                               <tr key={index}>
                                 <td className="middle nowrap text-center">
@@ -402,11 +397,10 @@ class Paket extends Component {
                                       textAlign: "right",
                                     }}
                                     type="text"
-                                    name="qty_adjust"
+                                    name="qty"
                                     ref={(input) =>
-                                      (this[
-                                        `qty-adjust-${btoa(item.barcode)}`
-                                      ] = input)
+                                      (this[`qty-${btoa(item.barcode)}`] =
+                                        input)
                                     }
                                     onFocus={(e) =>
                                       this.HandleFocusInputReset(e, index)
@@ -416,7 +410,7 @@ class Paket extends Component {
                                       this.HandleOnChange(e, index)
                                     }
                                     value={toCurrency(
-                                      this.state.brgval[index].qty_adjust
+                                      this.state.brgval[index].qty
                                     )}
                                     className="form-control in-table"
                                   />

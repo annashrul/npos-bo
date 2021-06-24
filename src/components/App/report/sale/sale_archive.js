@@ -343,13 +343,10 @@ class SaleArchive extends Component {
             )}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <div className="form-group">
-              <label>Lokasi</label>
-              <LokasiCommon
-                callback={(res) => this.HandleChangeLokasi(res)}
-                isAll={true}
-              />
-            </div>
+            <LokasiCommon
+              callback={(res) => this.HandleChangeLokasi(res)}
+              isAll={true}
+            />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <div className="form-group">

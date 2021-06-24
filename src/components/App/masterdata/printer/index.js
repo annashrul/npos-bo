@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { generateNo } from "../../../../helper";
+import { generateNo, rmSpaceToStrip } from "../../../../helper";
 import { testPrinter } from "../../../../redux/actions/masterdata/printer/printer.action";
 
 class Printer extends Component {
@@ -29,17 +29,16 @@ class Printer extends Component {
       where: "",
     };
   }
-  checkingParam(page = 1) {
-    let state = this.state;
+  checkingParam(any, page = 1) {
     let where = `page=${page}&perpage=10`;
-    if (state.any !== "") {
-      where += `&q=${state.any}`;
+    if (any !== "") {
+      where += `&q=${any}`;
     }
     this.setState({ where: where });
     this.props.dispatch(readPrinter(where));
   }
   componentWillMount() {
-    this.checkingParam();
+    this.checkingParam("", 1);
   }
   toggleModal(e, i) {
     e.preventDefault();
@@ -56,11 +55,16 @@ class Printer extends Component {
       });
     }
   }
-  handlesearch() {
-    this.checkingParam();
+  handlesearch(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+    let any = data.get("any");
+    this.setState({ any: any });
+    this.checkingParam(any, 1);
   }
   handlePageChange(i) {
-    this.checkingParam(i);
+    this.checkingParam(this.state.any, i);
   }
   handleChange(e) {
     this.setState({
@@ -80,44 +84,41 @@ class Printer extends Component {
     return (
       <Layout page="Printer">
         <div className="col-12 box-margin">
-          <div className="row">
-            <div className="col-10 col-xs-10 col-md-3">
-              <div className="input-group input-group-sm">
-                <input
-                  type="search"
-                  name="any"
-                  className="form-control form-control-sm"
-                  placeholder="cari berdasarkan nama printer"
-                  value={this.state.any}
-                  onChange={(e) => {
-                    this.setState({ any: e.target.value });
-                  }}
-                  onKeyPress={(event) => {
-                    if (event.key === "Enter") {
-                      this.handlesearch();
-                    }
-                  }}
-                />
-                <span className="input-group-append">
-                  <button type="submit" className="btn btn-primary">
-                    <i className="fa fa-search" />
+          <form onSubmit={this.handlesearch} noValidate>
+            <div className="row">
+              <div className="col-10 col-xs-10 col-md-3">
+                <div className="input-group input-group-sm">
+                  <input
+                    type="search"
+                    name="any"
+                    className="form-control form-control-sm"
+                    placeholder="cari berdasarkan nama printer"
+                    value={this.state.any}
+                    onChange={(e) => {
+                      this.setState({ any: e.target.value });
+                    }}
+                  />
+                  <span className="input-group-append">
+                    <button type="submit" className="btn btn-primary">
+                      <i className="fa fa-search" />
+                    </button>
+                  </span>
+                </div>
+              </div>
+              <div className="col-2 col-xs-2 col-md-9">
+                <div className="form-group text-right">
+                  <button
+                    style={{ height: "38px" }}
+                    type="button"
+                    onClick={(e) => this.toggleModal(e, null)}
+                    className="btn btn-primary"
+                  >
+                    <i className="fa fa-plus" />
                   </button>
-                </span>
+                </div>
               </div>
             </div>
-            <div className="col-2 col-xs-2 col-md-9">
-              <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-plus" />
-                </button>
-              </div>
-            </div>
-          </div>
+          </form>
           <div style={{ overflowX: "auto" }}>
             <table className="table table-hover table-noborder">
               <thead className="bg-light">
@@ -125,8 +126,17 @@ class Printer extends Component {
                   <th className="text-black middle text-center" width="1%">
                     No
                   </th>
-
+                  <th className="text-black middle text-center" width="1%">
+                    #
+                  </th>
                   <th className="text-black middle">Nama</th>
+                  <th className="text-black middle" width="5%">
+                    Lokasi
+                  </th>
+                  <th className="text-black middle" width="10%">
+                    Ukuran kertas
+                  </th>
+
                   <th className="text-black middle" width="1%">
                     IP
                   </th>
@@ -139,46 +149,59 @@ class Printer extends Component {
                   <th className="text-black middle" width="5%">
                     Pid
                   </th>
-                  <th className="text-black middle text-center" width="12%">
-                    #
-                  </th>
                 </tr>
               </thead>
               <tbody>
                 {typeof data === "object" ? (
                   data.map((v, i) => {
-                    console.log(v);
                     return (
                       <tr key={i}>
-                        <td className="middle text-center">
+                        <td className="middle text-center nowrap">
                           {generateNo(i, current_page)}
                         </td>
-                        <td className="middle">{v.nama}</td>
-                        <td className="middle">
+                        <td className="text-center middle nowrap">
+                          <UncontrolledButtonDropdown>
+                            <DropdownToggle caret></DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem
+                                onClick={(e) => this.toggleModal(e, i)}
+                              >
+                                Edit
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={(e) => this.handleTestPrint(e, i)}
+                              >
+                                Test print
+                              </DropdownItem>
+                              <DropdownItem
+                                onClick={(e) =>
+                                  this.handleDelete(e, v.id_printer)
+                                }
+                              >
+                                Delete
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </UncontrolledButtonDropdown>
+                        </td>
+                        <td className="middle nowrap">{v.nama} </td>
+                        <td className="middle nowrap">
+                          {rmSpaceToStrip(v.lokasi)}
+                        </td>
+                        <td className="middle nowrap">
+                          {rmSpaceToStrip(v.paper_size)}
+                        </td>
+
+                        <td className="middle nowrap">
                           {`${v.konektor}`.toLowerCase()}
                         </td>
-                        <td className="middle">{v.ip !== "" ? v.ip : "-"}</td>
-                        <td className="middle">{v.vid !== "" ? v.vid : "-"}</td>
-                        <td className="middle">{v.pid !== "" ? v.pid : "-"}</td>
-                        <td className="middle">
-                          <button
-                            className="btn btn-primary btn-sm mr-1"
-                            onClick={(e) => this.handleDelete(e, v.id_printer)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>
-                          <button
-                            className="btn btn-primary btn-sm mr-1"
-                            onClick={(e) => this.toggleModal(e, i)}
-                          >
-                            <i className="fa fa-pencil"></i>
-                          </button>
-                          <button
-                            className="btn btn-primary btn-sm"
-                            onClick={(e) => this.handleTestPrint(e, i)}
-                          >
-                            <i className="fa fa-print"></i>
-                          </button>
+                        <td className="middle nowrap">
+                          {rmSpaceToStrip(v.ip)}
+                        </td>
+                        <td className="middle nowrap">
+                          {rmSpaceToStrip(v.vid)}
+                        </td>
+                        <td className="middle nowrap">
+                          {rmSpaceToStrip(v.pid)}
                         </td>
                       </tr>
                     );

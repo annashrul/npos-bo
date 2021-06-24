@@ -696,7 +696,7 @@ class FormProduct extends Component {
   toggleModal(e, param) {
     e.preventDefault();
     this.setState({
-      detail: { kel_brg: "" },
+      detail: { kel_brg: "", id: "" },
       filled: true,
       isModalFormGroupProduct: true,
     });
@@ -1161,6 +1161,9 @@ class FormProduct extends Component {
   }
   componentWillMount() {
     this.getProps(this.props);
+  }
+  componentDidMount() {
+    console.log("didmount");
   }
   async fetchData(data) {
     const url = HEADERS.URL + `site/cekdata`;
@@ -3184,7 +3187,6 @@ class FormProduct extends Component {
                           value={this.state.kd_brg}
                           onChange={(e) => this.handleChange(e, null)}
                           onBlur={(e) => this.handleChange(e, null, "onBlur")}
-                          max
                         />
                         <div className="input-group-append">
                           {this.props.dataEdit === undefined ? (
@@ -4079,7 +4081,7 @@ class FormProduct extends Component {
             </ModalBody>
           </form>
         </WrapperModal>
-        <FormSupplier fastAdd={true} />
+        <FormSupplier fastAdd={true} detail={this.state.detail} />
         <FormSubDepartment fastAdd={true} />
         {this.state.isModalFormGroupProduct && this.props.isOpen ? (
           <FormGroupProduct

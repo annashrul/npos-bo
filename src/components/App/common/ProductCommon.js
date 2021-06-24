@@ -30,21 +30,28 @@ class ProductCommon extends Component {
       data: { value: 1, label: "Kode barang" },
       dataBahan: {},
       value: "",
+      perpage: 5,
     };
   }
 
   handleLoadMore() {
-    if (this.props.data === undefined) return;
-    if (
-      parseInt(this.props.data.total, 10) >
-      parseInt(this.props.data.per_page, 10)
-    ) {
-      this.props.callbackDispatch();
-      this.setState({ scrollPage: this.state.scrollPage + 5 });
-    } else {
-      swal("Tida ada data.");
-    }
-    if (!this.props.loading) this.handleScroll();
+    let perpage = this.state.perpage;
+    this.handleService(this.state.data.value, this.state.value, (res) => {
+      // this.setState({ scrollPage: this.state.scrollPage + 5 });
+    });
+    // if (this.props.data === undefined) return;
+    // if (
+    //   parseInt(this.props.data.total, 10) >
+    //   parseInt(this.props.data.per_page, 10)
+    // ) {
+    //   this.handleService(this.state.data.value, this.state.value, (res) => {
+    //     console.log(res);
+    //     // this.setState({ scrollPage: this.state.scrollPage + 5 });
+    //   });
+    // } else {
+    //   swal("Tida ada data.");
+    // }
+    // if (!this.props.loading) this.handleScroll();
   }
   handleScroll() {
     let divToScrollTo;
@@ -60,7 +67,7 @@ class ProductCommon extends Component {
       if (res !== undefined) {
         Object.assign(res, {
           id: res.id,
-          qty_adjust: parseInt(res.qty_adjust, 10) + 1,
+          qty: parseInt(res.qty, 10) + 1,
         });
         update(table, res);
       }
@@ -72,26 +79,58 @@ class ProductCommon extends Component {
       this.props.callbackGetData(res, brg);
     });
   }
+  componentWillReceiveProps = (nextProps) => {
+    let perpage = this.state.perpage;
+    if (nextProps.dataTrx !== undefined) {
+      if (nextProps.dataTrx.data !== undefined) {
+        if (nextProps.dataTrx.data.length === perpage) {
+          this.setState({
+            perpage: perpage + 5,
+          });
+        }
+      }
+    }
+  };
+
+  handleService(col, any, callback) {
+    let column = this.checkColumn(col);
+    let url = `page=1&lokasi=${this.props.location}&perpage=${this.state.perpage}`;
+    if (this.props.category !== undefined) {
+      url += `&kategori=${this.props.category}`;
+    }
+    if (col !== "" && any !== "") {
+      url += `&searchby=${column}&q=${any}`;
+    }
+    this.props.dispatch(readProductTrx(url, (res) => callback(res)));
+  }
+
+  checkColumn(value) {
+    let column = "";
+    if (value === 1) column = "kd_brg";
+    if (value === 2) column = "barcode";
+    if (value === 3) column = "deskripsi";
+    return column;
+  }
 
   HandleSearch(val) {
     let state = this.state;
     if (this.props.location === "") {
       swal("Pilih lokasi");
     } else {
-      let column = "";
-      if (state.data.value === 1) column = "kd_brg";
-      if (state.data.value === 2) column = "barcode";
-      if (state.data.value === 3) column = "deskripsi";
-      this.props.dispatch(
-        readProductTrx(
-          `page=1&kategori=${this.props.category}&lokasi=${this.props.location}&searchby=${column}&q=${val}`,
-          (res) => {
-            this.HandleAddBrg(res[0]);
-            this.props.callbackSetFocus(res[0]);
-          }
-        )
-      );
-      setTimeout(() => this.setState({ value: "" }), 500);
+      this.handleService(state.data.value, val, (res) => {
+        this.HandleAddBrg(res[0]);
+        this.props.callbackSetFocus(res[0]);
+        setTimeout(() => this.setState({ value: "" }), 500);
+      });
+      // this.props.dispatch(
+      //   readProductTrx(
+      //     `page=1&kategori=${this.props.category}&lokasi=${this.props.location}&searchby=${column}&q=${val}`,
+      //     (res) => {
+      // this.HandleAddBrg(res[0]);
+      // this.props.callbackSetFocus(res[0]);
+      //     }
+      //   )
+      // );
     }
   }
 
@@ -182,7 +221,7 @@ class ProductCommon extends Component {
                         onClick={(e) => {
                           e.preventDefault();
                           Object.assign(this.props.dataTrx.data[inx], {
-                            qty_adjust: 0,
+                            qty: 0,
                           });
                           this.HandleAddBrg(this.props.dataTrx.data[inx]);
                           this.props.callbackSetFocus(

@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
+import { isError } from "lodash";
 
 export const generateNo = (i, current_page) => {
   return i + 1 + 10 * (parseInt(current_page, 10) - 1);
@@ -488,20 +489,20 @@ export const select2Group = (
   );
 };
 
-export const dateRange = (onApply, value, isShow = true) => {
+export const dateRange = (onApply, value, isShow = true, isLabel = true) => {
   return (
     <div className={`form-group ${!isShow && "none"}`}>
-      <label htmlFor=""> Periode </label>
+      <label
+        style={{ display: isLabel || isLabel === undefined ? "block" : "none" }}
+      >
+        {" "}
+        Periode{" "}
+      </label>
       <DateRangePicker
         style={{ display: "unset" }}
         ranges={rangeDate}
         alwaysShowCalendars={true}
-        onEvent={(event, picker) => {
-          // event.preventDefault();
-          // const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
-          // const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
-          // onEvent(firstDate, lastDate);
-        }}
+        onEvent={(event, picker) => {}}
         onApply={(event, picker) => {
           const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
           const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
@@ -509,6 +510,7 @@ export const dateRange = (onApply, value, isShow = true) => {
         }}
       >
         <input
+          style={{ fontSize: "12px" }}
           readOnly={true}
           type="text"
           className={`form-control`}
@@ -527,17 +529,73 @@ export const handleError = (val, msg = "tidak boleh kosong") => {
 export const rmSpaceToStrip = (val) => {
   return val === "" ? "-" : val;
 };
-
-export const setFocus = (thist, column) => {
-  return column && setTimeout(() => thist && thist[column].focus(), 500);
-};
-
-export const isEmptyOrUndefined = (val, col) => {
-  if (val === "" || val === undefined) {
-    handleError(col);
+export const rmSpace = (val) => {
+  if (val === "" || val === "0" || val === undefined) {
     return false;
   }
   return true;
+};
+
+export const setFocus = (thist, column) => {
+  return setTimeout(
+    () => thist!== undefined? thist && thist[column].focus():"",
+    thist[column] !== undefined ? 100 : 300
+  );
+};
+export const onHandleKeyboard = function (key, callback) {
+  window &&
+    window.addEventListener("keydown", (e) => {
+      // e.preventDefault();
+      if (e.keyCode === key) {
+        callback(e);
+      }
+    });
+};
+export const onHandleKeyboardChar = function (key, callback) {
+  window &&
+    window.addEventListener("keydown", (e) => {
+      // e.preventDefault();
+      if (e.ctrlKey && e.key === key) {
+        callback(e);
+      }
+    });
+};
+
+export const isEmptyOrUndefined = (val, col, isShowError = true) => {
+  if (val === "" || val === undefined || val === null || val === "null") {
+    if (col !== undefined && isShowError === true) {
+      handleError(col);
+    }
+    return false;
+  }
+  return true;
+};
+
+export const setStorage = (key, val) => {
+  return localStorage.setItem(key, val);
+};
+
+export const getStorage = (key) => {
+  return localStorage.getItem(key);
+};
+
+export const handleDataSelect = (props, value, label) => {
+  let data = [];
+  if(value=='kd_cust'){
+    data.push({
+      value: "1000001",
+      label: "UMUM",
+    });
+  }else{
+    data.push({
+      value: "1",
+      label: "UMUM",
+    })
+  }
+  props.map((val) => {
+    data.push({ value: val[value], label: val[label] });
+  });
+  return data;
 };
 
 class Paginationq extends Component {

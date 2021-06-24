@@ -14,6 +14,7 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
+import { rmSpaceToStrip } from "../../../../../helper";
 
 class ListSupplier extends Component {
   constructor(props) {
@@ -166,10 +167,8 @@ class ListSupplier extends Component {
                 </th>
               </tr>
               <tr>
-                <th className="text-black middle nowrap text-center">Nama</th>
-                <th className="text-black middle nowrap text-center">
-                  Telepon
-                </th>
+                <th className="text-black middle nowrap">Nama</th>
+                <th className="text-black middle nowrap">Telepon</th>
               </tr>
             </thead>
             <tbody>
@@ -199,17 +198,25 @@ class ListSupplier extends Component {
                       </td>
                       <td className="middle nowrap">{v.kode}</td>
                       <td className="middle nowrap">{v.nama}</td>
-                      <td className="middle nowrap">{v.alamat}</td>
-                      <td className="middle nowrap">{v.kota}</td>
-                      <td className="middle nowrap">{v.telp}</td>
+                      <td className="middle nowrap">
+                        {rmSpaceToStrip(v.alamat)}
+                      </td>
+                      <td className="middle nowrap">
+                        {rmSpaceToStrip(v.kota)}
+                      </td>
+                      <td className="middle nowrap">
+                        {rmSpaceToStrip(v.telp)}
+                      </td>
                       <td className="middle nowrap">{v.penanggung_jawab}</td>
                       <td className="middle nowrap">{v.no_penanggung_jawab}</td>
                       <td className="middle nowrap">
                         {v.status === "1"
-                          ? statusQ("success", "Active")
-                          : statusQ("danger", "In Active")}
+                          ? statusQ("success", "Aktif")
+                          : statusQ("danger", "Tidak aktif")}
                       </td>
-                      <td className="middle nowrap">{v.email}</td>
+                      <td className="middle nowrap">
+                        {rmSpaceToStrip(v.email)}
+                      </td>
                     </tr>
                   );
                 })

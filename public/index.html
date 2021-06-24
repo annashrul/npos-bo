@@ -266,7 +266,7 @@
     }
     input.form-control {
       color: #333333 !important;
-      font-size: 14px !important;
+      font-size: 14px;
       border-radius: 4px !important;
       border:1px solid hsl(0,0%,80%) !important;
       /* margin-top: 1px!important; */
@@ -305,6 +305,12 @@ input[readonly] {
     background-color: #EEEEEE !important;
 }
 input.in-table{
+  height:31px !important;
+}
+select.in-table{
+  height:31px !important;
+}
+.in-table{
   height:31px !important;
 }
 
@@ -481,6 +487,9 @@ input[type=checkbox]:checked
       color: #fff;
       height:38px;
     }
+    button.btn-outline-info{
+       height:38px;
+    }
 
     /* button.btn-sm{
       padding-left: 2px;
@@ -489,6 +498,27 @@ input[type=checkbox]:checked
       padding-bottom: 0px;
       line-height: 1.5;
     } */
+    button.btn-info{
+      height:38px;
+    }
+    input.input-custom{
+    color: #283593 !important;
+    border-color: #283593 !important;
+    cursor: pointer;
+    }
+    input[readonly].input-custom{
+      background-color: transparent !important;
+    }
+    /* input.input-custom:hover{
+      background-color: #283593 !important;
+    color: #fff !important;
+    border-color: #283593 !important;
+    } */
+    input.input-custom:focus{
+      border-color: #283593 !important;
+      background-color: #283593 !important;
+      color: #fff !important;
+    }
 
     button.btn-secondary{
       /* padding: .25rem .5rem; */
@@ -513,9 +543,8 @@ height:38px;
     border-color: #283593 !important;
 }
 .btn-outline-info:hover {
-  background-color: transparent !important;
-        border-radius: 4px !important;
-    color: #283593 !important;
+  background-color: #283593 !important;
+    color: #fff !important;
     border-color: #283593 !important;
 }
   </style>
