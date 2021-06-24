@@ -129,7 +129,7 @@ class ListCustomer extends Component {
                 <th className="text-black middle nowrap">Kode</th>
                 <th className="text-black middle nowrap">Nama</th>
                 <th className="text-black middle nowrap">Telepon</th>
-                <th className="text-black middle nowrap">Tipe kustomer</th>
+                <th className="text-black middle nowrap">Tipe Customer</th>
                 <th className="text-black middle nowrap">Email</th>
                 <th className="text-black middle nowrap">Lokasi</th>
                 <th className="text-black middle nowrap">Keterangan</th>
@@ -180,7 +180,7 @@ class ListCustomer extends Component {
                 })
               ) : (
                 <tr>
-                  <td colSpan={11}>Tidak ada data kustomer.</td>
+                  <td colSpan={11}>Tidak ada data Customer.</td>
                 </tr>
               )}
             </tbody>

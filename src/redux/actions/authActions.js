@@ -132,8 +132,10 @@ export const setLoggedin = (decoded) => {
 // set logout user
 export const logoutUser = () => (dispatch) => {
   // remove jwtToken from localStorage
-  // localStorage.removeItem('jwtToken');
   destroy("sess");
+  destroy("receive");
+  destroy("sale");
+  destroy("hold");
   dispatch(setLoggedin(false));
   localStorage.clear();
   Cookies.remove("datum_exp");

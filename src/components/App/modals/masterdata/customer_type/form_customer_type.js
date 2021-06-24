@@ -67,7 +67,7 @@ class FormCustomerType extends Component {
         isOpen={this.props.isOpen && this.props.type === "formCustomerType"}
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id === "" ? "Tambah" : "Ubah"} tipe kustomer
+          {this.props.detail.id === "" ? "Tambah" : "Ubah"} tipe Customer
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>

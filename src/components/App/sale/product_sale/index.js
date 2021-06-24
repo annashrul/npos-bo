@@ -1257,7 +1257,7 @@ class Sale extends Component {
                                   onChange={(e) =>
                                     this.handleChecked(e, index, item.barcode)
                                   }
-                                /> <label for="isOpenPrice" style={{fontSize:'10px'}}>Open Price</label >
+                                /> <label htmlFor="isOpenPrice" style={{fontSize:'10px'}}>Open Price</label >
                               </td>
                                <td className="middle nowrap">
                                 <input

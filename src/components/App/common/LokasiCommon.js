@@ -41,8 +41,7 @@ class LokasiCommon extends Component {
       }
       Object.assign(state, { dataArray: arrLokasi });
     }
-    
-
+      
     // jika kondisi edit
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
      
@@ -98,7 +97,7 @@ class LokasiCommon extends Component {
         <label
           style={{
             display:
-              this.props.isRequired || this.props.isLable === undefined
+              this.props.isRequired || this.props.useLabel === undefined
                 ? "block"
                 : "none",
           }}
