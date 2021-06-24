@@ -30,9 +30,14 @@ class FormHoldBill extends Component {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      nama: "",
+    };
   }
   getProps(props, inState) {
-    // console.log(inState, this);
+    if (props.objectHoldBill.id !== undefined) {
+      this.setState({ nama: props.objectHoldBill.nama });
+    }
     props.type === "formHoldBill" && setFocus(this, "nama");
   }
   componentDidMount() {
@@ -60,20 +65,27 @@ class FormHoldBill extends Component {
       setFocus(this, "nama");
       return;
     }
-    store("hold", {
+    let field = {
       nama: nama,
       master: JSON.stringify(this.props.master),
       detail: JSON.stringify(this.props.dataHoldBill),
-    });
+    };
+    if (this.props.objectHoldBill.id !== undefined) {
+      Object.assign(field, { id: this.props.objectHoldBill.id });
+      update("hold", field);
+    } else {
+      store("hold", field);
+    }
 
     swalWithCallback("transaksi berhasil disimpan", () => {
       this.props.callback("submit");
       const bool = !this.props.isOpen;
       this.props.dispatch(ModalToggle(bool));
+      this.setState({ nama: "" });
     });
   }
   render() {
-    console.log(this.props);
+    console.log("hold", this.props);
     return (
       <WrapperModal
         isOpen={this.props.isOpen && this.props.type === "formHoldBill"}
@@ -86,11 +98,14 @@ class FormHoldBill extends Component {
           <form onSubmit={this.handleSubmit} noValidate>
             <div className="form-group">
               <label>Atas nama</label>
+
               <input
                 autoFocus
                 type="text"
                 name="nama"
                 className="form-control"
+                value={this.state.nama}
+                onChange={(e) => this.setState({ nama: e.target.value })}
                 ref={(input) => {
                   // this[`nama`] = input;
                   if (input !== null) {

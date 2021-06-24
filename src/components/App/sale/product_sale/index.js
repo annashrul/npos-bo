@@ -1,12 +1,22 @@
 import React, { Component } from "react";
-import {store,get,update,destroy,cekData,del} from "components/model/app.model";
+import {
+  store,
+  get,
+  update,
+  destroy,
+  cekData,
+  del,
+} from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import {  setProductbrg,  FetchProductSale } from "redux/actions/masterdata/product/product.action";
+import {
+  setProductbrg,
+  FetchProductSale,
+} from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
 import FormClosing from "../../modals/sale/form_closing";
@@ -50,11 +60,11 @@ const Toast = Swal.mixin({
 });
 
 const save = "ctrl+s";
-const closing = "c";
-const reset = "r";
-const focusSearch = "f";
-const holdBill = "h";
-const listHoldBill = "l";
+const closing = "ctrl+c";
+const reset = "ctrl+x";
+const focusSearch = "ctrl+f";
+const holdBill = "ctrl+h";
+const listHoldBill = "ctrl+l";
 
 class Sale extends Component {
   constructor(props) {
@@ -101,13 +111,16 @@ class Sale extends Component {
       },
       detail: [],
       master: {},
+      dataHoldBill: [],
+      idHoldBill: "",
+      objectHoldBill: {},
       opSales: [
         {
           value: "1",
           label: "UMUM",
         },
       ],
-      dataHoldBill: [],
+
       modalClosing: false,
       modalHoldBill: false,
       modalListHoldBill: false,
@@ -192,21 +205,27 @@ class Sale extends Component {
       where += `&sales=${sales}`;
     }
     this.setState(setState);
-    if (location!==null){
+    if (location !== null) {
       if (val !== "sales" || customer !== "1000001") {
-        this.props.dispatch(FetchProductSale(1, where, "sale", this.autoSetQty));
+        this.props.dispatch(
+          FetchProductSale(1, where, "sale", this.autoSetQty)
+        );
       }
     }
   }
 
   componentDidMount() {
-    setStorage("key", "");
     this.getData();
-    this.setState({
+    let state = {
       modalClosing: false,
       modalHoldBill: false,
       modalListHoldBill: false,
-    });
+    };
+    let idHold = localStorage.objectHoldBill;
+    if (isEmptyOrUndefined(idHold)) {
+      Object.assign(state, { objectHoldBill: JSON.parse(idHold) });
+    }
+    this.setState(state);
     this.fetchProduct();
   }
   getProps(props) {
@@ -229,7 +248,7 @@ class Sale extends Component {
 
     if (props.auth.user) {
       Object.assign(state, {
-        userid: props.auth.user.id
+        userid: props.auth.user.id,
       });
     }
 
@@ -297,10 +316,16 @@ class Sale extends Component {
 
   HandleChangeSelect(state, res) {
     setStorage(state, res.value);
-    if (state === "sales_tr") return;
+    if (state === "sales_tr") {
+      this.setState({ sales: res.value });
+    }
     if (state === "location_tr") {
+      this.setState({ location: res.value });
       destroy(table);
       this.getData();
+    }
+    if (state === "customer") {
+      this.setState({ customer: res.value });
     }
     this.fetchProduct(state);
   }
@@ -357,7 +382,7 @@ class Sale extends Component {
         return;
       }
     }
-  handleInputOnBlurCommon(
+    handleInputOnBlurCommon(
       e,
       { id: this.state.databrg[i].barcode, table: table, where: "barcode" },
       () => {
@@ -381,8 +406,8 @@ class Sale extends Component {
         else if (parseFloat(val) > 100) {
           values = 100;
         }
-      }else if(column==="qty"){
-        values = isNaN(val) ? 1 : val
+      } else if (column === "qty") {
+        values = isNaN(val) ? 1 : val;
       }
       brgval[i] = { ...brgval[i], [column]: values };
       this.setState({ brgval });
@@ -430,7 +455,6 @@ class Sale extends Component {
     }
     this.handleCheckData(item.barcode, item);
     setTimeout(() => this[`qty-${btoa(item.barcode)}`].focus(), 500);
-
   }
   HandleAddBrg(e, item, index) {
     e.preventDefault();
@@ -487,7 +511,8 @@ class Sale extends Component {
             (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10);
           detail.push({
             kode_trx: this.props.nota,
-            subtotal:(disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10),
+            subtotal:
+              (disc2 === 0 ? hrg + ppn : disc2 + ppn) * parseInt(item.qty, 10),
             price: rmComma(item.harga),
             qty: item.qty,
             diskon: item.diskon_persen,
@@ -505,6 +530,7 @@ class Sale extends Component {
           });
           return null;
         });
+        console.log("submit", this.state.objectHoldBill);
         moment.locale("id");
         let master = {
           cetak_nota: true,
@@ -522,7 +548,7 @@ class Sale extends Component {
           compliment: "-",
           kd_kasir: this.state.userid,
           no_kartu: "0",
-          id_hold: "-",
+          id_hold: this.state.objectHoldBill.id,
           diskon:
             this.state.discount_harga === 0
               ? 0
@@ -546,7 +572,12 @@ class Sale extends Component {
           kode_trx: this.props.nota,
           subtotal: subtotal,
           lokasi: this.state.location,
-          kassa: atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? "Z" : "Q",
+          kassa:
+            atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
+            atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
+            atob(atob(Cookies.get("tnt="))) === "npos"
+              ? "Z"
+              : "Q",
           jns_kartu: "Debit",
           status: "LUNAS",
           optional_note: this.state.catatan,
@@ -556,7 +587,9 @@ class Sale extends Component {
           dataHoldBill: hold,
           master: master,
           detail: detail,
+          objectHoldBill: this.state.objectHoldBill,
         });
+        console.log(this.state.master);
         callback(true);
       }
     });
@@ -572,6 +605,7 @@ class Sale extends Component {
       if (res) {
         const bool = !this.props.isOpen;
         this.props.dispatch(ModalToggle(bool));
+
         this.props.dispatch(ModalType("formSale"));
       }
     });
@@ -592,11 +626,7 @@ class Sale extends Component {
   }
   HandleSearch() {
     if (this.state.customer === "" || this.state.location === "") {
-      Swal.fire(
-        "Gagal!",
-        "Pilih lokasi terlebih dahulu.",
-        "error"
-      );
+      Swal.fire("Gagal!", "Pilih lokasi terlebih dahulu.", "error");
     } else {
       localStorage.setItem("anySaleTrx", this.state.search);
       let where = `lokasi=${this.state.location}&customer=${this.state.customer}`;
@@ -739,6 +769,13 @@ class Sale extends Component {
     }
   }
   handleClear() {
+    localStorage.removeItem("objectHoldBill");
+    this.setState({
+      detail: [],
+      master: {},
+      dataHoldBill: [],
+      objectHoldBill: {},
+    });
     destroy(table);
     this.getData();
   }
@@ -771,7 +808,6 @@ class Sale extends Component {
     }
   }
 
-
   render() {
     if (this.state.isScroll === true) this.handleScroll();
     let totalsub = 0;
@@ -796,24 +832,26 @@ class Sale extends Component {
               </button>
               Penjualan Barang
             </h4>
-            {atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg" || atob(atob(Cookies.get("tnt="))) === "npos" ? (
-            <h4 style={{ float: "right" }}>
-              <button
-                className={"btn btn-primary"}
-                onClick={(e) => this.handleClosing(e)}
-              >
-                Closing
-              </button>
-              <button
-                className="btn btn-outline-info ml-1"
-                onClick={(e) => this.handleHoldBill(e, "listHoldBill")}
-              >
-                List Hold bill
-              </button>
-            </h4>
-
-            ) : ""
-            }
+            {atob(atob(Cookies.get("tnt="))) === "nov-jkt" ||
+            atob(atob(Cookies.get("tnt="))) === "nov-bdg" ||
+            atob(atob(Cookies.get("tnt="))) === "npos" ? (
+              <h4 style={{ float: "right" }}>
+                <button
+                  className={"btn btn-primary"}
+                  onClick={(e) => this.handleClosing(e)}
+                >
+                  Closing
+                </button>
+                <button
+                  className="btn btn-outline-info ml-1"
+                  onClick={(e) => this.handleHoldBill(e, "listHoldBill")}
+                >
+                  List Hold bill
+                </button>
+              </h4>
+            ) : (
+              ""
+            )}
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             <StickyBox
@@ -1245,7 +1283,7 @@ class Sale extends Component {
                                     }}
                                   ></div>
                                 </div>
-                                 <input
+                                <input
                                   style={{
                                     height: "17px",
                                     width: "17px",
@@ -1259,7 +1297,7 @@ class Sale extends Component {
                                   }
                                 /> <label htmlFor="isOpenPrice" style={{fontSize:'10px'}}>Open Price</label >
                               </td>
-                               <td className="middle nowrap">
+                              <td className="middle nowrap">
                                 <input
                                   readOnly={true}
                                   type="number"
@@ -1268,7 +1306,7 @@ class Sale extends Component {
                                   style={{ width: "100px" }}
                                 />
                               </td>
-                              
+
                               <td className="middle nowrap">
                                 <input
                                   type="text"
@@ -1332,7 +1370,6 @@ class Sale extends Component {
                                   value={this.state.brgval[index].ppn}
                                 />
                               </td>
-                             
 
                               <td className="middle nowrap">
                                 <input
@@ -1508,6 +1545,7 @@ class Sale extends Component {
         {this.state.modalClosing && this.props.isOpen ? <FormClosing /> : null}
         {this.state.modalHoldBill && this.props.isOpen ? (
           <FormHoldBill
+            objectHoldBill={this.state.objectHoldBill}
             dataHoldBill={this.state.dataHoldBill}
             master={this.state.master}
             detail={this.state.detail}
@@ -1521,12 +1559,14 @@ class Sale extends Component {
 
         {this.state.modalListHoldBill && this.props.isOpen ? (
           <ListHoldBill
+            objectHoldBill={this.state.objectHoldBill}
             callback={(res) => {
-              setStorage("key", "");
-              this.setState({ modalListHoldBill: false });
-              if (res !== "close") {
+              this.setState({
+                modalListHoldBill: false,
+              });
+              if (res !== "close" && res !== "delete") {
                 destroy("sale");
-                if (res.detail!==undefined){
+                if (res.detail !== undefined) {
                   res.detail.map((val, index) => {
                     this.HanldeSetAddBrg(val, "hold", index);
                   });
@@ -1534,7 +1574,9 @@ class Sale extends Component {
                 setStorage("location", res.master.lokasi);
                 setStorage("sales", res.master.kd_sales);
                 setStorage("customer", res.master.kd_cust);
+                localStorage.setItem("objectHoldBill", JSON.stringify(res));
                 this.setState({
+                  objectHoldBill: res,
                   location: res.master.lokasi,
                   customer: res.master.kd_cust,
                   sales: res.master.kd_sales,
@@ -1544,6 +1586,9 @@ class Sale extends Component {
                 }, 500);
 
                 // !this.props.loadingbrg &&this.props.dispatch(ModalToggle(false));
+              }
+              if (res === "delete") {
+                this.handleClear();
               }
             }}
           />
@@ -1555,7 +1600,6 @@ class Sale extends Component {
 
 const mapStateToPropsCreateItem = (state) => ({
   isOpen: state.modalReducer,
-
   barang: state.productReducer.result_brg_sale,
   loadingbrg: state.productReducer.isLoadingBrgSale,
   pagin_brg_sale: state.productReducer.pagin_brg_sale,
