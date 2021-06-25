@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
 import moment from "moment";
-import {handleGet} from "../handleHttp"
+import { handleGet } from "../handleHttp";
 export function setLoading(load) {
   return {
     type: SALE_BY_CUST.LOADING,
@@ -125,12 +125,10 @@ export const storeSaleByCust = (data) => {
   };
 };
 
-export const FetchReportSaleByCust = (page = 1, where = "") => {
+export const FetchReportSaleByCust = (where = "") => {
   return (dispatch) => {
-    let url = `report/penjualan/by_cust?page=${page}`;
-    if (where !== "") {
-      url += `&${where}`;
-    }
+    let url = `report/penjualan/by_cust`;
+    if (where !== "") url += `?${where}`;
     handleGet(url, (data) => {
       dispatch(setReport(data));
     });

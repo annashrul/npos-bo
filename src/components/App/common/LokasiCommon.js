@@ -12,9 +12,9 @@ class LokasiCommon extends Component {
     this.state = {
       dataArray: [],
       dataObject: "",
-      isChecked:false,
+      isChecked: false,
     };
-    this.toggleChange = this.toggleChange.bind(this)
+    this.toggleChange = this.toggleChange.bind(this);
   }
 
   getProps(props) {
@@ -32,25 +32,24 @@ class LokasiCommon extends Component {
             label: i.nama,
           });
         });
+        // Object.assign(state, { dataObject: arrLokasi[0] });
+        // localStorage.setItem("location_tr", arrLokasi[0].value);
 
-        if(propsLokasi.length===1){
+        if (propsLokasi.length === 1) {
           Object.assign(state, { dataObject: arrLokasi[0] });
-          localStorage.setItem("location_tr",arrLokasi[0].value)
-
+          localStorage.setItem("location_tr", arrLokasi[0].value);
         }
       }
       Object.assign(state, { dataArray: arrLokasi });
     }
-      
+
     // jika kondisi edit
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
-     
       if (props.isMulti && props.dataEdit.length > 0) {
-        Object.assign(state, { dataObject: props.dataEdit,isChecked:true })
-      }
-      else {
+        Object.assign(state, { dataObject: props.dataEdit, isChecked: true });
+      } else {
         if (props.dataEdit === "-") {
-        Object.assign(state, { dataObject: "" });
+          Object.assign(state, { dataObject: "" });
         } else {
           const stateLokasi = this.state.dataArray.filter(
             (item) => item.value === props.dataEdit
@@ -60,7 +59,6 @@ class LokasiCommon extends Component {
           }
         }
       }
-      
     }
     this.setState(state);
   }
@@ -78,22 +76,18 @@ class LokasiCommon extends Component {
     this.props.callback(value);
   }
   toggleChange(e) {
-    let state = {isChecked:e.target.checked};
+    let state = { isChecked: e.target.checked };
     if (e.target.checked) {
-      this.onChange(this.state.dataArray)
+      this.onChange(this.state.dataArray);
     } else {
-      this.onChange("")
+      this.onChange("");
     }
     this.setState(state);
-    
-
-    
   }
 
   render() {
-    return (
-      this.props.isMulti === undefined ? (
-        <div className="form-group">
+    return this.props.isMulti === undefined ? (
+      <div className="form-group">
         <label
           style={{
             display:
@@ -112,15 +106,25 @@ class LokasiCommon extends Component {
           value={this.state.dataObject}
         />
       </div>
-      ) : <div className="form-group">
-          <label htmlFor="inputState" className="col-form-label">Lokasi&nbsp;<input type="checkbox" name="checked_lokasi" checked={this.state.isChecked} onChange={this.toggleChange}/> Pilih Semua </label>
-           <Select
-            isMulti={true}
-            options={this.state.dataArray}
-            placeholder={`Pilih lokasi`}
-            onChange={(value, actionMeta) => this.onChange(value)}
-            value={this.state.dataObject}
-          />
+    ) : (
+      <div className="form-group">
+        <label htmlFor="inputState" className="col-form-label">
+          Lokasi&nbsp;
+          <input
+            type="checkbox"
+            name="checked_lokasi"
+            checked={this.state.isChecked}
+            onChange={this.toggleChange}
+          />{" "}
+          Pilih Semua{" "}
+        </label>
+        <Select
+          isMulti={true}
+          options={this.state.dataArray}
+          placeholder={`Pilih lokasi`}
+          onChange={(value, actionMeta) => this.onChange(value)}
+          value={this.state.dataObject}
+        />
       </div>
     );
   }

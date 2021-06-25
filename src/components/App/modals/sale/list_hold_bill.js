@@ -61,11 +61,13 @@ class ListHoldBill extends Component {
       return false;
     });
 
-    // onHandleKeyboard(13, (e) => {
-    //   if (this.state.data.length > 0) {
-    //     this.handleSave(this.state.data[this.state.idx]);
-    //   }
-    // });
+    onHandleKeyboard(13, (e) => {
+      if (this.props.type === "listHoldBill") {
+        if (this.state.data.length > 0) {
+          this.handleSave(this.state.data[this.state.idx]);
+        }
+      }
+    });
   }
   getProps(props) {
     const table = "hold";

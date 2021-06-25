@@ -377,6 +377,7 @@ const mapStateToProps = (state) => {
     isLoadingReport: state.saleReducer.isLoadingReport,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
+    percent: state.saleReducer.percent,
   };
 };
 export default connect(mapStateToProps)(SaleReportExcel);

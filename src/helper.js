@@ -510,7 +510,7 @@ export const dateRange = (onApply, value, isShow = true, isLabel = true) => {
         }}
       >
         <input
-          style={{ fontSize: "12px" }}
+          // style={{ fontSize: "12px" }}
           readOnly={true}
           type="text"
           className={`form-control`}
@@ -537,10 +537,15 @@ export const rmSpace = (val) => {
 };
 
 export const setFocus = (thist, column) => {
-  return setTimeout(
-    () => thist!== undefined? thist && thist[column].focus():"",
-    thist[column] !== undefined ? 100 : 300
-  );
+  if (thist[column]) {
+    setTimeout(() => {
+      thist[column].focus();
+    }, 500);
+  }
+  // return setTimeout(
+  //   () => (thist !== undefined ? thist && thist[column].focus() : ""),
+  //   thist[column] !== undefined ? 100 : 300
+  // );
 };
 export const onHandleKeyboard = function (key, callback) {
   window &&
@@ -562,7 +567,13 @@ export const onHandleKeyboardChar = function (key, callback) {
 };
 
 export const isEmptyOrUndefined = (val, col, isShowError = true) => {
-  if (val === "" || val === undefined || val === null || val === "null") {
+  if (
+    val === "" ||
+    val === undefined ||
+    val === null ||
+    val === "null" ||
+    val === "undefined"
+  ) {
     if (col !== undefined && isShowError === true) {
       handleError(col);
     }
@@ -578,19 +589,31 @@ export const setStorage = (key, val) => {
 export const getStorage = (key) => {
   return localStorage.getItem(key);
 };
+export const rmStorage = (key) => {
+  return localStorage.removeItem(key);
+};
+
+export const noData = (colSpan) => {
+  return (
+    <tr>
+      <td colSpan={colSpan}>Tidak ada data</td>
+    </tr>
+  );
+};
 
 export const handleDataSelect = (props, value, label) => {
   let data = [];
-  if(value=='kd_cust'){
+  if (value == "kd_cust") {
     data.push({
       value: "1000001",
       label: "UMUM",
     });
-  }else{
+  }
+  if (value === "kd_sales") {
     data.push({
       value: "1",
       label: "UMUM",
-    })
+    });
   }
   props.map((val) => {
     data.push({ value: val[value], label: val[label] });

@@ -23,6 +23,7 @@ class SelectCommon extends Component {
   getProps(props) {
     let propsGroup = props.options;
     let state = { value_data: propsGroup, label: props.label };
+
     if (props.dataEdit !== undefined || props.dataEdit !== "") {
       if (props.dataEdit === "-") {
         Object.assign(state, { value: "" });

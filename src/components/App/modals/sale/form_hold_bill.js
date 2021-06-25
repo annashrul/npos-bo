@@ -37,6 +37,8 @@ class FormHoldBill extends Component {
   getProps(props, inState) {
     if (props.objectHoldBill.id !== undefined) {
       this.setState({ nama: props.objectHoldBill.nama });
+    } else {
+      this.setState({ nama: "" });
     }
     props.type === "formHoldBill" && setFocus(this, "nama");
   }
@@ -85,7 +87,6 @@ class FormHoldBill extends Component {
     });
   }
   render() {
-    console.log("hold", this.props);
     return (
       <WrapperModal
         isOpen={this.props.isOpen && this.props.type === "formHoldBill"}

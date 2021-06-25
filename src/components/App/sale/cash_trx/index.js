@@ -253,6 +253,7 @@ class Sale extends Component {
                           useLabel={false}
                           callback={(res) => this.HandleSelect(res, "location")}
                           dataEdit={this.state.dataEdit}
+                          isLable={false}
                         />
                       </div>
                       <div className="col-md-6">

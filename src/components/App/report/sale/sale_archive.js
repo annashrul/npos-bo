@@ -23,19 +23,39 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import { dateRange, generateNo, swallOption } from "../../../../helper";
+import {
+  dateRange,
+  generateNo,
+  getStorage,
+  handleDataSelect,
+  isEmptyOrUndefined,
+  setStorage,
+  swallOption,
+} from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
+import SelectCommon from "../../common/SelectCommon";
+import { loading } from "../../../../redux/actions/handleHttp";
 class SaleArchive extends Component {
   constructor(props) {
     super(props);
     this.state = {
       where_data: "",
-      type_data: [],
+      type_data: [
+        { kode: "", value: "Semua Tipe" },
+        { kode: "0", value: "Tunai" },
+        { kode: "1", value: "Non Tunai" },
+        { kode: "2", value: "Gabungan" },
+        { kode: "3", value: "Void" },
+      ],
       type: "",
-      status_data: [],
+      status_data: [
+        { kode: "", value: "Semua Status" },
+        { kode: "0", value: "Belum Lunas" },
+        { kode: "1", value: "Lunas" },
+      ],
       status: "",
-      location: "",
-      any_sale_report: "",
+      lokasi: "",
+      any: "",
       id_trx: "",
       prevLoc: [],
       startDate: moment(new Date()).format("yyyy-MM-DD"),
@@ -44,230 +64,83 @@ class SaleArchive extends Component {
       isModalExcel: false,
       isModalOtorisasi: false,
       totalExcel: 0,
+      page: 1,
     };
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.HandleChangeType = this.HandleChangeType.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
-    this.handleEvent = this.handleEvent.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleDetail = this.handleDetail.bind(this);
+    this.handleModal = this.handleModal.bind(this);
     this.onDone = this.onDone.bind(this);
+    this.handleChangeSelect = this.handleChangeSelect.bind(this);
   }
 
   onDone(id, id_trx) {
-    this.props.dispatch(deleteReportSale(id, id_trx));
+    this.props.dispatch(
+      deleteReportSale({ id: id, id_trx: id_trx, where: this.state.where_data })
+    );
     this.setState({
       id_trx: "",
     });
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    let type = [
-      { kode: "", value: "Semua Tipe" },
-      { kode: "0", value: "Tunai" },
-      { kode: "1", value: "Non Tunai" },
-      { kode: "2", value: "Gabungan" },
-      { kode: "3", value: "Void" },
-    ];
-    let data_type = [];
-    type.map((i) => {
-      data_type.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      type_data: data_type,
-    });
-
-    let status = [
-      { kode: "", value: "Semua Status" },
-      { kode: "0", value: "Belum Lunas" },
-      { kode: "1", value: "Lunas" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      status_data: data_status,
-    });
-  };
   componentWillUnmount() {
     this.setState({
       isModalDetail: false,
       isModalExcel: false,
       isModalOtorisasi: false,
     });
-    localStorage.removeItem("type_sale_report");
-    localStorage.removeItem("status_sale_report");
-    localStorage.removeItem("location_sale_report");
-    localStorage.removeItem("any_sale_report");
-    // localStorage.removeItem("pageNumber_sale_report");
   }
   componentWillMount() {
-    let page = localStorage.pageNumber_sale_report;
-    this.checkingParameter(page === undefined && page === null ? 1 : page);
+    this.handleService();
   }
-  componentDidMount() {
-    if (
-      localStorage.location_sale_report !== undefined &&
-      localStorage.location_sale_report !== ""
-    ) {
-      this.setState({
-        location: localStorage.location_sale_report,
-      });
-    }
-    if (
-      localStorage.type_sale_report !== undefined &&
-      localStorage.type_sale_report !== ""
-    ) {
-      this.setState({
-        type: localStorage.type_sale_report,
-      });
-    }
-    if (
-      localStorage.any_sale_report !== undefined &&
-      localStorage.any_sale_report !== ""
-    ) {
-      this.setState({
-        any_sale_report: localStorage.any_sale_report,
-      });
-    }
-    if (
-      localStorage.date_from_sale_report !== undefined &&
-      localStorage.date_from_sale_report !== null
-    ) {
-      this.setState({
-        startDate: localStorage.date_from_sale_report,
-      });
-    }
-    if (
-      localStorage.date_to_sale_report !== undefined &&
-      localStorage.date_to_sale_report !== null
-    ) {
-      this.setState({
-        endDate: localStorage.date_to_sale_report,
-      });
-    }
-    if (
-      localStorage.status_sale_report !== undefined &&
-      localStorage.status_sale_report !== null
-    ) {
-      this.setState({
-        endDate: localStorage.status_sale_report,
-      });
-    }
+
+  handleService(page = 1) {
+    const { startDate, endDate, lokasi, type, status, any } = this.state;
+    let where = `page=${page}&datefrom=${startDate}&dateto=${endDate}`;
+    if (isEmptyOrUndefined(lokasi)) where += `&lokasi=${lokasi}`;
+    if (isEmptyOrUndefined(type)) where += `&type=${type}`;
+    if (isEmptyOrUndefined(status)) where += `&status=${status}`;
+    if (isEmptyOrUndefined(any)) where += `&q=${any}`;
+    this.setState({ where_data: where });
+    this.props.dispatch(FetchReportSale(where));
   }
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
-  HandleChangeType(type) {
-    this.setState({
-      type: type.value,
-    });
-    localStorage.setItem("type_sale_report", type.value);
+  handleChangeSelect(state, res) {
+    this.setState({ [state]: res.value });
+    setTimeout(() => this.handleService(), 500);
   }
-  HandleChangeStatus(status) {
-    this.setState({
-      status: status.value,
-    });
-    localStorage.setItem("status_sale_report", status.value);
-  }
-  HandleChangeLokasi(lk) {
-    this.setState({
-      location: lk.value,
-    });
-    localStorage.setItem("location_sale_report", lk.value);
-  }
-  handleEvent = (first, last) => {
-    localStorage.setItem("date_from_sale_report", `${first}`);
-    localStorage.setItem("date_to_sale_report", `${last}`);
-    this.setState({
-      startDate: first,
-      endDate: last,
-    });
-  };
-  handleSearch(e) {
-    e.preventDefault();
-    localStorage.setItem("any_sale_report", this.state.any_sale_report);
-    this.checkingParameter(1);
-  }
-  checkingParameter(pageNumber) {
-    let where = "";
-    let dateFrom = localStorage.getItem("date_from_sale_report");
-    let dateTo = localStorage.getItem("date_to_sale_report");
-    let tipe =
-      this.state.type === ""
-        ? localStorage.getItem("type_sale_report")
-        : this.state.type;
-    let status =
-      this.state.status === ""
-        ? localStorage.getItem("status_sale_report")
-        : this.state.status;
-    let lokasi =
-      this.state.location === ""
-        ? localStorage.getItem("location_sale_report")
-        : this.state.location;
-    let any =
-      this.state.any_sale_report === ""
-        ? localStorage.any_sale_report
-        : this.state.any_sale_report;
 
-    if (dateFrom !== undefined && dateFrom !== null) {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `datefrom=${dateFrom}&dateto=${dateTo}`;
-    } else {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
-    }
-    if (tipe !== undefined && tipe !== null && tipe !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `type=${tipe}`;
-    }
-    if (status !== undefined && status !== null && status !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `status=${status}`;
-    }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `lokasi=${lokasi}`;
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      if (where !== "") {
-        where += "&";
-      }
-      where += `q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    this.props.dispatch(
-      FetchReportSale(pageNumber === null ? 1 : pageNumber, where)
-    );
-    // this.props.dispatch(FetchReportSaleExcel(pageNumber===null?1:pageNumber,where));
-  }
   handlePageChange(pageNumber) {
-    localStorage.setItem("pageNumber_sale_report", pageNumber);
-    this.checkingParameter(pageNumber);
+    this.handleService(pageNumber);
   }
+
+  handleFetchModal(page) {
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+    this.props.dispatch(ModalType(page));
+  }
+
+  handleModal(e, page, param) {
+    e.preventDefault();
+    let state = {};
+    if (page === "detailSaleReport") {
+      Object.assign(state, { isModalDetail: true });
+      this.props.dispatch(FetchReportDetailSale(param.kode));
+    }
+    if (page === "formSaleExcel") {
+      Object.assign(state, { isModalExcel: true, totalExcel: param.total });
+      this.props.dispatch(
+        FetchReportSaleExcel(this.state.where_data, param.total, (percent) => {
+          // Object.assign(state, { where_data: percent });
+        })
+      );
+    }
+    this.setState(state);
+    // this.handleFetchModal(page);
+  }
+
   handleDelete(e, id) {
     e.preventDefault();
     this.setState({
@@ -275,28 +148,8 @@ class SaleArchive extends Component {
     });
     swallOption("Data yang telah dihapus tidak bisa dikembalikan.", () => {
       this.setState({ isModalOtorisasi: true });
-      const bool = !this.props.isOpen;
-      this.props.dispatch(ModalToggle(bool));
-      this.props.dispatch(ModalType("modalOtorisasi"));
+      this.handleFetchModal("modalOtorisasi");
     });
-  }
-  handleDetail(e, kode) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailSaleReport"));
-    this.props.dispatch(FetchReportDetailSale(kode));
-  }
-
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    this.setState({ isModalExcel: true, totalExcel: total });
-    const bool = !this.props.isOpen;
-    // let range = total*perpage;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formSaleExcel"));
-    this.props.dispatch(FetchReportSaleExcel(this.state.where_data, total));
   }
 
   render() {
@@ -332,84 +185,100 @@ class SaleArchive extends Component {
     let voucher_per = 0;
     let rounding_per = 0;
     let total_tunai = 0;
+    let loadings;
+
+    if (this.props.percent === "loading") {
+      loadings = this.props.percent;
+    } else if (this.props.percent > 0 && this.props.percent < 100) {
+      loadings = this.props.percent + "%";
+    } else {
+      loadings = <i className="fa fa-print"></i>;
+    }
+    // load
 
     return (
       <Layout page="Laporan Arsip Penjualan">
-        <div className="row">
+        <div className="row" style={{ zoom: "90%" }}>
           <div className="col-6 col-xs-6 col-md-2">
-            {dateRange(
-              (first, last) => this.handleEvent(first, last),
-              `${this.state.startDate} to ${this.state.endDate}`
-            )}
+            {dateRange((first, last) => {
+              this.setState({ startDate: first, endDate: last });
+              setTimeout(() => this.handleService(), 300);
+            }, `${this.state.startDate} to ${this.state.endDate}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <LokasiCommon
-              callback={(res) => this.HandleChangeLokasi(res)}
+              callback={(res) => this.handleChangeSelect("lokasi", res)}
               isAll={true}
             />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <div className="form-group">
-              <label>Tipe Transaksi</label>
-              <Select
-                options={this.state.type_data}
-                placeholder="Pilih Tipe Transaksi"
-                onChange={this.HandleChangeType}
-                value={this.state.type_data.find((op) => {
-                  return op.value === this.state.type;
-                })}
-              />
-            </div>
+            <SelectCommon
+              label="Tipe transaksi"
+              options={handleDataSelect(this.state.type_data, "kode", "value")}
+              callback={(res) => this.handleChangeSelect("type", res)}
+            />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <div className="form-group">
-              <label>Status</label>
-              <Select
-                options={this.state.status_data}
-                placeholder="Pilih Status Transaksi"
-                onChange={this.HandleChangeStatus}
-                value={this.state.status_data.find((op) => {
-                  return op.value === this.state.status;
-                })}
-              />
-            </div>
+            <SelectCommon
+              label="Status"
+              options={handleDataSelect(
+                this.state.status_data,
+                "kode",
+                "value"
+              )}
+              callback={(res) => this.handleChangeSelect("status", res)}
+            />
           </div>
-          <div className="col-6 col-xs-6 col-md-2">
-            <div className="form-group">
-              <label htmlFor="">Cari</label>
+          <div className="col-6 col-xs-6 col-md-3">
+            <label>Cari</label>
+            <div className="input-group">
               <input
-                type="text"
-                name="any_sale_report"
+                type="search"
+                name="any"
                 className="form-control"
-                value={this.state.any_sale_report}
-                placeholder="Kode/Kasir/Sales/Customer"
-                onChange={(e) => this.handleChange(e)}
+                placeholder="tulis sesuatu disini"
+                value={this.state.any}
+                onChange={(e) => this.setState({ any: e.target.value })}
+                onKeyPress={(event) => {
+                  if (event.key === "Enter") {
+                    this.handleService();
+                  }
+                }}
               />
+              <span className="input-group-append">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleService();
+                  }}
+                >
+                  <i className="fa fa-search" />
+                </button>
+              </span>
             </div>
           </div>
-          <div className="col-md-2 text-right">
+          <div className="col-md-1 text-right">
             <div className="form-group">
               <button
                 style={{ marginTop: "28px", marginRight: "5px" }}
                 className="btn btn-primary"
-                onClick={this.handleSearch}
-              >
-                <i className="fa fa-search" />
-              </button>
-              <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
-                className="btn btn-primary"
-                onClick={(e) =>
-                  this.toggleModal(e, last_page * per_page, per_page)
+                onClick={
+                  (e) =>
+                    this.handleModal(e, "formSaleExcel", {
+                      total: last_page * per_page,
+                    })
+                  // this.toggleModal(e, last_page * per_page, per_page)
                 }
               >
-                <i className="fa fa-print"></i>
+                {loadings}
               </button>
             </div>
           </div>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto", zoom: "90%" }}>
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
@@ -543,8 +412,12 @@ class SaleArchive extends Component {
                               <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem
-                                  onClick={(e) =>
-                                    this.handleDetail(e, v.kd_trx)
+                                  onClick={
+                                    (e) =>
+                                      this.handleModal(e, "detailSaleReport", {
+                                        kode: v.kd_trx,
+                                      })
+                                    // this.handleDetail(e, v.kd_trx)
                                   }
                                 >
                                   Detail
@@ -712,7 +585,7 @@ class SaleArchive extends Component {
             </tfoot>
           </table>
         </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
+        <div style={{ marginTop: "20px", float: "right", zoom: "90%" }}>
           <Paginationq
             current_page={parseInt(current_page, 10)}
             per_page={parseInt(per_page, 10)}
@@ -721,10 +594,10 @@ class SaleArchive extends Component {
           />
         </div>
 
-        {this.state.isModalDetail ? (
+        {this.props.isOpen && this.state.isModalDetail ? (
           <DetailSaleReport detailSale={this.props.detailSale} />
         ) : null}
-        {this.state.isModalExcel ? (
+        {this.props.isOpen && this.state.isModalExcel ? (
           <SaleReportExcel
             startDate={this.state.startDate}
             endDate={this.state.endDate}
@@ -734,14 +607,16 @@ class SaleArchive extends Component {
             totalRow={this.state.totalExcel}
           />
         ) : null}
-        {this.state.isModalOtorisasi ? (
+        {this.props.isOpen && this.state.isModalOtorisasi ? (
           <Otorisasi
             datum={{
               module: "arsip penjualan",
               aksi: "delete",
               id_trx: this.state.id_trx,
             }}
-            onDone={this.onDone}
+            onDone={(id, kd_trx) => {
+              this.onDone(id, kd_trx);
+            }}
           />
         ) : null}
       </Layout>
@@ -758,7 +633,9 @@ const mapStateToProps = (state) => {
     isLoadingReport: state.saleReducer.isLoadingReport,
     detailSale: state.saleReducer.dataDetail,
     isLoadingDetail: state.saleReducer.isLoadingDetail,
+    percent: state.saleReducer.percent,
     auth: state.auth,
+    isOpen: state.modalReducer,
   };
 };
 
