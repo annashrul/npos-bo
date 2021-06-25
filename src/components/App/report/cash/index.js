@@ -252,8 +252,7 @@ class ReportCash extends Component {
     this.checkingParameter(pageNumber);
   }
   render() {
-    const { last_page, per_page, current_page, total_kas, data } =
-      this.props.cashReport;
+    const { last_page, per_page, current_page, total_kas, data } = this.props.cashReport;
     let total_perpage = 0;
     return (
       <Layout page="Laporan Kas">

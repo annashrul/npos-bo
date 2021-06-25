@@ -151,9 +151,10 @@ export const FetchCashReport = (where = "") => {
   return (dispatch) => {
     let url = "pos/report?param=kas&isbo=true";
     if (where !== "") url += `&${where}`;
-    handleGet(url, (res) => {
-      const data = res.data;
+    handlePost(url,[], (res,msg,status) => {
+      const data = res;
       dispatch(setCashReport(data));
+      dispatch(successCashTrx(true));
     });
   };
 };

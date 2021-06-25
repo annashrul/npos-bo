@@ -1289,6 +1289,7 @@ class Sale extends Component {
                                     width: "17px",
                                     // paddingTop: "10px",
                                   }}
+                                  id = "isOpenPrice"
                                   type="checkbox"
                                   name="isOpenPrice"
                                   checked={this.state.brgval[index].isOpenPrice}

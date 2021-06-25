@@ -69,6 +69,8 @@ export const handlePost = async (
         } else {
           callback(datum, datum.msg, false);
         }
+        loading(false);
+
       }, 800);
     })
     .catch(function (error) {
