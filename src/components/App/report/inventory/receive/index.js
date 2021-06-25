@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import { FetchReport } from "redux/actions/purchase/receive/receive.action";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import Select from "react-select";
 import moment from "moment";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq from "helper";
@@ -28,37 +25,59 @@ import Swal from "sweetalert2";
 import {
   dateRange,
   generateNo,
+  getStorage,
   isEmptyOrUndefined,
+  setStorage,
 } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
+import IsActiveCommon from "../../../common/IsActiveCommon";
+import SelectSortCommon from "../../../common/SelectSortCommon";
+
+const dateFromStorage = "dateFromReportReceive";
+const dateToStorage = "dateToReportReceive";
+const locationStorage = "locationReportReveive";
+const typeStorage = "typeReportReveive";
+const columnStorage = "columnReportReveive";
+const sortStorage = "sortReportReveive";
+const statusStorage = "statusReportReveive";
+const anyStorage = "anyReportReveive";
 
 class ReceiveReport extends Component {
   constructor(props) {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
     this.toggle = this.toggle.bind(this);
-    this.handleEvent = this.handleEvent.bind(this);
+    this.handleChangeSelect = this.handleChangeSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleRetur = this.handleRetur.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
     this.state = {
       where_data: "",
       detail: {},
       dateFrom: moment(new Date()).format("yyyy-MM-DD"),
       dateTo: moment(new Date()).format("yyyy-MM-DD"),
-      location_data: [],
       location: "",
-      type_data: [],
       type: "",
       any: "",
       sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
+      column: "",
       status: "",
-      status_data: [],
+      type_data: [
+        { value: "", label: "Semua Tipe" },
+        { value: "Tunai", label: "Tunai" },
+        { value: "Kredit", label: "Kredit" },
+      ],
+      column_data: [
+        { value: "no_faktur_beli", label: "No. Faktur" },
+        { value: "nama_penerima", label: "Penerima" },
+      ],
+      status_data: [
+        { value: "", label: "Semua Status" },
+        { value: "0", label: "Belum Lunas" },
+        { value: "1", label: "Lunas" },
+      ],
       isModalDetail: false,
       isModalForm: false,
       isModalExport: false,
@@ -73,158 +92,64 @@ class ReceiveReport extends Component {
     });
   }
   componentWillMount() {
-    this.checkingParameter(1);
+    this.handleService(1);
   }
-
-  componentWillReceiveProps = (nextProps) => {
-    let type = [
-      { kode: "", value: "Semua Tipe" },
-      { kode: "Tunai", value: "Tunai" },
-      { kode: "Kredit", value: "Kredit" },
-    ];
-    let data_type = [];
-    type.map((i) => {
-      data_type.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "no_faktur_beli", value: "No. Faktur" },
-      { kode: "nama_penerima", value: "Penerima" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let status = [
-      { kode: "", value: "Semua Status" },
-      { kode: "0", value: "Belum Lunas" },
-      { kode: "1", value: "Lunas" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      status_data: data_status,
-      type_data: data_type,
-    });
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
+  handleService(page = 1) {
+    let tglAwal = getStorage(dateFromStorage);
+    let tglAkhir = getStorage(dateToStorage);
+    let lokasi = getStorage(locationStorage);
+    let tipe = getStorage(typeStorage);
+    let kolom = getStorage(columnStorage);
+    let urutan = getStorage(sortStorage);
+    let status = getStorage(statusStorage);
+    let any = getStorage(anyStorage);
+    let where = `page=${page}`;
+    let state = {};
+    if (isEmptyOrUndefined(tglAwal) && isEmptyOrUndefined(tglAkhir)) {
+      where = `page=${page}&datefrom=${tglAwal}&dateto=${tglAkhir}`;
+      Object.assign(state, { dateFrom: tglAwal, dateTo: tglAkhir });
+    } else {
+      where = `page=${page}&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
+    }
+    if (isEmptyOrUndefined(lokasi)) {
+      where += `&lokasi=${lokasi}`;
+      Object.assign(state, { location: lokasi });
+    }
+    if (isEmptyOrUndefined(tipe)) {
+      where += `&type=${tipe}`;
+      Object.assign(state, { type: tipe });
+    }
+    if (isEmptyOrUndefined(kolom)) {
+      if (isEmptyOrUndefined(urutan)) {
+        where += `&sort=${kolom}|${urutan}`;
+        Object.assign(state, { sort: urutan, column: kolom });
       }
-    }
-
-    localStorage.setItem(
-      "status_receive_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_receive_report
-    );
-    localStorage.setItem(
-      "sort_receive_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_receive_report
-    );
-    localStorage.setItem(
-      "filter_receive_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_receive_report
-    );
-  };
-  checkingParameter(pageNumber) {
-    console.log("state", this.state);
-    let page = pageNumber;
-    let dateFrom = this.state.dateFrom;
-    let dateTo = this.state.dateTo;
-    let type = this.state.type;
-    let location = this.state.location;
-    let any = this.state.any;
-    let sort = this.state.sort;
-    let filter = this.state.filter;
-    let status = this.state.status;
-    let where = `dateFrom=${dateFrom}&dateTo=${dateTo}`;
-
-    if (!isNaN(page)) {
-      where += `page=${page}`;
-    }
-    if (isEmptyOrUndefined(type)) {
-      where += `type=${type}`;
-    }
-    if (isEmptyOrUndefined(location)) {
-      where += `lokasi=${location}`;
     }
     if (isEmptyOrUndefined(status)) {
-      where += `status=${status}`;
-    }
-    if (isEmptyOrUndefined(filter)) {
-      if (isEmptyOrUndefined(sort)) {
-        where += `sort=${filter}|${sort}`;
-      }
+      where += `&status=${status}`;
+      Object.assign(state, { status: status });
     }
     if (isEmptyOrUndefined(any)) {
-      where += `q=${any}`;
+      where += `&q=${any}`;
+      Object.assign(state, { any: any });
     }
     this.setState({
       where_data: where,
     });
     this.props.dispatch(FetchReport(where));
   }
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  handleEvent = (first, last) => {};
   handlePageChange(pageNumber) {
-    localStorage.setItem("pageNumber_receive_report", pageNumber);
-    this.checkingParameter(pageNumber);
+    this.handleService(pageNumber);
   }
   handleSearch(e) {
     e.preventDefault();
-    localStorage.setItem("any_receive_report", this.state.any_receive_report);
-    this.checkingParameter(1);
+    setStorage(anyStorage, this.state.any);
+    setTimeout(() => this.handleService(1), 500);
   }
   toggle(e, kdTrx, tgl, lokasi, penerima, pelunasan, operator) {
     e.preventDefault();
@@ -299,6 +224,14 @@ class ReceiveReport extends Component {
     this.props.dispatch(ModalType("formReceiveExcel"));
     this.props.dispatch(FetchReportExcel(1, this.state.where_data, total));
   }
+  handleChangeSelect(state, res) {
+    if (state === "location") setStorage(locationStorage, res.value);
+    if (state === "type") setStorage(typeStorage, res.value);
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
+    if (state === "status") setStorage(statusStorage, res.value);
+    setTimeout(() => this.handleService(1), 500);
+  }
   render() {
     const columnStyle = {
       verticalAlign: "middle",
@@ -325,62 +258,44 @@ class ReceiveReport extends Component {
                 style={{ paddingRight: "0px" }}
               >
                 {dateRange((first, last) => {
-                  this.setState({
-                    dateFrom: first,
-                    dateTo: last,
-                  });
+                  setStorage(dateFromStorage, first);
+                  setStorage(dateToStorage, last);
+                  setTimeout(() => this.handleService(1), 500);
                 }, `${this.state.dateFrom} to ${this.state.dateTo}`)}
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <LokasiCommon
-                  callback={(res) => {
-                    this.setState({ location: res.value });
-                  }}
+                  callback={(res) => this.handleChangeSelect("location", res)}
                   isAll={true}
+                  dataEdit={this.state.location}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <SelectCommon
                   label="Tipe transaksi"
                   options={this.state.type_data}
-                  callback={(res) => {
-                    this.setState({
-                      type: res.value,
-                    });
-                  }}
+                  callback={(res) => this.handleChangeSelect("type", res)}
+                  dataEdit={this.state.type}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <SelectCommon
                   label="Kolom"
-                  options={this.state.filter_data}
-                  callback={(res) => {
-                    this.setState({
-                      filter: res.value,
-                    });
-                  }}
+                  options={this.state.column_data}
+                  callback={(res) => this.handleChangeSelect("column", res)}
+                  dataEdit={this.state.column}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon
-                  label="Sort"
-                  options={this.state.sort_data}
-                  callback={(res) => {
-                    this.setState({
-                      sort: res.value,
-                    });
-                  }}
+                <SelectSortCommon
+                  callback={(res) => this.handleChangeSelect("sort", res)}
+                  dataEdit={this.state.sort}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon
-                  label="Status"
-                  options={this.state.status_data}
-                  callback={(res) => {
-                    this.setState({
-                      status: res.value,
-                    });
-                  }}
+                <IsActiveCommon
+                  callback={(res) => this.handleChangeSelect("status", res)}
+                  dataEdit={this.state.status}
                 />
               </div>
               <div className="col-12 col-xs-12 col-md-3">

@@ -44,13 +44,14 @@ class IsActiveCommon extends Component {
     return (
       <div className="form-group">
         <label>
-          Status{" "}
+          {this.props.label === undefined ? "Status" : this.props.label}{" "}
           <span className="text-danger">{this.props.isRequired && "*"}</span>
         </label>
         <Select
-          autoFocus={true}
           options={this.state.dataArray}
-          placeholder={`Pilih status`}
+          placeholder={`Pilih ${
+            this.props.label === undefined ? "Status" : this.props.label
+          }`}
           onChange={(value, actionMeta) => this.onChange(value)}
           value={this.state.dataObject}
         />

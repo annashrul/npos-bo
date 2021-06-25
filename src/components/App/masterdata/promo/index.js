@@ -30,35 +30,28 @@ import Noimage from "assets/default.png";
 class Promo extends Component {
   constructor(props) {
     super(props);
-    this.handleAdd = this.handleAdd.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.state = {
       detail: {},
       lokasi_data: [],
       kategori_data: [],
       isModalForm: false,
+      any: "",
     };
 
     this.handlePagin = this.handlePagin.bind(this);
+  }
+  handleService(any, page) {
+    let where = `page=${page}`;
+    if (any !== "") where += `&q=${where}`;
+    this.props.dispatch(FetchPromo(where));
   }
   componentWillUnmount() {
     this.setState({ isModalForm: false });
   }
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.auth.user) {
-      let access = nextProps.auth.user.access;
-      if (access !== undefined && access !== null) {
-        if (nextProps.auth.user.access[17]["label"] === "0") {
-          alert("bukan halaman kamu");
-          this.props.history.push({
-            pathname: "/",
-            state: { from: this.props.location.pathname },
-          });
-        }
-      }
-    }
     this.setState({
       lokasi_data: nextProps.lokasi.data,
       kategori_data: nextProps.promo_kategori,
@@ -66,56 +59,37 @@ class Promo extends Component {
   };
   componentWillMount() {
     this.props.dispatch(FetchPromoKategori());
-    this.props.dispatch(FetchPromo(1, ""));
+    this.handleService("", 1);
     this.props.dispatch(FetchAllLocation());
   }
-  handleAdd(e) {
-    e.preventDefault();
-    this.setState({ isModalForm: true });
-
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formPromo"));
-    this.props.dispatch(FetchGroupProduct(1, "", 100));
-    this.props.dispatch(FetchSupplierAll());
-    this.props.dispatch(FetchAllLocation());
-    this.props.dispatch(setPromoDetail([]));
-  }
-  handleEdit(e, id) {
-    this.setState({ isModalForm: true });
-
+  toggleModal(e, res = null) {
     e.preventDefault();
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formPromo"));
-    this.props.dispatch(FetchPromoDetail(id));
-    this.props.dispatch(FetchGroupProduct(1, "", 100));
     this.props.dispatch(FetchSupplierAll());
-    this.props.dispatch(FetchAllLocation());
+    this.props.dispatch(FetchGroupProduct(1, "", 100));
+    if (res !== null) {
+      this.props.dispatch(FetchPromoDetail(res.id));
+    }
+    let state = { isModalForm: true };
+    this.setState(state);
   }
   handlePagin(param) {
-    // let any = this.state.any;
-    this.props.dispatch(FetchPromo(param, ""));
+    this.handleService(this.state.any, param);
   }
-  handleSearch(e) {
-    e.preventDefault();
+  handleSearch(event) {
+    event.preventDefault();
+    event.preventDefault();
+    const form = event.target;
+    const data = new FormData(form);
+    let any = data.get("any");
+    this.handleService(any, 1);
   }
+
   handleDelete(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deletePromo(id));
-      }
-    });
+    this.props.dispatch(deletePromo(id));
   }
 
   render() {
@@ -129,37 +103,42 @@ class Promo extends Component {
       total,
     } = this.props.promo;
     // const columnStyle = {verticalAlign: "middle", textAlign: "center",};
+    console.log(this.state);
     return (
       <Layout page="Promo">
         <form onSubmit={this.handleSearch} noValidate>
           <div className="row">
-            <div className="col-8 col-xs-10 col-md-3">
-              <div className="form-group">
-                <label>Search</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="any"
-                  defaultValue={localStorage.getItem("any_promo")}
-                />
+            <div className="col-10 col-xs-10 col-md-11">
+              <div className="row">
+                <div className="col-md-4">
+                  <div className="input-group input-group-sm">
+                    <input
+                      type="search"
+                      name="any"
+                      className="form-control form-control-sm"
+                      placeholder="cari berdasarkan nama"
+                      value={this.state.any}
+                      onChange={(e) => {
+                        this.setState({ any: e.target.value });
+                      }}
+                    />
+                    <span className="input-group-append">
+                      <button type="submit" className="btn btn-primary">
+                        <i className="fa fa-search" />
+                      </button>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="col-4 col-xs-2 col-md-3">
+            <div className="col-4 col-xs-2 col-md-1 text-right">
               <div className="form-group">
                 <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-search" />
-                </button>
-                <button
-                  style={{ marginTop: "27px" }}
                   type="button"
-                  onClick={(e) => this.handleAdd(e)}
+                  onClick={(e) => this.toggleModal(e)}
                   className="btn btn-primary"
                 >
-                  <i className="fa fa-plus" />
+                  <i className="fa fa-plus"></i>
                 </button>
               </div>
             </div>
@@ -169,55 +148,57 @@ class Promo extends Component {
           {total !== "0" ? (
             typeof data === "object" ? (
               data.map((v, i) => {
-                let arrLok = v.lokasi.split(",");
-                let kat =
-                  this.state.kategori_data === undefined
-                    ? ""
-                    : this.state.kategori_data.filter(
-                        (item) => item.kode === v.category
-                      );
-                let val =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : this.state.lokasi_data.filter(
-                        (item) => item.kode === v.lokasi
-                      );
-                let val1 =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : this.state.lokasi_data.filter(
-                        (item) => item.kode === arrLok[0]
-                      );
-                let val2 =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : this.state.lokasi_data.filter(
-                        (item) => item.kode === arrLok[1]
-                      );
-                let val3 =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : this.state.lokasi_data.filter(
-                        (item) => item.kode === arrLok[2]
-                      );
-                let getVal1 =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : val1[0] === undefined
-                    ? ""
-                    : val1[0].nama_toko;
-                let getVal2 =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : val2[0] === undefined
-                    ? ""
-                    : val2[0].nama_toko;
-                let getVal3 =
-                  this.state.lokasi_data === undefined
-                    ? ""
-                    : val3[0] === undefined
-                    ? ""
-                    : val3[0].nama_toko;
+                console.log(this.state.kategori_data);
+                // let kategori = this.state.kategori_data.filter(res=>res)
+                // let arrLok = v.lokasi.split(",");
+                // let kat =
+                //   this.state.kategori_data === undefined
+                //     ? ""
+                //     : this.state.kategori_data.filter(
+                //         (item) => item.kode === v.category
+                //       );
+                // let val =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : this.state.lokasi_data.filter(
+                //         (item) => item.kode === v.lokasi
+                //       );
+                // let val1 =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : this.state.lokasi_data.filter(
+                //         (item) => item.kode === arrLok[0]
+                //       );
+                // let val2 =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : this.state.lokasi_data.filter(
+                //         (item) => item.kode === arrLok[1]
+                //       );
+                // let val3 =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : this.state.lokasi_data.filter(
+                //         (item) => item.kode === arrLok[2]
+                //       );
+                // let getVal1 =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : val1[0] === undefined
+                //     ? ""
+                //     : val1[0].nama_toko;
+                // let getVal2 =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : val2[0] === undefined
+                //     ? ""
+                //     : val2[0].nama_toko;
+                // let getVal3 =
+                //   this.state.lokasi_data === undefined
+                //     ? ""
+                //     : val3[0] === undefined
+                //     ? ""
+                //     : val3[0].nama_toko;
                 return (
                   <div className="col-xl-3 col-md-6 mb-4" key={i}>
                     <div className="card">
@@ -258,9 +239,7 @@ class Promo extends Component {
                                   </DropdownToggle>
                                   <DropdownMenu>
                                     <DropdownItem
-                                      onClick={(e) =>
-                                        this.handleEdit(e, v.id_promo)
-                                      }
+                                      onClick={(e) => this.toggleModal(e, v)}
                                     >
                                       <i className="ti-pencil-alt" /> Edit
                                     </DropdownItem>
@@ -307,7 +286,8 @@ class Promo extends Component {
                                       }}
                                     >
                                       {" "}
-                                      Promo {kat[0].title}
+                                      {/* Promo {kat[0].title} */}
+                                      Promo
                                     </th>
                                   </tr>
                                   <tr>
@@ -331,8 +311,7 @@ class Promo extends Component {
                                         borderTop: "none",
                                       }}
                                     >
-                                      {" "}
-                                      {arrLok.length >= 3
+                                      {/* {arrLok.length >= 3
                                         ? `${getVal1}, ${getVal2}, ${getVal3} ...`
                                         : arrLok.length >= 2
                                         ? `${getVal1} & ${getVal2}`
@@ -340,7 +319,8 @@ class Promo extends Component {
                                         ? ""
                                         : val[0] === undefined
                                         ? ""
-                                        : val[0].nama_toko}
+                                        : val[0].nama_toko} */}
+                                      lokasi
                                     </th>
                                   </tr>
                                   <tr>
@@ -505,7 +485,7 @@ class Promo extends Component {
             callback={this.handlePagin.bind(this)}
           />
         </div>
-        {this.state.isModalForm ? (
+        {this.props.isOpen && this.state.isModalForm ? (
           <FormPromo
             detail={this.props.promo_detail}
             kategori={this.props.promo_kategori}
@@ -521,6 +501,7 @@ class Promo extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    isOpen: state.modalReducer,
     authenticated: state.auth,
     promo: state.promoReducer.data,
     promo_kategori: state.promoReducer.data_kategori,
