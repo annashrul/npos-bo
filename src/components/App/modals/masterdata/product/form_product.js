@@ -13,7 +13,6 @@ import { FetchCheck } from "redux/actions/site.action";
 import axios from "axios";
 import { HEADERS } from "redux/actions/_constants";
 import Select from "react-select";
-// import FileBase64 from "react-file-base64";
 import moment from "moment";
 import {
   handleError,
@@ -535,7 +534,6 @@ class FormProduct extends Component {
   }
 
   componentWillUnmount() {
-    console.log("componentWillUnmount");
     this.setState({
       isModalFormGroupProduct: false,
       isModalFormPrinter: false,
@@ -999,7 +997,6 @@ class FormProduct extends Component {
           ]);
         }
       }
-      console.log("props", param.dateEdit);
       this.setState({
         kd_brg: param.dataEdit.kd_brg,
         nm_brg: param.dataEdit.nm_brg,

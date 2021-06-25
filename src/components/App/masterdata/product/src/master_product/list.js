@@ -328,7 +328,7 @@ class ListProduct extends Component {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formProduct"));
-    this.props.dispatch(FetchGroupProduct(1, "", "1000"));
+    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
     this.props.dispatch(readPrinter("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
@@ -349,7 +349,7 @@ class ListProduct extends Component {
     this.props.dispatch(
       ModalType(pricing ? "formProductPricing" : "formProduct")
     );
-    this.props.dispatch(FetchGroupProduct(1, "", "1000"));
+    this.props.dispatch(FetchGroupProduct("page=1&perpage=99999"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
     this.props.dispatch(FetchSubDepartmentAll());
