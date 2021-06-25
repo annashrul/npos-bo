@@ -66,10 +66,12 @@ export function setPoReportDetail(data = []) {
   return { type: PO.PO_REPORT_DETAIL, data };
 }
 
-export const FetchPoReport = (page = 1, perpage = 10) => {
+export const FetchPoReport = (where = "") => {
   return (dispatch) => {
+    let url = "purchaseorder/report?status=0";
+    if (where !== "") url += `&${where}`;
     handleGet(
-      `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`,
+      url,
       (res) => {
         let data = res.data;
         dispatch(setPoReport(data));
@@ -240,18 +242,11 @@ export const poReportDetail = (page = 1, code) => {
   };
 };
 
-export const FetchPurchaseBySupplierReport = (page = 1, where = "") => {
+export const FetchPurchaseBySupplierReport = (where = "") => {
   return (dispatch) => {
-    let que = `report/pembelian/by_supplier?perpage=5&page=${page}`;
-    if (where !== "") que += `${where}`;
-    handleGet(
-      que,
-      (res) => {
-        let data = res.data;
-        dispatch(setPBSupplierReport(data));
-      },
-      true
-    );
+    let url = "report/pembelian/by_supplier";
+    if (where !== "") url += `?${where}`;
+    handleGet(url, (res) => dispatch(setPBSupplierReport(res.data)), true);
   };
 };
 

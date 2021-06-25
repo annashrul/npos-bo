@@ -603,6 +603,7 @@ export const noData = (colSpan) => {
 
 export const handleDataSelect = (props, value, label) => {
   let data = [];
+
   if (value == "kd_cust") {
     data.push({
       value: "1000001",
@@ -615,9 +616,22 @@ export const handleDataSelect = (props, value, label) => {
       label: "UMUM",
     });
   }
+
   props.map((val) => {
     data.push({ value: val[value], label: val[label] });
   });
+
+  return data;
+};
+
+export const dataStatus = (isAll = false) => {
+  let data = [];
+  if (isAll) {
+    data.push({ value: "semua", label: "Semua status" });
+  }
+  data.push({ value: "1", label: "Aktif" });
+  data.push({ value: "0", label: "Tidak aktif" });
+
   return data;
 };
 

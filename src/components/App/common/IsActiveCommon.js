@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
+import { handleDataSelect } from "../../../helper";
 
 /* ############# list props #############  */
 /* isAll                        : boolean  */
@@ -18,13 +19,18 @@ class IsActiveCommon extends Component {
   }
 
   getProps(props) {
+    let datas = handleDataSelect(this.state.dataArray, "value", "label");
     // jika kondisi edit
     if (props.dataEdit !== undefined) {
-      let data = this.state.dataArray.filter(
-        (item) => item.value === props.dataEdit
-      );
+      let data = datas.filter((item) => item.value === props.dataEdit);
       this.setState({ dataObject: data });
     }
+    // if (props.dataEdit !== undefined) {
+    //   let data = this.state.dataArray.filter(
+    //     (item) => item.value === props.dataEdit
+    //   );
+    //   this.setState({ dataObject: data });
+    // }
   }
   componentDidMount() {
     this.getProps(this.props);

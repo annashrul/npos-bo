@@ -23,10 +23,12 @@ import { toRp } from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
 import Swal from "sweetalert2";
 import {
+  dataStatus,
   dateRange,
   generateNo,
   getStorage,
   isEmptyOrUndefined,
+  noData,
   setStorage,
 } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
@@ -94,6 +96,9 @@ class ReceiveReport extends Component {
   componentWillMount() {
     this.handleService(1);
   }
+  componentDidMount() {
+    this.handleService(1);
+  }
   handleService(page = 1) {
     let tglAwal = getStorage(dateFromStorage);
     let tglAkhir = getStorage(dateToStorage);
@@ -126,7 +131,7 @@ class ReceiveReport extends Component {
       }
     }
     if (isEmptyOrUndefined(stts)) {
-      where += `&status=${stts}`;
+      if (stts !== "semua") where += `&status=${stts}`;
       Object.assign(state, { status: stts });
     }
     if (isEmptyOrUndefined(any)) {
@@ -249,7 +254,7 @@ class ReceiveReport extends Component {
     let tot_beli = 0;
     return (
       <Layout page="Laporan Pembelian">
-        <div className="row">
+        <div className="row" style={{ zoom: "90%" }}>
           <div className="col-md-12">
             <div className="row">
               <div
@@ -292,7 +297,9 @@ class ReceiveReport extends Component {
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <IsActiveCommon
+                <SelectCommon
+                  label="Status"
+                  options={dataStatus(true)}
                   callback={(res) => this.handleChangeSelect("status", res)}
                   dataEdit={this.state.status}
                 />
@@ -355,112 +362,106 @@ class ReceiveReport extends Component {
               </tr>
             </thead>
             <tbody>
-              {typeof data === "object" ? (
-                data.length > 0 ? (
-                  data.map((v, i) => {
-                    tot_beli = tot_beli + parseInt(v.total_beli, 10);
-                    return (
-                      <tr key={i}>
-                        <td className="text-center middle nowrap">
-                          {generateNo(i, current_page)}
-                        </td>
+              {typeof data === "object"
+                ? data.length > 0
+                  ? data.map((v, i) => {
+                      tot_beli = tot_beli + parseInt(v.total_beli, 10);
+                      return (
+                        <tr key={i}>
+                          <td className="text-center middle nowrap">
+                            {generateNo(i, current_page)}
+                          </td>
 
-                        <td className="text-center middle nowrap">
-                          <UncontrolledButtonDropdown>
-                            <DropdownToggle caret></DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.toggle(
-                                    e,
-                                    v.no_faktur_beli,
-                                    moment(v.tgl_beli).format("YYYY-MM-DD"),
-                                    v.lokasi,
-                                    v.nama_penerima,
-                                    v.pelunasan,
-                                    v.operator
-                                  )
-                                }
-                              >
-                                Detail
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleRetur(e, v.no_faktur_beli)
-                                }
-                              >
-                                Retur
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleDelete(e, v.no_faktur_beli)
-                                }
-                              >
-                                Delete
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleChangePage(
-                                    e,
-                                    v.no_faktur_beli,
-                                    v.kd_lokasi,
-                                    "-",
-                                    v.kode_supplier,
-                                    v.nama_penerima,
-                                    v.nonota,
-                                    v.type
-                                  )
-                                }
-                              >
-                                Edit
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledButtonDropdown>
-                        </td>
-                        <td className="middle nowrap">{v.no_faktur_beli}</td>
-                        <td className="middle nowrap">
-                          {moment(v.tgl_beli).format("YYYY-MM-DD")}
-                        </td>
-                        <td className="middle nowrap">{v.nama_penerima}</td>
-                        <td className="middle nowrap">{v.type}</td>
-                        <td className="middle nowrap">{v.pelunasan}</td>
-                        <td className="middle nowrap">{v.disc}</td>
-                        <td className="middle nowrap">{v.ppn}</td>
-                        <td className="middle nowrap">{v.supplier}</td>
-                        <td className="middle nowrap">{v.operator}</td>
-                        <td className="middle nowrap">{v.lokasi}</td>
-                        <td className="middle nowrap">{v.serial}</td>
-                        <td className="middle nowrap">{v.jumlah_pembayaran}</td>
-                        <td className="middle nowrap">
-                          {v.pelunasan.toLowerCase() === "lunas"
-                            ? 0
-                            : toRp(
-                                parseFloat(v.total_beli) -
-                                  parseFloat(v.jumlah_bayar)
-                              )}
-                        </td>
-                        <td className="middle nowrap">{v.qty_beli}</td>
-                        <td className="middle nowrap">
-                          {toRp(parseInt(v.total_beli, 10))}
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={17}>No Data.</td>
-                  </tr>
-                )
-              ) : (
-                <tr>
-                  <td colSpan={17}>No Data.</td>
-                </tr>
-              )}
+                          <td className="text-center middle nowrap">
+                            <UncontrolledButtonDropdown>
+                              <DropdownToggle caret></DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.toggle(
+                                      e,
+                                      v.no_faktur_beli,
+                                      moment(v.tgl_beli).format("YYYY-MM-DD"),
+                                      v.lokasi,
+                                      v.nama_penerima,
+                                      v.pelunasan,
+                                      v.operator
+                                    )
+                                  }
+                                >
+                                  Detail
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handleRetur(e, v.no_faktur_beli)
+                                  }
+                                >
+                                  Retur
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handleDelete(e, v.no_faktur_beli)
+                                  }
+                                >
+                                  Delete
+                                </DropdownItem>
+                                <DropdownItem
+                                  onClick={(e) =>
+                                    this.handleChangePage(
+                                      e,
+                                      v.no_faktur_beli,
+                                      v.kd_lokasi,
+                                      "-",
+                                      v.kode_supplier,
+                                      v.nama_penerima,
+                                      v.nonota,
+                                      v.type
+                                    )
+                                  }
+                                >
+                                  Edit
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </UncontrolledButtonDropdown>
+                          </td>
+                          <td className="middle nowrap">{v.no_faktur_beli}</td>
+                          <td className="middle nowrap">
+                            {moment(v.tgl_beli).format("YYYY-MM-DD")}
+                          </td>
+                          <td className="middle nowrap">{v.nama_penerima}</td>
+                          <td className="middle nowrap">{v.type}</td>
+                          <td className="middle nowrap">{v.pelunasan}</td>
+                          <td className="middle nowrap">{v.disc}</td>
+                          <td className="middle nowrap">{v.ppn}</td>
+                          <td className="middle nowrap">{v.supplier}</td>
+                          <td className="middle nowrap">{v.operator}</td>
+                          <td className="middle nowrap">{v.lokasi}</td>
+                          <td className="middle nowrap">{v.serial}</td>
+                          <td className="middle nowrap">
+                            {v.jumlah_pembayaran}
+                          </td>
+                          <td className="middle nowrap">
+                            {v.pelunasan.toLowerCase() === "lunas"
+                              ? 0
+                              : toRp(
+                                  parseFloat(v.total_beli) -
+                                    parseFloat(v.jumlah_bayar)
+                                )}
+                          </td>
+                          <td className="middle nowrap">{v.qty_beli}</td>
+                          <td className="middle nowrap">
+                            {toRp(parseInt(v.total_beli, 10))}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  : noData(17)
+                : noData(17)}
             </tbody>
 
             <tfoot>
               <tr style={{ backgroundColor: "#EEEEEE" }}>
-                <td colSpan="16">TOTAL PERPAGE</td>
+                <td colSpan="16">Total perhalaman</td>
                 <td style={{ textAlign: "right" }}>{toRp(tot_beli)}</td>
               </tr>
             </tfoot>

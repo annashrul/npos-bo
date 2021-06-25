@@ -20,243 +20,127 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
+import {
+  dateRange,
+  generateNo,
+  getStorage,
+  isEmptyOrUndefined,
+  setStorage,
+} from "../../../../../helper";
+import LokasiCommon from "../../../common/LokasiCommon";
+import SelectCommon from "../../../common/SelectCommon";
+import SelectSortCommon from "../../../common/SelectSortCommon";
+
+const dateFromStorage = "dateFromReportPo";
+const dateToStorage = "dateToReportPo";
+const locationStorage = "locationReportPoe";
+const columnStorage = "columnReportPo";
+const sortStorage = "sortReportPo";
+const statusStorage = "statusReportPo";
+const anyStorage = "anyReportPo";
 
 class PoReport extends Component {
   constructor(props) {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
     this.toggle = this.toggle.bind(this);
-    this.handleEvent = this.handleEvent.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
+    this.handleChangeSelect = this.handleChangeSelect.bind(this);
     this.state = {
       master: {},
       where_data: "",
       any: "",
       location: "",
-      location_data: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      dateFrom: moment(new Date()).format("yyyy-MM-DD"),
+      dateTo: moment(new Date()).format("yyyy-MM-DD"),
       sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
+      column: "",
       status: "",
-      status_data: [],
+      column_data: [
+        { value: "no_po", label: "No. PO" },
+        { value: "tgl_po", label: "Tanggal PO" },
+        { value: "tglkirim", label: "Tanggal Kirim" },
+        { value: "nama_supplier", label: "Nama Supplier" },
+        { value: "status", label: "Status" },
+        { value: "kode_supplier", label: "Kode Supplier" },
+      ],
+      status_data: [
+        { value: "", label: "Semua" },
+        { value: "0", label: "Processing" },
+        { value: "1", label: "Ordered" },
+      ],
       isModalDetail: false,
       isModalExport: false,
     };
   }
 
+  handleService(page = 1) {
+    let tglAwal = getStorage(dateFromStorage);
+    let tglAkhir = getStorage(dateToStorage);
+    let lokasi = getStorage(locationStorage);
+    let kolom = getStorage(columnStorage);
+    let urutan = getStorage(sortStorage);
+    let stts = getStorage(statusStorage);
+    let any = getStorage(anyStorage);
+    let where = `page=${page}`;
+    let state = {};
+    if (isEmptyOrUndefined(tglAwal) && isEmptyOrUndefined(tglAkhir)) {
+      where = `page=${page}&datefrom=${tglAwal}&dateto=${tglAkhir}`;
+      Object.assign(state, { dateFrom: tglAwal, dateTo: tglAkhir });
+    } else {
+      where = `page=${page}&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
+    }
+    if (isEmptyOrUndefined(lokasi)) {
+      where += `&lokasi=${lokasi}`;
+      Object.assign(state, { location: lokasi });
+    }
+    if (isEmptyOrUndefined(kolom)) {
+      if (isEmptyOrUndefined(urutan)) {
+        where += `&sort=${kolom}|${urutan}`;
+        Object.assign(state, { sort: urutan, column: kolom });
+      }
+    }
+    if (isEmptyOrUndefined(stts)) {
+      where += `&status=${stts}`;
+      Object.assign(state, { status: stts });
+    }
+    if (isEmptyOrUndefined(any)) {
+      where += `&q=${any}`;
+      Object.assign(state, { any: any });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
+    this.props.dispatch(fetchPoReport(where));
+  }
+  handleChangeSelect(state, res) {
+    if (state === "location") setStorage(locationStorage, res.value);
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
+    if (state === "status") setStorage(statusStorage, res.value);
+    setTimeout(() => this.handleService(1), 500);
+  }
+
   componentWillUnmount() {
     this.setState({ isModalDetail: false, isModalExport: false });
   }
-
-  getProps(param) {
-    if (param.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = param.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-  }
-  componentWillReceiveProps(nextProps) {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "no_po", value: "No. PO" },
-      { kode: "tgl_po", value: "Tanggal PO" },
-      { kode: "tglkirim", value: "Tanggal Kirim" },
-      { kode: "nama_supplier", value: "Nama Supplier" },
-      { kode: "status", value: "Status" },
-      { kode: "kode_supplier", value: "Kode Supplier" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let status = [
-      { kode: "", value: "Semua" },
-      { kode: "0", value: "Processing" },
-      { kode: "1", value: "Ordered" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      status_data: data_status,
-    });
-    this.getProps(nextProps);
-
-    localStorage.setItem(
-      "status_po_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_po_report
-    );
-    localStorage.setItem(
-      "sort_po_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_po_report
-    );
-    localStorage.setItem(
-      "filter_po_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_po_report
-    );
-  }
   componentWillMount() {
-    this.getProps(this.props);
-    let page = localStorage.page_po_report;
-    if (page !== undefined && page !== null) {
-      this.handleParamter(page);
-    } else {
-      this.handleParamter(1);
-    }
+    this.handleService(1);
   }
   componentDidMount() {
-    if (
-      localStorage.location_po_report !== undefined &&
-      localStorage.location_po_report !== null
-    ) {
-      this.setState({ location: localStorage.location_po_report });
-    }
-    if (
-      localStorage.any_po_report !== undefined &&
-      localStorage.any_po_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_po_report });
-    }
-    if (
-      localStorage.date_from_po_report !== undefined &&
-      localStorage.date_from_po_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_po_report });
-    }
-    if (
-      localStorage.date_to_po_report !== undefined &&
-      localStorage.date_to_po_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_po_report });
-    }
-    if (
-      localStorage.sort_po_report !== undefined &&
-      localStorage.sort_po_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_po_report });
-    }
-    if (
-      localStorage.filter_po_report !== undefined &&
-      localStorage.filter_po_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_po_report });
-    }
-    if (
-      localStorage.status_po_report !== undefined &&
-      localStorage.status_po_report !== null
-    ) {
-      this.setState({ status: localStorage.status_po_report });
-    }
+    this.handleService(1);
   }
-  handleParamter(pageNumber) {
-    let dateFrom = localStorage.date_from_po_report;
-    let dateTo = localStorage.date_to_po_report;
-    let lokasi = localStorage.location_po_report;
-    let any = localStorage.any_po_report;
-    let sort = localStorage.sort_po_report;
-    let filter = localStorage.filter_po_report;
-    let status = localStorage.status_po_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&dateFrom=${dateFrom}&dateTo=${dateTo}`;
-    }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      where += `&lokasi=${lokasi}`;
-    }
-    if (status !== undefined && status !== null && status !== "") {
-      where += `&status=${status}`;
-    }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    console.log(where);
-    this.props.dispatch(fetchPoReport(pageNumber, where));
-    // this.props.dispatch(fetchPoReportExcel(pageNumber,where))
-  }
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_po_report", `${awal}`);
-    localStorage.setItem("date_to_po_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
-  HandleChangeLokasi(lk) {
-    this.setState({ location: lk.value });
-    localStorage.setItem("location_po_report", lk.value);
-  }
+
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_po_report", pageNumber);
-    this.handleParamter(pageNumber);
+    this.handleService(pageNumber);
   }
   handleSearch(e) {
     e.preventDefault();
-    localStorage.setItem("any_po_report", this.state.any);
-    this.handleParamter(1);
+    setStorage(anyStorage, this.state.any);
+    setTimeout(() => this.handleService(1), 300);
   }
   toggle(e, no_po, i) {
     e.preventDefault();
@@ -283,25 +167,6 @@ class PoReport extends Component {
     });
   }
 
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_po_report", sr.value);
-  }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_po_report", fl.value);
-  }
-  HandleChangeStatus(st) {
-    this.setState({
-      status: st.value,
-    });
-    localStorage.setItem("status_po_report", st.value);
-  }
-
   toggleModal(e, total, perpage) {
     e.preventDefault();
     const bool = !this.props.isOpen;
@@ -314,11 +179,6 @@ class PoReport extends Component {
   }
 
   render() {
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
     const {
       // total,
       last_page,
@@ -332,145 +192,97 @@ class PoReport extends Component {
     return (
       <Layout page="Laporan Purchase Order">
         <div className="row" style={{ zoom: "90%" }}>
-          <div className="col-md-11" style={{ zoom: "90%" }}>
+          <div className="col-md-12">
             <div className="row">
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
+              <div className="col-6 col-xs-6 col-md-3">
+                {dateRange((first, last) => {
+                  setStorage(dateFromStorage, first);
+                  setStorage(dateToStorage, last);
+                  setTimeout(() => this.handleService(1), 500);
+                }, `${this.state.dateFrom} to ${this.state.dateTo}`)}
               </div>
-              <div className="col-6 col-xs-6 col-md-2">
+              <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
-                  <label htmlFor="">Lokasi</label>
-                  <Select
-                    options={this.state.location_data}
-                    onChange={this.HandleChangeLokasi}
-                    placeholder="Pilih Lokasi"
-                    value={this.state.location_data.find((op) => {
-                      return op.value === this.state.location;
-                    })}
+                  <LokasiCommon
+                    isAll={true}
+                    callback={(res) => this.handleChangeSelect("location", res)}
+                    dataEdit={this.state.location}
                   />
                 </div>
               </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Status</label>
-                  <Select
-                    options={this.state.status_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeStatus}
-                    value={this.state.status_data.find((op) => {
-                      return op.value === this.state.status;
-                    })}
-                  />
-                </div>
+              <div className="col-6 col-xs-6 col-md-3">
+                <SelectCommon
+                  label="Status"
+                  options={this.state.status_data}
+                  callback={(res) => this.handleChangeSelect("status", res)}
+                  dataEdit={this.state.status}
+                />
               </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
+              <div className="col-6 col-xs-6 col-md-3">
+                <SelectCommon
+                  label="Kolom"
+                  options={this.state.column_data}
+                  callback={(res) => this.handleChangeSelect("column", res)}
+                  dataEdit={this.state.column}
+                />
               </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
+              <div className="col-6 col-xs-6 col-md-3">
+                <SelectSortCommon
+                  callback={(res) => this.handleChangeSelect("sort", res)}
+                  dataEdit={this.state.sort}
+                />
               </div>
-              <div className="col-6 col-xs-6 col-md-2">
+              <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
                   <label>Cari</label>
                   <input
                     className="form-control"
                     type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
                     name="any"
                     value={this.state.any}
                     onChange={(e) => this.handleChange(e)}
                   />
                 </div>
               </div>
+              <div className="col-md-2">
+                <button
+                  style={{ marginTop: "28px", marginRight: "5px" }}
+                  className="btn btn-primary"
+                  onClick={this.handleSearch}
+                >
+                  <i className="fa fa-search" />
+                </button>
+                <button
+                  style={{ marginTop: "28px" }}
+                  className="btn btn-primary"
+                  onClick={(e) =>
+                    this.toggleModal(e, last_page * per_page, per_page)
+                  }
+                >
+                  <i className="fa fa-print"></i>
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div className="col-md-1 text-right" style={{ zoom: "90%" }}>
-            <button
-              style={{ marginTop: "28px", marginRight: "5px" }}
-              className="btn btn-primary"
-              onClick={this.handleSearch}
-            >
-              <i className="fa fa-search" />
-            </button>
-            <button
-              style={{ marginTop: "28px" }}
-              className="btn btn-primary"
-              onClick={(e) =>
-                this.toggleModal(e, last_page * per_page, per_page)
-              }
-            >
-              <i className="fa fa-print"></i>
-            </button>
           </div>
         </div>
         <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black text-center middle nowrap" width="1%">
+                  No
+                </th>
+                <th className="text-black text-center middle nowrap" width="1%">
                   #
                 </th>
-                <th className="text-black" style={columnStyle}>
-                  No. PO
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Tanggal
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Tanggal Kirim
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Nama Supplier
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Lokasi
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Jenis
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Operator
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Status
-                </th>
+                <th className="text-black middle nowrap">No. PO</th>
+                <th className="text-black middle nowrap">Tanggal</th>
+                <th className="text-black middle nowrap">Tanggal Kirim</th>
+                <th className="text-black middle nowrap">Nama Supplier</th>
+                <th className="text-black middle nowrap">Lokasi</th>
+                <th className="text-black middle nowrap">Jenis</th>
+                <th className="text-black middle nowrap">Operator</th>
+                <th className="text-black middle nowrap">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -478,11 +290,14 @@ class PoReport extends Component {
                 data.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td style={columnStyle}>
+                      <td className="text-center middle nowrap">
+                        {generateNo(i, current_page)}
+                      </td>
+                      <td className="text-center middle nowrap">
                         {/* Example split danger button */}
                         <div className="btn-group">
                           <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>Aksi</DropdownToggle>
+                            <DropdownToggle caret></DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem
                                 onClick={(e) => this.toggle(e, v.no_po, i)}
@@ -493,21 +308,21 @@ class PoReport extends Component {
                           </UncontrolledButtonDropdown>
                         </div>
                       </td>
-                      <td style={columnStyle}>{v.no_po}</td>
-                      <td style={columnStyle}>
+                      <td className="middle nowrap">{v.no_po}</td>
+                      <td className="middle nowrap">
                         {moment(v.tgl_po).format("YYYY-MM-DD")}
                       </td>
-                      <td style={columnStyle}>
+                      <td className="middle nowrap">
                         {moment(v.tglkirim).format("YYYY-MM-DD")}
                       </td>
-                      <td style={columnStyle}>{v.nama_supplier}</td>
-                      <td style={columnStyle}>{v.lokasi}</td>
-                      <td style={columnStyle}>{v.jenis}</td>
-                      <td style={columnStyle}>{v.kd_kasir}</td>
-                      <td style={columnStyle}>
+                      <td className="middle nowrap">{v.nama_supplier}</td>
+                      <td className="middle nowrap">{v.lokasi}</td>
+                      <td className="middle nowrap">{v.jenis}</td>
+                      <td className="middle nowrap">{v.kd_kasir}</td>
+                      <td className="middle nowrap">
                         {v.status === "0"
-                          ? statusQ("warning", "Processing")
-                          : statusQ("success", "Ordered")}
+                          ? statusQ("warning", "Proses")
+                          : statusQ("success", "Order")}
                       </td>
                     </tr>
                   );
