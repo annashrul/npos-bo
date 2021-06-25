@@ -33,15 +33,13 @@ class Sales extends Component {
   render() {
     return (
       <Layout page="Sales">
-        <div className="col-12 box-margin">
-          <ListSales
-            data={this.props.sales}
-            pagin={this.handlePagin}
-            search={this.handleSearch}
-            token={this.state.token}
-            auth={this.props.auth}
-          />
-        </div>
+        <ListSales
+          data={this.props.sales}
+          pagin={this.handlePagin}
+          search={this.handleSearch}
+          token={this.state.token}
+          auth={this.props.auth}
+        />
       </Layout>
     );
   }

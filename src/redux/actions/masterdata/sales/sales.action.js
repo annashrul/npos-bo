@@ -1,8 +1,14 @@
 import { SALES, HEADERS } from "../../_constants";
 import axios from "axios";
-import Swal from "sweetalert2";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import {
+  handleDelete,
+  handleGet,
+  handlePost,
+  handlePut,
+} from "../../handleHttp";
+import { swal } from "../../../../helper";
+import { ModalToggle } from "redux/actions/modal.action";
+
 export function setLoading(load) {
   return { type: SALES.LOADING, load };
 }
@@ -17,29 +23,18 @@ export function setSalesFailed(data = []) {
   return { type: SALES.FAILED, data };
 }
 
-export const FetchSales = (page = 1, q = "") => {
+export const FetchSales = (where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Nprogress.start();
-    let url = "";
-    if (q === "") {
-      url = `sales?page=${page}`;
-    } else {
-      url = `sales?page=${page}&q=${q}`;
-    }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
+    let url = "sales";
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        const data = res.data;
         dispatch(setSales(data));
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+      },
+      true
+    );
   };
 };
 export const FetchSalesAll = (lok) => {
@@ -62,151 +57,32 @@ export const FetchSalesAll = (lok) => {
   };
 };
 
-export const createSales = (data, token) => {
+export const createSales = (data) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `sales`;
-
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchSales(
-            localStorage.getItem("page_sales")
-              ? localStorage.getItem("page_sales")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
+    handlePost("sales", data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchSales("page=1"));
+      }
+    });
   };
 };
 export const updateSales = (id, data, token) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `sales/${id}`;
-
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchSales(
-            localStorage.getItem("page_sales")
-              ? localStorage.getItem("page_sales")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handlePut("sales/" + id, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchSales("page=1"));
+      }
+    });
   };
 };
-export const deleteSales = (id, token) => {
+export const deleteSales = (id) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `sales/${id}`;
-
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(
-          FetchSales(
-            localStorage.getItem("page_sales")
-              ? localStorage.getItem("page_sales")
-              : 1,
-            ""
-          )
-        );
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(`sales/${id}`, () => {
+      dispatch(FetchSales("page=1"));
+    });
   };
 };

@@ -14,7 +14,7 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
-import { generateNo } from "../../../../../helper";
+import { generateNo, swallOption } from "../../../../../helper";
 
 class ListSales extends Component {
   constructor(props) {
@@ -22,25 +22,25 @@ class ListSales extends Component {
     this.handlesearch = this.handlesearch.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.state = {
+      any: "",
       detail: {},
       lokasi_data: [],
     };
   }
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_sales", pageNumber);
-    this.props.dispatch(FetchSales(pageNumber, ""));
+    this.handleService(this.state.any, pageNumber);
+  }
+  handleService(any, page) {
+    let where = `page=${page}`;
+    if (any !== "") where += `q=${any}`;
+    this.props.dispatch(FetchSales(where));
   }
   handlesearch(e) {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    let any = data.get("field_any");
-    localStorage.setItem("any_sales", any);
-    if (any === "" || any === null || any === undefined) {
-      this.props.dispatch(FetchSales(1, ""));
-    } else {
-      this.props.dispatch(FetchSales(1, any));
-    }
+    let any = data.get("any");
+    this.handleService(any, 1);
   }
   toggleModal(e, i) {
     e.preventDefault();
@@ -62,61 +62,48 @@ class ListSales extends Component {
   }
   handleDelete(e, id) {
     e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deleteSales(id, this.props.token));
-      }
-    });
+    this.props.dispatch(deleteSales(id));
   }
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
     const { total, per_page, current_page, data } = this.props.data;
     return (
-      <div>
+      <div className="col-12 box-margin">
         <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
-              <div className="form-group">
-                <label>Search</label>
+              <div className="input-group input-group-sm">
                 <input
-                  type="text"
-                  className="form-control"
-                  name="field_any"
-                  defaultValue={localStorage.getItem("any_sales")}
+                  type="search"
+                  name="any"
+                  className="form-control form-control-sm"
+                  placeholder="cari berdasarkan nama"
+                  value={this.state.any}
+                  onChange={(e) => {
+                    this.setState({ any: e.target.value });
+                  }}
                 />
+                <span className="input-group-append">
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fa fa-search" />
+                  </button>
+                </span>
               </div>
             </div>
-            <div className="col-2 col-xs-4 col-md-4">
-              <div className="form-group">
+            <div className="col-2 col-xs-2 col-md-9">
+              <div className="form-group text-right">
                 <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-                <button
-                  style={{ marginTop: "27px", marginRight: "2px" }}
+                  style={{ height: "38px" }}
                   type="button"
                   onClick={(e) => this.toggleModal(e, null)}
                   className="btn btn-primary"
                 >
-                  <i className="fa fa-plus"></i>
+                  <i className="fa fa-plus" />
                 </button>
               </div>
             </div>
           </div>
         </form>
-        <div className="table-responsive" style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto" }}>
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
@@ -128,8 +115,9 @@ class ListSales extends Component {
                 </th>
                 <th className="text-black middle nowrap">Nama</th>
                 <th className="text-black middle nowrap">Lokasi</th>
-                <th className="text-black middle nowrap">Status</th>
-                {/* <th className="text-black" style={columnStyle}>KODE</th> */}
+                <th className="text-black middle nowrap" width="1%">
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody>
