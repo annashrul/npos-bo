@@ -284,9 +284,7 @@ class SaleReportExcel extends Component {
         centered
         keyboard
       >
-        <ModalHeader toggle={this.toggle}>
-          Manage Export {this.props.percent}
-        </ModalHeader>
+        <ModalHeader toggle={this.toggle}>Manage Export</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           {!this.props.isLoadingReport ? (
             <ModalBody>

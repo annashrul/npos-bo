@@ -187,7 +187,7 @@ class SaleArchive extends Component {
     let total_tunai = 0;
     let loadings;
 
-    if (this.props.percent === "menyiapkan data") {
+    if (this.props.percent === "loading") {
       loadings = this.props.percent;
     } else if (this.props.percent > 0 && this.props.percent < 100) {
       loadings = this.props.percent + "%";

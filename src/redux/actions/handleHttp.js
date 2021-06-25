@@ -39,7 +39,7 @@ export const handleError = (err) => {
 
 export const handleGet = (url, callback, isLoading = true, onProgress) => {
   if (isLoading) Nprogress.start();
-  if (onProgress !== undefined) onProgress("menyiapkan data");
+  if (onProgress !== undefined) onProgress("loading");
   axios
     .get(HEADERS.URL + url, {
       onDownloadProgress: (progressEvent) => {
@@ -84,7 +84,6 @@ export const handlePost = async (
           callback(datum, datum.msg, false);
         }
         loading(false);
-
       }, 800);
     })
     .catch(function (error) {
