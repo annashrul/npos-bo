@@ -137,3 +137,28 @@ export const handleDelete = async (
       });
   });
 };
+
+export const handleGetExport = (url, callback, download) => {
+  Nprogress.start();
+  download("loading");
+  axios
+    .get(HEADERS.URL + url, {
+      onDownloadProgress: (progressEvent) => {
+        let percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        Nprogress.set(percentCompleted / 100);
+        download(percentCompleted);
+      },
+    })
+    .then(function (response) {
+      callback(response);
+      Nprogress.done();
+      download(0);
+    })
+    .catch(function (error) {
+      Nprogress.done();
+      handleError(error);
+      download(0);
+    });
+};

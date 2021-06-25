@@ -23,6 +23,12 @@ export const HEADERS = {
   PASSWORD: "$2b$08$hLMU6rEvNILCMaQbthARK.iCmDRO7jNbUB8CcvyRStqsHD4UQxjDO",
 };
 
+export const EXTENSION = {
+  CSV: "csv",
+  XLXS: "xlsx",
+  PDF: "pdf",
+};
+
 export const CONFIG_HIDE = {
   HIDE_HRG_BELI: "admin-cabang",
 };

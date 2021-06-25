@@ -6,7 +6,6 @@ import {
   FetchSaleReturReportExcel,
 } from "redux/actions/sale/sale.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import SaleReturReportExcel from "components/App/modals/report/sale/form_sale_retur_excel";
 import moment from "moment";
 import {
@@ -14,15 +13,28 @@ import {
   generateNo,
   handleDataSelect,
   isEmptyOrUndefined,
+  setStorage,
+  getStorage,
+  noData,
+  isProgress,
 } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
 import SelectSortCommon from "../../common/SelectSortCommon";
+import ExportCommon from "../../common/ExportCommon";
+
+const dateFromStorage = "dateFromReportSaleReturArchive";
+const dateToStorage = "dateToReportSaleReturArchive";
+const locationStorage = "locationReportSaleReturArchive";
+const columnStorage = "columnReportSaleReturArchive";
+const sortStorage = "sortReportSaleReturArchive";
+const anyStorage = "anyReportSaleReturArchive";
 
 class SaleReturReport extends Component {
   constructor(props) {
     super(props);
     this.handleChangeSelect = this.handleChangeSelect.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.state = {
       where_data: "",
       any: "",
@@ -32,8 +44,8 @@ class SaleReturReport extends Component {
       sort: "",
       isModalReport: false,
       where_data: "",
-      filter: "",
-      filter_data: [
+      column: "",
+      column_data: [
         { kode: "kd_trx", value: "Kode Trx" },
         { kode: "tgl", value: "Tanggal" },
         { kode: "nama", value: "Nama" },
@@ -42,6 +54,7 @@ class SaleReturReport extends Component {
       ],
     };
   }
+
   componentWillUnmount() {
     this.setState({ isModalReport: false });
   }
@@ -56,27 +69,55 @@ class SaleReturReport extends Component {
   toggleModal(e, total) {
     e.preventDefault();
     this.setState({ isModalReport: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formSaleReturExcel"));
     this.props.dispatch(
       FetchSaleReturReportExcel(1, this.state.where_data, total)
     );
   }
-  handleChangeSelect(state, val) {
-    this.setState({ [state]: val.value });
+  handleChangeSelect(state, res) {
+    if (state === "location") setStorage(locationStorage, res.value);
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
     setTimeout(() => this.handleService(), 300);
   }
 
   handleService(page = 1) {
-    const { startDate, endDate, location, filter, sort, any } = this.state;
-    let where = `page=${page}&datefrom=${startDate}&dateto=${endDate}`;
-    if (isEmptyOrUndefined(location)) where += `&lokasi=${location}`;
-    if (isEmptyOrUndefined(sort) && isEmptyOrUndefined(filter))
-      where += `&sort=${filter}|${sort}`;
-    if (isEmptyOrUndefined(any)) where += `&q=${any}`;
-    this.setState({ where_data: where });
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getLocation = getStorage(locationStorage);
+    let getColumn = getStorage(columnStorage);
+    let getSort = getStorage(sortStorage);
+    let getAny = getStorage(anyStorage);
+
+    let where = `page=${page}`;
+    let state = {};
+
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+    }
+    if (isEmptyOrUndefined(getLocation)) {
+      where += `&lokasi=${getLocation}`;
+      Object.assign(state, { lokasi: getLocation });
+    }
+    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
+      where += `&sort${getColumn}|${getSort}`;
+      Object.assign(state, { column: getColumn, sort: getSort });
+    }
+
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
     this.props.dispatch(FetchSaleReturReport(where));
+  }
+
+  handleSearch(e) {
+    e.preventDefault();
+    this.handleService();
   }
 
   render() {
@@ -95,7 +136,8 @@ class SaleReturReport extends Component {
         <div className="row" style={{ zoom: "90%" }}>
           <div className="col-6 col-xs-6 col-md-2">
             {dateRange((first, last) => {
-              this.setState({ startDate: first, endDate: last });
+              setStorage(dateFromStorage, first);
+              setStorage(dateToStorage, last);
               setTimeout(() => this.handleService(), 300);
             }, `${this.state.startDate} to ${this.state.endDate}`)}
           </div>
@@ -111,11 +153,11 @@ class SaleReturReport extends Component {
             <SelectCommon
               label="Kolom"
               options={handleDataSelect(
-                this.state.filter_data,
+                this.state.column_data,
                 "kode",
                 "value"
               )}
-              callback={(res) => this.handleChangeSelect("filter", res)}
+              callback={(res) => this.handleChangeSelect("column", res)}
             />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
@@ -132,10 +174,13 @@ class SaleReturReport extends Component {
                 className="form-control"
                 placeholder="tulis sesuatu disini"
                 value={this.state.any}
-                onChange={(e) => this.setState({ any: e.target.value })}
+                onChange={(e) => {
+                  this.setState({ any: e.target.value });
+                  setStorage(anyStorage, e.target.value);
+                }}
                 onKeyPress={(event) => {
                   if (event.key === "Enter") {
-                    this.handleService();
+                    this.handleSearch(event);
                   }
                 }}
               />
@@ -144,8 +189,7 @@ class SaleReturReport extends Component {
                   type="button"
                   className="btn btn-primary"
                   onClick={(e) => {
-                    e.preventDefault();
-                    this.handleService();
+                    this.handleSearch(e);
                   }}
                 >
                   <i className="fa fa-search" />
@@ -162,7 +206,7 @@ class SaleReturReport extends Component {
                   this.toggleModal(e, last_page * per_page, per_page)
                 }
               >
-                <i className="fa fa-print" />
+                {isProgress(this.props.percent)}
               </button>
             </div>
           </div>
@@ -191,38 +235,30 @@ class SaleReturReport extends Component {
             </thead>
             {
               <tbody>
-                {typeof data === "object" ? (
-                  data.length > 0 ? (
-                    data.map((v, i) => {
-                      return (
-                        <tr key={i}>
-                          <td className="text-center middle nowrap">
-                            {generateNo(i, current_page)}
-                          </td>
-                          <td className="middle nowrap">{v.kd_trx}</td>
-                          <td className="middle nowrap">{v.nama}</td>
-                          <td className="middle nowrap text-right">
-                            {v.nilai_retur}
-                          </td>
-                          <td className="middle nowrap text-right">
-                            {v.diskon_item}
-                          </td>
-                          <td className="middle nowrap">
-                            {moment(v.tgl).format("DD-MM-YYYY")}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={6}>No Data</td>
-                    </tr>
-                  )
-                ) : (
-                  <tr>
-                    <td colSpan={6}>No Data</td>
-                  </tr>
-                )}
+                {typeof data === "object"
+                  ? data.length > 0
+                    ? data.map((v, i) => {
+                        return (
+                          <tr key={i}>
+                            <td className="text-center middle nowrap">
+                              {generateNo(i, current_page)}
+                            </td>
+                            <td className="middle nowrap">{v.kd_trx}</td>
+                            <td className="middle nowrap">{v.nama}</td>
+                            <td className="middle nowrap text-right">
+                              {v.nilai_retur}
+                            </td>
+                            <td className="middle nowrap text-right">
+                              {v.diskon_item}
+                            </td>
+                            <td className="middle nowrap">
+                              {moment(v.tgl).format("DD-MM-YYYY")}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : noData(6)
+                  : noData(6)}
               </tbody>
             }
           </table>
@@ -235,6 +271,13 @@ class SaleReturReport extends Component {
             callback={this.handlePageChange.bind(this)}
           />
         </div>
+        {/* <ExportCommon
+          modalType="formSaleReturExcel"
+          isPdf={true}
+          callbackPdf={() => {}}
+          isExcel={true}
+          callbackExcel={() => {}}
+        /> */}
         {/* <DetailSaleRetur sale_returDetail={this.props.sale_returDetail}/> */}
         {this.props.isOpen && this.state.isModalReport ? (
           <SaleReturReportExcel
@@ -256,6 +299,7 @@ const mapStateToProps = (state) => {
     sale_returReportExcel: state.saleReducer.sale_retur_export,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
+    percent: state.saleReducer.percent,
   };
 };
 export default connect(mapStateToProps)(SaleReturReport);

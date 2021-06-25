@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import { isError } from "lodash";
+import XLSX from "xlsx";
 
 export const generateNo = (i, current_page) => {
   return i + 1 + 10 * (parseInt(current_page, 10) - 1);
@@ -33,6 +33,61 @@ export const stringifyFormData = (fd) => {
     data[key] = fd.get(key);
   }
   return data;
+};
+
+export const toExcel = (
+  title = "",
+  periode = "",
+  head = [],
+  content = [],
+  foot = [],
+  ext = "xlsx"
+) => {
+  let header = [[title.toUpperCase()], [`PERIODE : ${periode}`], [""], head];
+  let footer = foot;
+  let body = header.concat(content);
+  let data = footer === undefined || footer === [] ? body : body.concat(footer);
+  let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+  let merge = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: head.length } },
+    { s: { r: 1, c: 0 }, e: { r: 1, c: head.length } },
+  ];
+  if (!ws["!merges"]) ws["!merges"] = [];
+  ws["!merges"] = merge;
+  ws["!ref"] = XLSX.utils.encode_range({
+    s: { c: 0, r: 0 },
+    e: { c: head.length, r: data.length },
+  });
+  ws["A1"].s = {
+    alignment: {
+      vertical: "middle",
+    },
+  };
+
+  let wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, title.toUpperCase());
+  let exportFileName = `${title.replaceAll(" ", "_").toUpperCase()}_${moment(
+    new Date()
+  ).format("YYYYMMDDHHMMss")}.${ext}`;
+  XLSX.writeFile(wb, exportFileName, { type: "file", bookType: ext });
+  return;
+};
+
+export const headerPdf = (master) => {
+  let stringHtml = "";
+  stringHtml +=
+    '<div style="text-align:center>' +
+    '<h3 align="center"><center>PERIODE : ' +
+    `${master.dateFrom}`.replaceAll("-", "/") +
+    " - " +
+    `${master.dateTo}`.replaceAll("-", "/") +
+    "</center></h3>" +
+    '<h3 align="center"><center>&nbsp;</center></h3>' +
+    '<h3 style="text-align:center"><center>LAPORAN ' +
+    master.title +
+    "</center></h3>" +
+    "</div>";
+  return stringHtml;
 };
 
 export const myPdf = (
@@ -633,6 +688,18 @@ export const dataStatus = (isAll = false) => {
   data.push({ value: "0", label: "Tidak aktif" });
 
   return data;
+};
+
+export const isProgress = (props) => {
+  let loading;
+  if (props === "loading") {
+    loading = props;
+  } else if (props > 0 && props < 100) {
+    loading = props + "%";
+  } else {
+    loading = <i className="fa fa-print"></i>;
+  }
+  return loading;
 };
 
 class Paginationq extends Component {

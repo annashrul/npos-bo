@@ -2,10 +2,10 @@ import { SALE, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy, del } from "components/model/app.model";
-import moment from "moment";
 import {
   handleDelete,
   handleGet,
+  handleGetExport,
   handlePost,
   handlePut,
   loading,
@@ -15,7 +15,7 @@ import "nprogress/nprogress.css";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import { setStorage, ToastQ } from "../../../helper";
+import { handleError, setStorage, ToastQ } from "../../../helper";
 import { ModalType } from "../modal.action";
 
 export function setLoading(load) {
@@ -269,86 +269,24 @@ export const FetchReportSale = (where = "") => {
   };
 };
 
-export const FetchReportSaleExcel = (where = "", perpage = "", callback) => {
+export const FetchReportSaleExcel = (where = "", perpage = "") => {
   return (dispatch) => {
-    dispatch(setLoading(0));
     let url = `report/arsip_penjualan?page=1&perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
-    handleGet(
+    handleGetExport(
       url,
       (res) => {
-        const data = res.data;
-        dispatch(setReportExcel(data));
+        const datum = res.data;
+        dispatch(setReportExcel(datum));
         dispatch(ModalToggle(true));
         dispatch(ModalType("formSaleExcel"));
-        dispatch(setLoading(0));
       },
-      true,
       (percent) => {
         dispatch(setLoading(percent));
       }
     );
-    // console.log("balik");
-    // const client = axios.create({
-    //   baseURL: HEADERS.URL,
-    //   timeout: 9999999999,
-    // });
-    // client
-    //   .get(url, {
-    //     onDownloadProgress: (progressEvent) => {
-    //       console.log(
-    //         progressEvent.srcElement.getResponseHeader("content-length")
-    //       );
-    //       x++;
-    //       console.log(x);
-    //       let percentCompleted = Math.round(
-    //         (progressEvent.loaded * 100) / progressEvent.total
-    //       );
-    //       dispatch(setLoading(percentCompleted));
-    //       // callback(percentCompleted);
-    //       // console.log(progressEvent.lengthComputable);
-    //       // loading(true, `${percentCompleted} download`);
-    //       // console.log(percentCompleted);
-    //     },
-    //   })
-    //   .then((res) => {
-    //     const data = res.data;
-    //     dispatch(setReportExcel(data));
-    //     dispatch(ModalToggle(true));
-    //     dispatch(ModalType("formSaleExcel"));
-    //     dispatch(setLoading(0));
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //     dispatch(setLoading(0));
-    //   });
-    // axios({
-    //   url: url,
-    //   method: "GET",
-    //   responseType: "blob",
-    //   onDownloadProgress: (progressEvent) => {
-    //     let percentCompleted = Math.round(
-    //       (progressEvent.loaded * 100) / progressEvent.total
-    //     ); // you can use this to show user percentage of file downloaded
-    //     console.log("completed", percentCompleted);
-    //   },
-    // }).then((res) => {
-    //   console.log(res);
-    //   loading(false);
-    // });
-    // handleGet(
-    //   url,
-    //   (res) => {
-    // const data = res.data;
-    // dispatch(setReportExcel(data));
-    // dispatch(ModalToggle(true));
-    // dispatch(ModalType("formSaleExcel"));
-    //     loading(false);
-    //   },
-    //   false
-    // );
   };
 };
 
@@ -397,25 +335,21 @@ export const FetchSaleReturReportExcel = (
   perpage = 99999
 ) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Nprogress.start();
-    // report/stock?page=1&datefrom=2020-01-01&dateto=2020-07-01&lokasi=LK%2F0001
-    let que = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
+    let url = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
     if (where !== "") {
-      que += `${where}`;
+      url += `${where}`;
     }
-
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setSaleReturReportExcel(data));
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+    handleGetExport(
+      url,
+      (res) => {
+        const datum = res.data;
+        dispatch(setSaleReturReportExcel(datum));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formSaleReturExcel"));
+      },
+      (percent) => {
+        dispatch(setLoading(percent));
+      }
+    );
   };
 };

@@ -29,12 +29,20 @@ import {
   getStorage,
   handleDataSelect,
   isEmptyOrUndefined,
+  isProgress,
   setStorage,
   swallOption,
 } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
-import { loading } from "../../../../redux/actions/handleHttp";
+
+const dateFromStorage = "dateFromReportSaleArchive";
+const dateToStorage = "dateToReportSaleArchive";
+const locationStorage = "locationReportSaleArchive";
+const typeStorage = "typeReportSaleArchive";
+const statusStorage = "statusReportSaleArchive";
+const anyStorage = "anyReportSaleArchive";
+
 class SaleArchive extends Component {
   constructor(props) {
     super(props);
@@ -71,6 +79,7 @@ class SaleArchive extends Component {
     this.handleModal = this.handleModal.bind(this);
     this.onDone = this.onDone.bind(this);
     this.handleChangeSelect = this.handleChangeSelect.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   onDone(id, id_trx) {
@@ -94,13 +103,40 @@ class SaleArchive extends Component {
   }
 
   handleService(page = 1) {
-    const { startDate, endDate, lokasi, type, status, any } = this.state;
-    let where = `page=${page}&datefrom=${startDate}&dateto=${endDate}`;
-    if (isEmptyOrUndefined(lokasi)) where += `&lokasi=${lokasi}`;
-    if (isEmptyOrUndefined(type)) where += `&type=${type}`;
-    if (isEmptyOrUndefined(status)) where += `&status=${status}`;
-    if (isEmptyOrUndefined(any)) where += `&q=${any}`;
-    this.setState({ where_data: where });
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getLocation = getStorage(locationStorage);
+    let getType = getStorage(typeStorage);
+    let getStatus = getStorage(statusStorage);
+    let getAny = getStorage(anyStorage);
+
+    let where = `page=${page}`;
+    let state = {};
+
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+    }
+    if (isEmptyOrUndefined(getLocation)) {
+      where += `&lokasi=${getLocation}`;
+      Object.assign(state, { lokasi: getLocation });
+    }
+    if (isEmptyOrUndefined(getType)) {
+      where += `&type=${getType}`;
+      Object.assign(state, { type: getType });
+    }
+    if (isEmptyOrUndefined(getStatus)) {
+      where += `&status=${getStatus}`;
+      Object.assign(state, { status: getStatus });
+    }
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
     this.props.dispatch(FetchReportSale(where));
   }
 
@@ -108,6 +144,9 @@ class SaleArchive extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
   handleChangeSelect(state, res) {
+    if (state === "lokasi") setStorage(locationStorage, res.value);
+    if (state === "type") setStorage(typeStorage, res.value);
+    if (state === "status") setStorage(statusStorage, res.value);
     this.setState({ [state]: res.value });
     setTimeout(() => this.handleService(), 500);
   }
@@ -132,9 +171,7 @@ class SaleArchive extends Component {
     if (page === "formSaleExcel") {
       Object.assign(state, { isModalExcel: true, totalExcel: param.total });
       this.props.dispatch(
-        FetchReportSaleExcel(this.state.where_data, param.total, (percent) => {
-          // Object.assign(state, { where_data: percent });
-        })
+        FetchReportSaleExcel(this.state.where_data, param.totalExcel)
       );
     }
     this.setState(state);
@@ -150,6 +187,12 @@ class SaleArchive extends Component {
       this.setState({ isModalOtorisasi: true });
       this.handleFetchModal("modalOtorisasi");
     });
+  }
+
+  handleSearch(e) {
+    e.preventDefault();
+    setStorage(anyStorage, this.state.any);
+    this.handleService(1);
   }
 
   render() {
@@ -185,23 +228,14 @@ class SaleArchive extends Component {
     let voucher_per = 0;
     let rounding_per = 0;
     let total_tunai = 0;
-    let loadings;
-
-    if (this.props.percent === "loading") {
-      loadings = this.props.percent;
-    } else if (this.props.percent > 0 && this.props.percent < 100) {
-      loadings = this.props.percent + "%";
-    } else {
-      loadings = <i className="fa fa-print"></i>;
-    }
-    // load
 
     return (
       <Layout page="Laporan Arsip Penjualan">
         <div className="row" style={{ zoom: "90%" }}>
           <div className="col-6 col-xs-6 col-md-2">
             {dateRange((first, last) => {
-              this.setState({ startDate: first, endDate: last });
+              setStorage(dateFromStorage, first);
+              setStorage(dateToStorage, last);
               setTimeout(() => this.handleService(), 300);
             }, `${this.state.startDate} to ${this.state.endDate}`)}
           </div>
@@ -241,7 +275,7 @@ class SaleArchive extends Component {
                 onChange={(e) => this.setState({ any: e.target.value })}
                 onKeyPress={(event) => {
                   if (event.key === "Enter") {
-                    this.handleService();
+                    this.handleSearch(event);
                   }
                 }}
               />
@@ -250,8 +284,7 @@ class SaleArchive extends Component {
                   type="button"
                   className="btn btn-primary"
                   onClick={(e) => {
-                    e.preventDefault();
-                    this.handleService();
+                    this.handleSearch(e);
                   }}
                 >
                   <i className="fa fa-search" />
@@ -272,7 +305,7 @@ class SaleArchive extends Component {
                   // this.toggleModal(e, last_page * per_page, per_page)
                 }
               >
-                {loadings}
+                {isProgress(this.props.percent)}
               </button>
             </div>
           </div>
