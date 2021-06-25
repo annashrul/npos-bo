@@ -153,7 +153,8 @@ export const FetchHutangReport = (page = 1, where = "") => {
     if (where !== "") {
       url += `${where}`;
     }
-    handleGet(url, (data) => {
+    handleGet(url, (res) => {
+      let data = res.data;
       dispatch(setHutangReport(data));
     });
   };
