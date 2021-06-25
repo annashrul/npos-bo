@@ -1,6 +1,6 @@
 import { SALE_BY_PRODUCT, HEADERS } from "../_constants";
 import axios from "axios";
-import { handleGet } from "../_interceptor";
+import { handleGet } from "../handleHttp";
 // export function setLoading(load) {
 //     return {
 //         type: SALE_BY_PRODUCT.LOADING,
@@ -64,12 +64,10 @@ export function setLoadingReport(load) {
   };
 }
 
-export const FetchReportSaleByProduct = (page = 1, where = "") => {
+export const FetchReportSaleByProduct = (where = "") => {
   return (dispatch) => {
-    let url = `report/penjualan/barang?page=${page}`;
-    if (where !== "") {
-      url += `&${where}`;
-    }
+    let url = `report/penjualan/barang`;
+    if (where !== "") url += `?${where}`;
     handleGet(url, (data) => {
       dispatch(setReport(data));
     });

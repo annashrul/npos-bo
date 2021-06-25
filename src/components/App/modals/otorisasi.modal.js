@@ -5,6 +5,7 @@ import WrapperModal from "./_wrapper.modal";
 import { ModalToggle } from "../../../redux/actions/modal.action";
 import Keamanan from "assets/keamanan.png";
 import { checkOtorisasi, setOtorisasiId } from "redux/actions/authActions";
+import { isEmptyOrUndefined } from "../../../helper";
 
 class ModalPin extends Component {
   constructor(props) {
@@ -42,14 +43,14 @@ class ModalPin extends Component {
     if (nextProps.id_log !== "") {
       if (nextProps.id_log !== this.state.prevIdLog) {
         const id = nextProps.id_log;
-        nextProps.dispatch(ModalToggle(false));
-        this.props.onDone(id, this.props.datum.id_trx);
-        this.props.dispatch(setOtorisasiId(""));
-        this.setState({
-          prevIdLog: nextProps.id_log,
-          id_log: nextProps.id_log,
-          pass: "",
-        });
+        // nextProps.dispatch(ModalToggle(false));
+        // this.props.onDone(id, this.props.datum.id_trx);
+        // this.props.dispatch(setOtorisasiId(""));
+        // this.setState({
+        //   prevIdLog: nextProps.id_log,
+        //   id_log: nextProps.id_log,
+        //   pass: "",
+        // });
       }
     }
   };
@@ -73,15 +74,29 @@ class ModalPin extends Component {
 
   handleLanjut(event) {
     event.preventDefault();
-
+    if (!isEmptyOrUndefined(this.state.pass, "password")) return;
     this.props.dispatch(
-      checkOtorisasi({
-        username: this.state.username,
-        password: this.state.pass,
-        module: this.props.datum.module,
-        aksi: this.props.datum.aksi,
-        id_trx: this.props.datum.id_trx,
-      })
+      checkOtorisasi(
+        {
+          username: this.state.username,
+          password: this.state.pass,
+          module: this.props.datum.module,
+          aksi: this.props.datum.aksi,
+          id_trx: this.props.datum.id_trx,
+        },
+        (status, data) => {
+          if (status) {
+            this.props.onDone(data.result.id_log, this.props.datum.id_trx);
+            this.setState({
+              prevIdLog: data.result.id_log,
+              id_log: data.result.id_log,
+              pass: "",
+            });
+            this.props.dispatch(setOtorisasiId(""));
+            this.props.dispatch(ModalToggle(false));
+          }
+        }
+      )
     );
   }
 
@@ -110,58 +125,28 @@ class ModalPin extends Component {
                   name="pass"
                   value={this.state.pass}
                   onChange={this.handleChange}
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      this.handleLanjut(event);
+                    }
+                  }}
                 />
-                <div
-                  className="invalid-feedback"
-                  style={
-                    this.state.error.pass !== ""
-                      ? { display: "block" }
-                      : { display: "none" }
-                  }
-                >
-                  {this.state.error.pass}
-                </div>
               </div>
-              <br />
-              {this.props.isLoading ? (
-                <div className="col-md-12">
-                  <div className="d-flex align-items-center">
-                    <div
-                      className="spinner-border text-primary ml-10"
-                      role="status"
-                      aria-hidden="true"
-                    />
-                    <strong
-                      className={"text-black text-center"}
-                      style={{
-                        position: "absolute",
-                        marginLeft: "10px",
-                        marginTop: "5px",
-                        verticalAlign: "middle",
-                      }}
-                    >
-                      Tunggu sebentar..
-                    </strong>
-                  </div>
-                </div>
-              ) : null}
             </div>
           </div>
         </ModalBody>
-        <ModalFooter
-          style={{ backgroundColor: "black", padding: 0, borderTop: "none" }}
-        >
+        <ModalFooter style={{ backgroundColor: "black", borderTop: "none" }}>
           <div className="form-group" style={{ textAlign: "right" }}>
             <button
               type="button"
-              className="btn btn-warning mb-2 mr-2"
+              className="btn btn-warning mr-2"
               onClick={this.toggle}
             >
-              <i className="ti-close" /> Cancel
+              <i className="ti-close" /> Batal
             </button>
             <button
               type="submit"
-              className="btn btn-primary mb-2 mr-2"
+              className="btn btn-primary"
               onClick={this.handleLanjut}
             >
               <i className="ti-save" /> Lanjutkan

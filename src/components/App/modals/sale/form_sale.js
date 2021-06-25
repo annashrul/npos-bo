@@ -6,22 +6,11 @@ import connect from "react-redux/es/connect/connect";
 import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
 import Preloader from "../../../../Preloader";
 import { storeSale } from "../../../../redux/actions/sale/sale.action";
-import { ToastQ, toCurrency, rmComma } from "helper";
+import { toCurrency, rmComma } from "helper";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
-import {
-  store,
-  get,
-  update,
-  destroy,
-  cekData,
-  del,
-} from "components/model/app.model";
-import {
-  handleError,
-  isEmptyOrUndefined,
-  onHandleKeyboard,
-} from "../../../../helper";
+
+import { handleError, onHandleKeyboard, setFocus } from "../../../../helper";
 class FormSale extends Component {
   constructor(props) {
     super(props);
@@ -45,9 +34,13 @@ class FormSale extends Component {
     };
     this.handleSetTunai = this.handleSetTunai.bind(this);
     onHandleKeyboard(13, (e) => {
-      console.log("enter bayar");
-      this.handleSubmit(e);
+      if (this.props.type === "formSale") {
+        this.handleSubmit(e);
+      }
     });
+  }
+  getProps(props) {
+    setFocus(this, "tunai");
   }
 
   resetState() {
@@ -69,6 +62,7 @@ class FormSale extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
     if (nextProps.master !== undefined && nextProps.master !== []) {
       this.setState({
         gt: nextProps.master.gt,
@@ -284,12 +278,11 @@ class FormSale extends Component {
         this.props.auth.user.site_title === undefined
           ? this.props.auth.user.title
           : this.props.auth.user.site_title;
-      if (this.props.master.id_hold !== undefined) {
-        del("hold", this.props.master.id_hold);
-        localStorage.removeItem("objectHoldBill");
-      } else {
-        Object.assign(parsedata["master"], { id_hold: "" });
-      }
+      // if (this.props.master.id_hold !== undefined) {
+
+      // } else {
+      //   Object.assign(parsedata["master"], { id_hold: "" });
+      // }
 
       this.props.dispatch(
         storeSale(newparse, (arr) => this.props.history.push(arr))
@@ -299,34 +292,31 @@ class FormSale extends Component {
   }
   componentWillMount() {
     this.props.dispatch(FetchBank(1, "", 100));
+    this.getProps(this.props);
+  }
+  componentDidMount() {
+    this.getProps(this.prop);
   }
 
   isTunai(label, name) {
     return (
       <div className="form-group">
         <label htmlFor="">{label}</label>
+
         <input
           type="text"
           name={name}
           id={name}
           className="form-control"
           value={toCurrency(this.state[name])}
-          onFocus={function (e) {
-            e.currentTarget.select();
+          ref={(input) => {
+            if (input !== null) {
+              this[`${name}`] = input;
+            }
           }}
           onKeyUp={this.handleChange}
           onChange={this.handleChange}
         />
-        <div
-          className="invalid-feedback"
-          style={
-            this.state.error.tunai !== "" || this.state.error.tunai !== "0"
-              ? { display: "block" }
-              : { display: "none" }
-          }
-        >
-          {this.state.error.tunai}
-        </div>
       </div>
     );
   }
@@ -470,7 +460,7 @@ class FormSale extends Component {
                     onChange={this.handleChange}
                   />
                   <div
-                    className="invalid-feedback text-center"
+                    className="invalid-feedback text-left"
                     style={
                       parseInt(this.state.change, 10) < 0 &&
                       this.state.jenis_trx !== "Gabungan"
@@ -501,11 +491,7 @@ class FormSale extends Component {
                   onClick={this.handleSubmit}
                   disabled={this.props.isLoadingSale}
                 >
-                  {this.props.isLoadingSale ? (
-                    <span className="spinner-border spinner-border-sm text-light" />
-                  ) : (
-                    "Bayar"
-                  )}
+                  Bayar
                 </button>
               </div>
             </div>

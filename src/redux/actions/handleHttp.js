@@ -37,16 +37,29 @@ export const handleError = (err) => {
   }
 };
 
-export const handleGet = (url, callback, isLoading = true) => {
+export const handleGet = (url, callback, isLoading = true, onProgress) => {
   if (isLoading) Nprogress.start();
+  if (onProgress !== undefined) onProgress("menyiapkan data");
   axios
-    .get(HEADERS.URL + url)
+    .get(HEADERS.URL + url, {
+      onDownloadProgress: (progressEvent) => {
+        console.log(
+          progressEvent.srcElement.getResponseHeader("content-length")
+        );
+        let percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onProgress !== undefined && onProgress(percentCompleted);
+      },
+    })
     .then(function (response) {
       const datum = response.data.result;
       callback(response);
+      onProgress !== undefined && onProgress(0);
       if (isLoading) Nprogress.done();
     })
     .catch(function (error) {
+      onProgress !== undefined && onProgress(0);
       if (isLoading) Nprogress.done();
       handleError(error);
     });
@@ -63,6 +76,7 @@ export const handlePost = async (
     .post(HEADERS.URL + url, data)
     .then(function (response) {
       setTimeout(function () {
+        loading(false);
         const datum = response.data;
         if (datum.status === "success") {
           callback(datum, datum.msg, true);

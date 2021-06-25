@@ -250,6 +250,7 @@ class Sale extends Component {
                         <LokasiCommon
                           callback={(res) => this.HandleSelect(res, "location")}
                           dataEdit={this.state.dataEdit}
+                          isLable={false}
                         />
                       </div>
                       <div className="col-md-6">

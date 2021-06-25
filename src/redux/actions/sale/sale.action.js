@@ -1,15 +1,22 @@
 import { SALE, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { destroy } from "components/model/app.model";
+import { destroy, del } from "components/model/app.model";
 import moment from "moment";
-import { handleDelete, handleGet, handlePost, handlePut } from "../handleHttp";
+import {
+  handleDelete,
+  handleGet,
+  handlePost,
+  handlePut,
+  loading,
+} from "../handleHttp";
 import Nprogress from "nprogress";
 import "nprogress/nprogress.css";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import {ToastQ} from '../../../helper'
+import { setStorage, ToastQ } from "../../../helper";
+import { ModalType } from "../modal.action";
 
 export function setLoading(load) {
   return {
@@ -144,6 +151,7 @@ export const FetchNotaReceipt = (kd_trx) => {
 };
 export const storeSale = (data, param) => {
   return (dispatch) => {
+    console.log("data", data);
     dispatch(setLoading(true));
 
     Swal.fire({
@@ -162,8 +170,11 @@ export const storeSale = (data, param) => {
       .then(function (response) {
         Swal.close();
         const datum = response.data;
+
         destroy("sale");
-        const goSwal=()=>{
+        del("hold", data.id_hold);
+        localStorage.removeItem("objectHoldBill");
+        const goSwal = () => {
           Swal.fire({
             allowOutsideClick: false,
             title: "Transaksi berhasil.",
@@ -172,50 +183,56 @@ export const storeSale = (data, param) => {
               "<br>" +
               '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
               '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
-              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning">Re-Print</button>'
-  
-              ,
+              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning">Re-Print</button>',
+
             showCancelButton: true,
-            cancelButtonText: 'Selesai',
+            cancelButtonText: "Selesai",
             showConfirmButton: false,
           }).then((result) => {
             if (result.dismiss === "cancel") {
-              dispatch(ModalToggle(false))
-              dispatch(FetchNotaSale(datum.result.lokasi))
-              dispatch(FetchCustomerAll(datum.result.lokasi))
-              dispatch(FetchSalesAll(datum.result.lokasi))
+              dispatch(ModalToggle(false));
+              dispatch(FetchNotaSale(datum.result.lokasi));
+              dispatch(FetchCustomerAll(datum.result.lokasi));
+              dispatch(FetchSalesAll(datum.result.lokasi));
             }
           });
-          document.getElementById("btnReprint").addEventListener("click", () => {
+          document
+            .getElementById("btnReprint")
+            .addEventListener("click", () => {
               handlePost(
                 "pos/reprint/" + btoa(datum.result.kode),
                 [],
-                (res,msg,status) => {
+                (res, msg, status) => {
                   const data = res.data;
                   ToastQ.fire({
                     icon: "success",
-                    title: msg
+                    title: msg,
                   });
                   goSwal();
                 }
               );
-          });
-          document.getElementById("btnNotaPdf").addEventListener("click", () => {
-            const win = window.open(datum.result.nota, "_blank");
-            if (win != null) {
-              win.focus();
-            }
-          });
-          document.getElementById("btnNota3ply").addEventListener("click", () => {
-  
-            const win = window.open(`/print3ply/${datum.result.kode}`, "_blank");
-            if (win != null) {
-              win.focus();
-            }
-            return false;
-          });
-          
-        }
+            });
+          document
+            .getElementById("btnNotaPdf")
+            .addEventListener("click", () => {
+              const win = window.open(datum.result.nota, "_blank");
+              if (win != null) {
+                win.focus();
+              }
+            });
+          document
+            .getElementById("btnNota3ply")
+            .addEventListener("click", () => {
+              const win = window.open(
+                `/print3ply/${datum.result.kode}`,
+                "_blank"
+              );
+              if (win != null) {
+                win.focus();
+              }
+              return false;
+            });
+        };
         goSwal();
 
         dispatch(setLoading(false));
@@ -237,10 +254,10 @@ export const storeSale = (data, param) => {
   };
 };
 
-export const FetchReportSale = (page = 1, where = "") => {
+export const FetchReportSale = (where = "") => {
   return (dispatch) => {
-    let url = `report/arsip_penjualan?page=${page}`;
-    if (where !== "") url += `&${where}`;
+    let url = `report/arsip_penjualan`;
+    if (where !== "") url += `?${where}`;
     handleGet(
       url,
       (res) => {
@@ -252,8 +269,9 @@ export const FetchReportSale = (page = 1, where = "") => {
   };
 };
 
-export const FetchReportSaleExcel = (where = "", perpage = "") => {
+export const FetchReportSaleExcel = (where = "", perpage = "", callback) => {
   return (dispatch) => {
+    dispatch(setLoading(0));
     let url = `report/arsip_penjualan?page=1&perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
@@ -263,9 +281,74 @@ export const FetchReportSaleExcel = (where = "", perpage = "") => {
       (res) => {
         const data = res.data;
         dispatch(setReportExcel(data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formSaleExcel"));
+        dispatch(setLoading(0));
       },
-      true
+      true,
+      (percent) => {
+        dispatch(setLoading(percent));
+      }
     );
+    // console.log("balik");
+    // const client = axios.create({
+    //   baseURL: HEADERS.URL,
+    //   timeout: 9999999999,
+    // });
+    // client
+    //   .get(url, {
+    //     onDownloadProgress: (progressEvent) => {
+    //       console.log(
+    //         progressEvent.srcElement.getResponseHeader("content-length")
+    //       );
+    //       x++;
+    //       console.log(x);
+    //       let percentCompleted = Math.round(
+    //         (progressEvent.loaded * 100) / progressEvent.total
+    //       );
+    //       dispatch(setLoading(percentCompleted));
+    //       // callback(percentCompleted);
+    //       // console.log(progressEvent.lengthComputable);
+    //       // loading(true, `${percentCompleted} download`);
+    //       // console.log(percentCompleted);
+    //     },
+    //   })
+    //   .then((res) => {
+    //     const data = res.data;
+    //     dispatch(setReportExcel(data));
+    //     dispatch(ModalToggle(true));
+    //     dispatch(ModalType("formSaleExcel"));
+    //     dispatch(setLoading(0));
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //     dispatch(setLoading(0));
+    //   });
+    // axios({
+    //   url: url,
+    //   method: "GET",
+    //   responseType: "blob",
+    //   onDownloadProgress: (progressEvent) => {
+    //     let percentCompleted = Math.round(
+    //       (progressEvent.loaded * 100) / progressEvent.total
+    //     ); // you can use this to show user percentage of file downloaded
+    //     console.log("completed", percentCompleted);
+    //   },
+    // }).then((res) => {
+    //   console.log(res);
+    //   loading(false);
+    // });
+    // handleGet(
+    //   url,
+    //   (res) => {
+    // const data = res.data;
+    // dispatch(setReportExcel(data));
+    // dispatch(ModalToggle(true));
+    // dispatch(ModalType("formSaleExcel"));
+    //     loading(false);
+    //   },
+    //   false
+    // );
   };
 };
 
@@ -276,43 +359,27 @@ export const FetchReportDetailSale = (kd_trx) => {
       (res) => {
         const data = res.data;
         dispatch(setSaleReportData(data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailSaleReport"));
       },
       true
     );
   };
 };
 
-export const deleteReportSale = (id, id_trx) => {
-  const kd_trx = btoa(id + "|" + id_trx);
+export const deleteReportSale = (data) => {
+  const kd_trx = btoa(data.id + "|" + data.id_trx);
   return (dispatch) => {
     handleDelete(`pos/remove_penjualan/${kd_trx}`, () => {
-      let dateFrom = localStorage.getItem("date_from_sale_report");
-      let dateTo = localStorage.getItem("date_to_sale_report");
-      let where = "";
-      if (dateFrom !== undefined && dateFrom !== null) {
-        if (where !== "") {
-          where += "&";
-        }
-        where += `datefrom=${dateFrom}&dateto=${dateTo}`;
-      } else {
-        if (where !== "") {
-          where += "&";
-        }
-        where += `datefrom=${moment(new Date()).format(
-          "yyyy-MM-DD"
-        )}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`;
-      }
-      dispatch(FetchReportSale(1, where));
+      dispatch(FetchReportSale(data.where));
     });
   };
 };
 
-export const FetchSaleReturReport = (page = 1, where = "") => {
+export const FetchSaleReturReport = (where = "") => {
   return (dispatch) => {
-    let url = `report/penjualan/retur?page=${page}`;
-    if (where !== "") {
-      url += `${where}`;
-    }
+    let url = `report/penjualan/retur`;
+    if (where !== "") url += `?${where}`;
     handleGet(
       url,
       (res) => {

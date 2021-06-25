@@ -284,7 +284,9 @@ class SaleReportExcel extends Component {
         centered
         keyboard
       >
-        <ModalHeader toggle={this.toggle}>Manage Export</ModalHeader>
+        <ModalHeader toggle={this.toggle}>
+          Manage Export {this.props.percent}
+        </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           {!this.props.isLoadingReport ? (
             <ModalBody>
@@ -377,6 +379,7 @@ const mapStateToProps = (state) => {
     isLoadingReport: state.saleReducer.isLoadingReport,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
+    percent: state.saleReducer.percent,
   };
 };
 export default connect(mapStateToProps)(SaleReportExcel);

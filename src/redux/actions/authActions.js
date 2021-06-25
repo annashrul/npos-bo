@@ -102,14 +102,13 @@ export const setOtorisasiId = (decoded) => {
   };
 };
 
-export const checkOtorisasi = (userData) => async (dispatch) => {
+export const checkOtorisasi = (userData, callback) => async (dispatch) => {
   handlePost(
     "auth/otorisasi",
     userData,
     (data, msg, status) => {
-      dispatch(ModalToggle(false));
+      if (callback !== undefined) callback(status, data);
       dispatch(setOtorisasiId(data.result.id_log));
-      console.log(data.result);
     },
     "Mem-verifikasi data akun anda.."
   );

@@ -13,10 +13,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import {
-  setProductbrg,
-  FetchProductSale,
-} from "redux/actions/masterdata/product/product.action";
+import { FetchProductSale } from "redux/actions/masterdata/product/product.action";
 import StickyBox from "react-sticky-box";
 import FormSale from "../../modals/sale/form_sale";
 import FormClosing from "../../modals/sale/form_closing";
@@ -31,18 +28,13 @@ import {
   getStorage,
   handleDataSelect,
   isEmptyOrUndefined,
-  onHandleKeyboard,
   onHandleKeyboardChar,
   setFocus,
   setStorage,
   swal,
   swallOption,
-  swalWithCallback,
 } from "../../../../helper";
-import {
-  getDataCommon,
-  handleInputOnBlurCommon,
-} from "../../common/FlowTrxCommon";
+import { handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
 import FormHoldBill from "../../modals/sale/form_hold_bill";
 import ListHoldBill from "../../modals/sale/list_hold_bill";
 
@@ -314,7 +306,7 @@ class Sale extends Component {
     });
   }
 
-  HandleChangeSelect(state, res) {
+  filterState(state, res) {
     setStorage(state, res.value);
     if (state === "sales_tr") {
       this.setState({ sales: res.value });
@@ -328,6 +320,41 @@ class Sale extends Component {
       this.setState({ customer: res.value });
     }
     this.fetchProduct(state);
+  }
+
+  setCoreState(action = "", res = null) {
+    if (action !== "" && res !== null) {
+      localStorage.setItem("objectHoldBill", JSON.stringify(res));
+      this.setState({
+        objectHoldBill: res,
+        location: res.master.lokasi,
+        customer: res.master.kd_cust,
+        sales: res.master.kd_sales,
+      });
+    } else {
+      localStorage.removeItem("objectHoldBill");
+      this.setState({
+        detail: [],
+        master: {},
+        dataHoldBill: [],
+        objectHoldBill: {},
+      });
+    }
+  }
+
+  HandleChangeSelect(state, res) {
+    if (this.state.objectHoldBill.id !== undefined) {
+      swallOption(
+        "anda yakin akan mereset transaksi atas nama " +
+          this.state.objectHoldBill.nama,
+        () => {
+          this.setCoreState();
+          this.filterState(state, res);
+        }
+      );
+    } else {
+      this.filterState(state, res);
+    }
   }
 
   HandleCommonInputChange(e, errs = true, st = 0) {
@@ -530,7 +557,6 @@ class Sale extends Component {
           });
           return null;
         });
-        console.log("submit", this.state.objectHoldBill);
         moment.locale("id");
         let master = {
           cetak_nota: true,
@@ -589,7 +615,6 @@ class Sale extends Component {
           detail: detail,
           objectHoldBill: this.state.objectHoldBill,
         });
-        console.log(this.state.master);
         callback(true);
       }
     });
@@ -769,13 +794,7 @@ class Sale extends Component {
     }
   }
   handleClear() {
-    localStorage.removeItem("objectHoldBill");
-    this.setState({
-      detail: [],
-      master: {},
-      dataHoldBill: [],
-      objectHoldBill: {},
-    });
+    this.setCoreState();
     destroy(table);
     this.getData();
   }
@@ -1309,7 +1328,7 @@ class Sale extends Component {
                                   type="number"
                                   value={item.stock}
                                   className="form-control text-right in-table"
-                                  style={{ width: "100px" }}
+                                  style={{ width: "70px" }}
                                 />
                               </td>
 
@@ -1580,13 +1599,8 @@ class Sale extends Component {
                 setStorage("location", res.master.lokasi);
                 setStorage("sales", res.master.kd_sales);
                 setStorage("customer", res.master.kd_cust);
-                localStorage.setItem("objectHoldBill", JSON.stringify(res));
-                this.setState({
-                  objectHoldBill: res,
-                  location: res.master.lokasi,
-                  customer: res.master.kd_cust,
-                  sales: res.master.kd_sales,
-                });
+                this.setCoreState("set", res);
+
                 setTimeout(() => {
                   this.fetchProduct();
                 }, 500);
