@@ -101,7 +101,7 @@ class ReceiveReport extends Component {
     let tipe = getStorage(typeStorage);
     let kolom = getStorage(columnStorage);
     let urutan = getStorage(sortStorage);
-    let status = getStorage(statusStorage);
+    let stts = getStorage(statusStorage);
     let any = getStorage(anyStorage);
     let where = `page=${page}`;
     let state = {};
@@ -125,17 +125,16 @@ class ReceiveReport extends Component {
         Object.assign(state, { sort: urutan, column: kolom });
       }
     }
-    if (isEmptyOrUndefined(status)) {
-      where += `&status=${status}`;
-      Object.assign(state, { status: status });
+    if (isEmptyOrUndefined(stts)) {
+      where += `&status=${stts}`;
+      Object.assign(state, { status: stts });
     }
     if (isEmptyOrUndefined(any)) {
       where += `&q=${any}`;
       Object.assign(state, { any: any });
     }
-    this.setState({
-      where_data: where,
-    });
+    Object.assign(state, { where_data: where });
+    this.setState(state);
     this.props.dispatch(FetchReport(where));
   }
 
