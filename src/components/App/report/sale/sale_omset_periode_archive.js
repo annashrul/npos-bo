@@ -361,7 +361,7 @@ class SaleOmsetPeriodeArchive extends Component {
 
     return (
       <Layout page="Laporan Arsip Penjualan">
-        <div className="row">
+        <div className="row" style={{ zoom: "90%" }}>
           <div className="col-md-10">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3">
@@ -415,7 +415,7 @@ class SaleOmsetPeriodeArchive extends Component {
             </div>
           </div>
           <div className="col-md-12">
-            <div style={{ overflowX: "auto", zoom: "85%" }}>
+            <div style={{ overflowX: "auto" }}>
               <table className="table table-hover table-noborder">
                 <thead className="bg-light">
                   <tr>
@@ -456,159 +456,153 @@ class SaleOmsetPeriodeArchive extends Component {
                     <th className="text-black middle nowrap">Persentase</th>
                   </tr>
                 </thead>
-                {!this.props.isLoadingReport ? (
-                  <tbody>
-                    {typeof data === "object"
-                      ? data.length > 0
-                        ? data.map((v, i) => {
-                            tot_omset_sebelum =
-                              tot_omset_sebelum + parseInt(v.omset_sebelum, 10);
-                            tot_transaksi_sebelum =
-                              tot_transaksi_sebelum +
-                              parseInt(v.transaksi_sebelum, 10);
-                            tot_rata_sebelum =
-                              tot_rata_sebelum +
-                              (!Number.isNaN(
-                                parseFloat(v.omset_sebelum) /
-                                  parseFloat(v.transaksi_sebelum)
-                              )
-                                ? parseFloat(v.omset_sebelum) /
-                                  parseFloat(v.transaksi_sebelum)
-                                : 0);
-                            tot_omset_sekarang =
-                              tot_omset_sekarang +
-                              parseInt(v.omset_sekarang, 10);
-                            tot_transaksi_sekarang =
-                              tot_transaksi_sekarang +
-                              parseInt(v.transaksi_sekarang, 10);
-                            tot_rata_sekarang =
-                              tot_rata_sekarang +
-                              (!Number.isNaN(
-                                parseFloat(v.omset_sekarang) /
-                                  parseFloat(v.transaksi_sekarang)
-                              )
-                                ? parseFloat(v.omset_sekarang) /
-                                  parseFloat(v.transaksi_sekarang)
-                                : 0);
-                            tot_pertumbuhan =
-                              tot_pertumbuhan +
-                              (parseInt(v.omset_sekarang, 10) -
-                                parseInt(v.omset_sebelum, 10));
-                            tot_persen_pertumbuhan =
-                              tot_persen_pertumbuhan +
-                              (!Number.isNaN(
-                                ((parseFloat(v.omset_sekarang) -
-                                  parseFloat(v.omset_sebelum)) /
-                                  parseFloat(v.omset_sebelum)) *
-                                  100
-                              ) &&
+                <tbody>
+                  {typeof data === "object"
+                    ? data.length > 0
+                      ? data.map((v, i) => {
+                          tot_omset_sebelum =
+                            tot_omset_sebelum + parseInt(v.omset_sebelum, 10);
+                          tot_transaksi_sebelum =
+                            tot_transaksi_sebelum +
+                            parseInt(v.transaksi_sebelum, 10);
+                          tot_rata_sebelum =
+                            tot_rata_sebelum +
+                            (!Number.isNaN(
+                              parseFloat(v.omset_sebelum) /
+                                parseFloat(v.transaksi_sebelum)
+                            )
+                              ? parseFloat(v.omset_sebelum) /
+                                parseFloat(v.transaksi_sebelum)
+                              : 0);
+                          tot_omset_sekarang =
+                            tot_omset_sekarang + parseInt(v.omset_sekarang, 10);
+                          tot_transaksi_sekarang =
+                            tot_transaksi_sekarang +
+                            parseInt(v.transaksi_sekarang, 10);
+                          tot_rata_sekarang =
+                            tot_rata_sekarang +
+                            (!Number.isNaN(
+                              parseFloat(v.omset_sekarang) /
+                                parseFloat(v.transaksi_sekarang)
+                            )
+                              ? parseFloat(v.omset_sekarang) /
+                                parseFloat(v.transaksi_sekarang)
+                              : 0);
+                          tot_pertumbuhan =
+                            tot_pertumbuhan +
+                            (parseInt(v.omset_sekarang, 10) -
+                              parseInt(v.omset_sebelum, 10));
+                          tot_persen_pertumbuhan =
+                            tot_persen_pertumbuhan +
+                            (!Number.isNaN(
                               ((parseFloat(v.omset_sekarang) -
                                 parseFloat(v.omset_sebelum)) /
                                 parseFloat(v.omset_sebelum)) *
-                                100 !==
-                                Infinity
-                                ? ((parseFloat(v.omset_sekarang, 10) -
-                                    parseFloat(v.omset_sebelum, 10)) /
-                                    parseFloat(v.omset_sebelum, 10)) *
-                                  100
-                                : 0);
+                                100
+                            ) &&
+                            ((parseFloat(v.omset_sekarang) -
+                              parseFloat(v.omset_sebelum)) /
+                              parseFloat(v.omset_sebelum)) *
+                              100 !==
+                              Infinity
+                              ? ((parseFloat(v.omset_sekarang, 10) -
+                                  parseFloat(v.omset_sebelum, 10)) /
+                                  parseFloat(v.omset_sebelum, 10)) *
+                                100
+                              : 0);
 
-                            return (
-                              <tr key={i}>
-                                <td className="text-center middle nowrap">
-                                  {generateNo(i, current_page)}
-                                </td>
-                                <td className="text-center middle nowrap">
-                                  <div className="btn-group">
-                                    <UncontrolledButtonDropdown>
-                                      <DropdownToggle caret></DropdownToggle>
-                                      <DropdownMenu>
-                                        <DropdownItem
-                                          onClick={(e) =>
-                                            this.handleDetail(e, v)
-                                          }
-                                        >
-                                          Detail
-                                        </DropdownItem>
-                                      </DropdownMenu>
-                                    </UncontrolledButtonDropdown>
-                                  </div>
-                                </td>
-                                <td className="middle nowrap">{v.nama_toko}</td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(parseInt(v.omset_sebelum, 10))}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(parseInt(v.transaksi_sebelum, 10))}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(
-                                    !Number.isNaN(
-                                      parseInt(v.omset_sebelum, 10) /
-                                        parseInt(v.transaksi_sebelum, 10)
-                                    )
-                                      ? parseFloat(
-                                          parseFloat(v.omset_sebelum) /
-                                            parseFloat(v.transaksi_sebelum)
-                                        ).toFixed(2)
-                                      : 0
-                                  )}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(parseInt(v.omset_sekarang, 10))}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(parseInt(v.transaksi_sekarang, 10))}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(
-                                    !Number.isNaN(
-                                      parseInt(v.omset_sekarang, 10) /
-                                        parseInt(v.transaksi_sekarang, 10)
-                                    )
-                                      ? parseFloat(
-                                          parseFloat(v.omset_sekarang) /
-                                            parseFloat(v.transaksi_sekarang)
-                                        ).toFixed(2)
-                                      : 0
-                                  )}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(
-                                    parseInt(v.omset_sekarang, 10) -
-                                      parseInt(v.omset_sebelum, 10)
-                                  )}
-                                </td>
-                                <td className="text-right middle nowrap">
-                                  {toRp(
-                                    !Number.isNaN(
-                                      ((parseFloat(v.omset_sekarang) -
+                          return (
+                            <tr key={i}>
+                              <td className="text-center middle nowrap">
+                                {generateNo(i, current_page)}
+                              </td>
+                              <td className="text-center middle nowrap">
+                                <div className="btn-group">
+                                  <UncontrolledButtonDropdown>
+                                    <DropdownToggle caret></DropdownToggle>
+                                    <DropdownMenu>
+                                      <DropdownItem
+                                        onClick={(e) => this.handleDetail(e, v)}
+                                      >
+                                        Detail
+                                      </DropdownItem>
+                                    </DropdownMenu>
+                                  </UncontrolledButtonDropdown>
+                                </div>
+                              </td>
+                              <td className="middle nowrap">{v.nama_toko}</td>
+                              <td className="text-right middle nowrap">
+                                {toRp(parseInt(v.omset_sebelum, 10))}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(parseInt(v.transaksi_sebelum, 10))}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(
+                                  !Number.isNaN(
+                                    parseInt(v.omset_sebelum, 10) /
+                                      parseInt(v.transaksi_sebelum, 10)
+                                  )
+                                    ? parseFloat(
+                                        parseFloat(v.omset_sebelum) /
+                                          parseFloat(v.transaksi_sebelum)
+                                      ).toFixed(2)
+                                    : 0
+                                )}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(parseInt(v.omset_sekarang, 10))}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(parseInt(v.transaksi_sekarang, 10))}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(
+                                  !Number.isNaN(
+                                    parseInt(v.omset_sekarang, 10) /
+                                      parseInt(v.transaksi_sekarang, 10)
+                                  )
+                                    ? parseFloat(
+                                        parseFloat(v.omset_sekarang) /
+                                          parseFloat(v.transaksi_sekarang)
+                                      ).toFixed(2)
+                                    : 0
+                                )}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(
+                                  parseInt(v.omset_sekarang, 10) -
+                                    parseInt(v.omset_sebelum, 10)
+                                )}
+                              </td>
+                              <td className="text-right middle nowrap">
+                                {toRp(
+                                  !Number.isNaN(
+                                    ((parseFloat(v.omset_sekarang) -
+                                      parseFloat(v.omset_sebelum)) /
+                                      parseFloat(v.omset_sebelum)) *
+                                      100
+                                  ) &&
+                                    ((parseFloat(v.omset_sekarang) -
+                                      parseFloat(v.omset_sebelum)) /
+                                      parseFloat(v.omset_sebelum)) *
+                                      100 !==
+                                      Infinity
+                                    ? ((parseFloat(v.omset_sekarang) -
                                         parseFloat(v.omset_sebelum)) /
                                         parseFloat(v.omset_sebelum)) *
                                         100
-                                    ) &&
-                                      ((parseFloat(v.omset_sekarang) -
-                                        parseFloat(v.omset_sebelum)) /
-                                        parseFloat(v.omset_sebelum)) *
-                                        100 !==
-                                        Infinity
-                                      ? ((parseFloat(v.omset_sekarang) -
-                                          parseFloat(v.omset_sebelum)) /
-                                          parseFloat(v.omset_sebelum)) *
-                                          100
-                                      : 0
-                                  )}
-                                  %
-                                </td>
-                              </tr>
-                            );
-                          })
-                        : "No data."
-                      : "No data."}
-                  </tbody>
-                ) : (
-                  <Preloader />
-                )}
+                                    : 0
+                                )}
+                                %
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : "No data."
+                    : "No data."}
+                </tbody>
+
                 <tfoot>
                   <tr>
                     <td colSpan={3}> Total</td>

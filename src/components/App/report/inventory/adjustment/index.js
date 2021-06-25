@@ -7,7 +7,7 @@ import {
   FetchAdjustmentDetail,
 } from "redux/actions/adjustment/adjustment.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import Paginationq from "helper";
+import Paginationq, { generateNo } from "helper";
 import DetailAdjustment from "components/App/modals/report/inventory/adjustment_report/detail_adjustment_report";
 import Swal from "sweetalert2";
 import Select from "react-select";
@@ -386,30 +386,20 @@ class AdjustmentReport extends Component {
           </div>
         </div>
         <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black text-center middle nowrap" width="1%">
                   No
                 </th>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black text-center middle nowrap" width="1%">
                   #
                 </th>
-                <th className="text-black" style={columnStyle}>
-                  No. Adjusment
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Tanggal
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Operator
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Lokasi
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Keterangan
-                </th>
+                <th className="text-black middle nowrap">No. Adjusment</th>
+                <th className="text-black middle nowrap">Tanggal</th>
+                <th className="text-black middle nowrap">Operator</th>
+                <th className="text-black middle nowrap">Lokasi</th>
+                <th className="text-black middle nowrap">Keterangan</th>
               </tr>
             </thead>
             {
@@ -418,15 +408,14 @@ class AdjustmentReport extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td style={columnStyle}>
-                          {" "}
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                        <td className="text-center middle nowrap">
+                          {generateNo(i, current_page)}
                         </td>
-                        <td style={columnStyle}>
+                        <td className="text-center middle nowrap">
                           {/* Example split danger button */}
                           <div className="btn-group">
                             <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem
                                   onClick={(e) =>
@@ -455,13 +444,13 @@ class AdjustmentReport extends Component {
                             </UncontrolledButtonDropdown>
                           </div>
                         </td>
-                        <td style={columnStyle}>{v.kd_trx}</td>
-                        <td style={columnStyle}>
+                        <td className="middle nowrap">{v.kd_trx}</td>
+                        <td className="middle nowrap">
                           {moment(v.tgl).format("yyyy-MM-DD")}
                         </td>
-                        <td style={columnStyle}>{v.username}</td>
-                        <td style={columnStyle}>{v.lokasi}</td>
-                        <td style={columnStyle}>{v.keterangan}</td>
+                        <td className="middle nowrap">{v.username}</td>
+                        <td className="middle nowrap">{v.lokasi}</td>
+                        <td className="middle nowrap">{v.keterangan}</td>
                       </tr>
                     );
                   })

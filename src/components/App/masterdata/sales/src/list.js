@@ -14,6 +14,7 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
+import { generateNo } from "../../../../../helper";
 
 class ListSales extends Component {
   constructor(props) {
@@ -116,21 +117,18 @@ class ListSales extends Component {
           </div>
         </form>
         <div className="table-responsive" style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
+          <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={columnStyle}>
+                <th className="text-black text-center middle nowrap" width="1%">
+                  No
+                </th>
+                <th className="text-black text-center middle nowrap" width="1%">
                   #
                 </th>
-                <th className="text-black" style={columnStyle}>
-                  Name
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Location
-                </th>
-                <th className="text-black" style={columnStyle}>
-                  Status
-                </th>
+                <th className="text-black middle nowrap">Nama</th>
+                <th className="text-black middle nowrap">Lokasi</th>
+                <th className="text-black middle nowrap">Status</th>
                 {/* <th className="text-black" style={columnStyle}>KODE</th> */}
               </tr>
             </thead>
@@ -144,11 +142,14 @@ class ListSales extends Component {
                     );
                   return (
                     <tr key={i}>
-                      <td style={columnStyle}>
+                      <td className="text-center middle nowrap">
+                        {generateNo(i, current_page)}
+                      </td>
+                      <td className="text-center middle nowrap">
                         {/* Example split danger button */}
                         <div className="btn-group">
                           <UncontrolledButtonDropdown>
-                            <DropdownToggle caret>Aksi</DropdownToggle>
+                            <DropdownToggle caret></DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem
                                 onClick={(e) => this.toggleModal(e, i)}
@@ -164,18 +165,17 @@ class ListSales extends Component {
                           </UncontrolledButtonDropdown>
                         </div>
                       </td>
-                      <td style={columnStyle}>{v.nama}</td>
-                      <td style={columnStyle}>
+                      <td className="middle nowrap">{v.nama}</td>
+                      <td className="middle nowrap">
                         {getLok === undefined
                           ? "Location Not Found!"
                           : getLok[0].nama}
                       </td>
-                      <td style={columnStyle}>
+                      <td className="middle nowrap">
                         {v.status === "1"
-                          ? statusQ("success", "Active")
-                          : statusQ("danger", "In Active")}
+                          ? statusQ("success", "Aktif")
+                          : statusQ("danger", "Tidak aktif")}
                       </td>
-                      {/* <td style={columnStyle}>{v.kode}</td> */}
                     </tr>
                   );
                 })

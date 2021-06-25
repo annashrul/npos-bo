@@ -3689,8 +3689,7 @@ class FormProduct extends Component {
                                                   Harga Jual
                                                   {this.state.set_harga > 1
                                                     ? ` ${this.state[place]}`
-                                                    : ""}{" "}
-                                                  {`hrgjual${z}`}
+                                                    : ""}
                                                 </label>
                                                 <input
                                                   readOnly={

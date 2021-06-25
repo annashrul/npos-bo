@@ -68,20 +68,14 @@ export function setPoReportDetail(data = []) {
 
 export const FetchPoReport = (page = 1, perpage = 10) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(
-        HEADERS.URL +
-          `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`
-      )
-      .then(function (response) {
-        const data = response.data;
+    handleGet(
+      `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`,
+      (res) => {
+        let data = res.data;
         dispatch(setPoReport(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+      },
+      true
+    );
   };
 };
 
@@ -92,6 +86,7 @@ export const FetchPoData = (nota) => {
       .get(HEADERS.URL + `purchaseorder/ambil_data/${nota}`)
       .then(function (response) {
         const data = response.data;
+
         dispatch(setPoData(data));
         dispatch(setLoading(false));
       })
@@ -206,7 +201,8 @@ export const fetchPoReport = (page = 1, where = "") => {
     handleGet(
       url,
       (res) => {
-        dispatch(setPoReport(res));
+        let data = res.data;
+        dispatch(setPoReport(data));
       },
       true
     );
@@ -222,7 +218,8 @@ export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
     handleGet(
       url,
       (res) => {
-        dispatch(setPoReportExcel(res));
+        let data = res.data;
+        dispatch(setPoReportExcel(data));
       },
       true
     );
@@ -250,7 +247,8 @@ export const FetchPurchaseBySupplierReport = (page = 1, where = "") => {
     handleGet(
       que,
       (res) => {
-        dispatch(setPBSupplierReport(res));
+        let data = res.data;
+        dispatch(setPBSupplierReport(data));
       },
       true
     );
@@ -270,7 +268,8 @@ export const FetchPurchaseBySupplierReportExcel = (
     handleGet(
       que,
       (res) => {
-        dispatch(setPBSupplierReportExcel(res));
+        let data = res.data;
+        dispatch(setPBSupplierReportExcel(data));
       },
       true
     );

@@ -1,7 +1,7 @@
 import { EXPEDISI, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet } from "../_interceptor";
+import { handleGet } from "../handleHttp";
 export function setLoading(load) {
   return { type: EXPEDISI.LOADING, load };
 }
@@ -50,7 +50,8 @@ export const FetchExpedisi = (page = 1, where = "") => {
     if (where !== "") {
       url += where;
     }
-    handleGet(url, (data) => {
+    handleGet(url, (res) => {
+      let data = res.data;
       dispatch(setExpedisi(data));
     });
   };
@@ -65,7 +66,8 @@ export const FetchExpedisiExcel = (page = 1, where = "", perpage = 99999) => {
     if (where !== "") {
       url += where;
     }
-    handleGet(url, (data) => {
+    handleGet(url, (res) => {
+      let data = res.data;
       dispatch(setExpedisiExcel(data));
     });
   };

@@ -228,6 +228,7 @@ class PoReport extends Component {
     this.setState({
       where_data: where,
     });
+    console.log(where);
     this.props.dispatch(fetchPoReport(pageNumber, where));
     // this.props.dispatch(fetchPoReportExcel(pageNumber,where))
   }
@@ -327,6 +328,7 @@ class PoReport extends Component {
       // to,
       data,
     } = this.props.poReport;
+    console.log(data);
     return (
       <Layout page="Laporan Purchase Order">
         <div className="row" style={{ zoom: "90%" }}>

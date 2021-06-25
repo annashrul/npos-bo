@@ -1,9 +1,6 @@
 import { PRODUCT, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
-import { configure } from "../../_interceptor";
 import {
   handleDelete,
   handleGet,

@@ -32,7 +32,8 @@ export const FetchAdjustment = (page = 1, where = "") => {
     let url = `adjustment/report?page=${page}`;
     if (where !== "") url += where;
     handleGet(url, (res) => {
-      dispatch(setAdjustment(res));
+      let data = res.data;
+      dispatch(setAdjustment(data));
     });
   };
 };

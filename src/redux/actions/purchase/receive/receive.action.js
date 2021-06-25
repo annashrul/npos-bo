@@ -222,7 +222,8 @@ export const FetchReport = (where = "") => {
     handleGet(
       url,
       (res) => {
-        dispatch(setPO(res));
+        let data = res.data;
+        dispatch(setPO(data));
       },
       true
     );

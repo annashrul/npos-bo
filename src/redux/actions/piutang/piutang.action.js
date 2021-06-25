@@ -1,7 +1,7 @@
 import { PIUTANG, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet } from "../_interceptor";
+import { handleGet } from "../handleHttp";
 
 export function setLoading(load) {
   return {
@@ -177,7 +177,8 @@ export const FetchPiutangReport = (page = 1, where = "") => {
     if (where !== "") {
       url += `${where}`;
     }
-    handleGet(url, (data) => {
+    handleGet(url, (res) => {
+      let data = res.data;
       dispatch(setPiutangReport(data));
     });
   };
