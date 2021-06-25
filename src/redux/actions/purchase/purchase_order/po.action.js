@@ -68,12 +68,10 @@ export function setPoReportDetail(data = []) {
 
 export const FetchPoReport = (page = 1, perpage = 10) => {
   return (dispatch) => {
-    console.log(page, perpage);
     handleGet(
       `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`,
       (res) => {
         let data = res.data;
-        console.log("data", data);
         dispatch(setPoReport(data));
       },
       true
@@ -203,7 +201,8 @@ export const fetchPoReport = (page = 1, where = "") => {
     handleGet(
       url,
       (res) => {
-        dispatch(setPoReport(res));
+        let data = res.data;
+        dispatch(setPoReport(data));
       },
       true
     );
@@ -219,7 +218,8 @@ export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
     handleGet(
       url,
       (res) => {
-        dispatch(setPoReportExcel(res));
+        let data = res.data;
+        dispatch(setPoReportExcel(data));
       },
       true
     );
@@ -247,7 +247,8 @@ export const FetchPurchaseBySupplierReport = (page = 1, where = "") => {
     handleGet(
       que,
       (res) => {
-        dispatch(setPBSupplierReport(res));
+        let data = res.data;
+        dispatch(setPBSupplierReport(data));
       },
       true
     );
@@ -267,7 +268,8 @@ export const FetchPurchaseBySupplierReportExcel = (
     handleGet(
       que,
       (res) => {
-        dispatch(setPBSupplierReportExcel(res));
+        let data = res.data;
+        dispatch(setPBSupplierReportExcel(data));
       },
       true
     );
