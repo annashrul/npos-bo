@@ -189,15 +189,9 @@ class SaleArchive extends Component {
 
     if (this.props.percent === "menyiapkan data") {
       loadings = this.props.percent;
-      loading(true, this.props.percent);
     } else if (this.props.percent > 0 && this.props.percent < 100) {
       loadings = this.props.percent + "%";
-      loading(
-        true,
-        "proses download sedang berlangsung " + this.props.percent + "%"
-      );
     } else {
-      loading(false);
       loadings = <i className="fa fa-print"></i>;
     }
     // load
@@ -205,7 +199,6 @@ class SaleArchive extends Component {
     return (
       <Layout page="Laporan Arsip Penjualan">
         <div className="row" style={{ zoom: "90%" }}>
-          {this.props.percent}
           <div className="col-6 col-xs-6 col-md-2">
             {dateRange((first, last) => {
               this.setState({ startDate: first, endDate: last });
