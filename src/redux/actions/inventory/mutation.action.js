@@ -1,334 +1,364 @@
-import {
-    MUTATION,
-    HEADERS
-} from "../_constants"
-import axios from "axios"
-import Swal from 'sweetalert2'
-import {setLoading} from "../masterdata/customer/customer.action";
-import {handleGet} from "../_interceptor"
-
+import { MUTATION, HEADERS } from "../_constants";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { setLoading } from "../masterdata/customer/customer.action";
+import { handleGet } from "../handleHttp";
 
 export function setLoadingApprove(load) {
-    return {
-        type: MUTATION.APPROVAL_MUTATION_SAVE,
-        load
-    }
+  return {
+    type: MUTATION.APPROVAL_MUTATION_SAVE,
+    load,
+  };
 }
 export function setLoadingApprovalMutation(load) {
-    return {
-        type: MUTATION.APPROVAL_MUTATION_LOADING,
-        load
-    }
+  return {
+    type: MUTATION.APPROVAL_MUTATION_LOADING,
+    load,
+  };
 }
 export function setLoadingApprovalMutationDetail(load) {
-    return {
-        type: MUTATION.APPROVAL_MUTATION_LOADING_DETAIL,
-        load
-    }
+  return {
+    type: MUTATION.APPROVAL_MUTATION_LOADING_DETAIL,
+    load,
+  };
 }
 export function setApprovalMutation(data = []) {
-    return {
-        type: MUTATION.APPROVAL_MUTATION_DATA,
-        data
-    }
+  return {
+    type: MUTATION.APPROVAL_MUTATION_DATA,
+    data,
+  };
 }
 export function setApprovalMutationDetail(data = []) {
-    return {
-        type: MUTATION.APPROVAL_TUTATION_DATA_DETAIL,
-        data
-    }
+  return {
+    type: MUTATION.APPROVAL_TUTATION_DATA_DETAIL,
+    data,
+  };
 }
 
 export function setApprovalMutationFailed(data = []) {
-    return {
-        type: MUTATION.APPROVAL_MUTATION_FAILED,
-        data
-    }
+  return {
+    type: MUTATION.APPROVAL_MUTATION_FAILED,
+    data,
+  };
 }
 
-export function setMutation(data=[]){
-    return {type:MUTATION.SUCCESS,data}
+export function setMutation(data = []) {
+  return { type: MUTATION.SUCCESS, data };
 }
 
-export function setMutationExcel(data=[]){
-    return {type:MUTATION.SUCCESS_EXCEL,data}
+export function setMutationExcel(data = []) {
+  return { type: MUTATION.SUCCESS_EXCEL, data };
 }
 
-export function setMutationData(data=[]){
-    return {type:MUTATION.SUCCESS_DATA,data}
+export function setMutationData(data = []) {
+  return { type: MUTATION.SUCCESS_DATA, data };
 }
 
 export const rePrintFaktur = (id) => {
-    return (dispatch) => {
+  return (dispatch) => {
+    Swal.fire({
+      title: "Silahkan tunggu.",
+      html: "Sedang memproses faktur..",
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      onClose: () => {},
+    });
+    let url = `alokasi/reprint/${id}`;
+
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        Swal.close();
+
+        const data = response.data;
+        if (data.status === "success") {
+          window.open(data.result.nota, "_blank");
+          Swal.fire({
+            allowOutsideClick: false,
+            title: "Transaksi berhasil.",
+            type: "info",
+            html:
+              `Disimpan dengan nota: ${id}` +
+              "<br><br>" +
+              '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+              '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
+            showCancelButton: true,
+            showConfirmButton: false,
+          }).then((result) => {
+            if (result.dismiss === "cancel") {
+              window.location.reload();
+              // window.open(`/approval_mutasi`, '_top');
+            }
+          });
+          document
+            .getElementById("btnNotaPdf")
+            .addEventListener("click", () => {
+              // const win = window.open(data['kd_trx'], '_blank');
+              // if (win != null) {
+              //     win.focus();
+              // }
+
+              dispatch(rePrintFaktur(id));
+            });
+          document
+            .getElementById("btnNota3ply")
+            .addEventListener("click", () => {
+              // param({
+              //     pathname: `/approvalAlokasi3ply`,
+              //     state: {
+              //         data: rawdata,
+              //     }
+              // })
+              // Swal.closeModal();
+              // return false;
+              const win = window.open(`/alokasi3ply/${id}`, "_blank");
+              if (win != null) {
+                win.focus();
+              }
+            });
+        } else {
+          Swal.fire({
+            title: "failed",
+            type: "error",
+            text: "Gagal mengambil faktur.",
+          });
+        }
+        dispatch(setLoadingApprovalMutation(false));
+      })
+      .catch(function (error) {
+        Swal.close();
+      });
+  };
+};
+
+export const FetchApprovalMutation = (
+  page = 1,
+  q = "",
+  lokasi = "",
+  param = ""
+) => {
+  return (dispatch) => {
+    dispatch(setLoadingApprovalMutation(true));
+    let url = `mutasi?page=${page}`;
+    if (q !== "") {
+      if (url !== "") {
+        url += "&";
+      }
+      url += `q=${q}`;
+    }
+    if (lokasi !== "") {
+      if (url !== "") {
+        url += "&";
+      }
+      url += `lokasi=${lokasi}`;
+    }
+    if (param !== "") {
+      if (url !== "") {
+        url += "&";
+      }
+      url += `type=${param}`;
+    }
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        const data = response.data;
+        dispatch(setApprovalMutation(data));
+        dispatch(setLoadingApprovalMutation(false));
+      })
+      .catch(function (error) {
+        // handle error
+      });
+  };
+};
+
+export const FetchApprovalMutationDetail = (page = 1, kd_trx) => {
+  return (dispatch) => {
+    dispatch(setLoadingApprovalMutationDetail(true));
+    let url = `mutasi/${kd_trx}/?perpage=${page}`;
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        const data = response.data;
+        dispatch(setApprovalMutationDetail(data));
+        dispatch(setLoadingApprovalMutationDetail(false));
+      })
+      .catch(function (error) {
+        // handle error
         Swal.fire({
-            title: 'Silahkan tunggu.',
-            html: 'Sedang memproses faktur..',
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-            onClose: () => {}
-        })
-        let url = `alokasi/reprint/${id}`;
-        
-        axios.get(HEADERS.URL + url)
-            .then(function (response) {
-                Swal.close() 
+          title: "failed",
+          type: "error",
+          text: "Gagal mengambil data.\n" + JSON.stringify(error),
+        });
+      });
+  };
+};
 
-                const data = response.data;
-                if(data.status==='success'){
-                    window.open(data.result.nota, '_blank');
-                    Swal.fire({
-                        allowOutsideClick:false,
-                        title: 'Transaksi berhasil.',
-                        type: 'info',
-                        html: `Disimpan dengan nota: ${id}` +
-                            "<br><br>" +
-                            '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
-                            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
-                        showCancelButton: true,
-                        showConfirmButton: false
-                    }).then((result) => {
-                        if(result.dismiss === 'cancel'){
-                            window.location.reload();
-                            // window.open(`/approval_mutasi`, '_top');
-                        }
-                    })
-                    document.getElementById("btnNotaPdf").addEventListener("click", () => {
-                        // const win = window.open(data['kd_trx'], '_blank');
-                        // if (win != null) {
-                        //     win.focus();
-                        // }
-                        
-                        dispatch(rePrintFaktur(id));
-                    });
-                    document.getElementById("btnNota3ply").addEventListener("click", () => {
-                        // param({
-                        //     pathname: `/approvalAlokasi3ply`,
-                        //     state: {
-                        //         data: rawdata,
-                        //     }
-                        // })
-                        // Swal.closeModal();
-                        // return false;
-                            const win = window.open(`/alokasi3ply/${id}`, '_blank');
-                            if (win != null) {
-                                win.focus();
-                            }
-                    });
-                }else{
-                    Swal.fire({
-                        title: 'failed',
-                        type: 'error',
-                        text: 'Gagal mengambil faktur.',
-                    });
-
-                }
-                dispatch(setLoadingApprovalMutation(false));
-            }).catch(function (error) {
-                Swal.close() 
-
-
-            })
-    }
-}
-
-export const FetchApprovalMutation = (page = 1,q='',lokasi='',param='') => {
-    return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
-        let url=`mutasi?page=${page}`;
-        if(q!==''){
-            if(url!==''){url+='&';}
-            url+=`q=${q}`;
-        }
-        if(lokasi!==''){
-            if(url!==''){url+='&';}
-            url+=`lokasi=${lokasi}`;
-        }
-        if(param!==''){
-            if(url!==''){url+='&';}
-            url+=`type=${param}`;
-        }
-        axios.get(HEADERS.URL + url)
-            .then(function (response) {
-                const data = response.data;
-                dispatch(setApprovalMutation(data));
-                dispatch(setLoadingApprovalMutation(false));
-            })
-            .catch(function (error) {
-                // handle error
-                
-            })
-
-    }
-}
-
-export const FetchApprovalMutationDetail = (page = 1,kd_trx) => {
-    return (dispatch) => {
-        dispatch(setLoadingApprovalMutationDetail(true));
-        let url=`mutasi/${kd_trx}/?perpage=${page}`;
-        axios.get(HEADERS.URL + url)
-            .then(function (response) {
-                const data = response.data;
-                dispatch(setApprovalMutationDetail(data));
-                dispatch(setLoadingApprovalMutationDetail(false));
-            })
-            .catch(function (error) {
-                // handle error
-                Swal.fire({
-                    title: 'failed',
-                    type: 'error',
-                    text: 'Gagal mengambil data.\n'+JSON.stringify(error),
-                });
-            })
-
-    }
-}
-
-export const saveApprovalMutation = (data,param) => {
-    return (dispatch) => {
-        // let rawdata = data;
-        dispatch(setLoadingApprove(true))
+export const saveApprovalMutation = (data, param) => {
+  return (dispatch) => {
+    // let rawdata = data;
+    dispatch(setLoadingApprove(true));
+    Swal.fire({
+      allowOutsideClick: false,
+      title: "Silahkan tunggu.",
+      html: "Sedang memproses data..",
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+      onClose: () => {},
+    });
+    const url = HEADERS.URL + `mutasi/approve`;
+    axios
+      .post(url, data.data)
+      .then(function (response) {
+        Swal.close();
+        //                const data = (response.data)
+        //                if (data.status === 'success') {
+        //                    Toast.fire({
+        //                        icon: 'success',
+        //                        title: data.msg
+        //                    })
+        //                } else {
+        //                    Swal.fire({
+        //                        title: 'failed',
+        //                        type: 'error',
+        //                        text: data.msg,
+        //                    });
+        //                }
+        // const data = data['kd_trx']
         Swal.fire({
-            allowOutsideClick:false,
-            title: 'Silahkan tunggu.',
-            html: 'Sedang memproses data..',
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-            onClose: () => {}
-        })
-        const url = HEADERS.URL + `mutasi/approve`;
-        axios.post(url, data.data)
-            .then(function (response) {
-                Swal.close()
-//                const data = (response.data)
-//                if (data.status === 'success') {
-//                    Toast.fire({
-//                        icon: 'success',
-//                        title: data.msg
-//                    })
-//                } else {
-//                    Swal.fire({
-//                        title: 'failed',
-//                        type: 'error',
-//                        text: data.msg,
-//                    });
-//                }
-                // const data = data['kd_trx']
-                Swal.fire({
-                    allowOutsideClick:false,
-                    title: 'Transaksi berhasil.',
-                    type: 'info',
-                    html: `Disimpan dengan nota: ${data.data['kd_trx']}` +
-                        "<br><br>" +
-                        '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
-                        '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
-                    showCancelButton: true,
-                    showConfirmButton: false
-                }).then((result) => {
-                    if(result.dismiss === 'cancel'){
-                        window.location.reload();
-                        // window.open(`/approval_mutasi`, '_top');
-                    }
-                })
-                document.getElementById("btnNotaPdf").addEventListener("click", () => {
-                    // const win = window.open(data['kd_trx'], '_blank');
-                    // if (win != null) {
-                    //     win.focus();
-                    // }
-                    
-                    dispatch(rePrintFaktur(data.data['kd_trx']));
-                });
-                document.getElementById("btnNota3ply").addEventListener("click", () => {
-                    // param({
-                    //     pathname: `/approvalAlokasi3ply`,
-                    //     state: {
-                    //         data: rawdata,
-                    //     }
-                    // })
-                    // Swal.closeModal();
-                    // return false;
-                        const win = window.open(`/alokasi3ply/${data.data['kd_trx']}`, '_blank');
-                        if (win != null) {
-                            win.focus();
-                        }
-                });
-                dispatch(setLoadingApprove(false));
-                dispatch(setLoading(false));
-            })
-            .catch(function (error) {
-                // dispatch(setLoading(false));
-                dispatch(setLoadingApprove(false));
-                Swal.fire({
-                    title: 'failed',
-                    type: 'error',
-                    text: error.response === undefined?'error!':error.response.data.msg,
-                });
+          allowOutsideClick: false,
+          title: "Transaksi berhasil.",
+          type: "info",
+          html:
+            `Disimpan dengan nota: ${data.data["kd_trx"]}` +
+            "<br><br>" +
+            '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>    ' +
+            '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info d-none">Nota 3ply</button>',
+          showCancelButton: true,
+          showConfirmButton: false,
+        }).then((result) => {
+          if (result.dismiss === "cancel") {
+            window.location.reload();
+            // window.open(`/approval_mutasi`, '_top');
+          }
+        });
+        document.getElementById("btnNotaPdf").addEventListener("click", () => {
+          // const win = window.open(data['kd_trx'], '_blank');
+          // if (win != null) {
+          //     win.focus();
+          // }
 
-                if (error.response) {
-                    
-                }
-            })
-    }
-}
+          dispatch(rePrintFaktur(data.data["kd_trx"]));
+        });
+        document.getElementById("btnNota3ply").addEventListener("click", () => {
+          // param({
+          //     pathname: `/approvalAlokasi3ply`,
+          //     state: {
+          //         data: rawdata,
+          //     }
+          // })
+          // Swal.closeModal();
+          // return false;
+          const win = window.open(
+            `/alokasi3ply/${data.data["kd_trx"]}`,
+            "_blank"
+          );
+          if (win != null) {
+            win.focus();
+          }
+        });
+        dispatch(setLoadingApprove(false));
+        dispatch(setLoading(false));
+      })
+      .catch(function (error) {
+        // dispatch(setLoading(false));
+        dispatch(setLoadingApprove(false));
+        Swal.fire({
+          title: "failed",
+          type: "error",
+          text:
+            error.response === undefined ? "error!" : error.response.data.msg,
+        });
 
-export const FetchMutation = (page=1,where='')=>{
-    return (dispatch) => {
-        let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}`;
-        if(where!=='')url+=where
-        handleGet(url,(res)=>{
-            dispatch(setMutation(res));
-        })
-    }
-}
+        if (error.response) {
+        }
+      });
+  };
+};
 
-export const FetchMutationExcel = (page=1,where='',perpage=99999)=>{
-    return (dispatch) => {
-        dispatch(setLoadingApprovalMutation(true));
-        let url=`mutasi/report?page=${page==='NaN'||page===null||page===''||page===undefined?1:page}&perpage=${perpage}`;
-        if(where!==''){
-            url+=where
-        }
-        
-        axios.get(HEADERS.URL+url)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setMutationExcel(data));
-                dispatch(setLoadingApprovalMutation(false));
-            }).catch(function(error){
-            
-        })
+export const FetchMutation = (page = 1, where = "") => {
+  return (dispatch) => {
+    let url = `mutasi/report?page=${
+      page === "NaN" || page === null || page === "" || page === undefined
+        ? 1
+        : page
+    }`;
+    if (where !== "") url += where;
+    handleGet(url, (res) => {
+      let data = res.data;
+      dispatch(setMutation(data));
+    });
+  };
+};
+
+export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
+  return (dispatch) => {
+    dispatch(setLoadingApprovalMutation(true));
+    let url = `mutasi/report?page=${
+      page === "NaN" || page === null || page === "" || page === undefined
+        ? 1
+        : page
+    }&perpage=${perpage}`;
+    if (where !== "") {
+      url += where;
     }
-}
-export const FetchMutationData = (page=1,code,dateFrom='',dateTo='',location='')=>{
-    return (dispatch) => {
-        dispatch(setLoading(true));
-        let que = '';
-        if(dateFrom===''&&dateTo===''&&location===''){
-            que = `alokasi/report/${code}?page=${page}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location===''){
-            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-        }
-        if(dateFrom!==''&&dateTo!==''&&location!==''){
-            que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-        }
-        if(location!==''){
-            que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
-        }
-        
-        axios.get(HEADERS.URL+`${que}`)
-            .then(function(response){
-                const data = response.data;
-                
-                dispatch(setMutationData(data));
-                dispatch(setLoading(false));
-            }).catch(function(error){
-            
-        })
+
+    axios
+      .get(HEADERS.URL + url)
+      .then(function (response) {
+        const data = response.data;
+
+        dispatch(setMutationExcel(data));
+        dispatch(setLoadingApprovalMutation(false));
+      })
+      .catch(function (error) {});
+  };
+};
+export const FetchMutationData = (
+  page = 1,
+  code,
+  dateFrom = "",
+  dateTo = "",
+  location = ""
+) => {
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    let que = "";
+    if (dateFrom === "" && dateTo === "" && location === "") {
+      que = `alokasi/report/${code}?page=${page}`;
     }
-}
+    if (dateFrom !== "" && dateTo !== "" && location === "") {
+      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
+    }
+    if (dateFrom !== "" && dateTo !== "" && location !== "") {
+      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
+    }
+    if (location !== "") {
+      que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
+    }
+
+    axios
+      .get(HEADERS.URL + `${que}`)
+      .then(function (response) {
+        const data = response.data;
+
+        dispatch(setMutationData(data));
+        dispatch(setLoading(false));
+      })
+      .catch(function (error) {});
+  };
+};
 
 //const Toast = Swal.mixin({
 //    toast: true,

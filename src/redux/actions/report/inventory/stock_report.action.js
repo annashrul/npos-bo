@@ -55,7 +55,8 @@ export const FetchStockReportExcel = (
     }
 
     handleGet(url, (res) => {
-      dispatch(setStockReportExcel(res));
+      const data = res.data;
+      dispatch(setStockReportExcel(data));
     });
   };
 };

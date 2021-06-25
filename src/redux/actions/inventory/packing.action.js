@@ -2,7 +2,7 @@ import { PACKING, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../_interceptor";
+import { handleGet } from "../handleHttp";
 export function setLoading(load) {
   return { type: PACKING.LOADING, load };
 }
@@ -138,8 +138,7 @@ export const storePacking = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            "error.response.data.msg===undefined?'something wrong':error.response.data.msg",
+          text: "error.response.data.msg===undefined?'something wrong':error.response.data.msg",
         });
 
         if (error.response) {
@@ -180,7 +179,8 @@ export const FetchPacking = (page = 1, where = "") => {
     }`;
     if (where !== "") url += where;
     handleGet(url, (res) => {
-      dispatch(setPacking(res));
+      let data = res.data;
+      dispatch(setPacking(data));
     });
   };
 };
@@ -192,9 +192,10 @@ export const FetchPackingExcel = (page = 1, where = "", perpage = 99999) => {
         : page
     }&perpage=${perpage}`;
     if (where !== "") url += where;
-    
+
     handleGet(url, (res) => {
-      dispatch(setPackingExcel(res));
+      let data = res.data;
+      dispatch(setPackingExcel(data));
     });
   };
 };

@@ -75,7 +75,8 @@ export function setLoadingReport(load) {
 }
 export const FetchNotaSaleByCust = () => {
   return (dispatch) => {
-    handleGet(`pos/getcode`, (data) => {
+    handleGet(`pos/getcode`, (res) => {
+      let data = res.data;
       dispatch(setCode(data));
     });
   };
@@ -129,7 +130,8 @@ export const FetchReportSaleByCust = (where = "") => {
   return (dispatch) => {
     let url = `report/penjualan/by_cust`;
     if (where !== "") url += `?${where}`;
-    handleGet(url, (data) => {
+    handleGet(url, (res) => {
+      let data = res.data;
       dispatch(setReport(data));
     });
   };

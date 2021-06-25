@@ -37,29 +37,16 @@ export const handleError = (err) => {
   }
 };
 
-export const handleGet = (url, callback, isLoading = true, onProgress) => {
+export const handleGet = (url, callback, isLoading = true) => {
   if (isLoading) Nprogress.start();
-  if (onProgress !== undefined) onProgress("loading");
   axios
-    .get(HEADERS.URL + url, {
-      onDownloadProgress: (progressEvent) => {
-        console.log(
-          progressEvent.srcElement.getResponseHeader("content-length")
-        );
-        let percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        onProgress !== undefined && onProgress(percentCompleted);
-      },
-    })
+    .get(HEADERS.URL + url)
     .then(function (response) {
       const datum = response.data.result;
       callback(response);
-      onProgress !== undefined && onProgress(0);
       if (isLoading) Nprogress.done();
     })
     .catch(function (error) {
-      onProgress !== undefined && onProgress(0);
       if (isLoading) Nprogress.done();
       handleError(error);
     });

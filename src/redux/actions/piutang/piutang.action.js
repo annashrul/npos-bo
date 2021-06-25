@@ -1,7 +1,7 @@
 import { PIUTANG, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet } from "../_interceptor";
+import { handleGet } from "../handleHttp";
 
 export function setLoading(load) {
   return {

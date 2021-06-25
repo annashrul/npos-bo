@@ -293,6 +293,7 @@ class OpnameReport extends Component {
       data,
       // total
     } = this.props.opnameReport;
+    console.log(data);
     return (
       <Layout page="Laporan Opname">
         <div className="row">

@@ -68,7 +68,8 @@ export const FetchReportSaleByProduct = (where = "") => {
   return (dispatch) => {
     let url = `report/penjualan/barang`;
     if (where !== "") url += `?${where}`;
-    handleGet(url, (data) => {
+    handleGet(url, (res) => {
+      let data = res.data;
       dispatch(setReport(data));
     });
   };
