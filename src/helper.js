@@ -8,6 +8,7 @@ import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import XLSX from "xlsx";
+import { EXTENSION } from "./redux/actions/_constants";
 
 export const generateNo = (i, current_page) => {
   return i + 1 + 10 * (parseInt(current_page, 10) - 1);
@@ -41,7 +42,7 @@ export const toExcel = (
   head = [],
   content = [],
   foot = [],
-  ext = "xlsx"
+  ext = EXTENSION.XLSX
 ) => {
   let header = [[title.toUpperCase()], [`PERIODE : ${periode}`], [""], head];
   let footer = foot;

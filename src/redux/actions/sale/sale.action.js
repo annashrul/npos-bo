@@ -256,8 +256,8 @@ export const storeSale = (data, param) => {
 
 export const FetchReportSale = (where = "") => {
   return (dispatch) => {
-    let url = `report/arsip_penjualan`;
-    if (where !== "") url += `?${where}`;
+    let url = `report/arsip_penjualan?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
@@ -316,8 +316,8 @@ export const deleteReportSale = (data) => {
 
 export const FetchSaleReturReport = (where = "") => {
   return (dispatch) => {
-    let url = `report/penjualan/retur`;
-    if (where !== "") url += `?${where}`;
+    let url = `report/penjualan/retur?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
