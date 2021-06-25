@@ -3027,21 +3027,21 @@ class FormProduct extends Component {
       }
     }
     // console.log(barangSku);
-    // parseData["barang_sku"] = barangSku;
-    // parseData["barang_harga"] = barangHarga;
-    // if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
-    //   this.props.dispatch(
-    //     updateProduct(this.state.kd_brg, parseData, (status) => {
-    //       if (status) this.clearState();
-    //     })
-    //   );
-    // } else {
-    //   this.props.dispatch(
-    //     createProduct(parseData, (status) => {
-    //       if (status) this.clearState();
-    //     })
-    //   );
-    // }
+    parseData["barang_sku"] = barangSku;
+    parseData["barang_harga"] = barangHarga;
+    if (this.props.dataEdit !== undefined && this.props.dataEdit !== []) {
+      this.props.dispatch(
+        updateProduct(this.state.kd_brg, parseData, (status) => {
+          if (status) this.clearState();
+        })
+      );
+    } else {
+      this.props.dispatch(
+        createProduct(parseData, (status) => {
+          if (status) this.clearState();
+        })
+      );
+    }
   }
   getFiles(files) {
     this.setState({

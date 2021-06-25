@@ -36,7 +36,8 @@ export const FetchStockReport = (page = 1, where = "") => {
       url += `${where}`;
     }
     handleGet(url, (res) => {
-      dispatch(setStockReport(res));
+      const data = res.data;
+      dispatch(setStockReport(data));
     });
   };
 };

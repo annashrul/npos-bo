@@ -21,7 +21,7 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
-import { toRp } from "../../../../../helper";
+import { generateNo, toRp } from "../../../../../helper";
 
 class InventoryReport extends Component {
   constructor(props) {
@@ -259,13 +259,8 @@ class InventoryReport extends Component {
       textAlign: "center",
       whiteSpace: "nowrap",
     };
-    const {
-      per_page,
-      last_page,
-      current_page,
-      data,
-      total,
-    } = this.props.stockReport;
+    const { per_page, last_page, current_page, data, total } =
+      this.props.stockReport;
     const {
       total_harga_beli,
       total_harga_jual,
@@ -291,7 +286,7 @@ class InventoryReport extends Component {
     let get_lokasi = true;
     return (
       <Layout page="Laporan Stock">
-        <div className="row" style={{ zoom: "85%" }}>
+        <div className="row" style={{ zoom: "90%" }}>
           <div className="col-md-10">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-2">
@@ -376,10 +371,7 @@ class InventoryReport extends Component {
 
           <div className="col-md-2">
             <div className="row">
-              <div
-                className="col-12 col-xs-12 col-md-12"
-                style={{ textAlign: "right" }}
-              >
+              <div className="col-12 col-xs-12 col-md-12">
                 <div className="form-group text-right">
                   <button
                     style={{ marginTop: "28px", marginRight: "5px" }}
@@ -404,89 +396,98 @@ class InventoryReport extends Component {
         </div>
         <div style={{ overflowX: "auto" }}>
           <table
-            className="table table-hover table-bordered"
+            className="table table-hover table-noborder"
             style={{ zoom: "80%" }}
           >
             <thead className="bg-light">
               <tr>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th
+                  className="text-black text-center middle nowrap"
+                  rowSpan="2"
+                >
                   No
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th
+                  className="text-black text-center middle nowrap"
+                  rowSpan="2"
+                >
                   #
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Kode Barang
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Barcode
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Satuan
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Nama
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Supplier
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Sub Dept
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
+                <th className="text-black middle nowrap" rowSpan="2">
                   Kelompok
                 </th>
                 <th
-                  className={`text-black ${!this.state.bukaHarga ? "d-none" : ""
-                    }`}
-                  style={columnStyle}
+                  className={`text-black middle nowrap ${
+                    !this.state.bukaHarga ? "d-none" : ""
+                  }`}
                   rowSpan="2"
                 >
                   Harga Beli
                 </th>
                 <th
-                  className={`text-black ${!this.state.bukaHarga ? "d-none" : ""
-                    }`}
-                  style={columnStyle}
+                  className={`text-black middle nowrap ${
+                    !this.state.bukaHarga ? "d-none" : ""
+                  }`}
                   rowSpan="2"
                 >
                   Harga Jual
                 </th>
-                <th className="text-black" style={columnStyle} colSpan="5">
+                <th
+                  className="text-black middle nowrap text-center"
+                  colSpan="5"
+                >
                   Stok
                 </th>
                 <th
-                  className={`text-black ${!this.state.bukaHarga ? "d-none" : ""
-                    }`}
-                  style={columnStyle}
+                  className={`text-black middle nowrap ${
+                    !this.state.bukaHarga ? "d-none" : ""
+                  }`}
                   rowSpan="2"
                 >
                   Total Harga Beli
                 </th>
 
                 <th
-                  className={`text-black ${!this.state.bukaHarga ? "d-none" : ""
-                    }`}
-                  style={columnStyle}
+                  className={`text-black middle nowrap ${
+                    !this.state.bukaHarga ? "d-none" : ""
+                  }`}
                   rowSpan="2"
                 >
                   Total Harga Jual
                 </th>
               </tr>
               <tr>
-                <th className="text-black" style={columnStyle} rowSpan="1">
+                <th className="text-black middle nowrap" rowSpan="1">
                   Awal
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="1">
+                <th className="text-black middle nowrap" rowSpan="1">
                   In
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="1">
+                <th className="text-black middle nowrap" rowSpan="1">
                   Out
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="1">
+                <th className="text-black middle nowrap" rowSpan="1">
                   Sale
                 </th>
-                <th className="text-black" style={columnStyle} rowSpan="1">
+                <th className="text-black middle nowrap" rowSpan="1">
                   Akhir
                 </th>
               </tr>
@@ -518,16 +519,16 @@ class InventoryReport extends Component {
                     total_beli_per += parseInt(v.harga_beli_lokasi, 10);
                     total_jual_qty_per += parseInt(
                       v.harga_lokasi *
-                      (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk)) -
-                      (parseFloat(v.stock_keluar) +
-                        parseFloat(v.stock_penjualan)),
+                        (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk)) -
+                        (parseFloat(v.stock_keluar) +
+                          parseFloat(v.stock_penjualan)),
                       10
                     );
                     total_beli_qty_per += parseInt(
                       v.harga_beli_lokasi *
-                      (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk)) -
-                      (parseFloat(v.stock_keluar) +
-                        parseFloat(v.stock_penjualan)),
+                        (parseFloat(v.stock_awal) + parseFloat(v.stock_masuk)) -
+                        (parseFloat(v.stock_keluar) +
+                          parseFloat(v.stock_penjualan)),
                       10
                     );
                     total_stock_penjualan_per =
@@ -536,15 +537,14 @@ class InventoryReport extends Component {
                     get_lokasi = v.lokasi === "-";
                     return (
                       <tr key={i}>
-                        <td style={columnStyle}>
-                          {" "}
-                          {i + 1 + 10 * (parseFloat(current_page, 10) - 1)}
+                        <td className="text-center middle nowrap">
+                          {generateNo(i, current_page)}
                         </td>
-                        <td style={columnStyle}>
+                        <td className="text-center middle nowrap">
                           {/* Example split danger button */}
                           <div className="btn-group">
                             <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
+                              <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem
                                   href={`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`}
@@ -568,66 +568,75 @@ class InventoryReport extends Component {
                             </UncontrolledButtonDropdown>
                           </div>
                         </td>
-                        <td style={columnStyle}>{v.kd_brg}</td>
-                        <td style={columnStyle}>{v.barcode}</td>
-                        <td style={columnStyle}>{v.satuan}</td>
-                        <td style={columnStyle}>{v.nm_brg}</td>
-                        <td style={columnStyle}>{v.supplier}</td>
-                        <td style={columnStyle}>{v.sub_dept}</td>
-                        <td style={columnStyle}>{v.nama_kel}</td>
-                        {/* <td style={{textAlign:"right"}}>{v.delivery_note}</td> */}
+                        <td className="middle nowrap">{v.kd_brg}</td>
+                        <td className="middle nowrap">{v.barcode}</td>
+                        <td className="middle nowrap">{v.satuan}</td>
+                        <td className="middle nowrap">{v.nm_brg}</td>
+                        <td className="middle nowrap">{v.supplier}</td>
+                        <td className="middle nowrap">{v.sub_dept}</td>
+                        <td className="middle nowrap">{v.nama_kel}</td>
                         <td
-                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
-                          style={{ textAlign: "right" }}
+                          className={`middle nowrap text-right ${
+                            !this.state.bukaHarga ? "d-none" : ""
+                          }`}
                         >
                           {get_lokasi ? 0 : toRp(v.harga_beli_lokasi)}
                         </td>
                         <td
-                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
-                          style={{ textAlign: "right" }}
+                          className={`middle nowrap text-right ${
+                            !this.state.bukaHarga ? "d-none" : ""
+                          }`}
                         >
                           {get_lokasi ? 0 : toRp(v.harga_lokasi)}
                         </td>
-                        <td style={{ textAlign: "right" }}>{v.stock_awal}</td>
-                        <td style={{ textAlign: "right" }}>{v.stock_masuk}</td>
-                        <td style={{ textAlign: "right" }}>{v.stock_keluar}</td>
-                        <td style={{ textAlign: "right" }}>
+                        <td className="text-right middle nowrap">
+                          {v.stock_awal}
+                        </td>
+                        <td className="text-right middle nowrap">
+                          {v.stock_masuk}
+                        </td>
+                        <td className="text-right middle nowrap">
+                          {v.stock_keluar}
+                        </td>
+                        <td className="text-right middle nowrap">
                           {v.stock_penjualan}
                         </td>
-                        <td style={{ textAlign: "right" }}>
+                        <td className="text-right middle nowrap">
                           {parseFloat(v.stock_awal) +
                             parseFloat(v.stock_masuk) -
                             (parseFloat(v.stock_keluar) +
                               parseFloat(v.stock_penjualan))}
                         </td>
                         <td
-                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
-                          style={{ textAlign: "right" }}
+                          className={`text-right middle nowrap ${
+                            !this.state.bukaHarga ? "d-none" : ""
+                          }`}
                         >
                           {get_lokasi
                             ? 0
                             : toRp(
-                              v.harga_beli_lokasi *
-                              (parseFloat(v.stock_awal) +
-                                parseFloat(v.stock_masuk)) -
-                              (parseFloat(v.stock_keluar) +
-                                parseFloat(v.stock_penjualan))
-                            )}
+                                v.harga_beli_lokasi *
+                                  (parseFloat(v.stock_awal) +
+                                    parseFloat(v.stock_masuk)) -
+                                  (parseFloat(v.stock_keluar) +
+                                    parseFloat(v.stock_penjualan))
+                              )}
                         </td>
 
                         <td
-                          className={`${!this.state.bukaHarga ? "d-none" : ""}`}
-                          style={{ textAlign: "right" }}
+                          className={`text-right middle nowrap ${
+                            !this.state.bukaHarga ? "d-none" : ""
+                          }`}
                         >
                           {get_lokasi
                             ? 0
                             : toRp(
-                              v.harga_lokasi *
-                              (parseFloat(v.stock_awal) +
-                                parseFloat(v.stock_masuk)) -
-                              (parseFloat(v.stock_keluar) +
-                                parseFloat(v.stock_penjualan))
-                            )}
+                                v.harga_lokasi *
+                                  (parseFloat(v.stock_awal) +
+                                    parseFloat(v.stock_masuk)) -
+                                  (parseFloat(v.stock_keluar) +
+                                    parseFloat(v.stock_penjualan))
+                              )}
                         </td>
                       </tr>
                     );
@@ -706,21 +715,31 @@ class InventoryReport extends Component {
                   {toRp(total_harga_jual)}
                 </th>
                 <th colSpan="1" style={{ textAlign: "right" }}>
-                  {total_stock_awal === undefined || total_stock_awal === null ? 0 : total_stock_awal}
+                  {total_stock_awal === undefined || total_stock_awal === null
+                    ? 0
+                    : total_stock_awal}
                 </th>
                 <th colSpan="1" style={{ textAlign: "right" }}>
-                  {total_stock_masuk === undefined || total_stock_masuk === null ? 0 : total_stock_masuk}
+                  {total_stock_masuk === undefined || total_stock_masuk === null
+                    ? 0
+                    : total_stock_masuk}
                 </th>
                 <th colSpan="1" style={{ textAlign: "right" }}>
-                  {total_stock_keluar === undefined || total_stock_keluar === null ? 0 : total_stock_keluar}
+                  {total_stock_keluar === undefined ||
+                  total_stock_keluar === null
+                    ? 0
+                    : total_stock_keluar}
                 </th>
                 <th colSpan="1" style={{ textAlign: "right" }}>
-                  {total_stock_penjualan === undefined || total_stock_penjualan === null
+                  {total_stock_penjualan === undefined ||
+                  total_stock_penjualan === null
                     ? 0
                     : total_stock_penjualan}
                 </th>
                 <th colSpan="1" style={{ textAlign: "right" }}>
-                  {total_stock_akhir === undefined || total_stock_akhir === null ? 0 : total_stock_akhir}
+                  {total_stock_akhir === undefined || total_stock_akhir === null
+                    ? 0
+                    : total_stock_akhir}
                 </th>
                 <th
                   className={`${!this.state.bukaHarga ? "d-none" : ""}`}
@@ -728,7 +747,8 @@ class InventoryReport extends Component {
                   style={{ textAlign: "right" }}
                 >
                   {toRp(
-                    total_harga_beli_qty === undefined || total_harga_beli_qty === null
+                    total_harga_beli_qty === undefined ||
+                      total_harga_beli_qty === null
                       ? 0
                       : total_harga_beli_qty
                   )}
@@ -740,7 +760,8 @@ class InventoryReport extends Component {
                   style={{ textAlign: "right" }}
                 >
                   {toRp(
-                    total_harga_jual_qty === undefined || total_harga_jual_qty === null
+                    total_harga_jual_qty === undefined ||
+                      total_harga_jual_qty === null
                       ? 0
                       : total_harga_jual_qty
                   )}
