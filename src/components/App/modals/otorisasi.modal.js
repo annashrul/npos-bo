@@ -27,31 +27,14 @@ class ModalPin extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.auth.user) {
-      this.setState({
-        username: nextProps.auth.user.username,
-      });
-    }
-
+    this.setState({
+      username: nextProps.auth.user.username,
+    });
     if (nextProps.datum) {
       this.setState({
         module: nextProps.datum.module,
         aksi: nextProps.datum.aksi,
       });
-    }
-
-    if (nextProps.id_log !== "") {
-      if (nextProps.id_log !== this.state.prevIdLog) {
-        const id = nextProps.id_log;
-        // nextProps.dispatch(ModalToggle(false));
-        // this.props.onDone(id, this.props.datum.id_trx);
-        // this.props.dispatch(setOtorisasiId(""));
-        // this.setState({
-        //   prevIdLog: nextProps.id_log,
-        //   id_log: nextProps.id_log,
-        //   pass: "",
-        // });
-      }
     }
   };
 

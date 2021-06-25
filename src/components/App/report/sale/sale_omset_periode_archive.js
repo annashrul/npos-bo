@@ -24,6 +24,7 @@ import {
 } from "reactstrap";
 import SaleOmsetPeriodeDetail from "../../modals/report/sale/form_sale_omset_periode_detail";
 import Swal from "sweetalert2";
+import { generateNo } from "../../../../helper";
 
 class SaleOmsetPeriodeArchive extends Component {
   constructor(props) {
@@ -106,7 +107,11 @@ class SaleOmsetPeriodeArchive extends Component {
   };
   componentWillMount() {
     let page = localStorage.getItem("pageNumber_saleOmsetPeriode_report");
-    this.checkingParameter(page === undefined && page === null ? 1 : page,this.state.startDate,this.state.endDate);
+    this.checkingParameter(
+      page === undefined && page === null ? 1 : page,
+      this.state.startDate,
+      this.state.endDate
+    );
   }
   componentDidMount() {
     if (
@@ -182,29 +187,35 @@ class SaleOmsetPeriodeArchive extends Component {
     });
   };
   handleDate = (e, param) => {
-    console.log(param,e);
-    
+    console.log(param, e);
+
     if (param === "old") {
       // const old =  moment(e._d).utc();
       // localStorage.setItem("date_from_saleOmsetPeriode_report", `${old}`);
-      if(moment(e._d).utc()<moment(this.state.endDate).utc()){
+      if (moment(e._d).utc() < moment(this.state.endDate).utc()) {
         this.setState({
           startDate: moment(e._d).utc(),
         });
-        this.checkingParameter(1,moment(e._d).utc(),this.state.endDate);
+        this.checkingParameter(1, moment(e._d).utc(), this.state.endDate);
       } else {
-        Swal.fire("Error", "Bulan yang dipilih tidak boleh melebihi bulan sekarang")
+        Swal.fire(
+          "Error",
+          "Bulan yang dipilih tidak boleh melebihi bulan sekarang"
+        );
       }
     } else if (param === "now") {
       // const now =  moment(e._d).utc();
       // localStorage.setItem("date_to_saleOmsetPeriode_report", `${now}`);
-      if(moment(e._d).utc()>moment(this.state.startDate).utc()){
+      if (moment(e._d).utc() > moment(this.state.startDate).utc()) {
         this.setState({
           endDate: moment(e._d).utc(),
         });
-        this.checkingParameter(1,this.state.startDate,moment(e._d).utc());
+        this.checkingParameter(1, this.state.startDate, moment(e._d).utc());
       } else {
-        Swal.fire("Error", "Bulan yang dipilih tidak boleh kurang dari bulan sebelum")
+        Swal.fire(
+          "Error",
+          "Bulan yang dipilih tidak boleh kurang dari bulan sebelum"
+        );
       }
     }
   };
@@ -218,8 +229,8 @@ class SaleOmsetPeriodeArchive extends Component {
   }
   checkingParameter(pageNumber, startDate, endDate) {
     let where = "";
-    let dateFrom = moment.unix(startDate/1000).format('yyyy-MM');
-    let dateTo = moment.unix(endDate/1000).format('yyyy-MM');
+    let dateFrom = moment.unix(startDate / 1000).format("yyyy-MM");
+    let dateTo = moment.unix(endDate / 1000).format("yyyy-MM");
     // let dateFrom = moment.unix(this.state.startDate/1000).format('yyyy-MM');
     // let dateTo = moment.unix(this.state.endDate/1000).format('yyyy-MM');
     // let any = localStorage.getItem("any_saleOmsetPeriode_report");
@@ -350,440 +361,329 @@ class SaleOmsetPeriodeArchive extends Component {
 
     return (
       <Layout page="Laporan Arsip Penjualan">
-        <div className="card">
-          <div className="card-header">
-            <h5>Laporan Omset Periode</h5>
-          </div>
-          <div className="card-body">
+        <div className="row">
+          <div className="col-md-10">
             <div className="row">
-              <div className="col-md-10">
-                <div className="row">
-                  <div className="col-6 col-xs-6 col-md-3">
-                    <div className="form-group">
-                      <label htmlFor=""> Bulan Lalu </label>
-                      {/* <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                                <input type="text" className="form-control" name="date_saleOmsetPeriode_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
-                                            </DateRangePicker> */}
-                      <Datetime
-                        dateFormat="YYYY-MM"
-                        timeFormat={false}
-                        closeOnSelect={true}
-                        value={this.state.startDate}
-                        onChange={(e) => this.handleDate(e, "old")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-6 col-xs-6 col-md-3">
-                    <div className="form-group">
-                      <label htmlFor=""> Bulan Sekarang </label>
-                      {/* <DateRangePicker style={{display:'unset'}} ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
-                                                <input type="text" className="form-control" name="date_saleOmsetPeriode_report" value={`${this.state.startDate} to ${this.state.endDate}`} style={{padding: '9px',fontWeight:'bolder'}}/>
-                                            </DateRangePicker> */}
-                      <Datetime
-                        dateFormat="YYYY-MM"
-                        timeFormat={false}
-                        closeOnSelect={true}
-                        value={this.state.endDate}
-                        onChange={(e) => this.handleDate(e, "now")}
-                      />
-                    </div>
-                  </div>
-                  {/* <div className="col-6 col-xs-6 col-md-3">
-                                        <div className="form-group">
-                                            <label className="control-label font-12">
-                                                Filter
-                                            </label>
-                                            <Select
-                                                options={this.state.filter_data}
-                                                // placeholder="Pilih Tipe Kas"
-                                                onChange={this.HandleChangeFilter}
-                                                value={
-                                                    this.state.filter_data.find(op => {
-                                                        return op.value === this.state.filter
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </div> */}
-                  {/* <div className="col-6 col-xs-6 col-md-3">
-                                        <div className="form-group">
-                                            <label className="control-label font-12">
-                                                Lokasi
-                                            </label>
-                                            <Select
-                                                options={this.state.location_data}
-                                                // placeholder="Pilih Tipe Kas"
-                                                onChange={this.HandleChangeLokasi}
-                                                value={
-                                                    this.state.location_data.find(op => {
-                                                        return op.value === this.state.location
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </div> */}
-
-                  {/* <div className="col-6 col-xs-6 col-md-3">
-                                        <div className="form-group">
-                                            <label htmlFor="">Cari</label>
-                                            <input type="text" name="any_saleOmsetPeriode_report" className="form-control form-control-lg" value={this.state.any_saleOmsetPeriode_report} onChange={(e)=>this.handleChange(e)}/>
-                                        </div>
-                                    </div> */}
+              <div className="col-6 col-xs-6 col-md-3">
+                <div className="form-group">
+                  <label htmlFor=""> Bulan Lalu </label>
+                  <Datetime
+                    dateFormat="YYYY-MM"
+                    timeFormat={false}
+                    closeOnSelect={true}
+                    value={this.state.startDate}
+                    onChange={(e) => this.handleDate(e, "old")}
+                  />
                 </div>
               </div>
-              <div className="col-md-2">
-                <div className="row">
-                  <div className="col-12 col-xs-12 col-md-12">
-                    <div className="form-group text-right">
-                      {/* <button
+              <div className="col-6 col-xs-6 col-md-3">
+                <div className="form-group">
+                  <label htmlFor=""> Bulan Sekarang </label>
+                  <Datetime
+                    dateFormat="YYYY-MM"
+                    timeFormat={false}
+                    closeOnSelect={true}
+                    value={this.state.endDate}
+                    onChange={(e) => this.handleDate(e, "now")}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-2">
+            <div className="row">
+              <div className="col-12 col-xs-12 col-md-12">
+                <div className="form-group text-right">
+                  {/* <button
                         style={{ marginTop: "28px", marginRight: "5px" }}
                         className="btn btn-primary"
                         onClick={this.handleSearch}
                       >
                         <i className="fa fa-search" />
                       </button> */}
-                      <button
-                        style={{ marginTop: "28px", marginRight: "5px" }}
-                        className="btn btn-primary"
-                        onClick={(e) =>
-                          this.toggleModal(e, last_page * per_page, per_page)
-                        }
-                      >
-                        <i className="fa fa-print" /> Export
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    style={{ marginTop: "28px", marginRight: "5px" }}
+                    className="btn btn-primary"
+                    onClick={(e) =>
+                      this.toggleModal(e, last_page * per_page, per_page)
+                    }
+                  >
+                    <i className="fa fa-print" /> Export
+                  </button>
                 </div>
-              </div>
-              <div className="col-md-12">
-                <div style={{ overflowX: "auto", zoom: "85%" }}>
-                  <table className="table table-hover table-bordered">
-                    <thead className="bg-light">
-                      <tr>
-                        {/* <th className="text-black" rowSpan="2" style={columnStyle}>#</th> */}
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          No
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Aksi
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Lokasi
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Omset
-                          <br />
-                          Bulan Lalu
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Transaksi
-                          <br />
-                          Bulan Lalu
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Rata - Rata Transaksi
-                          <br />
-                          Bulan Lalu
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Omset
-                          <br />
-                          Bulan Sekarang
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Transaksi
-                          <br />
-                          Bulan Sekarang
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Rata - Rata Transaksi
-                          <br />
-                          Bulan Sekarang
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Pertumbuhan
-                        </th>
-                        <th
-                          className="text-black"
-                          rowSpan="2"
-                          style={columnStyle}
-                        >
-                          Persentase
-                        </th>
-                      </tr>
-                    </thead>
-                    {!this.props.isLoadingReport ? (
-                      <tbody>
-                        {typeof data === "object"
-                          ? data.length > 0
-                            ? data.map((v, i) => {
-                                tot_omset_sebelum =
-                                  tot_omset_sebelum +
-                                  parseInt(v.omset_sebelum, 10);
-                                tot_transaksi_sebelum =
-                                  tot_transaksi_sebelum +
-                                  parseInt(v.transaksi_sebelum, 10);
-                                tot_rata_sebelum =
-                                  tot_rata_sebelum +
-                                  (!Number.isNaN(
-                                    parseFloat(v.omset_sebelum) /
-                                      parseFloat(v.transaksi_sebelum)
-                                  )
-                                    ? parseFloat(v.omset_sebelum) /
-                                      parseFloat(v.transaksi_sebelum)
-                                    : 0);
-                                tot_omset_sekarang =
-                                  tot_omset_sekarang +
-                                  parseInt(v.omset_sekarang, 10);
-                                tot_transaksi_sekarang =
-                                  tot_transaksi_sekarang +
-                                  parseInt(v.transaksi_sekarang, 10);
-                                tot_rata_sekarang =
-                                  tot_rata_sekarang +
-                                  (!Number.isNaN(
-                                    parseFloat(v.omset_sekarang) /
-                                      parseFloat(v.transaksi_sekarang)
-                                  )
-                                    ? parseFloat(v.omset_sekarang) /
-                                      parseFloat(v.transaksi_sekarang)
-                                    : 0);
-                                tot_pertumbuhan =
-                                  tot_pertumbuhan +
-                                  (parseInt(v.omset_sekarang, 10) -
-                                    parseInt(v.omset_sebelum, 10));
-                                tot_persen_pertumbuhan =
-                                  tot_persen_pertumbuhan +
-                                  ((!Number.isNaN(
-                                    ((parseFloat(v.omset_sekarang) -
-                                      parseFloat(v.omset_sebelum)) /
-                                      parseFloat(v.omset_sebelum)) *
-                                      100
-                                  )&&(
-                                    ((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum) * 100)
-                                  )!==Infinity)
-                                    ? ((parseFloat(v.omset_sekarang, 10) -
-                                        parseFloat(v.omset_sebelum, 10)) /
-                                        parseFloat(v.omset_sebelum, 10)) *
-                                      100
-                                    : 0);
-                                    
-                                    
-                                return (
-                                  <tr key={i}>
-                                    <td style={columnStyle}>
-                                      {" "}
-                                      {i +
-                                        1 +
-                                        10 * (parseInt(current_page, 10) - 1)}
-                                    </td>
-                                    <td>
-                                      <div className="btn-group">
-                                        <UncontrolledButtonDropdown>
-                                          <DropdownToggle caret>
-                                            Aksi
-                                          </DropdownToggle>
-                                          <DropdownMenu>
-                                            <DropdownItem
-                                              onClick={(e) =>
-                                                this.handleDetail(e, v)
-                                              }
-                                            >
-                                              Detail
-                                            </DropdownItem>
-                                            {/* <DropdownItem onClick={(e) => this.handleExport(e, v.kd_trx)}>Export</DropdownItem> */}
-                                          </DropdownMenu>
-                                        </UncontrolledButtonDropdown>
-                                      </div>
-                                    </td>
-                                    <td style={{ textAlign: "center" }}>
-                                      {v.nama_toko}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(parseInt(v.omset_sebelum, 10))}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(parseInt(v.transaksi_sebelum, 10))}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(
-                                        !Number.isNaN(
-                                          parseInt(v.omset_sebelum, 10) /
-                                            parseInt(v.transaksi_sebelum, 10)
-                                        )
-                                          ? parseFloat(
-                                              parseFloat(v.omset_sebelum) /
-                                                parseFloat(
-                                                  v.transaksi_sebelum
-                                                )
-                                            ).toFixed(2)
-                                          : 0
-                                      )}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(parseInt(v.omset_sekarang, 10))}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(parseInt(v.transaksi_sekarang, 10))}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(
-                                        !Number.isNaN(
-                                          parseInt(v.omset_sekarang, 10) /
-                                            parseInt(v.transaksi_sekarang, 10)
-                                        )
-                                          ? parseFloat(
-                                              parseFloat(v.omset_sekarang) /
-                                                parseFloat(
-                                                  v.transaksi_sekarang
-                                                )
-                                            ).toFixed(2)
-                                          : 0
-                                      )}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(
-                                        parseInt(v.omset_sekarang, 10) -
-                                          parseInt(v.omset_sebelum, 10)
-                                      )}
-                                    </td>
-                                    <td style={{ textAlign: "right" }}>
-                                      {toRp(
-                                        (!Number.isNaN(
-                                          ((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum) * 100)
-                                        )&&(
-                                            ((parseFloat(v.omset_sekarang) - parseFloat(v.omset_sebelum)) / parseFloat(v.omset_sebelum) * 100)
-                                          )!==Infinity)
-                                          ? ((parseFloat(v.omset_sekarang) -
-                                              parseFloat(v.omset_sebelum)) /
-                                              parseFloat(v.omset_sebelum)) *
-                                              100
-                                          : 0
-                                      )}
-                                      %
-                                    </td>
-                                  </tr>
-                                );
-                              })
-                            : "No data."
-                          : "No data."}
-                      </tbody>
-                    ) : (
-                      <Preloader />
-                    )}
-                    <tfoot>
-                      <tr>
-                        <td style={columnStyle} colSpan={3}>
-                          {" "}
-                          Total
-                        </td>
-
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseInt(tot_omset_sebelum, 10))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseInt(tot_transaksi_sebelum, 10))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseFloat(tot_rata_sebelum).toFixed(2))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseInt(tot_omset_sekarang, 10))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseInt(tot_transaksi_sekarang, 10))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseFloat(tot_rata_sekarang).toFixed(2))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseInt(tot_pertumbuhan, 10))}
-                        </td>
-                        <td style={{ textAlign: "right" }}>
-                          {toRp(parseInt(tot_persen_pertumbuhan, 10))}%
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-                <div style={{ marginTop: "20px", float: "right" }}>
-                  <Paginationq
-                    current_page={parseInt(current_page, 10)}
-                    per_page={parseInt(per_page, 10)}
-                    total={parseInt(last_page * per_page, 10)}
-                    callback={this.handlePageChange.bind(this)}
-                  />
-                </div>
-                {this.props.saleOmsetPeriodeReportExcel.data !== undefined &&
-                this.props.saleOmsetPeriodeReportExcel.data.length > 0 ? (
-                  <SaleOmsetPeriodeReportExcel
-                    startDate={moment.unix(this.state.startDate/1000).format('yyyy-MM-DD')}
-                    endDate={moment.unix(this.state.endDate/1000).format('yyyy-MM-DD')}
-                    location={this.state.location}
-                  />
-                ) : (
-                  ""
-                )}
-                {typeof this.props.detail === "object" ? (
-                  <SaleOmsetPeriodeDetail
-                    startDate={moment.unix(this.state.startDate/1000).format('yyyy-MM-DD')}
-                    endDate={moment.unix(this.state.endDate/1000).format('yyyy-MM-DD')}
-                    dataDetail={this.props.detail}
-                  />
-                ) : (
-                  ""
-                )}
               </div>
             </div>
           </div>
+          <div className="col-md-12">
+            <div style={{ overflowX: "auto", zoom: "85%" }}>
+              <table className="table table-hover table-noborder">
+                <thead className="bg-light">
+                  <tr>
+                    <th className="text-black text-center middle nowrap">No</th>
+                    <th className="text-black text-center middle nowrap">#</th>
+                    <th className="text-black middle nowrap">Lokasi</th>
+                    <th className="text-black middle nowrap">
+                      Omset
+                      <br />
+                      Bulan Lalu
+                    </th>
+                    <th className="text-black middle nowrap">
+                      Transaksi
+                      <br />
+                      Bulan Lalu
+                    </th>
+                    <th className="text-black middle nowrap">
+                      Rata - Rata Transaksi
+                      <br />
+                      Bulan Lalu
+                    </th>
+                    <th className="text-black middle nowrap">
+                      Omset
+                      <br />
+                      Bulan Sekarang
+                    </th>
+                    <th className="text-black middle nowrap">
+                      Transaksi
+                      <br />
+                      Bulan Sekarang
+                    </th>
+                    <th className="text-black middle nowrap">
+                      Rata - Rata Transaksi
+                      <br />
+                      Bulan Sekarang
+                    </th>
+                    <th className="text-black middle nowrap">Pertumbuhan</th>
+                    <th className="text-black middle nowrap">Persentase</th>
+                  </tr>
+                </thead>
+                {!this.props.isLoadingReport ? (
+                  <tbody>
+                    {typeof data === "object"
+                      ? data.length > 0
+                        ? data.map((v, i) => {
+                            tot_omset_sebelum =
+                              tot_omset_sebelum + parseInt(v.omset_sebelum, 10);
+                            tot_transaksi_sebelum =
+                              tot_transaksi_sebelum +
+                              parseInt(v.transaksi_sebelum, 10);
+                            tot_rata_sebelum =
+                              tot_rata_sebelum +
+                              (!Number.isNaN(
+                                parseFloat(v.omset_sebelum) /
+                                  parseFloat(v.transaksi_sebelum)
+                              )
+                                ? parseFloat(v.omset_sebelum) /
+                                  parseFloat(v.transaksi_sebelum)
+                                : 0);
+                            tot_omset_sekarang =
+                              tot_omset_sekarang +
+                              parseInt(v.omset_sekarang, 10);
+                            tot_transaksi_sekarang =
+                              tot_transaksi_sekarang +
+                              parseInt(v.transaksi_sekarang, 10);
+                            tot_rata_sekarang =
+                              tot_rata_sekarang +
+                              (!Number.isNaN(
+                                parseFloat(v.omset_sekarang) /
+                                  parseFloat(v.transaksi_sekarang)
+                              )
+                                ? parseFloat(v.omset_sekarang) /
+                                  parseFloat(v.transaksi_sekarang)
+                                : 0);
+                            tot_pertumbuhan =
+                              tot_pertumbuhan +
+                              (parseInt(v.omset_sekarang, 10) -
+                                parseInt(v.omset_sebelum, 10));
+                            tot_persen_pertumbuhan =
+                              tot_persen_pertumbuhan +
+                              (!Number.isNaN(
+                                ((parseFloat(v.omset_sekarang) -
+                                  parseFloat(v.omset_sebelum)) /
+                                  parseFloat(v.omset_sebelum)) *
+                                  100
+                              ) &&
+                              ((parseFloat(v.omset_sekarang) -
+                                parseFloat(v.omset_sebelum)) /
+                                parseFloat(v.omset_sebelum)) *
+                                100 !==
+                                Infinity
+                                ? ((parseFloat(v.omset_sekarang, 10) -
+                                    parseFloat(v.omset_sebelum, 10)) /
+                                    parseFloat(v.omset_sebelum, 10)) *
+                                  100
+                                : 0);
+
+                            return (
+                              <tr key={i}>
+                                <td className="text-center middle nowrap">
+                                  {generateNo(i, current_page)}
+                                </td>
+                                <td className="text-center middle nowrap">
+                                  <div className="btn-group">
+                                    <UncontrolledButtonDropdown>
+                                      <DropdownToggle caret></DropdownToggle>
+                                      <DropdownMenu>
+                                        <DropdownItem
+                                          onClick={(e) =>
+                                            this.handleDetail(e, v)
+                                          }
+                                        >
+                                          Detail
+                                        </DropdownItem>
+                                      </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                  </div>
+                                </td>
+                                <td className="middle nowrap">{v.nama_toko}</td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(parseInt(v.omset_sebelum, 10))}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(parseInt(v.transaksi_sebelum, 10))}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(
+                                    !Number.isNaN(
+                                      parseInt(v.omset_sebelum, 10) /
+                                        parseInt(v.transaksi_sebelum, 10)
+                                    )
+                                      ? parseFloat(
+                                          parseFloat(v.omset_sebelum) /
+                                            parseFloat(v.transaksi_sebelum)
+                                        ).toFixed(2)
+                                      : 0
+                                  )}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(parseInt(v.omset_sekarang, 10))}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(parseInt(v.transaksi_sekarang, 10))}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(
+                                    !Number.isNaN(
+                                      parseInt(v.omset_sekarang, 10) /
+                                        parseInt(v.transaksi_sekarang, 10)
+                                    )
+                                      ? parseFloat(
+                                          parseFloat(v.omset_sekarang) /
+                                            parseFloat(v.transaksi_sekarang)
+                                        ).toFixed(2)
+                                      : 0
+                                  )}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(
+                                    parseInt(v.omset_sekarang, 10) -
+                                      parseInt(v.omset_sebelum, 10)
+                                  )}
+                                </td>
+                                <td className="text-right middle nowrap">
+                                  {toRp(
+                                    !Number.isNaN(
+                                      ((parseFloat(v.omset_sekarang) -
+                                        parseFloat(v.omset_sebelum)) /
+                                        parseFloat(v.omset_sebelum)) *
+                                        100
+                                    ) &&
+                                      ((parseFloat(v.omset_sekarang) -
+                                        parseFloat(v.omset_sebelum)) /
+                                        parseFloat(v.omset_sebelum)) *
+                                        100 !==
+                                        Infinity
+                                      ? ((parseFloat(v.omset_sekarang) -
+                                          parseFloat(v.omset_sebelum)) /
+                                          parseFloat(v.omset_sebelum)) *
+                                          100
+                                      : 0
+                                  )}
+                                  %
+                                </td>
+                              </tr>
+                            );
+                          })
+                        : "No data."
+                      : "No data."}
+                  </tbody>
+                ) : (
+                  <Preloader />
+                )}
+                <tfoot>
+                  <tr>
+                    <td colSpan={3}> Total</td>
+
+                    <td className="text-right middle nowrap">
+                      {toRp(parseInt(tot_omset_sebelum, 10))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseInt(tot_transaksi_sebelum, 10))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseFloat(tot_rata_sebelum).toFixed(2))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseInt(tot_omset_sekarang, 10))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseInt(tot_transaksi_sekarang, 10))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseFloat(tot_rata_sekarang).toFixed(2))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseInt(tot_pertumbuhan, 10))}
+                    </td>
+                    <td className="text-right middle nowrap">
+                      {toRp(parseInt(tot_persen_pertumbuhan, 10))}%
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div style={{ marginTop: "20px", float: "right" }}>
+              <Paginationq
+                current_page={parseInt(current_page, 10)}
+                per_page={parseInt(per_page, 10)}
+                total={parseInt(last_page * per_page, 10)}
+                callback={this.handlePageChange.bind(this)}
+              />
+            </div>
+            {this.props.saleOmsetPeriodeReportExcel.data !== undefined &&
+            this.props.saleOmsetPeriodeReportExcel.data.length > 0 ? (
+              <SaleOmsetPeriodeReportExcel
+                startDate={moment
+                  .unix(this.state.startDate / 1000)
+                  .format("yyyy-MM-DD")}
+                endDate={moment
+                  .unix(this.state.endDate / 1000)
+                  .format("yyyy-MM-DD")}
+                location={this.state.location}
+              />
+            ) : (
+              ""
+            )}
+            {typeof this.props.detail === "object" ? (
+              <SaleOmsetPeriodeDetail
+                startDate={moment
+                  .unix(this.state.startDate / 1000)
+                  .format("yyyy-MM-DD")}
+                endDate={moment
+                  .unix(this.state.endDate / 1000)
+                  .format("yyyy-MM-DD")}
+                dataDetail={this.props.detail}
+              />
+            ) : (
+              ""
+            )}
+          </div>
         </div>
-        {/* <Details /> */}
       </Layout>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  
   return {
     data: state.saleOmsetPeriodeReducer.data,
     detail: state.saleOmsetPeriodeReducer.detail,
