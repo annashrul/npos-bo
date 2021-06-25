@@ -43,8 +43,8 @@ class Customer extends Component {
         <div className="col-12 box-margin">
           <Tabs>
             <TabList>
-              <Tab onClick={() => this.handleSelect(0)}>Kustomer</Tab>
-              <Tab onClick={() => this.handleSelect(1)}>Tipe Kustomer</Tab>
+              <Tab onClick={() => this.handleSelect(0)}>Customer</Tab>
+              <Tab onClick={() => this.handleSelect(1)}>Tipe Customer</Tab>
             </TabList>
             <TabPanel>
               <ListCustomer

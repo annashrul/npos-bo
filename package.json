@@ -1,6 +1,6 @@
 {
-  "name": "client-app",
-  "version": "0.1.0",
+  "name": "npos-bo",
+  "version": "4.1.0",
   "private": true,
   "dependencies": {
     "@react-pdf/renderer": "^2.0.15",
@@ -45,13 +45,12 @@
     "react-idle": "^3.0.0",
     "react-indexed-db": "^1.0.12",
     "react-js-pagination": "^3.0.3",
-    "react-keyboard-event-handler": "^1.5.4",
     "react-number-format": "^4.4.1",
     "react-places-autocomplete": "^7.2.1",
     "react-qr-code": "^1.0.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.1.8",
     "react-scroll": "^1.8.1",
     "react-scroll-to-bottom": "^4.0.0",
     "react-select": "^3.1.0",
@@ -79,5 +78,11 @@
   },
   "devDependencies": {
     "concurrently": "^3.5.1"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

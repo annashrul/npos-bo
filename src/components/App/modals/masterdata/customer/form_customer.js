@@ -142,7 +142,7 @@ class FormCustomer extends Component {
 
     if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
     if (!isEmptyOrUndefined(parseData["lokasi"], "lokasi")) return;
-    if (!isEmptyOrUndefined(parseData["cust_type"], "tipe kustomer")) return;
+    if (!isEmptyOrUndefined(parseData["cust_type"], "tipe Customer")) return;
     if (!isEmptyOrUndefined(parseData["jenis_kelamin"], "jenis kelamin"))
       return;
     if (!isEmptyOrUndefined(parseData["tlp"], "telepon")) return;
@@ -171,7 +171,7 @@ class FormCustomer extends Component {
         size="lg"
       >
         <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id !== "" ? "Ubah Kustomer" : "Tambah Kustomer"}
+          {this.props.detail.id !== "" ? "Ubah Customer" : "Tambah Customer"}
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
@@ -195,7 +195,7 @@ class FormCustomer extends Component {
                   dataEdit={this.state.location}
                 />
                 <SelectCommon
-                  label="Tipe kustomer"
+                  label="Tipe Customer"
                   options={this.state.cust_type_data}
                   callback={(res) => {
                     this.setState({ cust_type: res.value });

@@ -66,7 +66,6 @@ class FormSale extends Component {
     if (nextProps.master !== undefined && nextProps.master !== []) {
       this.setState({
         gt: nextProps.master.gt,
-        tunai: nextProps.master.gt,
         kode_trx: nextProps.master.kode_trx,
       });
     }

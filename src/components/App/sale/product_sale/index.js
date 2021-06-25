@@ -134,35 +134,35 @@ class Sale extends Component {
     this.handleHoldBill = this.handleHoldBill.bind(this);
 
     // set focus search
-    onHandleKeyboardChar("f", (e) => {
-      e.preventDefault();
-      setFocus(this, "search");
-    });
+    // onHandleKeyboardChar("f", (e) => {
+    //   e.preventDefault();
+    //   setFocus(this, "search");
+    // });
     // closing
-    onHandleKeyboardChar("c", (e) => {
-      e.preventDefault();
-      this.handleClosing(e);
-    });
+    // onHandleKeyboardChar("c", (e) => {
+    //   e.preventDefault();
+    //   this.handleClosing(e);
+    // });
     // form hold bill
-    onHandleKeyboardChar("h", (e) => {
-      e.preventDefault();
-      this.handleHoldBill(e, "formHoldBill");
-    });
+    // onHandleKeyboardChar("h", (e) => {
+    //   e.preventDefault();
+    //   this.handleHoldBill(e, "formHoldBill");
+    // });
     // list hold bill
-    onHandleKeyboardChar("l", (e) => {
-      e.preventDefault();
-      this.handleHoldBill(e, "listHoldBill");
-    });
+    // onHandleKeyboardChar("l", (e) => {
+    //   e.preventDefault();
+    //   this.handleHoldBill(e, "listHoldBill");
+    // });
     //simpan transaksi
-    onHandleKeyboardChar("s", (e) => {
-      e.preventDefault();
-      this.HandleSubmit(e);
-    });
+    // onHandleKeyboardChar("s", (e) => {
+    //   e.preventDefault();
+    //   this.HandleSubmit(e);
+    // });
     //reset transaksi
-    onHandleKeyboardChar("x", (e) => {
-      e.preventDefault();
-      this.HandleReset(e);
-    });
+    // onHandleKeyboardChar("x", (e) => {
+    //   e.preventDefault();
+    //   this.HandleReset(e);
+    // });
   }
 
   handleClickToggle(e) {
@@ -1308,19 +1308,14 @@ class Sale extends Component {
                                     width: "17px",
                                     // paddingTop: "10px",
                                   }}
+                                  id = "isOpenPrice"
                                   type="checkbox"
                                   name="isOpenPrice"
                                   checked={this.state.brgval[index].isOpenPrice}
                                   onChange={(e) =>
                                     this.handleChecked(e, index, item.barcode)
                                   }
-                                />{" "}
-                                <label
-                                  for="isOpenPrice"
-                                  style={{ fontSize: "10px" }}
-                                >
-                                  Open Price
-                                </label>
+                                /> <label htmlFor="isOpenPrice" style={{fontSize:'10px'}}>Open Price</label >
                               </td>
                               <td className="middle nowrap">
                                 <input

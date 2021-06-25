@@ -14,7 +14,7 @@ class SelectCommon extends Component {
     super(props);
     this.onChange = this.onChange.bind(this);
     this.state = {
-      value: "",
+      value: "Z",
       value_data: [],
       label: "",
     };
@@ -34,6 +34,9 @@ class SelectCommon extends Component {
         }
       }
     }
+
+    if (props.label === 'kassa')Object.assign(state, { value: {label:"Z",value:"Z"} });
+
     this.setState(state);
   }
   componentWillMount() {
@@ -47,11 +50,13 @@ class SelectCommon extends Component {
   }
 
   onChange(value) {
+    console.log("object",value);
     this.setState({ value: value });
     this.props.callback(value);
   }
 
   render() {
+    console.log(this.state.value);
     return (
       <div className="form-group">
         <label
@@ -71,6 +76,7 @@ class SelectCommon extends Component {
           placeholder={`Pilih ${this.state.label}`}
           onChange={(value, actionMeta) => this.onChange(value)}
           value={this.state.value}
+          isDisabled={this.props.isDisabled===undefined?false:this.props.isDisabled}
         />
       </div>
     );

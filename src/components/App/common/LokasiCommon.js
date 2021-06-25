@@ -91,7 +91,7 @@ class LokasiCommon extends Component {
         <label
           style={{
             display:
-              this.props.isRequired || this.props.isLable === undefined
+              this.props.isRequired || this.props.useLabel === undefined
                 ? "block"
                 : "none",
           }}

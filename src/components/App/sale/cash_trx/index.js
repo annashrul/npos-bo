@@ -18,6 +18,8 @@ import {
 import moment from "moment";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
+import Cookies from "js-cookie";
+
 class Sale extends Component {
   constructor(props) {
     super(props);
@@ -248,6 +250,7 @@ class Sale extends Component {
                     <div className="row mt-3">
                       <div className="col-md-6">
                         <LokasiCommon
+                          useLabel={false}
                           callback={(res) => this.HandleSelect(res, "location")}
                           dataEdit={this.state.dataEdit}
                           isLable={false}
@@ -278,6 +281,7 @@ class Sale extends Component {
                           options={kassa("")}
                           callback={(res) => this.HandleSelect(res, "kassa")}
                           isLabel={false}
+                          isDisabled={atob(atob(Cookies.get("tnt="))) === "nov-jkt" || atob(atob(Cookies.get("tnt="))) === "nov-bdg"}
                           dataEdit={this.state.dataEdit}
                         />
                       </div>
