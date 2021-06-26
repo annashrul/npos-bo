@@ -15,6 +15,7 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import { rmSpaceToStrip } from "../../../../../helper";
+import TableCommon from "../../../common/TableCommon";
 
 class ListSupplier extends Component {
   constructor(props) {
@@ -44,38 +45,26 @@ class ListSupplier extends Component {
     this.setState({ any: any });
     this.handleGet(any, 1);
   }
-  toggleModal(e, i) {
-    e.preventDefault();
+  toggleModal(i) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formSupplier"));
     if (i === null) {
       this.setState({ detail: { id: "", where: this.state.where } });
     } else {
+      let detail = { id: "-" };
+      Object.assign(detail, this.props.data.data[i]);
       this.setState({
-        detail: {
-          id: "-",
-          where: this.state.where,
-          kode: this.props.data.data[i].kode,
-          nama: this.props.data.data[i].nama,
-          alamat: this.props.data.data[i].alamat,
-          kota: this.props.data.data[i].kota,
-          telp: this.props.data.data[i].telp,
-          penanggung_jawab: this.props.data.data[i].penanggung_jawab,
-          no_penanggung_jawab: this.props.data.data[i].no_penanggung_jawab,
-          status: this.props.data.data[i].status,
-          email: this.props.data.data[i].email,
-        },
+        detail: detail,
       });
     }
   }
-  handleDelete(e, id) {
-    e.preventDefault();
+  handleDelete(index) {
     if (this.props.data.total === 1) {
       this.setState({ any: "" });
     }
     this.props.dispatch(
-      deleteSupplier(id, {
+      deleteSupplier(this.props.data.data[index].kode, {
         where: this.state.where,
         total: this.props.data.total,
       })
@@ -83,6 +72,18 @@ class ListSupplier extends Component {
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
+    const head = [
+      { label: "No", className: "text-center", width: "1%", rowSpan: "2" },
+      { label: "#", className: "text-center", width: "1%", rowSpan: "2" },
+      { label: "Kode", rowSpan: "2" },
+      { label: "Nama", rowSpan: "2" },
+      { label: "Alamat", rowSpan: "2" },
+      { label: "Kota", rowSpan: "2" },
+      { label: "Telepon", rowSpan: "2" },
+      { label: "Penanggung jawab", className: "text-center", colSpan: "2" },
+      { label: "Status", width: "1%", rowSpan: "2" },
+      { label: "Email", rowSpan: "2" },
+    ];
     return (
       <div>
         <form onSubmit={this.handlesearch} noValidate>
@@ -120,122 +121,38 @@ class ListSupplier extends Component {
             </div>
           </div>
         </form>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-noborder">
-            <thead className="bg-light">
-              <tr>
-                <th
-                  className="text-black middle nowrap text-center"
-                  width="1%"
-                  rowSpan={2}
-                >
-                  No
-                </th>
-                <th
-                  className="text-black middle nowrap text-center"
-                  width="1%"
-                  rowSpan={2}
-                >
-                  #
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Kode
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Nama
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Alamat
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Kota
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Telepon
-                </th>
-                <th
-                  className="text-black middle text-center nowrap"
-                  colSpan={2}
-                >
-                  Penaggung jawab
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Status
-                </th>
-                <th className="text-black middle nowrap" rowSpan={2}>
-                  Email
-                </th>
-              </tr>
-              <tr>
-                <th className="text-black middle nowrap">Nama</th>
-                <th className="text-black middle nowrap">Telepon</th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.map((v, i) => {
-                  return (
-                    <tr key={i}>
-                      <td className="text-center middle">
-                        {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                      </td>
-                      <td className="text-center middle">
-                        <UncontrolledButtonDropdown>
-                          <DropdownToggle caret></DropdownToggle>
-                          <DropdownMenu>
-                            <DropdownItem
-                              onClick={(e) => this.toggleModal(e, i)}
-                            >
-                              Edit
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={(e) => this.handleDelete(e, v.kode)}
-                            >
-                              Delete
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledButtonDropdown>
-                      </td>
-                      <td className="middle nowrap">{v.kode}</td>
-                      <td className="middle nowrap">{v.nama}</td>
-                      <td className="middle nowrap">
-                        {rmSpaceToStrip(v.alamat)}
-                      </td>
-                      <td className="middle nowrap">
-                        {rmSpaceToStrip(v.kota)}
-                      </td>
-                      <td className="middle nowrap">
-                        {rmSpaceToStrip(v.telp)}
-                      </td>
-                      <td className="middle nowrap">{v.penanggung_jawab}</td>
-                      <td className="middle nowrap">{v.no_penanggung_jawab}</td>
-                      <td className="middle nowrap">
-                        {v.status === "1"
-                          ? statusQ("success", "Aktif")
-                          : statusQ("danger", "Tidak aktif")}
-                      </td>
-                      <td className="middle nowrap">
-                        {rmSpaceToStrip(v.email)}
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={11}>No data.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
+        <TableCommon
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          head={head}
+          isRowSpan={true}
+          rowSpan={[{ label: "Nama" }, { label: "No" }]}
+          body={typeof data === "object" && data}
+          label={[
+            { label: "kode" },
+            { label: "nama" },
+            { label: "alamat" },
+            { label: "kota" },
+            { label: "telp" },
+            { label: "penanggung_jawab" },
+            { label: "no_penanggung_jawab" },
+            { label: "status", isButton: true },
+            { label: "email" },
+          ]}
+          isNo={true}
+          current_page={current_page}
+          isAction={true}
+          action={[{ label: "Edit" }, { label: "Hapus" }]}
+          callback={(e, index) => {
+            if (e === 0) this.toggleModal(index);
+            if (e === 1) this.handleDelete(index);
+          }}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
+
         <FormSupplier token={this.props.token} detail={this.state.detail} />
       </div>
     );

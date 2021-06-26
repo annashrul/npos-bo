@@ -14,6 +14,9 @@ import {
   DropdownItem,
   DropdownToggle,
 } from "reactstrap";
+import TableCommon from "../../common/TableCommon";
+import { generateNo, noData } from "../../../../helper";
+import ButtonActionCommon from "../../common/ButtonActionCommon";
 
 class ListDepartment extends Component {
   constructor(props) {
@@ -23,25 +26,26 @@ class ListDepartment extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.state = {
       detail: {},
+      any: "",
     };
   }
+  handleGet(any, page) {
+    let where = `page=${page}`;
+    if (any !== "") where += `&q=${any}`;
+    this.setState({ where: where });
+    this.props.dispatch(FetchDepartment(where));
+  }
   handlePageChange(pageNumber) {
-    this.props.dispatch(FetchDepartment(`page=${pageNumber}`));
+    this.handleGet(this.state.any, pageNumber);
   }
   handlesearch(e) {
     e.preventDefault();
     const form = e.target;
     const data = new FormData(form);
-    let any = data.get("field_any");
-    localStorage.setItem("any_department", any);
-    if (any !== "" || any !== undefined || any !== null) {
-      this.props.dispatch(FetchDepartment(`page=1&q=${any}`));
-    } else {
-      this.props.dispatch(FetchDepartment(`page=1`));
-    }
+    let any = data.get("any");
+    this.handleGet(any, 1);
   }
-  toggleModal(e, i) {
-    e.preventDefault();
+  toggleModal(i) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formDepartment"));
@@ -56,8 +60,7 @@ class ListDepartment extends Component {
       });
     }
   }
-  handleDelete(e, id) {
-    e.preventDefault();
+  handleDelete(index) {
     Swal.fire({
       allowOutsideClick: false,
       title: "Are you sure?",
@@ -69,115 +72,75 @@ class ListDepartment extends Component {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.value) {
-        this.props.dispatch(deleteDepartment(id, this.props.token));
+        this.props.dispatch(
+          deleteDepartment(this.props.data.data[index].id, this.props.token)
+        );
       }
     });
   }
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
-    const {
-      total,
-      // last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.data;
+    const { total, per_page, current_page, data } = this.props.data;
+    const head = [
+      { label: "No", className: "text-center", width: "1%" },
+      { label: "#", className: "text-center", width: "1%" },
+      { label: "Nama" },
+    ];
     return (
-      <div className="row">
-        <div className="col-md-6 offset-3">
-          <form onSubmit={this.handlesearch} noValidate>
-            <div className="row">
-              <div className="col-8 col-xs-8 col-md-6">
-                <div className="form-group">
-                  <label>Search Department</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="field_any"
-                    defaultValue={localStorage.getItem("any_department")}
-                  />
-                </div>
-              </div>
-              <div className="col-4 col-xs-4 col-md-3">
-                <div className="form-group">
-                  <button
-                    style={{ marginTop: "27px", marginRight: "2px" }}
-                    type="submit"
-                    className="btn btn-primary"
-                  >
-                    <i className="fa fa-search"></i>
+      <div>
+        <form onSubmit={this.handlesearch} noValidate>
+          <div className="row">
+            <div className="col-10 col-xs-10 col-md-3">
+              <div className="input-group input-group-sm">
+                <input
+                  type="search"
+                  name="any"
+                  className="form-control form-control-sm"
+                  placeholder="tulis sesuatu disini"
+                  value={this.state.any}
+                  onChange={(e) => {
+                    this.setState({ any: e.target.value });
+                  }}
+                />
+                <span className="input-group-append">
+                  <button type="submit" className="btn btn-primary">
+                    <i className="fa fa-search" />
                   </button>
-                  <button
-                    style={{ marginTop: "27px", marginRight: "2px" }}
-                    type="button"
-                    onClick={(e) => this.toggleModal(e, null)}
-                    className="btn btn-primary"
-                  >
-                    <i className="fa fa-plus"></i>
-                  </button>
-                </div>
+                </span>
               </div>
             </div>
-          </form>
-          <div className="table-responsive" style={{ overflowX: "auto" }}>
-            <table className="table table-hover table-bordered">
-              <thead className="bg-light">
-                <tr>
-                  <th className="text-black" style={columnStyle}>
-                    #
-                  </th>
-                  <th className="text-black" style={columnStyle}>
-                    Name
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {typeof data === "object" ? (
-                  data.map((v, i) => {
-                    return (
-                      <tr key={i}>
-                        <td style={columnStyle}>
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) => this.toggleModal(e, i)}
-                                >
-                                  Edit
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => this.handleDelete(e, v.id)}
-                                >
-                                  Delete
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        <td style={columnStyle}>{v.nama}</td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td>No data.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            <div className="col-2 col-xs-2 col-md-9">
+              <div className="form-group text-right">
+                <button
+                  style={{ height: "38px" }}
+                  type="button"
+                  onClick={(e) => this.toggleModal(null)}
+                  className="btn btn-primary"
+                >
+                  <i className="fa fa-plus" />
+                </button>
+              </div>
+            </div>
           </div>
-          <div style={{ marginTop: "20px", float: "right" }}>
-            <Paginationq
-              current_page={current_page}
-              per_page={per_page}
-              total={total}
-              callback={this.handlePageChange.bind(this)}
-            />
-          </div>
-        </div>
+        </form>
+        <TableCommon
+          head={head}
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          body={typeof data === "object" && data}
+          label={[{ label: "nama" }]}
+          isNo={true}
+          current_page={current_page}
+          isAction={true}
+          action={[{ label: "Edit" }, { label: "Hapus" }]}
+          callback={(e, index) => {
+            if (e === 0) this.toggleModal(index);
+            if (e === 1) this.handleDelete(index);
+          }}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
         <FormDepartment token={this.props.token} detail={this.state.detail} />
       </div>
     );

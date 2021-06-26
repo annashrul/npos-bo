@@ -14,8 +14,10 @@ import {
 } from "reactstrap";
 import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { generateNo, rmSpaceToStrip } from "../../../../helper";
+import { generateNo, noData, rmSpaceToStrip } from "../../../../helper";
 import { testPrinter } from "../../../../redux/actions/masterdata/printer/printer.action";
+import TableCommon from "../../common/TableCommon";
+import ButtonActionCommon from "../../common/ButtonActionCommon";
 
 class Printer extends Component {
   constructor(props) {
@@ -40,8 +42,7 @@ class Printer extends Component {
   componentWillMount() {
     this.checkingParam("", 1);
   }
-  toggleModal(e, i) {
-    e.preventDefault();
+  toggleModal(i) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formPrinter"));
@@ -71,16 +72,25 @@ class Printer extends Component {
       [e.target.name]: e.target.value,
     });
   }
-  handleDelete(e, id) {
-    e.preventDefault();
+  handleDelete(id) {
     this.props.dispatch(deletePrinter(id, this.state.where));
   }
-  handleTestPrint(e, i) {
-    e.preventDefault();
+  handleTestPrint(i) {
     this.props.dispatch(testPrinter(this.props.data.data[i].id_printer));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
+    const head = [
+      { label: "No", className: "text-center", width: "1%" },
+      { label: "#", className: "text-center", width: "1%" },
+      { label: "Nama" },
+      { label: "Lokasi", width: "5%" },
+      { label: "Ukuran kertas", width: "10%" },
+      { label: "Ip address", width: "1%" },
+      { label: "Konektor", width: "5%" },
+      { label: "Vid", width: "5%" },
+      { label: "Pid", width: "5%" },
+    ];
     return (
       <Layout page="Printer">
         <div className="col-12 box-margin">
@@ -119,6 +129,58 @@ class Printer extends Component {
               </div>
             </div>
           </form>
+          {/* <TableCommon
+            head={head}
+            body={
+              typeof data === "object"
+                ? data.length > 0
+                  ? data.map((res, index) => {
+                      return (
+                        <tr key={index}>
+                          <td className="middle text-center nowrap">
+                            {generateNo(index, current_page)}
+                          </td>
+                          <td className="text-center middle nowrap">
+                            <ButtonActionCommon
+                              action={[
+                                { label: "Edit" },
+                                { label: "Test print" },
+                                { label: "Hapus" },
+                              ]}
+                              callback={(e) => {
+                                if (e === 0) this.toggleModal(index);
+                                if (e === 0) this.handleTestPrint(index);
+                                if (e === 0) this.handleDelete(res.id_printer);
+                              }}
+                            />
+                          </td>
+                          <td className="middle nowrap">{res.nama} </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.lokasi)}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.paper_size)}
+                          </td>
+
+                          <td className="middle nowrap">
+                            {`${res.konektor}`.toLowerCase()}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.ip)}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.vid)}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.pid)}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  : noData(head.length)
+                : noData(head.length)
+            }
+          /> */}
           <div style={{ overflowX: "auto" }}>
             <table className="table table-hover table-noborder">
               <thead className="bg-light">
