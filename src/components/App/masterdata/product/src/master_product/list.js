@@ -41,7 +41,12 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
-import { dateRange, generateNo } from "../../../../../../helper";
+import {
+  dateRange,
+  generateNo,
+  getStorage,
+  setStorage,
+} from "../../../../../../helper";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -84,10 +89,22 @@ class ListProduct extends Component {
     });
   }
 
+  componentDidMount() {
+    let getIsPeriodeBarang = getStorage("isPeriodeBarang");
+    if (getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
+      this.setState({ semua_periode: true });
+    } else {
+      this.setState({ semua_periode: false });
+    }
+  }
+
   handleChange(event) {
     let column = event.target.name;
     let value = event.target.value;
     let checked = event.target.checked;
+    if (column === "semua_periode") {
+      setStorage("isPeriodeBarang", checked);
+    }
     if (checked && column === "semua_periode") {
       this.props.dispatch(FetchProduct());
     }

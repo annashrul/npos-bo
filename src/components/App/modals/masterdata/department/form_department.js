@@ -1,110 +1,105 @@
-import React,{Component} from 'react';
+import React, { Component } from "react";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody, ModalFooter, ModalHeader} from "reactstrap";
-import {ModalToggle} from "redux/actions/modal.action";
+import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {stringifyFormData} from "helper";
-import {createDepartment, updateDepartment} from "redux/actions/masterdata/department/department.action";
+import { stringifyFormData } from "helper";
+import {
+  createDepartment,
+  updateDepartment,
+} from "redux/actions/masterdata/department/department.action";
+import { isEmptyOrUndefined } from "../../../../../helper";
+import ButtonActionForm from "../../../common/ButtonActionForm";
 
-class FormDepartment extends Component{
-    constructor(props){
-        super(props);
-        this.toggle = this.toggle.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.state = {
-            nama:'',
-            id:'',
-            error:{
-                nama:"",
-            },
-        };
-    }
-    handleChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value});
-        let err = Object.assign({}, this.state.error, {
-            [event.target.name]: ""
-        });
-        this.setState({
-            error: err
-        });
-    }
-    toggle = (e) => {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        this.setState({})
+class FormDepartment extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      nama: "",
     };
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.detail !== [] && nextProps.detail !== undefined) {
-            this.setState({
-                nama: nextProps.detail.nama,
-                id:nextProps.detail.id
-            })
-        }else{
-            this.setState({
-                nama: '',
-                id:''
-            })
-        }
+  }
+  resetState() {
+    this.setState({
+      nama: "",
+    });
+  }
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+  getProps(props) {
+    if (props.detail && props.detail.id !== "") {
+      this.setState({
+        nama: props.detail.nama,
+      });
+    } else {
+      this.resetState();
     }
-    handleSubmit(e){
-        e.preventDefault();
-        const form = e.target;
-        let data = new FormData(form);
-        let parseData = stringifyFormData(data);
-        ;
-        parseData['nama'] = this.state.nama;
-        let err = this.state.error;
-        if(this.state.nama===''||this.state.nama===undefined){
-            err = Object.assign({}, err, {nama:"nama tidak boleh kosong"});
-            this.setState({error: err});
-            return;
-        }else{
-            if(this.props.detail===undefined){
-                this.props.dispatch(createDepartment(parseData));
-                this.props.dispatch(ModalToggle(false));
-            }else{
-                this.props.dispatch(updateDepartment(this.state.id,parseData));
-                this.props.dispatch(ModalToggle(false));
-            }
-        }
-
-
-
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    let data = new FormData(form);
+    let parseData = stringifyFormData(data);
+    parseData["nama"] = this.state.nama;
+    if (!isEmptyOrUndefined(parseData.nama, "nama")) return;
+    if (this.props.detail.id === "") {
+      this.props.dispatch(createDepartment(parseData));
+    } else {
+      Object.assign(parseData, { where: this.props.detail.where });
+      this.props.dispatch(updateDepartment(this.props.detail.id, parseData));
     }
+  }
 
-    render(){
-        return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formDepartment"} size="md">
-                <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Add Department":"Update Department"}</ModalHeader>
-                <form onSubmit={this.handleSubmit}>
-                    <ModalBody>
-                        <div className="form-group">
-                            <label>Name</label>
-                            <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange}/>
-                            <div className="invalid-feedback"
-                                 style={this.state.error.nama !== "" ? {display: 'block'} : {display: 'none'}}>
-                                {this.state.error.nama}
-                            </div>
-                        </div>
-
-                    </ModalBody>
-                    <ModalFooter>
-                        <div className="form-group" style={{textAlign:"right"}}>
-                            <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.toggle}><i className="ti-close" /> Cancel</button>
-                            <button type="submit" className="btn btn-primary mb-2 mr-2" ><i className="ti-save" /> Simpan</button>
-                        </div>
-                    </ModalFooter>
-                </form>
-            </WrapperModal>
-        );
-    }
+  render() {
+    return (
+      <WrapperModal
+        isOpen={this.props.isOpen && this.props.type === "formDepartment"}
+        size="md"
+      >
+        <ModalHeader
+          toggle={(e) => {
+            e.preventDefault();
+            this.props.dispatch(ModalToggle(false));
+          }}
+        >
+          {this.props.detail.id === "" ? "Tambah " : "Ubah"} Departemen
+        </ModalHeader>
+        <form onSubmit={this.handleSubmit}>
+          <ModalBody>
+            <div className="form-group">
+              <label>Nama</label>
+              <input
+                type="text"
+                className="form-control"
+                name="nama"
+                value={this.state.nama}
+                onChange={this.handleChange}
+              />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <ButtonActionForm callback={() => this.resetState()} />
+          </ModalFooter>
+        </form>
+      </WrapperModal>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-    }
-}
+  return {
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+  };
+};
 export default connect(mapStateToProps)(FormDepartment);

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Layout from "../../Layout";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import connect from "react-redux/es/connect/connect";
-import Preloader from "Preloader";
 import { FetchProduct } from "redux/actions/masterdata/product/product.action";
 import { FetchPriceProduct } from "redux/actions/masterdata/price_product/price_product.action";
 import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_product.action";
@@ -10,17 +9,13 @@ import ListGroupProduct from "./src/master_group_product/list";
 import ListPriceProduct from "./src/master_price_product/list";
 import ListProduct from "./src/master_product/list";
 import { Link } from "react-router-dom";
-import moment from "moment";
+import { getStorage, isEmptyOrUndefined, setStorage } from "../../../../helper";
 
 class Product extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: "",
-      activeTab: 0,
       selectedIndex: 0,
-      any: localStorage.getItem("any_product"),
-      by: localStorage.getItem("by_product"),
     };
   }
   componentWillReceiveProps = (nextProps) => {
@@ -37,32 +32,45 @@ class Product extends Component {
       }
     }
   };
+  handleService() {
+    let getIsPeriodeBarang = getStorage("isPeriodeBarang");
+    if (getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
+      this.props.dispatch(FetchProduct());
+    }
+  }
   componentWillMount() {
-    this.props.dispatch(FetchProduct());
+    // let getIsPeriodeBarang = getStorage("isPeriodeBarang");
+    this.handleService();
     this.props.dispatch(FetchPriceProduct("page=1"));
     this.props.dispatch(FetchGroupProduct("page=1"));
   }
 
-  //Use arrow functions to avoid binding
+  componentDidMount() {
+    this.handleService();
+    let index = getStorage("activeTabProduct");
+    if (isEmptyOrUndefined(index)) {
+      this.setState({ selectedIndex: parseInt(index, 10) });
+    }
+  }
   handleSelect = (index) => {
-    this.setState({ selectedIndex: index }, () => {});
+    setStorage("activeTabProduct", `${index}`);
+    this.setState({ selectedIndex: index });
   };
 
   render() {
+    console.log("this.props.product", this.props.product);
     return (
       <Layout page="Product">
-        <Tabs>
+        <Tabs
+          style={{ zoom: "90%" }}
+          selectedIndex={this.state.selectedIndex}
+          onSelect={(selectedIndex) => this.handleSelect(selectedIndex)}
+        >
           <div className="card-header d-flex align-items-center justify-content-between">
             <TabList>
-              <Tab label="Core Courses" onClick={() => this.handleSelect(0)}>
-                Barang
-              </Tab>
-              <Tab label="Core Courses" onClick={() => this.handleSelect(1)}>
-                Harga Barang
-              </Tab>
-              <Tab label="Core Courses" onClick={() => this.handleSelect(2)}>
-                Kelompok Barang
-              </Tab>
+              <Tab>Barang</Tab>
+              <Tab>Harga Barang</Tab>
+              <Tab>Kelompok Barang</Tab>
             </TabList>
             <div className={`${this.state.selectedIndex !== 0 && "none"}`}>
               <Link to="upload" className="btn btn-outline-info">
@@ -74,22 +82,15 @@ class Product extends Component {
           <div className="card-body">
             <TabPanel>
               <ListProduct
-                token={this.state.token}
                 data={this.props.product}
                 group={this.props.groupProduct}
               />
             </TabPanel>
             <TabPanel>
-              <ListPriceProduct
-                token={this.state.token}
-                data={this.props.priceProduct}
-              />
+              <ListPriceProduct data={this.props.priceProduct} />
             </TabPanel>
             <TabPanel>
-              <ListGroupProduct
-                token={this.state.token}
-                data={this.props.groupProduct}
-              />
+              <ListGroupProduct data={this.props.groupProduct} />
             </TabPanel>
           </div>
         </Tabs>

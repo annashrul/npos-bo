@@ -123,10 +123,10 @@ export const handleDelete = async (
           const datum = response.data;
           if (datum.status === "success") {
             swal(datum.msg);
+            callback();
           } else {
             swal(datum.msg);
           }
-          callback();
         }, 800);
       })
       .catch(function (error) {

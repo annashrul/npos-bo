@@ -27,6 +27,7 @@ class ListDepartment extends Component {
     this.state = {
       detail: {},
       any: "",
+      where: "",
     };
   }
   handleGet(any, page) {
@@ -45,46 +46,25 @@ class ListDepartment extends Component {
     let any = data.get("any");
     this.handleGet(any, 1);
   }
-  toggleModal(i) {
+  toggleModal(index) {
+    if (index === null) {
+      this.setState({ detail: { id: "" } });
+    } else {
+      Object.assign(this.props.data.data[index], { where: this.state.where });
+      this.setState({
+        detail: this.props.data.data[index],
+      });
+    }
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formDepartment"));
-    if (i === null) {
-      this.setState({ detail: undefined });
-    } else {
-      this.setState({
-        detail: {
-          id: this.props.data.data[i].id,
-          nama: this.props.data.data[i].nama,
-        },
-      });
-    }
   }
   handleDelete(index) {
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(
-          deleteDepartment(this.props.data.data[index].id, this.props.token)
-        );
-      }
-    });
+    Object.assign(this.props.data.data[index], { where: this.state.where });
+    this.props.dispatch(deleteDepartment(this.props.data.data[index]));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
-    const head = [
-      { label: "No", className: "text-center", width: "1%" },
-      { label: "#", className: "text-center", width: "1%" },
-      { label: "Nama" },
-    ];
     return (
       <div>
         <form onSubmit={this.handlesearch} noValidate>
@@ -123,7 +103,11 @@ class ListDepartment extends Component {
           </div>
         </form>
         <TableCommon
-          head={head}
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "#", className: "text-center", width: "1%" },
+            { label: "Nama" },
+          ]}
           meta={{
             total: total,
             current_page: current_page,
@@ -141,10 +125,14 @@ class ListDepartment extends Component {
           }}
           callbackPage={this.handlePageChange.bind(this)}
         />
-        <FormDepartment token={this.props.token} detail={this.state.detail} />
+        {this.props.isOpen && <FormDepartment detail={this.state.detail} />}
       </div>
     );
   }
 }
-
-export default connect()(ListDepartment);
+const mapStateToProps = (state) => {
+  return {
+    isOpen: state.modalReducer,
+  };
+};
+export default connect(mapStateToProps)(ListDepartment);

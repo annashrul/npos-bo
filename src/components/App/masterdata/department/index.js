@@ -6,12 +6,13 @@ import ListDepartment from "./list_department";
 import ListSubDepartment from "./list_sub_department";
 import { FetchDepartment } from "redux/actions/masterdata/department/department.action";
 import { FetchSubDepartment } from "redux/actions/masterdata/department/sub_department.action";
+import { getStorage, isEmptyOrUndefined, setStorage } from "../../../../helper";
 
 class Department extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: "",
+      selectedIndex: 0,
     };
   }
   componentWillReceiveProps = (nextProps) => {
@@ -28,22 +29,36 @@ class Department extends Component {
       }
     }
   };
+
   componentWillMount() {
     this.props.dispatch(FetchDepartment());
     this.props.dispatch(FetchSubDepartment());
   }
+  componentDidMount() {
+    let index = getStorage("activeTabDepartment");
+    if (isEmptyOrUndefined(index)) {
+      this.setState({ selectedIndex: parseInt(index, 10) });
+    }
+  }
   handleSelect = (index) => {
-    this.setState({ selectedIndex: index }, () => {});
+    setStorage("activeTabDepartment", `${index}`);
+    this.setState({ selectedIndex: index });
   };
   render() {
     return (
       <Layout page="Department">
-        <div className="col-12 box-margin">
-          <Tabs>
+        <Tabs
+          style={{ zoom: "90%" }}
+          selectedIndex={this.state.selectedIndex}
+          onSelect={(selectedIndex) => this.handleSelect(selectedIndex)}
+        >
+          <div className="card-header">
             <TabList>
-              <Tab onClick={() => this.handleSelect(0)}>Department</Tab>
-              <Tab onClick={() => this.handleSelect(1)}>Sub Department</Tab>
+              <Tab>Department</Tab>
+              <Tab>Sub Department</Tab>
             </TabList>
+          </div>
+          <div className="card-body">
             <TabPanel>
               <ListDepartment
                 token={this.state.token}
@@ -56,8 +71,8 @@ class Department extends Component {
                 data={this.props.subDepartment}
               />
             </TabPanel>
-          </Tabs>
-        </div>
+          </div>
+        </Tabs>
       </Layout>
     );
   }
