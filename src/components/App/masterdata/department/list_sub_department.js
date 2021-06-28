@@ -8,12 +8,12 @@ import FormSubDepartment from "components/App/modals/masterdata/department/form_
 import { ModalType } from "redux/actions/modal.action";
 import { FetchAllDepartment } from "../../../../redux/actions/masterdata/department/department.action";
 import TableCommon from "../../common/TableCommon";
+import HeaderGeneralCommon from "../../common/HeaderGeneralCommon";
 
 class ListSubDepartment extends Component {
   constructor(props) {
     super(props);
     this.toggleModal = this.toggleModal.bind(this);
-    this.handlesearch = this.handlesearch.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.state = {
       detail: {},
@@ -31,13 +31,6 @@ class ListSubDepartment extends Component {
   handlePageChange(pageNumber) {
     this.handleGet(this.state.any, pageNumber);
   }
-  handlesearch(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    let any = data.get("any");
-    this.handleGet(any, 1);
-  }
   toggleModal(index) {
     if (index === null) {
       this.setState({ detail: { id: "" } });
@@ -48,7 +41,6 @@ class ListSubDepartment extends Component {
       });
     }
     this.props.dispatch(FetchAllDepartment());
-
     this.props.dispatch(ModalType("formSubDepartment"));
   }
   handleDelete(index) {
@@ -59,41 +51,13 @@ class ListSubDepartment extends Component {
     const { total, per_page, current_page, data } = this.props.data;
     return (
       <div>
-        <form onSubmit={this.handlesearch} noValidate>
-          <div className="row">
-            <div className="col-10 col-xs-10 col-md-3">
-              <div className="input-group input-group-sm">
-                <input
-                  type="search"
-                  name="any"
-                  className="form-control form-control-sm"
-                  placeholder="tulis sesuatu disini"
-                  value={this.state.any}
-                  onChange={(e) => {
-                    this.setState({ any: e.target.value });
-                  }}
-                />
-                <span className="input-group-append">
-                  <button type="submit" className="btn btn-primary">
-                    <i className="fa fa-search" />
-                  </button>
-                </span>
-              </div>
-            </div>
-            <div className="col-2 col-xs-2 col-md-9">
-              <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(null)}
-                  className="btn btn-primary"
-                >
-                  <i className="fa fa-plus" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <HeaderGeneralCommon
+          callbackGet={(res) => {
+            this.setState({ any: res });
+            this.handleGet(res, 1);
+          }}
+          callbackAdd={() => this.toggleModal(null)}
+        />
         <TableCommon
           head={[
             { label: "No", className: "text-center", width: "1%" },
@@ -108,9 +72,7 @@ class ListSubDepartment extends Component {
           }}
           body={typeof data === "object" && data}
           label={[{ label: "kode" }, { label: "nama" }]}
-          isNo={true}
           current_page={current_page}
-          isAction={true}
           action={[{ label: "Edit" }, { label: "Hapus" }]}
           callback={(e, index) => {
             if (e === 0) this.toggleModal(index);
@@ -125,110 +87,6 @@ class ListSubDepartment extends Component {
           />
         )}
       </div>
-      // <div className="row">
-      //   <div className="col-md-6 offset-3">
-      //     <form onSubmit={this.handlesearch} noValidate>
-      //       <div className="row">
-      //         <div className="col-8 col-xs-8 col-md-6">
-      //           <div className="form-group">
-      //             <label>Search Sub Department</label>
-      //             <input
-      //               type="text"
-      //               className="form-control"
-      //               name="any"
-      //               value={this.state.any}
-      //               onChange={(e)=>this.setState({any:e.target.value})}
-      //             />
-      //           </div>
-      //         </div>
-      //         <div className="col-4 col-xs-4 col-md-4">
-      //           <div className="form-group">
-      //             <button
-      //               style={{ marginTop: "27px", marginRight: "2px" }}
-      //               type="submit"
-      //               className="btn btn-primary"
-      //             >
-      //               <i className="fa fa-search"></i>
-      //             </button>
-      //             <button
-      //               style={{ marginTop: "27px", marginRight: "2px" }}
-      //               type="button"
-      //               onClick={(e) => this.toggleModal(e, null)}
-      //               className="btn btn-primary"
-      //             >
-      //               <i className="fa fa-plus"></i>
-      //             </button>
-      //           </div>
-      //         </div>
-      //       </div>
-      //     </form>
-      //     <div className="table-responsive" style={{ overflowX: "auto" }}>
-      //       <table className="table table-hover table-bordered">
-      //         <thead className="bg-light">
-      //           <tr>
-      //             <th className="text-black" style={columnStyle}>
-      //               #
-      //             </th>
-      //             <th className="text-black" style={columnStyle}>
-      //               Code
-      //             </th>
-      //             <th className="text-black" style={columnStyle}>
-      //               Name
-      //             </th>
-      //           </tr>
-      //         </thead>
-      //         <tbody>
-      //           {typeof data === "object" ? (
-      //             data.map((v, i) => {
-      //               return (
-      //                 <tr key={i}>
-      //                   <td style={columnStyle}>
-      //                     <div className="btn-group">
-      //                       <UncontrolledButtonDropdown>
-      //                         <DropdownToggle caret>Aksi</DropdownToggle>
-      //                         <DropdownMenu>
-      //                           <DropdownItem
-      //                             onClick={(e) => this.toggleModal(e, i)}
-      //                           >
-      //                             Edit
-      //                           </DropdownItem>
-      //                           <DropdownItem
-      //                             onClick={(e) => this.handleDelete(e, v.kode)}
-      //                           >
-      //                             Delete
-      //                           </DropdownItem>
-      //                         </DropdownMenu>
-      //                       </UncontrolledButtonDropdown>
-      //                     </div>
-      //                   </td>
-      //                   <td style={columnStyle}>{v.kode}</td>
-      //                   <td style={columnStyle}>{v.nama}</td>
-      //                 </tr>
-      //               );
-      //             })
-      //           ) : (
-      //             <tr>
-      //               <td>No data.</td>
-      //             </tr>
-      //           )}
-      //         </tbody>
-      //       </table>
-      //     </div>
-      //     <div style={{ marginTop: "20px", float: "right" }}>
-      //       <Paginationq
-      //         current_page={current_page}
-      //         per_page={per_page}
-      //         total={total}
-      //         callback={this.handlePageChange.bind(this)}
-      //       />
-      //     </div>
-      //   </div>
-      // <FormSubDepartment
-      //   dataDepartment={this.props.dataDepartment}
-      //   token={this.props.token}
-      //   detail={this.state.detail}
-      // />
-      // </div>
     );
   }
 }

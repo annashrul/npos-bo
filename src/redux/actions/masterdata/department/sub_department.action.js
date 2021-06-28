@@ -35,7 +35,14 @@ export const FetchSubDepartment = (where = "") => {
 export const FetchSubDepartmentAll = () => {
   return (dispatch) => {
     let url = `${baseUrl}?page=1&perpage=999999`;
-    handleGet(url, (res) => dispatch(setSubDepartmentAll(res.data)), true);
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setSubDepartmentAll(res.data));
+        dispatch(ModalToggle(true));
+      },
+      true
+    );
   };
 };
 

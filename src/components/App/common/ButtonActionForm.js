@@ -4,13 +4,7 @@ import { ModalToggle } from "../../../redux/actions/modal.action";
 class ButtonActionForm extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
   }
-  toggle = (e) => {
-    e.preventDefault();
-    this.props.dispatch(ModalToggle(false));
-    this.props.callback();
-  };
 
   render() {
     return (
@@ -18,7 +12,7 @@ class ButtonActionForm extends Component {
         <button
           type="button"
           className="btn btn-warning mr-2"
-          onClick={this.toggle}
+          onClick={(e) => this.props.callback(e)}
         >
           <i className="ti-close" /> Batal
         </button>

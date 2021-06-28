@@ -1,7 +1,12 @@
 import React, { Component } from "react";
-import Select from "react-select";
-import Paginationq, { generateNo, noData } from "../../../helper";
+import Paginationq, {
+  generateNo,
+  isImage,
+  noData,
+  toRp,
+} from "../../../helper";
 import ButtonActionCommon from "./ButtonActionCommon";
+import moment from "moment";
 
 /**
  * props
@@ -25,10 +30,18 @@ class TableCommon extends Component {
     }
   }
 
+  checkTypeLabel(res, val) {
+    if (val.isStatus) return this.isButton(res);
+    if (val.isCurrency) return toRp(res);
+    if (val.isImage) return isImage(res);
+    if (val.date) return moment(res).format("YYYY-MM-DD");
+    return res;
+  }
+
   render() {
     return (
       <div>
-        <div style={{ overflowX: "auto", zoom: "90%" }}>
+        <div style={{ overflowX: "auto" }}>
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
@@ -37,11 +50,11 @@ class TableCommon extends Component {
                     <th
                       key={index}
                       className={`text-black middle nowrap ${
-                        res.className === undefined ? "" : res.className
+                        res.className && res.className
                       }`}
-                      width={res.width === undefined ? "" : res.width}
-                      rowSpan={res.rowSpan !== undefined ? res.rowSpan : ""}
-                      colSpan={res.colSpan !== undefined ? res.colSpan : ""}
+                      width={res.width ? res.width : ""}
+                      rowSpan={res.rowSpan ? res.rowSpan : ""}
+                      colSpan={res.colSpan ? res.colSpan : ""}
                     >
                       {res.label}
                     </th>
@@ -49,7 +62,7 @@ class TableCommon extends Component {
                 })}
               </tr>
               <tr>
-                {this.props.isRowSpan &&
+                {this.props.rowSpan &&
                   this.props.rowSpan.map((res, index) => {
                     return (
                       <th
@@ -68,30 +81,26 @@ class TableCommon extends Component {
                   ? this.props.body.map((res, index) => {
                       return (
                         <tr key={index}>
-                          {this.props.isNo && this.props.isNo !== undefined ? (
-                            <td className={`text-center middle nowrap`}>
-                              {generateNo(index, this.props.meta.current_page)}
-                            </td>
-                          ) : (
-                            ""
-                          )}
-                          {this.props.isAction &&
-                          this.props.isAction !== undefined ? (
+                          <td className={`text-center middle nowrap`}>
+                            {generateNo(index, this.props.meta.current_page)}
+                          </td>
+                          {this.props.action && (
                             <td className={`text-center middle nowrap`}>
                               <ButtonActionCommon
                                 action={this.props.action}
                                 callback={(e) => this.props.callback(e, index)}
                               />
                             </td>
-                          ) : (
-                            ""
                           )}
                           {this.props.label.map((val, key) => {
                             return (
-                              <td key={key} className={`middle nowrap`}>
-                                {val.isButton && val.isButton !== undefined
-                                  ? this.isButton(res[val.label])
-                                  : res[val.label]}
+                              <td
+                                key={key}
+                                className={`middle nowrap ${
+                                  val.className && val.className
+                                }`}
+                              >
+                                {this.checkTypeLabel(res[val.label], val)}
                               </td>
                             );
                           })}

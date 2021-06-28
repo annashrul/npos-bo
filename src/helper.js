@@ -9,6 +9,28 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import XLSX from "xlsx";
 import { EXTENSION } from "./redux/actions/_constants";
+import Default from "assets/default.png";
+
+export const isImage = (img, className = "img-in-table pointer") => {
+  return (
+    <img
+      onClick={() => {
+        Swal.fire({
+          imageUrl: img,
+          imageAlt: "gambar tidak tersedia",
+          showClass: { popup: "animate__animated animate__fadeInDown" },
+          hideClass: { popup: "animate__animated animate__fadeOutUp" },
+        });
+      }}
+      src={img}
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = `${Default}`;
+      }}
+      className={className}
+    />
+  );
+};
 
 export const generateNo = (i, current_page) => {
   return i + 1 + 10 * (parseInt(current_page, 10) - 1);
@@ -628,7 +650,8 @@ export const isEmptyOrUndefined = (val, col, isShowError = true) => {
     val === undefined ||
     val === null ||
     val === "null" ||
-    val === "undefined"
+    val === "undefined" ||
+    isNaN(val)
   ) {
     if (col !== undefined && isShowError === true) {
       handleError(col);

@@ -30,6 +30,7 @@ import {
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
+import TableCommon from "../../../common/TableCommon";
 
 const dateFromStorage = "dateFromReportPo";
 const dateToStorage = "dateToReportPo";
@@ -66,8 +67,8 @@ class PoReport extends Component {
       ],
       status_data: [
         { value: "", label: "Semua" },
-        { value: "0", label: "Processing" },
-        { value: "1", label: "Ordered" },
+        { value: "0", label: "Proses" },
+        { value: "1", label: "Order" },
       ],
       isModalDetail: false,
       isModalExport: false,
@@ -84,11 +85,13 @@ class PoReport extends Component {
     let any = getStorage(anyStorage);
     let where = `page=${page}`;
     let state = {};
+    console.log(tglAwal);
+
     if (isEmptyOrUndefined(tglAwal) && isEmptyOrUndefined(tglAkhir)) {
-      where = `page=${page}&datefrom=${tglAwal}&dateto=${tglAkhir}`;
+      where += `&datefrom=${tglAwal}&dateto=${tglAkhir}`;
       Object.assign(state, { dateFrom: tglAwal, dateTo: tglAkhir });
     } else {
-      where = `page=${page}&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
+      where += `&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
     }
     if (isEmptyOrUndefined(lokasi)) {
       where += `&lokasi=${lokasi}`;
@@ -140,19 +143,20 @@ class PoReport extends Component {
   handleSearch(e) {
     e.preventDefault();
     setStorage(anyStorage, this.state.any);
-    setTimeout(() => this.handleService(1), 300);
+    this.handleService(this.state.any, 1);
+    // setTimeout(() => this.handleService(1), 300);
   }
-  toggle(e, no_po, i) {
+  toggle(e, i) {
     e.preventDefault();
     this.setState({ isModalDetail: true });
-    this.props.dispatch(poReportDetail(1, no_po));
+    this.props.dispatch(poReportDetail(1, this.props.data.data[i].no_po));
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("poReportDetail"));
 
     this.setState({
       master: {
-        no_po: no_po,
+        no_po: this.props.data.data[i].no_po,
         tgl_po: moment(this.props.poReport.data[i].tgl_po).format("yyyy-MM-DD"),
         tgl_kirim: moment(this.props.poReport.data[i].tglkirim).format(
           "yyyy-MM-DD"
@@ -180,7 +184,7 @@ class PoReport extends Component {
 
   render() {
     const {
-      // total,
+      total,
       last_page,
       per_page,
       current_page,
@@ -191,7 +195,7 @@ class PoReport extends Component {
     console.log(data);
     return (
       <Layout page="Laporan Purchase Order">
-        <div className="row" style={{ zoom: "90%" }}>
+        <div className="row">
           <div className="col-md-12">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3">
@@ -265,7 +269,45 @@ class PoReport extends Component {
             </div>
           </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "#", className: "text-center", width: "1%" },
+            { label: "No.Po" },
+            { label: "Tanggal" },
+            { label: "Tanggal kirim" },
+            { label: "Nama Supplier" },
+            { label: "Lokasi" },
+            { label: "Jenis" },
+            { label: "Operator" },
+            { label: "Status" },
+          ]}
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          body={typeof data === "object" && data}
+          label={[
+            { label: "no_po" },
+            { label: "tgl_po", date: true },
+            { label: "tglkirim", date: true },
+            { label: "nama_supplier" },
+            { label: "lokasi" },
+            { label: "jenis" },
+            { label: "kd_kasir" },
+            { label: "status" },
+          ]}
+          current_page={current_page}
+          action={[{ label: "Detail" }]}
+          callback={(e, index) => {
+            if (e === 0) this.toggle(e, index);
+            // if (e === 1) this.handleDelete(index);
+          }}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
+
+        {/* <div style={{ overflowX: "auto" }}>
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
@@ -294,7 +336,6 @@ class PoReport extends Component {
                         {generateNo(i, current_page)}
                       </td>
                       <td className="text-center middle nowrap">
-                        {/* Example split danger button */}
                         <div className="btn-group">
                           <UncontrolledButtonDropdown>
                             <DropdownToggle caret></DropdownToggle>
@@ -334,15 +375,15 @@ class PoReport extends Component {
               )}
             </tbody>
           </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
+        </div> */}
+        {/* <div style={{ marginTop: "20px", float: "right" }}>
           <Paginationq
             current_page={current_page}
             per_page={per_page}
             total={last_page * per_page}
             callback={this.handlePageChange.bind(this)}
           />
-        </div>
+        </div> */}
         {this.state.isModalDetail ? (
           <DetailPoReport
             master={this.state.master}

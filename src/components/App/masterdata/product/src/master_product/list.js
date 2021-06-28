@@ -91,10 +91,16 @@ class ListProduct extends Component {
 
   componentDidMount() {
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
-    if (getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
+    if (
+      getIsPeriodeBarang === null ||
+      getIsPeriodeBarang === "null" ||
+      getIsPeriodeBarang === "true"
+    ) {
       this.setState({ semua_periode: true });
     } else {
-      this.setState({ semua_periode: false });
+      this.setState({
+        semua_periode: false,
+      });
     }
   }
 

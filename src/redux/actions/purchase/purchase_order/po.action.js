@@ -194,20 +194,13 @@ export const storePo = (data, param) => {
       });
   };
 };
-export const fetchPoReport = (page = 1, where = "") => {
+export const fetchPoReport = (where = "") => {
   return (dispatch) => {
-    let url = `purchaseorder/report?page=${page}`;
+    let url = `purchaseorder/report`;
     if (where !== "") {
-      url += `${where}`;
+      url += `?${where}`;
     }
-    handleGet(
-      url,
-      (res) => {
-        let data = res.data;
-        dispatch(setPoReport(data));
-      },
-      true
-    );
+    handleGet(url, (res) => dispatch(setPoReport(res.data)), true);
   };
 };
 
@@ -217,14 +210,7 @@ export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
     if (where !== "") {
       url += `${where}`;
     }
-    handleGet(
-      url,
-      (res) => {
-        let data = res.data;
-        dispatch(setPoReportExcel(data));
-      },
-      true
-    );
+    handleGet(url, (res) => dispatch(setPoReportExcel(res.data)), true);
   };
 };
 export const poReportDetail = (page = 1, code) => {
@@ -234,7 +220,6 @@ export const poReportDetail = (page = 1, code) => {
       .get(HEADERS.URL + `purchaseorder/report/${code}?page=${page}`)
       .then(function (response) {
         const data = response.data;
-
         dispatch(setPoReportDetail(data));
         dispatch(setLoading(false));
       })

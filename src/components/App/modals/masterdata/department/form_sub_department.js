@@ -16,6 +16,7 @@ class FormSubDepartment extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this.state = {
       dept_data: [],
       kode: "",
@@ -26,6 +27,11 @@ class FormSubDepartment extends Component {
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
+  closeModal(e) {
+    e.preventDefault();
+    this.resetState();
+    this.props.dispatch(ModalToggle(false));
+  }
 
   resetState() {
     this.setState({
@@ -88,12 +94,7 @@ class FormSubDepartment extends Component {
         isOpen={this.props.isOpen && this.props.type === "formSubDepartment"}
         size="md"
       >
-        <ModalHeader
-          toggle={(e) => {
-            e.preventDefault();
-            this.props.dispatch(ModalToggle(false));
-          }}
-        >
+        <ModalHeader toggle={this.closeModal}>
           {this.props.detail.id === "" ? "Tambah" : "Ubah"} Sub Departemen
         </ModalHeader>
         <form onSubmit={this.handleSubmit}>
@@ -117,7 +118,7 @@ class FormSubDepartment extends Component {
             </div>
           </ModalBody>
           <ModalFooter>
-            <ButtonActionForm callback={() => this.resetState()} />
+            <ButtonActionForm callback={this.closeModal} />
           </ModalFooter>
         </form>
       </WrapperModal>

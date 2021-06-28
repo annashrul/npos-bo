@@ -1,29 +1,18 @@
 import React, { Component } from "react";
-import { toRp } from "helper";
 import connect from "react-redux/es/connect/connect";
 import { FetchPriceProduct } from "redux/actions/masterdata/price_product/price_product.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import Paginationq from "helper";
 import FormPriceProduct from "../../../../modals/masterdata/price_product/form_price_product";
-import { generateNo, toCurrency } from "../../../../../../helper";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import HeaderGeneralCommon from "../../../../common/HeaderGeneralCommon";
+import TableCommon from "../../../../common/TableCommon";
 
 class ListPriceProduct extends Component {
   constructor(props) {
     super(props);
-    this.handlesearch = this.handlesearch.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleGet = this.handleGet.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
     this.state = {
       detail: {},
-      isActive: "",
       any: "",
-      page: 1,
       where: "",
     };
   }
@@ -36,89 +25,77 @@ class ListPriceProduct extends Component {
   }
 
   handlePageChange(pageNumber) {
-    this.setState({ page: pageNumber });
     this.handleGet(this.state.any, pageNumber);
   }
-  handlesearch(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = new FormData(form);
-    let any = data.get("field_any");
-    this.setState({ any: any });
-    this.handleGet(any, 1);
-  }
-  handleDelete = (e, kode) => {
-    e.preventDefault();
-  };
-  handleEdit = (
-    e,
-    id,
-    harga,
-    ppn,
-    service,
-    harga2,
-    harga3,
-    harga4,
-    harga_beli
-  ) => {
-    e.preventDefault();
+
+  toggleModal(index) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formPriceProduct"));
+    Object.assign(this.props.data.data[index], { where: this.state.where });
     this.setState({
-      isActive: id,
-      detail: {
-        where: this.state.where,
-        id: id,
-        harga: harga,
-        ppn: ppn,
-        service: harga,
-        harga2: harga2,
-        harga3: harga3,
-        harga4: harga4,
-        service: service,
-        harga_beli: harga_beli,
-      },
+      detail: this.props.data.data[index],
     });
-  };
+  }
 
   render() {
-    console.log(this.state.isActive);
-
-    const {
-      total,
-      // last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.data;
+    const { total, per_page, current_page, data } = this.props.data;
+    const head = [
+      { label: "No", className: "text-center", width: "1%", rowSpan: "2" },
+      { label: "#", className: "text-center", width: "1%", rowSpan: "2" },
+      { label: "Kode", rowSpan: "2" },
+      { label: "Barcode", rowSpan: "2" },
+      { label: "Nama", rowSpan: "2" },
+      { label: "Lokasi", rowSpan: "2" },
+      { label: "Harga beli", rowSpan: "2" },
+      { label: "Harga jual", className: "text-center", colSpan: "4" },
+      { label: "Ppn (%)", width: "1%", rowSpan: "2" },
+      { label: "Servis (%)", rowSpan: "2" },
+    ];
     return (
       <div>
-        <form onSubmit={this.handlesearch} noValidate>
-          <div className="row">
-            <div className="col-10 col-xs-10 col-md-3">
-              <div className="form-group">
-                <div className="input-group input-group-sm">
-                  <input
-                    type="text"
-                    name="field_any"
-                    className="form-control form-control-sm"
-                    placeholder="cari berdasarkan nama barang"
-                    defaultValue={localStorage.getItem("any_price_product")}
-                  />
-                  <span className="input-group-append">
-                    <button type="submit" className="btn btn-primary">
-                      <i className="fa fa-search" />
-                    </button>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div style={{ overflowX: "auto" }}>
+        <HeaderGeneralCommon
+          callbackGet={(res) => {
+            this.setState({ any: res });
+            this.handleGet(res, 1);
+          }}
+        />
+        <TableCommon
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          head={head}
+          rowSpan={[
+            { label: "1" },
+            { label: "2" },
+            { label: "3" },
+            { label: "4" },
+          ]}
+          body={typeof data === "object" && data}
+          label={[
+            { label: "kd_brg" },
+            { label: "barcode" },
+            { label: "nm_brg" },
+            { label: "nama_toko" },
+            { label: "harga_beli", className: "text-right" },
+            { label: "harga", className: "text-right" },
+            { label: "harga2", className: "text-right" },
+            { label: "harga3", className: "text-right" },
+            { label: "harga4", className: "text-right" },
+            { label: "ppn", className: "text-right" },
+            { label: "service", className: "text-right" },
+          ]}
+          current_page={current_page}
+          action={[{ label: "Edit" }]}
+          callback={(e, index) => {
+            if (e === 0) this.toggleModal(index);
+          }}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
+
+        {/* <div style={{ overflowX: "auto" }}>
           <table className="table table-hover table-noborder">
             <thead className="bg-light">
               <tr>
@@ -173,13 +150,7 @@ class ListPriceProduct extends Component {
               {typeof data === "object"
                 ? data.map((v, i) => {
                     return (
-                      <tr
-                        key={i}
-                        style={{
-                          backgroundColor:
-                            this.state.isActive === v.id ? "#EEEEEE" : "",
-                        }}
-                      >
+                      <tr key={i}>
                         <td className="text-center middle nowrap">
                           {generateNo(i, current_page)}
                         </td>
@@ -250,7 +221,7 @@ class ListPriceProduct extends Component {
             total={total}
             callback={this.handlePageChange.bind(this)}
           />
-        </div>
+        </div> */}
         {this.props.isOpen && (
           <FormPriceProduct
             callback={(id) => {

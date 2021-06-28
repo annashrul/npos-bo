@@ -57,10 +57,10 @@ class PurchaseBySupplierReport extends Component {
     let where = `page=${page}`;
     let state = {};
     if (isEmptyOrUndefined(tglAwal) && isEmptyOrUndefined(tglAkhir)) {
-      where = `page=${page}&datefrom=${tglAwal}&dateto=${tglAkhir}`;
+      where += `&datefrom=${tglAwal}&dateto=${tglAkhir}`;
       Object.assign(state, { dateFrom: tglAwal, dateTo: tglAkhir });
     } else {
-      where = `page=${page}&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
+      where += `&datefrom=${this.state.dateFrom}&dateto=${this.state.dateTo}`;
     }
     if (isEmptyOrUndefined(kolom)) {
       if (isEmptyOrUndefined(urutan)) {
@@ -72,6 +72,7 @@ class PurchaseBySupplierReport extends Component {
       where += `&q=${any}`;
       Object.assign(state, { any: any });
     }
+    console.log("where", where);
     Object.assign(state, { where_data: where });
     this.setState(state);
     this.props.dispatch(FetchPurchaseBySupplierReport(where));

@@ -8,6 +8,7 @@ import {
   handlePut,
 } from "../../handleHttp";
 import { swal } from "../../../../helper";
+import { ModalToggle } from "../../modal.action";
 
 export function setLoading(load) {
   return { type: PRICE_PRODUCT.LOADING, load };
@@ -40,7 +41,10 @@ export const updatePriceProduct = (id, data, where) => {
   return (dispatch) => {
     handlePut(`barangHarga/${id}`, data, (data, msg, status) => {
       swal(msg);
-      dispatch(FetchPriceProduct(where));
+      if (status) {
+        dispatch(ModalToggle(true));
+        dispatch(FetchPriceProduct(where));
+      }
     });
   };
 };
