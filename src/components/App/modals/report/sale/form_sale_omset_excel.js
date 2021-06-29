@@ -8,6 +8,7 @@ import imgExcel from "assets/xls.png";
 import imgPdf from "assets/pdf.png";
 import moment from "moment";
 import XLSX from "xlsx";
+import { headerPdf } from "../../../../../helper";
 class SaleOmsetReportExcel extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +49,7 @@ class SaleOmsetReportExcel extends Component {
 
     const headers = [
       [
+        "No",
         "Tanggal",
         "QTY",
         "Gross Sale",
@@ -61,7 +63,8 @@ class SaleOmsetReportExcel extends Component {
     ];
     let data =
       typeof this.props.sale_omsetReportExcel.data === "object"
-        ? this.props.sale_omsetReportExcel.data.map((v) => [
+        ? this.props.sale_omsetReportExcel.data.map((v,i) => [
+            i+1,
             moment(v.tanggal).format("YYYY-MM-DD"),
             v.qty,
             toRp(parseInt(v.gross_sales, 10)),
@@ -75,8 +78,12 @@ class SaleOmsetReportExcel extends Component {
         : "";
     // data +=["TOTAL","","","","","","","","",tprice];
     to_pdf(
-      "sale_omset_",
-      stringHtml,
+      "OMSET_PENJUALAN",
+      headerPdf({
+        title: "OMSET PENJUALAN",
+        dateFrom: this.props.startDate,
+        dateTo: this.props.endDate,
+      }),
       headers,
       data
       // footer
@@ -104,7 +111,7 @@ class SaleOmsetReportExcel extends Component {
     ];
     let raw =
       typeof this.props.sale_omsetReportExcel.data === "object"
-        ? this.props.sale_omsetReportExcel.data.map((v) => [
+        ? this.props.sale_omsetReportExcel.data.map((v,i) => [
             moment(v.tanggal).format("YYYY-MM-DD"),
             v.qty,
             toRp(parseInt(v.gross_sales, 10)),

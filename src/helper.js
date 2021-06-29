@@ -100,15 +100,15 @@ export const headerPdf = (master) => {
   let stringHtml = "";
   stringHtml +=
     '<div style="text-align:center>' +
+     '<h3 style="text-align:center"><center>LAPORAN ' +
+       master.title +
+    "</center></h3>" +
     '<h3 align="center"><center>PERIODE : ' +
     `${master.dateFrom}`.replaceAll("-", "/") +
     " - " +
     `${master.dateTo}`.replaceAll("-", "/") +
     "</center></h3>" +
     '<h3 align="center"><center>&nbsp;</center></h3>' +
-    '<h3 style="text-align:center"><center>LAPORAN ' +
-    master.title +
-    "</center></h3>" +
     "</div>";
   return stringHtml;
 };
@@ -155,25 +155,28 @@ export const to_pdf = (
   footer = []
 ) => {
   const doc = jsPDF("portrait", "pt", "A4");
-  const marginLeft = 40;
-  doc.setFontSize(15);
+  const marginLeft = 10;
+  doc.setFontSize(10);
   let content = {
-    headStyles: { backgroundColor: [0, 0, 0, 0] },
-    footStyles: {},
-    bodyStyles: { lineWidth: 1, lineColor: [33, 33, 33], marginBottom: 20 },
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    headStyles:{backgroundColor: [33, 33, 33],lineWidth: 1,marginBottom:0},
+    bodyStyles: { lineWidth: 1,  marginBottom: 20 },
     theme: "grid",
-    startY: 100,
+    startY: 50,
     head: header,
     body: body,
     foot: footer,
-    margin: { bottom: 60, top: 40 },
+    margin: { bottom: 10, top: 10,left:10,right:10 },
+    autoSize:true
   };
-  doc.fromHTML(title, marginLeft, 40, { align: "center" });
-  // doc.text(title, marginLeft, 40);
+  doc.fromHTML(title, marginLeft, 10, { align: "center" });
   doc.autoTable(content);
-  addFooters(doc);
-  return doc.save(filename + "_report.pdf");
+  // addFooters(doc);
+  return doc.save("LAPORAN_"+filename+`_${moment(new Date()).format("YYYYMMDDHHMMss")}`+".pdf");
 };
+
+
 export const to_pdf_l = (
   filename,
   title = "",
@@ -577,7 +580,6 @@ export const dateRange = (onApply, value, isShow = true, isLabel = true) => {
         Periode{" "}
       </label>
       <DateRangePicker
-        style={{ display: "unset" }}
         ranges={rangeDate}
         alwaysShowCalendars={true}
         onEvent={(event, picker) => {}}
@@ -588,7 +590,6 @@ export const dateRange = (onApply, value, isShow = true, isLabel = true) => {
         }}
       >
         <input
-          // style={{ fontSize: "12px" }}
           readOnly={true}
           type="text"
           className={`form-control`}
@@ -650,8 +651,7 @@ export const isEmptyOrUndefined = (val, col, isShowError = true) => {
     val === undefined ||
     val === null ||
     val === "null" ||
-    val === "undefined" ||
-    isNaN(val)
+    val === "undefined"
   ) {
     if (col !== undefined && isShowError === true) {
       handleError(col);
@@ -717,7 +717,10 @@ export const dataStatus = (isAll = false) => {
 export const isProgress = (props) => {
   let loading;
   if (props === "loading") {
-    loading = props;
+    loading = <div>
+      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+      <span className="sr-only">Loading...</span>
+    </div>;
   } else if (props > 0 && props < 100) {
     loading = props + "%";
   } else {

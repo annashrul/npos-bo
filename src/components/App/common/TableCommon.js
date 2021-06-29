@@ -21,12 +21,20 @@ class TableCommon extends Component {
     super(props);
   }
 
-  isButton(val) {
+  statusGeneral(val) {
     if (parseInt(val, 10) === 0) {
-      return <button className="btn btn-danger btn-sm">Tidak aktif</button>;
+      return (
+        <button className="btn btn-danger btn-sm " style={{ fontSize: "10px" }}>
+          Tidak aktif
+        </button>
+      );
     }
     if (parseInt(val, 10) === 1) {
-      return <button className="btn btn-success btn-sm">Aktif</button>;
+      return (
+        <button className="btn btn-success btn-sm" style={{ fontSize: "10px" }}>
+          Aktif
+        </button>
+      );
     }
   }
 
@@ -66,7 +74,9 @@ class TableCommon extends Component {
                   this.props.rowSpan.map((res, index) => {
                     return (
                       <th
-                        className={`text-black middle nowrap ${res.className}`}
+                        className={`text-black middle nowrap ${
+                          res.className && res.className
+                        }`}
                         key={index}
                       >
                         {res.label}
@@ -76,40 +86,66 @@ class TableCommon extends Component {
               </tr>
             </thead>
             <tbody>
-              {typeof this.props.body
-                ? this.props.body.length > 0
-                  ? this.props.body.map((res, index) => {
-                      return (
-                        <tr key={index}>
-                          <td className={`text-center middle nowrap`}>
-                            {generateNo(index, this.props.meta.current_page)}
-                          </td>
-                          {this.props.action && (
+              {this.props.renderRow === undefined
+                ? typeof this.props.body
+                  ? this.props.body.length > 0
+                    ? this.props.body.map((res, index) => {
+                        return (
+                          <tr key={index}>
                             <td className={`text-center middle nowrap`}>
-                              <ButtonActionCommon
-                                action={this.props.action}
-                                callback={(e) => this.props.callback(e, index)}
-                              />
+                              {generateNo(index, this.props.meta.current_page)}
                             </td>
-                          )}
-                          {this.props.label.map((val, key) => {
-                            return (
-                              <td
-                                key={key}
-                                className={`middle nowrap ${
-                                  val.className && val.className
-                                }`}
-                              >
-                                {this.checkTypeLabel(res[val.label], val)}
+                            {this.props.action && (
+                              <td className={`text-center middle nowrap`}>
+                                <ButtonActionCommon
+                                  action={this.props.action}
+                                  callback={(e) =>
+                                    this.props.callback(e, index)
+                                  }
+                                />
                               </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })
+                            )}
+                            {this.props.label.map((val, key) => {
+                              return (
+                                <td
+                                  key={key}
+                                  className={`middle nowrap ${
+                                    val.className && val.className
+                                  }`}
+                                >
+                                  {this.checkTypeLabel(res[val.label], val)}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })
+                    : noData(this.props.head.length)
                   : noData(this.props.head.length)
-                : noData(this.props.head.length)}
+                : this.props.renderRow}
             </tbody>
+            {this.props.footer && (
+              <tfoot style={{ border: "1px solid black" }}>
+                {this.props.footer.map((val, key) => {
+                  return (
+                    <tr key={key} style={{ backgroundColor: "#EEEEEE" }}>
+                      {val.data.map((res, index) => {
+                        return (
+                          <th
+                            colSpan={res.colSpan ? res.colSpan : ""}
+                            className={`text-black ${
+                              res.className ? res.className : "text-right"
+                            }`}
+                          >
+                            {res.label}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tfoot>
+            )}
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>

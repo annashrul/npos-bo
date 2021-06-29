@@ -1,0 +1,733 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.28 841.89]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 5083
+>>
+stream
+0.20 w
+0 G
+q
+q BT 0 g 10.00 831.89 Td
+0 -12.00 Td
+0.000 g
+/F9 12.00 Tf (LAPORAN PURCHASE ORDER) Tj
+ET Q
+q BT 0 g 10.00 819.89 Td
+0 -14.04 Td
+/F10 14.04 Tf (PERIODE : 2021/01/01 - 2021/12/31) Tj
+ET Q
+Q
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+10.00 791.89 96.18 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+15.00 778.39 Td
+(NO) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+106.18 791.89 103.90 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+111.18 778.39 Td
+(NO PO) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+210.09 791.89 68.82 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+215.09 778.39 Td
+(TGL) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+278.90 791.89 69.38 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+283.90 778.39 Td
+(TGL KIRIM) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+348.29 791.89 71.77 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+353.29 778.39 Td
+(SUPPLIER) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+420.05 791.89 54.17 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+425.05 778.39 Td
+(LOKASI) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+474.22 791.89 43.95 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+479.22 778.39 Td
+(JENIS) Tj
+ET
+0.10 0.74 0.61 rg
+0.78 G
+1.00 w
+518.17 791.89 67.11 -21.50 re
+B
+BT
+/F2 10 Tf
+11.50 TL
+1.000 g
+523.17 778.39 Td
+(STATUS) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+10.00 770.39 96.18 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+15.00 756.89 Td
+([object Object]10) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+106.18 770.39 103.90 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+111.18 756.89 Td
+(PO-2102040001-2) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+210.09 770.39 68.82 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+215.09 756.89 Td
+(2021-02-04) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+278.90 770.39 69.38 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+283.90 756.89 Td
+(2021-02-04) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+348.29 770.39 71.77 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+353.29 756.89 Td
+(VELYN) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+420.05 770.39 54.17 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+425.05 756.89 Td
+(LK/0001) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+474.22 770.39 43.95 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+479.22 756.89 Td
+(Tunai) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+518.17 770.39 67.11 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+523.17 756.89 Td
+(Processing) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+10.00 748.89 96.18 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+15.00 735.39 Td
+([object Object]10) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+106.18 748.89 103.90 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+111.18 735.39 Td
+(PO-2102040001-1) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+210.09 748.89 68.82 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+215.09 735.39 Td
+(2021-02-04) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+278.90 748.89 69.38 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+283.90 735.39 Td
+(2021-02-04) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+348.29 748.89 71.77 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+353.29 735.39 Td
+(SUKANDA) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+420.05 748.89 54.17 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+425.05 735.39 Td
+(LK/0001) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+474.22 748.89 43.95 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+479.22 735.39 Td
+(Tunai) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+518.17 748.89 67.11 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+523.17 735.39 Td
+(Processing) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+10.00 727.39 96.18 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+15.00 713.89 Td
+([object Object]10) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+106.18 727.39 103.90 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+111.18 713.89 Td
+(PO-2012290001-2) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+210.09 727.39 68.82 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+215.09 713.89 Td
+(2020-12-29) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+278.90 727.39 69.38 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+283.90 713.89 Td
+(2020-12-29) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+348.29 727.39 71.77 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+353.29 713.89 Td
+(CEDEA) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+420.05 727.39 54.17 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+425.05 713.89 Td
+(LK/0001) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+474.22 727.39 43.95 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+479.22 713.89 Td
+(Tunai) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+518.17 727.39 67.11 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+523.17 713.89 Td
+(Processing) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+10.00 705.89 96.18 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+15.00 692.39 Td
+([object Object]10) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+106.18 705.89 103.90 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+111.18 692.39 Td
+(PO-2012290001-1) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+210.09 705.89 68.82 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+215.09 692.39 Td
+(2020-12-29) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+278.90 705.89 69.38 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+283.90 692.39 Td
+(2020-12-29) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+348.29 705.89 71.77 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+353.29 692.39 Td
+(KO ACUNG) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+420.05 705.89 54.17 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+425.05 692.39 Td
+(LK/0001) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+474.22 705.89 43.95 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+479.22 692.39 Td
+(Tunai) Tj
+ET
+1.00 g
+0.78 G
+1.00 w
+518.17 705.89 67.11 -21.50 re
+B
+BT
+/F1 10 Tf
+11.50 TL
+0.314 g
+523.17 692.39 Td
+(Processing) Tj
+ET
+0.78 G
+0.00 w
+BT
+/F1 7 Tf
+8.05 TL
+0.000 g
+555.28 30.00 Td
+(Page - 1) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R ]
+/Count 1
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+6 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+7 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+10 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 5 0 R
+/F2 6 0 R
+/F3 7 0 R
+/F4 8 0 R
+/F5 9 0 R
+/F6 10 0 R
+/F7 11 0 R
+/F8 12 0 R
+/F9 13 0 R
+/F10 14 0 R
+/F11 15 0 R
+/F12 16 0 R
+/F13 17 0 R
+/F14 18 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+19 0 obj
+<<
+/Producer (jsPDF 1.5.3)
+/CreationDate (D:20210629040458+07'00')
+>>
+endobj
+20 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 21
+0000000000 65535 f 
+0000005259 00000 n 
+0000007076 00000 n 
+0000000015 00000 n 
+0000000124 00000 n 
+0000005316 00000 n 
+0000005441 00000 n 
+0000005571 00000 n 
+0000005704 00000 n 
+0000005841 00000 n 
+0000005964 00000 n 
+0000006093 00000 n 
+0000006225 00000 n 
+0000006361 00000 n 
+0000006489 00000 n 
+0000006616 00000 n 
+0000006745 00000 n 
+0000006878 00000 n 
+0000006980 00000 n 
+0000007324 00000 n 
+0000007410 00000 n 
+trailer
+<<
+/Size 21
+/Root 20 0 R
+/Info 19 0 R
+/ID [ <49352E7550E9549107B283E0875BDA38> <49352E7550E9549107B283E0875BDA38> ]
+>>
+startxref
+7514
+%%EOF

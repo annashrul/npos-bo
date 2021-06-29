@@ -133,7 +133,7 @@ class SaleReturReport extends Component {
 
     return (
       <Layout page="Laporan SaleRetur">
-        <div className="row" style={{ zoom: "90%" }}>
+        <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
             {dateRange((first, last) => {
               setStorage(dateFromStorage, first);

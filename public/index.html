@@ -302,7 +302,8 @@
     outline: 1px solid transparent!important;
 }
 input[readonly] {
-    background-color: #EEEEEE !important;
+  
+    background-color: transparent !important;
 }
 input.in-table{
   height:31px !important;
@@ -335,20 +336,11 @@ input[type=checkbox]
     background-color: transparent!important;
 }
 
-table.table-noborder>tbody>tr>td{
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    /* border-top: none !important;
-    border-left: none !important;
-    border-right: none !important; */
+table.table-noborder>tbody,table.table-noborder>tfoot{
     border: 1px solid hsl(0,0%,80%) !important;
 }
-table.table-noborder>tbody{
-    border: 1px solid hsl(0,0%,80%) !important;
-}
-table.table-noborder>thead>tr>th{
+
+table.table-noborder>thead>tr>th,table.table-noborder>tbody>tr>td, table.table-noborder>tfoot>tr>th{
     padding-top: 5px !important;
     padding-bottom: 5px !important;
     padding-left: 10px !important;
@@ -492,7 +484,7 @@ input[type=checkbox]:checked
       color: #fff;
       height:38px;
     }
-    button.btn-outline-info{
+    button.btn-outline-info, button.btn-default{
        height:38px;
     }
 

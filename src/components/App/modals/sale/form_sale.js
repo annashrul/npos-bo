@@ -406,7 +406,6 @@ class FormSale extends Component {
                 </div>
                 {/*TRANSFER*/}
                 {this.state.isTransfer === true ? (
-                  !this.props.isLoading ? (
                     <div className="form-group">
                       <label htmlFor="">BANK</label>
                       <select
@@ -430,9 +429,7 @@ class FormSale extends Component {
                         {/*<option value="KREDIT">KREDIT</option>*/}
                       </select>
                     </div>
-                  ) : (
-                    <Preloader />
-                  )
+                  
                 ) : (
                   ""
                 )}

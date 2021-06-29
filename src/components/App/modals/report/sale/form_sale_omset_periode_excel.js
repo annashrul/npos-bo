@@ -49,6 +49,7 @@ class SaleOmsetPeriodeReportExcel extends Component{
         '</div>';
         
         const headers = [[
+            "No",
             "Nama Toko",
             "Omset Bulan Lalu",
             "Transaksi Bulan Lalu",
@@ -59,7 +60,8 @@ class SaleOmsetPeriodeReportExcel extends Component{
             "Pertumbuhan Trx",
             "Persentase",
         ]];
-        let data = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object'?this.props.saleOmsetPeriodeReportExcel.data.map(v=> [
+        let data = typeof this.props.saleOmsetPeriodeReportExcel.data === 'object'?this.props.saleOmsetPeriodeReportExcel.data.map((v,i)=> [
+            i+1,
             v.nama_toko,
             toRp(parseInt(v.omset_sebelum, 10)),
             toRp(parseInt(v.transaksi_sebelum, 10)),

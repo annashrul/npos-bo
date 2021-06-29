@@ -3,7 +3,7 @@ import {
 } from "../../../actions/_constants";
 
 const initialState = {
-    isLoading: true,
+    isLoading: 0,
     isLoadingDetail: false,
     data: [],
     msg:"",

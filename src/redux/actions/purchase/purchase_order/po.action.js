@@ -2,7 +2,8 @@ import { PO, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../../handleHttp";
+import { handleGet,handleGetExport } from "../../handleHttp";
+import { ModalToggle } from "../../modal.action";
 
 export function setLoading(load) {
   return {
@@ -207,23 +208,26 @@ export const fetchPoReport = (where = "") => {
 export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
     let url = `purchaseorder/report?page=${page}&perpage=${perpage}`;
-    if (where !== "") {
-      url += `${where}`;
-    }
-    handleGet(url, (res) => dispatch(setPoReportExcel(res.data)), true);
+     handleGetExport(
+      url,
+      (res) => {
+        dispatch(setPoReportExcel(res.data));
+        dispatch(ModalToggle(true));
+      },
+      (percent) => dispatch(setLoading(percent))
+      // (percent) => callback(percent)
+    );
+   
   };
 };
+
 export const poReportDetail = (page = 1, code) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `purchaseorder/report/${code}?page=${page}`)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setPoReportDetail(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    let url = `purchaseorder/report/${code}?page=${page}`;
+    handleGet(url, (res) => {
+      dispatch(setPoReportDetail(res.data))
+      dispatch(ModalToggle(true));
+    }, true);
   };
 };
 

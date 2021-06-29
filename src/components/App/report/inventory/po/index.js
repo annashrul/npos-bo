@@ -25,6 +25,7 @@ import {
   generateNo,
   getStorage,
   isEmptyOrUndefined,
+  isProgress,
   setStorage,
 } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
@@ -34,7 +35,7 @@ import TableCommon from "../../../common/TableCommon";
 
 const dateFromStorage = "dateFromReportPo";
 const dateToStorage = "dateToReportPo";
-const locationStorage = "locationReportPoe";
+const locationStorage = "locationReportPo";
 const columnStorage = "columnReportPo";
 const sortStorage = "sortReportPo";
 const statusStorage = "statusReportPo";
@@ -69,6 +70,7 @@ class PoReport extends Component {
         { value: "", label: "Semua" },
         { value: "0", label: "Proses" },
         { value: "1", label: "Order" },
+        { value: "2", label: "Receive" },
       ],
       isModalDetail: false,
       isModalExport: false,
@@ -85,7 +87,6 @@ class PoReport extends Component {
     let any = getStorage(anyStorage);
     let where = `page=${page}`;
     let state = {};
-    console.log(tglAwal);
 
     if (isEmptyOrUndefined(tglAwal) && isEmptyOrUndefined(tglAkhir)) {
       where += `&datefrom=${tglAwal}&dateto=${tglAkhir}`;
@@ -120,6 +121,7 @@ class PoReport extends Component {
     if (state === "column") setStorage(columnStorage, res.value);
     if (state === "sort") setStorage(sortStorage, res.value);
     if (state === "status") setStorage(statusStorage, res.value);
+    this.setState({ [state]: res.value });
     setTimeout(() => this.handleService(1), 500);
   }
 
@@ -146,53 +148,26 @@ class PoReport extends Component {
     this.handleService(this.state.any, 1);
     // setTimeout(() => this.handleService(1), 300);
   }
-  toggle(e, i) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    this.props.dispatch(poReportDetail(1, this.props.data.data[i].no_po));
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
+  toggle(i) {
+    this.props.dispatch(poReportDetail(1, this.props.poReport.data[i].no_po));
+    this.setState({ isModalDetail: true, master: this.props.poReport.data[i] });
     this.props.dispatch(ModalType("poReportDetail"));
-
-    this.setState({
-      master: {
-        no_po: this.props.data.data[i].no_po,
-        tgl_po: moment(this.props.poReport.data[i].tgl_po).format("yyyy-MM-DD"),
-        tgl_kirim: moment(this.props.poReport.data[i].tglkirim).format(
-          "yyyy-MM-DD"
-        ),
-        lokasi: this.props.poReport.data[i].lokasi,
-        kd_kasir: this.props.poReport.data[i].kd_kasir,
-        nama_supplier: this.props.poReport.data[i].nama_supplier,
-        alamat_supplier: this.props.poReport.data[i].alamat_supplier,
-        telp_supplier: this.props.poReport.data[i].telp_supplier,
-        catatan: this.props.poReport.data[i].catatan,
-      },
-    });
   }
 
-  toggleModal(e, total, perpage) {
+  toggleModal(e, total) {
     e.preventDefault();
-    const bool = !this.props.isOpen;
+     this.props.dispatch(fetchPoReportExcel(1, this.state.where_data, total));
     this.setState({ isModalExport: true });
-
-    // let range = total*perpage;
-    this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formPoExcel"));
-    this.props.dispatch(fetchPoReportExcel(1, this.state.where_data, total));
+   
   }
 
   render() {
+    const {total,last_page,per_page,current_page,data} = this.props.poReport;
     const {
-      total,
-      last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.poReport;
-    console.log(data);
+      status_data,status,column,column_data,location,sort,any,dateFrom,dateTo,isModalDetail,isModalExport,master
+    } = this.state;
+
     return (
       <Layout page="Laporan Purchase Order">
         <div className="row">
@@ -200,40 +175,41 @@ class PoReport extends Component {
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3">
                 {dateRange((first, last) => {
+                  this.setState({ dateFrom: first, dateTo: last });
                   setStorage(dateFromStorage, first);
                   setStorage(dateToStorage, last);
                   setTimeout(() => this.handleService(1), 500);
-                }, `${this.state.dateFrom} to ${this.state.dateTo}`)}
+                }, `${dateFrom} to ${dateTo}`)}
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
                   <LokasiCommon
                     isAll={true}
                     callback={(res) => this.handleChangeSelect("location", res)}
-                    dataEdit={this.state.location}
+                    dataEdit={location}
                   />
                 </div>
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <SelectCommon
                   label="Status"
-                  options={this.state.status_data}
+                  options={status_data}
                   callback={(res) => this.handleChangeSelect("status", res)}
-                  dataEdit={this.state.status}
+                  dataEdit={status}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <SelectCommon
                   label="Kolom"
-                  options={this.state.column_data}
+                  options={column_data}
                   callback={(res) => this.handleChangeSelect("column", res)}
-                  dataEdit={this.state.column}
+                  dataEdit={column}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <SelectSortCommon
                   callback={(res) => this.handleChangeSelect("sort", res)}
-                  dataEdit={this.state.sort}
+                  dataEdit={sort}
                 />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
@@ -243,7 +219,7 @@ class PoReport extends Component {
                     className="form-control"
                     type="text"
                     name="any"
-                    value={this.state.any}
+                    value={any}
                     onChange={(e) => this.handleChange(e)}
                   />
                 </div>
@@ -256,14 +232,9 @@ class PoReport extends Component {
                 >
                   <i className="fa fa-search" />
                 </button>
-                <button
-                  style={{ marginTop: "28px" }}
-                  className="btn btn-primary"
-                  onClick={(e) =>
-                    this.toggleModal(e, last_page * per_page, per_page)
-                  }
-                >
-                  <i className="fa fa-print"></i>
+              
+                <button className="btn btn-primary" type="button" style={{ marginTop: "28px" }} onClick={(e) =>this.toggleModal(e, last_page * per_page)}>
+                  {isProgress(this.props.isLoading)}
                 </button>
               </div>
             </div>
@@ -301,101 +272,18 @@ class PoReport extends Component {
           current_page={current_page}
           action={[{ label: "Detail" }]}
           callback={(e, index) => {
-            if (e === 0) this.toggle(e, index);
-            // if (e === 1) this.handleDelete(index);
+            if (e === 0) this.toggle(index);
           }}
           callbackPage={this.handlePageChange.bind(this)}
         />
 
-        {/* <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-noborder">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black text-center middle nowrap" width="1%">
-                  No
-                </th>
-                <th className="text-black text-center middle nowrap" width="1%">
-                  #
-                </th>
-                <th className="text-black middle nowrap">No. PO</th>
-                <th className="text-black middle nowrap">Tanggal</th>
-                <th className="text-black middle nowrap">Tanggal Kirim</th>
-                <th className="text-black middle nowrap">Nama Supplier</th>
-                <th className="text-black middle nowrap">Lokasi</th>
-                <th className="text-black middle nowrap">Jenis</th>
-                <th className="text-black middle nowrap">Operator</th>
-                <th className="text-black middle nowrap">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.map((v, i) => {
-                  return (
-                    <tr key={i}>
-                      <td className="text-center middle nowrap">
-                        {generateNo(i, current_page)}
-                      </td>
-                      <td className="text-center middle nowrap">
-                        <div className="btn-group">
-                          <UncontrolledButtonDropdown>
-                            <DropdownToggle caret></DropdownToggle>
-                            <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggle(e, v.no_po, i)}
-                              >
-                                Detail
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </UncontrolledButtonDropdown>
-                        </div>
-                      </td>
-                      <td className="middle nowrap">{v.no_po}</td>
-                      <td className="middle nowrap">
-                        {moment(v.tgl_po).format("YYYY-MM-DD")}
-                      </td>
-                      <td className="middle nowrap">
-                        {moment(v.tglkirim).format("YYYY-MM-DD")}
-                      </td>
-                      <td className="middle nowrap">{v.nama_supplier}</td>
-                      <td className="middle nowrap">{v.lokasi}</td>
-                      <td className="middle nowrap">{v.jenis}</td>
-                      <td className="middle nowrap">{v.kd_kasir}</td>
-                      <td className="middle nowrap">
-                        {v.status === "0"
-                          ? statusQ("warning", "Proses")
-                          : statusQ("success", "Order")}
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td>No data.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div> */}
-        {/* <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={last_page * per_page}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div> */}
-        {this.state.isModalDetail ? (
-          <DetailPoReport
-            master={this.state.master}
-            poReportDetail={this.props.dataReportDetail}
+        {this.props.isOpen&&isModalDetail ? (
+          <DetailPoReport master={master} poReportDetail={this.props.dataReportDetail}
           />
         ) : null}
 
-        {this.state.isModalExport ? (
-          <PoReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
+        {this.props.isOpen&&isModalExport ? (
+          <PoReportExcel startDate={dateFrom} endDate={dateTo}/>
         ) : null}
       </Layout>
     );

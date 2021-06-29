@@ -3,8 +3,10 @@ import connect from "react-redux/es/connect/connect";
 import Select from "react-select";
 
 /* ############# list props #############  */
-/* isAll                        : boolean  */
-/* callback                     : void     */
+/* isAll             : boolean             */
+/* isMulti           : boolean             */
+/* callback          : void                */
+/* dataEdit          : string || array     */
 
 class LokasiCommon extends Component {
   constructor(props) {
@@ -19,8 +21,9 @@ class LokasiCommon extends Component {
 
   getProps(props) {
     let state = {};
+    let arrLokasi = [];
+
     if (props.auth.user) {
-      let arrLokasi = [];
       if (props.isAll !== undefined && props.isAll) {
         arrLokasi.push({ value: "", label: "Semua lokasi" });
       }
@@ -32,34 +35,34 @@ class LokasiCommon extends Component {
             label: i.nama,
           });
         });
-        // Object.assign(state, { dataObject: arrLokasi[0] });
-        // localStorage.setItem("location_tr", arrLokasi[0].value);
 
         if (propsLokasi.length === 1) {
           Object.assign(state, { dataObject: arrLokasi[0] });
           localStorage.setItem("location_tr", arrLokasi[0].value);
         }
-      }
-      Object.assign(state, { dataArray: arrLokasi });
-    }
 
-    // jika kondisi edit
-    if (props.dataEdit !== undefined || props.dataEdit !== "") {
-      if (props.isMulti && props.dataEdit.length > 0) {
-        Object.assign(state, { dataObject: props.dataEdit, isChecked: true });
-      } else {
-        if (props.dataEdit === "-") {
-          Object.assign(state, { dataObject: "" });
-        } else {
-          const stateLokasi = this.state.dataArray.filter(
-            (item) => item.value === props.dataEdit
-          );
-          if (stateLokasi[0] !== undefined) {
-            Object.assign(state, { dataObject: stateLokasi[0] });
+        if (props.dataEdit !== undefined || props.dataEdit !== "") {
+          if (props.isMulti && props.dataEdit.length > 0) {
+            Object.assign(state, {
+              dataObject: props.dataEdit,
+              isChecked: true,
+            });
+          } else {
+            if (props.dataEdit === "-") {
+              Object.assign(state, { dataObject: "" });
+            } else {
+              const stateLokasi = arrLokasi.filter(
+                (item) => item.value === props.dataEdit
+              );
+              if (stateLokasi[0] !== undefined) {
+                Object.assign(state, { dataObject: stateLokasi[0] });
+              }
+            }
           }
         }
       }
     }
+    Object.assign(state, { dataArray: arrLokasi });
     this.setState(state);
   }
   componentDidMount() {

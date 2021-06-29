@@ -339,6 +339,7 @@ export const FetchSaleReturReportExcel = (
     if (where !== "") {
       url += `${where}`;
     }
+    console.log(url);
     handleGetExport(
       url,
       (res) => {

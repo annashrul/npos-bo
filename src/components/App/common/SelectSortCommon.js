@@ -17,6 +17,24 @@ class SelectSortCommon extends Component {
     };
   }
 
+  getProps(props) {
+    if (props.dataEdit !== undefined || props.dataEdit !== "") {
+      const state = this.state.dataArray.filter(
+        (res) => res.value === props.dataEdit
+      );
+      this.setState({ dataObject: state[0] });
+    }
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
+  }
+
   onChange(value) {
     this.setState({ dataObject: value });
     this.props.callback(value);
