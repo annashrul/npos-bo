@@ -189,7 +189,7 @@ class MutationReport extends Component {
               setStorage(dateFromStorage, first);
               setStorage(dateToStorage, last);
               setTimeout(() => this.handleService(), 300);
-            }, `${this.state.startDate} s/d ${this.state.endDate}`)}
+            }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <LokasiCommon

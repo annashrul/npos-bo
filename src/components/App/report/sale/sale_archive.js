@@ -26,6 +26,7 @@ import {
   noData,
   setStorage,
   swallOption,
+  toDate,
 } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
@@ -260,7 +261,7 @@ class SaleArchive extends Component {
               setStorage(dateFromStorage, first);
               setStorage(dateToStorage, last);
               setTimeout(() => this.handleService(), 300);
-            }, `${this.state.startDate} s/d ${this.state.endDate}`)}
+            }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <LokasiCommon
@@ -280,7 +281,11 @@ class SaleArchive extends Component {
           <div className="col-6 col-xs-6 col-md-2">
             <SelectCommon
               label="Status"
-              options={handleDataSelect(this.state.status_data,"kode","value")}
+              options={handleDataSelect(
+                this.state.status_data,
+                "kode",
+                "value"
+              )}
               callback={(res) => this.handleChangeSelect("status", res)}
               dataEdit={this.state.status}
             />
@@ -307,23 +312,17 @@ class SaleArchive extends Component {
                 >
                   <i className="fa fa-search" />
                 </button>
+                <button
+                  className="btn btn-primary ml-1"
+                  onClick={(e) => {
+                    this.handleModal("formSaleExcel", {
+                      total: last_page * per_page,
+                    });
+                  }}
+                >
+                  {isProgress(this.props.percent)}
+                </button>
               </span>
-            </div>
-          </div>
-          <div className="col-md-1 text-right">
-            <div className="form-group">
-              <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
-                className="btn btn-primary"
-                onClick={(e) =>{
-                  // e.preventDefault();
-                  this.handleModal("formSaleExcel", {
-                    total: last_page * per_page,
-                  })
-                }}
-              >
-                {isProgress(this.props.percent)}
-              </button>
             </div>
           </div>
         </div>
@@ -362,46 +361,94 @@ class SaleArchive extends Component {
                     total_tunai += parseFloat(v.bayar) - parseFloat(v.change);
                     return (
                       <tr key={i}>
-                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
+                          {generateNo(i, current_page)}
+                        </td>
                         <td className="middle nowrap text-center">
                           <ButtonActionCommon
                             action={[
-                              { label: "Detail" },{ label: "Nota" },{ label: "3ply" },{ label: "Hapus" },
+                              { label: "Detail" },
+                              { label: "Nota" },
+                              { label: "3ply" },
+                              { label: "Hapus" },
                             ]}
                             callback={(e) => {
-                              if (e === 0)this.handleModal("detail", { kode: v.kd_trx });
-                              if (e === 1)this.props.dispatch(FetchNotaReceipt(v.kd_trx));
-                              if (e === 2)this.props.history.push(`../print3ply/${v.kd_trx}`);
-                              if (e === 3)this.handleDelete(v.kd_trx);
+                              if (e === 0)
+                                this.handleModal("detail", { kode: v.kd_trx });
+                              if (e === 1)
+                                this.props.dispatch(FetchNotaReceipt(v.kd_trx));
+                              if (e === 2)
+                                this.props.history.push(
+                                  `../print3ply/${v.kd_trx}`
+                                );
+                              if (e === 3) this.handleDelete(v.kd_trx);
                             }}
                           />
                         </td>
                         <td className="middle nowrap">{v.kd_trx}</td>
-                        <td className="middle nowrap">{moment(v.tgl).format("yyyy/MM/DD")}</td>
-                        <td className="middle nowrap">{moment(v.jam).format("hh:mm:ss")}</td>
+                        <td className="middle nowrap">
+                          {moment(v.tgl).format("yyyy/MM/DD")}
+                        </td>
+                        <td className="middle nowrap">
+                          {moment(v.jam).format("hh:mm:ss")}
+                        </td>
                         <td className="middle nowrap">{v.customer}</td>
                         <td className="middle nowrap">{v.nama}</td>
                         <td className="middle nowrap">{v.sales}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.omset))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.diskon_item))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.dis_rp))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.dis_persen).toFixed(0))}</td>
-                        <td className="middle nowrap text-right">{toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.hrg_beli))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.hrg_jual))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.profit))}</td>
-                        <td className="middle nowrap">{v.regmember ? v.regmember : "-"}</td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.omset))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.diskon_item))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.dis_rp))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.dis_persen).toFixed(0))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.hrg_beli))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.hrg_jual))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.profit))}
+                        </td>
+                        <td className="middle nowrap">
+                          {v.regmember ? v.regmember : "-"}
+                        </td>
                         <td className="middle nowrap">{v.kas_lain}</td>
                         <td className="middle nowrap">{v.ket_kas_lain}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.gt))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.rounding))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.bayar))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.change))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.bayar) - parseFloat(v.change))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.jml_kartu))}</td>
-                        <td className="middle nowrap text-right">{toRp(parseFloat(v.charge))}</td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.gt))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.rounding))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.bayar))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.change))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.bayar) - parseFloat(v.change))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.jml_kartu))}
+                        </td>
+                        <td className="middle nowrap text-right">
+                          {toRp(parseFloat(v.charge))}
+                        </td>
                         <td className="middle nowrap">{v.kartu}</td>
-                        <td className="middle nowrap">{CapitalizeEachWord(v.status)}</td>
+                        <td className="middle nowrap">
+                          {CapitalizeEachWord(v.status)}
+                        </td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis_trx}</td>
                       </tr>
@@ -413,50 +460,64 @@ class SaleArchive extends Component {
           footer={[
             {
               data: [
-                { colSpan: 8, label: "Total perhalaman",className: "text-left"},
-                { colSpan: 1, label: toRp(parseFloat(omset_per))},
-                { colSpan: 1, label: toRp(parseFloat(dis_item_per).toFixed(0))},
-                { colSpan: 1, label: toRp(parseFloat(dis_rp_per).toFixed(0))},
-                { colSpan: 1, label: toRp(parseFloat(dis_persen_per).toFixed(0))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(hpp_per))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(profit_per))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(kas_lain_per))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(gt_per))},
-                { colSpan: 1, label: toRp(parseFloat(rounding_per))},
-                { colSpan: 1, label: toRp(parseFloat(bayar_per))},
-                { colSpan: 1, label: toRp(parseFloat(change_per))},
-                { colSpan: 1, label: toRp(parseFloat(total_tunai))},
-                { colSpan: 1, label: toRp(parseFloat(jml_kartu_per))},
-                { colSpan: 1, label: toRp(parseFloat(charge_per))},
+                {
+                  colSpan: 8,
+                  label: "Total perhalaman",
+                  className: "text-left",
+                },
+                { colSpan: 1, label: toRp(parseFloat(omset_per)) },
+                {
+                  colSpan: 1,
+                  label: toRp(parseFloat(dis_item_per).toFixed(0)),
+                },
+                { colSpan: 1, label: toRp(parseFloat(dis_rp_per).toFixed(0)) },
+                {
+                  colSpan: 1,
+                  label: toRp(parseFloat(dis_persen_per).toFixed(0)),
+                },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(hpp_per)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(profit_per)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(kas_lain_per)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(gt_per)) },
+                { colSpan: 1, label: toRp(parseFloat(rounding_per)) },
+                { colSpan: 1, label: toRp(parseFloat(bayar_per)) },
+                { colSpan: 1, label: toRp(parseFloat(change_per)) },
+                { colSpan: 1, label: toRp(parseFloat(total_tunai)) },
+                { colSpan: 1, label: toRp(parseFloat(jml_kartu_per)) },
+                { colSpan: 1, label: toRp(parseFloat(charge_per)) },
                 { colSpan: 4, label: "" },
               ],
             },
             {
               data: [
-                { colSpan: 8, label: "Total keseluruhan",className: "text-left"},
-                { colSpan: 1, label: toRp(parseFloat(omset ? omset : 0))},
-                { colSpan: 1, label: toRp(parseFloat(dis_item).toFixed(0))},
-                { colSpan: 1, label: toRp(parseFloat(dis_rp).toFixed(0))},
-                { colSpan: 1, label: toRp(parseFloat(dis_persen).toFixed(0))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(hpp))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(profit))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(kas_lain))},
-                { colSpan: 1, label: ""},
-                { colSpan: 1, label: toRp(parseFloat(gt))},
-                { colSpan: 1, label: toRp(parseFloat(rounding))},
-                { colSpan: 1, label: toRp(parseFloat(bayar))},
-                { colSpan: 1, label: toRp(parseFloat(change))},
-                { colSpan: 1, label: toRp(parseFloat(total_tunai_all))},
-                { colSpan: 1, label: toRp(parseFloat(jml_kartu))},
-                { colSpan: 1, label: toRp(parseFloat(charge))},
-                { colSpan: 4, label: ""},
+                {
+                  colSpan: 8,
+                  label: "Total keseluruhan",
+                  className: "text-left",
+                },
+                { colSpan: 1, label: toRp(parseFloat(omset ? omset : 0)) },
+                { colSpan: 1, label: toRp(parseFloat(dis_item).toFixed(0)) },
+                { colSpan: 1, label: toRp(parseFloat(dis_rp).toFixed(0)) },
+                { colSpan: 1, label: toRp(parseFloat(dis_persen).toFixed(0)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(hpp)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(profit)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(kas_lain)) },
+                { colSpan: 1, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(gt)) },
+                { colSpan: 1, label: toRp(parseFloat(rounding)) },
+                { colSpan: 1, label: toRp(parseFloat(bayar)) },
+                { colSpan: 1, label: toRp(parseFloat(change)) },
+                { colSpan: 1, label: toRp(parseFloat(total_tunai_all)) },
+                { colSpan: 1, label: toRp(parseFloat(jml_kartu)) },
+                { colSpan: 1, label: toRp(parseFloat(charge)) },
+                { colSpan: 4, label: "" },
               ],
             },
           ]}
