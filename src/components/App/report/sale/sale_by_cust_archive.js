@@ -1,57 +1,38 @@
 import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import Select from "react-select";
-import Paginationq from "helper";
-import Preloader from "Preloader";
-import { rangeDate, toRp } from "helper";
 import { FetchReportSaleByCust } from "redux/actions/sale/sale_by_cust.action";
-import Swal from "sweetalert2";
 import SaleByCustReportExcel from "components/App/modals/report/sale/form_sale_by_cust_excel";
-import {
-  deleteReportSaleByCust,
-  FetchReportDetailSaleByCust,
-  FetchReportSaleByCustExcel,
-} from "redux/actions/sale/sale_by_cust.action";
+import { FetchReportDetailSaleByCust, FetchReportSaleByCustExcel } from "redux/actions/sale/sale_by_cust.action";
 import DetailSaleByCustReport from "../../modals/report/sale/detail_sale_by_cust_report";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import {
-  dateRange,
-  generateNo,
-  handleDataSelect,
-  isEmptyOrUndefined,
-  swallOption,
-} from "../../../../helper";
+import { dateRange, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, setStorage, toDate } from "../../../../helper";
 import SelectCommon from "../../common/SelectCommon";
 import SelectSortCommon from "../../common/SelectSortCommon";
+import TableCommon from "../../common/TableCommon";
+
+const dateFromStorage = "dateFromReportSaleByCust";
+const dateToStorage = "dateToReportSaleByCust";
+const columnStorage = "columnReportSaleByCust";
+const sortStorage = "sortReportSaleByCust";
+const anyStorage = "anyReportSaleByCust";
 
 class SaleByCustArchive extends Component {
   constructor(props) {
     super(props);
     this.handleChangeSelect = this.handleChangeSelect.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleDetail = this.handleDetail.bind(this);
     this.state = {
       where_data: "",
-      type: "",
-      location: "",
       any: "",
       sort: "",
-      filter: "",
+      column: "",
       isModalDetail: false,
       isModalExport: false,
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
-      type_data: [
-        { kode: "", value: "Semua Tipe" },
-        { kode: "0", value: "Tunai" },
-        { kode: "1", value: "Non Tunai" },
-        { kode: "2", value: "Gabungan" },
-        { kode: "3", value: "Void" },
-      ],
-      filter_data: [
+      startDate: toDate(new Date()),
+      endDate: toDate(new Date()),
+      column_data: [
         { kode: "kd_cust", value: "Kode Cust." },
         { kode: "nama", value: "Nama" },
         { kode: "qty", value: "QTY" },
@@ -75,12 +56,7 @@ class SaleByCustArchive extends Component {
   handlePageChange(pageNumber) {
     this.handleService(pageNumber);
   }
-  handleDelete(e, id) {
-    e.preventDefault();
-    swallOption("anda yakin akan menghapus data ini ?", () => {
-      this.props.dispatch(deleteReportSaleByCust(id));
-    });
-  }
+
   handleDetail(e, kode) {
     e.preventDefault();
     this.setState({ isModalDetail: true });
@@ -93,66 +69,71 @@ class SaleByCustArchive extends Component {
   toggleModal(e, total) {
     e.preventDefault();
     this.setState({ isModalExport: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formSaleByCustExcel"));
-    this.props.dispatch(
-      FetchReportSaleByCustExcel(1, this.state.where_data, total)
-    );
+    this.props.dispatch(FetchReportSaleByCustExcel(1, this.state.where_data, total));
   }
 
-  handleChangeSelect(state, val) {
-    this.setState({ [state]: val.value });
+  handleChangeSelect(state, res) {
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
     setTimeout(() => this.handleService(), 300);
   }
 
   handleService(page = 1) {
-    const { startDate, endDate, filter, sort, any } = this.state;
-    let where = `page=${page}&datefrom=${startDate}&dateto=${endDate}`;
-    if (isEmptyOrUndefined(sort) && isEmptyOrUndefined(filter))
-      where += `&sort=${filter}|${sort}`;
-    if (isEmptyOrUndefined(any)) where += `&q=${any}`;
-    this.setState({ where_data: where });
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getColumn = getStorage(columnStorage);
+    let getSort = getStorage(sortStorage);
+    let getAny = getStorage(anyStorage);
+
+    let where = `page=${page}`;
+    let state = {};
+
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where += `&datefrom=${toDate(getDateFrom, "-")}&dateto=${toDate(getDateTo, "-")}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where += `&datefrom=${toDate(this.state.startDate, "-")}&dateto=${toDate(this.state.endDate, "-")}`;
+    }
+    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
+      where += `&sort${getColumn}|${getSort}`;
+      Object.assign(state, { column: getColumn, sort: getSort });
+    }
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
+
     this.props.dispatch(FetchReportSaleByCust(where));
+  }
+  handleSearch(e) {
+    e.preventDefault();
+    setStorage(anyStorage, this.state.any);
+    this.handleService();
   }
 
   render() {
-    const {
-      // total,
-      last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.sale_by_custReport;
-
+    const { total, last_page, per_page, current_page, data } = this.props.sale_by_custReport;
+    const { startDate, endDate, column, sort, column_data, any, isModalDetail, isModalExport } = this.state;
     return (
       <Layout page="Laporan Arsip Penjualan">
-        <div className="row" style={{ zoom: "90%" }}>
+        <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
             {dateRange((first, last) => {
-              this.setState({ startDate: first, endDate: last });
+              setStorage(dateFromStorage, first);
+              setStorage(dateToStorage, last);
               setTimeout(() => this.handleService(), 300);
-            }, `${this.state.startDate} to ${this.state.endDate}`)}
+            }, `${toDate(startDate)} - ${toDate(endDate)}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon
-              label="Kolom"
-              options={handleDataSelect(
-                this.state.filter_data,
-                "kode",
-                "value"
-              )}
-              callback={(res) => this.handleChangeSelect("filter", res)}
-            />
+            <SelectCommon label="Kolom" options={handleDataSelect(column_data, "kode", "value")} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectSortCommon
-              callback={(res) => this.handleChangeSelect("sort", res)}
-            />
+            <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
           </div>
-          <div className="col-6 col-xs-6 col-md-5">
+          <div className="col-6 col-xs-6 col-md-3">
             <label>Cari</label>
             <div className="input-group">
               <input
@@ -160,130 +141,50 @@ class SaleByCustArchive extends Component {
                 name="any"
                 className="form-control"
                 placeholder="tulis sesuatu disini"
-                value={this.state.any}
+                value={any}
                 onChange={(e) => this.setState({ any: e.target.value })}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    this.handleService();
-                  }
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
                 }}
               />
               <span className="input-group-append">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.handleService();
-                  }}
-                >
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
                   <i className="fa fa-search" />
+                </button>
+                <button className="btn btn-primary ml-1" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
+                  {isProgress(this.props.download)}
                 </button>
               </span>
             </div>
           </div>
-          <div className="col-md-1">
-            <div className="form-group text-right">
-              <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
-                className="btn btn-primary"
-                onClick={(e) =>
-                  this.toggleModal(e, last_page * per_page, per_page)
-                }
-              >
-                <i className="fa fa-print" />
-              </button>
-            </div>
-          </div>
-          <div className="col-md-12">
-            <div style={{ overflowX: "auto" }}>
-              <table className="table table-hover table-noborder">
-                <thead className="bg-light">
-                  <tr>
-                    <th
-                      className="text-black text-center middle nowrap"
-                      width="1%"
-                    >
-                      No
-                    </th>
-                    <th className="text-black middle nowrap">Kd Cust</th>
-                    <th className="text-black middle nowrap">Nama</th>
-                    <th className="text-black middle nowrap">Gross Sales</th>
-                    <th className="text-black middle nowrap">Diskon Item</th>
-                    <th className="text-black middle nowrap">Diskon Trx</th>
-                    <th className="text-black middle nowrap">Service</th>
-                    <th className="text-black middle nowrap">Qty</th>
-                  </tr>
-                </thead>
-                {!this.props.isLoadingReport ? (
-                  <tbody>
-                    {typeof data === "object" ? (
-                      data.length > 0 ? (
-                        data.map((v, i) => {
-                          return (
-                            <tr key={i}>
-                              <td className="text-center middle nowrap">
-                                {generateNo(i, current_page)}
-                              </td>
-
-                              <td className="middle nowrap">{v.kd_cust}</td>
-                              <td className="middle nowrap">{v.nama}</td>
-                              <td className="middle nowrap text-right">
-                                {toRp(parseInt(v.gross_sales, 10))}
-                              </td>
-                              <td className="middle nowrap text-right">
-                                {toRp(parseInt(v.diskon_item, 10))}
-                              </td>
-                              <td className="middle nowrap text-right">
-                                {toRp(parseInt(v.diskon_trx, 10))}
-                              </td>
-                              <td className="middle nowrap text-right">
-                                {toRp(v.service)}
-                              </td>
-                              <td className="middle nowrap text-right">
-                                {v.qty}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <td colSpan={8}>No Data</td>
-                        </tr>
-                      )
-                    ) : (
-                      <tr>
-                        <td colSpan={8}>No Data</td>
-                      </tr>
-                    )}
-                  </tbody>
-                ) : (
-                  <Preloader />
-                )}
-              </table>
-            </div>
-            <div style={{ marginTop: "20px", float: "right" }}>
-              <Paginationq
-                current_page={parseInt(current_page, 10)}
-                per_page={parseInt(per_page, 10)}
-                total={parseInt(last_page * per_page, 10)}
-                callback={this.handlePageChange.bind(this)}
-              />
-            </div>
-          </div>
         </div>
-        {this.state.isModalExport ? (
-          <SaleByCustReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            location={this.state.location}
-          />
-        ) : null}
-        {this.state.isModalDetail ? (
-          <DetailSaleByCustReport
-            detailSaleByCust={this.props.detailSaleByCust}
-          />
-        ) : null}
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "Kode Customer", width: "5%" },
+            { label: "Nama" },
+            { label: "Gross sales", width: "1%" },
+            { label: "Diskon item", width: "1%" },
+            { label: "Diskon trx", width: "1%" },
+            { label: "Service", width: "1%" },
+            { label: "Qty", width: "1%" },
+          ]}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          body={typeof data === "object" && data}
+          label={[
+            { label: "kd_cust" },
+            { label: "nama" },
+            { label: "gross_sales", isCurrency: true, className: "text-right" },
+            { label: "diskon_item", isCurrency: true, className: "text-right" },
+            { label: "diskon_trx", isCurrency: true, className: "text-right" },
+            { label: "service", isCurrency: true, className: "text-right" },
+            { label: "qty", isCurrency: true, className: "text-right" },
+          ]}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
+        {this.props.isOpen && isModalExport ? <SaleByCustReportExcel startDate={startDate} endDate={endDate} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailSaleByCustReport detailSaleByCust={this.props.detailSaleByCust} /> : null}
       </Layout>
     );
   }
@@ -291,13 +192,12 @@ class SaleByCustArchive extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    isOpen: state.modalReducer,
     sale_by_custReport: state.sale_by_custReducer.report,
-    // totalPenjualan:state.sale_by_custReducer.total_penjualan,
+    download: state.sale_by_custReducer.download,
     sale_by_custReportExcel: state.sale_by_custReducer.report_excel,
     totalPenjualanExcel: state.sale_by_custReducer.total_penjualan_excel,
-    isLoadingReport: state.sale_by_custReducer.isLoadingReport,
     detailSaleByCust: state.sale_by_custReducer.dataDetail,
-    isLoadingDetail: state.sale_by_custReducer.isLoadingDetail,
     auth: state.auth,
   };
 };

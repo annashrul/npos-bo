@@ -6,19 +6,12 @@ import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_
 import "jspdf-autotable";
 import { to_pdf } from "helper";
 import { FetchAllLocation } from "redux/actions/masterdata/location/location.action";
-import {
-  FetchProduct,
-  deleteProduct,
-} from "redux/actions/masterdata/product/product.action";
+import { FetchProduct, deleteProduct } from "redux/actions/masterdata/product/product.action";
 import Paginationq from "helper";
 import { FetchSupplierAll } from "redux/actions/masterdata/supplier/supplier.action";
 import { FetchSubDepartmentAll } from "redux/actions/masterdata/department/sub_department.action";
 import Swal from "sweetalert2";
-import {
-  FetchProductDetail,
-  FetchProductEdit,
-  setProductEdit,
-} from "redux/actions/masterdata/product/product.action";
+import { FetchProductDetail, FetchProductEdit, setProductEdit } from "redux/actions/masterdata/product/product.action";
 import DetailProduct from "components/App/modals/masterdata/product/detail_product";
 import { FetchCustomerPrice } from "redux/actions/masterdata/customer/customer.action";
 import CustomerPrice from "components/App/modals/masterdata/customer/customer_price";
@@ -30,23 +23,13 @@ import imgY from "assets/status-Y.png";
 import imgT from "assets/status-T.png";
 import { rangeDate } from "helper";
 import Select from "react-select";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import FormProductExport from "../../../../modals/masterdata/product/form_product_export";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import MyPdfL from "../../../../../../myPdfL";
 import FormProductPricing from "../../../../modals/masterdata/product/form_product_pricing";
 import { readPrinter } from "../../../../../../redux/actions/masterdata/printer/printer.action";
-import {
-  dateRange,
-  generateNo,
-  getStorage,
-  setStorage,
-} from "../../../../../../helper";
+import { dateRange, generateNo, getStorage, setStorage } from "../../../../../../helper";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -91,11 +74,7 @@ class ListProduct extends Component {
 
   componentDidMount() {
     let getIsPeriodeBarang = getStorage("isPeriodeBarang");
-    if (
-      getIsPeriodeBarang === null ||
-      getIsPeriodeBarang === "null" ||
-      getIsPeriodeBarang === "true"
-    ) {
+    if (getIsPeriodeBarang === null || getIsPeriodeBarang === "null" || getIsPeriodeBarang === "true") {
       this.setState({ semua_periode: true });
     } else {
       this.setState({
@@ -115,12 +94,7 @@ class ListProduct extends Component {
       this.props.dispatch(FetchProduct());
     }
     if (!checked && column === "semua_periode") {
-      this.props.dispatch(
-        FetchProduct(
-          1,
-          `datefrom=${this.state.startDate}&dateto=${this.state.endDate}`
-        )
-      );
+      this.props.dispatch(FetchProduct(1, `datefrom=${this.state.startDate}&dateto=${this.state.endDate}`));
     }
     this.setState({
       [column]: column === "semua_periode" ? checked : value,
@@ -138,14 +112,7 @@ class ListProduct extends Component {
     let dept = this.state.any_dept_barang;
     let subdept = this.state.any_subdept_barang;
     let kategori = this.state.any_kategori_barang;
-    if (
-      kode !== "" ||
-      nama !== "" ||
-      kelompok !== "" ||
-      supplier !== "" ||
-      subdept !== "" ||
-      kategori !== ""
-    ) {
+    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || subdept !== "" || kategori !== "") {
       if (column === "any_kode_barang") {
         if (where !== "") {
           where += "&";
@@ -248,15 +215,7 @@ class ListProduct extends Component {
     let dept = this.state.any_dept_barang;
     let subdept = this.state.any_subdept_barang;
     let kategori = this.state.any_kategori_barang;
-    if (
-      kode !== "" ||
-      nama !== "" ||
-      kelompok !== "" ||
-      supplier !== "" ||
-      dept !== "" ||
-      subdept !== "" ||
-      kategori !== ""
-    ) {
+    if (kode !== "" || nama !== "" || kelompok !== "" || supplier !== "" || dept !== "" || subdept !== "" || kategori !== "") {
       if (column === "any_kode_barang") {
         if (where !== "") {
           where += "&";
@@ -369,9 +328,7 @@ class ListProduct extends Component {
 
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(
-      ModalType(pricing ? "formProductPricing" : "formProduct")
-    );
+    this.props.dispatch(ModalType(pricing ? "formProductPricing" : "formProduct"));
     this.props.dispatch(FetchGroupProduct(1, "", "1000"));
     this.props.dispatch(FetchAllLocation());
     this.props.dispatch(FetchSupplierAll());
@@ -384,21 +341,10 @@ class ListProduct extends Component {
       tprice = 0;
     stringHtml += `<h3 align="center"><center>PRODUCT REPORT</center></h3>`;
     stringHtml += `<h3 align="center">PT NETINDO MEDIATAMA PERKASA</h3>`;
-    const headers = [
-      ["CODE", "NAME", "GROUP", "SUPPLIER", "SUB DEPARTEMEN", "PRICE"],
-    ];
+    const headers = [["CODE", "NAME", "GROUP", "SUPPLIER", "SUB DEPARTEMEN", "PRICE"]];
     const data =
       typeof this.props.data.data === "object"
-        ? this.props.data.data.map((elt) => [
-            elt.kd_brg,
-            elt.nm_brg,
-            elt.kel_brg,
-            elt.group1,
-            elt.group2,
-            Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 }).format(
-              elt.hrg_beli
-            ),
-          ])
+        ? this.props.data.data.map((elt) => [elt.kd_brg, elt.nm_brg, elt.kel_brg, elt.group1, elt.group2, Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 }).format(elt.hrg_beli)])
         : "";
     const footer = ["TOTAL", "", "", "", "", tprice];
     to_pdf("product_report", stringHtml, headers, data, footer);
@@ -485,12 +431,7 @@ class ListProduct extends Component {
                 <div className="col-6 col-xs-6 col-md-3">
                   <div className="form-group">
                     <label htmlFor="inputState" className="col-form-label">
-                      <input
-                        name="semua_periode"
-                        type="checkbox"
-                        checked={this.state.semua_periode}
-                        onChange={this.handleChange}
-                      />
+                      <input name="semua_periode" type="checkbox" checked={this.state.semua_periode} onChange={this.handleChange} />
                       &nbsp; semua periode
                     </label>
                     {dateRange(
@@ -498,6 +439,7 @@ class ListProduct extends Component {
                         this.handlePeriode(first, last);
                       },
                       `${this.state.startDate} s/d ${this.state.endDate}`,
+                      "",
                       !this.state.semua_periode ? true : false,
                       false
                     )}
@@ -519,26 +461,12 @@ class ListProduct extends Component {
                 <i className="fa fa-plus"></i>
               </button>
               <PDFDownloadLink
-                document={
-                  <MyPdfL
-                    title={[
-                      "Data Barang per Halaman",
-                      `${this.state.startDate} sampai ${this.state.endDate}`,
-                    ]}
-                    result={body}
-                  />
-                }
+                document={<MyPdfL title={["Data Barang per Halaman", `${this.state.startDate} sampai ${this.state.endDate}`]} result={body} />}
                 style={{ marginRight: "2px" }}
                 fileName="semua_barang.pdf"
                 className="btn btn-primary py-2 d-none"
               >
-                {({ blob, url, loading, error }) =>
-                  loading ? (
-                    <i className="spinner-border spinner-border-sm"></i>
-                  ) : (
-                    <i className="fa fa-file-pdf-o"></i>
-                  )
-                }
+                {({ blob, url, loading, error }) => (loading ? <i className="spinner-border spinner-border-sm"></i> : <i className="fa fa-file-pdf-o"></i>)}
               </PDFDownloadLink>
               {/* <button
                 style={{ marginTop: "27px", marginRight: "2px" }}
@@ -623,47 +551,17 @@ class ListProduct extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td style={centerStyle}>
-                          {generateNo(i, current_page)}
-                        </td>
+                        <td style={centerStyle}>{generateNo(i, current_page)}</td>
                         <td style={centerStyle}>
                           <div className="btn-group">
                             <UncontrolledButtonDropdown>
                               <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.handlePriceCustomer(
-                                      e,
-                                      v.kd_brg,
-                                      v.nm_brg
-                                    )
-                                  }
-                                >
-                                  Set Harga Customer
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => this.loc_detail(e, v.kd_brg)}
-                                >
-                                  Detail
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => loc_edit(e, v.kd_brg)}
-                                >
-                                  Edit
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    loc_edit_per(e, v.kd_brg, true)
-                                  }
-                                >
-                                  Edit Harga per Lokasi
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => loc_delete(e, v.kd_brg)}
-                                >
-                                  Delete
-                                </DropdownItem>
+                                <DropdownItem onClick={(e) => this.handlePriceCustomer(e, v.kd_brg, v.nm_brg)}>Set Harga Customer</DropdownItem>
+                                <DropdownItem onClick={(e) => this.loc_detail(e, v.kd_brg)}>Detail</DropdownItem>
+                                <DropdownItem onClick={(e) => loc_edit(e, v.kd_brg)}>Edit</DropdownItem>
+                                <DropdownItem onClick={(e) => loc_edit_per(e, v.kd_brg, true)}>Edit Harga per Lokasi</DropdownItem>
+                                <DropdownItem onClick={(e) => loc_delete(e, v.kd_brg)}>Delete</DropdownItem>
                               </DropdownMenu>
                             </UncontrolledButtonDropdown>
                           </div>
@@ -675,13 +573,7 @@ class ListProduct extends Component {
                         <td style={leftStyle}>{v.dept}</td>
                         <td style={leftStyle}>{v.subdept}</td>
                         <td style={leftStyle}>{v.kategori}</td>
-                        <td style={centerStyle}>
-                          {v.jenis === "0" ? (
-                            <img alt="netindo" src={imgT} width="20px" />
-                          ) : (
-                            <img alt="netindo" src={imgY} width="20px" />
-                          )}
-                        </td>
+                        <td style={centerStyle}>{v.jenis === "0" ? <img alt="netindo" src={imgT} width="20px" /> : <img alt="netindo" src={imgY} width="20px" />}</td>
                         <td style={centerStyle}>{v.stock_min}</td>
                       </tr>
                     );
@@ -700,12 +592,7 @@ class ListProduct extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
         </div>
         {this.state.isModalForm ? (
           <FormProduct
@@ -730,12 +617,8 @@ class ListProduct extends Component {
           />
         ) : null}
 
-        {this.state.isModalDetail ? (
-          <DetailProduct dataDetail={this.props.productDetail} />
-        ) : null}
-        {this.state.isModalCustomer ? (
-          <CustomerPrice dataCustomerPrice={this.props.customerPrice} />
-        ) : null}
+        {this.state.isModalDetail ? <DetailProduct dataDetail={this.props.productDetail} /> : null}
+        {this.state.isModalCustomer ? <CustomerPrice dataCustomerPrice={this.props.customerPrice} /> : null}
         <FormProductExport />
       </div>
     );

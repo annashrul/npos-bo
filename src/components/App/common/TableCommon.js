@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import Paginationq, {
-  generateNo,
-  isImage,
-  noData,
-  toRp,
-} from "../../../helper";
+import Paginationq, { generateNo, isImage, noData, toDate, toRp } from "../../../helper";
 import ButtonActionCommon from "./ButtonActionCommon";
 import moment from "moment";
 
@@ -40,9 +35,9 @@ class TableCommon extends Component {
 
   checkTypeLabel(res, val) {
     if (val.isStatus) return this.statusGeneral(res);
-    if (val.isCurrency) return toRp(res);
+    if (val.isCurrency) return toRp(parseFloat(res));
     if (val.isImage) return isImage(res);
-    if (val.date) return moment(res).format("YYYY-MM-DD");
+    if (val.date) return toDate(res);
     return res;
   }
 
@@ -57,9 +52,7 @@ class TableCommon extends Component {
                   return (
                     <th
                       key={index}
-                      className={`text-black middle nowrap ${
-                        res.className && res.className
-                      }`}
+                      className={`text-black middle nowrap ${res.className && res.className}`}
                       width={res.width ? res.width : ""}
                       rowSpan={res.rowSpan ? res.rowSpan : ""}
                       colSpan={res.colSpan ? res.colSpan : ""}
@@ -73,12 +66,7 @@ class TableCommon extends Component {
                 {this.props.rowSpan &&
                   this.props.rowSpan.map((res, index) => {
                     return (
-                      <th
-                        className={`text-black middle nowrap ${
-                          res.className && res.className
-                        }`}
-                        key={index}
-                      >
+                      <th className={`text-black middle nowrap ${res.className && res.className}`} key={index}>
                         {res.label}
                       </th>
                     );
@@ -92,27 +80,15 @@ class TableCommon extends Component {
                     ? this.props.body.map((res, index) => {
                         return (
                           <tr key={index}>
-                            <td className={`text-center middle nowrap`}>
-                              {generateNo(index, this.props.meta.current_page)}
-                            </td>
+                            <td className={`text-center middle nowrap`}>{generateNo(index, this.props.meta.current_page)}</td>
                             {this.props.action && (
                               <td className={`text-center middle nowrap`}>
-                                <ButtonActionCommon
-                                  action={this.props.action}
-                                  callback={(e) =>
-                                    this.props.callback(e, index)
-                                  }
-                                />
+                                <ButtonActionCommon action={this.props.action} callback={(e) => this.props.callback(e, index)} />
                               </td>
                             )}
                             {this.props.label.map((val, key) => {
                               return (
-                                <td
-                                  key={key}
-                                  className={`middle nowrap ${
-                                    val.className && val.className
-                                  }`}
-                                >
+                                <td key={key} className={`middle nowrap ${val.className && val.className}`}>
                                   {this.checkTypeLabel(res[val.label], val)}
                                 </td>
                               );
@@ -131,12 +107,7 @@ class TableCommon extends Component {
                     <tr key={key} style={{ backgroundColor: "#EEEEEE" }}>
                       {val.data.map((res, index) => {
                         return (
-                          <th
-                            colSpan={res.colSpan ? res.colSpan : ""}
-                            className={`text-black ${
-                              res.className ? res.className : "text-right"
-                            }`}
-                          >
+                          <th colSpan={res.colSpan ? res.colSpan : ""} className={`text-black ${res.className ? res.className : "text-right"}`}>
                             {res.label}
                           </th>
                         );
@@ -149,15 +120,29 @@ class TableCommon extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={this.props.meta.current_page}
-            per_page={this.props.meta.per_page}
-            total={this.props.meta.total}
-            callback={(page) => this.props.callbackPage(page)}
-          />
+          <Paginationq current_page={this.props.meta.current_page} per_page={this.props.meta.per_page} total={this.props.meta.total} callback={(page) => this.props.callbackPage(page)} />
         </div>
       </div>
     );
+  }
+}
+
+class TdCommon extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let type = "";
+    if (this.props.type) {
+      type = "text-right";
+      return;
+    }
+    if (!this.props.type) {
+      type = "text-center";
+      return;
+    }
+    return <td className={`middle nowrap ${type}`}>{this.props.title}</td>;
   }
 }
 

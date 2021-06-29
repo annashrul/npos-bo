@@ -3,31 +3,14 @@ import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
-import Select from "react-select";
-import Paginationq, { toRp, CapitalizeEachWord } from "helper";
+import { toRp, CapitalizeEachWord } from "helper";
 import { FetchReportSale } from "redux/actions/sale/sale.action";
-import {
-  deleteReportSale,
-  FetchReportDetailSale,
-  FetchReportSaleExcel,
-  FetchNotaReceipt,
-} from "redux/actions/sale/sale.action";
+import { deleteReportSale, FetchReportDetailSale, FetchReportSaleExcel, FetchNotaReceipt } from "redux/actions/sale/sale.action";
 import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import Otorisasi from "../../modals/otorisasi.modal";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import {
-  dateRange,
-  generateNo,
-  getStorage,
-  handleDataSelect,
-  isEmptyOrUndefined,
-  isProgress,
-  noData,
-  setStorage,
-  swallOption,
-  toDate,
-} from "../../../../helper";
+import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, parseToRp, rmSpaceToStrip, setStorage, swallOption, toDate } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
@@ -39,6 +22,7 @@ const locationStorage = "locationReportSaleArchive";
 const typeStorage = "typeReportSaleArchive";
 const statusStorage = "statusReportSaleArchive";
 const anyStorage = "anyReportSaleArchive";
+const activeDateRangePickerStorage = "activeDateReportSale";
 
 class SaleArchive extends Component {
   constructor(props) {
@@ -63,8 +47,8 @@ class SaleArchive extends Component {
       any: "",
       id_trx: "",
       prevLoc: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: toDate(new Date()),
+      endDate: toDate(new Date()),
       isModalDetail: false,
       isModalExcel: false,
       isModalOtorisasi: false,
@@ -80,9 +64,7 @@ class SaleArchive extends Component {
   }
 
   onDone(id, id_trx) {
-    this.props.dispatch(
-      deleteReportSale({ id: id, id_trx: id_trx, where: this.state.where_data })
-    );
+    this.props.dispatch(deleteReportSale({ id: id, id_trx: id_trx, where: this.state.where_data }));
     this.setState({
       id_trx: "",
     });
@@ -166,9 +148,7 @@ class SaleArchive extends Component {
     }
     if (page === "formSaleExcel") {
       Object.assign(state, { isModalExcel: true, totalExcel: param.total });
-      this.props.dispatch(
-        FetchReportSaleExcel(this.state.where_data, param.total)
-      );
+      this.props.dispatch(FetchReportSaleExcel(this.state.where_data, param.total));
     }
     this.setState(state);
   }
@@ -190,24 +170,8 @@ class SaleArchive extends Component {
   }
 
   render() {
-    const { total, last_page, per_page, current_page, data } =
-      this.props.saleReport;
-    const {
-      omset,
-      dis_item,
-      dis_persen,
-      dis_rp,
-      kas_lain,
-      gt,
-      bayar,
-      jml_kartu,
-      charge,
-      change,
-      rounding,
-      profit,
-      hpp,
-      total_tunai_all,
-    } = this.props.totalPenjualan;
+    const { total, last_page, per_page, current_page, data } = this.props.saleReport;
+    const { omset, dis_item, dis_persen, dis_rp, kas_lain, gt, bayar, jml_kartu, charge, change, rounding, profit, hpp, total_tunai_all } = this.props.totalPenjualan;
     let omset_per = 0;
     let profit_per = 0;
     let hpp_per = 0;
@@ -257,18 +221,19 @@ class SaleArchive extends Component {
       <Layout page="Laporan Arsip Penjualan">
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
-            {dateRange((first, last) => {
-              setStorage(dateFromStorage, first);
-              setStorage(dateToStorage, last);
-              setTimeout(() => this.handleService(), 300);
-            }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(activeDateRangePickerStorage, isActive);
+                setStorage(dateFromStorage, first);
+                setStorage(dateToStorage, last);
+                setTimeout(() => this.handleService(), 300);
+              },
+              `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`,
+              getStorage(activeDateRangePickerStorage)
+            )}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <LokasiCommon
-              callback={(res) => this.handleChangeSelect("lokasi", res)}
-              isAll={true}
-              dataEdit={this.state.lokasi}
-            />
+            <LokasiCommon callback={(res) => this.handleChangeSelect("lokasi", res)} isAll={true} dataEdit={this.state.lokasi} />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <SelectCommon
@@ -279,16 +244,7 @@ class SaleArchive extends Component {
             />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon
-              label="Status"
-              options={handleDataSelect(
-                this.state.status_data,
-                "kode",
-                "value"
-              )}
-              callback={(res) => this.handleChangeSelect("status", res)}
-              dataEdit={this.state.status}
-            />
+            <SelectCommon label="Status" options={handleDataSelect(this.state.status_data, "kode", "value")} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={this.state.status} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <label>Cari</label>
@@ -305,11 +261,7 @@ class SaleArchive extends Component {
                 }}
               />
               <span className="input-group-append">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={this.handleSearch}
-                >
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
                   <i className="fa fa-search" />
                 </button>
                 <button
@@ -328,11 +280,7 @@ class SaleArchive extends Component {
         </div>
         <TableCommon
           head={head}
-          rowSpan={[
-            { label: "Item" },
-            { label: "Total (rp)" },
-            { label: "Total (%)" },
-          ]}
+          rowSpan={[{ label: "Item" }, { label: "Total (rp)" }, { label: "Total (%)" }]}
           meta={{
             total: total,
             current_page: current_page,
@@ -361,94 +309,45 @@ class SaleArchive extends Component {
                     total_tunai += parseFloat(v.bayar) - parseFloat(v.change);
                     return (
                       <tr key={i}>
-                        <td className="middle nowrap text-center">
-                          {generateNo(i, current_page)}
-                        </td>
+                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
                           <ButtonActionCommon
-                            action={[
-                              { label: "Detail" },
-                              { label: "Nota" },
-                              { label: "3ply" },
-                              { label: "Hapus" },
-                            ]}
+                            action={[{ label: "Detail" }, { label: "Nota" }, { label: "3ply" }, { label: "Hapus" }]}
                             callback={(e) => {
-                              if (e === 0)
-                                this.handleModal("detail", { kode: v.kd_trx });
-                              if (e === 1)
-                                this.props.dispatch(FetchNotaReceipt(v.kd_trx));
-                              if (e === 2)
-                                this.props.history.push(
-                                  `../print3ply/${v.kd_trx}`
-                                );
+                              if (e === 0) this.handleModal("detail", { kode: v.kd_trx });
+                              if (e === 1) this.props.dispatch(FetchNotaReceipt(v.kd_trx));
+                              if (e === 2) this.props.history.push(`../print3ply/${v.kd_trx}`);
                               if (e === 3) this.handleDelete(v.kd_trx);
                             }}
                           />
                         </td>
+
                         <td className="middle nowrap">{v.kd_trx}</td>
-                        <td className="middle nowrap">
-                          {moment(v.tgl).format("yyyy/MM/DD")}
-                        </td>
-                        <td className="middle nowrap">
-                          {moment(v.jam).format("hh:mm:ss")}
-                        </td>
+                        <td className="middle nowrap">{moment(v.tgl).format("yyyy/MM/DD")}</td>
+                        <td className="middle nowrap">{moment(v.jam).format("hh:mm:ss")}</td>
                         <td className="middle nowrap">{v.customer}</td>
                         <td className="middle nowrap">{v.nama}</td>
                         <td className="middle nowrap">{v.sales}</td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.omset))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.diskon_item))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.dis_rp))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.dis_persen).toFixed(0))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.hrg_beli))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.hrg_jual))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.profit))}
-                        </td>
-                        <td className="middle nowrap">
-                          {v.regmember ? v.regmember : "-"}
-                        </td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.omset))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.diskon_item))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.dis_rp))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.dis_persen).toFixed(0))}</td>
+                        <td className="middle nowrap text-right">{toRp(v.hrg_jual * (parseFloat(v.tax) / 100))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.hrg_beli))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.hrg_jual))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.profit))}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.regmember)}</td>
                         <td className="middle nowrap">{v.kas_lain}</td>
                         <td className="middle nowrap">{v.ket_kas_lain}</td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.gt))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.rounding))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.bayar))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.change))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.bayar) - parseFloat(v.change))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.jml_kartu))}
-                        </td>
-                        <td className="middle nowrap text-right">
-                          {toRp(parseFloat(v.charge))}
-                        </td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.gt))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.rounding))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.bayar))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.change))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.bayar) - parseFloat(v.change))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.jml_kartu))}</td>
+                        <td className="middle nowrap text-right">{toRp(parseFloat(v.charge))}</td>
                         <td className="middle nowrap">{v.kartu}</td>
-                        <td className="middle nowrap">
-                          {CapitalizeEachWord(v.status)}
-                        </td>
+                        <td className="middle nowrap">{CapitalizeEachWord(v.status)}</td>
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis_trx}</td>
                       </tr>
@@ -523,9 +422,7 @@ class SaleArchive extends Component {
           ]}
         />
 
-        {this.props.isOpen && this.state.isModalDetail ? (
-          <DetailSaleReport detailSale={this.props.detailSale} />
-        ) : null}
+        {this.props.isOpen && this.state.isModalDetail ? <DetailSaleReport detailSale={this.props.detailSale} /> : null}
         {this.props.isOpen && this.state.isModalExcel ? (
           <SaleReportExcel
             startDate={this.state.startDate}
@@ -557,9 +454,7 @@ const mapStateToProps = (state) => {
     totalPenjualan: state.saleReducer.total_penjualan,
     saleReportExcel: state.saleReducer.report_excel,
     totalPenjualanExcel: state.saleReducer.total_penjualan_excel,
-    isLoadingReport: state.saleReducer.isLoadingReport,
     detailSale: state.saleReducer.dataDetail,
-    isLoadingDetail: state.saleReducer.isLoadingDetail,
     percent: state.saleReducer.percent,
     auth: state.auth,
     isOpen: state.modalReducer,

@@ -1,27 +1,15 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import Paginationq from "helper";
-import {
-  FetchSaleReturReport,
-  FetchSaleReturReportExcel,
-} from "redux/actions/sale/sale.action";
+import { FetchSaleReturReport, FetchSaleReturReportExcel } from "redux/actions/sale/sale.action";
 import connect from "react-redux/es/connect/connect";
 import SaleReturReportExcel from "components/App/modals/report/sale/form_sale_retur_excel";
 import moment from "moment";
-import {
-  dateRange,
-  generateNo,
-  handleDataSelect,
-  isEmptyOrUndefined,
-  setStorage,
-  getStorage,
-  noData,
-  isProgress,
-} from "../../../../helper";
+import { dateRange, generateNo, handleDataSelect, isEmptyOrUndefined, setStorage, getStorage, noData, isProgress, toDate } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
 import SelectSortCommon from "../../common/SelectSortCommon";
-import ExportCommon from "../../common/ExportCommon";
+import TableCommon from "../../common/TableCommon";
 
 const dateFromStorage = "dateFromReportSaleReturArchive";
 const dateToStorage = "dateToReportSaleReturArchive";
@@ -39,8 +27,8 @@ class SaleReturReport extends Component {
       where_data: "",
       any: "",
       location: "",
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: toDate(new Date()),
+      endDate: toDate(new Date()),
       sort: "",
       isModalReport: false,
       where_data: "",
@@ -69,9 +57,7 @@ class SaleReturReport extends Component {
   toggleModal(e, total) {
     e.preventDefault();
     this.setState({ isModalReport: true });
-    this.props.dispatch(
-      FetchSaleReturReportExcel(1, this.state.where_data, total)
-    );
+    this.props.dispatch(FetchSaleReturReportExcel(1, this.state.where_data, total));
   }
   handleChangeSelect(state, res) {
     if (state === "location") setStorage(locationStorage, res.value);
@@ -121,15 +107,7 @@ class SaleReturReport extends Component {
   }
 
   render() {
-    const {
-      per_page,
-      last_page,
-      current_page,
-      // from,
-      // to,
-      data,
-      // total
-    } = this.props.sale_returReport;
+    const { per_page, last_page, current_page, total, data } = this.props.sale_returReport;
 
     return (
       <Layout page="Laporan SaleRetur">
@@ -139,33 +117,20 @@ class SaleReturReport extends Component {
               setStorage(dateFromStorage, first);
               setStorage(dateToStorage, last);
               setTimeout(() => this.handleService(), 300);
-            }, `${this.state.startDate} to ${this.state.endDate}`)}
+            }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
-            <LokasiCommon
-              callback={(res) => this.handleChangeSelect("location", res)}
-              isAll={true}
-            />
+            <LokasiCommon callback={(res) => this.handleChangeSelect("location", res)} isAll={true} />
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon
-              label="Kolom"
-              options={handleDataSelect(
-                this.state.column_data,
-                "kode",
-                "value"
-              )}
-              callback={(res) => this.handleChangeSelect("column", res)}
-            />
+            <SelectCommon label="Kolom" options={handleDataSelect(this.state.column_data, "kode", "value")} callback={(res) => this.handleChangeSelect("column", res)} />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectSortCommon
-              callback={(res) => this.handleChangeSelect("sort", res)}
-            />
+            <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} />
           </div>
-          <div className="col-12 col-xs-12 col-md-3">
+          <div className="col-6 col-xs-6 col-md-3">
             <label>Cari</label>
             <div className="input-group">
               <input
@@ -174,117 +139,38 @@ class SaleReturReport extends Component {
                 className="form-control"
                 placeholder="tulis sesuatu disini"
                 value={this.state.any}
-                onChange={(e) => {
-                  this.setState({ any: e.target.value });
-                  setStorage(anyStorage, e.target.value);
-                }}
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    this.handleSearch(event);
-                  }
+                onChange={(e) => this.setState({ any: e.target.value })}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
                 }}
               />
               <span className="input-group-append">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    this.handleSearch(e);
-                  }}
-                >
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
                   <i className="fa fa-search" />
+                </button>
+                <button className="btn btn-primary ml-1" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
+                  {isProgress(this.props.percent)}
                 </button>
               </span>
             </div>
           </div>
-          <div className="col-12 col-xs-12 col-md-1">
-            <div className="form-group text-right">
-              <button
-                style={{ marginTop: "28px" }}
-                className="btn btn-primary"
-                onClick={(e) =>
-                  this.toggleModal(e, last_page * per_page, per_page)
-                }
-              >
-                {isProgress(this.props.percent)}
-              </button>
-            </div>
-          </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-noborder">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black text-center middle nowrap" width="1%">
-                  No
-                </th>
-                <th className="text-black middle nowrap" width="5%">
-                  Kode Trx
-                </th>
-                <th className="text-black middle nowrap">Nama</th>
-                <th className="text-black middle nowrap" width="1%">
-                  Nilai Retur
-                </th>
-                <th className="text-black middle nowrap" width="1%">
-                  Diskon Item
-                </th>
-                <th className="text-black middle nowrap" width="1%">
-                  Tanggal
-                </th>
-              </tr>
-            </thead>
-            {
-              <tbody>
-                {typeof data === "object"
-                  ? data.length > 0
-                    ? data.map((v, i) => {
-                        return (
-                          <tr key={i}>
-                            <td className="text-center middle nowrap">
-                              {generateNo(i, current_page)}
-                            </td>
-                            <td className="middle nowrap">{v.kd_trx}</td>
-                            <td className="middle nowrap">{v.nama}</td>
-                            <td className="middle nowrap text-right">
-                              {v.nilai_retur}
-                            </td>
-                            <td className="middle nowrap text-right">
-                              {v.diskon_item}
-                            </td>
-                            <td className="middle nowrap">
-                              {moment(v.tgl).format("DD-MM-YYYY")}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : noData(6)
-                  : noData(6)}
-              </tbody>
-            }
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-        {/* <ExportCommon
-          modalType="formSaleReturExcel"
-          isPdf={true}
-          callbackPdf={() => {}}
-          isExcel={true}
-          callbackExcel={() => {}}
-        /> */}
-        {/* <DetailSaleRetur sale_returDetail={this.props.sale_returDetail}/> */}
-        {this.props.isOpen && this.state.isModalReport ? (
-          <SaleReturReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
-        ) : null}
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "Kode", width: "5%" },
+            { label: "Nama" },
+            { label: "Nilai retur", width: "1%" },
+            { label: "Diskon item", width: "1%" },
+            { label: "Tanggal", width: "1%" },
+          ]}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          body={typeof data === "object" && data}
+          label={[{ label: "kd_trx" }, { label: "nama" }, { label: "nilai_retur" }, { label: "diskon_item" }, { label: "tgl", date: true }]}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
+        {this.props.isOpen && this.state.isModalReport ? <SaleReturReportExcel startDate={this.state.startDate} endDate={this.state.endDate} /> : null}
       </Layout>
     );
   }

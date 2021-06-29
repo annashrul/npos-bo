@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import moment from "moment";
-import { to_pdf } from "helper";
-import "jspdf-autotable";
 import ExportCommon from "../../../common/ExportCommon";
-import { headerPdf, toExcel } from "../../../../../helper";
+import { to_pdf, headerPdf, toDate, toExcel } from "../../../../../helper";
+import { EXTENSION } from "../../../../../redux/actions/_constants";
 
 class SaleReturReportExcel extends Component {
   constructor(props) {
@@ -15,21 +13,16 @@ class SaleReturReportExcel extends Component {
   }
 
   handleHeader() {
-    return ["KODE TRANSAKSI", "TANGGAL", "NAMA", "NILAI RETUR", "DISKON ITEM"];
+    return ["NO", "KODE TRANSAKSI", "TANGGAL", "NAMA", "NILAI RETUR", "DISKON ITEM"];
   }
 
-  handleContent() {
+  handleContent(cek = "excel") {
     let props = [];
     if (this.props.sale_returReportExcel.data !== undefined) {
       if (this.props.sale_returReportExcel.data.length > 0) {
-        this.props.sale_returReportExcel.data.map((v) => {
-          props.push([
-            v.kd_trx,
-            moment(v.tgl).format("DD-MM-YYYY"),
-            v.nama,
-            v.nilai_retur,
-            v.diskon_item,
-          ]);
+        this.props.sale_returReportExcel.data.map((v, i) => {
+          props.push([i + 1, v.kd_trx, toDate(v.tgl), v.nama, v.nilai_retur, v.diskon_item]);
+          if (cek === "excel") props[i].shift();
         });
       }
     }
@@ -38,6 +31,7 @@ class SaleReturReportExcel extends Component {
 
   printPdf() {
     const headers = [this.handleHeader()];
+    const content = this.handleContent("pdf");
     to_pdf(
       "RETUR_PENJUALAN",
       headerPdf({
@@ -46,30 +40,21 @@ class SaleReturReportExcel extends Component {
         dateTo: this.props.endDate,
       }),
       headers,
-      this.handleContent()
+      content
     );
     this.props.dispatch(ModalToggle(false));
   }
   printExcel() {
-    toExcel(
-      "LAPORAN RETUR PENJUALAN",
-      `${this.props.startDate} - ${this.props.endDate}`,
-      this.handleHeader(),
-      this.handleContent(),
-      []
-    );
+    let header = this.handleHeader();
+    header.shift();
+    let content = this.handleContent();
+    toExcel("LAPORAN RETUR PENJUALAN", `${this.props.startDate} - ${this.props.endDate}`, header, content, [], EXTENSION.XLXS);
     this.props.dispatch(ModalToggle(false));
   }
   render() {
     return (
       <div>
-        <ExportCommon
-          modalType="formSaleReturExcel"
-          isPdf={true}
-          callbackPdf={() => this.printPdf()}
-          isExcel={true}
-          callbackExcel={() => this.printExcel()}
-        />
+        <ExportCommon modalType="formSaleReturExcel" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />
       </div>
     );
   }
