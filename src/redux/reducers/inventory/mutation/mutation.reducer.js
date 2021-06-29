@@ -13,6 +13,7 @@ const initialState = {
     dataApprovalDetail: [],
     msgApproval:"",
     statusApproval:"",
+    download:0,
 };
 
 export const mutationReducer = (state = initialState, action) => {
@@ -58,6 +59,10 @@ export const mutationReducer = (state = initialState, action) => {
         case MUTATION.APPROVAL_MUTATION_SAVE:
             return Object.assign({}, state, {
                 isLoadingApprove: action.load
+            });
+        case MUTATION.DOWNLOAD:
+            return Object.assign({}, state, {
+                download: action.load
             });
         default:
             return state

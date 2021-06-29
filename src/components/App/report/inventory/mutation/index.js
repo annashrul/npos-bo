@@ -14,8 +14,7 @@ import MutationReportExcel from "components/App/modals/report/inventory/mutation
 import Select from "react-select";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import { statusQ } from "helper";
+import { statusQ, dateRange, rangeDate, handleDataSelect } from "helper";
 import {
   UncontrolledButtonDropdown,
   DropdownMenu,
@@ -23,33 +22,98 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import {
+  generateNo,
+  getStorage,
+  isEmptyOrUndefined,
+  isProgress,
+  noData,
+  setStorage,
+  toDate,
+  toRp,
+} from "../../../../../helper";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import TableCommon from "../../../common/TableCommon";
+import SelectSortCommon from "../../../common/SelectSortCommon";
+import LokasiCommon from "../../../common/LokasiCommon";
+import SelectCommon from "../../../common/SelectCommon";
+
+const dateFromStorage = "dateFromReportMutasi";
+const dateToStorage = "dateToReportMutasi";
+const statusStorage = "statusReportMutasi";
+const locationStorage = "locationReportMutasi";
+const columnStorage = "columnReportMutasi";
+const sortStorage = "sortReportMutasi";
+const anyStorage = "anyReportMutasi";
+
 class MutationReport extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
       where_data: "",
       any: "",
       location: "",
-      location_data: [],
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
       sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
+      column: "",
+      column_data: [
+        { kode: "no_faktur_mutasi", value: "Kode Mutasi" },
+        { kode: "tgl_mutasi", value: "Tanggal" },
+        { kode: "status", value: "Status" },
+      ],
       status: "",
-      status_data: [],
+      status_data: [
+        { kode: "", value: "Semua" },
+        { kode: "0", value: "Dikirim" },
+        { kode: "1", value: "Diterima" },
+      ],
       isModalDetail: false,
       isModalExport: false,
     };
+  }
+
+  handleService(page = 1) {
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getLocation = getStorage(locationStorage);
+    let getColumn = getStorage(columnStorage);
+    let getSort = getStorage(sortStorage);
+    let getStatus = getStorage(statusStorage);
+    let getAny = getStorage(anyStorage);
+
+    let where = `page=${page}`;
+    let state = {};
+
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+    }
+    if (isEmptyOrUndefined(getLocation)) {
+      where += `&lokasi=${getLocation}`;
+      Object.assign(state, { location: getLocation });
+    }
+    if (isEmptyOrUndefined(getStatus)) {
+      where += `&status=${getStatus}`;
+      Object.assign(state, { status: getStatus });
+    }
+    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
+      where += `&sort=${getColumn}|${getSort}`;
+      Object.assign(state, { column: getColumn, sort: getSort });
+    }
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
+    this.props.dispatch(FetchMutation(where));
   }
 
   componentWillUnmount() {
@@ -60,498 +124,259 @@ class MutationReport extends Component {
   }
 
   componentWillMount() {
-    let page = localStorage.page_mutation_report;
-    this.handleParameter(page !== undefined && page !== null ? page : 1);
+    this.handleService();
   }
   componentDidMount() {
-    if (
-      localStorage.location_mutation_report !== undefined &&
-      localStorage.location_mutation_report !== ""
-    ) {
-      this.setState({ location: localStorage.location_mutation_report });
-    }
-    if (
-      localStorage.any_mutation_report !== undefined &&
-      localStorage.any_mutation_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_mutation_report });
-    }
-    if (
-      localStorage.date_from_mutation_report !== undefined &&
-      localStorage.date_from_mutation_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_mutation_report });
-    }
-    if (
-      localStorage.date_to_mutation_report !== undefined &&
-      localStorage.date_to_mutation_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_mutation_report });
-    }
-    if (
-      localStorage.sort_mutation_report !== undefined &&
-      localStorage.sort_mutation_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_mutation_report });
-    }
-    if (
-      localStorage.filter_mutation_report !== undefined &&
-      localStorage.filter_mutation_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_mutation_report });
-    }
-    if (
-      localStorage.status_mutation_report !== undefined &&
-      localStorage.status_mutation_report !== null
-    ) {
-      this.setState({ status: localStorage.status_mutation_report });
-    }
+    this.handleService();
   }
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_mutation_report", pageNumber);
-    this.props.dispatch(FetchMutation(pageNumber));
+    this.handleService(pageNumber);
   }
-  toggle(e, code, barcode, name) {
-    e.preventDefault();
+  toggle(code, barcode, name) {
     this.setState({ isModalDetail: true });
-    localStorage.setItem("code", code);
-    localStorage.setItem("barcode", barcode);
-    localStorage.setItem("name", name);
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("detailMutation"));
-    this.props.dispatch(FetchMutationData(1, code));
+    this.props.dispatch(FetchMutationData(code, "page=1"));
   }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_mutation_report", `${awal}`);
-    localStorage.setItem("date_to_mutation_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
+
   handleSearch(e) {
     e.preventDefault();
-    localStorage.setItem("any_mutation_report", this.state.any);
-    this.handleParameter(1);
-  }
-  handleParameter(pageNumber) {
-    let dateFrom = localStorage.date_from_mutation_report;
-    let dateTo = localStorage.date_to_mutation_report;
-    // let lokasi = localStorage.location_mutation_report;
-    let any = localStorage.any_mutation_report;
-    let sort = localStorage.sort_mutation_report;
-    let filter = localStorage.filter_mutation_report;
-    let status = localStorage.status_mutation_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&datefrom=${dateFrom}&dateto=${dateTo}`;
-    }
-    // if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
-    //     where+=`&lokasi=${lokasi}`;
-    // }
-
-    if (status !== undefined && status !== null && status !== "") {
-      where += `&status=${status}`;
-    }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    this.props.dispatch(FetchMutation(pageNumber, where));
-    // this.props.dispatch(FetchMutationExcel(pageNumber,where))
-  }
-  componentWillReceiveProps = (nextProps) => {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "no_faktur_mutasi", value: "Kode Mutasi" },
-      { kode: "tgl_mutasi", value: "Tanggal" },
-      { kode: "status", value: "Status" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let status = [
-      { kode: "", value: "Semua" },
-      { kode: "0", value: "Dikirim" },
-      { kode: "1", value: "Diterima" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      status_data: data_status,
-    });
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-
-    localStorage.setItem(
-      "status_mutation_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_mutation_report
-    );
-    localStorage.setItem(
-      "sort_mutation_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_mutation_report
-    );
-    localStorage.setItem(
-      "filter_mutation_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_mutation_report
-    );
-  };
-  HandleChangeLokasi(lk) {
-    this.setState({
-      location: lk.value,
-    });
-    localStorage.setItem("location_mutation_report", lk.value);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    let any = this.state.any;
+    setStorage(anyStorage, any);
+    this.handleService();
   }
 
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_mutation_report", sr.value);
-  }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_mutation_report", fl.value);
-  }
-  HandleChangeStatus(st) {
-    this.setState({
-      status: st.value,
-    });
-    localStorage.setItem("status_mutation_report", st.value);
+  handleSelect(state, res) {
+    if (state === "location") setStorage(locationStorage, res.value);
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
+    if (state === "status") setStorage(statusStorage, res.value);
+    this.setState({ [state]: res.value });
+    setTimeout(() => this.handleService(), 500);
   }
 
-  toggleModal(e, total, perpage) {
+  toggleModal(e, total) {
     e.preventDefault();
     const bool = !this.props.isOpen;
-    // let range = total*perpage;
     this.setState({ isModalExport: true });
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formMutationExcel"));
     this.props.dispatch(FetchMutationExcel(1, this.state.where_data, total));
   }
-  handleRePrint(e, id) {
-    e.preventDefault();
+  handleRePrint(id) {
     this.props.dispatch(rePrintFaktur(id));
   }
 
   render() {
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
-    const {
-      per_page,
-      last_page,
-      current_page,
-      // from,
-      // to,
-      data,
-      // total
-    } = this.props.mutationReport;
+    const { per_page, last_page, current_page, data, total } =
+      this.props.mutationReport;
+    const head = [
+      { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
+      { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
+      { colSpan: "2", label: "Faktur", width: "1%" },
+      { colSpan: "2", label: "Lokasi", width: "1%" },
+      { rowSpan: "2", label: "qty", width: "1%" },
+      { rowSpan: "2", label: "Status", width: "1%" },
+      { rowSpan: "2", label: "Keterangan" },
+      { rowSpan: "2", label: "Tanggal mutasi", width: "1%" },
+    ];
+    let totQtyPer = 0;
+
     return (
-      <Layout page="Laporan Mutation">
+      <Layout page="Laporan Mutasi">
         <div className="row">
-          <div className="col-md-10" style={{ zoom: "85%" }}>
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Status</label>
-                  <Select
-                    options={this.state.status_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeStatus}
-                    value={this.state.status_data.find((op) => {
-                      return op.value === this.state.status;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            {dateRange((first, last) => {
+              setStorage(dateFromStorage, first);
+              setStorage(dateToStorage, last);
+              setTimeout(() => this.handleService(), 300);
+            }, `${this.state.startDate} s/d ${this.state.endDate}`)}
           </div>
-          <div
-            className="col-6 col-xs-6 col-md-2"
-            style={{ zoom: "85%", textAlign: "right" }}
-          >
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
+          <div className="col-6 col-xs-6 col-md-3">
+            <LokasiCommon
+              callback={(res) => this.handleSelect("location", res)}
+              isAll={true}
+              dataEdit={this.state.location}
+            />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <SelectCommon
+              label="Status"
+              options={handleDataSelect(
+                this.state.status_data,
+                "kode",
+                "value"
+              )}
+              callback={(res) => this.handleSelect("status", res)}
+              dataEdit={this.state.status}
+            />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <SelectCommon
+              label="Kolom"
+              options={handleDataSelect(
+                this.state.column_data,
+                "kode",
+                "value"
+              )}
+              callback={(res) => this.handleSelect("column", res)}
+              dataEdit={this.state.status}
+            />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <SelectSortCommon
+              callback={(res) => this.handleSelect("sort", res)}
+              dataEdit={this.state.sort}
+            />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <div className="form-group">
+              <label>Cari</label>
+              <div className="input-group">
+                <input
+                  type="search"
+                  name="any"
+                  className="form-control"
+                  placeholder="tulis sesuatu disini"
+                  value={this.state.any}
+                  onChange={(e) => this.setState({ any: e.target.value })}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") this.handleSearch(e);
+                  }}
+                />
+                <span className="input-group-append">
                   <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
+                    type="button"
                     className="btn btn-primary"
                     onClick={this.handleSearch}
                   >
                     <i className="fa fa-search" />
                   </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
-                    <i className="fa fa-print"></i>
-                  </button>
-                </div>
+                </span>
               </div>
             </div>
           </div>
+          <div className="col-6 col-xs-6 col-md-1">
+            <div className="form-group">
+              <button
+                style={{ marginTop: "28px" }}
+                className="btn btn-primary"
+                onClick={(e) =>
+                  this.toggleModal(e, last_page * per_page, per_page)
+                }
+              >
+                {isProgress(this.props.download)}
+              </button>
+            </div>
+          </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  #
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Kode Faktur
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Asal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Tujuan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No. Faktur Beli
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Total QTY
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Status
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Keterangan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Tanggal Mutasi
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.length > 0 ? (
-                  data.map((v, i) => {
+        <TableCommon
+          head={head}
+          rowSpan={[
+            { label: "Mutasi" },
+            { label: "Beli" },
+            { label: "Asal" },
+            { label: "Tujuan" },
+          ]}
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
+                    let action = [
+                      { label: "Detail" },
+                      { label: "Print Faktur" },
+                      { label: "3ply" },
+                      { label: "Edit" },
+                    ];
+                    if (v.status !== "0") {
+                      action = [
+                        { label: "Detail" },
+                        { label: "Print Faktur" },
+                        { label: "3ply" },
+                      ];
+                    }
+                    totQtyPer = totQtyPer + parseInt(v.total_qty);
                     return (
                       <tr key={i}>
-                        <td style={columnStyle}>
-                          {" "}
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                        <td className="middle nowrap text-center">
+                          {generateNo(i, current_page)}
                         </td>
-
-                        <td style={columnStyle}>
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.toggle(e, v.no_faktur_mutasi, "", "")
-                                  }
-                                >
-                                  Detail
-                                </DropdownItem>
-                                {v.status === "0" ? (
-                                  <Link
-                                    to={`../edit/alokasi/${btoa(
+                        <td className="middle nowrap text-center">
+                          <ButtonActionCommon
+                            action={action}
+                            callback={(e) => {
+                              console.log(e);
+                              if (e === 0)
+                                this.toggle(v.no_faktur_mutasi, "", "");
+                              if (e === 1)
+                                this.handleRePrint(v.no_faktur_mutasi);
+                              if (e === 2)
+                                this.props.history.push(
+                                  `../alokasi3ply/${v.no_faktur_mutasi}`
+                                );
+                              if (v.status === "0") {
+                                if (e === 3)
+                                  this.props.history.push(
+                                    `../edit/alokasi/${btoa(
                                       v.no_faktur_mutasi
-                                    )}`}
-                                  >
-                                    <DropdownItem>Edit</DropdownItem>
-                                  </Link>
-                                ) : (
-                                  ""
-                                )}
-                                <Link
-                                  to={`../alokasi3ply/${v.no_faktur_mutasi}`}
-                                  target="_blank"
-                                >
-                                  <DropdownItem>3ply</DropdownItem>
-                                </Link>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.handleRePrint(e, v.no_faktur_mutasi)
-                                  }
-                                >
-                                  Print Faktur
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
+                                    )}`
+                                  );
+                              }
+                            }}
+                          />
                         </td>
-                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                        <td style={columnStyle}>{v.lokasi_asal}</td>
-                        <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                        <td style={columnStyle}>{v.no_faktur_beli}</td>
-                        <td style={columnStyle}>{v.total_qty}</td>
-                        <td style={columnStyle}>
-                          {
-                            v.status === "0"
-                              ? statusQ("info", "Dikirim")
-                              : v.status === "1"
-                              ? statusQ("success", "Diterima")
-                              : ""
-                            // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                          }
+                        <td className="middle nowrap">{v.no_faktur_mutasi}</td>
+                        <td className="middle nowrap">
+                          {v.no_faktur_beli === "" ? "-" : v.no_faktur_beli}
                         </td>
-                        <td style={columnStyle}>{v.keterangan}</td>
-                        <td style={columnStyle}>
-                          {moment(v.tgl_mutasi).format("DD-MM-YYYY")}
+                        <td className="middle nowrap">{v.lokasi_asal}</td>
+                        <td className="middle nowrap">{v.lokasi_tujuan}</td>
+                        <td className="middle nowrap text-right">
+                          {v.total_qty}
+                        </td>
+                        <td className="middle nowrap">
+                          {v.status === "0"
+                            ? statusQ("warning", "Dikirim")
+                            : v.status === "1"
+                            ? statusQ("success", "Diterima")
+                            : ""}
+                        </td>
+                        <td className="middle nowrap">{v.keterangan}</td>
+                        <td className="middle nowrap">
+                          {toDate(v.tgl_mutasi)}
                         </td>
                       </tr>
                     );
                   })
-                ) : (
-                  <tr>
-                    <td>No Data.</td>
-                  </tr>
-                )
-              ) : (
-                <tr>
-                  <td>No Data.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-        {this.state.isModalDetail ? <DetailMutation /> : null}
+                : noData(head.length)
+              : noData(head.length)
+          }
+          footer={[
+            {
+              data: [
+                {
+                  colSpan: 6,
+                  label: "Total perhalaman",
+                  className: "text-left",
+                },
+                { colSpan: 1, label: toRp(parseFloat(totQtyPer)) },
+                { colSpan: 4, label: "" },
+              ],
+            },
+          ]}
+        />
 
-        {this.state.isModalExport ? (
+        {this.props.isOpen && this.state.isModalDetail ? (
+          <DetailMutation />
+        ) : null}
+
+        {this.props.isOpen && this.state.isModalExport ? (
           <MutationReportExcel
             startDate={this.state.startDate}
             endDate={this.state.endDate}
@@ -565,11 +390,9 @@ class MutationReport extends Component {
 const mapStateToProps = (state) => {
   return {
     mutationReport: state.mutationReducer.report,
-    isLoadingDetail: state.mutationReducer.isLoadingApproval,
-    auth: state.auth,
-    isLoading: state.mutationReducer.isLoadingApproval,
+    download: state.mutationReducer.download,
     mutationReportExcel: state.mutationReducer.report_excel,
-    // isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
+    auth: state.auth,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

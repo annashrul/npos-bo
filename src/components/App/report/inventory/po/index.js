@@ -26,12 +26,15 @@ import {
   getStorage,
   isEmptyOrUndefined,
   isProgress,
+  noData,
   setStorage,
+  toDate,
 } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
 import TableCommon from "../../../common/TableCommon";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
 
 const dateFromStorage = "dateFromReportPo";
 const dateToStorage = "dateToReportPo";
@@ -156,17 +159,41 @@ class PoReport extends Component {
 
   toggleModal(e, total) {
     e.preventDefault();
-     this.props.dispatch(fetchPoReportExcel(1, this.state.where_data, total));
+    this.props.dispatch(fetchPoReportExcel(1, this.state.where_data, total));
     this.setState({ isModalExport: true });
     this.props.dispatch(ModalType("formPoExcel"));
-   
   }
 
   render() {
-    const {total,last_page,per_page,current_page,data} = this.props.poReport;
+    const { total, last_page, per_page, current_page, data } =
+      this.props.poReport;
     const {
-      status_data,status,column,column_data,location,sort,any,dateFrom,dateTo,isModalDetail,isModalExport,master
+      status_data,
+      status,
+      column,
+      column_data,
+      location,
+      sort,
+      any,
+      dateFrom,
+      dateTo,
+      isModalDetail,
+      isModalExport,
+      master,
     } = this.state;
+
+    const head = [
+      { label: "No", className: "text-center", width: "1%" },
+      { label: "#", className: "text-center", width: "1%" },
+      { label: "No.Po", width: "1%" },
+      { label: "Tanggal Po", width: "1%" },
+      { label: "Tanggal kirim", width: "1%" },
+      { label: "Nama Supplier" },
+      { label: "Lokasi", width: "1%" },
+      { label: "Jenis", width: "1%" },
+      { label: "Operator" },
+      { label: "Status", width: "1%" },
+    ];
 
     return (
       <Layout page="Laporan Purchase Order">
@@ -232,8 +259,13 @@ class PoReport extends Component {
                 >
                   <i className="fa fa-search" />
                 </button>
-              
-                <button className="btn btn-primary" type="button" style={{ marginTop: "28px" }} onClick={(e) =>this.toggleModal(e, last_page * per_page)}>
+
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  style={{ marginTop: "28px" }}
+                  onClick={(e) => this.toggleModal(e, last_page * per_page)}
+                >
                   {isProgress(this.props.isLoading)}
                 </button>
               </div>
@@ -241,49 +273,69 @@ class PoReport extends Component {
           </div>
         </div>
         <TableCommon
-          head={[
-            { label: "No", className: "text-center", width: "1%" },
-            { label: "#", className: "text-center", width: "1%" },
-            { label: "No.Po" },
-            { label: "Tanggal" },
-            { label: "Tanggal kirim" },
-            { label: "Nama Supplier" },
-            { label: "Lokasi" },
-            { label: "Jenis" },
-            { label: "Operator" },
-            { label: "Status" },
-          ]}
+          head={head}
           meta={{
             total: total,
             current_page: current_page,
             per_page: per_page,
           }}
-          body={typeof data === "object" && data}
-          label={[
-            { label: "no_po" },
-            { label: "tgl_po", date: true },
-            { label: "tglkirim", date: true },
-            { label: "nama_supplier" },
-            { label: "lokasi" },
-            { label: "jenis" },
-            { label: "kd_kasir" },
-            { label: "status" },
-          ]}
           current_page={current_page}
-          action={[{ label: "Detail" }]}
-          callback={(e, index) => {
-            if (e === 0) this.toggle(index);
-          }}
           callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
+                    let title, desc;
+                    if (v.status === "0") {
+                      title = "warning";
+                      desc = "Proses";
+                    }
+                    if (v.status === "1") {
+                      title = "info";
+                      desc = "Order";
+                    }
+                    if (v.status === "2") {
+                      title = "success";
+                      desc = "Receive";
+                    }
+                    return (
+                      <tr key={i}>
+                        <td className="middle nowrap text-center">
+                          {generateNo(i, current_page)}
+                        </td>
+                        <td className="middle nowrap text-center">
+                          <ButtonActionCommon
+                            action={[{ label: "Detail" }]}
+                            callback={(e) => this.toggle(i)}
+                          />
+                        </td>
+                        <td className="middle nowrap">{v.no_po}</td>
+                        <td className="middle nowrap">{toDate(v.tgl_po)} </td>
+                        <td className="middle nowrap">{toDate(v.tglkirim)} </td>
+                        <td className="middle nowrap">{v.nama_supplier}</td>
+                        <td className="middle nowrap">{v.lokasi}</td>
+                        <td className="middle nowrap">{v.jenis}</td>
+                        <td className="middle nowrap">{v.kd_kasir}</td>
+                        <td className="middle nowrap">
+                          {statusQ(title, desc)}
+                        </td>
+                      </tr>
+                    );
+                  })
+                : noData(head.length)
+              : noData(head.length)
+          }
         />
 
-        {this.props.isOpen&&isModalDetail ? (
-          <DetailPoReport master={master} poReportDetail={this.props.dataReportDetail}
+        {this.props.isOpen && isModalDetail ? (
+          <DetailPoReport
+            master={master}
+            poReportDetail={this.props.dataReportDetail}
           />
         ) : null}
 
-        {this.props.isOpen&&isModalExport ? (
-          <PoReportExcel startDate={dateFrom} endDate={dateTo}/>
+        {this.props.isOpen && isModalExport ? (
+          <PoReportExcel startDate={dateFrom} endDate={dateTo} />
         ) : null}
       </Layout>
     );

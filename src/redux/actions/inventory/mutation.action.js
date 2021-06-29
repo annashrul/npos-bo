@@ -2,7 +2,16 @@ import { MUTATION, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { setLoading } from "../masterdata/customer/customer.action";
-import { handleGet } from "../handleHttp";
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle } from "../modal.action";
+
+
+export function setDownload(load) {
+  return {
+    type: MUTATION.DOWNLOAD,
+    load,
+  };
+}
 
 export function setLoadingApprove(load) {
   return {
@@ -287,76 +296,39 @@ export const saveApprovalMutation = (data, param) => {
   };
 };
 
-export const FetchMutation = (page = 1, where = "") => {
+export const FetchMutation = (where = "") => {
   return (dispatch) => {
-    let url = `mutasi/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }`;
-    if (where !== "") url += where;
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setMutation(data));
-    });
+    let url = `mutasi/report`;
+    if (where !== "") url += `?${where}`;
+    handleGet(url, (res) => dispatch(setMutation(res.data)));
   };
 };
 
 export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
-    dispatch(setLoadingApprovalMutation(true));
-    let url = `mutasi/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }&perpage=${perpage}`;
-    if (where !== "") {
-      url += where;
-    }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setMutationExcel(data));
-        dispatch(setLoadingApprovalMutation(false));
-      })
-      .catch(function (error) {});
+   let url = `mutasi/report?page=${page}&perpage=${perpage}`;
+    if (where !== "") url += where
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setMutationExcel(res.data));
+        dispatch(ModalToggle(true));
+      },
+      (percent) => {
+        dispatch(setDownload(percent));
+      }
+    );
   };
 };
-export const FetchMutationData = (
-  page = 1,
-  code,
-  dateFrom = "",
-  dateTo = "",
-  location = ""
-) => {
+export const FetchMutationData = (code,where="") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    let que = "";
-    if (dateFrom === "" && dateTo === "" && location === "") {
-      que = `alokasi/report/${code}?page=${page}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location === "") {
-      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location !== "") {
-      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-    }
-    if (location !== "") {
-      que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
-    }
-
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setMutationData(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    let url = `alokasi/report/${code}`
+    if(where!=="") url+=`?${where}`
+    handleGet(url,(res)=>{
+      dispatch(setMutationData(res.data));
+       dispatch(ModalToggle(true));
+    })
+   
   };
 };
 

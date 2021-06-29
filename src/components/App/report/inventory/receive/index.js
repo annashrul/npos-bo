@@ -254,7 +254,7 @@ class ReceiveReport extends Component {
     let tot_beli = 0;
     return (
       <Layout page="Laporan Pembelian">
-        <div className="row" style={{ zoom: "90%" }}>
+        <div className="row">
           <div className="col-md-12">
             <div className="row">
               <div

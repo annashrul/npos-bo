@@ -8,8 +8,16 @@ import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import XLSX from "xlsx";
-import { EXTENSION } from "./redux/actions/_constants";
+import { EXTENSION, HEADERS } from "./redux/actions/_constants";
 import Default from "assets/default.png";
+
+export const parseToRp = (val) => {
+  return toRp(parseFloat(parseInt(val, 10)));
+};
+
+export const toDate = (val) => {
+  return moment(val).format("yyyy/MM/DD");
+};
 
 export const isImage = (img, className = "img-in-table pointer") => {
   return (
@@ -32,8 +40,8 @@ export const isImage = (img, className = "img-in-table pointer") => {
   );
 };
 
-export const generateNo = (i, current_page) => {
-  return i + 1 + 10 * (parseInt(current_page, 10) - 1);
+export const generateNo = (i, current_page, perpage = HEADERS.PERPAGE) => {
+  return i + 1 + perpage * (parseInt(current_page, 10) - 1);
 };
 
 export const groupByArray = (list, keyGetter) => {
@@ -100,8 +108,8 @@ export const headerPdf = (master) => {
   let stringHtml = "";
   stringHtml +=
     '<div style="text-align:center>' +
-     '<h3 style="text-align:center"><center>LAPORAN ' +
-       master.title +
+    '<h3 style="text-align:center"><center>LAPORAN ' +
+    master.title +
     "</center></h3>" +
     '<h3 align="center"><center>PERIODE : ' +
     `${master.dateFrom}`.replaceAll("-", "/") +
@@ -158,24 +166,32 @@ export const to_pdf = (
   const marginLeft = 10;
   doc.setFontSize(10);
   let content = {
-    pageBreak: 'auto',
-    rowPageBreak: 'avoid',
-    headStyles:{backgroundColor: [33, 33, 33],lineWidth: 1,marginBottom:0},
-    bodyStyles: { lineWidth: 1,  marginBottom: 20 },
+    pageBreak: "auto",
+    rowPageBreak: "avoid",
+    headStyles: {
+      backgroundColor: [33, 33, 33],
+      lineWidth: 1,
+      marginBottom: 0,
+    },
+    bodyStyles: { lineWidth: 1, marginBottom: 20 },
     theme: "grid",
     startY: 50,
     head: header,
     body: body,
     foot: footer,
-    margin: { bottom: 10, top: 10,left:10,right:10 },
-    autoSize:true
+    margin: { bottom: 10, top: 10, left: 10, right: 10 },
+    autoSize: true,
   };
   doc.fromHTML(title, marginLeft, 10, { align: "center" });
   doc.autoTable(content);
   // addFooters(doc);
-  return doc.save("LAPORAN_"+filename+`_${moment(new Date()).format("YYYYMMDDHHMMss")}`+".pdf");
+  return doc.save(
+    "LAPORAN_" +
+      filename +
+      `_${moment(new Date()).format("YYYYMMDDHHMMss")}` +
+      ".pdf"
+  );
 };
-
 
 export const to_pdf_l = (
   filename,
@@ -359,7 +375,7 @@ export const statusQ = (lbl, txt) => {
     return (
       <button
         className="btn btn-success btn-sm btn-status"
-        style={{ fontSize: "8px" }}
+        style={{ fontSize: "10px" }}
       >
         {txt}
       </button>
@@ -368,7 +384,7 @@ export const statusQ = (lbl, txt) => {
     return (
       <button
         className="btn btn-danger btn-sm btn-status"
-        style={{ fontSize: "8px" }}
+        style={{ fontSize: "10px" }}
       >
         {txt}
       </button>
@@ -377,7 +393,7 @@ export const statusQ = (lbl, txt) => {
     return (
       <button
         className="btn btn-warning btn-sm btn-status"
-        style={{ fontSize: "8px", color: "white" }}
+        style={{ fontSize: "10px", color: "white" }}
       >
         {txt}
       </button>
@@ -386,7 +402,7 @@ export const statusQ = (lbl, txt) => {
     return (
       <button
         className="btn btn-info btn-sm btn-status"
-        style={{ fontSize: "8px" }}
+        style={{ fontSize: "10px" }}
       >
         {txt}
       </button>
@@ -717,10 +733,16 @@ export const dataStatus = (isAll = false) => {
 export const isProgress = (props) => {
   let loading;
   if (props === "loading") {
-    loading = <div>
-      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-      <span className="sr-only">Loading...</span>
-    </div>;
+    loading = (
+      <div>
+        <span
+          className="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        />
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
   } else if (props > 0 && props < 100) {
     loading = props + "%";
   } else {
