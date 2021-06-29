@@ -39,7 +39,7 @@ class TableCommon extends Component {
   }
 
   checkTypeLabel(res, val) {
-    if (val.isStatus) return this.isButton(res);
+    if (val.isStatus) return this.statusGeneral(res);
     if (val.isCurrency) return toRp(res);
     if (val.isImage) return isImage(res);
     if (val.date) return moment(res).format("YYYY-MM-DD");
