@@ -776,33 +776,35 @@ class Sale extends Component {
     let totalsub = 0;
     return (
       <React.Fragment>
-        <KeyHandler
-          keyEventName={KEYPRESS}
-          keyValue={["Enter", "c", "h", "l", "x"]}
-          onKeyHandle={(e) => {
-            console.log(e);
-            if (e.key === "Enter") {
-              this.HandleSubmit(e);
-              return;
-            }
-            if (e.key === "h") {
-              this.handleHoldBill(e, "formHoldBill");
-              return;
-            }
-            if (e.key === "l") {
-              this.handleHoldBill(e, "listHoldBill");
-              return;
-            }
-            if (e.key === "c") {
-              this.handleClosing(e);
-              return;
-            }
-            if (e.key === "x") {
-              this.HandleReset(e);
-              return;
-            }
-          }}
-        />
+        {!this.props.isOpen && !this.state.isModalForm ? (
+          <KeyHandler
+            keyEventName={KEYPRESS}
+            keyValue={["Enter", "c", "h", "l", "x"]}
+            onKeyHandle={(e) => {
+              console.log(e);
+              if (e.key === "Enter") {
+                this.HandleSubmit(e);
+                return;
+              }
+              if (e.key === "h") {
+                this.handleHoldBill(e, "formHoldBill");
+                return;
+              }
+              if (e.key === "l") {
+                this.handleHoldBill(e, "listHoldBill");
+                return;
+              }
+              if (e.key === "c") {
+                this.handleClosing(e);
+                return;
+              }
+              if (e.key === "x") {
+                this.HandleReset(e);
+                return;
+              }
+            }}
+          />
+        ) : null}
         <Layout page="Penjualan Barang">
           <div className="card">
             <div className="card-header">
