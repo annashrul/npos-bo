@@ -58,7 +58,6 @@ class LokasiCommon extends Component {
             }
           }
         }
-        console.log(state);
       }
     }
     Object.assign(state, { dataArray: arrLokasi });
