@@ -151,13 +151,6 @@ class InventoryReport extends Component {
     this.setState(state);
   }
   render() {
-    console.log("this.state.isModalExcel", this.state.isModalExcel);
-    console.log("this.props.isOper", this.props.isOpen);
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
     const { per_page, last_page, current_page, data, total } = this.props.stockReport;
     const { total_harga_beli, total_harga_jual, total_harga_beli_qty, total_harga_jual_qty, total_stock_awal, total_stock_masuk, total_stock_keluar, total_stock_akhir, total_stock_penjualan } =
       this.props.total_stock;
@@ -198,8 +191,6 @@ class InventoryReport extends Component {
     bukaHarga && rowSpan.push({ label: "Harga beli" });
     bukaHarga && rowSpan.push({ label: "Harga jual" });
 
-    console.log(head);
-    console.log(rowSpan);
     return (
       <Layout page="Laporan Stock">
         <div className="row">
@@ -298,7 +289,7 @@ class InventoryReport extends Component {
                           action={[{ label: "Detail" }, { label: "Export" }]}
                           callback={(e) => {
                             if (e === 0) this.toggle(v.kd_brg, v.barcode, v.nm_brg);
-                            if (e === 2) this.props.history.push(`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`);
+                            if (e === 1) this.props.history.push(`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`);
                           }}
                         />
                       </td>

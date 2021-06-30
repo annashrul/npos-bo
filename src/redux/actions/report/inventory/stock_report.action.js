@@ -56,7 +56,7 @@ export const FetchStockReportExcel = (page = 1, where = "", perpage = 99999) => 
       (res) => {
         dispatch(setStockReportExcel(res.data));
         dispatch(ModalToggle(true));
-        this.props.dispatch(ModalType("formStockExcel"));
+        dispatch(ModalType("formStockExcel"));
       },
       (res) => dispatch(setDownload(res))
     );
