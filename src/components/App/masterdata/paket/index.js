@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { get, destroy, del } from "components/model/app.model";
+import { destroy, del } from "components/model/app.model";
 import connect from "react-redux/es/connect/connect";
 import Layout from "../../Layout";
 import Select from "react-select";
@@ -8,24 +8,11 @@ import { FetchBrgProduksiPaket } from "redux/actions/inventory/produksi.action";
 import StickyBox from "react-sticky-box";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import FormPaket from "../../modals/masterdata/paket/form_paket";
-import {
-  btnSave,
-  btnSCancel,
-  handleError,
-  rmComma,
-  swal,
-  swallOption,
-  swalWithCallback,
-  toCurrency,
-} from "../../../../helper";
+import { btnSave, btnSCancel, handleError, rmComma, swal, swallOption, swalWithCallback, toCurrency } from "../../../../helper";
 import { handlePost } from "../../../../redux/actions/handleHttp";
 import LokasiCommon from "../../common/LokasiCommon";
 import ProductCommon from "../../common/ProductCommon";
-import {
-  actionDataCommon,
-  getDataCommon,
-  handleInputOnBlurCommon,
-} from "../../common/FlowTrxCommon";
+import { actionDataCommon, getDataCommon, handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
 import { readProductTrx } from "../../../../redux/actions/masterdata/product/product.action";
 import { update } from "lodash";
 const table = "production";
@@ -145,15 +132,11 @@ class Paket extends Component {
         return;
       }
     }
-    handleInputOnBlurCommon(
-      e,
-      { id: this.state.brgval[i].barcode, table: table, where: "barcode" },
-      () => {
-        getDataCommon(table, (res, brg) => {
-          this.setState({ databrg: res, brgval: brg });
-        });
-      }
-    );
+    handleInputOnBlurCommon(e, { id: this.state.brgval[i].barcode, table: table, where: "barcode" }, () => {
+      getDataCommon(table, (res, brg) => {
+        this.setState({ databrg: res, brgval: brg });
+      });
+    });
   }
   HandleFocusInputReset(e, i) {
     let col = e.target.name;
@@ -187,10 +170,7 @@ class Paket extends Component {
       });
       if (isNaN(parseFloat(brgval[i].qty)) || parseFloat(brgval[i].qty) < 1) {
         handleError("qty");
-        setTimeout(
-          () => this && this[`qty-adjust-${btoa(brgval[i].barcode)}`].focus(),
-          500
-        );
+        setTimeout(() => this && this[`qty-adjust-${btoa(brgval[i].barcode)}`].focus(), 500);
         return;
         // break;
       }
@@ -250,11 +230,7 @@ class Paket extends Component {
           </div>
           <div style={{ display: "flex", alignItems: "flex-start" }}>
             {/*START LEFT*/}
-            <StickyBox
-              offsetTop={100}
-              offsetBottom={20}
-              style={{ width: "30%", marginRight: "10px" }}
-            >
+            <StickyBox offsetTop={100} offsetBottom={20} style={{ width: "30%", marginRight: "10px" }}>
               <div className="card">
                 <div className="card-body">
                   <ProductCommon
@@ -269,12 +245,7 @@ class Paket extends Component {
                       });
                     }}
                     callbackSetFocus={(res) => {
-                      setTimeout(
-                        () =>
-                          this &&
-                          this[`qty-adjust-${btoa(res.barcode)}`].focus(),
-                        500
-                      );
+                      setTimeout(() => this && this[`qty-adjust-${btoa(res.barcode)}`].focus(), 500);
                     }}
                   />
                 </div>
@@ -287,12 +258,7 @@ class Paket extends Component {
                 <div className="card-body">
                   <div className="row">
                     <div className="col-md-3">
-                      <LokasiCommon
-                        callback={(val) =>
-                          this.HandleChangeSelect(val, "lokasi")
-                        }
-                        isRequired={true}
-                      />
+                      <LokasiCommon callback={(val) => this.HandleChangeSelect(val, "lokasi")} isRequired={true} />
                     </div>
                     <div className="col-md-3">
                       <div className="form-group">
@@ -300,9 +266,7 @@ class Paket extends Component {
                         <Select
                           options={this.state.dataPaket}
                           placeholder="Pilih Barang"
-                          onChange={(val, actionMeta) =>
-                            this.HandleChangeSelect(val, "paket")
-                          }
+                          onChange={(val, actionMeta) => this.HandleChangeSelect(val, "paket")}
                           value={this.state.dataPaket.find((op) => {
                             return op.value === this.state.paket;
                           })}
@@ -332,10 +296,7 @@ class Paket extends Component {
                       <table className="table table-hover table-noborder">
                         <thead>
                           <tr>
-                            <th
-                              className="text-center middle nowrap"
-                              width="1%"
-                            >
+                            <th className="text-center middle nowrap" width="1%">
                               No
                             </th>
 
@@ -343,22 +304,13 @@ class Paket extends Component {
                             <th className="middle nowrap" width="10%">
                               Satuan
                             </th>
-                            <th
-                              className="middle nowrap"
-                              style={{ width: "15%" }}
-                            >
+                            <th className="middle nowrap" style={{ width: "15%" }}>
                               Harga Beli
                             </th>
-                            <th
-                              className="middle nowrap"
-                              style={{ width: "15%" }}
-                            >
+                            <th className="middle nowrap" style={{ width: "15%" }}>
                               Qty
                             </th>
-                            <th
-                              className="text-center middle nowrap"
-                              width="1%"
-                            >
+                            <th className="text-center middle nowrap" width="1%">
                               #
                             </th>
                           </tr>
@@ -366,14 +318,10 @@ class Paket extends Component {
 
                         <tbody>
                           {this.state.databrg.map((item, index) => {
-                            totHargaBeli +=
-                              parseInt(item.harga_beli, 10) *
-                              parseInt(item.qty, 10);
+                            totHargaBeli += parseInt(item.harga_beli, 10) * parseInt(item.qty, 10);
                             return (
                               <tr key={index}>
-                                <td className="middle nowrap text-center">
-                                  {index + 1}
-                                </td>
+                                <td className="middle nowrap text-center">{index + 1}</td>
 
                                 <td className="middle nowrap">{item.nm_brg}</td>
                                 <td className="middle nowrap">{item.satuan}</td>
@@ -385,9 +333,7 @@ class Paket extends Component {
                                     readOnly={true}
                                     type="text"
                                     name="harga_beli"
-                                    value={toCurrency(
-                                      parseInt(item.harga_beli, 10)
-                                    )}
+                                    value={toCurrency(parseInt(item.harga_beli, 10))}
                                     className="form-control in-table"
                                   />
                                 </td>
@@ -398,20 +344,11 @@ class Paket extends Component {
                                     }}
                                     type="text"
                                     name="qty"
-                                    ref={(input) =>
-                                      (this[`qty-${btoa(item.barcode)}`] =
-                                        input)
-                                    }
-                                    onFocus={(e) =>
-                                      this.HandleFocusInputReset(e, index)
-                                    }
+                                    ref={(input) => (this[`qty-${btoa(item.barcode)}`] = input)}
+                                    onFocus={(e) => this.HandleFocusInputReset(e, index)}
                                     onBlur={(e) => this.HandleOnBlur(e, index)}
-                                    onChange={(e) =>
-                                      this.HandleOnChange(e, index)
-                                    }
-                                    value={toCurrency(
-                                      this.state.brgval[index].qty
-                                    )}
+                                    onChange={(e) => this.HandleOnChange(e, index)}
+                                    value={toCurrency(this.state.brgval[index].qty)}
                                     className="form-control in-table"
                                   />
                                   {/* {isNaN(this.state.brgval[index].qty_adjust) ||
@@ -431,12 +368,7 @@ class Paket extends Component {
                                   )} */}
                                 </td>
                                 <td className="middle nowrap">
-                                  <button
-                                    className="btn btn-primary btn-sm"
-                                    onClick={(e) =>
-                                      this.HandleRemove(e, item.id)
-                                    }
-                                  >
+                                  <button className="btn btn-primary btn-sm" onClick={(e) => this.HandleRemove(e, item.id)}>
                                     <i className="fa fa-trash" />
                                   </button>
                                 </td>
@@ -460,26 +392,14 @@ class Paket extends Component {
                   <div className="row" style={{ width: "50%" }}>
                     <div className="col-md-12">
                       <div className="row">
-                        <div className="col-md-6 text-right">
-                          Total harga beli
-                        </div>
+                        <div className="col-md-6 text-right">Total harga beli</div>
                         <div className="col-md-1">:</div>
-                        <div className="col-md-5 text-right">
-                          {toCurrency(
-                            this.props.isOpen
-                              ? this.state.total_hrg_beli
-                              : totHargaBeli
-                          )}
-                        </div>
+                        <div className="col-md-5 text-right">{toCurrency(this.props.isOpen ? this.state.total_hrg_beli : totHargaBeli)}</div>
                       </div>
                       <div className="row">
-                        <div className="col-md-6 text-right">
-                          Total harga jual
-                        </div>
+                        <div className="col-md-6 text-right">Total harga jual</div>
                         <div className="col-md-1">:</div>
-                        <div className="col-md-5 text-right">
-                          {toCurrency(this.state.total_hrg_jual)}
-                        </div>
+                        <div className="col-md-5 text-right">{toCurrency(this.state.total_hrg_jual)}</div>
                       </div>
                     </div>
                   </div>

@@ -2,21 +2,10 @@ import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq, { statusQ } from "helper";
-import {
-  deleteCustomer,
-  FetchCustomer,
-  FetchCustomerEdit,
-  setCustomerEdit,
-} from "redux/actions/masterdata/customer/customer.action";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { deleteCustomer, FetchCustomer, setCustomerEdit } from "redux/actions/masterdata/customer/customer.action";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import FormCustomer from "components/App/modals/masterdata/customer/form_customer";
 import { FetchCustomerTypeAll } from "redux/actions/masterdata/customer_type/customer_type.action";
-import Swal from "sweetalert2";
 import { generateNo } from "../../../../../../helper";
 
 class ListCustomer extends Component {
@@ -104,12 +93,7 @@ class ListCustomer extends Component {
             </div>
             <div className="col-2 col-xs-2 col-md-9">
               <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
+                <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                   <i className="fa fa-plus" />
                 </button>
               </div>
@@ -142,23 +126,13 @@ class ListCustomer extends Component {
                 data.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td className="middle nowrap text-center">
-                        {generateNo(i, current_page)}
-                      </td>
+                      <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                       <td className="middle nowrap text-center">
                         <UncontrolledButtonDropdown>
                           <DropdownToggle caret></DropdownToggle>
                           <DropdownMenu>
-                            <DropdownItem
-                              onClick={(e) => this.toggleModal(e, i)}
-                            >
-                              Edit
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={(e) => this.handleDelete(e, v.kd_cust)}
-                            >
-                              Delete
-                            </DropdownItem>
+                            <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
+                            <DropdownItem onClick={(e) => this.handleDelete(e, v.kd_cust)}>Delete</DropdownItem>
                           </DropdownMenu>
                         </UncontrolledButtonDropdown>
                       </td>
@@ -170,11 +144,7 @@ class ListCustomer extends Component {
                       <td className="middle nowrap">{v.lokasi}</td>
                       <td className="middle nowrap">{v.keterangan}</td>
                       <td className="middle nowrap">{v.alamat}</td>
-                      <td className="middle nowrap">
-                        {v.status === "1"
-                          ? statusQ("success", "Aktif")
-                          : statusQ("danger", "Tidak Aktif")}
-                      </td>
+                      <td className="middle nowrap">{v.status === "1" ? statusQ("success", "Aktif") : statusQ("danger", "Tidak Aktif")}</td>
                     </tr>
                   );
                 })
@@ -187,22 +157,11 @@ class ListCustomer extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
         </div>
         {
           // this.props.dataCustomerEdit!==undefined?
-          this.props.isOpen && (
-            <FormCustomer
-              detail={this.state.detail}
-              dataCustomerEdit={this.props.dataCustomerEdit}
-              dataCustomerTypeAll={this.props.dataCustomerTypeAll}
-            />
-          )
+          this.props.isOpen && <FormCustomer detail={this.state.detail} dataCustomerEdit={this.props.dataCustomerEdit} dataCustomerTypeAll={this.props.dataCustomerTypeAll} />
           // : <Preloader/>
         }
       </div>

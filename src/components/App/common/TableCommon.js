@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Paginationq, { generateNo, isImage, noData, toDate, toRp } from "../../../helper";
 import ButtonActionCommon from "./ButtonActionCommon";
-import moment from "moment";
 
 /**
  * props
@@ -12,10 +11,6 @@ import moment from "moment";
  */
 
 class TableCommon extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   statusGeneral(val) {
     if (parseInt(val, 10) === 0) {
       return (
@@ -107,7 +102,7 @@ class TableCommon extends Component {
                     <tr key={key} style={{ backgroundColor: "#EEEEEE" }}>
                       {val.data.map((res, index) => {
                         return (
-                          <th colSpan={res.colSpan ? res.colSpan : ""} className={`text-black ${res.className ? res.className : "text-right"}`}>
+                          <th key={index} colSpan={res.colSpan ? res.colSpan : ""} className={`text-black ${res.className ? res.className : "text-right"}`}>
                             {res.label}
                           </th>
                         );
@@ -124,25 +119,6 @@ class TableCommon extends Component {
         </div>
       </div>
     );
-  }
-}
-
-class TdCommon extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    let type = "";
-    if (this.props.type) {
-      type = "text-right";
-      return;
-    }
-    if (!this.props.type) {
-      type = "text-center";
-      return;
-    }
-    return <td className={`middle nowrap ${type}`}>{this.props.title}</td>;
   }
 }
 

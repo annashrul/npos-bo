@@ -2,7 +2,12 @@ import { ADJUSTMENT, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../handleHttp";
+import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "redux/actions/modal.action";
+
+export function setDownload(load) {
+  return { type: ADJUSTMENT.DOWNLOAD, load };
+}
 
 export function setLoading(load) {
   return { type: ADJUSTMENT.LOADING, load };
@@ -27,39 +32,35 @@ export function setCodeAdjusment(data = []) {
   return { type: ADJUSTMENT.GET_CODE, data };
 }
 
-export const FetchAdjustment = (page = 1, where = "") => {
+export const FetchAdjustment = (where = "") => {
   return (dispatch) => {
-    let url = `adjustment/report?page=${page}`;
-    if (where !== "") url += where;
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setAdjustment(data));
-    });
+    let url = `adjustment/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(url, (res) => dispatch(setAdjustment(res.data)));
   };
 };
 export const FetchAdjustmentExcel = (page = "", where = "", perpage = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
     let url = `adjustment/report?page=${page}&perpage=${perpage}`;
     if (where !== "") {
       url += where;
     }
 
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setAdjustmentExcel(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setAdjustmentExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formAdjustmentExcel"));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
 
 export const FetchAdjustmentAll = () => {
   return (dispatch) => {
     dispatch(setLoading(true));
-
     axios
       .get(HEADERS.URL + `adjustment/report?page=1&perpage=100`)
       .then(function (response) {
@@ -120,10 +121,7 @@ export const storeAdjusment = (data, param) => {
           }
         });
         document.getElementById("btnNota3ply").addEventListener("click", () => {
-          const win = window.open(
-            `/adjust3ply/${response.data.result.insertId}`,
-            "_blank"
-          );
+          const win = window.open(`/adjust3ply/${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -138,8 +136,7 @@ export const storeAdjusment = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -172,14 +169,7 @@ export const updateAdjustment = (id, data, token) => {
           });
         }
         dispatch(setLoading(false));
-        dispatch(
-          FetchAdjustment(
-            localStorage.getItem("page_adjustment")
-              ? localStorage.getItem("page_adjustment")
-              : 1,
-            ""
-          )
-        );
+        dispatch(FetchAdjustment(localStorage.getItem("page_adjustment") ? localStorage.getItem("page_adjustment") : 1, ""));
       })
       .catch(function (error) {
         // handle error
@@ -189,79 +179,33 @@ export const updateAdjustment = (id, data, token) => {
           allowOutsideClick: false,
           title: "failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
         if (error.response) {
         }
       });
   };
 };
-export const deleteAdjustment = (id) => {
+export const deleteAdjustment = (res) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `adjustment/${id}`;
-
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchAdjustment(1, ""));
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(`adjustment/${res.kd_trx}`, () => {
+      dispatch(FetchAdjustment(res.where));
+    });
   };
 };
-export const FetchAdjustmentDetail = (page = 1, code) => {
+export const FetchAdjustmentDetail = (code, where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `adjustment/report/${code}/?page=${page}`)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setAdjustmentDetail(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    let url = `adjustment/report/${code}?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setAdjustmentDetail(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailAdjustment"));
+      },
+      true
+    );
   };
 };
 

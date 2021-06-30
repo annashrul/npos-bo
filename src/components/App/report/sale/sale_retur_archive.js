@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
 import { FetchSaleReturReport, FetchSaleReturReportExcel } from "redux/actions/sale/sale.action";
 import connect from "react-redux/es/connect/connect";
 import SaleReturReportExcel from "components/App/modals/report/sale/form_sale_retur_excel";
-import moment from "moment";
-import { dateRange, generateNo, handleDataSelect, isEmptyOrUndefined, setStorage, getStorage, noData, isProgress, toDate } from "../../../../helper";
+import { dateRange, handleDataSelect, isEmptyOrUndefined, setStorage, getStorage, isProgress, toDate } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
 import SelectSortCommon from "../../common/SelectSortCommon";
@@ -32,7 +30,6 @@ class SaleReturReport extends Component {
       endDate: toDate(new Date()),
       sort: "",
       isModalReport: false,
-      where_data: "",
       column: "",
       column_data: [
         { kode: "kd_trx", value: "Kode Trx" },

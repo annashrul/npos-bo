@@ -1,37 +1,12 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
-import {
-  FetchMutation,
-  FetchMutationExcel,
-  FetchMutationData,
-  rePrintFaktur,
-} from "redux/actions/inventory/mutation.action";
+import { FetchMutation, FetchMutationExcel, FetchMutationData, rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import DetailMutation from "components/App/modals/report/inventory/mutation_report/detail_mutation";
 import MutationReportExcel from "components/App/modals/report/inventory/mutation_report/form_mutation_excel";
-import Select from "react-select";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { statusQ, dateRange, rangeDate, handleDataSelect } from "helper";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import { Link } from "react-router-dom";
-import {
-  generateNo,
-  getStorage,
-  isEmptyOrUndefined,
-  isProgress,
-  noData,
-  setStorage,
-  toDate,
-  toRp,
-} from "../../../../../helper";
+import { statusQ, dateRange, handleDataSelect } from "helper";
+import { generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import TableCommon from "../../../common/TableCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
@@ -57,8 +32,8 @@ class MutationReport extends Component {
       where_data: "",
       any: "",
       location: "",
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: toDate(new Date()),
+      endDate: toDate(new Date()),
       sort: "",
       column: "",
       column_data: [
@@ -167,8 +142,7 @@ class MutationReport extends Component {
   }
 
   render() {
-    const { per_page, last_page, current_page, data, total } =
-      this.props.mutationReport;
+    const { per_page, last_page, current_page, data, total } = this.props.mutationReport;
     const head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
@@ -192,41 +166,16 @@ class MutationReport extends Component {
             }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <LokasiCommon
-              callback={(res) => this.handleSelect("location", res)}
-              isAll={true}
-              dataEdit={this.state.location}
-            />
+            <LokasiCommon callback={(res) => this.handleSelect("location", res)} isAll={true} dataEdit={this.state.location} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon
-              label="Status"
-              options={handleDataSelect(
-                this.state.status_data,
-                "kode",
-                "value"
-              )}
-              callback={(res) => this.handleSelect("status", res)}
-              dataEdit={this.state.status}
-            />
+            <SelectCommon label="Status" options={handleDataSelect(this.state.status_data, "kode", "value")} callback={(res) => this.handleSelect("status", res)} dataEdit={this.state.status} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon
-              label="Kolom"
-              options={handleDataSelect(
-                this.state.column_data,
-                "kode",
-                "value"
-              )}
-              callback={(res) => this.handleSelect("column", res)}
-              dataEdit={this.state.status}
-            />
+            <SelectCommon label="Kolom" options={handleDataSelect(this.state.column_data, "kode", "value")} callback={(res) => this.handleSelect("column", res)} dataEdit={this.state.status} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectSortCommon
-              callback={(res) => this.handleSelect("sort", res)}
-              dataEdit={this.state.sort}
-            />
+            <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={this.state.sort} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <div className="form-group">
@@ -244,11 +193,7 @@ class MutationReport extends Component {
                   }}
                 />
                 <span className="input-group-append">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
+                  <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
                     <i className="fa fa-search" />
                   </button>
                 </span>
@@ -257,13 +202,7 @@ class MutationReport extends Component {
           </div>
           <div className="col-6 col-xs-6 col-md-1">
             <div className="form-group">
-              <button
-                style={{ marginTop: "28px" }}
-                className="btn btn-primary"
-                onClick={(e) =>
-                  this.toggleModal(e, last_page * per_page, per_page)
-                }
-              >
+              <button style={{ marginTop: "28px" }} className="btn btn-primary" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
                 {isProgress(this.props.download)}
               </button>
             </div>
@@ -271,12 +210,7 @@ class MutationReport extends Component {
         </div>
         <TableCommon
           head={head}
-          rowSpan={[
-            { label: "Mutasi" },
-            { label: "Beli" },
-            { label: "Asal" },
-            { label: "Tujuan" },
-          ]}
+          rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}
           meta={{
             total: total,
             current_page: current_page,
@@ -288,69 +222,36 @@ class MutationReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let action = [
-                      { label: "Detail" },
-                      { label: "Print Faktur" },
-                      { label: "3ply" },
-                      { label: "Edit" },
-                    ];
+                    let action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Edit" }];
                     if (v.status !== "0") {
-                      action = [
-                        { label: "Detail" },
-                        { label: "Print Faktur" },
-                        { label: "3ply" },
-                      ];
+                      action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }];
                     }
                     totQtyPer = totQtyPer + parseInt(v.total_qty);
                     return (
                       <tr key={i}>
-                        <td className="middle nowrap text-center">
-                          {generateNo(i, current_page)}
-                        </td>
+                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
                           <ButtonActionCommon
                             action={action}
                             callback={(e) => {
                               console.log(e);
-                              if (e === 0)
-                                this.toggle(v.no_faktur_mutasi, "", "");
-                              if (e === 1)
-                                this.handleRePrint(v.no_faktur_mutasi);
-                              if (e === 2)
-                                this.props.history.push(
-                                  `../alokasi3ply/${v.no_faktur_mutasi}`
-                                );
+                              if (e === 0) this.toggle(v.no_faktur_mutasi, "", "");
+                              if (e === 1) this.handleRePrint(v.no_faktur_mutasi);
+                              if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
                               if (v.status === "0") {
-                                if (e === 3)
-                                  this.props.history.push(
-                                    `../edit/alokasi/${btoa(
-                                      v.no_faktur_mutasi
-                                    )}`
-                                  );
+                                if (e === 3) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
                               }
                             }}
                           />
                         </td>
                         <td className="middle nowrap">{v.no_faktur_mutasi}</td>
-                        <td className="middle nowrap">
-                          {v.no_faktur_beli === "" ? "-" : v.no_faktur_beli}
-                        </td>
+                        <td className="middle nowrap">{v.no_faktur_beli === "" ? "-" : v.no_faktur_beli}</td>
                         <td className="middle nowrap">{v.lokasi_asal}</td>
                         <td className="middle nowrap">{v.lokasi_tujuan}</td>
-                        <td className="middle nowrap text-right">
-                          {v.total_qty}
-                        </td>
-                        <td className="middle nowrap">
-                          {v.status === "0"
-                            ? statusQ("warning", "Dikirim")
-                            : v.status === "1"
-                            ? statusQ("success", "Diterima")
-                            : ""}
-                        </td>
+                        <td className="middle nowrap text-right">{v.total_qty}</td>
+                        <td className="middle nowrap">{v.status === "0" ? statusQ("warning", "Dikirim") : v.status === "1" ? statusQ("success", "Diterima") : ""}</td>
                         <td className="middle nowrap">{v.keterangan}</td>
-                        <td className="middle nowrap">
-                          {toDate(v.tgl_mutasi)}
-                        </td>
+                        <td className="middle nowrap">{toDate(v.tgl_mutasi)}</td>
                       </tr>
                     );
                   })
@@ -372,16 +273,9 @@ class MutationReport extends Component {
           ]}
         />
 
-        {this.props.isOpen && this.state.isModalDetail ? (
-          <DetailMutation />
-        ) : null}
+        {this.props.isOpen && this.state.isModalDetail ? <DetailMutation /> : null}
 
-        {this.props.isOpen && this.state.isModalExport ? (
-          <MutationReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
-        ) : null}
+        {this.props.isOpen && this.state.isModalExport ? <MutationReportExcel startDate={this.state.startDate} endDate={this.state.endDate} /> : null}
       </Layout>
     );
   }

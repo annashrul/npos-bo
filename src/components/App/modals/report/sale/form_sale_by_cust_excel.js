@@ -18,12 +18,22 @@ class SaleByCustReportExcel extends Component {
 
   handleContent(cek = "excel") {
     let props = [];
-    if (this.props.sale_by_custReportExcel.data !== undefined) {
-      if (this.props.sale_by_custReportExcel.data.length > 0) {
-        this.props.sale_by_custReportExcel.data.map((v, i) => {
-          props.push([i + 1, v.kd_cust, v.nama, toRp(parseInt(v.gross_sales, 10)), toRp(parseInt(v.diskon_item, 10)), toRp(parseInt(v.diskon_trx, 10)), toRp(v.service), v.qty]);
-          if (cek === "excel") props[i].shift();
-        });
+    let data = this.props.sale_by_custReportExcel.data;
+    if (data !== undefined) {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          props.push([
+            i + 1,
+            data[i].kd_cust,
+            data[i].nama,
+            toRp(parseInt(data[i].gross_sales, 10)),
+            toRp(parseInt(data[i].diskon_item, 10)),
+            toRp(parseInt(data[i].diskon_trx, 10)),
+            toRp(data[i].service),
+            data[i].qty,
+          ]);
+          cek === "excel" && props[i].shift();
+        }
       }
     }
     return props;

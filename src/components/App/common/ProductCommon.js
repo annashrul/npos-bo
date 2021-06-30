@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
-import { lengthBrg, swal } from "../../../helper";
+import { swal } from "../../../helper";
 import { update } from "components/model/app.model";
 import { actionDataCommon, getDataCommon } from "./FlowTrxCommon";
 import Select from "react-select";
@@ -35,7 +35,6 @@ class ProductCommon extends Component {
   }
 
   handleLoadMore() {
-    let perpage = this.state.perpage;
     this.handleService(this.state.data.value, this.state.value, (res) => {
       // this.setState({ scrollPage: this.state.scrollPage + 5 });
     });
@@ -150,19 +149,9 @@ class ProductCommon extends Component {
       <div>
         <div className="form-group">
           <label>Pilih barang</label>
-          <Select
-            options={this.state.data_array}
-            placeholder="Pilih barang"
-            onChange={this.HandleChangeSelect}
-            value={this.state.data}
-          />
+          <Select options={this.state.data_array} placeholder="Pilih barang" onChange={this.HandleChangeSelect} value={this.state.data} />
           <small id="passwordHelpBlock" className="form-text text-muted">
-            Cari berdasarkan{" "}
-            {this.state.data.value === 1
-              ? "Kode Barang"
-              : this.state.data.value === 2
-              ? "Barcode"
-              : "Deskripsi"}
+            Cari berdasarkan {this.state.data.value === 1 ? "Kode Barang" : this.state.data.value === 2 ? "Barcode" : "Deskripsi"}
           </small>
         </div>
         <div className="form-group">
@@ -212,8 +201,7 @@ class ProductCommon extends Component {
                     return (
                       <li
                         style={{
-                          backgroundColor:
-                            this.state.scrollPage === inx ? "#eeeeee" : "",
+                          backgroundColor: this.state.scrollPage === inx ? "#eeeeee" : "",
                         }}
                         id={`item${inx}`}
                         className="clearfix"
@@ -224,9 +212,7 @@ class ProductCommon extends Component {
                             qty: 0,
                           });
                           this.HandleAddBrg(this.props.dataTrx.data[inx]);
-                          this.props.callbackSetFocus(
-                            this.props.dataTrx.data[inx]
-                          );
+                          this.props.callbackSetFocus(this.props.dataTrx.data[inx]);
                         }}
                       >
                         <div className="about">
@@ -275,16 +261,8 @@ class ProductCommon extends Component {
         </div>
         <hr />
         <div className="form-group">
-          <button
-            className={"btn btn-primary"}
-            style={{ width: "100%" }}
-            onClick={this.handleLoadMore}
-          >
-            {this.props.isLoading ? (
-              "Tunggu Sebentar"
-            ) : (
-              <i className="fa fa-refresh"></i>
-            )}
+          <button className={"btn btn-primary"} style={{ width: "100%" }} onClick={this.handleLoadMore}>
+            {this.props.isLoading ? "Tunggu Sebentar" : <i className="fa fa-refresh"></i>}
           </button>
         </div>
       </div>

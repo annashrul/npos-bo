@@ -44,12 +44,12 @@ class FormGroupProduct extends Component {
 
     if (propsGroup.data !== undefined) {
       if (typeof propsGroup.data === "object") {
-        propsGroup.data.map((v, i) => {
+        propsGroup.data.map((v, i) =>
           stateGroup.push({
             value: v.kode,
             label: v.nama,
-          });
-        });
+          })
+        );
       }
     }
 

@@ -1,35 +1,15 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  fetchPoReport,
-  fetchPoReportExcel,
-} from "redux/actions/purchase/purchase_order/po.action";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
+import { fetchPoReport, fetchPoReportExcel } from "redux/actions/purchase/purchase_order/po.action";
+import { ModalType } from "redux/actions/modal.action";
 import { poReportDetail } from "redux/actions/purchase/purchase_order/po.action";
 import moment from "moment";
-import Paginationq, { statusQ } from "helper";
+import { statusQ } from "helper";
 import DetailPoReport from "components/App/modals/report/purchase/purchase_order/detail_po_report";
 import PoReportExcel from "components/App/modals/report/purchase/purchase_order/form_po_excel";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import Select from "react-select";
-import { rangeDate } from "helper";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import {
-  dateRange,
-  generateNo,
-  getStorage,
-  isEmptyOrUndefined,
-  isProgress,
-  noData,
-  setStorage,
-  toDate,
-} from "../../../../../helper";
+
+import { dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
@@ -165,22 +145,8 @@ class PoReport extends Component {
   }
 
   render() {
-    const { total, last_page, per_page, current_page, data } =
-      this.props.poReport;
-    const {
-      status_data,
-      status,
-      column,
-      column_data,
-      location,
-      sort,
-      any,
-      dateFrom,
-      dateTo,
-      isModalDetail,
-      isModalExport,
-      master,
-    } = this.state;
+    const { total, last_page, per_page, current_page, data } = this.props.poReport;
+    const { status_data, status, column, column_data, location, sort, any, dateFrom, dateTo, isModalDetail, isModalExport, master } = this.state;
 
     const head = [
       { label: "No", className: "text-center", width: "1%" },
@@ -210,62 +176,30 @@ class PoReport extends Component {
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
-                  <LokasiCommon
-                    isAll={true}
-                    callback={(res) => this.handleChangeSelect("location", res)}
-                    dataEdit={location}
-                  />
+                  <LokasiCommon isAll={true} callback={(res) => this.handleChangeSelect("location", res)} dataEdit={location} />
                 </div>
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon
-                  label="Status"
-                  options={status_data}
-                  callback={(res) => this.handleChangeSelect("status", res)}
-                  dataEdit={status}
-                />
+                <SelectCommon label="Status" options={status_data} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={status} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon
-                  label="Kolom"
-                  options={column_data}
-                  callback={(res) => this.handleChangeSelect("column", res)}
-                  dataEdit={column}
-                />
+                <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectSortCommon
-                  callback={(res) => this.handleChangeSelect("sort", res)}
-                  dataEdit={sort}
-                />
+                <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
                   <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    name="any"
-                    value={any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
+                  <input className="form-control" type="text" name="any" value={any} onChange={(e) => this.handleChange(e)} />
                 </div>
               </div>
               <div className="col-md-2">
-                <button
-                  style={{ marginTop: "28px", marginRight: "5px" }}
-                  className="btn btn-primary"
-                  onClick={this.handleSearch}
-                >
+                <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={this.handleSearch}>
                   <i className="fa fa-search" />
                 </button>
 
-                <button
-                  className="btn btn-primary"
-                  type="button"
-                  style={{ marginTop: "28px" }}
-                  onClick={(e) => this.toggleModal(e, last_page * per_page)}
-                >
+                <button className="btn btn-primary" type="button" style={{ marginTop: "28px" }} onClick={(e) => this.toggleModal(e, last_page * per_page)}>
                   {isProgress(this.props.isLoading)}
                 </button>
               </div>
@@ -300,14 +234,9 @@ class PoReport extends Component {
                     }
                     return (
                       <tr key={i}>
+                        <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                         <td className="middle nowrap text-center">
-                          {generateNo(i, current_page)}
-                        </td>
-                        <td className="middle nowrap text-center">
-                          <ButtonActionCommon
-                            action={[{ label: "Detail" }]}
-                            callback={(e) => this.toggle(i)}
-                          />
+                          <ButtonActionCommon action={[{ label: "Detail" }]} callback={(e) => this.toggle(i)} />
                         </td>
                         <td className="middle nowrap">{v.no_po}</td>
                         <td className="middle nowrap">{toDate(v.tgl_po)} </td>
@@ -316,9 +245,7 @@ class PoReport extends Component {
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis}</td>
                         <td className="middle nowrap">{v.kd_kasir}</td>
-                        <td className="middle nowrap">
-                          {statusQ(title, desc)}
-                        </td>
+                        <td className="middle nowrap">{statusQ(title, desc)}</td>
                       </tr>
                     );
                   })
@@ -327,16 +254,9 @@ class PoReport extends Component {
           }
         />
 
-        {this.props.isOpen && isModalDetail ? (
-          <DetailPoReport
-            master={master}
-            poReportDetail={this.props.dataReportDetail}
-          />
-        ) : null}
+        {this.props.isOpen && isModalDetail ? <DetailPoReport master={master} poReportDetail={this.props.dataReportDetail} /> : null}
 
-        {this.props.isOpen && isModalExport ? (
-          <PoReportExcel startDate={dateFrom} endDate={dateTo} />
-        ) : null}
+        {this.props.isOpen && isModalExport ? <PoReportExcel startDate={dateFrom} endDate={dateTo} /> : null}
       </Layout>
     );
   }

@@ -34,9 +34,7 @@ export const getDataCommon = (table, callback) => {
   const data = get(table);
   data.then((res) => {
     let brg = [];
-    res.map((i) => {
-      brg.push(i);
-    });
+    res.map((i) => brg.push(i));
     callback(res, brg);
   });
 };

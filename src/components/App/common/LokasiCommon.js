@@ -29,12 +29,12 @@ class LokasiCommon extends Component {
       }
       let propsLokasi = props.auth.user.lokasi;
       if (propsLokasi !== undefined) {
-        propsLokasi.map((i) => {
+        propsLokasi.map((i) =>
           arrLokasi.push({
             value: i.kode,
             label: i.nama,
-          });
-        });
+          })
+        );
 
         if (propsLokasi.length === 1) {
           Object.assign(state, { dataObject: arrLokasi[0] });

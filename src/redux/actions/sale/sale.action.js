@@ -2,13 +2,11 @@ import { SALE, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy, del } from "components/model/app.model";
-import { handleDelete, handleGet, handleGetExport, handlePost, handlePut, loading } from "../handleHttp";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import { handleDelete, handleGet, handleGetExport, handlePost } from "../handleHttp";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import { handleError, isEmptyOrUndefined, setStorage, ToastQ } from "../../../helper";
+import { isEmptyOrUndefined, ToastQ } from "../../../helper";
 import { ModalType } from "../modal.action";
 
 export function setLoading(load) {
@@ -192,7 +190,6 @@ export const storeSale = (data, param) => {
           });
           document.getElementById("btnReprint").addEventListener("click", () => {
             handlePost("pos/reprint/" + btoa(datum.result.kode), [], (res, msg, status) => {
-              const data = res.data;
               ToastQ.fire({
                 icon: "success",
                 title: msg,

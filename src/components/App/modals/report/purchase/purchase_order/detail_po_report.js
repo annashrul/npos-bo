@@ -3,7 +3,6 @@ import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import { ModalToggle } from "redux/actions/modal.action";
-import { toRp } from "helper";
 import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
 import { toDate } from "../../../../../../helper";
 import TableCommon from "../../../../common/TableCommon";
@@ -38,13 +37,8 @@ class DetailPoReport extends Component {
       { label: "Catatan" },
     ];
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "poReportDetail"}
-        size="lg"
-      >
-        <ModalHeader toggle={this.toggle}>
-          Detail Laporan Purchase Order
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "poReportDetail"} size="lg">
+        <ModalHeader toggle={this.toggle}>Detail Laporan Purchase Order</ModalHeader>
         <ModalBody>
           <HeaderDetailCommon
             data={[

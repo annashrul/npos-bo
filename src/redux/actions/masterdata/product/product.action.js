@@ -1,16 +1,9 @@
 import { PRODUCT, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { ModalToggle } from "../../modal.action";
 import { swal } from "../../../../helper";
-import { actionDataCommon } from "../../../../components/App/common/FlowTrxCommon";
-import { update } from "lodash";
 
 export function setLoadingbrg(load) {
   return { type: PRODUCT.LOADING_BRG, load };
@@ -189,15 +182,7 @@ export const deleteProduct = (id) => {
   };
 };
 
-export const FetchBrg = (
-  page = 1,
-  by = "barcode",
-  q = "",
-  lokasi = null,
-  supplier = null,
-  db,
-  perpage = ""
-) => {
+export const FetchBrg = (page = 1, by = "barcode", q = "", lokasi = null, supplier = null, db, perpage = "") => {
   return (dispatch) => {
     dispatch(setLoadingbrg(true));
     let url = `barang/get?page=${page}`;
@@ -291,15 +276,7 @@ export const FetchBrgAll = (lokasi) => {
   };
 };
 
-export const FetchBrgSame = (
-  page = 1,
-  by = "barcode",
-  q = "",
-  lokasi = null,
-  supplier = null,
-  db,
-  perpage
-) => {
+export const FetchBrgSame = (page = 1, by = "barcode", q = "", lokasi = null, supplier = null, db, perpage) => {
   return (dispatch) => {
     dispatch(setLoadingbrg(true));
     let url = `barang?page=${page}`;
@@ -394,8 +371,7 @@ export const FetchProductDetail = (kode) => {
           allowOutsideClick: false,
           title: "failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
       });
   };
@@ -452,8 +428,7 @@ export const FetchProductSale = (page = 1, where, param = "", db) => {
           allowOutsideClick: false,
           title: "failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
       });
   };

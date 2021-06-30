@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import WrapperModal from "components/App/modals/_wrapper.modal";
-import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalBody, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
-import Preloader from "../../../../Preloader";
 import { storeSale } from "../../../../redux/actions/sale/sale.action";
 import { toCurrency, rmComma } from "helper";
 import { withRouter } from "react-router-dom";
@@ -12,7 +11,7 @@ import moment from "moment";
 import KeyHandler, { KEYPRESS } from "react-key-handler";
 import SelectCommon from "../../common/SelectCommon";
 
-import { handleError, onHandleKeyboard, setFocus } from "../../../../helper";
+import { handleError, setFocus } from "../../../../helper";
 class FormSale extends Component {
   constructor(props) {
     super(props);

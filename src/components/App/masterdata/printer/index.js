@@ -1,23 +1,13 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  readPrinter,
-  deletePrinter,
-} from "redux/actions/masterdata/printer/printer.action";
+import { readPrinter, deletePrinter } from "redux/actions/masterdata/printer/printer.action";
 import FormPrinter from "../../modals/masterdata/printer/form_printer";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { generateNo, noData, rmSpaceToStrip } from "../../../../helper";
+import { generateNo, rmSpaceToStrip } from "../../../../helper";
 import { testPrinter } from "../../../../redux/actions/masterdata/printer/printer.action";
-import TableCommon from "../../common/TableCommon";
-import ButtonActionCommon from "../../common/ButtonActionCommon";
 
 class Printer extends Component {
   constructor(props) {
@@ -80,17 +70,7 @@ class Printer extends Component {
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
-    const head = [
-      { label: "No", className: "text-center", width: "1%" },
-      { label: "#", className: "text-center", width: "1%" },
-      { label: "Nama" },
-      { label: "Lokasi", width: "5%" },
-      { label: "Ukuran kertas", width: "10%" },
-      { label: "Ip address", width: "1%" },
-      { label: "Konektor", width: "5%" },
-      { label: "Vid", width: "5%" },
-      { label: "Pid", width: "5%" },
-    ];
+
     return (
       <Layout page="Printer">
         <div className="col-12 box-margin">
@@ -117,12 +97,7 @@ class Printer extends Component {
               </div>
               <div className="col-2 col-xs-2 col-md-9">
                 <div className="form-group text-right">
-                  <button
-                    style={{ height: "38px" }}
-                    type="button"
-                    onClick={(e) => this.toggleModal(e, null)}
-                    className="btn btn-primary"
-                  >
+                  <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                     <i className="fa fa-plus" />
                   </button>
                 </div>
@@ -218,53 +193,25 @@ class Printer extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td className="middle text-center nowrap">
-                          {generateNo(i, current_page)}
-                        </td>
+                        <td className="middle text-center nowrap">{generateNo(i, current_page)}</td>
                         <td className="text-center middle nowrap">
                           <UncontrolledButtonDropdown>
                             <DropdownToggle caret></DropdownToggle>
                             <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggleModal(e, i)}
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleTestPrint(e, i)}
-                              >
-                                Test print
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleDelete(e, v.id_printer)
-                                }
-                              >
-                                Delete
-                              </DropdownItem>
+                              <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
+                              <DropdownItem onClick={(e) => this.handleTestPrint(e, i)}>Test print</DropdownItem>
+                              <DropdownItem onClick={(e) => this.handleDelete(e, v.id_printer)}>Delete</DropdownItem>
                             </DropdownMenu>
                           </UncontrolledButtonDropdown>
                         </td>
                         <td className="middle nowrap">{v.nama} </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.lokasi)}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.paper_size)}
-                        </td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.lokasi)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.paper_size)}</td>
 
-                        <td className="middle nowrap">
-                          {`${v.konektor}`.toLowerCase()}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.ip)}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.vid)}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.pid)}
-                        </td>
+                        <td className="middle nowrap">{`${v.konektor}`.toLowerCase()}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.ip)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.vid)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.pid)}</td>
                       </tr>
                     );
                   })
@@ -277,12 +224,7 @@ class Printer extends Component {
             </table>
           </div>
           <div style={{ marginTop: "20px", float: "right" }}>
-            <Paginationq
-              current_page={current_page}
-              per_page={per_page}
-              total={total}
-              callback={this.handlePageChange.bind(this)}
-            />
+            <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
           </div>
           {this.props.isOpen && <FormPrinter detail={this.state.detail} />}
         </div>

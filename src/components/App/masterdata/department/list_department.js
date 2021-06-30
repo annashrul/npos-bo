@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
-import {
-  deleteDepartment,
-  FetchDepartment,
-} from "redux/actions/masterdata/department/department.action";
+import { deleteDepartment, FetchDepartment } from "redux/actions/masterdata/department/department.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import FormDepartment from "components/App/modals/masterdata/department/form_department";
 import TableCommon from "../../common/TableCommon";
 import HeaderGeneralCommon from "../../common/HeaderGeneralCommon";
-import Dept from "assets/dept.png";
 
 class ListDepartment extends Component {
   constructor(props) {
@@ -59,11 +55,7 @@ class ListDepartment extends Component {
           callbackAdd={() => this.toggleModal(null)}
         />
         <TableCommon
-          head={[
-            { label: "No", className: "text-center", width: "1%" },
-            { label: "#", className: "text-center", width: "1%" },
-            { label: "Nama" },
-          ]}
+          head={[{ label: "No", className: "text-center", width: "1%" }, { label: "#", className: "text-center", width: "1%" }, { label: "Nama" }]}
           meta={{
             total: total,
             current_page: current_page,

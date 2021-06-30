@@ -3,15 +3,8 @@ import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import { ModalToggle } from "redux/actions/modal.action";
-import { toRp } from "helper";
 import { FetchMutationData } from "redux/actions/inventory/mutation.action";
-import {
-  generateNo,
-  noData,
-  parseToRp,
-  rmSpaceToStrip,
-  toDate,
-} from "../../../../../../helper";
+import { generateNo, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../../../helper";
 import TableCommon from "../../../../common/TableCommon";
 import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
 
@@ -27,29 +20,12 @@ class DetailMutation extends Component {
   }
 
   handlePageChange(pageNumber) {
-    this.props.dispatch(
-      FetchMutationData(
-        this.props.mutationDetail.no_faktur_mutasi,
-        `page=${pageNumber}`
-      )
-    );
+    this.props.dispatch(FetchMutationData(this.props.mutationDetail.no_faktur_mutasi, `page=${pageNumber}`));
   }
 
   render() {
-    const { data, current_page, per_page, last_page } =
-      this.props.mutationDetail.detail === undefined
-        ? []
-        : this.props.mutationDetail.detail;
-    const {
-      keterangan,
-      lokasi_asal,
-      lokasi_tujuan,
-      no_faktur_beli,
-      no_faktur_mutasi,
-      operator,
-      tgl_mutasi,
-      total,
-    } = this.props.mutationDetail;
+    const { data, current_page, per_page, last_page } = this.props.mutationDetail.detail === undefined ? [] : this.props.mutationDetail.detail;
+    const { keterangan, lokasi_asal, lokasi_tujuan, no_faktur_beli, no_faktur_mutasi, operator, tgl_mutasi, total } = this.props.mutationDetail;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "Kode" },
@@ -63,10 +39,7 @@ class DetailMutation extends Component {
 
     return (
       <div>
-        <WrapperModal
-          isOpen={this.props.isOpen && this.props.type === "detailMutation"}
-          size="lg"
-        >
+        <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailMutation"} size="lg">
           <ModalHeader toggle={this.toggle}>DETAIL LAPORAN MUTASI</ModalHeader>
           <ModalBody>
             <HeaderDetailCommon
@@ -86,13 +59,7 @@ class DetailMutation extends Component {
             />
             <TableCommon
               head={head}
-              rowSpan={[
-                { label: "Total" },
-                { label: "Retur" },
-                { label: "Diterima" },
-                { label: "Beli" },
-                { label: "Jual" },
-              ]}
+              rowSpan={[{ label: "Total" }, { label: "Retur" }, { label: "Diterima" }, { label: "Beli" }, { label: "Jual" }]}
               meta={{
                 total: parseInt(per_page * last_page, 10),
                 current_page: current_page,
@@ -106,30 +73,16 @@ class DetailMutation extends Component {
                     ? data.map((v, i) => {
                         return (
                           <tr key={i}>
-                            <td className="middle nowrap text-center">
-                              {generateNo(i, current_page)}
-                            </td>
+                            <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                             <td className="middle nowrap">{v.barcode}</td>
                             <td className="middle nowrap">{v.kd_brg}</td>
                             <td className="middle nowrap">{v.nm_brg}</td>
-                            <td className="middle nowrap text-right">
-                              {parseToRp(v.qty)}
-                            </td>
-                            <td className="middle nowrap text-right">
-                              {parseToRp(v.qty_retur)}
-                            </td>
-                            <td className="middle nowrap text-right">
-                              {parseToRp(v.qty - v.qty_retur)}
-                            </td>
-                            <td className="middle nowrap text-right">
-                              {parseToRp(v.hrg_beli)}
-                            </td>
-                            <td className="middle nowrap text-right">
-                              {parseToRp(v.hrg_jual)}
-                            </td>
-                            <td className="middle nowrap text-right">
-                              {parseToRp(v.hrg_jual * (v.qty - v.qty_retur))}
-                            </td>
+                            <td className="middle nowrap text-right">{parseToRp(v.qty)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.qty_retur)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.qty - v.qty_retur)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.hrg_jual)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(v.hrg_jual * (v.qty - v.qty_retur))}</td>
                             <td className="middle nowrap">{v.satuan}</td>
                           </tr>
                         );

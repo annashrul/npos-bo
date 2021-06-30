@@ -1,12 +1,6 @@
-import { PROMO, HEADERS } from "../../_constants";
-import axios from "axios";
+import { PROMO } from "../../_constants";
 
-import {
-  handleGet,
-  handlePost,
-  handlePut,
-  handleDelete,
-} from "../../handleHttp";
+import { handleGet, handlePost, handlePut, handleDelete } from "../../handleHttp";
 import { swal } from "../../../../helper";
 
 import { ModalToggle } from "../../modal.action";

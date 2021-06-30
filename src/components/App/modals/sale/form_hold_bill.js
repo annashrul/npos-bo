@@ -1,29 +1,11 @@
 import React, { Component } from "react";
 import WrapperModal from "components/App/modals/_wrapper.modal";
-import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalBody, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
-import Preloader from "../../../../Preloader";
-import { storeSale } from "../../../../redux/actions/sale/sale.action";
-import { ToastQ, toCurrency, rmComma } from "helper";
 import { withRouter } from "react-router-dom";
-import moment from "moment";
-import {
-  store,
-  get,
-  update,
-  destroy,
-  cekData,
-  del,
-} from "components/model/app.model";
-import {
-  isEmptyOrUndefined,
-  setFocus,
-  swallOption,
-  swalWithCallback,
-} from "../../../../helper";
-import { ModalType } from "../../../../redux/actions/modal.action";
+import { store, update } from "components/model/app.model";
+import { isEmptyOrUndefined, setFocus, swalWithCallback } from "../../../../helper";
 
 class FormHoldBill extends Component {
   constructor(props) {
@@ -88,13 +70,8 @@ class FormHoldBill extends Component {
   }
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formHoldBill"}
-        size="md"
-      >
-        <ModalHeader toggle={this.toggle}>
-          Simpan transaksi #{this.props.master.kode_trx}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formHoldBill"} size="md">
+        <ModalHeader toggle={this.toggle}>Simpan transaksi #{this.props.master.kode_trx}</ModalHeader>
         <ModalBody>
           <form onSubmit={this.handleSubmit} noValidate>
             <div className="form-group">

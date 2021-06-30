@@ -1,12 +1,5 @@
-import { AREA, HEADERS } from "../../_constants";
-import axios from "axios";
-import Swal from "sweetalert2";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { AREA } from "../../_constants";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
 import { ModalToggle } from "redux/actions/modal.action";
 
@@ -62,14 +55,7 @@ export const createArea = (data, token) => {
       } else {
         dispatch(ModalToggle(true));
       }
-      dispatch(
-        FetchArea(
-          localStorage.getItem("page_area")
-            ? localStorage.getItem("page_area")
-            : 1,
-          ""
-        )
-      );
+      dispatch(FetchArea(localStorage.getItem("page_area") ? localStorage.getItem("page_area") : 1, ""));
     });
   };
 };
@@ -89,7 +75,6 @@ export const updateArea = (id, data, where = "") => {
 export const deleteArea = (id, where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    const url = HEADERS.URL + `area/${id}`;
     handleDelete(`area/${id}`, () => {
       dispatch(FetchArea(where !== "" ? where : "page=1"));
     });

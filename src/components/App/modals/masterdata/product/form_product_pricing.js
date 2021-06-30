@@ -3,20 +3,16 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-// import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { setProductEdit, createProduct, updateProduct } from "redux/actions/masterdata/product/product.action";
+import { setProductEdit, updateProduct } from "redux/actions/masterdata/product/product.action";
 import { FetchCheck } from "redux/actions/site.action";
 import axios from "axios";
 import { HEADERS } from "redux/actions/_constants";
-// import Select from "react-select";
-// import FileBase64 from "react-file-base64";
 import moment from "moment";
 import { rmComma, toCurrency } from "../../../../../helper";
 import { isNaN } from "lodash";
 import FormSubDepartment from "../../../../../components/App/modals/masterdata/department/form_sub_department";
 import FormGroupProduct from "../../../../../components/App/modals/masterdata/group_product/form_group_product";
 import FormSupplier from "../../../../../components/App/modals/masterdata/supplier/form_supplier";
-// import Default from "../../../../../assets/default.png";
 import { convertBase64 } from "helper";
 class FormProductPricing extends Component {
   constructor(props) {
@@ -2352,10 +2348,8 @@ class FormProductPricing extends Component {
                             {(() => {
                               let containers = [];
                               for (let x = 0; x < this.state.barangSku.length; x++) {
-                                let satuan = "",
-                                  checked;
+                                let satuan = "";
                                 let lbl = this.state.barangSku[x].qty;
-                                let isReadonly = "isReadonly";
                                 let hargaBeli,
                                   nameHargaBeli = "hrgBeli";
                                 let service,
@@ -2364,10 +2358,8 @@ class FormProductPricing extends Component {
                                   ppnName = "ppn";
                                 if (x === 0) {
                                   satuan = "Pcs";
-                                  checked = v[x].isCheckedPCS;
                                   hargaBeli = v[x].hrgBeliPCS;
                                   nameHargaBeli += `PCS`;
-                                  isReadonly += ``;
                                   service = v[x].servicePCS;
                                   ppn = v[x].ppnPCS;
                                   serviceName += "PCS";
@@ -2375,10 +2367,8 @@ class FormProductPricing extends Component {
                                 }
                                 if (x === 1) {
                                   satuan = "Pack";
-                                  checked = v[x].isCheckedPACK;
                                   hargaBeli = v[x].hrgBeliPACK;
                                   nameHargaBeli += `PACK`;
-                                  isReadonly += `Pack`;
                                   service = v[x].servicePACK;
                                   ppn = v[x].ppnPACK;
                                   serviceName += "PACK";
@@ -2386,10 +2376,8 @@ class FormProductPricing extends Component {
                                 }
                                 if (x === 2) {
                                   satuan = "Karton";
-                                  checked = v[x].isCheckedKARTON;
                                   hargaBeli = v[x].hrgBeliKARTON;
                                   nameHargaBeli += `KARTON`;
-                                  isReadonly += `Karton`;
                                   service = v[x].serviceKARTON;
                                   ppn = v[x].ppnKARTON;
                                   serviceName += "KARTON";
@@ -2400,19 +2388,6 @@ class FormProductPricing extends Component {
                                     <tr>
                                       <th className="text-black" colSpan={9} width="10%" style={{ verticalAlign: "middle", textAlign: "left" }}>
                                         <div className="d-flex align-items-center">
-                                          {/* <input
-                                          className="mr-2"
-                                          type="checkbox"
-                                          name="lokasi"
-                                          value={v[x].lokasi}
-                                          checked={checked}
-                                          onChange={(e) =>
-                                            this.handleCheckChieldElementSku(
-                                              e,
-                                              i
-                                            )
-                                          }
-                                        /> */}
                                           <label className="mb-0">
                                             {v[x].nama_toko} ( {lbl} )
                                           </label>
@@ -2424,11 +2399,6 @@ class FormProductPricing extends Component {
                                         <div className="form-group">
                                           <label className="font-11 text-secondary float-left">Harga Beli</label>
                                           <input
-                                            // readOnly={
-                                            //   localStorage.getItem(
-                                            //     `${isReadonly}`
-                                            //   ) === "true"
-                                            // }
                                             type="text"
                                             placeholder="hrg beli"
                                             className="form-control"
@@ -2450,14 +2420,6 @@ class FormProductPricing extends Component {
                                                 <label className="font-11 text-secondary float-left">Margin{this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}</label>
                                                 <div className="input-group">
                                                   <input
-                                                    // readOnly={
-                                                    //   this.state.jenis ===
-                                                    //   "4"
-                                                    //     ? true
-                                                    //     : localStorage.getItem(
-                                                    //         `${isReadonly}`
-                                                    //       ) === "true"
-                                                    // }
                                                     type="text"
                                                     placeholder={`margin ${z + 1}`}
                                                     className="form-control"
@@ -2490,14 +2452,6 @@ class FormProductPricing extends Component {
                                               <div className="form-group" key={z}>
                                                 <label className="font-11 text-secondary float-left">Harga Jual{this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}</label>
                                                 <input
-                                                  // readOnly={
-                                                  //   this.state.jenis ===
-                                                  //   "4"
-                                                  //     ? true
-                                                  //     : localStorage.getItem(
-                                                  //         `${isReadonly}`
-                                                  //       ) === "true"
-                                                  // }
                                                   type="text"
                                                   placeholder={`hrg jual ${this.state[place]}`}
                                                   className="form-control"

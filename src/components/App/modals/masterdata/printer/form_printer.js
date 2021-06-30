@@ -4,17 +4,8 @@ import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
-import {
-  createPrinter,
-  updatePrinter,
-  readPrinter,
-} from "redux/actions/masterdata/printer/printer.action";
-import Select from "react-select";
-import {
-  handleError,
-  isEmptyOrUndefined,
-  rmSpaceToStrip,
-} from "../../../../../helper";
+import { createPrinter, updatePrinter, readPrinter } from "redux/actions/masterdata/printer/printer.action";
+import { isEmptyOrUndefined, rmSpaceToStrip } from "../../../../../helper";
 import SelectCommon from "../../../common/SelectCommon";
 import LokasiCommon from "../../../common/LokasiCommon";
 class FormPrinter extends Component {
@@ -169,69 +160,38 @@ class FormPrinter extends Component {
 
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formPrinter"}
-        size="md"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id_printer === ""
-            ? "Tambah Printer"
-            : "Ubah Printer"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPrinter"} size="md">
+        <ModalHeader toggle={this.toggle}>{this.props.detail.id_printer === "" ? "Tambah Printer" : "Ubah Printer"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
                   <label>Nama</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="nama"
-                    value={this.state.nama}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
                 </div>
               </div>
               <div className="col-md-6">
-                <LokasiCommon
-                  callback={(res) => this.handleChangeSelect("lokasi", res)}
-                  isRequired={true}
-                  dataEdit={this.state.lokasi}
-                />
+                <LokasiCommon callback={(res) => this.handleChangeSelect("lokasi", res)} isRequired={true} dataEdit={this.state.lokasi} />
               </div>
               <div className="col-md-6">
                 <SelectCommon
                   label="Ukuran kertas"
                   options={this.state.ukuran_kertas_data}
-                  callback={(res) =>
-                    this.handleChangeSelect("ukuran_kertas", res)
-                  }
+                  callback={(res) => this.handleChangeSelect("ukuran_kertas", res)}
                   isRequired={true}
                   dataEdit={this.state.ukuran_kertas}
                 />
               </div>
               <div className="col-md-6">
-                <SelectCommon
-                  label="Konektor"
-                  options={this.state.konektor_data}
-                  callback={(res) => this.handleChangeSelect("konektor", res)}
-                  isRequired={true}
-                  dataEdit={this.state.konektor}
-                />
+                <SelectCommon label="Konektor" options={this.state.konektor_data} callback={(res) => this.handleChangeSelect("konektor", res)} isRequired={true} dataEdit={this.state.konektor} />
               </div>
             </div>
 
             {this.state.konektor === "lan" && (
               <div className="form-group">
                 <label>IP address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="ip"
-                  value={this.state.ip}
-                  onChange={this.handleChange}
-                />
+                <input type="text" className="form-control" name="ip" value={this.state.ip} onChange={this.handleChange} />
               </div>
             )}
             {this.state.konektor === "usb" && (
@@ -239,25 +199,13 @@ class FormPrinter extends Component {
                 <div className="col-md-6">
                   <div className="form-group">
                     <label>Vid</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="vid"
-                      value={this.state.vid}
-                      onChange={this.handleChange}
-                    />
+                    <input type="text" className="form-control" name="vid" value={this.state.vid} onChange={this.handleChange} />
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="form-group">
                     <label>Pid</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="pid"
-                      value={this.state.pid}
-                      onChange={this.handleChange}
-                    />
+                    <input type="text" className="form-control" name="pid" value={this.state.pid} onChange={this.handleChange} />
                   </div>
                 </div>
               </div>
@@ -265,11 +213,7 @@ class FormPrinter extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary">
