@@ -3,18 +3,8 @@ import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import {
-  FetchCash,
-  StoreCashTrx,
-} from "redux/actions/masterdata/cash/cash.action";
-import {
-  kassa,
-  toCurrency,
-  rmComma,
-  swallOption,
-  isEmptyOrUndefined,
-  swalWithCallback,
-} from "../../../../helper";
+import { FetchCash, StoreCashTrx } from "redux/actions/masterdata/cash/cash.action";
+import { kassa, toCurrency, rmComma, swallOption, isEmptyOrUndefined, swalWithCallback, getStorage } from "../../../../helper";
 import moment from "moment";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
@@ -39,7 +29,7 @@ class Sale extends Component {
       userid: "",
       jenis: "",
       jenis_data: [],
-      location: "LK/0001",
+      location: "",
       location_data: [],
       kassa: "Z",
       startDate: moment().format("yyyy-MM-DD"),
@@ -172,24 +162,24 @@ class Sale extends Component {
   }
 
   HandleSubmit(e) {
-    // e.preventDefault();
-    if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
-    if (!isEmptyOrUndefined(this.state.kassa, "kassa")) return;
-    if (!isEmptyOrUndefined(this.state.jenis, "jenis kas")) return;
-    if (!isEmptyOrUndefined(this.state.jumlah, "jumlah")) return;
-    if (!isEmptyOrUndefined(this.state.keterangan, "keterangan")) return;
-    let data = {
-      kd_kasir: this.state.userid,
-      jumlah: rmComma(this.state.jumlah),
-      keterangan: this.state.keterangan,
-      lokasi: this.state.location,
-      kassa: this.state.kassa,
-      kd_trx: "",
-      type_kas: this.state.kategori,
-      jenis: this.state.jenis,
-      tanggal: this.state.startDate,
-    };
+    e.preventDefault();
+    const { kassa, jenis, jumlah, keterangan, location, kategori, startDate } = this.state;
+    if (!isEmptyOrUndefined(kassa, "kassa")) return;
+    if (!isEmptyOrUndefined(jenis, "jenis kas")) return;
+    if (!isEmptyOrUndefined(jumlah, "jumlah")) return;
+    if (!isEmptyOrUndefined(keterangan, "keterangan")) return;
 
+    let data = {
+      kd_kasir: this.props.auth.user.id,
+      jumlah: rmComma(jumlah),
+      keterangan: keterangan,
+      lokasi: location === "" ? getStorage("location_tr") : location,
+      kassa: kassa,
+      kd_trx: "",
+      type_kas: kategori,
+      jenis: jenis,
+      tanggal: startDate,
+    };
     swallOption("Pastikan data telah diisi dengan benar!", () => {
       this.props.dispatch(StoreCashTrx(data));
     });
@@ -206,10 +196,7 @@ class Sale extends Component {
                   <div className="card-body">
                     <div className="row">
                       <div className="col-md-6 col-sm-6 col-xs-6 col-6">
-                        <div
-                          className="custom-control custom-radio"
-                          style={{ textAlign: "end" }}
-                        >
+                        <div className="custom-control custom-radio" style={{ textAlign: "end" }}>
                           <input
                             type="radio"
                             id="customRadio1"
@@ -219,10 +206,7 @@ class Sale extends Component {
                             name="kategori"
                             className="custom-control-input"
                           />
-                          <label
-                            className="custom-control-label"
-                            htmlFor="customRadio1"
-                          >
+                          <label className="custom-control-label" htmlFor="customRadio1">
                             Kas Masuk
                           </label>
                         </div>
@@ -238,10 +222,7 @@ class Sale extends Component {
                             name="kategori"
                             className="custom-control-input"
                           />
-                          <label
-                            className="custom-control-label"
-                            htmlFor="customRadio2"
-                          >
+                          <label className="custom-control-label" htmlFor="customRadio2">
                             Kas Keluar
                           </label>
                         </div>
@@ -249,12 +230,7 @@ class Sale extends Component {
                     </div>
                     <div className="row mt-3">
                       <div className="col-md-6">
-                        <LokasiCommon
-                          useLabel={false}
-                          callback={(res) => this.HandleSelect(res, "location")}
-                          dataEdit={this.state.dataEdit}
-                          isLable={false}
-                        />
+                        <LokasiCommon useLabel={false} callback={(res) => this.HandleSelect(res, "location")} dataEdit={this.state.location} isLable={false} />
                       </div>
                       <div className="col-md-6">
                         <div className="form-group">
@@ -262,13 +238,7 @@ class Sale extends Component {
                             type="date"
                             name="startDate"
                             className="form-control"
-                            value={
-                              this.state.startDate === undefined
-                                ? moment(new Date()).format("yyyy-MM-DD")
-                                : moment(this.state.startDate).format(
-                                    "yyyy-MM-DD"
-                                  )
-                            }
+                            value={this.state.startDate === undefined ? moment(new Date()).format("yyyy-MM-DD") : moment(this.state.startDate).format("yyyy-MM-DD")}
                             onChange={this.handleEvent}
                           />
                         </div>
@@ -287,28 +257,12 @@ class Sale extends Component {
                       </div>
 
                       <div className="col-md-6">
-                        <SelectCommon
-                          label="jenis"
-                          options={this.state.jenis_data}
-                          callback={(res) => this.HandleSelect(res, "jenis")}
-                          isLabel={false}
-                          dataEdit={this.state.dataEdit}
-                        />
+                        <SelectCommon label="jenis" options={this.state.jenis_data} callback={(res) => this.HandleSelect(res, "jenis")} isLabel={false} dataEdit={this.state.dataEdit} />
                       </div>
                       <div className="col-md-12">
                         <div className="form-group">
-                          <label className="control-label font-12">
-                            Jumlah
-                          </label>
-                          <input
-                            type="text"
-                            readOnly={false}
-                            className="form-control"
-                            id="jumlah"
-                            name="jumlah"
-                            onChange={(e) => this.HandleInput(e)}
-                            value={toCurrency(this.state.jumlah)}
-                          />
+                          <label className="control-label font-12">Jumlah</label>
+                          <input type="text" readOnly={false} className="form-control" id="jumlah" name="jumlah" onChange={(e) => this.HandleInput(e)} value={toCurrency(this.state.jumlah)} />
                         </div>
                       </div>
                       <div className="col-md-12">
@@ -329,11 +283,7 @@ class Sale extends Component {
                       <div className="col-md-6">
                         <div class="form-group">
                           <label>&nbsp;</label>
-                          <button
-                            type="button"
-                            className="btn btn-primary btn-block"
-                            onClick={(e) => this.HandleSubmit(e)}
-                          >
+                          <button type="button" className="btn btn-primary btn-block" onClick={(e) => this.HandleSubmit(e)}>
                             SIMPAN
                           </button>
                         </div>
@@ -341,11 +291,7 @@ class Sale extends Component {
                       <div className="col-md-6">
                         <div class="form-group">
                           <label>&nbsp;</label>
-                          <button
-                            type="button"
-                            className="btn btn-danger btn-block"
-                            onClick={(e) => this.HandleReset(e)}
-                          >
+                          <button type="button" className="btn btn-danger btn-block" onClick={(e) => this.HandleReset(e)}>
                             RESET
                           </button>
                         </div>

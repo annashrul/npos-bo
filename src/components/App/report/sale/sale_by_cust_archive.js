@@ -16,6 +16,7 @@ const dateToStorage = "dateToReportSaleByCust";
 const columnStorage = "columnReportSaleByCust";
 const sortStorage = "sortReportSaleByCust";
 const anyStorage = "anyReportSaleByCust";
+const activeDateRangePickerStorage = "activeDateRangeReportSale";
 
 class SaleByCustArchive extends Component {
   constructor(props) {
@@ -121,11 +122,16 @@ class SaleByCustArchive extends Component {
       <Layout page="Laporan Arsip Penjualan">
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
-            {dateRange((first, last) => {
-              setStorage(dateFromStorage, first);
-              setStorage(dateToStorage, last);
-              setTimeout(() => this.handleService(), 300);
-            }, `${toDate(startDate)} - ${toDate(endDate)}`)}
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(activeDateRangePickerStorage, isActive);
+                setStorage(dateFromStorage, first);
+                setStorage(dateToStorage, last);
+                setTimeout(() => this.handleService(), 300);
+              },
+              `${toDate(startDate)} - ${toDate(endDate)}`,
+              getStorage(activeDateRangePickerStorage)
+            )}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <SelectCommon label="Kolom" options={handleDataSelect(column_data, "kode", "value")} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />

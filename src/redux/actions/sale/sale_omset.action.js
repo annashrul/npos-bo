@@ -1,7 +1,7 @@
 import { SALE_OMSET, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { handleGet, loading } from "../handleHttp";
+import { handleGet, handleGetExport, loading } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
 
 export function setLoading(load) {
@@ -67,7 +67,12 @@ export function setLoadingReport(load) {
     load,
   };
 }
-
+export function setDownload(load) {
+  return {
+    type: SALE_OMSET.DOWNLOAD,
+    load,
+  };
+}
 export const FetchReportSaleOmset = (where = "") => {
   return (dispatch) => {
     let url = `report/penjualan/omset`;
@@ -75,24 +80,22 @@ export const FetchReportSaleOmset = (where = "") => {
     handleGet(url, (res) => dispatch(setReport(res.data)));
   };
 };
-export const FetchReportSaleOmsetExcel = (
-  page = 1,
-  where = "",
-  perpage = 10000
-) => {
+export const FetchReportSaleOmsetExcel = (page = 1, where = "", perpage = 10000) => {
   return (dispatch) => {
-    loading(true, "Sedang memproses faktur..");
     let url = `report/penjualan/omset?page=${page}&perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
-    handleGet(url, (res) => {
-      const data = res.data;
-      dispatch(ModalToggle(true));
-      dispatch(ModalType("formSaleOmsetExcel"));
-      dispatch(setReportExcel(data));
-      loading(false);
-    });
+    handleGetExport(
+      url,
+      (res) => {
+        const data = res.data;
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formSaleOmsetExcel"));
+        dispatch(setReportExcel(data));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
 

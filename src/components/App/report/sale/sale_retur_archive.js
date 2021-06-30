@@ -17,6 +17,7 @@ const locationStorage = "locationReportSaleReturArchive";
 const columnStorage = "columnReportSaleReturArchive";
 const sortStorage = "sortReportSaleReturArchive";
 const anyStorage = "anyReportSaleReturArchive";
+const activeDateRangePickerStorage = "activeDateRangeReportSaleReturArchive";
 
 class SaleReturReport extends Component {
   constructor(props) {
@@ -108,27 +109,33 @@ class SaleReturReport extends Component {
 
   render() {
     const { per_page, last_page, current_page, total, data } = this.props.sale_returReport;
+    const { startDate, endDate, location, column, sort, column_data, any, isModalReport } = this.state;
 
     return (
       <Layout page="Laporan SaleRetur">
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
-            {dateRange((first, last) => {
-              setStorage(dateFromStorage, first);
-              setStorage(dateToStorage, last);
-              setTimeout(() => this.handleService(), 300);
-            }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(activeDateRangePickerStorage, isActive);
+                setStorage(dateFromStorage, first);
+                setStorage(dateToStorage, last);
+                setTimeout(() => this.handleService(), 300);
+              },
+              `${toDate(startDate)} - ${toDate(endDate)}`,
+              getStorage(activeDateRangePickerStorage)
+            )}
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
-            <LokasiCommon callback={(res) => this.handleChangeSelect("location", res)} isAll={true} />
+            <LokasiCommon callback={(res) => this.handleChangeSelect("location", res)} isAll={true} dataEdit={location} />
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Kolom" options={handleDataSelect(this.state.column_data, "kode", "value")} callback={(res) => this.handleChangeSelect("column", res)} />
+            <SelectCommon label="Kolom" options={handleDataSelect(column_data, "kode", "value")} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} />
+            <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <label>Cari</label>
@@ -138,7 +145,7 @@ class SaleReturReport extends Component {
                 name="any"
                 className="form-control"
                 placeholder="tulis sesuatu disini"
-                value={this.state.any}
+                value={any}
                 onChange={(e) => this.setState({ any: e.target.value })}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") this.handleSearch(e);
@@ -170,7 +177,7 @@ class SaleReturReport extends Component {
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
         />
-        {this.props.isOpen && this.state.isModalReport ? <SaleReturReportExcel startDate={this.state.startDate} endDate={this.state.endDate} /> : null}
+        {this.props.isOpen && isModalReport ? <SaleReturReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );
   }
