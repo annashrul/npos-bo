@@ -297,6 +297,7 @@ class FormSale extends Component {
   }
 
   render() {
+    console.log(this.props);
     const { data } = this.props.bank;
     return (
       <React.Fragment>
