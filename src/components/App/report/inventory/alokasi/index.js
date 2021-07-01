@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import Paginationq from "helper";
-import {
-  FetchAlokasi,
-  FetchAlokasiExcel,
-  FetchAlokasiDetail,
-} from "redux/actions/inventory/alokasi.action";
+import { FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail } from "redux/actions/inventory/alokasi.action";
 import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
@@ -17,12 +13,7 @@ import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { rangeDate } from "helper";
 import { statusQ } from "helper";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import { Link } from "react-router-dom";
 class AlokasiReport extends Component {
   constructor(props) {
@@ -68,46 +59,25 @@ class AlokasiReport extends Component {
     this.handleParameter(page !== undefined && page !== null ? page : 1);
   }
   componentDidMount() {
-    if (
-      localStorage.location_alokasi_report !== undefined &&
-      localStorage.location_alokasi_report !== ""
-    ) {
+    if (localStorage.location_alokasi_report !== undefined && localStorage.location_alokasi_report !== "") {
       this.setState({ location: localStorage.location_alokasi_report });
     }
-    if (
-      localStorage.any_alokasi_report !== undefined &&
-      localStorage.any_alokasi_report !== ""
-    ) {
+    if (localStorage.any_alokasi_report !== undefined && localStorage.any_alokasi_report !== "") {
       this.setState({ any: localStorage.any_alokasi_report });
     }
-    if (
-      localStorage.date_from_alokasi_report !== undefined &&
-      localStorage.date_from_alokasi_report !== null
-    ) {
+    if (localStorage.date_from_alokasi_report !== undefined && localStorage.date_from_alokasi_report !== null) {
       this.setState({ startDate: localStorage.date_from_alokasi_report });
     }
-    if (
-      localStorage.date_to_alokasi_report !== undefined &&
-      localStorage.date_to_alokasi_report !== null
-    ) {
+    if (localStorage.date_to_alokasi_report !== undefined && localStorage.date_to_alokasi_report !== null) {
       this.setState({ endDate: localStorage.date_to_alokasi_report });
     }
-    if (
-      localStorage.sort_alokasi_report !== undefined &&
-      localStorage.sort_alokasi_report !== null
-    ) {
+    if (localStorage.sort_alokasi_report !== undefined && localStorage.sort_alokasi_report !== null) {
       this.setState({ sort: localStorage.sort_alokasi_report });
     }
-    if (
-      localStorage.filter_alokasi_report !== undefined &&
-      localStorage.filter_alokasi_report !== null
-    ) {
+    if (localStorage.filter_alokasi_report !== undefined && localStorage.filter_alokasi_report !== null) {
       this.setState({ filter: localStorage.filter_alokasi_report });
     }
-    if (
-      localStorage.status_alokasi_report !== undefined &&
-      localStorage.status_alokasi_report !== null
-    ) {
+    if (localStorage.status_alokasi_report !== undefined && localStorage.status_alokasi_report !== null) {
       this.setState({ status: localStorage.status_alokasi_report });
     }
   }
@@ -227,24 +197,9 @@ class AlokasiReport extends Component {
       filter_data: data_filter,
       status_data: data_status,
     });
-    localStorage.setItem(
-      "status_alokasi_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_production_report
-    );
-    localStorage.setItem(
-      "sort_alokasi_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_alokasi_report
-    );
-    localStorage.setItem(
-      "filter_alokasi_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_alokasi_report
-    );
+    localStorage.setItem("status_alokasi_report", this.state.status === "" || this.state.status === undefined ? status[0].kode : localStorage.status_production_report);
+    localStorage.setItem("sort_alokasi_report", this.state.sort === "" || this.state.sort === undefined ? sort[0].kode : localStorage.sort_alokasi_report);
+    localStorage.setItem("filter_alokasi_report", this.state.filter === "" || this.state.filter === undefined ? filter[0].kode : localStorage.filter_alokasi_report);
     if (nextProps.auth.user) {
       let lk = [
         {
@@ -332,25 +287,16 @@ class AlokasiReport extends Component {
         <div className="row">
           <div className="col-md-10">
             <div className="row">
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
+              <div className="col-6 col-xs-6 col-md-2">
                 <div className="form-group">
                   <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                    />
+                  <DateRangePicker ranges={rangeDate} alwaysShowCalendars={true} onEvent={this.handleEvent}>
+                    <input readOnly={true} type="text" className="form-control" value={`${this.state.startDate} to ${this.state.endDate}`} />
                   </DateRangePicker>
                 </div>
               </div>
 
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
+              <div className="col-6 col-xs-6 col-md-2">
                 <div className="form-group">
                   <label htmlFor="">Lokasi</label>
                   <Select
@@ -363,7 +309,7 @@ class AlokasiReport extends Component {
                   />
                 </div>
               </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
+              <div className="col-6 col-xs-6 col-md-2">
                 <div className="form-group">
                   <label className="control-label font-12">Status</label>
                   <Select
@@ -376,7 +322,7 @@ class AlokasiReport extends Component {
                   />
                 </div>
               </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
+              <div className="col-6 col-xs-6 col-md-2">
                 <div className="form-group">
                   <label className="control-label font-12">Filter</label>
                   <Select
@@ -389,7 +335,7 @@ class AlokasiReport extends Component {
                   />
                 </div>
               </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
+              <div className="col-6 col-xs-6 col-md-2">
                 <div className="form-group">
                   <label className="control-label font-12">Sort</label>
                   <Select
@@ -402,17 +348,10 @@ class AlokasiReport extends Component {
                   />
                 </div>
               </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
+              <div className="col-6 col-xs-6 col-md-2">
                 <div className="form-group">
                   <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
+                  <input className="form-control" type="text" style={{ padding: "9px", fontWeight: "bolder" }} name="any" value={this.state.any} onChange={(e) => this.handleChange(e)} />
                 </div>
               </div>
             </div>
@@ -422,20 +361,10 @@ class AlokasiReport extends Component {
             <div className="row">
               <div className="col-md-12">
                 <div className="form-group">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
+                  <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={this.handleSearch}>
                     <i className="fa fa-search" />
                   </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
+                  <button style={{ marginTop: "28px" }} className="btn btn-primary" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
                     <i className="fa fa-print"></i>
                   </button>
                 </div>
@@ -488,55 +417,31 @@ class AlokasiReport extends Component {
                       // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
                       return (
                         <tr key={i}>
-                          <td style={columnStyle}>
-                            {" "}
-                            {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                          </td>
+                          <td style={columnStyle}> {i + 1 + 10 * (parseInt(current_page, 10) - 1)}</td>
                           <td style={columnStyle}>
                             {/* Example split danger button */}
                             <div className="btn-group">
                               <UncontrolledButtonDropdown>
                                 <DropdownToggle caret>Aksi</DropdownToggle>
                                 <DropdownMenu>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.toggle(e, v.no_faktur_mutasi, "", "")
-                                    }
-                                  >
-                                    Detail
-                                  </DropdownItem>
+                                  <DropdownItem onClick={(e) => this.toggle(e, v.no_faktur_mutasi, "", "")}>Detail</DropdownItem>
                                   {v.status === "0" ? (
-                                    <Link
-                                      to={`../edit/alokasi/${btoa(
-                                        v.no_faktur_mutasi
-                                      )}`}
-                                    >
+                                    <Link to={`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`}>
                                       <DropdownItem>Edit</DropdownItem>
                                     </Link>
                                   ) : (
                                     ""
                                   )}
-                                  <Link
-                                    to={`../alokasi3ply/${v.no_faktur_mutasi}`}
-                                    target="_blank"
-                                  >
+                                  <Link to={`../alokasi3ply/${v.no_faktur_mutasi}`} target="_blank">
                                     <DropdownItem>3ply</DropdownItem>
                                   </Link>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handleRePrint(e, v.no_faktur_mutasi)
-                                    }
-                                  >
-                                    Print Faktur
-                                  </DropdownItem>
+                                  <DropdownItem onClick={(e) => this.handleRePrint(e, v.no_faktur_mutasi)}>Print Faktur</DropdownItem>
                                 </DropdownMenu>
                               </UncontrolledButtonDropdown>
                             </div>
                           </td>
                           <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                          <td style={columnStyle}>
-                            {moment(v.tgl_mutasi).format("DD-MM-YYYY")}
-                          </td>
+                          <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
                           <td style={columnStyle}>{v.lokasi_asal}</td>
                           <td style={columnStyle}>{v.lokasi_tujuan}</td>
                           <td style={columnStyle}>
@@ -553,12 +458,8 @@ class AlokasiReport extends Component {
                               // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
                             }
                           </td>
-                          <td style={columnStyle}>
-                            {v.no_faktur_beli ? v.no_faktur_beli : "-"}
-                          </td>
-                          <td style={columnStyle}>
-                            {v.keterangan ? v.keterangan : "-"}
-                          </td>
+                          <td style={columnStyle}>{v.no_faktur_beli ? v.no_faktur_beli : "-"}</td>
+                          <td style={columnStyle}>{v.keterangan ? v.keterangan : "-"}</td>
                         </tr>
                       );
                     })
@@ -577,22 +478,10 @@ class AlokasiReport extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={parseInt(per_page * last_page, 10)} callback={this.handlePageChange.bind(this)} />
         </div>
-        {this.state.isModalDetail ? (
-          <DetailAlokasi alokasiDetail={this.props.alokasiDetail} />
-        ) : null}
-        {this.state.isModalExccel ? (
-          <AlokasiReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
-        ) : null}
+        {this.state.isModalDetail ? <DetailAlokasi alokasiDetail={this.props.alokasiDetail} /> : null}
+        {this.state.isModalExccel ? <AlokasiReportExcel startDate={this.state.startDate} endDate={this.state.endDate} /> : null}
         {this.state.isModalForm ? <FormAlokasi /> : null}
       </Layout>
     );
