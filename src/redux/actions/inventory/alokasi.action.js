@@ -2,8 +2,14 @@ import { ALOKASI, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../handleHttp";
-
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+export function setDOwnload(load) {
+  return {
+    type: ALOKASI.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: ALOKASI.LOADING,
@@ -63,13 +69,10 @@ export function setAlokasiDetail(data = []) {
 
 export const FetchDnReport = (page = 1, perpage = 10) => {
   return (dispatch) => {
-    handleGet(
-      `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`,
-      (res) => {
-        let data = res.data;
-        dispatch(setReport(data));
-      }
-    );
+    handleGet(`purchaseorder/report?page=${page}&perpage=${perpage}&status=0`, (res) => {
+      let data = res.data;
+      dispatch(setReport(data));
+    });
   };
 };
 export const FetchDnData = (nota) => {
@@ -160,10 +163,7 @@ export const storeAlokasi = (data, param) => {
           // param({
           //     pathname: `/alokasi3ply/${response.data.result.insertId}`
           // })
-          const win = window.open(
-            `/alokasi3ply/${response.data.result.insertId}`,
-            "_blank"
-          );
+          const win = window.open(`/alokasi3ply/${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -179,8 +179,7 @@ export const storeAlokasi = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -235,10 +234,7 @@ export const updateAlokasi = (data, param) => {
           // param({
           //     pathname: `/alokasi3ply/${response.data.result.insertId}`
           // })
-          const win = window.open(
-            `/alokasi3ply/${response.data.result.insertId}`,
-            "_blank"
-          );
+          const win = window.open(`/alokasi3ply/${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -252,8 +248,7 @@ export const updateAlokasi = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -261,15 +256,16 @@ export const updateAlokasi = (data, param) => {
       });
   };
 };
-export const FetchAlokasi = (page = 1, where = "") => {
+export const FetchAlokasi = (where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    let url = `alokasi/report?page=${page}`;
+    let url = `alokasi/report?perpage=${HEADERS.PERPAGE}`;
     if (where !== "") {
-      url += where;
+      url += `&${where}`;
     }
     handleGet(url, (res) => {
       let data = res.data;
+
       dispatch(setALOKASI(data));
     });
   };
@@ -281,54 +277,30 @@ export const FetchAlokasiExcel = (page = 1, where = "", perpage = 99999) => {
     if (where !== "") {
       url += where;
     }
-    axios
-      .get(HEADERS.URL + `${url}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setAlokasiExcel(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setAlokasiExcel(res.data));
+        dispatch(ModalType("formAlokasiExcel"));
+        dispatch(ModalToggle(true));
+      },
+      (res) => dispatch(setDOwnload(res))
+    );
   };
 };
-export const FetchAlokasiDetail = (
-  page = 1,
-  code,
-  dateFrom = "",
-  dateTo = "",
-  location = "",
-  perpage = ""
-) => {
+export const FetchAlokasiDetail = (code, where = "") => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    let que = "";
-    if (dateFrom === "" && dateTo === "" && location === "") {
-      que = `alokasi/report/${code}?page=${page}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location === "") {
-      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location !== "") {
-      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-    }
-    if (location !== "") {
-      que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
-    }
-
-    if (perpage !== "") {
-      que += `&perpage=${perpage}`;
-    }
-
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setALOKASIData(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    let url = `alokasi/report/${code}?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailAlokasi"));
+        dispatch(setALOKASIData(res.data));
+      },
+      true
+    );
   };
 };
 export const FetchAlokasiData = (page = 1, code) => {

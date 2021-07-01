@@ -14,9 +14,9 @@ export const TOKEN = {
 
 export const HEADERS = {
   // URL: atob(document.getElementById("hellyeah").value),
-  // URL: "http://ptnetindo.com:6692/",
+  URL: "http://ptnetindo.com:6692/",
   // URL: "http://192.168.100.10:6692/",
-  URL: "http://192.168.100.9:6692/",
+  // URL: "http://192.168.100.9:6692/",
   TOKEN:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwY2RiN2M5OC0wNWNmLTQ4NDgtOGM3Yy0yZTFiYTczZGUwNmYiLCJpYXQiOjE1NzAxNzM0ODYsImV4cCI6MTU3MDc3ODI4Nn0.1NiWtt2luG83am8FJSvWpL5p35Oxd8GSJJTwhFmAdgw",
   USERNAME: "netindo",
@@ -605,6 +605,7 @@ export const DN = {
 };
 
 export const ALOKASI = {
+  DOWNLOAD: "SET_ALOKASI_DOWNLOAD",
   LOADING: "SET_ALOKASI_LOADING",
   LOADING_DETAIL: "SET_STOCK_REPORT_DETAIL_LOADING",
   SUCCESS: "SET_ALOKASI_SUCCESS",
