@@ -232,6 +232,10 @@ class FormSale extends Component {
 
       let parsedata = {};
       parsedata["master"] = this.props.master;
+      if (this.props.master.id_hold === undefined) {
+        Object.assign(parsedata["master"], { id_hold: "" });
+      }
+
       parsedata["split"] = [];
       parsedata["join"] = [];
       parsedata["detail"] = this.props.detail;
@@ -261,11 +265,6 @@ class FormSale extends Component {
       newparse["parsedata"] = parsedata;
       newparse["alamat"] = this.props.lokasi.alamat;
       newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
-      // if (this.props.master.id_hold !== undefined) {
-
-      // } else {
-      //   Object.assign(parsedata["master"], { id_hold: "" });
-      // }
 
       this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
       this.resetState();

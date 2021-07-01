@@ -64,7 +64,7 @@ class SaleByProductArchive extends Component {
       where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
       Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
     } else {
-      where += `&datefrom=${this.state.startDate}&dateto=${this.stateendDate}`;
+      where += `&datefrom=${this.state.startDate}&dateto=${this.endDate}`;
     }
     if (isEmptyOrUndefined(getLocation)) {
       where += `&lokasi=${getLocation}`;
@@ -106,6 +106,11 @@ class SaleByProductArchive extends Component {
     if (state === "sort") setStorage(sortStorage, res.value);
     this.setState({ [state]: res.value });
     setTimeout(() => this.handleService(), 300);
+  }
+  handleSearch(e) {
+    e.preventDefault();
+    setStorage(anyStorage, this.state.any);
+    this.handleService(1);
   }
 
   render() {
