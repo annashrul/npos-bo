@@ -41,8 +41,8 @@ class InventoryReport extends Component {
       ],
       status: "",
       any: "",
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: toDate(new Date()),
+      endDate: toDate(new Date()),
       search_by: "br.kd_brg",
       search_by_data: [
         { value: "br.kd_brg", label: "Kode Barang" },

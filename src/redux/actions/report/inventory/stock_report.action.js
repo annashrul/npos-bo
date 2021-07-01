@@ -76,12 +76,13 @@ export const FetchStockReportDetailSatuan = (code, where = "", isModal = true) =
 };
 export const FetchStockReportDetailTransaction = (code, where = "", isModal = true) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
     let url = `report/stock/${code}/detail?perpage=${HEADERS.PERPAGE}`;
     if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
+        console.log(res);
+
         dispatch(setStockReportDetailTransaction(res.data));
         if (isModal) {
           dispatch(ModalToggle(true));

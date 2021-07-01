@@ -143,7 +143,6 @@ export const FetchNotaReceipt = (kd_trx) => {
 export const storeSale = (data, param) => {
   return (dispatch) => {
     let master = data.parsedata.master;
-    console.log("data", master.id_hold);
     dispatch(setLoading(true));
 
     Swal.fire({
@@ -167,9 +166,6 @@ export const storeSale = (data, param) => {
           del("hold", master.id_hold);
           localStorage.removeItem("objectHoldBill");
         }
-        // if (isEmptyOrUndefined(data.parsedata.master.id_hold)) {
-
-        // }
         const goSwal = () => {
           Swal.fire({
             allowOutsideClick: false,

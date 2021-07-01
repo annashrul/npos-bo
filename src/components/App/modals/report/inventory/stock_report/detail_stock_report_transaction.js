@@ -30,7 +30,6 @@ class DetailStockReportTransaction extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { data, total, current_page, per_page } = this.props.stockReportDetailTransaction;
     let totStockIn = 0;
     let totStockOut = 0;

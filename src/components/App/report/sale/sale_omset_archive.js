@@ -8,9 +8,11 @@ import SaleOmsetReportExcel from "../../modals/report/sale/form_sale_omset_excel
 import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, setStorage, toDate } from "../../../../helper";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
+import LokasiCommon from "../../common/LokasiCommon";
 
 const dateFromStorage = "dateFromReportSaleOmset";
 const dateToStorage = "dateToReportSaleOmset";
+const locationStorage = "locationReportSaleOmset";
 const sortStorage = "sortReportSaleOmset";
 const anyStorage = "anyReportSaleOmset";
 const activeDateRangePickerStorage = "activeDateRangeReportSaleOmset";
@@ -22,6 +24,7 @@ class SaleOmsetArchive extends Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.state = {
       where_data: "",
+      location: "",
       any: "",
       sort: "",
       startDate: moment(new Date()).format("yyyy-MM-DD"),
@@ -76,7 +79,8 @@ class SaleOmsetArchive extends Component {
   }
 
   handleChangeSelect(state, val) {
-    setStorage(sortStorage, val.value);
+    if (state === "sort") setStorage(sortStorage, val.value);
+    if (state === "location") setStorage(locationStorage, val.value);
     this.setState({ [state]: val.value });
     setTimeout(() => this.handleService(), 300);
   }
@@ -85,6 +89,7 @@ class SaleOmsetArchive extends Component {
     const { startDate, endDate } = this.state;
     let dateFrom = getStorage(dateFromStorage);
     let dateTo = getStorage(dateToStorage);
+    let getLocation = getStorage(locationStorage);
     let sortBy = getStorage(sortStorage);
     let q = getStorage(anyStorage);
     let where = `page=${page}&datefrom=${startDate}&dateto=${endDate}`;
@@ -93,6 +98,10 @@ class SaleOmsetArchive extends Component {
     if (isEmptyOrUndefined(dateFrom) && isEmptyOrUndefined(dateTo)) {
       where = `page=${page}&datefrom=${dateFrom}&dateto=${dateTo}`;
       Object.assign(setState, { startDate: dateFrom, endDate: dateTo });
+    }
+    if (isEmptyOrUndefined(getLocation)) {
+      where += `&lokasi=${getLocation}`;
+      Object.assign(setState, { location: getLocation });
     }
     if (isEmptyOrUndefined(sortBy)) {
       where += `&sort=${sortBy}`;
@@ -131,7 +140,7 @@ class SaleOmsetArchive extends Component {
     let tot_diskon_trx = 0;
     let tot_tax = 0;
     let tot_service = 0;
-    const { startDate, endDate, sort, sort_data, any } = this.state;
+    const { startDate, endDate, sort, location, sort_data, any } = this.state;
     return (
       <Layout page="Laporan Arsip Penjualan">
         <div className="row">
@@ -146,6 +155,9 @@ class SaleOmsetArchive extends Component {
               `${toDate(startDate)} - ${toDate(endDate)}`,
               getStorage(activeDateRangePickerStorage)
             )}
+          </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            <LokasiCommon callback={(res) => this.handleChangeSelect("location", res)} isAll={true} dataEdit={location} />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <SelectCommon label="Urutan" options={handleDataSelect(sort_data, "value", "label")} callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
