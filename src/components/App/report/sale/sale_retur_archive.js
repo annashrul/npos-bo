@@ -85,9 +85,13 @@ class SaleReturReport extends Component {
       where += `&lokasi=${getLocation}`;
       Object.assign(state, { lokasi: getLocation });
     }
-    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
-      where += `&sort${getColumn}|${getSort}`;
-      Object.assign(state, { column: getColumn, sort: getSort });
+    if (isEmptyOrUndefined(getColumn)) {
+      where += `&sort${getColumn}`;
+      Object.assign(state, { column: getColumn });
+      if (isEmptyOrUndefined(getSort)) {
+        where += `&sort${getColumn}|${getSort}`;
+        Object.assign(state, { sort: getSort });
+      }
     }
 
     if (isEmptyOrUndefined(getAny)) {

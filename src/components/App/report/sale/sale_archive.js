@@ -10,7 +10,7 @@ import DetailSaleReport from "../../modals/report/sale/detail_sale_report";
 import Otorisasi from "../../modals/otorisasi.modal";
 import SaleReportExcel from "../../modals/report/sale/form_sale_excel";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, parseToRp, rmSpaceToStrip, setStorage, swallOption, toDate } from "../../../../helper";
+import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, rmSpaceToStrip, setStorage, swallOption, toDate } from "../../../../helper";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
