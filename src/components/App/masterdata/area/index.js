@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import { FetchArea } from "redux/actions/masterdata/area/area.action";
-import Preloader from "Preloader";
 import ListArea from "./src/list";
 
 class Area extends Component {
@@ -32,13 +31,7 @@ class Area extends Component {
     return (
       <Layout page="Area">
         <div className="col-12 box-margin">
-          <ListArea
-            data={this.props.area}
-            pagin={this.handlePagin}
-            search={this.handleSearch}
-            token={this.state.token}
-            auth={this.props.auth}
-          />
+          <ListArea data={this.props.area} pagin={this.handlePagin} search={this.handleSearch} token={this.state.token} auth={this.props.auth} />
         </div>
       </Layout>
     );

@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 /**
  * props
  * label      : string    (required)
@@ -14,10 +9,6 @@ import {
  */
 
 class ButtonActionCommon extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <UncontrolledButtonDropdown>

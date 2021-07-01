@@ -39,32 +39,11 @@ class SaleOmsetReportExcel extends Component {
   };
   printDocument = (e) => {
     e.preventDefault();
-    let stringHtml = "";
-    stringHtml +=
-      '<div style="text-align:center>' +
-      // '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
-      '<h3 align="center"><center>&nbsp;</center></h3>' +
-      '<h3 style="text-align:center"><center>LAPORAN OMSET PENJUALAN</center></h3>' +
-      "</div>";
-
-    const headers = [
-      [
-        "No",
-        "Tanggal",
-        "QTY",
-        "Gross Sale",
-        "Net Sale",
-        "Grand Total",
-        "Diskon Item",
-        "Diskon Trx",
-        "TAX",
-        "Service",
-      ],
-    ];
+    const headers = [["No", "Tanggal", "QTY", "Gross Sale", "Net Sale", "Grand Total", "Diskon Item", "Diskon Trx", "TAX", "Service"]];
     let data =
       typeof this.props.sale_omsetReportExcel.data === "object"
-        ? this.props.sale_omsetReportExcel.data.map((v,i) => [
-            i+1,
+        ? this.props.sale_omsetReportExcel.data.map((v, i) => [
+            i + 1,
             moment(v.tanggal).format("YYYY-MM-DD"),
             v.qty,
             toRp(parseInt(v.gross_sales, 10)),
@@ -97,21 +76,11 @@ class SaleOmsetReportExcel extends Component {
       ["LAPORAN OMSET PENJUALAN"],
       ["PERIODE : " + this.props.startDate + " - " + this.props.endDate + ""],
       [""],
-      [
-        "Tanggal",
-        "QTY",
-        "Gross Sale",
-        "Net Sale",
-        "Grand Total",
-        "Diskon Item",
-        "Diskon Trx",
-        "TAX",
-        "Service",
-      ],
+      ["Tanggal", "QTY", "Gross Sale", "Net Sale", "Grand Total", "Diskon Item", "Diskon Trx", "TAX", "Service"],
     ];
     let raw =
       typeof this.props.sale_omsetReportExcel.data === "object"
-        ? this.props.sale_omsetReportExcel.data.map((v,i) => [
+        ? this.props.sale_omsetReportExcel.data.map((v, i) => [
             moment(v.tanggal).format("YYYY-MM-DD"),
             v.qty,
             toRp(parseInt(v.gross_sales, 10)),
@@ -131,9 +100,7 @@ class SaleOmsetReportExcel extends Component {
 
     let wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-    let exportFileName = `Laporan__Omset_Penjualan_${moment(new Date()).format(
-      "YYYYMMDDHHMMss"
-    )}.${param === "csv" ? `csv` : `xlsx`}`;
+    let exportFileName = `Laporan__Omset_Penjualan_${moment(new Date()).format("YYYYMMDDHHMMss")}.${param === "csv" ? `csv` : `xlsx`}`;
     XLSX.writeFile(wb, exportFileName, {
       type: "file",
       bookType: param === "csv" ? "csv" : "xlsx",
@@ -171,11 +138,7 @@ class SaleOmsetReportExcel extends Component {
                 </div>
                 <div className="gallery-text-area">
                   <div className="gallery-icon">
-                    <button
-                      type="button"
-                      className="btn btn-circle btn-lg btn-danger"
-                      onClick={(e) => this.printDocument(e)}
-                    >
+                    <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e) => this.printDocument(e)}>
                       <i className="fa fa-print"></i>
                     </button>
                   </div>
@@ -189,11 +152,7 @@ class SaleOmsetReportExcel extends Component {
                 </div>
                 <div className="gallery-text-area">
                   <div className="gallery-icon">
-                    <button
-                      type="button"
-                      className="btn btn-circle btn-lg btn-success"
-                      onClick={(e) => this.printDocumentXLsx(e, "xlsx")}
-                    >
+                    <button type="button" className="btn btn-circle btn-lg btn-success" onClick={(e) => this.printDocumentXLsx(e, "xlsx")}>
                       <i className="fa fa-print"></i>
                     </button>
                   </div>

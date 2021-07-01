@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import WrapperModal from "components/App/modals/_wrapper.modal";
-import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalBody, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { withRouter } from "react-router-dom";
-import { get, del, destroy } from "components/model/app.model";
-import {
-  onHandleKeyboard,
-  setFocus,
-  swallOption,
-  swalWithCallback,
-} from "../../../../helper";
+import { get, del } from "components/model/app.model";
+import { onHandleKeyboard, setFocus, swallOption, swalWithCallback } from "../../../../helper";
 // const onEscape = function (action) {
 //   window &&
 //     window.addEventListener("keydown", (e) => {
@@ -77,14 +72,14 @@ class ListHoldBill extends Component {
     const data = get(table);
     data.then((res) => {
       let dataArray = [];
-      res.map((val) => {
+      res.map((val) =>
         dataArray.push({
           id: val.id,
           nama: val.nama,
           master: JSON.parse(val.master),
           detail: JSON.parse(val.detail),
-        });
-      });
+        })
+      );
       this.setState({ data: dataArray });
     });
   }
@@ -110,9 +105,7 @@ class ListHoldBill extends Component {
   getData() {
     get("hold").then((res) => {
       let data = [];
-      res.map((val) => {
-        data.push(val);
-      });
+      res.map((val) => data.push(val));
       this.setState({ data: data });
     });
   }
@@ -122,15 +115,11 @@ class ListHoldBill extends Component {
       const dataSale = get("sale");
       dataSale.then((res) => {
         if (res.length > 0) {
-          swallOption(
-            "transaksi yang sudah ada akan ditimpa oleh transaksi dengan a/n " +
-              val.nama,
-            () => {
-              this.setState({ data: [] });
-              this.props.callback(val);
-              this.props.dispatch(ModalToggle(false));
-            }
-          );
+          swallOption("transaksi yang sudah ada akan ditimpa oleh transaksi dengan a/n " + val.nama, () => {
+            this.setState({ data: [] });
+            this.props.callback(val);
+            this.props.dispatch(ModalToggle(false));
+          });
         } else {
           this.setState({ data: [] });
           this.props.callback(val);
@@ -144,15 +133,12 @@ class ListHoldBill extends Component {
     e.preventDefault();
     swalWithCallback("anda yakin akan menghapus transaksi ini ??", () => {
       if (this.props.objectHoldBill.id === val.id) {
-        swalWithCallback(
-          "transaksi atas nama ini sedang berlangsung. jika anda menghapusnya sistem otomatis akan mereset transaksi ini",
-          () => {
-            del("hold", val.id).then((res) => {
-              this.getData();
-            });
-            this.props.callback("delete");
-          }
-        );
+        swalWithCallback("transaksi atas nama ini sedang berlangsung. jika anda menghapusnya sistem otomatis akan mereset transaksi ini", () => {
+          del("hold", val.id).then((res) => {
+            this.getData();
+          });
+          this.props.callback("delete");
+        });
       } else {
         del("hold", val.id).then((res) => {
           this.getData();
@@ -164,10 +150,7 @@ class ListHoldBill extends Component {
   render() {
     return (
       <div>
-        <WrapperModal
-          isOpen={this.props.isOpen && this.props.type === "listHoldBill"}
-          size="md"
-        >
+        <WrapperModal isOpen={this.props.isOpen && this.props.type === "listHoldBill"} size="md">
           <ModalHeader toggle={this.toggle}>List Hold Bill</ModalHeader>
           <ModalBody>
             {this.state.data.length > 0
@@ -187,11 +170,7 @@ class ListHoldBill extends Component {
                         onClick={(e) => this.handleSubmit(e, val)}
                       />
                       <span className="input-group-append">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={(event) => this.handleDelete(event, val)}
-                        >
+                        <button type="button" className="btn btn-primary" onClick={(event) => this.handleDelete(event, val)}>
                           <i className="fa fa-trash" />
                         </button>
                       </span>

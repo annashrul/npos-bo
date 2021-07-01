@@ -5,15 +5,9 @@ import connect from "react-redux/es/connect/connect";
 import DetailStockReportSatuan from "components/App/modals/report/inventory/stock_report/detail_stock_report_satuan";
 import StockReportExcel from "components/App/modals/report/inventory/stock_report/form_stock_report_excel";
 import moment from "moment";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import { FetchStockReportDetailSatuan } from "redux/actions/report/inventory/stock_report.action";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import Select from "react-select";
 import { HEADERS } from "redux/actions/_constants";
-import Paginationq from "helper";
-import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
-import { dateRange, generateNo, getStorage, handleDataSelect, headerPdf, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
+import { dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import TableCommon from "../../../common/TableCommon";
@@ -25,7 +19,7 @@ const locationStorage = "locationReportStock";
 const filterStorage = "filterReportStock";
 const searchByStorage = "searchByReportStock";
 const anyStorage = "anyReportStock";
-const activeDateRangePickerStorage = "activeDateReportSale";
+const activeDateRangePickerStorage = "activeDateReportStock";
 
 class InventoryReport extends Component {
   constructor(props) {
@@ -57,6 +51,7 @@ class InventoryReport extends Component {
       ],
       isModalExcel: false,
       isModalDetail: false,
+      detail: "",
     };
   }
   componentWillUnmount() {
@@ -123,30 +118,16 @@ class InventoryReport extends Component {
     setStorage(anyStorage, this.state.any);
     this.handleService(1);
   }
-  toggle(e, code, barcode, name) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    localStorage.setItem("code", code);
-    localStorage.setItem("barcode", barcode);
-    localStorage.setItem("name", name);
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailStockReportSatuan"));
 
-    this.props.dispatch(FetchStockReportDetailSatuan(1, code, "", "", ""));
-  }
-
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    this.setState({ isModalExcel: true });
-    this.props.dispatch(ModalType("formStockExcel"));
-    this.props.dispatch(FetchStockReportExcel(1, this.state.where_data, total));
-  }
   handleModal(param, obj) {
     let state = {};
     if (param === "formSaleExcel") {
       Object.assign(state, { isModalExcel: true });
       this.props.dispatch(FetchStockReportExcel(1, this.state.where_data, obj.total));
+    } else {
+      Object.assign(obj, { where: this.state.where_data });
+      Object.assign(state, { isModalDetail: true, detail: obj });
+      this.props.dispatch(FetchStockReportDetailSatuan(obj.kd_brg, this.state.where_data));
     }
     this.setState(state);
   }
@@ -164,7 +145,6 @@ class InventoryReport extends Component {
     let total_stock_akhir_per = 0;
     let total_stock_harga_beli_per = 0;
     let total_stock_harga_jual_per = 0;
-    let get_lokasi = true;
 
     const { bukaHarga, startDate, endDate, location, status, status_data, any, search_by_data, search_by, isModalExcel, isModalDetail } = this.state;
 
@@ -208,7 +188,7 @@ class InventoryReport extends Component {
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
-            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={this.state.location} isAll={true} />
+            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
@@ -225,7 +205,7 @@ class InventoryReport extends Component {
                 name="any"
                 className="form-control"
                 placeholder="tulis sesuatu disini"
-                value={this.state.any}
+                value={any}
                 onChange={(e) => this.setState({ any: e.target.value })}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") this.handleSearch(e);
@@ -279,8 +259,6 @@ class InventoryReport extends Component {
                   total_stock_akhir_per += stockAkhir;
                   total_stock_harga_beli_per += hrgBeliPerLokasi * stockAkhir;
                   total_stock_harga_jual_per += hrgJualPerLokasi * stockAkhir;
-
-                  get_lokasi = v.lokasi === "-";
                   return (
                     <tr key={i}>
                       <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
@@ -288,7 +266,7 @@ class InventoryReport extends Component {
                         <ButtonActionCommon
                           action={[{ label: "Detail" }, { label: "Export" }]}
                           callback={(e) => {
-                            if (e === 0) this.toggle(v.kd_brg, v.barcode, v.nm_brg);
+                            if (e === 0) this.handleModal("detal", v);
                             if (e === 1) this.props.history.push(`${HEADERS.URL}reports/penjualan/${v.kd_trx}.pdf`);
                           }}
                         />
@@ -299,16 +277,16 @@ class InventoryReport extends Component {
                       <td className="middle nowrap">{v.nm_brg}</td>
                       <td className="middle nowrap">{v.nama_kel}</td>
 
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{get_lokasi ? 0 : toRp(hrgBeliPerLokasi)}</td>
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{get_lokasi ? 0 : toRp(hrgJualPerLokasi)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgBeliPerLokasi)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgJualPerLokasi)}</td>
 
                       <td className="text-right middle nowrap">{stockAwal}</td>
                       <td className="text-right middle nowrap">{stockMasuk}</td>
                       <td className="text-right middle nowrap">{stockKeluar}</td>
                       <td className="text-right middle nowrap">{v.stock_penjualan}</td>
                       <td className="text-right middle nowrap">{stockAkhir}</td>
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{get_lokasi ? 0 : toRp(hrgBeliPerLokasi * stockAkhir)}</td>
-                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{get_lokasi ? 0 : toRp(hrgJualPerLokasi * stockAkhir)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgBeliPerLokasi * stockAkhir)}</td>
+                      <td className={`middle nowrap text-right ${bukaHarga ? "" : "dNone"}`}>{toRp(hrgJualPerLokasi * stockAkhir)}</td>
                       <td className="middle nowrap">{v.supplier}</td>
                       <td className="middle nowrap">{v.sub_dept}</td>
                     </tr>
@@ -349,10 +327,8 @@ class InventoryReport extends Component {
             },
           ]}
         />
-        {this.props.isOpen && isModalDetail ? (
-          <DetailStockReportSatuan token={this.props.token} stockReportDetailSatuan={this.props.stockReportDetailSatuan} startDate={startDate} endDate={endDate} lokasi={this.props.auth.user.lokasi} />
-        ) : null}
-        {this.props.isOpen && isModalExcel ? <StockReportExcel startDate={startDate} endDate={endDate} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailStockReportSatuan stockReportDetailSatuan={this.props.stockReportDetailSatuan} detail={this.state.detail} /> : null}
+        {this.props.isOpen && isModalExcel ? <StockReportExcel startDate={startDate} endDate={endDate} lokasi={this.state.location} /> : null}
       </Layout>
     );
   }

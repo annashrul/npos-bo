@@ -1,4 +1,4 @@
-import { SALE_BY_PRODUCT, HEADERS } from "../_constants";
+import { SALE_BY_PRODUCT } from "../_constants";
 import { handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle } from "../modal.action";
 export function setDownload(load) {

@@ -1,11 +1,6 @@
-import { SUB_DEPT, HEADERS } from "../../_constants";
+import { SUB_DEPT } from "../../_constants";
 
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
 import { ModalToggle } from "../../modal.action";
 

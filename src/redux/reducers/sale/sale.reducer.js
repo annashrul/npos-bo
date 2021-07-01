@@ -102,10 +102,10 @@ export const saleReducer = (state = initialState, action) => {
         msg: action.data.msg,
         data: action.data.result,
       });
-    case SALE.LOADING:
-      return Object.assign({}, state, {
-        isLoading: action.load,
-      });
+    // case SALE.LOADING:
+    //   return Object.assign({}, state, {
+    //     isLoading: action.load,
+    //   });
     case SALE.LOADING_DETAIL:
       return Object.assign({}, state, {
         isLoadingDetail: action.load,

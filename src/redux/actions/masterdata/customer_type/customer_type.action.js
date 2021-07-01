@@ -1,10 +1,5 @@
-import { CUSTOMER_TYPE, HEADERS } from "../../_constants";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { CUSTOMER_TYPE } from "../../_constants";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { ModalToggle } from "../../modal.action";
 import { swal } from "../../../../helper";
 

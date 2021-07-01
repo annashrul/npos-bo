@@ -1,10 +1,5 @@
-import { BANK, HEADERS } from "../../_constants";
-import {
-  handleGet,
-  handlePost,
-  handlePut,
-  handleDelete,
-} from "../../handleHttp";
+import { BANK } from "../../_constants";
+import { handleGet, handlePost, handlePut, handleDelete } from "../../handleHttp";
 import { swal } from "../../../../helper";
 
 import { ModalToggle } from "../../modal.action";

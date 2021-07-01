@@ -2,20 +2,11 @@ import { SALE, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy, del } from "components/model/app.model";
-import {
-  handleDelete,
-  handleGet,
-  handleGetExport,
-  handlePost,
-  handlePut,
-  loading,
-} from "../handleHttp";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import { handleDelete, handleGet, handleGetExport, handlePost } from "../handleHttp";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import { handleError, setStorage, ToastQ } from "../../../helper";
+import { isEmptyOrUndefined, ToastQ } from "../../../helper";
 import { ModalType } from "../modal.action";
 
 export function setLoading(load) {
@@ -170,10 +161,11 @@ export const storeSale = (data, param) => {
       .then(function (response) {
         Swal.close();
         const datum = response.data;
-
         destroy("sale");
-        del("hold", data.id_hold);
-        localStorage.removeItem("objectHoldBill");
+        if (isEmptyOrUndefined(data.master.id_hold)) {
+          del("hold", data.master.id_hold);
+          localStorage.removeItem("objectHoldBill");
+        }
         const goSwal = () => {
           Swal.fire({
             allowOutsideClick: false,
@@ -196,42 +188,28 @@ export const storeSale = (data, param) => {
               dispatch(FetchSalesAll(datum.result.lokasi));
             }
           });
-          document
-            .getElementById("btnReprint")
-            .addEventListener("click", () => {
-              handlePost(
-                "pos/reprint/" + btoa(datum.result.kode),
-                [],
-                (res, msg, status) => {
-                  const data = res.data;
-                  ToastQ.fire({
-                    icon: "success",
-                    title: msg,
-                  });
-                  goSwal();
-                }
-              );
+          document.getElementById("btnReprint").addEventListener("click", () => {
+            handlePost("pos/reprint/" + btoa(datum.result.kode), [], (res, msg, status) => {
+              ToastQ.fire({
+                icon: "success",
+                title: msg,
+              });
+              goSwal();
             });
-          document
-            .getElementById("btnNotaPdf")
-            .addEventListener("click", () => {
-              const win = window.open(datum.result.nota, "_blank");
-              if (win != null) {
-                win.focus();
-              }
-            });
-          document
-            .getElementById("btnNota3ply")
-            .addEventListener("click", () => {
-              const win = window.open(
-                `/print3ply/${datum.result.kode}`,
-                "_blank"
-              );
-              if (win != null) {
-                win.focus();
-              }
-              return false;
-            });
+          });
+          document.getElementById("btnNotaPdf").addEventListener("click", () => {
+            const win = window.open(datum.result.nota, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+          });
+          document.getElementById("btnNota3ply").addEventListener("click", () => {
+            const win = window.open(`/print3ply/${datum.result.kode}`, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+            return false;
+          });
         };
         goSwal();
 
@@ -244,8 +222,7 @@ export const storeSale = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -329,11 +306,7 @@ export const FetchSaleReturReport = (where = "") => {
   };
 };
 
-export const FetchSaleReturReportExcel = (
-  page = 1,
-  where = "",
-  perpage = 99999
-) => {
+export const FetchSaleReturReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
     let url = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
     if (where !== "") {

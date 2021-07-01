@@ -12,12 +12,12 @@ import FormSale from "../../modals/sale/form_sale";
 import FormClosing from "../../modals/sale/form_closing";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import { FetchNotaSale } from "redux/actions/sale/sale.action";
-import { toRp, toCurrency, rmComma } from "helper";
+import { toCurrency, rmComma } from "helper";
 import Spinner from "Spinner";
 import Cookies from "js-cookie";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
-import { getStorage, handleDataSelect, isEmptyOrUndefined, onHandleKeyboardChar, setFocus, setStorage, swal, swallOption } from "../../../../helper";
+import { getStorage, handleDataSelect, isEmptyOrUndefined, setStorage, swal, swallOption } from "../../../../helper";
 import { handleInputOnBlurCommon } from "../../common/FlowTrxCommon";
 import FormHoldBill from "../../modals/sale/form_hold_bill";
 import ListHoldBill from "../../modals/sale/list_hold_bill";
@@ -35,13 +35,6 @@ const Toast = Swal.mixin({
     toast.addEventListener("mouseleave", Swal.resumeTimer);
   },
 });
-
-const save = "ctrl+s";
-const closing = "ctrl+c";
-const reset = "ctrl+x";
-const focusSearch = "ctrl+f";
-const holdBill = "ctrl+h";
-const listHoldBill = "ctrl+l";
 
 class Sale extends Component {
   constructor(props) {
@@ -776,33 +769,35 @@ class Sale extends Component {
     let totalsub = 0;
     return (
       <React.Fragment>
-        <KeyHandler
-          keyEventName={KEYPRESS}
-          keyValue={["Enter", "c", "h", "l", "x"]}
-          onKeyHandle={(e) => {
-            console.log(e);
-            if (e.key === "Enter") {
-              this.HandleSubmit(e);
-              return;
-            }
-            if (e.key === "h") {
-              this.handleHoldBill(e, "formHoldBill");
-              return;
-            }
-            if (e.key === "l") {
-              this.handleHoldBill(e, "listHoldBill");
-              return;
-            }
-            if (e.key === "c") {
-              this.handleClosing(e);
-              return;
-            }
-            if (e.key === "x") {
-              this.HandleReset(e);
-              return;
-            }
-          }}
-        />
+        {!this.props.isOpen && !this.state.isModalForm ? (
+          <KeyHandler
+            keyEventName={KEYPRESS}
+            keyValue={["Enter", "c", "h", "l", "x"]}
+            onKeyHandle={(e) => {
+              console.log(e);
+              if (e.key === "Enter") {
+                this.HandleSubmit(e);
+                return;
+              }
+              if (e.key === "h") {
+                this.handleHoldBill(e, "formHoldBill");
+                return;
+              }
+              if (e.key === "l") {
+                this.handleHoldBill(e, "listHoldBill");
+                return;
+              }
+              if (e.key === "c") {
+                this.handleClosing(e);
+                return;
+              }
+              if (e.key === "x") {
+                this.HandleReset(e);
+                return;
+              }
+            }}
+          />
+        ) : null}
         <Layout page="Penjualan Barang">
           <div className="card">
             <div className="card-header">
@@ -1358,9 +1353,7 @@ class Sale extends Component {
                 if (res !== "close" && res !== "delete") {
                   destroy("sale");
                   if (res.detail !== undefined) {
-                    res.detail.map((val, index) => {
-                      this.HanldeSetAddBrg(val, "hold", index);
-                    });
+                    res.detail.map((val, index) => this.HanldeSetAddBrg(val, "hold", index));
                   }
                   setStorage("location", res.master.lokasi);
                   setStorage("sales", res.master.kd_sales);

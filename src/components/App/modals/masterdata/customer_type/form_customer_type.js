@@ -3,11 +3,8 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import { stringifyFormData, isEmptyOrUndefined } from "helper";
-import {
-  createCustomerType,
-  updateCustomerType,
-} from "redux/actions/masterdata/customer_type/customer_type.action";
+import { isEmptyOrUndefined } from "helper";
+import { createCustomerType, updateCustomerType } from "redux/actions/masterdata/customer_type/customer_type.action";
 class FormCustomerType extends Component {
   constructor(props) {
     super(props);
@@ -53,9 +50,7 @@ class FormCustomerType extends Component {
     parseData["nama"] = this.state.nama;
     if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
     if (this.props.detail.id !== "") {
-      this.props.dispatch(
-        updateCustomerType(this.state.kode, parseData, this.props.detail.where)
-      );
+      this.props.dispatch(updateCustomerType(this.state.kode, parseData, this.props.detail.where));
     } else {
       this.props.dispatch(createCustomerType(parseData));
     }
@@ -63,34 +58,20 @@ class FormCustomerType extends Component {
 
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formCustomerType"}
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id === "" ? "Tambah" : "Ubah"} tipe Customer
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formCustomerType"}>
+        <ModalHeader toggle={this.toggle}>{this.props.detail.id === "" ? "Tambah" : "Ubah"} tipe Customer</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
               <label>
                 Nama <span className="text-danger">*</span>
               </label>
-              <input
-                type="text"
-                className="form-control"
-                name="nama"
-                value={this.state.nama}
-                onChange={this.handleChange}
-              />
+              <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
             </div>
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary">

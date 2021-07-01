@@ -1,488 +1,214 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  deleteAdjustment,
-  FetchAdjustment,
-  FetchAdjustmentDetail,
-} from "redux/actions/adjustment/adjustment.action";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import Paginationq, { generateNo } from "helper";
+import { deleteAdjustment, FetchAdjustment, FetchAdjustmentDetail } from "redux/actions/adjustment/adjustment.action";
 import DetailAdjustment from "components/App/modals/report/inventory/adjustment_report/detail_adjustment_report";
-import Swal from "sweetalert2";
-import Select from "react-select";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
 import { HEADERS } from "redux/actions/_constants";
 import { FetchAdjustmentExcel } from "redux/actions/adjustment/adjustment.action";
 import AdjustmentReportExcel from "components/App/modals/report/inventory/adjustment_report/form_adjustment_excel";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+import { dateRange, getStorage, isEmptyOrUndefined, isProgress, setStorage, toDate } from "../../../../../helper";
+import LokasiCommon from "../../../common/LokasiCommon";
+import SelectCommon from "../../../common/SelectCommon";
+import SelectSortCommon from "../../../common/SelectSortCommon";
+import TableCommon from "../../../common/TableCommon";
+
+const dateFromStorage = "dateFromReportAdjusment";
+const dateToStorage = "dateToReportAdjusment";
+const locationStorage = "locationReportAdjusment";
+const columnStorage = "columnReportAdjusment";
+const sortStorage = "sortReportAdjusment";
+const anyStorage = "anyReportAdjusment";
+const activeDateRangePickerStorage = "activeDateReportAdjusment";
 
 class AdjustmentReport extends Component {
   constructor(props) {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.toggleModalDet = this.toggleModalDet.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
+    this.handleModal = this.handleModal.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.state = {
       where_data: "",
       any: "",
       location: "",
-      location_data: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: toDate(new Date()),
+      endDate: toDate(new Date()),
       sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
+      column: "",
+      column_data: [
+        { value: "kd_trx", label: "Kode Trx" },
+        { value: "tgl", label: "Tanggal" },
+        { value: "username", label: "Username" },
+      ],
       isModalExcel: false,
       isModalDetail: false,
     };
   }
+  handleService(page = 1) {
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getLocation = getStorage(locationStorage);
+    let getColumn = getStorage(columnStorage);
+    let getSort = getStorage(sortStorage);
+    let getAny = getStorage(anyStorage);
+
+    let where = `page=${page}`;
+    let state = {};
+
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+    }
+    if (isEmptyOrUndefined(getLocation)) {
+      where += `&lokasi=${getLocation}`;
+      Object.assign(state, { location: getLocation, bukaHarga: true });
+    }
+
+    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
+      where += `&sort=${getColumn}|${getSort}`;
+      Object.assign(state, { column: getColumn, sort: getSort });
+    }
+
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
+    this.props.dispatch(FetchAdjustment(where));
+  }
+  handleSelect(state, res) {
+    if (state === "location") setStorage(locationStorage, res.value);
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
+    this.setState({ [state]: res.value });
+    setTimeout(() => this.handleService(), 500);
+  }
+
   componentWillUnmount() {
     this.setState({ isModalExcel: false, isModalDetail: false });
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "kd_trx", value: "Kode Trx" },
-      { kode: "tgl", value: "Tanggal" },
-      { kode: "username", value: "Username" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-    });
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-    // localStorage.setItem('status_adjust_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_adjust_report)
-    localStorage.setItem(
-      "sort_adjust_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_adjust_report
-    );
-    localStorage.setItem(
-      "filter_adjust_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_adjust_report
-    );
-  };
   componentWillMount() {
-    let page = localStorage.page_adjust_report;
-    this.handleParamter(page !== undefined && page !== null ? page : 1);
+    this.handleService();
   }
   componentDidMount() {
-    if (
-      localStorage.location_adjust_report !== undefined &&
-      localStorage.location_adjust_report !== ""
-    ) {
-      this.setState({ location: localStorage.location_adjust_report });
-    }
-    if (
-      localStorage.any_adjust_report !== undefined &&
-      localStorage.any_adjust_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_adjust_report });
-    }
-    if (
-      localStorage.date_from_adjust_report !== undefined &&
-      localStorage.date_from_adjust_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_adjust_report });
-    }
-    if (
-      localStorage.date_to_adjust_report !== undefined &&
-      localStorage.date_to_adjust_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_adjust_report });
-    }
-    if (
-      localStorage.sort_adjust_report !== undefined &&
-      localStorage.sort_adjust_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_adjust_report });
-    }
-    if (
-      localStorage.filter_adjust_report !== undefined &&
-      localStorage.filter_adjust_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_adjust_report });
-    }
+    this.handleService();
   }
-  handleParamter(pageNumber) {
-    let dateFrom = localStorage.date_from_adjust_report;
-    let dateTo = localStorage.date_to_adjust_report;
-    let lokasi = localStorage.location_adjust_report;
-    let any = localStorage.any_adjust_report;
-    let sort = localStorage.sort_adjust_report;
-    let filter = localStorage.filter_adjust_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&dateFrom=${dateFrom}&dateTo=${dateTo}`;
-    }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      where += `&lokasi=${lokasi}`;
-    }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    localStorage.setItem("where_adjust_report", where);
-    this.props.dispatch(FetchAdjustment(pageNumber, where));
-    // this.props.dispatch(FetchAdjustmentExcel(where));
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_adjust_report", pageNumber);
-    this.handleParamter(pageNumber);
+    this.handleService(pageNumber);
   }
   handleSearch(e) {
     e.preventDefault();
-    localStorage.setItem("any_adjust_report", this.state.any);
-    this.handleParamter(1);
+    setStorage(anyStorage, this.state.any);
+    this.handleService(1);
   }
-  toggleModalDet(e, kd_trx) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailAdjustment"));
-    this.props.dispatch(FetchAdjustmentDetail(1, kd_trx));
+  handleModal(type, obj) {
+    if (type === "excel") {
+      this.setState({ isModalExcel: true });
+      this.props.dispatch(FetchAdjustmentExcel(1, this.state.where_data, obj.total));
+      return;
+    }
+    if (type === "detail") {
+      this.setState({ isModalDetail: true });
+      this.props.dispatch(FetchAdjustmentDetail(obj.kd_trx, "page=1"));
+      return;
+    }
   }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_adjust_report", `${awal}`);
-    localStorage.setItem("date_to_adjust_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_adjust_report", sr.value);
-  }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_adjust_report", fl.value);
-  }
-  HandleChangeLokasi(lk) {
-    this.setState({ location: lk.value });
-    localStorage.setItem("location_adjust_report", lk.value);
-  }
-  handleDelete(e, id) {
-    e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deleteAdjustment(id));
-      }
-    });
-  }
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    const bool = !this.props.isOpen;
-    this.setState({ isModalExcel: true });
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formAdjustmentExcel"));
-    this.props.dispatch(FetchAdjustmentExcel(1, this.state.where_data, total));
+
+  handleDelete(obj) {
+    Object.assign(obj, { where: this.state.where_data });
+    this.props.dispatch(deleteAdjustment(obj));
   }
 
   render() {
-    const {
-      // total,
-      last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.adjustmentReport;
+    const { total, last_page, per_page, current_page, data } = this.props.adjustmentReport;
+    const { startDate, endDate, location, column, column_data, sort, any, isModalExcel, isModalDetail } = this.state;
 
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
     return (
       <Layout page="Laporan Adjusment">
         <div className="row">
-          <div className="col-md-12" style={{ zoom: "85%" }}>
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor="">
-                    {" "}
-                    Periode
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{" "}
-                  </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label htmlFor="">Lokasi</label>
-                  <Select
-                    options={this.state.location_data}
-                    onChange={this.HandleChangeLokasi}
-                    placeholder="Pilih Lokasi"
-                    value={this.state.location_data.find((op) => {
-                      return op.value === this.state.location;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2">
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-12 col-xs-12 col-md-2">
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              </div>
-              <div
-                className="col-12 col-xs-12 col-md-2"
-                style={{ textAlign: "right" }}
-              >
-                <div className="form-group text-right">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
-                    <i className="fa fa-print"></i>
-                  </button>
-                </div>
-              </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(activeDateRangePickerStorage, isActive);
+                setStorage(dateFromStorage, first);
+                setStorage(dateToStorage, last);
+                setTimeout(() => this.handleService(), 300);
+              },
+              `${toDate(startDate)} - ${toDate(endDate)}`,
+              getStorage(activeDateRangePickerStorage)
+            )}
+          </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            <SelectCommon label="Kolom" options={column_data} dataEdit={column} callback={(res) => this.handleSelect("column", res)} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            <SelectSortCommon dataEdit={sort} callback={(res) => this.handleSelect("sort", res)} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <label>Cari</label>
+            <div className="input-group">
+              <input
+                type="search"
+                name="any"
+                className="form-control"
+                placeholder="tulis sesuatu disini"
+                value={any}
+                onChange={(e) => this.setState({ any: e.target.value })}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
+                }}
+              />
+              <span className="input-group-append">
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                  <i className="fa fa-search" />
+                </button>
+                <button
+                  className="btn btn-primary ml-1"
+                  onClick={(e) => {
+                    this.handleModal("excel", {
+                      total: last_page * per_page,
+                    });
+                  }}
+                >
+                  {isProgress(this.props.download)}
+                </button>
+              </span>
             </div>
           </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-noborder">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black text-center middle nowrap" width="1%">
-                  No
-                </th>
-                <th className="text-black text-center middle nowrap" width="1%">
-                  #
-                </th>
-                <th className="text-black middle nowrap">No. Adjusment</th>
-                <th className="text-black middle nowrap">Tanggal</th>
-                <th className="text-black middle nowrap">Operator</th>
-                <th className="text-black middle nowrap">Lokasi</th>
-                <th className="text-black middle nowrap">Keterangan</th>
-              </tr>
-            </thead>
-            {
-              <tbody>
-                {typeof data === "object" ? (
-                  data.map((v, i) => {
-                    return (
-                      <tr key={i}>
-                        <td className="text-center middle nowrap">
-                          {generateNo(i, current_page)}
-                        </td>
-                        <td className="text-center middle nowrap">
-                          {/* Example split danger button */}
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret></DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.toggleModalDet(e, v.kd_trx)
-                                  }
-                                >
-                                  Detail
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.handleDelete(e, v.kd_trx)
-                                  }
-                                >
-                                  Delete
-                                </DropdownItem>
-                                <DropdownItem
-                                  href={`${HEADERS.URL}reports/adjust/${v.kd_trx}.pdf`}
-                                  target="_blank"
-                                >
-                                  Nota
-                                </DropdownItem>
-                                <Link to={`../adjust3ply/${v.kd_trx}`}>
-                                  <DropdownItem>3ply</DropdownItem>
-                                </Link>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        <td className="middle nowrap">{v.kd_trx}</td>
-                        <td className="middle nowrap">
-                          {moment(v.tgl).format("yyyy-MM-DD")}
-                        </td>
-                        <td className="middle nowrap">{v.username}</td>
-                        <td className="middle nowrap">{v.lokasi}</td>
-                        <td className="middle nowrap">{v.keterangan}</td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td>No Data.</td>
-                  </tr>
-                )}
-              </tbody>
-            }
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={parseInt(current_page, 10)}
-            per_page={parseInt(per_page, 10)}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-
-        {this.state.isModalExcel ? (
-          <AdjustmentReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            location={this.state.location}
-          />
-        ) : null}
-
-        {this.state.isModalDetail ? (
-          <DetailAdjustment detail={this.props.adjustmentDetailSatuan} />
-        ) : null}
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "#", className: "text-center", width: "1%" },
+            { label: "Kode Adjusment", width: "1%" },
+            { label: "Operator", width: "1%" },
+            { label: "Lokasi", width: "1%" },
+            { label: "Tanggal", width: "1%" },
+            { label: "Keterangan" },
+          ]}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          body={typeof data === "object" && data}
+          label={[{ label: "kd_trx" }, { label: "username" }, { label: "lokasi" }, { label: "tgl", date: true }, { label: "keterangan" }]}
+          action={[{ label: "Detail" }, { label: "Nota" }, { label: "3ply" }, { label: "Hapus" }]}
+          callback={(e, index) => {
+            if (e === 0) this.handleModal("detail", data[index]);
+            if (e === 1) this.props.history.push(`${HEADERS.URL}reports/adjust/${data[index].kd_trx}.pdf`);
+            if (e === 2) this.props.history.push(`../adjust3ply/${data[index].kd_trx}`);
+            if (e === 3) this.handleDelete(data[index]);
+          }}
+        />
+        {this.props.isOpen && isModalExcel ? <AdjustmentReportExcel startDate={startDate} endDate={endDate} location={location} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailAdjustment detail={this.props.adjustmentDetailSatuan} /> : null}
       </Layout>
     );
   }
@@ -493,9 +219,8 @@ const mapStateToProps = (state) => {
     adjustmentReport: state.adjustmentReducer.data,
     adjustmentReportExcel: state.adjustmentReducer.dataExcel,
     total: state.adjustmentReducer.total,
-    isLoadingDetailSatuan: state.adjustmentReducer.isLoadingDetailSatuan,
+    download: state.adjustmentReducer.download,
     auth: state.auth,
-    isLoading: state.adjustmentReducer.isLoading,
     adjustmentDetailSatuan: state.adjustmentReducer.dataDetailTransaksi,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,

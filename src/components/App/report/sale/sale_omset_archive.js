@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
 import moment from "moment";
-import Paginationq from "helper";
 import { toRp } from "helper";
 import { FetchReportSaleOmset, FetchReportSaleOmsetExcel } from "redux/actions/sale/sale_omset.action";
 import SaleOmsetReportExcel from "../../modals/report/sale/form_sale_omset_excel";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, rmStorage, setStorage, toDate } from "../../../../helper";
+import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, setStorage, toDate } from "../../../../helper";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
 
@@ -84,7 +82,7 @@ class SaleOmsetArchive extends Component {
   }
 
   handleService(page = 1) {
-    const { startDate, endDate, sort, any } = this.state;
+    const { startDate, endDate } = this.state;
     let dateFrom = getStorage(dateFromStorage);
     let dateTo = getStorage(dateToStorage);
     let sortBy = getStorage(sortStorage);

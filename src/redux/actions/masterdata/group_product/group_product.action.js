@@ -1,10 +1,5 @@
-import { GROUP_PRODUCT, HEADERS } from "../../_constants";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { GROUP_PRODUCT } from "../../_constants";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
 const baseUrl = "kelompokBrg";
 export function setLoading(load) {

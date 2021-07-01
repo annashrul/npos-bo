@@ -79,9 +79,10 @@ class SaleReportExcel extends Component {
 
   handleContent() {
     let props = [];
-    if (this.props.saleReportExcel.data !== undefined) {
-      if (this.props.saleReportExcel.data.length > 0) {
-        this.props.saleReportExcel.data.map((v) => {
+    let data = this.props.saleReportExcel.data;
+    if (data !== undefined) {
+      if (data.length > 0) {
+        data.map((v) =>
           props.push([
             v.kd_trx,
             moment(v.tgl).format("yyyy/MM/DD"),
@@ -108,33 +109,18 @@ class SaleReportExcel extends Component {
             v.status,
             v.lokasi,
             v.jenis_trx,
-          ]);
-        });
+          ])
+        );
       }
     }
     return props;
   }
   printExcel(param) {
-    toExcel(
-      "LAPORAN ARSIP PENJUALAN",
-      `${this.props.startDate} - ${this.props.endDate}`,
-      this.handleHeader(),
-      this.handleContent(),
-      this.handleFooter(),
-      param
-    );
+    toExcel("LAPORAN ARSIP PENJUALAN", `${this.props.startDate} - ${this.props.endDate}`, this.handleHeader(), this.handleContent(), this.handleFooter(), param);
     this.props.dispatch(ModalToggle(false));
   }
   render() {
-    return (
-      <ExportCommon
-        modalType="formSaleExcel"
-        isCsv={true}
-        isExcel={true}
-        callbackCsv={() => this.printExcel(EXTENSION.CSV)}
-        callbackExcel={() => this.printExcel(EXTENSION.XLXS)}
-      />
-    );
+    return <ExportCommon modalType="formSaleExcel" isCsv={true} isExcel={true} callbackCsv={() => this.printExcel(EXTENSION.CSV)} callbackExcel={() => this.printExcel(EXTENSION.XLXS)} />;
   }
 }
 

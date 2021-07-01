@@ -2,7 +2,6 @@ import { SALE_BY_CUST, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import moment from "moment";
 import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle } from "../modal.action";
 

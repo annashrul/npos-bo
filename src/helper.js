@@ -19,9 +19,10 @@ export const toDate = (val, type = "/") => {
   return type === "/" ? moment(val).format("yyyy/MM/DD") : moment(val).format("yyyy-MM-DD");
 };
 
-export const isImage = (img, className = "img-in-table pointer") => {
+export const isImage = (img = "", className = "img-in-table pointer") => {
   return (
     <img
+      src={img}
       onClick={() => {
         Swal.fire({
           imageUrl: img,
@@ -30,12 +31,12 @@ export const isImage = (img, className = "img-in-table pointer") => {
           hideClass: { popup: "animate__animated animate__fadeOutUp" },
         });
       }}
-      src={img}
       onError={(e) => {
         e.target.onerror = null;
         e.target.src = `${Default}`;
       }}
       className={className}
+      alt={img}
     />
   );
 };
@@ -64,6 +65,10 @@ export const stringifyFormData = (fd) => {
     data[key] = fd.get(key);
   }
   return data;
+};
+
+export const headerExcel = (from, to) => {
+  return `${toDate(from, "/")} - ${toDate(to, "/")}`;
 };
 
 export const toExcel = (title = "", periode = "", head = [], content = [], foot = [], ext = EXTENSION.XLSX) => {
@@ -156,7 +161,8 @@ export const to_pdf = (filename, title = "", header = [], body = [], footer = []
   doc.fromHTML(title, marginLeft, 10, { align: "center" });
   doc.autoTable(content);
   // addFooters(doc);
-  return doc.save("LAPORAN_" + filename + `_${moment(new Date()).format("YYYYMMDDHHMMss")}` + ".pdf");
+  // return doc.save("LAPORAN_" + filename + `_${moment(new Date()).format("YYYYMMDDHHMMss")}` + ".pdf");
+  return doc.save(`LAPORAN ${filename}_${moment(new Date()).format("YYYYMMDDHHMMss")}.pdf`);
 };
 
 export const to_pdf_l = (filename, title = "", header = [], body = [], footer = []) => {
@@ -594,7 +600,7 @@ export const noData = (colSpan) => {
 export const handleDataSelect = (props, value, label) => {
   let data = [];
 
-  if (value == "kd_cust") {
+  if (value === "kd_cust") {
     data.push({
       value: "1000001",
       label: "UMUM",
@@ -607,9 +613,7 @@ export const handleDataSelect = (props, value, label) => {
     });
   }
 
-  props.map((val) => {
-    data.push({ value: val[value], label: val[label] });
-  });
+  props.map((val) => data.push({ value: val[value], label: val[label] }));
 
   return data;
 };

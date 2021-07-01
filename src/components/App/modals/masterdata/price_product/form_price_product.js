@@ -5,12 +5,7 @@ import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
 import { updatePriceProduct } from "../../../../../redux/actions/masterdata/price_product/price_product.action";
-import {
-  handleError,
-  isEmptyOrUndefined,
-  rmComma,
-  toCurrency,
-} from "../../../../../helper";
+import { isEmptyOrUndefined, rmComma, toCurrency } from "../../../../../helper";
 
 import ButtonActionForm from "../../../common/ButtonActionForm";
 
@@ -94,93 +89,46 @@ class FormPriceProduct extends Component {
     if (!isEmptyOrUndefined(parseData.harga4, "harga 4")) return;
     if (!isEmptyOrUndefined(parseData.ppn, "ppn")) return;
     if (!isEmptyOrUndefined(parseData.service, "service")) return;
-    this.props.dispatch(
-      updatePriceProduct(this.state.id, parseData, this.props.detail.where)
-    );
+    this.props.dispatch(updatePriceProduct(this.state.id, parseData, this.props.detail.where));
   }
 
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formPriceProduct"}
-        size="md"
-      >
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPriceProduct"} size="md">
         <ModalHeader toggle={this.closeModal}>Ubah Harga Barang</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
               <label>Harga Beli</label>
-              <input
-                type="text"
-                className="form-control"
-                name="harga_beli"
-                value={toCurrency(this.state.harga_beli)}
-                onChange={this.handleChange}
-              />
+              <input type="text" className="form-control" name="harga_beli" value={toCurrency(this.state.harga_beli)} onChange={this.handleChange} />
             </div>
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
                   <label>Harga 1</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="harga"
-                    value={toCurrency(this.state.harga)}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="harga" value={toCurrency(this.state.harga)} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Harga 2</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="harga2"
-                    value={toCurrency(this.state.harga2)}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="harga2" value={toCurrency(this.state.harga2)} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>PPN</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="ppn"
-                    value={toCurrency(this.state.ppn)}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="ppn" value={toCurrency(this.state.ppn)} onChange={this.handleChange} />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
                   <label>Harga 3</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="harga3"
-                    value={toCurrency(this.state.harga3)}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="harga3" value={toCurrency(this.state.harga3)} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Harga 4</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="harga4"
-                    value={toCurrency(this.state.harga4)}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="harga4" value={toCurrency(this.state.harga4)} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Servis</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="service"
-                    value={toCurrency(this.state.service)}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="service" value={toCurrency(this.state.service)} onChange={this.handleChange} />
                 </div>
               </div>
             </div>

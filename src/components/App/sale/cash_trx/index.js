@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 import Layout from "components/App/Layout";
-import Select from "react-select";
-import Swal from "sweetalert2";
 import { FetchCash, StoreCashTrx } from "redux/actions/masterdata/cash/cash.action";
-import { kassa, toCurrency, rmComma, swallOption, isEmptyOrUndefined, swalWithCallback, getStorage } from "../../../../helper";
+import { kassa, toCurrency, rmComma, swallOption, isEmptyOrUndefined, getStorage } from "../../../../helper";
 import moment from "moment";
 import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";

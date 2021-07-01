@@ -3,7 +3,7 @@ import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import "jspdf-autotable";
 import ExportCommon from "../../../../common/ExportCommon";
-import { to_pdf, headerPdf, toExcel, rmSpaceToStrip, toDate } from "../../../../../../helper";
+import { to_pdf, headerPdf, toExcel, rmSpaceToStrip, toDate, headerExcel } from "../../../../../../helper";
 import { EXTENSION } from "../../../../../../redux/actions/_constants";
 
 class MutationReportExcel extends Component {
@@ -18,22 +18,23 @@ class MutationReportExcel extends Component {
   }
 
   handleContent(cek = "excel") {
+    let data = this.props.mutationReportExcel.data;
     let props = [];
-    if (this.props.mutationReportExcel.data !== undefined) {
-      if (this.props.mutationReportExcel.data.length > 0) {
-        this.props.mutationReportExcel.data.map((v, i) => {
+    if (data !== undefined) {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
           props.push([
             i + 1,
-            v.no_faktur_mutasi,
-            v.lokasi_asal,
-            v.lokasi_tujuan,
-            rmSpaceToStrip(v.no_faktur_beli),
-            v.status === "0" ? "Dikirim" : v.status === "1" ? "Diterima" : "",
-            v.keterangan,
-            toDate(v.tgl_mutasi),
+            data[i].no_faktur_mutasi,
+            data[i].lokasi_asal,
+            data[i].lokasi_tujuan,
+            rmSpaceToStrip(data[i].no_faktur_beli),
+            data[i].status === "0" ? "Dikirim" : data[i].status === "1" ? "Diterima" : "",
+            data[i].keterangan,
+            toDate(data[i].tgl_mutasi),
           ]);
-          if (cek === "excel") props[i].shift();
-        });
+          cek === "excel" && props[i].shift();
+        }
       }
     }
     return props;
@@ -56,7 +57,7 @@ class MutationReportExcel extends Component {
   printExcel() {
     let header = this.handleHeader();
     header.shift();
-    toExcel("LAPORAN MUTASI", `${this.props.startDate} - ${this.props.endDate}`, header, this.handleContent(), [], EXTENSION.XLXS);
+    toExcel("LAPORAN MUTASI", headerExcel(this.props.startDate, this.props.endDate), header, this.handleContent(), [], EXTENSION.XLXS);
     this.props.dispatch(ModalToggle(false));
   }
   render() {

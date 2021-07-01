@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import WrapperModal from "components/App/modals/_wrapper.modal";
-import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { ModalBody, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { FetchBank } from "redux/actions/masterdata/bank/bank.action";
-import Preloader from "../../../../Preloader";
 import { storeSale } from "../../../../redux/actions/sale/sale.action";
 import { toCurrency, rmComma } from "helper";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
 import KeyHandler, { KEYPRESS } from "react-key-handler";
+import SelectCommon from "../../common/SelectCommon";
 
-import { handleError, onHandleKeyboard, setFocus } from "../../../../helper";
+import { handleError, setFocus } from "../../../../helper";
 class FormSale extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +34,7 @@ class FormSale extends Component {
       bank: "",
     };
     this.handleSetTunai = this.handleSetTunai.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     // onHandleKeyboard(13, (e) => {
     //   e.preventDefault();
     //   console.log(this.props.type);
@@ -82,7 +83,41 @@ class FormSale extends Component {
     }
   }
 
+  handleSelect(res) {
+    let value = res.value;
+    let setState = { jenis_trx: value, isTransfer: false };
+    let state = this.state;
+    let props = this.props.master;
+    if (value === "Transfer" || value === "Gabungan") {
+      if (value === "Transfer") {
+        setFocus(this, "jml_kartu");
+      }
+      Object.assign(setState, { isTransfer: true, jml_kartu: state.gt });
+      let bank = state.bank.split("-");
+      Object.assign(props, {
+        tunai: rmComma(state.tunai),
+        change: state.change,
+        jenis_trx: value,
+        pemilik_kartu: bank[1],
+        kartu: bank[0],
+      });
+    }
+    if (value === "Kredit") {
+      Object.assign(setState, { change: 0, tunai: 0 });
+      Object.assign(props, {
+        change: 0,
+        tunai: 0,
+        jenis_trx: value,
+      });
+    }
+    if (value === "Tunai" || value === "Kredit" || value === "Gabungan") {
+      setFocus(this, "tunai");
+    }
+    this.setState(setState);
+  }
+
   handleChange = (event) => {
+    event.preventDefault();
     this.setState({ [event.target.name]: event.target.value });
 
     if (event.target.name === "tunai") {
@@ -100,34 +135,6 @@ class FormSale extends Component {
         pemilik_kartu: "-",
         kartu: "-",
       });
-    }
-    if (event.target.name === "jenis_trx") {
-      if (event.target.value === "Transfer" || event.target.value === "Gabungan") {
-        this.setState({ isTransfer: true, jml_kartu: this.state.gt });
-        let bank = this.state.bank.split("-");
-        Object.assign(this.props.master, {
-          tunai: rmComma(this.state.tunai),
-          change: this.state.change,
-          jenis_trx: event.target.value,
-          pemilik_kartu: bank[1],
-          kartu: bank[0],
-        });
-      } else {
-        this.setState({
-          isTransfer: false,
-        });
-      }
-      if (event.target.value === "Kredit") {
-        this.setState({
-          change: 0,
-          tunai: 0,
-        });
-        Object.assign(this.props.master, {
-          change: 0,
-          tunai: 0,
-          jenis_trx: event.target.value,
-        });
-      }
     }
     if (event.target.name.toLowerCase() === "dp") {
       this.setState({
@@ -170,7 +177,6 @@ class FormSale extends Component {
     e.preventDefault();
     let bank = this.state.bank.split("-");
 
-    let err = this.state.error;
     if (this.state.jenis_trx.toLowerCase() === "kredit") {
       if (parseFloat(this.state.tunai.toString().replace(/,/g, "")) < 0) {
         handleError("Nominal masih kosong!");
@@ -197,17 +203,17 @@ class FormSale extends Component {
     } else {
       if (this.state.jenis_trx === "Tunai") {
         if (parseFloat(this.state.tunai.toString().replace(/,/g, "")) < this.state.gt) {
-          handleError("Jumlah uang tidak boleh kurang dari total pembayaran");
+          handleError("", "Jumlah uang tidak boleh kurang dari total pembayaran");
           return;
         }
       }
       if (this.state.jenis_trx === "Transfer") {
         if (this.state.bank === "") {
-          handleError("silahkan pilih bank tujuan");
+          handleError("", "silahkan pilih bank tujuan");
           return false;
         }
         if (rmComma(this.state.jml_kartu) < this.state.gt) {
-          handleError("Jumlah uang tidak boleh kurang dari total pembayaran");
+          handleError("", "Jumlah uang tidak boleh kurang dari total pembayaran");
           return false;
         }
       }
@@ -215,12 +221,12 @@ class FormSale extends Component {
       if (this.state.jenis_trx === "Gabungan") {
         let jumlah = parseInt(rmComma(this.state.tunai)) + parseInt(rmComma(this.state.jml_kartu));
         if (this.state.bank === "") {
-          handleError("silahkan pilih bank tujuan");
+          handleError("", "silahkan pilih bank tujuan");
           return false;
         }
         if (jumlah > parseInt(rmComma(this.state.gt))) {
-          handleError("uang tunai dan uang transfer tidak boleh lebih dari total pembayaran");
-          return;
+          handleError("", "uang tunai dan uang transfer tidak boleh lebih dari total pembayaran");
+          return false;
         }
       }
 
@@ -297,129 +303,126 @@ class FormSale extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { data } = this.props.bank;
     return (
-      <React.Fragment>
+      <div>
         <KeyHandler
           keyEventName={KEYPRESS}
           keyValue={["Enter", "f"]}
           onKeyHandle={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === "s") {
               this.handleSubmit(e);
-              return;
             }
             if (e.key === "f") {
               setFocus(this, "tunai");
-              return;
             }
           }}
         />
 
         <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSale"} size="md">
-          <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Pembayaran" : "#" + this.state.kode_trx}</ModalHeader>
+          <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Pembayaran" : "#" + this.props.master.kode_trx}</ModalHeader>
           <ModalBody>
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label htmlFor="">Jenis Pembayaran</label>
-                  <select name="jenis_trx" id="jenis_trx" className="form-control" value={this.state.jenis_trx} onChange={this.handleChange}>
-                    <option value="Tunai">TUNAI</option>
-                    <option value="Transfer">TRANSFER</option>
-                    <option value="Kredit">KREDIT</option>
-                    <option value="Gabungan">GABUNGAN</option>
-                  </select>
-                </div>
-                {this.state.jenis_trx === "Gabungan" && this.isTunai("Uang tunai", "tunai")}
-                {(() => {
-                  let label = "",
-                    name = "";
-                  let jenis_trx = this.state.jenis_trx;
-                  if (jenis_trx === "Kredit") {
-                    label = "Jumlah DP";
-                    name = "tunai";
-                  } else if (jenis_trx === "Transfer" || jenis_trx === "Gabungan") {
-                    label = jenis_trx === "Gabungan" ? "Uang transfer" : "Jumlah Uang";
-                    name = "jml_kartu";
-                  } else {
-                    label = "Jumlah Uang";
-                    name = "tunai";
-                  }
-                  return this.isTunai(label, name);
-                })()}
-                <div
-                  className="form-group"
-                  style={{
-                    display: this.state.jenis_trx === "Kredit" ? "" : "none",
-                  }}
-                >
-                  <label htmlFor="">Tanggal Tempo</label>
-                  <input
-                    type="date"
-                    name={"tanggal_tempo"}
-                    min={moment(new Date()).add(1, "days").format("yyyy-MM-DD")}
-                    className="form-control"
-                    value={this.state.tanggal_tempo}
-                    onChange={this.handleChange}
+            <form onSubmit={this.handleSubmit}>
+              <div className="row">
+                <div className="col-md-12">
+                  <SelectCommon
+                    label="Jenis pembayaran"
+                    options={[
+                      { value: "Tunai", label: "Tunai" },
+                      { value: "Transfer", label: "Transfer" },
+                      { value: "Kredit", label: "Kredit" },
+                      { value: "Gabungan", label: "Gabungan" },
+                    ]}
+                    dataEdit={this.state.jenis_trx}
+                    callback={(res) => this.handleSelect(res)}
                   />
-                  <div className="invalid-feedback" style={this.state.error.tanggal_tempo !== "" || this.state.error.tanggal_tempo !== "0" ? { display: "block" } : { display: "none" }}>
-                    {this.state.error.tanggal_tempo}
-                  </div>
-                </div>
-                {/*TRANSFER*/}
-                {this.state.isTransfer === true ? (
-                  <div className="form-group">
-                    <label htmlFor="">BANK</label>
-                    <select name="bank" id="bank" className="form-control" value={this.state.bank} defaultValue={this.state.bank} onChange={this.handleChange}>
-                      {typeof data === "object"
-                        ? data.map((v, i) => {
-                            return (
-                              <option value={`${v.nama}-${v.akun}`}>
-                                {v.nama} || {v.akun}
-                              </option>
-                            );
-                          })
-                        : ""}
 
-                      {/*<option value="KREDIT">KREDIT</option>*/}
-                    </select>
+                  {this.state.jenis_trx === "Gabungan" && this.isTunai("Uang tunai", "tunai")}
+                  {(() => {
+                    let label = "",
+                      name = "";
+                    let jenis_trx = this.state.jenis_trx;
+                    if (jenis_trx === "Kredit") {
+                      label = "Jumlah DP";
+                      name = "tunai";
+                    } else if (jenis_trx === "Transfer" || jenis_trx === "Gabungan") {
+                      label = jenis_trx === "Gabungan" ? "Uang transfer" : "Jumlah Uang";
+                      name = "jml_kartu";
+                    } else {
+                      label = "Jumlah Uang";
+                      name = "tunai";
+                    }
+                    return this.isTunai(label, name);
+                  })()}
+                  <div
+                    className="form-group"
+                    style={{
+                      display: this.state.jenis_trx === "Kredit" ? "" : "none",
+                    }}
+                  >
+                    <label htmlFor="">Tanggal Tempo</label>
+                    <input
+                      type="date"
+                      name={"tanggal_tempo"}
+                      min={moment(new Date()).add(1, "days").format("yyyy-MM-DD")}
+                      className="form-control"
+                      value={this.state.tanggal_tempo}
+                      onChange={this.handleChange}
+                    />
+                    <div className="invalid-feedback" style={this.state.error.tanggal_tempo !== "" || this.state.error.tanggal_tempo !== "0" ? { display: "block" } : { display: "none" }}>
+                      {this.state.error.tanggal_tempo}
+                    </div>
                   </div>
-                ) : (
-                  ""
-                )}
-                {/*END TRANSFER*/}
-                <div
-                  className="form-group"
-                  style={{
-                    display: this.state.jenis_trx === "Gabungan" || this.state.jenis_trx === "Kredit" || this.state.jenis_trx === "Transfer" ? "none" : "block",
-                  }}
-                >
-                  <label htmlFor="">Kembalian</label>
-                  <input readOnly type="text" name="change" id="change" className="form-control" value={toCurrency(this.state.change)} onChange={this.handleChange} />
-                  <div className="invalid-feedback text-left" style={parseInt(this.state.change, 10) < 0 && this.state.jenis_trx !== "Gabungan" ? { display: "block" } : { display: "none" }}>
-                    Kembalian Masih (Minus)
+                  {/*TRANSFER*/}
+                  {this.state.isTransfer === true ? (
+                    <div className="form-group">
+                      <label htmlFor="">BANK</label>
+                      <select name="bank" id="bank" className="form-control" value={this.state.bank} onChange={this.handleChange}>
+                        {typeof data === "object"
+                          ? data.map((v, i) => {
+                              return (
+                                <option key={i} value={`${v.nama}-${v.akun}`}>
+                                  {v.nama} || {v.akun}
+                                </option>
+                              );
+                            })
+                          : ""}
+                      </select>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {/*END TRANSFER*/}
+                  <div
+                    className="form-group"
+                    style={{
+                      display: this.state.jenis_trx === "Gabungan" || this.state.jenis_trx === "Kredit" || this.state.jenis_trx === "Transfer" ? "none" : "block",
+                    }}
+                  >
+                    <label htmlFor="">Kembalian</label>
+                    <input readOnly type="text" name="change" id="change" className="form-control" value={toCurrency(this.state.change)} onChange={this.handleChange} />
+                    <div className="invalid-feedback text-left" style={parseInt(this.state.change, 10) < 0 && this.state.jenis_trx !== "Gabungan" ? { display: "block" } : { display: "none" }}>
+                      Kembalian Masih (Minus)
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-md-9">
-                <button className="btn btn-info btn-block text-left" onClick={(event) => this.handleSetTunai(event)} data-toggle="tooltip" title="Masukan total ke jumlah uang.">
-                  TOTAL = <b>{toCurrency(this.state.gt)}</b>
-                </button>
+              <div className="row">
+                <div className="col-md-9">
+                  <button className="btn btn-info btn-block text-left" onClick={(event) => this.handleSetTunai(event)} data-toggle="tooltip" title="Masukan total ke jumlah uang.">
+                    TOTAL = <b>{toCurrency(this.state.gt)}</b>
+                  </button>
+                </div>
+                <div className="col-md-3">
+                  <button style={{ float: "right" }} type="submit" className="btn btn-primary" disabled={this.props.isLoadingSale}>
+                    Bayar
+                  </button>
+                </div>
               </div>
-              <div className="col-md-3">
-                <button style={{ float: "right" }} className="btn btn-primary" onClick={this.handleSubmit} disabled={this.props.isLoadingSale}>
-                  Bayar
-                </button>
-              </div>
-            </div>
+            </form>
           </ModalBody>
-          <ModalFooter>
-            <div className="container"></div>
-          </ModalFooter>
         </WrapperModal>
-      </React.Fragment>
+      </div>
     );
   }
 }

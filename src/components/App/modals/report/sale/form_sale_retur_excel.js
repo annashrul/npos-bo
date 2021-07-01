@@ -18,12 +18,13 @@ class SaleReturReportExcel extends Component {
 
   handleContent(cek = "excel") {
     let props = [];
-    if (this.props.sale_returReportExcel.data !== undefined) {
-      if (this.props.sale_returReportExcel.data.length > 0) {
-        this.props.sale_returReportExcel.data.map((v, i) => {
-          props.push([i + 1, v.kd_trx, toDate(v.tgl), v.nama, v.nilai_retur, v.diskon_item]);
-          if (cek === "excel") props[i].shift();
-        });
+    let data = this.props.sale_returReportExcel.data;
+    if (data !== undefined) {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          props.push([i + 1, data[i].kd_trx, toDate(data[i].tgl), data[i].nama, data[i].nilai_retur, data[i].diskon_item]);
+          cek === "excel" && props[i].shift();
+        }
       }
     }
     return props;

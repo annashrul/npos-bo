@@ -1,7 +1,6 @@
 import { SALE_OMSET, HEADERS } from "../_constants";
 import axios from "axios";
-import Swal from "sweetalert2";
-import { handleGet, handleGetExport, loading } from "../handleHttp";
+import { handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle, ModalType } from "../modal.action";
 
 export function setLoading(load) {

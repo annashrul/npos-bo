@@ -1,13 +1,7 @@
 import { MEJA, HEADERS } from "../../_constants";
 import axios from "axios";
-import Swal from "sweetalert2";
 import { ModalToggle } from "redux/actions/modal.action";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
 
 export function setLoading(load) {

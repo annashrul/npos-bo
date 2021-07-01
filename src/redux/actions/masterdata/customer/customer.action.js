@@ -1,10 +1,5 @@
-import { CUSTOMER, HEADERS } from "../../_constants";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { CUSTOMER } from "../../_constants";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal, ToastQ } from "../../../../helper";
 import { ModalToggle } from "../../modal.action";
 
@@ -135,7 +130,6 @@ export const FetchCustomerPrice = (kode, page = 1, q = "") => {
 export const saveCustomerPrice = (data) => {
   return (dispatch) => {
     handlePost(baseUrl + "/harga", data, (res, msg, status) => {
-      const data = res.data;
       if (status) {
         ToastQ.fire({
           icon: "success",
