@@ -5,7 +5,6 @@ import { setLoading } from "../masterdata/customer/customer.action";
 import { handleGet, handleGetExport } from "../handleHttp";
 import { ModalToggle } from "../modal.action";
 
-
 export function setDownload(load) {
   return {
     type: MUTATION.DOWNLOAD,
@@ -100,32 +99,28 @@ export const rePrintFaktur = (id) => {
               // window.open(`/approval_mutasi`, '_top');
             }
           });
-          document
-            .getElementById("btnNotaPdf")
-            .addEventListener("click", () => {
-              // const win = window.open(data['kd_trx'], '_blank');
-              // if (win != null) {
-              //     win.focus();
-              // }
+          document.getElementById("btnNotaPdf").addEventListener("click", () => {
+            // const win = window.open(data['kd_trx'], '_blank');
+            // if (win != null) {
+            //     win.focus();
+            // }
 
-              dispatch(rePrintFaktur(id));
-            });
-          document
-            .getElementById("btnNota3ply")
-            .addEventListener("click", () => {
-              // param({
-              //     pathname: `/approvalAlokasi3ply`,
-              //     state: {
-              //         data: rawdata,
-              //     }
-              // })
-              // Swal.closeModal();
-              // return false;
-              const win = window.open(`/alokasi3ply/${id}`, "_blank");
-              if (win != null) {
-                win.focus();
-              }
-            });
+            dispatch(rePrintFaktur(id));
+          });
+          document.getElementById("btnNota3ply").addEventListener("click", () => {
+            // param({
+            //     pathname: `/approvalAlokasi3ply`,
+            //     state: {
+            //         data: rawdata,
+            //     }
+            // })
+            // Swal.closeModal();
+            // return false;
+            const win = window.open(`/alokasi3ply/${id}`, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+          });
         } else {
           Swal.fire({
             title: "failed",
@@ -141,12 +136,7 @@ export const rePrintFaktur = (id) => {
   };
 };
 
-export const FetchApprovalMutation = (
-  page = 1,
-  q = "",
-  lokasi = "",
-  param = ""
-) => {
+export const FetchApprovalMutation = (page = 1, q = "", lokasi = "", param = "") => {
   return (dispatch) => {
     dispatch(setLoadingApprovalMutation(true));
     let url = `mutasi?page=${page}`;
@@ -221,20 +211,6 @@ export const saveApprovalMutation = (data, param) => {
       .post(url, data.data)
       .then(function (response) {
         Swal.close();
-        //                const data = (response.data)
-        //                if (data.status === 'success') {
-        //                    Toast.fire({
-        //                        icon: 'success',
-        //                        title: data.msg
-        //                    })
-        //                } else {
-        //                    Swal.fire({
-        //                        title: 'failed',
-        //                        type: 'error',
-        //                        text: data.msg,
-        //                    });
-        //                }
-        // const data = data['kd_trx']
         Swal.fire({
           allowOutsideClick: false,
           title: "Transaksi berhasil.",
@@ -269,10 +245,7 @@ export const saveApprovalMutation = (data, param) => {
           // })
           // Swal.closeModal();
           // return false;
-          const win = window.open(
-            `/alokasi3ply/${data.data["kd_trx"]}`,
-            "_blank"
-          );
+          const win = window.open(`/alokasi3ply/${data.data["kd_trx"]}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -286,8 +259,7 @@ export const saveApprovalMutation = (data, param) => {
         Swal.fire({
           title: "failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -306,8 +278,8 @@ export const FetchMutation = (where = "") => {
 
 export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
-   let url = `mutasi/report?page=${page}&perpage=${perpage}`;
-    if (where !== "") url += where
+    let url = `mutasi/report?page=${page}&perpage=${perpage}`;
+    if (where !== "") url += where;
     handleGetExport(
       url,
       (res) => {
@@ -320,15 +292,14 @@ export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
     );
   };
 };
-export const FetchMutationData = (code,where="") => {
+export const FetchMutationData = (code, where = "") => {
   return (dispatch) => {
-    let url = `alokasi/report/${code}`
-    if(where!=="") url+=`?${where}`
-    handleGet(url,(res)=>{
+    let url = `alokasi/report/${code}`;
+    if (where !== "") url += `?${where}`;
+    handleGet(url, (res) => {
       dispatch(setMutationData(res.data));
-       dispatch(ModalToggle(true));
-    })
-   
+      dispatch(ModalToggle(true));
+    });
   };
 };
 

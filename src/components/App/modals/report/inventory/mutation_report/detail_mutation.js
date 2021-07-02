@@ -7,6 +7,7 @@ import { FetchMutationData } from "redux/actions/inventory/mutation.action";
 import { generateNo, noData, parseToRp, rmSpaceToStrip, toDate } from "../../../../../../helper";
 import TableCommon from "../../../../common/TableCommon";
 import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
+import { statusMutasi } from "../../../../../../helperStatus";
 
 class DetailMutation extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class DetailMutation extends Component {
 
   render() {
     const { data, current_page, per_page, last_page } = this.props.mutationDetail.detail === undefined ? [] : this.props.mutationDetail.detail;
-    const { keterangan, lokasi_asal, lokasi_tujuan, no_faktur_beli, no_faktur_mutasi, operator, tgl_mutasi, total } = this.props.mutationDetail;
+    const { keterangan, lokasi_asal, lokasi_tujuan, no_faktur_beli, no_faktur_mutasi, operator, tgl_mutasi, total, status } = this.props.mutationDetail;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "Kode" },
@@ -36,7 +37,10 @@ class DetailMutation extends Component {
       { rowSpan: 2, label: "Total" },
       { rowSpan: 2, label: "Satuan" },
     ];
-
+    let total_qty = 0;
+    let total_qty_retur = 0;
+    let total_qty_diterima = 0;
+    let total_hasil = 0;
     return (
       <div>
         <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailMutation"} size="lg">
@@ -52,7 +56,7 @@ class DetailMutation extends Component {
                 },
                 { title: "Operator", desc: operator },
                 { title: "Lokasi asal", desc: lokasi_asal },
-                { title: "Total transaksi", desc: parseToRp(total) },
+                { title: "Total transaksi", desc: statusMutasi(status) },
                 { title: "Lokasi tujuan", desc: lokasi_tujuan },
                 { title: "Keterangan", desc: keterangan },
               ]}
@@ -71,18 +75,31 @@ class DetailMutation extends Component {
                 typeof data === "object"
                   ? data.length > 0
                     ? data.map((v, i) => {
+                        let qty = parseInt(v.qty, 10);
+                        let qtyRetur = parseInt(v.qty_retur, 10);
+                        let totalItem = v.hrg_jual * (qty - qtyRetur);
+
+                        total_qty = total_qty + qty;
+
+                        total_qty_retur = total_qty_retur + qtyRetur;
+
+                        total_qty_diterima = total_qty_diterima + qty - qtyRetur;
+
+                        total_hasil = total_hasil + totalItem;
+
+                        total_qty = total_qty + parseInt(v.qty, 10);
                         return (
                           <tr key={i}>
                             <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                             <td className="middle nowrap">{v.barcode}</td>
                             <td className="middle nowrap">{v.kd_brg}</td>
                             <td className="middle nowrap">{v.nm_brg}</td>
-                            <td className="middle nowrap text-right">{parseToRp(v.qty)}</td>
-                            <td className="middle nowrap text-right">{parseToRp(v.qty_retur)}</td>
-                            <td className="middle nowrap text-right">{parseToRp(v.qty - v.qty_retur)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(qty)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(qtyRetur)}</td>
+                            <td className="middle nowrap text-right">{parseToRp(qty - qtyRetur)}</td>
                             <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
                             <td className="middle nowrap text-right">{parseToRp(v.hrg_jual)}</td>
-                            <td className="middle nowrap text-right">{parseToRp(v.hrg_jual * (v.qty - v.qty_retur))}</td>
+                            <td className="middle nowrap text-right">{parseToRp(totalItem)}</td>
                             <td className="middle nowrap">{v.satuan}</td>
                           </tr>
                         );
@@ -90,6 +107,18 @@ class DetailMutation extends Component {
                     : noData(head.length)
                   : noData(head.length)
               }
+              footer={[
+                {
+                  data: [
+                    { colSpan: 4, label: "Total perhalaman", className: "text-left" },
+                    { colSpan: 1, label: parseToRp(total_qty) },
+                    { colSpan: 1, label: parseToRp(total_qty_retur) },
+                    { colSpan: 1, label: parseToRp(total_qty_diterima) },
+                    { colSpan: 2, label: "" },
+                    { colSpan: 1, label: parseToRp(total_hasil) },
+                  ],
+                },
+              ]}
             />
           </ModalBody>
         </WrapperModal>

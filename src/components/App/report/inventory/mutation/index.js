@@ -6,12 +6,13 @@ import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import DetailMutation from "components/App/modals/report/inventory/mutation_report/detail_mutation";
 import MutationReportExcel from "components/App/modals/report/inventory/mutation_report/form_mutation_excel";
 import { statusQ, dateRange, handleDataSelect } from "helper";
-import { generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
+import { generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, parseToRp, setStorage, toDate, toRp } from "../../../../../helper";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
 import TableCommon from "../../../common/TableCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
+import { statusMutasi, STATUS_MUTASI } from "../../../../../helperStatus";
 
 const dateFromStorage = "dateFromReportMutasi";
 const dateToStorage = "dateToReportMutasi";
@@ -37,16 +38,12 @@ class MutationReport extends Component {
       sort: "",
       column: "",
       column_data: [
-        { kode: "no_faktur_mutasi", value: "Kode Mutasi" },
-        { kode: "tgl_mutasi", value: "Tanggal" },
-        { kode: "status", value: "Status" },
+        { value: "", label: "Semua" },
+        { value: "no_faktur_mutasi", label: "Kode Mutasi" },
+        { value: "tgl_mutasi", label: "Tanggal" },
+        { value: "status", label: "Status" },
       ],
       status: "",
-      status_data: [
-        { kode: "", value: "Semua" },
-        { kode: "0", value: "Dikirim" },
-        { kode: "1", value: "Diterima" },
-      ],
       isModalDetail: false,
       isModalExport: false,
     };
@@ -147,17 +144,20 @@ class MutationReport extends Component {
 
   render() {
     const { per_page, last_page, current_page, data, total } = this.props.mutationReport;
+    const { startDate, endDate, location, status, column, column_data, sort, any, isModalDetail, isModalExport } = this.state;
     const head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
       { rowSpan: "2", label: "#", className: "text-center", width: "1%" },
       { colSpan: "2", label: "Faktur", width: "1%" },
       { colSpan: "2", label: "Lokasi", width: "1%" },
       { rowSpan: "2", label: "qty", width: "1%" },
-      { rowSpan: "2", label: "Status", width: "1%" },
+      { rowSpan: "2", label: "Total transaksi", width: "1%" },
       { rowSpan: "2", label: "Keterangan" },
+      { rowSpan: "2", label: "Status", width: "1%" },
       { rowSpan: "2", label: "Tanggal mutasi", width: "1%" },
     ];
     let totQtyPer = 0;
+    let totAmountPer = 0;
 
     return (
       <Layout page="Laporan Mutasi">
@@ -167,19 +167,19 @@ class MutationReport extends Component {
               setStorage(dateFromStorage, first);
               setStorage(dateToStorage, last);
               this.handleService();
-            }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
+            }, `${toDate(startDate)} - ${toDate(endDate)}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <LokasiCommon callback={(res) => this.handleSelect("location", res)} isAll={true} dataEdit={this.state.location} />
+            <LokasiCommon callback={(res) => this.handleSelect("location", res)} isAll={true} dataEdit={location} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Status" options={handleDataSelect(this.state.status_data, "kode", "value")} callback={(res) => this.handleSelect("status", res)} dataEdit={this.state.status} />
+            <SelectCommon label="Status" options={STATUS_MUTASI} callback={(res) => this.handleSelect("status", res)} dataEdit={status} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Kolom" options={handleDataSelect(this.state.column_data, "kode", "value")} callback={(res) => this.handleSelect("column", res)} dataEdit={this.state.status} />
+            <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleSelect("column", res)} dataEdit={column} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={this.state.sort} />
+            <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <div className="form-group">
@@ -190,7 +190,7 @@ class MutationReport extends Component {
                   name="any"
                   className="form-control"
                   placeholder="tulis sesuatu disini"
-                  value={this.state.any}
+                  value={any}
                   onChange={(e) => this.setState({ any: e.target.value })}
                   onKeyPress={(e) => {
                     if (e.key === "Enter") this.handleSearch(e);
@@ -231,6 +231,7 @@ class MutationReport extends Component {
                       action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }];
                     }
                     totQtyPer = totQtyPer + parseInt(v.total_qty);
+                    totAmountPer = totAmountPer + parseInt(v.total);
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -252,9 +253,10 @@ class MutationReport extends Component {
                         <td className="middle nowrap">{v.no_faktur_beli === "" ? "-" : v.no_faktur_beli}</td>
                         <td className="middle nowrap">{v.lokasi_asal}</td>
                         <td className="middle nowrap">{v.lokasi_tujuan}</td>
-                        <td className="middle nowrap text-right">{v.total_qty}</td>
-                        <td className="middle nowrap">{v.status === "0" ? statusQ("warning", "Dikirim") : v.status === "1" ? statusQ("success", "Diterima") : ""}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.total_qty)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.total)}</td>
                         <td className="middle nowrap">{v.keterangan}</td>
+                        <td className="middle nowrap">{statusMutasi(v.status, true)}</td>
                         <td className="middle nowrap">{toDate(v.tgl_mutasi)}</td>
                       </tr>
                     );
@@ -271,15 +273,16 @@ class MutationReport extends Component {
                   className: "text-left",
                 },
                 { colSpan: 1, label: toRp(parseFloat(totQtyPer)) },
-                { colSpan: 4, label: "" },
+                { colSpan: 1, label: toRp(parseFloat(totAmountPer)) },
+                { colSpan: 3, label: "" },
               ],
             },
           ]}
         />
 
-        {this.props.isOpen && this.state.isModalDetail ? <DetailMutation /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailMutation /> : null}
 
-        {this.props.isOpen && this.state.isModalExport ? <MutationReportExcel startDate={this.state.startDate} endDate={this.state.endDate} /> : null}
+        {this.props.isOpen && isModalExport ? <MutationReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );
   }

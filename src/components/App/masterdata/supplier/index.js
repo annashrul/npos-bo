@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  FetchSupplier,
-  deleteSupplier,
-} from "redux/actions/masterdata/supplier/supplier.action";
+import { FetchSupplier, deleteSupplier } from "redux/actions/masterdata/supplier/supplier.action";
 
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import FormSupplier from "components/App/modals/masterdata/supplier/form_supplier";
@@ -35,9 +32,6 @@ class Supplier extends Component {
   }
 
   toggleModal(i) {
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formSupplier"));
     if (i === null) {
       this.setState({ detail: { id: "", where: this.state.where } });
     } else {
@@ -47,6 +41,8 @@ class Supplier extends Component {
         detail: detail,
       });
     }
+    this.props.dispatch(ModalToggle(true));
+    this.props.dispatch(ModalType("formSupplier"));
   }
   handleDelete(index) {
     if (this.props.data.total === 1) {
@@ -126,6 +122,7 @@ const mapStateToProps = (state) => {
   return {
     data: state.supplierReducer.data,
     auth: state.auth,
+    isOpen: state.modalReducer,
   };
 };
 

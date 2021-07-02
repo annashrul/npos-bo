@@ -129,7 +129,7 @@ class AlokasiReport extends Component {
   }
 
   handleRePrint(e, id) {
-    e.preventDefault();
+    // e.preventDefault();
     this.props.dispatch(rePrintFaktur(id));
   }
 

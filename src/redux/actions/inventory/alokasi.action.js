@@ -288,15 +288,17 @@ export const FetchAlokasiExcel = (page = 1, where = "", perpage = 99999) => {
     );
   };
 };
-export const FetchAlokasiDetail = (code, where = "") => {
+export const FetchAlokasiDetail = (code, where = "", isModal = true) => {
   return (dispatch) => {
     let url = `alokasi/report/${code}?perpage=${HEADERS.PERPAGE}`;
     if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
-        dispatch(ModalToggle(true));
-        dispatch(ModalType("detailAlokasi"));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailAlokasi"));
+        }
         dispatch(setALOKASIData(res.data));
       },
       true
