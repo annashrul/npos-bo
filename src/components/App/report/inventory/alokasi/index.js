@@ -1,26 +1,18 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
 import { FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail } from "redux/actions/inventory/alokasi.action";
 import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
-import FormAlokasi from "components/App/modals/inventory/alokasi/form_alokasi";
-import Select from "react-select";
 import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import { statusQ } from "helper";
-import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
-import { Link } from "react-router-dom";
-import { dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, rmSpaceToStrip, setStorage, toDate } from "../../../../../helper";
+import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, rmSpaceToStrip, setStorage, toDate } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import { statusAlokasi, STATUS_ALOKASI } from "../../../../../helperStatus";
 
 const dateFromStorage = "dateFromReportAlokasi";
 const dateToStorage = "dateToReportAlokasi";
@@ -45,15 +37,7 @@ class AlokasiReport extends Component {
       startDate: moment(new Date()).format("yyyy-MM-DD"),
       endDate: moment(new Date()).format("yyyy-MM-DD"),
       status: "",
-      status_data: [
-        { value: "", label: "Semua" },
-        { value: "3", label: "Diterima" },
-        { value: "2", label: "Dikirim" },
-        { value: "1", label: "Packing" },
-        { value: "0", label: "Proses" },
-      ],
       sort: "",
-      sort_data: [],
       column: "",
       column_data: [
         { value: "no_faktur_mutasi", label: "Faktur Mutasi" },
@@ -108,7 +92,7 @@ class AlokasiReport extends Component {
       where += `&sort=${getColumn}`;
       Object.assign(state, { column: getColumn });
       if (isEmptyOrUndefined(getSort)) {
-        where += `&sort=${getColumn}|${getSort}`;
+        where += `|${getSort}`;
         Object.assign(state, { sort: getSort });
       }
     }
@@ -155,12 +139,12 @@ class AlokasiReport extends Component {
     if (state === "column") setStorage(columnStorage, res.value);
     if (state === "sort") setStorage(sortStorage, res.value);
     this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(), 500);
+    this.handleService();
   }
 
   render() {
     const { per_page, last_page, current_page, data, total } = this.props.alokasiReport;
-    const { startDate, endDate, location, status, status_data, column, column_data, sort, any, isModalExcel, isModalDetail } = this.state;
+    const { startDate, endDate, location, status, column, column_data, sort, any, isModalExcel, isModalDetail } = this.state;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
       { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
@@ -189,7 +173,7 @@ class AlokasiReport extends Component {
             <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
-            <SelectCommon label="Status" options={status_data} dataEdit={status} callback={(res) => this.handleSelect("status", res)} />
+            <SelectCommon label="Status" options={handleDataSelect(STATUS_ALOKASI, "value", "label")} dataEdit={status} callback={(res) => this.handleSelect("status", res)} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <SelectCommon label="Kolom" options={column_data} dataEdit={column} callback={(res) => this.handleSelect("column", res)} />
@@ -265,17 +249,7 @@ class AlokasiReport extends Component {
                         <td className="middle nowrap">{v.lokasi_tujuan}</td>
 
                         <td className="middle nowrap">{rmSpaceToStrip(v.keterangan)}</td>
-                        <td className="middle nowrap">
-                          {v.status === "0"
-                            ? statusQ("primary", "proses")
-                            : v.status === "1"
-                            ? statusQ("warning", "packing")
-                            : v.status === "2"
-                            ? statusQ("info", "dikirim")
-                            : v.status === "3"
-                            ? statusQ("success", "diterima")
-                            : ""}
-                        </td>
+                        <td className="middle nowrap">{statusAlokasi(v.status, true)}</td>
                         <td className="middle nowrap">{toDate(v.tgl_mutasi)}</td>
                       </tr>
                     );
@@ -285,7 +259,7 @@ class AlokasiReport extends Component {
           }
         />
 
-        {this.props.isOpen && isModalDetail ? <DetailAlokasi alokasiDetail={this.props.alokasiDetail} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailAlokasi where={this.state.where_data} alokasiDetail={this.props.alokasiDetail} /> : null}
         {this.props.isOpen && isModalExcel ? <AlokasiReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );

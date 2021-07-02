@@ -593,6 +593,7 @@ export const SITE = {
  INVENTORY SECTION
  *****************/
 export const DN = {
+  DOWNLOAD: "SET_DN_DOWNLOAD",
   LOADING: "SET_DN_LOADING",
   SUCCESS: "SET_DN_SUCCESS",
   FAILED: "SET_DN_FAILED",

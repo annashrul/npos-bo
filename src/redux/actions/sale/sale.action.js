@@ -142,6 +142,7 @@ export const FetchNotaReceipt = (kd_trx) => {
 };
 export const storeSale = (data, param) => {
   return (dispatch) => {
+    console.log(data);
     let master = data.parsedata.master;
     dispatch(setLoading(true));
 

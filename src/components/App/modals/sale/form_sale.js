@@ -175,6 +175,49 @@ class FormSale extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
+
+    let propsMaster = this.props.master;
+    let field = {};
+    field["master"] = {
+      tempo: propsMaster.tempo,
+      kd_cust: propsMaster.kd_cust,
+      change: propsMaster.change,
+      kd_sales: propsMaster.kd_sales,
+      optional_note: propsMaster.optional_note,
+      rounding: propsMaster.rounding,
+      tax: propsMaster.tax,
+      dis_persen: propsMaster.dis_persen,
+      status: propsMaster.status,
+      kd_kasir: propsMaster.kd_kasir,
+      subtotal: propsMaster.subtotal,
+      gt: propsMaster.gt,
+      jam: propsMaster.jam,
+      tunai: propsMaster.tunai,
+      nominal_poin: propsMaster.nominal_poin,
+      diskon: propsMaster.diskon,
+      kode_trx: propsMaster.kode_trx,
+      compliment: propsMaster.compliment,
+      poin_tukar: propsMaster.poin_tukar,
+      jenis_trx: propsMaster.jenis_trx,
+      jml_kartu: propsMaster.jml_kartu,
+      no_kartu: propsMaster.no_kartu,
+      lokasi: propsMaster.lokasi,
+      kartu: propsMaster.kartu,
+      charge: propsMaster.charge,
+      hr: propsMaster.hr,
+      kassa: propsMaster.kassa,
+      pemilik_kartu: propsMaster.pemilik_kartu,
+      id_hold: propsMaster.id_hold === undefined ? "-" : propsMaster.id_hold,
+      jns_kartu: propsMaster.jns_kartu,
+      compliment_rp: propsMaster.compliment_rp,
+      tgl: propsMaster.tgl,
+    };
+    field["split"] = [];
+    field["join"] = [];
+    field["detail"] = this.props.detail;
+    let parsedata = field;
+
+    console.log(field);
     let bank = this.state.bank.split("-");
 
     if (this.state.jenis_trx.toLowerCase() === "kredit") {
@@ -185,19 +228,18 @@ class FormSale extends Component {
         handleError("Tanggal masih kosong!");
         return;
       } else {
-        let parsedata = {};
-        parsedata["master"] = this.props.master;
-        parsedata["split"] = [];
-        parsedata["join"] = [];
+        // parsedata["master"] = propsMaster;
+        // parsedata["split"] = [];
+        // parsedata["join"] = [];
         parsedata["detail"] = this.props.detail;
         parsedata["master"]["jml_kartu"] = 0;
         parsedata["master"]["pemilik_kartu"] = "-";
         let newparse = {};
         newparse["parsedata"] = parsedata;
-        newparse["alamat"] = this.props.lokasi.alamat;
-        newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
+        // newparse["alamat"] = this.props.lokasi.alamat;
+        // newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
 
-        this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
+        this.props.dispatch(storeSale(parsedata, (arr) => this.props.history.push(arr)));
         this.resetState();
       }
     } else {
@@ -230,15 +272,14 @@ class FormSale extends Component {
         }
       }
 
-      let parsedata = {};
-      parsedata["master"] = this.props.master;
+      // parsedata["master"] = propsMaster;
       if (this.props.master.id_hold === undefined) {
         Object.assign(parsedata["master"], { id_hold: "" });
       }
 
-      parsedata["split"] = [];
-      parsedata["join"] = [];
-      parsedata["detail"] = this.props.detail;
+      // parsedata["split"] = [];
+      // parsedata["join"] = [];
+      // parsedata["detail"] = this.props.detail;
       parsedata["master"]["jenis_trx"] = this.state.jenis_trx;
 
       let newparse = {};
@@ -263,12 +304,14 @@ class FormSale extends Component {
         parsedata["master"]["kartu"] = bank[0];
       }
       newparse["parsedata"] = parsedata;
-      newparse["alamat"] = this.props.lokasi.alamat;
-      newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
-
+      // newparse["alamat"] = this.props.lokasi.alamat;
+      // newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
       this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
       this.resetState();
     }
+    // console.log("data", Object.keys(data.master));
+    // console.log("master", Object.keys(this.props.master));
+    // console.table(this.props.detail);
   }
   componentWillMount() {
     this.props.dispatch(FetchBank(1, "", 100));

@@ -66,9 +66,13 @@ class AdjustmentReport extends Component {
       Object.assign(state, { location: getLocation, bukaHarga: true });
     }
 
-    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
-      where += `&sort=${getColumn}|${getSort}`;
-      Object.assign(state, { column: getColumn, sort: getSort });
+    if (isEmptyOrUndefined(getColumn)) {
+      where += `&sort=${getColumn}`;
+      Object.assign(state, { column: getColumn });
+      if (isEmptyOrUndefined(getSort)) {
+        where += `|${getSort}`;
+        Object.assign(state, { sort: getSort });
+      }
     }
 
     if (isEmptyOrUndefined(getAny)) {
@@ -84,7 +88,7 @@ class AdjustmentReport extends Component {
     if (state === "column") setStorage(columnStorage, res.value);
     if (state === "sort") setStorage(sortStorage, res.value);
     this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(), 500);
+    this.handleService();
   }
 
   componentWillUnmount() {
@@ -137,7 +141,7 @@ class AdjustmentReport extends Component {
                 setStorage(activeDateRangePickerStorage, isActive);
                 setStorage(dateFromStorage, first);
                 setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
+                this.handleService();
               },
               `${toDate(startDate)} - ${toDate(endDate)}`,
               getStorage(activeDateRangePickerStorage)

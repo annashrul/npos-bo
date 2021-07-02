@@ -15,6 +15,7 @@ import LokasiCommon from "../../common/LokasiCommon";
 import SelectCommon from "../../common/SelectCommon";
 import TableCommon from "../../common/TableCommon";
 import ButtonActionCommon from "../../common/ButtonActionCommon";
+import { STATUS_ARSIP_PENJUALAN } from "../../../../helperStatus";
 
 const dateFromStorage = "dateFromReportSaleArchive";
 const dateToStorage = "dateToReportSaleArchive";
@@ -127,7 +128,7 @@ class SaleArchive extends Component {
     if (state === "type") setStorage(typeStorage, res.value);
     if (state === "status") setStorage(statusStorage, res.value);
     this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(), 500);
+    this.handleService();
   }
 
   handlePageChange(pageNumber) {
@@ -226,7 +227,7 @@ class SaleArchive extends Component {
                 setStorage(activeDateRangePickerStorage, isActive);
                 setStorage(dateFromStorage, first);
                 setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
+                this.handleService();
               },
               `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`,
               getStorage(activeDateRangePickerStorage)
@@ -244,7 +245,7 @@ class SaleArchive extends Component {
             />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Status" options={handleDataSelect(this.state.status_data, "kode", "value")} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={this.state.status} />
+            <SelectCommon label="Status" options={handleDataSelect(STATUS_ARSIP_PENJUALAN, "value", "label")} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={this.state.status} />
           </div>
           <div className="col-6 col-xs-6 col-md-3">
             <label>Cari</label>
@@ -280,7 +281,7 @@ class SaleArchive extends Component {
         </div>
         <TableCommon
           head={head}
-          rowSpan={[{ label: "Item" }, { label: "Total (rp)" }, { label: "Total (%)" }]}
+          rowSpan={[{ label: "Item (%)" }, { label: "Total (rp)" }, { label: "Total (%)" }]}
           meta={{
             total: total,
             current_page: current_page,

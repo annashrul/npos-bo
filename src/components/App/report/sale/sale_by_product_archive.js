@@ -105,7 +105,7 @@ class SaleByProductArchive extends Component {
     if (state === "location") setStorage(locationStorage, res.value);
     if (state === "sort") setStorage(sortStorage, res.value);
     this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(), 300);
+    this.handleService();
   }
   handleSearch(e) {
     e.preventDefault();
@@ -143,7 +143,7 @@ class SaleByProductArchive extends Component {
                 setStorage(activeDateRangePickerStorage, isActive);
                 setStorage(dateFromStorage, first);
                 setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
+                this.handleService();
               },
               `${toDate(startDate)} - ${toDate(endDate)}`,
               getStorage(activeDateRangePickerStorage)

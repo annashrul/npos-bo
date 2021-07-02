@@ -10,12 +10,14 @@ class CompareLocationCommon extends Component {
   }
 
   getProps(props) {
+    // console.log("lokasi", props.lokasi);
     if (props.auth.user) {
       let lokasi = props.auth.user.lokasi;
-      const check = lokasi.filter((res) => props.lokasi === res.kode);
-      console.log(props.lokasi);
-      if (check[0] !== undefined) {
-        this.setState({ txt: check[0].nama });
+      if (lokasi !== undefined) {
+        const check = lokasi.filter((res) => props.lokasi === res.kode);
+        if (check[0] !== undefined) {
+          this.setState({ txt: check[0].nama });
+        }
       }
     }
   }
@@ -37,6 +39,7 @@ class CompareLocationCommon extends Component {
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
+    // lokasi: state.locationReducer.allData,
   };
 };
 

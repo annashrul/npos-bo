@@ -111,14 +111,8 @@ class InventoryReport extends Component {
     if (state === "status") setStorage(filterStorage, res.value);
     if (state === "search_by") setStorage(searchByStorage, res.value);
     this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(), 500);
+    this.handleService();
   }
-  handleSearch(e) {
-    e.preventDefault();
-    setStorage(anyStorage, this.state.any);
-    this.handleService(1);
-  }
-
   handleModal(param, obj) {
     let state = {};
     if (param === "formSaleExcel") {
@@ -131,6 +125,12 @@ class InventoryReport extends Component {
     }
     this.setState(state);
   }
+  handleSearch(e) {
+    e.preventDefault();
+    setStorage(anyStorage, this.state.any);
+    this.handleService(1);
+  }
+
   render() {
     const { per_page, last_page, current_page, data, total } = this.props.stockReport;
     const { total_harga_beli, total_harga_jual, total_harga_beli_qty, total_harga_jual_qty, total_stock_awal, total_stock_masuk, total_stock_keluar, total_stock_akhir, total_stock_penjualan } =
@@ -180,7 +180,7 @@ class InventoryReport extends Component {
                 setStorage(activeDateRangePickerStorage, isActive);
                 setStorage(dateFromStorage, first);
                 setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
+                this.handleService();
               },
               `${toDate(startDate)} - ${toDate(endDate)}`,
               getStorage(activeDateRangePickerStorage)

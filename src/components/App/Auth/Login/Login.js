@@ -29,9 +29,9 @@ class Login extends Component {
   getSubdomain() {
     let host = window.location.host;
     let parts = host.split(".");
-    const subdomains = btoa(parts[0]);
+    // const subdomains = btoa(parts[0]);
     //const subdomains = btoa(document.getElementById("coolyeah").value);
-    //const subdomains = btoa("npos");
+    const subdomains = btoa("npos");
     //const subdomains = btoa("cff");
     Cookies.set("tnt=", btoa(subdomains), {
       expires: 365,
@@ -74,9 +74,7 @@ class Login extends Component {
                 Swal.fire({
                   allowOutsideClick: false,
                   title: "Warning!",
-                  html: `<h6>Aplikasi ${
-                    parseInt(data.result.day, 10) <= 0 ? "telah" : "mendekati"
-                  } kedaluarsa.</h6><br/>
+                  html: `<h6>Aplikasi ${parseInt(data.result.day, 10) <= 0 ? "telah" : "mendekati"} kedaluarsa.</h6><br/>
                                     <p>Silahkan lakukan pembayaran<br> melalui rekening berikut ini,</p>
                                     <b>Jumlah:</b><br/>
                                     ${data.result.server_price}<br/>
@@ -203,11 +201,7 @@ class Login extends Component {
       const expires = this.state.rememberme ? 30 : 1;
       this.props.loginUser(user, expires);
     } else {
-      Swal.fire(
-        "Isi Username dan Password Terlebih Dahulu! ",
-        "Lengkapi form untuk melanjutkan.",
-        "error"
-      );
+      Swal.fire("Isi Username dan Password Terlebih Dahulu! ", "Lengkapi form untuk melanjutkan.", "error");
     }
   };
 
@@ -241,9 +235,7 @@ class Login extends Component {
                       alt="logos"
                       src={this.state.logo === "-" ? BgAuth : this.state.logo}
                       className="img-responsive"
-                      width={
-                        this.state.width === "-" ? "200px" : this.state.width
-                      }
+                      width={this.state.width === "-" ? "200px" : this.state.width}
                       style={{
                         textAlign: "center",
                         marginLeft: "auto",
@@ -253,10 +245,7 @@ class Login extends Component {
                     />
                     {/* Account Login */}
                   </span>
-                  <div
-                    className="wrap-input100 rs1 validate-input"
-                    data-validate="Username is required"
-                  >
+                  <div className="wrap-input100 rs1 validate-input" data-validate="Username is required">
                     <input
                       type="text"
                       readOnly={disableButton}
@@ -267,36 +256,23 @@ class Login extends Component {
                       onChange={this.handleInputChange}
                     />
                     <span className="label-input100">Username</span>
-                    {errors.email && (
-                      <div className="invalid-feedback">{errors.email}</div>
-                    )}
+                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                   </div>
-                  <div
-                    className="wrap-input100 rs2 validate-input"
-                    data-validate="Password is required"
-                  >
+                  <div className="wrap-input100 rs2 validate-input" data-validate="Password is required">
                     <input
                       readOnly={disableButton}
                       type="password"
-                      className={
-                        password !== "" ? "input100 has-val" : "input100"
-                      }
+                      className={password !== "" ? "input100 has-val" : "input100"}
                       placeholder="Password"
                       name="password"
                       value={password}
                       onChange={this.handleInputChange}
                     />
                     <span className="label-input100">Password</span>
-                    {errors.password && (
-                      <div className="invalid-feedback">{errors.password}</div>
-                    )}
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                   </div>
                   <div className="container-login100-form-btn">
-                    <button
-                      className="login100-form-btn"
-                      type="submit"
-                      onClick={this.submitHandelar}
-                    >
+                    <button className="login100-form-btn" type="submit" onClick={this.submitHandelar}>
                       Sign in
                     </button>
                   </div>
@@ -314,19 +290,9 @@ class Login extends Component {
                     }}
                   >
                     <div className="form-check form-check-inline">
-                      <input
-                        type="checkbox"
-                        name="rememberme"
-                        class="form-check-input"
-                        id="inlineCheckbox1"
-                        onChange={this.handleRemember}
-                        checked={this.state.rememberme}
-                      />
+                      <input type="checkbox" name="rememberme" class="form-check-input" id="inlineCheckbox1" onChange={this.handleRemember} checked={this.state.rememberme} />
 
-                      <label
-                        className="form-check-label"
-                        htmlFor="inlineCheckbox1"
-                      >
+                      <label className="form-check-label" htmlFor="inlineCheckbox1">
                         Biarkan saya tetap login.
                       </label>
                     </div>

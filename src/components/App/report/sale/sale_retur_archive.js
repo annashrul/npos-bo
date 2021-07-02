@@ -58,10 +58,11 @@ class SaleReturReport extends Component {
     this.props.dispatch(FetchSaleReturReportExcel(1, this.state.where_data, total));
   }
   handleChangeSelect(state, res) {
+    this.setState({ [state]: res.value });
     if (state === "location") setStorage(locationStorage, res.value);
     if (state === "column") setStorage(columnStorage, res.value);
     if (state === "sort") setStorage(sortStorage, res.value);
-    setTimeout(() => this.handleService(), 300);
+    this.handleService();
   }
 
   handleService(page = 1) {
@@ -121,7 +122,7 @@ class SaleReturReport extends Component {
                 setStorage(activeDateRangePickerStorage, isActive);
                 setStorage(dateFromStorage, first);
                 setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
+                this.handleService();
               },
               `${toDate(startDate)} - ${toDate(endDate)}`,
               getStorage(activeDateRangePickerStorage)

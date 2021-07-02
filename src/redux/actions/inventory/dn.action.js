@@ -2,8 +2,14 @@ import { DN, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-
-import { handleGet } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+import { handleGet, handleGetExport } from "../handleHttp";
+export function setDOwnload(load) {
+  return {
+    type: DN.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: DN.LOADING,
@@ -59,10 +65,7 @@ export const FetchDnReport = (page = 1, perpage = 10) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     axios
-      .get(
-        HEADERS.URL +
-          `deliverynote/report?page=${page}&perpage=${perpage}&status=0`
-      )
+      .get(HEADERS.URL + `deliverynote/report?page=${page}&perpage=${perpage}&status=0`)
       .then(function (response) {
         const data = response.data;
         dispatch(setReport(data));
@@ -74,14 +77,11 @@ export const FetchDnReport = (page = 1, perpage = 10) => {
   };
 };
 
-export const FetchDn = (page = 1, where = "") => {
+export const FetchDn = (where = "") => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    let url = `deliverynote/report?page=${page}`;
-    if (where !== "") {
-      url += where;
-    }
-
+    let url = `deliverynote/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(url, (res) => {
       let data = res.data;
       dispatch(setReport(data));
@@ -96,15 +96,15 @@ export const FetchDnExcel = (page = 1, where = "", perpage = 99999) => {
     if (where !== "") {
       url += where;
     }
-    axios
-      .get(HEADERS.URL + `${url}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setReportExcel(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setReportExcel(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formDnExcel"));
+      },
+      (res) => dispatch(setDOwnload(res))
+    );
   };
 };
 
@@ -126,17 +126,15 @@ export const FetchDnData = (nota) => {
 
 export const FetchDnDetail = (nota) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `deliverynote/report/${nota}`)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setDnDetail(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+    handleGet(
+      `deliverynote/report/${nota}`,
+      (res) => {
+        dispatch(setDnDetail(res.data));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailDn"));
+      },
+      true
+    );
   };
 };
 
@@ -203,10 +201,7 @@ export const storeDN = (data, param) => {
           // param({
           //     pathname: `/dn3ply/${response.data.result.insertId}`
           // })
-          const win = window.open(
-            `/dn3ply/${response.data.result.insertId}`,
-            "_blank"
-          );
+          const win = window.open(`/dn3ply/${response.data.result.insertId}`, "_blank");
           if (win != null) {
             win.focus();
           }
@@ -220,8 +215,7 @@ export const storeDN = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {

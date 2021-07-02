@@ -82,7 +82,7 @@ class SaleOmsetArchive extends Component {
     if (state === "sort") setStorage(sortStorage, val.value);
     if (state === "location") setStorage(locationStorage, val.value);
     this.setState({ [state]: val.value });
-    setTimeout(() => this.handleService(), 300);
+    this.handleService();
   }
 
   handleService(page = 1) {
@@ -150,7 +150,7 @@ class SaleOmsetArchive extends Component {
                 setStorage(activeDateRangePickerStorage, isActive);
                 setStorage(dateFromStorage, first);
                 setStorage(dateToStorage, last);
-                setTimeout(() => this.handleService(), 300);
+                this.handleService();
               },
               `${toDate(startDate)} - ${toDate(endDate)}`,
               getStorage(activeDateRangePickerStorage)

@@ -6,7 +6,7 @@ import setAuthToken from "../../utils/setAuthToken";
 import { HEADERS } from "./_constants";
 import Cookies from "js-cookie";
 import { handlePost } from "./handleHttp";
-
+import { FetchAllLocation } from "./masterdata/location/location.action";
 // Login user -- get token
 export const loginUser =
   (userData, expire = 1) =>
@@ -27,6 +27,7 @@ export const loginUser =
         headers: { username: atob(Cookies.get("tnt=")) },
       })
       .then((res) => {
+        // dispatch(FetchAllLocation(1));
         setTimeout(function () {
           Swal.close();
           // save token to localStorage

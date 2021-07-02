@@ -78,9 +78,13 @@ class MutationReport extends Component {
       where += `&status=${getStatus}`;
       Object.assign(state, { status: getStatus });
     }
-    if (isEmptyOrUndefined(getColumn) && isEmptyOrUndefined(getSort)) {
-      where += `&sort=${getColumn}|${getSort}`;
-      Object.assign(state, { column: getColumn, sort: getSort });
+    if (isEmptyOrUndefined(getColumn)) {
+      where += `&sort=${getColumn}`;
+      Object.assign(state, { column: getColumn });
+      if (isEmptyOrUndefined(getSort)) {
+        where += `|${getSort}`;
+        Object.assign(state, { sort: getSort });
+      }
     }
     if (isEmptyOrUndefined(getAny)) {
       where += `&q=${getAny}`;
@@ -126,7 +130,7 @@ class MutationReport extends Component {
     if (state === "sort") setStorage(sortStorage, res.value);
     if (state === "status") setStorage(statusStorage, res.value);
     this.setState({ [state]: res.value });
-    setTimeout(() => this.handleService(), 500);
+    this.handleService();
   }
 
   toggleModal(e, total) {
@@ -162,7 +166,7 @@ class MutationReport extends Component {
             {dateRange((first, last) => {
               setStorage(dateFromStorage, first);
               setStorage(dateToStorage, last);
-              setTimeout(() => this.handleService(), 300);
+              this.handleService();
             }, `${toDate(this.state.startDate)} - ${toDate(this.state.endDate)}`)}
           </div>
           <div className="col-6 col-xs-6 col-md-3">
