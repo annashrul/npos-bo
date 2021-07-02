@@ -7,7 +7,8 @@ import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle 
 import FormCustomer from "components/App/modals/masterdata/customer/form_customer";
 import { FetchCustomerTypeAll } from "redux/actions/masterdata/customer_type/customer_type.action";
 import { generateNo } from "../../../../../../helper";
-
+import HeaderGeneralCommon from "../../../../common/HeaderGeneralCommon";
+import TableCommon from "../../../../common/TableCommon";
 class ListCustomer extends Component {
   constructor(props) {
     super(props);
@@ -41,8 +42,7 @@ class ListCustomer extends Component {
     this.handleGet(any, 1);
   }
 
-  toggleModal(e, i) {
-    e.preventDefault();
+  toggleModal(i) {
     if (i === null) {
       this.setState({ detail: { where: this.state.where, id: "" } });
     } else {
@@ -54,17 +54,14 @@ class ListCustomer extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formCustomer"));
     this.props.dispatch(FetchCustomerTypeAll());
-    this.props.dispatch(setCustomerEdit([]));
   }
 
-  handleDelete(e, id) {
-    e.preventDefault();
+  handleDelete(id) {
     let detail = {};
     Object.assign(detail, {
       where: this.state.where,
       total: this.props.data.total,
     });
-    console.log(detail);
     this.props.dispatch(deleteCustomer(id, detail));
   }
   render() {
@@ -72,7 +69,7 @@ class ListCustomer extends Component {
 
     return (
       <div>
-        <form onSubmit={this.handlesearch} noValidate>
+        {/* <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
               <div className="input-group input-group-sm">
@@ -158,7 +155,54 @@ class ListCustomer extends Component {
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
           <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
-        </div>
+        </div> */}
+
+        <HeaderGeneralCommon
+          callbackGet={(res) => {
+            this.setState({ any: res });
+            this.handleGet(res, 1);
+          }}
+          callbackAdd={() => this.toggleModal(null)}
+        />
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "#", className: "text-center", width: "1%" },
+            { label: "Kode" },
+            { label: "Nama" },
+            { label: "Telepon" },
+            { label: "Tipe Customer" },
+            { label: "Email" },
+            { label: "Lokasi" },
+            { label: "Keterangan" },
+            { label: "Alamat" },
+            { label: "Status" },
+          ]}
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          body={typeof data === "object" && data}
+          label={[
+            { label: "kd_cust" },
+            { label: "nama" },
+            { label: "tlp" },
+            { label: "cust_type" },
+            { label: "email" },
+            { label: "lokasi" },
+            { label: "keterangan" },
+            { label: "alamat" },
+            { label: "status", isStatus: true },
+          ]}
+          current_page={current_page}
+          action={[{ label: "Edit" }, { label: "Hapus" }]}
+          callback={(e, index) => {
+            if (e === 0) this.toggleModal(index);
+            if (e === 1) this.handleDelete(index);
+          }}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
         {
           // this.props.dataCustomerEdit!==undefined?
           this.props.isOpen && <FormCustomer detail={this.state.detail} dataCustomerEdit={this.props.dataCustomerEdit} dataCustomerTypeAll={this.props.dataCustomerTypeAll} />

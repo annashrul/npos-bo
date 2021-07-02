@@ -2,8 +2,8 @@ import { statusQ } from "./helper";
 
 export const STATUS_GENERAL = [
   { value: "", label: "Semua" },
-  { value: "0", label: "Aktif", color: "primary" },
-  { value: "1", label: "Tidak aktif", color: "info" },
+  { value: "1", label: "Aktif", color: "primary" },
+  { value: "0", label: "Tidak aktif", color: "info" },
 ];
 
 export const STATUS_ARSIP_PENJUALAN = [

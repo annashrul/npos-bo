@@ -94,7 +94,7 @@ class Supplier extends Component {
             label={[
               { label: "kode" },
               { label: "nama" },
-              { label: "alamat" },
+              { label: "alamat", isSubstring: true },
               { label: "kota" },
               { label: "telp" },
               { label: "penanggung_jawab" },

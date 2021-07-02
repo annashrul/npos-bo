@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Paginationq, { generateNo, isImage, noData, toDate, toRp } from "../../../helper";
+import { statusGeneral } from "../../../helperStatus";
 import ButtonActionCommon from "./ButtonActionCommon";
 
 /**
@@ -11,27 +12,18 @@ import ButtonActionCommon from "./ButtonActionCommon";
  */
 
 class TableCommon extends Component {
-  statusGeneral(val) {
-    if (parseInt(val, 10) === 0) {
-      return (
-        <button className="btn btn-danger btn-sm " style={{ fontSize: "10px" }}>
-          Tidak aktif
-        </button>
-      );
-    }
-    if (parseInt(val, 10) === 1) {
-      return (
-        <button className="btn btn-success btn-sm" style={{ fontSize: "10px" }}>
-          Aktif
-        </button>
-      );
-    }
-  }
-
   checkTypeLabel(res, val) {
-    if (val.isStatus) return this.statusGeneral(res);
+    if (val.isStatus) return statusGeneral(res, true);
     if (val.isCurrency) return toRp(parseFloat(res));
     if (val.isImage) return isImage(res);
+    if (val.isSubstring) {
+      console.log(res.length);
+      if (res.length > 30) {
+        // let str = `${res}`.substr(0, 5);
+        return `${res}`.substr(0, 30) + " ..";
+      }
+    }
+    // if (val.isSubstring) return `${res}`.substr(0,20);
     if (val.date) return toDate(res);
     return res;
   }

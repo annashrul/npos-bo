@@ -128,7 +128,7 @@ class FormSupplier extends Component {
     } else {
       where = "page=1";
     }
-    if (this.props.detail !== undefined) {
+    if (this.props.detail !== undefined && this.props.detail.id !== "") {
       this.props.dispatch(updateSupplier(this.state.kode, parseData, where));
       this.props.dispatch(ModalToggle(false));
     } else {

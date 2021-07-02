@@ -67,7 +67,6 @@ class FormCustomer extends Component {
         cust_type: detail.kd_type,
         password: "",
         register: detail.register,
-        foto: detail.foto,
         email: detail.email,
         biografi: detail.biografi,
         special_price: detail.special_price,
