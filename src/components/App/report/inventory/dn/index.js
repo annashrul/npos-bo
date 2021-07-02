@@ -4,7 +4,21 @@ import { FetchDn, FetchDnExcel, FetchDnDetail } from "redux/actions/inventory/dn
 import connect from "react-redux/es/connect/connect";
 import DetailDn from "components/App/modals/report/inventory/dn_report/detail_dn";
 import DnReportExcel from "components/App/modals/report/inventory/dn_report/form_dn_excel";
-import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, rmSpaceToStrip, setStorage, toDate } from "../../../../../helper";
+import {
+  CURRENT_DATE,
+  dateRange,
+  DEFAULT_WHERE,
+  generateNo,
+  getStorage,
+  getWhere,
+  handleDataSelect,
+  isEmptyOrUndefined,
+  isProgress,
+  noData,
+  rmSpaceToStrip,
+  setStorage,
+  toDate,
+} from "../../../../../helper";
 import { statusDeliveryNote, STATUS_DELIVERY_NOTE } from "../../../../../helperStatus";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
@@ -28,11 +42,11 @@ class DnReport extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleModal = this.handleModal.bind(this);
     this.state = {
-      where_data: "",
+      where_data: DEFAULT_WHERE,
       any: "",
       location: "",
-      startDate: toDate(new Date()),
-      endDate: toDate(new Date()),
+      startDate: CURRENT_DATE,
+      endDate: CURRENT_DATE,
       sort: "",
       column: "",
       column_data: [
@@ -112,14 +126,15 @@ class DnReport extends Component {
     this.handleService();
   }
   handleModal(param, obj) {
-    let state = {};
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}`;
+    let state = { where_data: where };
     if (param === "excel") {
       Object.assign(state, { isModalExport: true });
-      this.props.dispatch(FetchDnExcel(1, this.state.where_data, obj.total));
+      this.props.dispatch(FetchDnExcel(1, where, obj.total));
     } else {
-      Object.assign(obj, { where: this.state.where_data });
       Object.assign(state, { isModalDetail: true, detail: obj });
-      this.props.dispatch(FetchDnDetail(obj.no_delivery_note));
+      this.props.dispatch(FetchDnDetail(obj.no_delivery_note, where, true));
     }
     this.setState(state);
   }
@@ -244,7 +259,7 @@ class DnReport extends Component {
           }
         />
 
-        {this.props.isOpen && isModalDetail ? <DetailDn dnDetail={this.props.dnDetail} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailDn where={this.state.where_data} dnDetail={this.props.dnDetail} /> : null}
 
         {this.props.isOpen && isModalExport ? <DnReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>

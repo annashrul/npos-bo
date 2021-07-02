@@ -5,8 +5,21 @@ import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
-import moment from "moment";
-import { dateRange, generateNo, getStorage, handleDataSelect, isEmptyOrUndefined, isProgress, noData, rmSpaceToStrip, setStorage, toDate } from "../../../../../helper";
+import {
+  CURRENT_DATE,
+  dateRange,
+  DEFAULT_WHERE,
+  generateNo,
+  getStorage,
+  getWhere,
+  handleDataSelect,
+  isEmptyOrUndefined,
+  isProgress,
+  noData,
+  rmSpaceToStrip,
+  setStorage,
+  toDate,
+} from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
@@ -31,11 +44,11 @@ class AlokasiReport extends Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
-      where_data: "",
+      where_data: DEFAULT_WHERE,
       any: "",
       location: "",
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: CURRENT_DATE,
+      endDate: CURRENT_DATE,
       status: "",
       sort: "",
       column: "",
@@ -117,13 +130,15 @@ class AlokasiReport extends Component {
   }
 
   handleModal(type, obj) {
-    let setState = {};
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}`;
+    let setState = { where_data: whereState };
     if (type === "excel") {
       Object.assign(setState, { isModalExcel: true });
-      this.props.dispatch(FetchAlokasiExcel(1, this.state.where_data, obj.total));
+      this.props.dispatch(FetchAlokasiExcel(1, where, obj.total));
     } else if (type === "detail") {
       Object.assign(setState, { isModalDetail: true });
-      this.props.dispatch(FetchAlokasiDetail(obj.no_faktur_mutasi, this.state.where_data));
+      this.props.dispatch(FetchAlokasiDetail(obj.no_faktur_mutasi, where));
     }
     this.setState(setState);
   }

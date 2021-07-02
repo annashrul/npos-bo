@@ -7,11 +7,12 @@ import StockReportExcel from "components/App/modals/report/inventory/stock_repor
 import moment from "moment";
 import { FetchStockReportDetailSatuan } from "redux/actions/report/inventory/stock_report.action";
 import { HEADERS } from "redux/actions/_constants";
-import { dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
+import { CURRENT_DATE, dateRange, generateNo, getStorage, getWhere, isEmptyOrUndefined, isProgress, noData, setStorage, toDate, toRp } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import TableCommon from "../../../common/TableCommon";
 import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import { STATUS_STOK } from "../../../../../helperStatus";
 
 const dateFromStorage = "dateFromReportStock";
 const dateToStorage = "dateToReportStock";
@@ -28,23 +29,18 @@ class InventoryReport extends Component {
     this.handleModal = this.handleModal.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.state = {
-      where_data: "",
+      where_data: `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`,
       isSelected: false,
       location: "",
       location_data: [],
       bukaHarga: false,
-      status_data: [
-        { value: "", label: "Semua Stock" },
-        { value: "<", label: "Stock -" },
-        { value: ">", label: "Stock +" },
-        { value: "=", label: "Stock 0" },
-      ],
       status: "",
       any: "",
-      startDate: toDate(new Date()),
-      endDate: toDate(new Date()),
+      startDate: CURRENT_DATE,
+      endDate: CURRENT_DATE,
       search_by: "br.kd_brg",
       search_by_data: [
+        { value: "", label: "Semua" },
         { value: "br.kd_brg", label: "Kode Barang" },
         { value: "br.nm_brg", label: "Nama Barang" },
         { value: "br.group1", label: "Supplier" },
@@ -114,14 +110,17 @@ class InventoryReport extends Component {
     this.handleService();
   }
   handleModal(param, obj) {
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}&lokasi=${this.state.location}`;
     let state = {};
     if (param === "formSaleExcel") {
       Object.assign(state, { isModalExcel: true });
-      this.props.dispatch(FetchStockReportExcel(1, this.state.where_data, obj.total));
+      this.props.dispatch(FetchStockReportExcel(1, where, obj.total));
     } else {
-      Object.assign(obj, { where: this.state.where_data });
+      if (!isEmptyOrUndefined(this.state.location, "lokasi")) return;
+      Object.assign(obj, { where_data: where });
       Object.assign(state, { isModalDetail: true, detail: obj });
-      this.props.dispatch(FetchStockReportDetailSatuan(obj.kd_brg, this.state.where_data));
+      this.props.dispatch(FetchStockReportDetailSatuan(obj.kd_brg, where));
     }
     this.setState(state);
   }
@@ -146,7 +145,7 @@ class InventoryReport extends Component {
     let total_stock_harga_beli_per = 0;
     let total_stock_harga_jual_per = 0;
 
-    const { bukaHarga, startDate, endDate, location, status, status_data, any, search_by_data, search_by, isModalExcel, isModalDetail } = this.state;
+    const { bukaHarga, startDate, endDate, location, status, any, search_by_data, search_by, isModalExcel, isModalDetail } = this.state;
 
     let head = [
       { rowSpan: "2", label: "No", className: "text-center", width: "1%" },
@@ -192,7 +191,7 @@ class InventoryReport extends Component {
           </div>
 
           <div className="col-6 col-xs-6 col-md-2">
-            <SelectCommon label="Filter stock" options={status_data} callback={(res) => this.handleSelect("status", res)} dataEdit={status} />
+            <SelectCommon label="Status" options={STATUS_STOK} callback={(res) => this.handleSelect("status", res)} dataEdit={status} />
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <SelectCommon label="Kolom" options={search_by_data} callback={(res) => this.handleSelect("search_by", res)} dataEdit={search_by} />

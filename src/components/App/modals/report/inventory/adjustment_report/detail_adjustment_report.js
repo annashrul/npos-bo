@@ -3,6 +3,9 @@ import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import WrapperModal from "../../../_wrapper.modal";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
+import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
+import { rmSpaceToStrip, toDate } from "../../../../../../helper";
+import TableCommon from "../../../../common/TableCommon";
 class DetailAdjustmentReport extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +19,10 @@ class DetailAdjustmentReport extends Component {
   }
 
   render() {
-    const { detail } = this.props.detail;
+    const { kd_trx, tgl, lokasi, keterangan, operator, detail } = this.props.adjustmentDetailTransaction;
+    // const { kd_trx, tgl, lokasi, keterangan, operator, detail } = detail;
+
+    console.log(this.props);
     // let totAdjustmentIn=0;
     // let totAdjustmentOut=0;
     // let totQty=0;
@@ -24,9 +30,41 @@ class DetailAdjustmentReport extends Component {
     const columnStyle = { verticalAlign: "middle", textAlign: "center" };
     return (
       <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailAdjustment"} size="lg">
-        <ModalHeader toggle={this.toggle}>Detail Adjustment Report </ModalHeader>
+        <ModalHeader toggle={this.toggle}>Detail laporan adjusment </ModalHeader>
         <ModalBody>
-          <div className="table-responsive" style={{ overflowX: "auto" }}>
+          <HeaderDetailCommon
+            data={[
+              { title: "Kode transaksi", desc: kd_trx },
+              { title: "Tanggal", desc: toDate(tgl) },
+              { title: "Lokasi", desc: lokasi },
+              { title: "Keterangan", desc: rmSpaceToStrip(keterangan) },
+              { title: "Operator", desc: operator },
+            ]}
+          />
+          <TableCommon
+            head={[
+              { label: "Barcode" },
+              { label: "Nama barang" },
+              { label: "Satuan" },
+              { label: "Harga beli" },
+              { label: "Qty adjusment" },
+              { label: "Saldo stok" },
+              { label: "Stok terakhir" },
+              { label: "Status" },
+            ]}
+            body={typeof [detail] === "object" && [detail]}
+            label={[
+              { label: "brcd_brg" },
+              { label: "nm_brg" },
+              { label: "satuan" },
+              { label: "harga_beli", isCurrency: true },
+              { label: "qty_adjust", isCurrency: true },
+              { label: "saldo_stock", isCurrency: true },
+              { label: "stock_terakhir", isCurrency: true },
+              { label: "status" },
+            ]}
+          />
+          {/* <div className="table-responsive" style={{ overflowX: "auto" }}>
             <table className="table table-hover table-bordered">
               <thead className="bg-light">
                 <tr>
@@ -83,16 +121,10 @@ class DetailAdjustmentReport extends Component {
                 )}
               </tbody>
               <tfoot>
-                <tr style={{ backgroundColor: "#EEEEEE" }}>
-                  {/* <td colSpan="2">TOTAL</td>
-                                <td colSpan="1" style={{textAlign:"right"}}>{totAdjustmentIn}</td>
-                                <td colSpan="1" style={{textAlign:"right"}}>{totAdjustmentOut}</td>
-                                <td colSpan="1" style={{textAlign:"right"}}>{totQty}</td>
-                                <td colSpan="1"></td> */}
-                </tr>
+                <tr style={{ backgroundColor: "#EEEEEE" }}></tr>
               </tfoot>
             </table>
-          </div>
+          </div> */}
         </ModalBody>
       </WrapperModal>
     );

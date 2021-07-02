@@ -11,6 +11,15 @@ import XLSX from "xlsx";
 import { EXTENSION, HEADERS } from "./redux/actions/_constants";
 import Default from "assets/default.png";
 
+export const CURRENT_DATE = moment(new Date()).format("yyyy-MM-DD");
+
+export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`;
+
+export const getWhere = (res) => {
+  let resToArray = res.split("&");
+  return `&${resToArray[1]}&${resToArray[2]}`;
+};
+
 export const parseToRp = (val) => {
   return toRp(parseFloat(parseInt(val, 10)));
 };

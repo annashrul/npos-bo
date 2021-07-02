@@ -6,7 +6,7 @@ import DetailAdjustment from "components/App/modals/report/inventory/adjustment_
 import { HEADERS } from "redux/actions/_constants";
 import { FetchAdjustmentExcel } from "redux/actions/adjustment/adjustment.action";
 import AdjustmentReportExcel from "components/App/modals/report/inventory/adjustment_report/form_adjustment_excel";
-import { dateRange, getStorage, isEmptyOrUndefined, isProgress, setStorage, toDate } from "../../../../../helper";
+import { CURRENT_DATE, dateRange, DEFAULT_WHERE, getStorage, getWhere, isEmptyOrUndefined, isProgress, setStorage, toDate } from "../../../../../helper";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
@@ -19,7 +19,6 @@ const columnStorage = "columnReportAdjusment";
 const sortStorage = "sortReportAdjusment";
 const anyStorage = "anyReportAdjusment";
 const activeDateRangePickerStorage = "activeDateReportAdjusment";
-
 class AdjustmentReport extends Component {
   constructor(props) {
     super(props);
@@ -28,11 +27,11 @@ class AdjustmentReport extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.state = {
-      where_data: "",
+      where_data: DEFAULT_WHERE,
       any: "",
       location: "",
-      startDate: toDate(new Date()),
-      endDate: toDate(new Date()),
+      startDate: CURRENT_DATE,
+      endDate: CURRENT_DATE,
       sort: "",
       column: "",
       column_data: [
@@ -111,16 +110,17 @@ class AdjustmentReport extends Component {
     this.handleService(1);
   }
   handleModal(type, obj) {
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}`;
+    let state = { where_data: whereState };
     if (type === "excel") {
-      this.setState({ isModalExcel: true });
-      this.props.dispatch(FetchAdjustmentExcel(1, this.state.where_data, obj.total));
-      return;
+      Object.assign(state, { isModalExcel: true });
+      this.props.dispatch(FetchAdjustmentExcel(1, where, obj.total));
+    } else {
+      Object.assign(state, { isModalDetail: true });
+      this.props.dispatch(FetchAdjustmentDetail(obj.kd_trx, where, true));
     }
-    if (type === "detail") {
-      this.setState({ isModalDetail: true });
-      this.props.dispatch(FetchAdjustmentDetail(obj.kd_trx, "page=1"));
-      return;
-    }
+    this.setState(state);
   }
 
   handleDelete(obj) {
@@ -195,14 +195,14 @@ class AdjustmentReport extends Component {
             { label: "Kode Adjusment", width: "1%" },
             { label: "Operator", width: "1%" },
             { label: "Lokasi", width: "1%" },
-            { label: "Tanggal", width: "1%" },
             { label: "Keterangan" },
+            { label: "Tanggal", width: "1%" },
           ]}
           meta={{ total: total, current_page: current_page, per_page: per_page }}
           current_page={current_page}
           callbackPage={this.handlePageChange.bind(this)}
           body={typeof data === "object" && data}
-          label={[{ label: "kd_trx" }, { label: "username" }, { label: "lokasi" }, { label: "tgl", date: true }, { label: "keterangan" }]}
+          label={[{ label: "kd_trx" }, { label: "username" }, { label: "lokasi" }, { label: "keterangan" }, { label: "tgl", date: true }]}
           action={[{ label: "Detail" }, { label: "Nota" }, { label: "3ply" }, { label: "Hapus" }]}
           callback={(e, index) => {
             if (e === 0) this.handleModal("detail", data[index]);
@@ -212,7 +212,7 @@ class AdjustmentReport extends Component {
           }}
         />
         {this.props.isOpen && isModalExcel ? <AdjustmentReportExcel startDate={startDate} endDate={endDate} location={location} /> : null}
-        {this.props.isOpen && isModalDetail ? <DetailAdjustment detail={this.props.adjustmentDetailSatuan} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailAdjustment /> : null}
       </Layout>
     );
   }
@@ -225,7 +225,6 @@ const mapStateToProps = (state) => {
     total: state.adjustmentReducer.total,
     download: state.adjustmentReducer.download,
     auth: state.auth,
-    adjustmentDetailSatuan: state.adjustmentReducer.dataDetailTransaksi,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

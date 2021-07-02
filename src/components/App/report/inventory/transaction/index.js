@@ -1,57 +1,99 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
-import {
-  FetchTransaction,
-  FetchTransactionExcel,
-  FetchTransactionData,
-} from "redux/actions/inventory/transaction.action";
+import { FetchTransaction, FetchTransactionExcel, FetchTransactionData } from "redux/actions/inventory/transaction.action";
 import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import DetailTransaction from "components/App/modals/report/inventory/transaction_report/detail_transaction";
 import TransactionReportExcel from "components/App/modals/report/inventory/transaction_report/form_transaction_excel";
-import Select from "react-select";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import { statusQ, toRp } from "helper";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { DeleteTransaction } from "../../../../../redux/actions/inventory/transaction.action";
+import { CURRENT_DATE, dateRange, generateNo, getStorage, getWhere, isEmptyOrUndefined, isProgress, noData, parseToRp, rmSpaceToStrip, setStorage, toDate } from "../../../../../helper";
+import SelectCommon from "../../../common/SelectCommon";
+import SelectSortCommon from "../../../common/SelectSortCommon";
+import TableCommon from "../../../common/TableCommon";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import { statusArsipPenjualan, statusMutasi } from "../../../../../helperStatus";
+
+const dateFromStorage = "dateFromReportReceive";
+const dateToStorage = "dateToReportReceive";
+const columnStorage = "columnReportReveive";
+const sortStorage = "sortReportReveive";
+const anyStorage = "anyReportReveive";
+
 class TransactionReport extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
-      where_data: "",
+      where_data: `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`,
       any: "",
       location: "",
-      location_data: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: CURRENT_DATE,
+      endDate: CURRENT_DATE,
       sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
-      status: "",
-      status_data: [],
+      column: "",
+      column_data: [
+        { value: "no_faktur_mutasi", label: "Kode Mutasi" },
+        { value: "tgl_mutasi", label: "Tanggal" },
+        { value: "status", label: "Status" },
+      ],
       isModalDetail: false,
       isModalExport: false,
     };
+  }
+
+  handleService(page = 1) {
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getColumn = getStorage(columnStorage);
+    let getSort = getStorage(sortStorage);
+    let getAny = getStorage(anyStorage);
+
+    let where = `page=${page}`;
+    let state = {};
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where = `page=${page}&datefrom=${getDateFrom}&dateto=${getDateTo}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where = `page=${page}&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+    }
+
+    if (isEmptyOrUndefined(getColumn)) {
+      where += `&sort=${getColumn}`;
+      Object.assign(state, { column: getColumn });
+      if (isEmptyOrUndefined(getSort)) {
+        where += `|${getSort}`;
+        Object.assign(state, { sort: getSort });
+      }
+    }
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
+    this.props.dispatch(FetchTransaction(where));
+  }
+  handleSelect(state, res) {
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
+    setTimeout(() => this.handleService(1), 500);
+  }
+  handleModal(type, obj) {
+    let state = {};
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}`;
+    if (type === "excel") {
+      Object.assign(state, { isModalExport: true });
+      this.props.dispatch(FetchTransactionExcel(1, where, obj.total));
+    } else {
+      Object.assign(state, { isModalDetail: true, where_data: where });
+      this.props.dispatch(FetchTransactionData(obj.no_faktur_mutasi, where, true));
+    }
+    this.setState(state);
   }
 
   componentWillUnmount() {
@@ -59,233 +101,19 @@ class TransactionReport extends Component {
   }
 
   componentWillMount() {
-    let page = localStorage.page_transaction_report;
-    this.handleParameter(page !== undefined && page !== null ? page : 1);
+    this.handleService();
   }
   componentDidMount() {
-    if (
-      localStorage.location_transaction_report !== undefined &&
-      localStorage.location_transaction_report !== ""
-    ) {
-      this.setState({ location: localStorage.location_transaction_report });
-    }
-    if (
-      localStorage.any_transaction_report !== undefined &&
-      localStorage.any_transaction_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_transaction_report });
-    }
-    if (
-      localStorage.date_from_transaction_report !== undefined &&
-      localStorage.date_from_transaction_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_transaction_report });
-    }
-    if (
-      localStorage.date_to_transaction_report !== undefined &&
-      localStorage.date_to_transaction_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_transaction_report });
-    }
-    if (
-      localStorage.sort_transaction_report !== undefined &&
-      localStorage.sort_transaction_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_transaction_report });
-    }
-    if (
-      localStorage.filter_transaction_report !== undefined &&
-      localStorage.filter_transaction_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_transaction_report });
-    }
-    if (
-      localStorage.status_transaction_report !== undefined &&
-      localStorage.status_transaction_report !== null
-    ) {
-      this.setState({ status: localStorage.status_transaction_report });
-    }
+    this.handleService();
   }
   handlePageChange(pageNumber) {
-    localStorage.setItem("page_transaction_report", pageNumber);
-    this.props.dispatch(FetchTransaction(pageNumber));
+    this.handleService(pageNumber);
   }
-  toggle(e, code, barcode, name) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    localStorage.setItem("code", code);
-    localStorage.setItem("barcode", barcode);
-    localStorage.setItem("name", name);
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailTransaction"));
-    this.props.dispatch(FetchTransactionData(1, code));
-  }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_transaction_report", `${awal}`);
-    localStorage.setItem("date_to_transaction_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
+
   handleSearch(e) {
     e.preventDefault();
-    localStorage.setItem("any_transaction_report", this.state.any);
-    this.handleParameter(1);
-  }
-  handleParameter(pageNumber) {
-    let dateFrom = localStorage.date_from_transaction_report;
-    let dateTo = localStorage.date_to_transaction_report;
-    // let lokasi = localStorage.location_transaction_report;
-    let any = localStorage.any_transaction_report;
-    let sort = localStorage.sort_transaction_report;
-    let filter = localStorage.filter_transaction_report;
-    // let status=localStorage.status_transaction_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&datefrom=${dateFrom}&dateto=${dateTo}`;
-    }
-    // if(lokasi!==undefined&&lokasi!==null&&lokasi!==''){
-    //     where+=`&lokasi=${lokasi}`;
-    // }
-    // if(status!==undefined&&status!==null&&status!==''){
-    //     where+=`&status=${status}`;
-    // }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    this.props.dispatch(FetchTransaction(pageNumber, where));
-    // this.props.dispatch(FetchTransactionExcel(pageNumber,where))
-  }
-  componentWillReceiveProps = (nextProps) => {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "no_faktur_mutasi", value: "Kode Mutasi" },
-      { kode: "tgl_mutasi", value: "Tanggal" },
-      { kode: "status", value: "Status" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    // let status = [
-    //     {kode:"",value: "Default"},
-    //     {kode:"0",value: "0"},
-    //     {kode:"1",value: "1"},
-    //     {kode:"2",value: "2"},
-    // ];
-    // let data_status=[];
-    // status.map((i) => {
-    //     data_status.push({
-    //         value: i.kode,
-    //         label: i.value
-    //     });
-    // });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      // status_data: data_status,
-    });
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-
-    // localStorage.setItem('status_transaction_report',this.state.status===''||this.state.status===undefined?status[0].kode:localStorage.status_transaction_report)
-    localStorage.setItem(
-      "sort_transaction_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_transaction_report
-    );
-    localStorage.setItem(
-      "filter_transaction_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_transaction_report
-    );
-  };
-  HandleChangeLokasi(lk) {
-    this.setState({
-      location: lk.value,
-    });
-    localStorage.setItem("location_transaction_report", lk.value);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_transaction_report", sr.value);
-  }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_transaction_report", fl.value);
-  }
-  HandleChangeStatus(st) {
-    this.setState({
-      status: st.value,
-    });
-    localStorage.setItem("status_transaction_report", st.value);
-  }
-
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    const bool = !this.props.isOpen;
-    // let range = total*perpage;
-    this.setState({ isModalExport: true });
-
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formTransactionExcel"));
-    this.props.dispatch(FetchTransactionExcel(1, this.state.where_data, total));
+    setStorage(anyStorage, this.state.any);
+    this.handleService();
   }
 
   handleRePrint(e, id) {
@@ -314,304 +142,147 @@ class TransactionReport extends Component {
   }
 
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "center" };
-    const {
-      per_page,
-      last_page,
-      current_page,
-      // from,
-      // to,
-      total_periode,
-      data,
-      // total
-    } = this.props.transactionReport;
-    let ns = 0;
-    let hp = 0;
-    let pr = 0;
+    const { per_page, last_page, current_page, total_periode, data, total } = this.props.transactionReport;
+    const { startDate, endDate, column, column_data, sort, any, where_data, isModalDetail, isModalExport } = this.state;
+
+    let totalNetSalePerHalaman = 0;
+    let totalHppPerHalaman = 0;
+    let totalProfitPerHalaman = 0;
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
+      { colSpan: 2, label: "Faktur", width: "1%" },
+      { colSpan: 2, label: "Lokasi", width: "1%" },
+      { rowSpan: 2, label: "Net sale", width: "1%" },
+      { rowSpan: 2, label: "Hpp", width: "1%" },
+      { rowSpan: 2, label: "Profit", width: "1%" },
+      { colSpan: 2, label: "Status", width: "1%" },
+      { rowSpan: 2, label: "Keterangan" },
+      { rowSpan: 2, label: "Tanggal", width: "1%" },
+    ];
     return (
       <Layout page="Laporan Alokasi Transaksi">
         <div className="row">
-          <div className="col-md-10" style={{ zoom: "85%" }}>
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    style={{ display: "unset" }}
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                      style={{ padding: "10px", fontWeight: "bolder" }}
-                    />
-                  </DateRangePicker>
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            {dateRange((first, last) => {
+              setStorage(dateFromStorage, first);
+              setStorage(dateToStorage, last);
+              this.handleService();
+            }, `${toDate(startDate)} - ${toDate(endDate)}`)}
           </div>
-          <div
-            className="col-6 col-xs-6 col-md-2"
-            style={{ zoom: "85%", textAlign: "right" }}
-          >
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
-                    }
-                  >
-                    <i className="fa fa-print" />
-                  </button>
-                </div>
-              </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleSelect("column", res)} dataEdit={column} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-2">
+            <SelectSortCommon callback={(res) => this.handleSelect("sort", res)} dataEdit={sort} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <label>Cari</label>
+            <div className="input-group">
+              <input
+                type="search"
+                name="any"
+                className="form-control"
+                placeholder="tulis sesuatu disini"
+                value={any}
+                onChange={(e) => this.setState({ any: e.target.value })}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
+                }}
+              />
+              <span className="input-group-append">
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                  <i className="fa fa-search" />
+                </button>
+                <button
+                  className="btn btn-primary ml-1"
+                  onClick={(e) => {
+                    this.handleModal("excel", {
+                      total: last_page * per_page,
+                    });
+                  }}
+                >
+                  {isProgress(this.props.download)}
+                </button>
+              </span>
             </div>
           </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  #
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Kode Faktur
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Tanggal Mutasi
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Asal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Tujuan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Net Sales
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Hpp
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Profit
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Status Penerimaan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Status Pembayaran
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Keterangan
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object" ? (
-                data.length > 0 ? (
-                  data.map((v, i) => {
-                    ns += parseInt(v.net_sales, 10);
-                    hp += parseInt(v.hpp, 10);
-                    pr += parseInt(v.profit, 10);
+        <TableCommon
+          head={head}
+          rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }, { label: "Penerimaan" }, { label: "Pembayaran" }]}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
+                    let action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Edit" }, { label: "Hapus" }];
+                    if (v.status !== "0") {
+                      action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Hapus" }];
+                    }
+                    totalNetSalePerHalaman += parseInt(v.net_sales, 10);
+                    totalHppPerHalaman += parseInt(v.hpp, 10);
+                    totalProfitPerHalaman += parseInt(v.profit, 10);
                     return (
                       <tr key={i}>
-                        <td style={columnStyle}>
-                          {" "}
-                          {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
+                        <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
+                          <ButtonActionCommon
+                            action={action}
+                            callback={(e) => {
+                              console.log(e);
+                              if (e === 0) this.handleModal("detail", v);
+                              if (e === 1) this.handleRePrint(v.no_faktur_mutasi);
+                              if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
+                              if (v.status === "0") {
+                                if (e === 3) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
+                              }
+                              if (e === 4) this.HandleRemove(e, v.no_faktur_mutasi);
+                            }}
+                          />
                         </td>
-
-                        <td style={columnStyle}>
-                          <div className="btn-group">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret>Aksi</DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.toggle(e, v.no_faktur_mutasi, "", "")
-                                  }
-                                >
-                                  Detail
-                                </DropdownItem>
-                                {v.status === "0" ? (
-                                  <Link
-                                    to={`../edit/alokasi/${btoa(
-                                      v.no_faktur_mutasi
-                                    )}`}
-                                  >
-                                    <DropdownItem>Edit</DropdownItem>
-                                  </Link>
-                                ) : (
-                                  ""
-                                )}
-                                <Link
-                                  to={`../alokasi3ply/${v.no_faktur_mutasi}`}
-                                  target="_blank"
-                                >
-                                  <DropdownItem>3ply</DropdownItem>
-                                </Link>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.handleRePrint(e, v.no_faktur_mutasi)
-                                  }
-                                >
-                                  Print Faktur
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.HandleRemove(e, v.no_faktur_mutasi)
-                                  }
-                                >
-                                  Delete
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </div>
-                        </td>
-                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                        <td style={columnStyle}>
-                          {moment(v.tgl_mutasi).format("DD-MM-YYYY")}
-                        </td>
-                        <td style={columnStyle}>{v.lokasi_asal}</td>
-                        <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                        <td style={columnStyle}>{toRp(v.net_sales)}</td>
-                        <td style={columnStyle}>{toRp(v.hpp)}</td>
-                        <td style={columnStyle}>{toRp(v.profit)}</td>
-                        <td style={columnStyle}>
-                          {
-                            v.status === "0"
-                              ? statusQ("info", "Dikirim")
-                              : v.status === "1"
-                              ? statusQ("success", "Diterima")
-                              : ""
-                            // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                          }
-                        </td>
-                        <td style={columnStyle}>
-                          {
-                            String(v.status_transaksi) === "0"
-                              ? statusQ("info", "Belum Lunas")
-                              : String(v.status_transaksi) === "1"
-                              ? statusQ("success", "Lunas")
-                              : ""
-                            // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                          }
-                        </td>
-                        <td style={columnStyle}>{v.keterangan}</td>
+                        <td className="middle nowrap">{v.no_faktur_mutasi}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.no_faktur_beli)}</td>
+                        <td className="middle nowrap">{v.lokasi_asal}</td>
+                        <td className="middle nowrap">{v.lokasi_tujuan}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.net_sales)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.hpp)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.profit)}</td>
+                        <td className="middle nowrap">{statusMutasi(v.status, true)}</td>
+                        <td className="middle nowrap">{statusArsipPenjualan(`${v.status_transaksi}`, true)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.keterangan)}</td>
+                        <td className="middle nowrap">{toDate(v.tgl_mutasi)}</td>
                       </tr>
                     );
                   })
-                ) : (
-                  <tr>
-                    <td>No Data</td>
-                  </tr>
-                )
-              ) : (
-                <tr>
-                  <td>No Data</td>
-                </tr>
-              )}
-            </tbody>
-            <tfoot>
-              <tr style={{ backgroundColor: "#EEEEEE" }}>
-                <td colSpan="6">TOTAL PERPAGE</td>
-                <td style={{ textAlign: "right" }}>{toRp(ns)}</td>
-                <td style={{ textAlign: "right" }}>{toRp(hp)}</td>
-                <td style={{ textAlign: "right" }}>{toRp(pr)}</td>
-                <td colSpan="3"></td>
-              </tr>
-              <tr style={{ backgroundColor: "#EEEEEE" }}>
-                <td colSpan="6">TOTAL</td>
-                <td style={{ textAlign: "right" }}>
-                  {toRp(
-                    total_periode !== undefined ? total_periode.net_sales : 0
-                  )}
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  {toRp(total_periode !== undefined ? total_periode.hpp : 0)}
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  {toRp(total_periode !== undefined ? total_periode.profit : 0)}
-                </td>
-                <td colSpan="3"></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={last_page * per_page}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-        {this.state.isModalDetail ? (
-          <DetailTransaction transactionDetail={this.props.transactionDetail} />
-        ) : null}
-
-        {this.state.isModalExport ? (
-          <TransactionReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
-        ) : null}
+                : noData(head.length)
+              : noData(head.length)
+          }
+          footer={[
+            {
+              data: [
+                { colSpan: 6, label: "Total perhalaman", className: "text-left" },
+                { colSpan: 1, label: parseToRp(totalNetSalePerHalaman) },
+                { colSpan: 1, label: parseToRp(totalHppPerHalaman) },
+                { colSpan: 1, label: parseToRp(totalProfitPerHalaman) },
+                { colSpan: 4, label: "" },
+              ],
+            },
+            {
+              data: [
+                { colSpan: 6, label: "Total keseluruhan", className: "text-left" },
+                { colSpan: 1, label: parseToRp(total_periode ? total_periode.net_sales : 0) },
+                { colSpan: 1, label: parseToRp(total_periode ? total_periode.hpp : 0) },
+                { colSpan: 1, label: parseToRp(total_periode ? total_periode.profit : 0) },
+                { colSpan: 4, label: "" },
+              ],
+            },
+          ]}
+        />
+        {this.props.isOpen && isModalDetail ? <DetailTransaction where={where_data} transactionDetail={this.props.transactionDetail} /> : null}
+        {this.props.isOpen && isModalExport ? <TransactionReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );
   }
@@ -619,6 +290,7 @@ class TransactionReport extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    download: state.transactionReducer.download,
     transactionReport: state.transactionReducer.report,
     isLoadingDetail: state.transactionReducer.isLoadingApproval,
     auth: state.auth,

@@ -4,6 +4,7 @@ import connect from "react-redux/es/connect/connect";
 import "jspdf-autotable";
 import ExportCommon from "../../../../common/ExportCommon";
 import { to_pdf, headerPdf, toExcel, rmSpaceToStrip, toDate, headerExcel } from "../../../../../../helper";
+import { statusMutasi } from "../../../../../../helperStatus";
 import { EXTENSION } from "../../../../../../redux/actions/_constants";
 
 class MutationReportExcel extends Component {
@@ -29,7 +30,7 @@ class MutationReportExcel extends Component {
             data[i].lokasi_asal,
             data[i].lokasi_tujuan,
             rmSpaceToStrip(data[i].no_faktur_beli),
-            data[i].status === "0" ? "Dikirim" : data[i].status === "1" ? "Diterima" : "",
+            statusMutasi(data[i].status),
             data[i].keterangan,
             toDate(data[i].tgl_mutasi),
           ]);

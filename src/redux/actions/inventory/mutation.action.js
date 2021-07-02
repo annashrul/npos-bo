@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { setLoading } from "../masterdata/customer/customer.action";
 import { handleGet, handleGetExport } from "../handleHttp";
-import { ModalToggle } from "../modal.action";
+import { ModalToggle, ModalType } from "../modal.action";
 
 export function setDownload(load) {
   return {
@@ -285,6 +285,7 @@ export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
       (res) => {
         dispatch(setMutationExcel(res.data));
         dispatch(ModalToggle(true));
+        dispatch(ModalType("formMutationExcel"));
       },
       (percent) => {
         dispatch(setDownload(percent));
@@ -292,13 +293,16 @@ export const FetchMutationExcel = (page = 1, where = "", perpage = 99999) => {
     );
   };
 };
-export const FetchMutationData = (code, where = "") => {
+export const FetchMutationData = (code, where = "", isModal = false) => {
   return (dispatch) => {
     let url = `alokasi/report/${code}`;
     if (where !== "") url += `?${where}`;
     handleGet(url, (res) => {
       dispatch(setMutationData(res.data));
-      dispatch(ModalToggle(true));
+      if (isModal) {
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("detailMutation"));
+      }
     });
   };
 };

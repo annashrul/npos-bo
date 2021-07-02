@@ -29,13 +29,14 @@ class DetailMutation extends Component {
     const { keterangan, lokasi_asal, lokasi_tujuan, no_faktur_beli, no_faktur_mutasi, operator, tgl_mutasi, total, status } = this.props.mutationDetail;
     const head = [
       { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
-      { rowSpan: 2, label: "Kode" },
-      { rowSpan: 2, label: "Barcode" },
-      { rowSpan: 2, label: "Barang" },
+      { colSpan: 4, label: "Barang" },
+      // { rowSpan: 2, label: "Kode" },
+      // { rowSpan: 2, label: "Barcode" },
+      // { rowSpan: 2, label: "Barang" },
       { colSpan: 3, label: "Qty" },
       { colSpan: 2, label: "Harga" },
       { rowSpan: 2, label: "Total" },
-      { rowSpan: 2, label: "Satuan" },
+      // { rowSpan: 2, label: "Satuan" },
     ];
     let total_qty = 0;
     let total_qty_retur = 0;
@@ -63,7 +64,17 @@ class DetailMutation extends Component {
             />
             <TableCommon
               head={head}
-              rowSpan={[{ label: "Total" }, { label: "Retur" }, { label: "Diterima" }, { label: "Beli" }, { label: "Jual" }]}
+              rowSpan={[
+                { label: "Kode" },
+                { label: "Barcode" },
+                { label: "Nama" },
+                { label: "Satuan" },
+                { label: "Total" },
+                { label: "Retur" },
+                { label: "Diterima" },
+                { label: "Beli" },
+                { label: "Jual" },
+              ]}
               meta={{
                 total: parseInt(per_page * last_page, 10),
                 current_page: current_page,
@@ -77,7 +88,7 @@ class DetailMutation extends Component {
                     ? data.map((v, i) => {
                         let qty = parseInt(v.qty, 10);
                         let qtyRetur = parseInt(v.qty_retur, 10);
-                        let totalItem = v.hrg_jual * (qty - qtyRetur);
+                        let totalItem = v.hrg_beli * (qty - qtyRetur);
 
                         total_qty = total_qty + qty;
 
@@ -87,20 +98,20 @@ class DetailMutation extends Component {
 
                         total_hasil = total_hasil + totalItem;
 
-                        total_qty = total_qty + parseInt(v.qty, 10);
                         return (
                           <tr key={i}>
                             <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                             <td className="middle nowrap">{v.barcode}</td>
                             <td className="middle nowrap">{v.kd_brg}</td>
                             <td className="middle nowrap">{v.nm_brg}</td>
+                            <td className="middle nowrap">{v.satuan}</td>
+
                             <td className="middle nowrap text-right">{parseToRp(qty)}</td>
                             <td className="middle nowrap text-right">{parseToRp(qtyRetur)}</td>
                             <td className="middle nowrap text-right">{parseToRp(qty - qtyRetur)}</td>
                             <td className="middle nowrap text-right">{parseToRp(v.hrg_beli)}</td>
                             <td className="middle nowrap text-right">{parseToRp(v.hrg_jual)}</td>
                             <td className="middle nowrap text-right">{parseToRp(totalItem)}</td>
-                            <td className="middle nowrap">{v.satuan}</td>
                           </tr>
                         );
                       })
@@ -110,7 +121,7 @@ class DetailMutation extends Component {
               footer={[
                 {
                   data: [
-                    { colSpan: 4, label: "Total perhalaman", className: "text-left" },
+                    { colSpan: 5, label: "Total perhalaman", className: "text-left" },
                     { colSpan: 1, label: parseToRp(total_qty) },
                     { colSpan: 1, label: parseToRp(total_qty_retur) },
                     { colSpan: 1, label: parseToRp(total_qty_diterima) },

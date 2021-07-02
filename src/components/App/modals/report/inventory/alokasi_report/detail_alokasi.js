@@ -20,17 +20,16 @@ class DetailAlokasi extends Component {
     this.props.dispatch(ModalToggle(false));
   }
   handlePageChange(page) {
-    let no_mutasi = this.props.alokasiDetail.no_faktur_mutasi;
-    let props = this.props.where.split("&");
-    console.log(no_mutasi, props);
-    this.props.dispatch(FetchAlokasiDetail(no_mutasi, `page=${page}&${props[1]}&${props[2]}`));
+    let props = this.props;
+    let no_mutasi = props.alokasiDetail.no_faktur_mutasi;
+    let where = props.where;
+    this.props.dispatch(FetchAlokasiDetail(no_mutasi, `page=${page}${where}`));
   }
 
   render() {
     let master = this.props.alokasiDetail;
     const detail = master.detail === undefined ? [] : master.detail;
     const { per_page, last_page, current_page, data, total } = detail;
-    console.log(this.props);
 
     return (
       <div>

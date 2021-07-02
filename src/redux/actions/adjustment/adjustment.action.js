@@ -193,7 +193,7 @@ export const deleteAdjustment = (res) => {
     });
   };
 };
-export const FetchAdjustmentDetail = (code, where = "") => {
+export const FetchAdjustmentDetail = (code, where = "", isModal = false) => {
   return (dispatch) => {
     let url = `adjustment/report/${code}?perpage=${HEADERS.PERPAGE}`;
     if (where !== "") url += `&${where}`;
@@ -201,8 +201,10 @@ export const FetchAdjustmentDetail = (code, where = "") => {
       url,
       (res) => {
         dispatch(setAdjustmentDetail(res.data));
-        dispatch(ModalToggle(true));
-        dispatch(ModalType("detailAdjustment"));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailAdjustment"));
+        }
       },
       true
     );

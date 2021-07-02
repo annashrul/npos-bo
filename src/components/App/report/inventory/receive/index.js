@@ -45,7 +45,7 @@ class ReceiveReport extends Component {
       type: "",
       any: "",
       sort: "",
-      column: "",
+      column: "no_faktur_beli",
       status: "",
       type_data: [
         { value: "", label: "Semua Tipe" },

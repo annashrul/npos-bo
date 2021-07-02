@@ -2,7 +2,14 @@ import { TRANSACTION, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { setLoading } from "../masterdata/customer/customer.action";
-import { handleGet } from "../handleHttp";
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle, ModalType } from "../modal.action";
+export function setDownload(load) {
+  return {
+    type: TRANSACTION.APPROVAL_TRANSACTION_DOWNLAOD,
+    load,
+  };
+}
 export function setLoadingApprovalTransaction(load) {
   return {
     type: TRANSACTION.APPROVAL_TRANSACTION_LOADING,
@@ -41,12 +48,7 @@ export function setTransactionData(data = []) {
   return { type: TRANSACTION.SUCCESS_DATA, data };
 }
 
-export const FetchApprovalTransaction = (
-  page = 1,
-  q = "",
-  lokasi = "",
-  param = ""
-) => {
+export const FetchApprovalTransaction = (page = 1, q = "", lokasi = "", param = "") => {
   return (dispatch) => {
     dispatch(setLoadingApprovalTransaction(true));
     let url = `mutasi?page=${page}`;
@@ -135,48 +137,29 @@ export const saveApprovalTransaction = (data) => {
   };
 };
 
-export const FetchTransaction = (page = 1, where = "") => {
+export const FetchTransaction = (where = "") => {
   return (dispatch) => {
-    let url = `alokasi_trx/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }`;
-    if (where !== "") {
-      url += where;
-    }
-    handleGet(url, (res) => {
-      let data = res.data;
-      dispatch(setTransaction(data));
-    });
+    let url = `alokasi_trx/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(url, (res) => dispatch(setTransaction(res.data)));
   };
 };
 
-export const FetchTransactionExcel = (
-  page = 1,
-  where = "",
-  perpage = 99999
-) => {
+export const FetchTransactionExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
-    dispatch(setLoadingApprovalTransaction(true));
-    let url = `alokasi_trx/report?page=${
-      page === "NaN" || page === null || page === "" || page === undefined
-        ? 1
-        : page
-    }&perpage=${perpage}`;
+    let url = `alokasi_trx/report?page=${page === "NaN" || page === null || page === "" || page === undefined ? 1 : page}&perpage=${perpage}`;
     if (where !== "") {
       url += where;
     }
-
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setTransactionExcel(data));
-        dispatch(setLoadingApprovalTransaction(false));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formTransactionExcel"));
+        dispatch(setTransactionExcel(res.data));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
 export const DeleteTransaction = (id) => {
@@ -221,38 +204,22 @@ export const DeleteTransaction = (id) => {
       });
   };
 };
-export const FetchTransactionData = (
-  page = 1,
-  code,
-  dateFrom = "",
-  dateTo = "",
-  location = ""
-) => {
+export const FetchTransactionData = (code, where = "", isModal = false) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    let que = "";
-    if (dateFrom === "" && dateTo === "" && location === "") {
-      que = `alokasi/report/${code}?page=${page}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location === "") {
-      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}`;
-    }
-    if (dateFrom !== "" && dateTo !== "" && location !== "") {
-      que = `alokasi/report/${code}?page=${page}&datefrom=${dateFrom}&dateto=${dateFrom}&lokasi=${location}`;
-    }
-    if (location !== "") {
-      que = `alokasi/report/${code}?page=${page}&lokasi=${location}`;
-    }
+    let url = `alokasi/report/${code}?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
 
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setTransactionData(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    handleGet(
+      url,
+      (res) => {
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailTransaction"));
+        }
+        dispatch(setTransactionData(res.data));
+      },
+      true
+    );
   };
 };
 

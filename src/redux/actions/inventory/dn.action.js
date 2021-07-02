@@ -124,14 +124,18 @@ export const FetchDnData = (nota) => {
   };
 };
 
-export const FetchDnDetail = (nota) => {
+export const FetchDnDetail = (nota, where = "", isModal = false) => {
   return (dispatch) => {
+    let url = `deliverynote/report/${nota}?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
-      `deliverynote/report/${nota}`,
+      url,
       (res) => {
         dispatch(setDnDetail(res.data));
-        dispatch(ModalToggle(true));
-        dispatch(ModalType("detailDn"));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("detailDn"));
+        }
       },
       true
     );
