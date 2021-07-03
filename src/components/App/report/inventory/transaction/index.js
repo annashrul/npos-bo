@@ -116,13 +116,11 @@ class TransactionReport extends Component {
     this.handleService();
   }
 
-  handleRePrint(e, id) {
-    e.preventDefault();
+  handleRePrint(id) {
     this.props.dispatch(rePrintFaktur(id));
   }
 
-  HandleRemove(e, id) {
-    e.preventDefault();
+  HandleRemove(id) {
     Swal.fire({
       allowOutsideClick: false,
       title: "Are you sure?",
@@ -218,7 +216,7 @@ class TransactionReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Edit" }, { label: "Hapus" }];
+                    let action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Hapus" }, { label: "Edit" }];
                     if (v.status !== "0") {
                       action = [{ label: "Detail" }, { label: "Print Faktur" }, { label: "3ply" }, { label: "Hapus" }];
                     }
@@ -236,10 +234,10 @@ class TransactionReport extends Component {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.handleRePrint(v.no_faktur_mutasi);
                               if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
+                              if (e === 3) this.HandleRemove(v.no_faktur_mutasi);
                               if (v.status === "0") {
-                                if (e === 3) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
+                                if (e === 4) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
                               }
-                              if (e === 4) this.HandleRemove(e, v.no_faktur_mutasi);
                             }}
                           />
                         </td>

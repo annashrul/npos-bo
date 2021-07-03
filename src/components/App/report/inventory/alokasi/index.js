@@ -143,7 +143,7 @@ class AlokasiReport extends Component {
     this.setState(setState);
   }
 
-  handleRePrint(e, id) {
+  handleRePrint(id) {
     // e.preventDefault();
     this.props.dispatch(rePrintFaktur(id));
   }
@@ -254,7 +254,7 @@ class AlokasiReport extends Component {
                               if (e === 0) this.handleModal("detail", v);
                               if (e === 1) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
                               if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
-                              if (e === 3) this.handleRePrint(e, v.no_faktur_mutasi);
+                              if (e === 3) this.handleRePrint(v.no_faktur_mutasi);
                             }}
                           />
                         </td>
