@@ -208,8 +208,8 @@ class Printer extends Component {
                         <td className="middle nowrap">{rmSpaceToStrip(v.lokasi)}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(v.paper_size)}</td>
 
-                        <td className="middle nowrap">{`${v.konektor}`.toLowerCase()}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(v.ip)}</td>
+                        <td className="middle nowrap">{`${v.konektor}`.toLowerCase()}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(v.vid)}</td>
                         <td className="middle nowrap">{rmSpaceToStrip(v.pid)}</td>
                       </tr>
