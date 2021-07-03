@@ -1240,9 +1240,16 @@ class Sale extends Component {
                           <button onClick={(e) => this.HandleReset(e)} className="btn btn-warning ml-1">
                             Reset
                           </button>
-                          <button className={"btn btn-primary  ml-1"} onClick={(e) => this.handleHoldBill(e, "formHoldBill")}>
-                            Hold bill
-                          </button>
+                          {
+                            atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg"?
+                            ''
+                            :
+                            (
+                              <button className={"btn btn-primary  ml-1"} onClick={(e) => this.handleHoldBill(e, "formHoldBill")}>
+                                Hold bill
+                              </button>
+                            )
+                          }
                         </div>
                       </div>
                       <div className="col-md-5">

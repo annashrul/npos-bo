@@ -217,7 +217,6 @@ class FormSale extends Component {
     field["detail"] = this.props.detail;
     let parsedata = field;
 
-    console.log(field);
     let bank = this.state.bank.split("-");
 
     if (this.state.jenis_trx.toLowerCase() === "kredit") {
@@ -228,18 +227,13 @@ class FormSale extends Component {
         handleError("Tanggal masih kosong!");
         return;
       } else {
-        // parsedata["master"] = propsMaster;
-        // parsedata["split"] = [];
-        // parsedata["join"] = [];
         parsedata["detail"] = this.props.detail;
         parsedata["master"]["jml_kartu"] = 0;
         parsedata["master"]["pemilik_kartu"] = "-";
         let newparse = {};
         newparse["parsedata"] = parsedata;
-        // newparse["alamat"] = this.props.lokasi.alamat;
-        // newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
 
-        this.props.dispatch(storeSale(parsedata, (arr) => this.props.history.push(arr)));
+        this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
         this.resetState();
       }
     } else {
@@ -277,9 +271,6 @@ class FormSale extends Component {
         Object.assign(parsedata["master"], { id_hold: "" });
       }
 
-      // parsedata["split"] = [];
-      // parsedata["join"] = [];
-      // parsedata["detail"] = this.props.detail;
       parsedata["master"]["jenis_trx"] = this.state.jenis_trx;
 
       let newparse = {};
@@ -304,14 +295,9 @@ class FormSale extends Component {
         parsedata["master"]["kartu"] = bank[0];
       }
       newparse["parsedata"] = parsedata;
-      // newparse["alamat"] = this.props.lokasi.alamat;
-      // newparse["site_title"] = this.props.auth.user.site_title === undefined ? this.props.auth.user.title : this.props.auth.user.site_title;
       this.props.dispatch(storeSale(newparse, (arr) => this.props.history.push(arr)));
       this.resetState();
     }
-    // console.log("data", Object.keys(data.master));
-    // console.log("master", Object.keys(this.props.master));
-    // console.table(this.props.detail);
   }
   componentWillMount() {
     this.props.dispatch(FetchBank(1, "", 100));

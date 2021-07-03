@@ -26,10 +26,17 @@ class ModalPin extends Component {
     this.handleLanjut = this.handleLanjut.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.state.username !== this.props.auth.user.username) {
+      this.setState({
+        username: this.props.auth.user.username,
+      });
+    }
+  }
+
+
   componentWillReceiveProps = (nextProps) => {
-    this.setState({
-      username: nextProps.auth.user.username,
-    });
     if (nextProps.datum) {
       this.setState({
         module: nextProps.datum.module,

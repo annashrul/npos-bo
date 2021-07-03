@@ -517,7 +517,6 @@ class FormProduct extends Component {
   }
 
   componentWillUnmount() {
-    console.log("componentWillUnmount");
     this.setState({
       isModalFormGroupProduct: false,
       isModalFormPrinter: false,
@@ -873,7 +872,6 @@ class FormProduct extends Component {
           ]);
         }
       }
-      console.log("props", param.dateEdit);
       this.setState({
         kd_brg: param.dataEdit.kd_brg,
         nm_brg: param.dataEdit.nm_brg,
