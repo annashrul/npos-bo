@@ -1,599 +1,281 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
-import Paginationq from "helper";
-import {
-  FetchAlokasi,
-  FetchAlokasiExcel,
-  FetchAlokasiDetail,
-} from "redux/actions/inventory/alokasi.action";
+import { FetchAlokasi, FetchAlokasiExcel, FetchAlokasiDetail } from "redux/actions/inventory/alokasi.action";
 import { rePrintFaktur } from "redux/actions/inventory/mutation.action";
 import connect from "react-redux/es/connect/connect";
-import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import DetailAlokasi from "components/App/modals/report/inventory/alokasi_report/detail_alokasi";
 import AlokasiReportExcel from "components/App/modals/report/inventory/alokasi_report/form_alokasi_excel";
-import FormAlokasi from "components/App/modals/inventory/alokasi/form_alokasi";
-import Select from "react-select";
-import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
-import { rangeDate } from "helper";
-import { statusQ } from "helper";
 import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+  CURRENT_DATE,
+  dateRange,
+  DEFAULT_WHERE,
+  generateNo,
+  getStorage,
+  getWhere,
+  handleDataSelect,
+  isEmptyOrUndefined,
+  isProgress,
+  noData,
+  rmSpaceToStrip,
+  setStorage,
+  toDate,
+} from "../../../../../helper";
+import LokasiCommon from "../../../common/LokasiCommon";
+import SelectCommon from "../../../common/SelectCommon";
+import SelectSortCommon from "../../../common/SelectSortCommon";
+import TableCommon from "../../../common/TableCommon";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
+import { statusAlokasi, STATUS_ALOKASI } from "../../../../../helperStatus";
+
+const dateFromStorage = "dateFromReportAlokasi";
+const dateToStorage = "dateToReportAlokasi";
+const locationStorage = "locationReportAlokasi";
+const statusStorage = "statusReportAlokasi";
+const columnStorage = "columnReportAlokasi";
+const sortStorage = "sortReportAlokasi";
+const anyStorage = "anyReportAlokasi";
+const activeDateRangePickerStorage = "activeDateReportAlokasi";
+
 class AlokasiReport extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.HandleChangeLokasi = this.HandleChangeLokasi.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleModal = this.handleModal.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.HandleChangeSort = this.HandleChangeSort.bind(this);
-    this.HandleChangeFilter = this.HandleChangeFilter.bind(this);
-    this.HandleChangeStatus = this.HandleChangeStatus.bind(this);
     this.handleRePrint = this.handleRePrint.bind(this);
     this.state = {
-      where_data: "",
+      where_data: DEFAULT_WHERE,
       any: "",
       location: "",
-      location_data: [],
-      startDate: moment(new Date()).format("yyyy-MM-DD"),
-      endDate: moment(new Date()).format("yyyy-MM-DD"),
+      startDate: CURRENT_DATE,
+      endDate: CURRENT_DATE,
       status: "",
-      status_data: [],
       sort: "",
-      sort_data: [],
-      filter: "",
-      filter_data: [],
+      column: "",
+      column_data: [
+        { value: "no_faktur_mutasi", label: "Faktur Mutasi" },
+        { value: "tgl_mutasi", label: "Tanggal Mutasi" },
+        { value: "status", label: "Status" },
+      ],
       isModalDetail: false,
-      isModalExccel: false,
-      isModalForm: false,
+      isModalExcel: false,
     };
   }
-
   componentWillUnmount() {
     this.setState({
       isModalDetail: false,
-      isModalExccel: false,
-      isModalForm: false,
+      isModalExcel: false,
     });
   }
 
   componentWillMount() {
-    let page = localStorage.page_alokasi_report;
-    this.handleParameter(page !== undefined && page !== null ? page : 1);
+    this.handleService();
   }
   componentDidMount() {
-    if (
-      localStorage.location_alokasi_report !== undefined &&
-      localStorage.location_alokasi_report !== ""
-    ) {
-      this.setState({ location: localStorage.location_alokasi_report });
-    }
-    if (
-      localStorage.any_alokasi_report !== undefined &&
-      localStorage.any_alokasi_report !== ""
-    ) {
-      this.setState({ any: localStorage.any_alokasi_report });
-    }
-    if (
-      localStorage.date_from_alokasi_report !== undefined &&
-      localStorage.date_from_alokasi_report !== null
-    ) {
-      this.setState({ startDate: localStorage.date_from_alokasi_report });
-    }
-    if (
-      localStorage.date_to_alokasi_report !== undefined &&
-      localStorage.date_to_alokasi_report !== null
-    ) {
-      this.setState({ endDate: localStorage.date_to_alokasi_report });
-    }
-    if (
-      localStorage.sort_alokasi_report !== undefined &&
-      localStorage.sort_alokasi_report !== null
-    ) {
-      this.setState({ sort: localStorage.sort_alokasi_report });
-    }
-    if (
-      localStorage.filter_alokasi_report !== undefined &&
-      localStorage.filter_alokasi_report !== null
-    ) {
-      this.setState({ filter: localStorage.filter_alokasi_report });
-    }
-    if (
-      localStorage.status_alokasi_report !== undefined &&
-      localStorage.status_alokasi_report !== null
-    ) {
-      this.setState({ status: localStorage.status_alokasi_report });
-    }
+    this.handleService();
   }
-  handlePageChange(pageNumber) {
-    localStorage.setItem("page_alokasi_report", pageNumber);
-    this.props.dispatch(FetchAlokasi(pageNumber));
-  }
-  toggle(e, code, barcode, name) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    localStorage.setItem("code", code);
-    localStorage.setItem("barcode", barcode);
-    localStorage.setItem("name", name);
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("detailAlokasi"));
-    this.props.dispatch(FetchAlokasiDetail(1, code, "", "", ""));
-  }
-  handleEdit(e, data) {
-    e.preventDefault();
-    this.setState({ isModalForm: true });
+  handleService(page = 1) {
+    let getDateFrom = getStorage(dateFromStorage);
+    let getDateTo = getStorage(dateToStorage);
+    let getLocation = getStorage(locationStorage);
+    let getStatus = getStorage(statusStorage);
+    let getColumn = getStorage(columnStorage);
+    let getSort = getStorage(sortStorage);
+    let getAny = getStorage(anyStorage);
 
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formEditAlokasi"));
+    let where = `page=${page}`;
+    let state = {};
+
+    if (isEmptyOrUndefined(getDateFrom) && isEmptyOrUndefined(getDateTo)) {
+      where += `&datefrom=${getDateFrom}&dateto=${getDateTo}`;
+      Object.assign(state, { startDate: getDateFrom, endDate: getDateTo });
+    } else {
+      where += `&datefrom=${this.state.startDate}&dateto=${this.state.endDate}`;
+    }
+    if (isEmptyOrUndefined(getLocation)) {
+      where += `&lokasi=${getLocation}`;
+      Object.assign(state, { location: getLocation });
+    }
+    if (isEmptyOrUndefined(getStatus)) {
+      where += `&status=${getStatus}`;
+      Object.assign(state, { status: getStatus });
+    }
+
+    if (isEmptyOrUndefined(getColumn)) {
+      where += `&sort=${getColumn}`;
+      Object.assign(state, { column: getColumn });
+      if (isEmptyOrUndefined(getSort)) {
+        where += `|${getSort}`;
+        Object.assign(state, { sort: getSort });
+      }
+    }
+
+    if (isEmptyOrUndefined(getAny)) {
+      where += `&q=${getAny}`;
+      Object.assign(state, { any: getAny });
+    }
+    Object.assign(state, { where_data: where });
+    this.setState(state);
+    this.props.dispatch(FetchAlokasi(where));
   }
-  handleEvent = (event, picker) => {
-    const awal = moment(picker.startDate._d).format("YYYY-MM-DD");
-    const akhir = moment(picker.endDate._d).format("YYYY-MM-DD");
-    localStorage.setItem("date_from_alokasi_report", `${awal}`);
-    localStorage.setItem("date_to_alokasi_report", `${akhir}`);
-    this.setState({
-      startDate: awal,
-      endDate: akhir,
-    });
-  };
+
+  handlePageChange(page) {
+    this.handleService(page);
+  }
+
   handleSearch(e) {
     e.preventDefault();
-    localStorage.setItem("any_alokasi_report", this.state.any);
-    this.handleParameter(1);
-  }
-  handleParameter(pageNumber) {
-    let dateFrom = localStorage.date_from_alokasi_report;
-    let dateTo = localStorage.date_to_alokasi_report;
-    let lokasi = localStorage.location_alokasi_report;
-    let any = localStorage.any_alokasi_report;
-    let status = localStorage.status_alokasi_report;
-    let sort = localStorage.sort_alokasi_report;
-    let filter = localStorage.filter_alokasi_report;
-    let where = "";
-    if (dateFrom !== undefined && dateFrom !== null) {
-      where += `&datefrom=${dateFrom}&dateto=${dateTo}`;
-    }
-    if (lokasi !== undefined && lokasi !== null && lokasi !== "") {
-      where += `&lokasi=${lokasi}`;
-    }
-    if (status !== undefined && status !== null && status !== "") {
-      where += `&status=${status}`;
-    }
-    if (filter !== undefined && filter !== null && filter !== "") {
-      if (sort !== undefined && sort !== null && sort !== "") {
-        where += `&sort=${filter}|${sort}`;
-      }
-    }
-    if (any !== undefined && any !== null && any !== "") {
-      where += `&q=${any}`;
-    }
-    this.setState({
-      where_data: where,
-    });
-    this.props.dispatch(FetchAlokasi(pageNumber, where));
-    // this.props.dispatch(FetchAlokasiExcel(pageNumber,where))
-  }
-  componentWillReceiveProps = (nextProps) => {
-    let sort = [
-      { kode: "desc", value: "DESCENDING" },
-      { kode: "asc", value: "ASCENDING" },
-    ];
-    let data_sort = [];
-    sort.map((i) => {
-      data_sort.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let status = [
-      { kode: "", value: "Semua" },
-      { kode: "3", value: "Diterima" },
-      { kode: "2", value: "Dikirim" },
-      { kode: "1", value: "Packing" },
-      { kode: "0", value: "Proses" },
-    ];
-    let data_status = [];
-    status.map((i) => {
-      data_status.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    let filter = [
-      { kode: "no_faktur_mutasi", value: "Faktur Mutasi" },
-      { kode: "tgl_mutasi", value: "Tanggal Mutasi" },
-      { kode: "status", value: "Status" },
-    ];
-    let data_filter = [];
-    filter.map((i) => {
-      data_filter.push({
-        value: i.kode,
-        label: i.value,
-      });
-      return null;
-    });
-    this.setState({
-      sort_data: data_sort,
-      filter_data: data_filter,
-      status_data: data_status,
-    });
-    localStorage.setItem(
-      "status_alokasi_report",
-      this.state.status === "" || this.state.status === undefined
-        ? status[0].kode
-        : localStorage.status_production_report
-    );
-    localStorage.setItem(
-      "sort_alokasi_report",
-      this.state.sort === "" || this.state.sort === undefined
-        ? sort[0].kode
-        : localStorage.sort_alokasi_report
-    );
-    localStorage.setItem(
-      "filter_alokasi_report",
-      this.state.filter === "" || this.state.filter === undefined
-        ? filter[0].kode
-        : localStorage.filter_alokasi_report
-    );
-    if (nextProps.auth.user) {
-      let lk = [
-        {
-          value: "",
-          label: "Semua Lokasi",
-        },
-      ];
-      let loc = nextProps.auth.user.lokasi;
-      if (loc !== undefined) {
-        loc.map((i) => {
-          lk.push({
-            value: i.kode,
-            label: i.nama,
-          });
-          return null;
-        });
-        this.setState({
-          location_data: lk,
-        });
-      }
-    }
-  };
-  HandleChangeLokasi(lk) {
-    this.setState({
-      location: lk.value,
-    });
-    localStorage.setItem("location_alokasi_report", lk.value);
-  }
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    setStorage(anyStorage, this.state.any);
+    this.handleService();
   }
 
-  HandleChangeSort(sr) {
-    this.setState({
-      sort: sr.value,
-    });
-    localStorage.setItem("sort_alokasi_report", sr.value);
-  }
-  HandleChangeFilter(fl) {
-    this.setState({
-      filter: fl.value,
-    });
-    localStorage.setItem("filter_alokasi_report", fl.value);
-  }
-  HandleChangeStatus(st) {
-    this.setState({
-      status: st.value,
-    });
-    localStorage.setItem("status_alokasi_report", st.value);
-  }
-
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    const bool = !this.props.isOpen;
-    // let range = total*perpage;
-    this.setState({ isModalExccel: true });
-
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formAlokasiExcel"));
-    this.props.dispatch(FetchAlokasiExcel(1, this.state.where_data, total));
+  handleModal(type, obj) {
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}`;
+    let setState = { where_data: whereState };
+    if (type === "excel") {
+      Object.assign(setState, { isModalExcel: true });
+      this.props.dispatch(FetchAlokasiExcel(1, where, obj.total));
+    } else if (type === "detail") {
+      Object.assign(setState, { isModalDetail: true });
+      this.props.dispatch(FetchAlokasiDetail(obj.no_faktur_mutasi, where));
+    }
+    this.setState(setState);
   }
 
   handleRePrint(e, id) {
-    e.preventDefault();
+    // e.preventDefault();
     this.props.dispatch(rePrintFaktur(id));
   }
 
+  handleSelect(state, res) {
+    if (state === "location") setStorage(locationStorage, res.value);
+    if (state === "status") setStorage(statusStorage, res.value);
+    if (state === "column") setStorage(columnStorage, res.value);
+    if (state === "sort") setStorage(sortStorage, res.value);
+    this.setState({ [state]: res.value });
+    this.handleService();
+  }
+
   render() {
-    const columnStyle = {
-      verticalAlign: "middle",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-    };
-    const {
-      per_page,
-      last_page,
-      current_page,
-      // from,
-      // to,
-      data,
-      // total
-    } = this.props.alokasiReport;
+    const { per_page, last_page, current_page, data, total } = this.props.alokasiReport;
+    const { startDate, endDate, location, status, column, column_data, sort, any, isModalExcel, isModalDetail } = this.state;
+    const head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
+      { colSpan: 2, label: "No faktur", width: "1%" },
+      { colSpan: 2, label: "Lokasi", width: "1%" },
+      { rowSpan: 2, label: "Keterangan" },
+      { rowSpan: 2, label: "Status", width: "1%" },
+      { rowSpan: 2, label: "Tanggal", width: "1%" },
+    ];
     return (
       <Layout page="Laporan Alokasi">
         <div className="row">
-          <div className="col-md-10">
-            <div className="row">
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
-                <div className="form-group">
-                  <label htmlFor=""> Periode </label>
-                  <DateRangePicker
-                    ranges={rangeDate}
-                    alwaysShowCalendars={true}
-                    onEvent={this.handleEvent}
-                  >
-                    <input
-                      readOnly={true}
-                      type="text"
-                      className="form-control"
-                      value={`${this.state.startDate} to ${this.state.endDate}`}
-                    />
-                  </DateRangePicker>
-                </div>
-              </div>
-
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
-                <div className="form-group">
-                  <label htmlFor="">Lokasi</label>
-                  <Select
-                    options={this.state.location_data}
-                    onChange={this.HandleChangeLokasi}
-                    placeholder="Pilih Lokasi"
-                    value={this.state.location_data.find((op) => {
-                      return op.value === this.state.location;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
-                <div className="form-group">
-                  <label className="control-label font-12">Status</label>
-                  <Select
-                    options={this.state.status_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeStatus}
-                    value={this.state.status_data.find((op) => {
-                      return op.value === this.state.status;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
-                <div className="form-group">
-                  <label className="control-label font-12">Filter</label>
-                  <Select
-                    options={this.state.filter_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeFilter}
-                    value={this.state.filter_data.find((op) => {
-                      return op.value === this.state.filter;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
-                <div className="form-group">
-                  <label className="control-label font-12">Sort</label>
-                  <Select
-                    options={this.state.sort_data}
-                    // placeholder="Pilih Tipe Kas"
-                    onChange={this.HandleChangeSort}
-                    value={this.state.sort_data.find((op) => {
-                      return op.value === this.state.sort;
-                    })}
-                  />
-                </div>
-              </div>
-              <div className="col-6 col-xs-6 col-md-2" style={{ zoom: "85%" }}>
-                <div className="form-group">
-                  <label>Cari</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    style={{ padding: "9px", fontWeight: "bolder" }}
-                    name="any"
-                    value={this.state.any}
-                    onChange={(e) => this.handleChange(e)}
-                  />
-                </div>
-              </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(activeDateRangePickerStorage, isActive);
+                setStorage(dateFromStorage, first);
+                setStorage(dateToStorage, last);
+                setTimeout(() => this.handleService(), 300);
+              },
+              `${toDate(startDate)} - ${toDate(endDate)}`,
+              getStorage(activeDateRangePickerStorage)
+            )}
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <LokasiCommon callback={(res) => this.handleSelect("location", res)} dataEdit={location} isAll={true} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <SelectCommon label="Status" options={handleDataSelect(STATUS_ALOKASI, "value", "label")} dataEdit={status} callback={(res) => this.handleSelect("status", res)} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <SelectCommon label="Kolom" options={column_data} dataEdit={column} callback={(res) => this.handleSelect("column", res)} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <SelectSortCommon dataEdit={sort} callback={(res) => this.handleSelect("sort", res)} />
+          </div>
+          <div className="col-6 col-xs-6 col-md-3">
+            <label>Cari</label>
+            <div className="input-group">
+              <input
+                type="search"
+                name="any"
+                className="form-control"
+                placeholder="tulis sesuatu disini"
+                value={any}
+                onChange={(e) => this.setState({ any: e.target.value })}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") this.handleSearch(e);
+                }}
+              />
+              <span className="input-group-append">
+                <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                  <i className="fa fa-search" />
+                </button>
+                <button
+                  className="btn btn-primary ml-1"
+                  onClick={(e) => {
+                    this.handleModal("excel", {
+                      total: last_page * per_page,
+                    });
+                  }}
+                >
+                  {isProgress(this.props.download)}
+                </button>
+              </span>
             </div>
           </div>
+        </div>
 
-          <div className="col-md-2" style={{ zoom: "85%", textAlign: "right" }}>
-            <div className="row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    style={{ marginTop: "28px", marginRight: "5px" }}
-                    className="btn btn-primary"
-                    onClick={this.handleSearch}
-                  >
-                    <i className="fa fa-search" />
-                  </button>
-                  <button
-                    style={{ marginTop: "28px" }}
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.toggleModal(e, last_page * per_page, per_page)
+        <TableCommon
+          head={head}
+          rowSpan={[{ label: "Mutasi" }, { label: "Beli" }, { label: "Asal" }, { label: "Tujuan" }]}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
+                    let action = [{ label: "Detail" }];
+                    if (v.status === "0") {
+                      action.push({ label: "Edit" });
                     }
-                  >
-                    <i className="fa fa-print"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-bordered">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  #
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No Faktur Mutasi
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Tanggal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Asal
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Lokasi Tujuan
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Status
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  No. Faktur Beli
-                </th>
-                <th className="text-black" style={columnStyle} rowSpan="2">
-                  Keterangan
-                </th>
-              </tr>
-            </thead>
-            {
-              <tbody>
-                {typeof data === "object" ? (
-                  data.length > 0 ? (
-                    data.map((v, i) => {
-                      // total_dn_per = total_dn_per+parseInt(v.delivery_note);
-                      // total_first_stock_per = total_first_stock_per+parseInt(v.stock_awal);
-                      // total_last_stock_per = total_last_stock_per+parseInt(v.stock_akhir);
-                      // total_stock_in_per = total_stock_in_per+parseInt(v.stock_masuk);
-                      // total_stock_out_per = total_stock_out_per+parseInt(v.stock_keluar);
-                      return (
-                        <tr key={i}>
-                          <td style={columnStyle}>
-                            {" "}
-                            {i + 1 + 10 * (parseInt(current_page, 10) - 1)}
-                          </td>
-                          <td style={columnStyle}>
-                            {/* Example split danger button */}
-                            <div className="btn-group">
-                              <UncontrolledButtonDropdown>
-                                <DropdownToggle caret>Aksi</DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.toggle(e, v.no_faktur_mutasi, "", "")
-                                    }
-                                  >
-                                    Detail
-                                  </DropdownItem>
-                                  {v.status === "0" ? (
-                                    <Link
-                                      to={`../edit/alokasi/${btoa(
-                                        v.no_faktur_mutasi
-                                      )}`}
-                                    >
-                                      <DropdownItem>Edit</DropdownItem>
-                                    </Link>
-                                  ) : (
-                                    ""
-                                  )}
-                                  <Link
-                                    to={`../alokasi3ply/${v.no_faktur_mutasi}`}
-                                    target="_blank"
-                                  >
-                                    <DropdownItem>3ply</DropdownItem>
-                                  </Link>
-                                  <DropdownItem
-                                    onClick={(e) =>
-                                      this.handleRePrint(e, v.no_faktur_mutasi)
-                                    }
-                                  >
-                                    Print Faktur
-                                  </DropdownItem>
-                                </DropdownMenu>
-                              </UncontrolledButtonDropdown>
-                            </div>
-                          </td>
-                          <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                          <td style={columnStyle}>
-                            {moment(v.tgl_mutasi).format("DD-MM-YYYY")}
-                          </td>
-                          <td style={columnStyle}>{v.lokasi_asal}</td>
-                          <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                          <td style={columnStyle}>
-                            {
-                              v.status === "0"
-                                ? statusQ("danger", "proses")
-                                : v.status === "1"
-                                ? statusQ("warning", "packing")
-                                : v.status === "2"
-                                ? statusQ("info", "dikirim")
-                                : v.status === "3"
-                                ? statusQ("success", "diterima")
-                                : ""
-                              // v.status===0?statusQ('danger','proses'):(v.status===1?statusQ('warning','packing')?(v.status===2?statusQ('info','dikirim'):statusQ('info','diterima')):""):""
-                            }
-                          </td>
-                          <td style={columnStyle}>
-                            {v.no_faktur_beli ? v.no_faktur_beli : "-"}
-                          </td>
-                          <td style={columnStyle}>
-                            {v.keterangan ? v.keterangan : "-"}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={9}>No Data</td>
-                    </tr>
-                  )
-                ) : (
-                  <tr>
-                    <td colSpan={9}>No Data</td>
-                  </tr>
-                )}
-              </tbody>
-            }
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
-        {this.state.isModalDetail ? (
-          <DetailAlokasi alokasiDetail={this.props.alokasiDetail} />
-        ) : null}
-        {this.state.isModalExccel ? (
-          <AlokasiReportExcel
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-          />
-        ) : null}
-        {this.state.isModalForm ? <FormAlokasi /> : null}
+                    action.push({ label: "3ply" }, { label: "Print nota" });
+                    return (
+                      <tr key={i}>
+                        <td className="middle nowrap text-center"> {generateNo(i, current_page)}</td>
+                        <td className="middle nowrap text-center">
+                          <ButtonActionCommon
+                            action={action}
+                            callback={(e) => {
+                              if (e === 0) this.handleModal("detail", v);
+                              if (e === 1) this.props.history.push(`../edit/alokasi/${btoa(v.no_faktur_mutasi)}`);
+                              if (e === 2) this.props.history.push(`../alokasi3ply/${v.no_faktur_mutasi}`);
+                              if (e === 3) this.handleRePrint(e, v.no_faktur_mutasi);
+                            }}
+                          />
+                        </td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.no_faktur_mutasi)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.no_faktur_beli)}</td>
+                        <td className="middle nowrap">{v.lokasi_asal}</td>
+                        <td className="middle nowrap">{v.lokasi_tujuan}</td>
+
+                        <td className="middle nowrap">{rmSpaceToStrip(v.keterangan)}</td>
+                        <td className="middle nowrap">{statusAlokasi(v.status, true)}</td>
+                        <td className="middle nowrap">{toDate(v.tgl_mutasi)}</td>
+                      </tr>
+                    );
+                  })
+                : noData(head.length)
+              : noData(head.length)
+          }
+        />
+
+        {this.props.isOpen && isModalDetail ? <DetailAlokasi where={this.state.where_data} alokasiDetail={this.props.alokasiDetail} /> : null}
+        {this.props.isOpen && isModalExcel ? <AlokasiReportExcel startDate={startDate} endDate={endDate} /> : null}
       </Layout>
     );
   }
@@ -602,12 +284,10 @@ class AlokasiReport extends Component {
 const mapStateToProps = (state) => {
   return {
     alokasiReport: state.alokasiReducer.data,
-    isLoadingDetail: state.alokasiReducer.isLoadingDetail,
+    download: state.alokasiReducer.download,
     auth: state.auth,
-    isLoading: state.alokasiReducer.isLoading,
     alokasiDetail: state.alokasiReducer.alokasi_data,
     alokasiReportExcel: state.alokasiReducer.report_excel,
-    isLoadingDetailSatuan: state.stockReportReducer.isLoadingDetailSatuan,
     isOpen: state.modalReducer,
     type: state.modalTypeReducer,
   };

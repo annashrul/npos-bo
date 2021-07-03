@@ -2,21 +2,14 @@ import { SALE, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy, del } from "components/model/app.model";
-import moment from "moment";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-  loading,
-} from "../handleHttp";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import { handleDelete, handleGet, handleGetExport, handlePost } from "../handleHttp";
 import { ModalToggle } from "redux/actions/modal.action";
 import { FetchCustomerAll } from "redux/actions/masterdata/customer/customer.action";
 import { FetchSalesAll } from "redux/actions/masterdata/sales/sales.action";
-import { setStorage, ToastQ } from "../../../helper";
+import { isEmptyOrUndefined, ToastQ } from "../../../helper";
 import { ModalType } from "../modal.action";
+import moment from 'moment'
+import Cookies from 'js-cookie'
 
 export function setLoading(load) {
   return {
@@ -151,7 +144,8 @@ export const FetchNotaReceipt = (kd_trx) => {
 };
 export const storeSale = (data, param) => {
   return (dispatch) => {
-    console.log("data", data);
+    console.log(data);
+    let master = data.parsedata.master;
     dispatch(setLoading(true));
 
     Swal.fire({
@@ -170,10 +164,11 @@ export const storeSale = (data, param) => {
       .then(function (response) {
         Swal.close();
         const datum = response.data;
-
         destroy("sale");
-        del("hold", data.id_hold);
-        localStorage.removeItem("objectHoldBill");
+        if (master.id_hold !== "") {
+          del("hold", master.id_hold);
+          localStorage.removeItem("objectHoldBill");
+        }
         const goSwal = () => {
           Swal.fire({
             allowOutsideClick: false,
@@ -183,7 +178,7 @@ export const storeSale = (data, param) => {
               "<br>" +
               '<button type="button" role="button" tabindex="0" id="btnNotaPdf" class="btn btn-primary">Nota PDF</button>     ' +
               '<button type="button" role="button" tabindex="0" id="btnNota3ply" class="btn btn-info">Nota 3ply</button>     ' +
-              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning">Re-Print</button>',
+              '<button type="button" role="button" tabindex="0" id="btnReprint" class="btn btn-warning" ' + (atob(atob(Cookies.get("tnt="))) !== "nov-jkt" || atob(atob(Cookies.get("tnt="))) !== "nov-bdg" ? 'style="visibility:hidden' : '') + '>Re-Print</button>',
 
             showCancelButton: true,
             cancelButtonText: "Selesai",
@@ -196,56 +191,46 @@ export const storeSale = (data, param) => {
               dispatch(FetchSalesAll(datum.result.lokasi));
             }
           });
-          document
-            .getElementById("btnReprint")
-            .addEventListener("click", () => {
-              handlePost(
-                "pos/reprint/" + btoa(datum.result.kode),
-                [],
-                (res, msg, status) => {
-                  const data = res.data;
-                  ToastQ.fire({
-                    icon: "success",
-                    title: msg,
-                  });
-                  goSwal();
-                }
-              );
+          const elReprint=document.getElementById("btnReprint")
+          if (elReprint){
+            elReprint.addEventListener("click", () => {
+              handlePost("pos/reprint/" + btoa(datum.result.kode), [], (res, msg, status) => {
+                ToastQ.fire({
+                  icon: "success",
+                  title: msg,
+                });
+                goSwal();
+              });
             });
-          document
-            .getElementById("btnNotaPdf")
-            .addEventListener("click", () => {
-              const win = window.open(datum.result.nota, "_blank");
-              if (win != null) {
-                win.focus();
-              }
-            });
-          document
-            .getElementById("btnNota3ply")
-            .addEventListener("click", () => {
-              const win = window.open(
-                `/print3ply/${datum.result.kode}`,
-                "_blank"
-              );
-              if (win != null) {
-                win.focus();
-              }
-              return false;
-            });
+
+          }
+          document.getElementById("btnNotaPdf").addEventListener("click", () => {
+            const win = window.open(datum.result.nota, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+          });
+          document.getElementById("btnNota3ply").addEventListener("click", () => {
+            const win = window.open(`/print3ply/${datum.result.kode}`, "_blank");
+            if (win != null) {
+              win.focus();
+            }
+            return false;
+          });
         };
         goSwal();
 
         dispatch(setLoading(false));
       })
       .catch(function (error) {
+        console.log(error);
         Swal.close();
 
         Swal.fire({
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -256,8 +241,8 @@ export const storeSale = (data, param) => {
 
 export const FetchReportSale = (where = "") => {
   return (dispatch) => {
-    let url = `report/arsip_penjualan`;
-    if (where !== "") url += `?${where}`;
+    let url = `report/arsip_penjualan?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
@@ -269,23 +254,20 @@ export const FetchReportSale = (where = "") => {
   };
 };
 
-export const FetchReportSaleExcel = (where = "", perpage = "", callback) => {
+export const FetchReportSaleExcel = (where = "", perpage = "") => {
   return (dispatch) => {
-    dispatch(setLoading(0));
     let url = `report/arsip_penjualan?page=1&perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
-    handleGet(
+    handleGetExport(
       url,
       (res) => {
-        const data = res.data;
-        dispatch(setReportExcel(data));
+        const datum = res.data;
+        dispatch(setReportExcel(datum));
         dispatch(ModalToggle(true));
         dispatch(ModalType("formSaleExcel"));
-        dispatch(setLoading(0));
       },
-      true,
       (percent) => {
         dispatch(setLoading(percent));
       }
@@ -369,8 +351,8 @@ export const deleteReportSale = (datum) => {
 
 export const FetchSaleReturReport = (where = "") => {
   return (dispatch) => {
-    let url = `report/penjualan/retur`;
-    if (where !== "") url += `?${where}`;
+    let url = `report/penjualan/retur?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
@@ -382,30 +364,23 @@ export const FetchSaleReturReport = (where = "") => {
   };
 };
 
-export const FetchSaleReturReportExcel = (
-  page = 1,
-  where = "",
-  perpage = 99999
-) => {
+export const FetchSaleReturReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    Nprogress.start();
-    let que = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
+    let url = `report/penjualan/retur?page=${page}&perpage=${perpage}`;
     if (where !== "") {
-      que += `${where}`;
+      url += `${where}`;
     }
-
-    axios
-      .get(HEADERS.URL + `${que}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setSaleReturReportExcel(data));
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+    handleGetExport(
+      url,
+      (res) => {
+        const datum = res.data;
+        dispatch(setSaleReturReportExcel(datum));
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formSaleReturExcel"));
+      },
+      (percent) => {
+        dispatch(setLoading(percent));
+      }
+    );
   };
 };

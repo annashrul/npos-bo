@@ -1,20 +1,11 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
-import {
-  deleteSales,
-  FetchSales,
-} from "redux/actions/masterdata/sales/sales.action";
+import { deleteSales, FetchSales } from "redux/actions/masterdata/sales/sales.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq, { statusQ } from "helper";
 import FormSales from "components/App/modals/masterdata/sales/form_sales";
-import Swal from "sweetalert2";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
-import { generateNo, swallOption } from "../../../../../helper";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
+import { generateNo } from "../../../../../helper";
 
 class ListSales extends Component {
   constructor(props) {
@@ -91,12 +82,7 @@ class ListSales extends Component {
             </div>
             <div className="col-2 col-xs-2 col-md-9">
               <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
+                <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                   <i className="fa fa-plus" />
                 </button>
               </div>
@@ -124,46 +110,25 @@ class ListSales extends Component {
               {typeof data === "object" ? (
                 data.map((v, i) => {
                   let getLok;
-                  if (this.props.auth.user.lokasi !== undefined)
-                    getLok = this.props.auth.user.lokasi.filter(
-                      (item) => item.kode === v.lokasi
-                    );
+                  if (this.props.auth.user.lokasi !== undefined) getLok = this.props.auth.user.lokasi.filter((item) => item.kode === v.lokasi);
                   return (
                     <tr key={i}>
-                      <td className="text-center middle nowrap">
-                        {generateNo(i, current_page)}
-                      </td>
+                      <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                       <td className="text-center middle nowrap">
                         {/* Example split danger button */}
                         <div className="btn-group">
                           <UncontrolledButtonDropdown>
                             <DropdownToggle caret></DropdownToggle>
                             <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggleModal(e, i)}
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleDelete(e, v.kode)}
-                              >
-                                Delete
-                              </DropdownItem>
+                              <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
+                              <DropdownItem onClick={(e) => this.handleDelete(e, v.kode)}>Delete</DropdownItem>
                             </DropdownMenu>
                           </UncontrolledButtonDropdown>
                         </div>
                       </td>
                       <td className="middle nowrap">{v.nama}</td>
-                      <td className="middle nowrap">
-                        {getLok === undefined
-                          ? "Location Not Found!"
-                          : getLok[0].nama}
-                      </td>
-                      <td className="middle nowrap">
-                        {v.status === "1"
-                          ? statusQ("success", "Aktif")
-                          : statusQ("danger", "Tidak aktif")}
-                      </td>
+                      <td className="middle nowrap">{getLok === undefined ? "Location Not Found!" : getLok[0].nama}</td>
+                      <td className="middle nowrap">{v.status === "1" ? statusQ("success", "Aktif") : statusQ("danger", "Tidak aktif")}</td>
                     </tr>
                   );
                 })
@@ -176,12 +141,7 @@ class ListSales extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
         </div>
         <FormSales token={this.props.token} detail={this.state.detail} />
       </div>

@@ -7,8 +7,6 @@ import "nprogress/nprogress.css";
 
 const strNetworkError = "a network error occurred.";
 const strServerError = "a server error occurred.";
-const strSuccessSaved = "Data has been saved.";
-const strFailedSaved = "Oppss .. data failed to saved.";
 
 export const loading = (isStatus = true, title = "Silahkan tunggu.") => {
   Swal.fire({
@@ -42,7 +40,6 @@ export const handleGet = (url, callback, isLoading = true) => {
   axios
     .get(HEADERS.URL + url)
     .then(function (response) {
-      const datum = response.data.result;
       callback(response);
       if (isLoading) Nprogress.done();
     })
@@ -52,12 +49,7 @@ export const handleGet = (url, callback, isLoading = true) => {
     });
 };
 
-export const handlePost = async (
-  url,
-  data,
-  callback,
-  title = "Silahkan tunggu."
-) => {
+export const handlePost = async (url, data, callback, title = "Silahkan tunggu.") => {
   loading(true, title);
   axios
     .post(HEADERS.URL + url, data)
@@ -80,12 +72,7 @@ export const handlePost = async (
     });
 };
 
-export const handlePut = async (
-  url,
-  data,
-  callback,
-  title = "Silahkan tunggu."
-) => {
+export const handlePut = async (url, data, callback, title = "Silahkan tunggu.") => {
   loading(true, title);
   axios
     .put(HEADERS.URL + url, data)
@@ -108,11 +95,7 @@ export const handlePut = async (
     });
 };
 
-export const handleDelete = async (
-  url,
-  callback,
-  title = "Silahkan tunggu."
-) => {
+export const handleDelete = async (url, callback, title = "Silahkan tunggu.") => {
   swallOption("Anda yakin akan menghapus data ini ?", async () => {
     loading(true, title);
     axios
@@ -123,10 +106,10 @@ export const handleDelete = async (
           const datum = response.data;
           if (datum.status === "success") {
             swal(datum.msg);
+            callback();
           } else {
             swal(datum.msg);
           }
-          callback();
         }, 800);
       })
       .catch(function (error) {
@@ -136,4 +119,27 @@ export const handleDelete = async (
         }, 800);
       });
   });
+};
+
+export const handleGetExport = (url, callback, download) => {
+  Nprogress.start();
+  download("loading");
+  axios
+    .get(HEADERS.URL + url, {
+      onDownloadProgress: (progressEvent) => {
+        let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        Nprogress.set(percentCompleted / 100);
+        download(percentCompleted);
+      },
+    })
+    .then(function (response) {
+      callback(response);
+      Nprogress.done();
+      download(0);
+    })
+    .catch(function (error) {
+      Nprogress.done();
+      handleError(error);
+      download(0);
+    });
 };

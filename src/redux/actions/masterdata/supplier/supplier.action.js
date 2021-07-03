@@ -1,15 +1,5 @@
-import { SUPPLIER, HEADERS } from "../../_constants";
-import axios from "axios";
-import Swal from "sweetalert2";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
-
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { SUPPLIER } from "../../_constants";
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
 const baseUrl = "supplier";
 export function setLoading(load) {

@@ -1,8 +1,11 @@
-import { SUB_DEPT, HEADERS } from "../../_constants";
-import axios from "axios";
-import Swal from "sweetalert2";
-import Nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import { SUB_DEPT } from "../../_constants";
+
+import { handleDelete, handleGet, handlePost, handlePut } from "../../handleHttp";
+import { swal } from "../../../../helper";
+import { ModalToggle } from "../../modal.action";
+
+const baseUrl = "group2";
+
 export function setLoading(load) {
   return { type: SUB_DEPT.LOADING, load };
 }
@@ -18,179 +21,56 @@ export function setSubDepartmentFailed(data = []) {
 }
 export const FetchSubDepartment = (where = "") => {
   return (dispatch) => {
-    Nprogress.start();
-    dispatch(setLoading(true));
-    let url = "group2";
-    if (where !== "") {
-      url += `?${where}`;
-    }
-    // if(q===''){
-    //     url = `group2?page=${page}`;
-    // }else{
-    //     url = `group2?page=${page}&q=${q}`;
-    // }
-    axios
-      .get(HEADERS.URL + `${url}`)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          dispatch(setSubDepartment(data));
-        }
-
-        dispatch(setLoading(false));
-        Nprogress.done();
-      })
-      .catch(function (error) {
-        Nprogress.done();
-      });
+    let url = baseUrl;
+    if (where !== "") url += `?${where}`;
+    handleGet(url, (res) => dispatch(setSubDepartment(res.data)), true);
   };
 };
 
 export const FetchSubDepartmentAll = () => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `group2?page=1&perpage=999999`)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          dispatch(setSubDepartmentAll(data));
-        }
-
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
+    let url = `${baseUrl}?page=1&perpage=999999`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setSubDepartmentAll(res.data));
+        dispatch(ModalToggle(true));
+      },
+      true
+    );
   };
 };
 
 export const createSubDepartment = (data) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `group2`;
-
-    axios
-      .post(url, data)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchSubDepartment(1, ""));
-      })
-      .catch(function (error) {
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-
-        if (error.response) {
-        }
-      });
+    handlePost(baseUrl, data, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchSubDepartment("page=1"));
+      }
+    });
   };
 };
 
 export const updateSubDepartment = (id, data) => {
+  const newData = data;
+  delete newData.where;
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `group2/${id}`;
-
-    axios
-      .put(url, data)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchSubDepartment(1, ""));
-      })
-      .catch(function (error) {
-        // handle error
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handlePut(`${baseUrl}/${id}`, newData, (res, msg, status) => {
+      swal(msg);
+      if (status) {
+        dispatch(ModalToggle(false));
+        dispatch(FetchSubDepartment(data.where));
+      }
+    });
   };
 };
 
-export const deleteSubDepartment = (id, token) => {
+export const deleteSubDepartment = (data) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `group2/${id}`;
-
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchSubDepartment(1, ""));
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(`${baseUrl}/${data.kode}`, () => {
+      dispatch(FetchSubDepartment(data.where));
+    });
   };
 };

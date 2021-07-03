@@ -1,18 +1,10 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
-import {
-  deleteMeja,
-  FetchMeja,
-} from "redux/actions/masterdata/meja/meja.action";
+import { deleteMeja, FetchMeja } from "redux/actions/masterdata/meja/meja.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq from "helper";
 import FormMeja from "components/App/modals/masterdata/area/form_meja";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import { generateNo } from "../../../../../helper";
 
 class ListMeja extends Component {
@@ -73,7 +65,6 @@ class ListMeja extends Component {
     this.props.dispatch(deleteMeja(id, this.state.where));
   }
   render() {
-    const columnStyle = { verticalAlign: "middle", textAlign: "left" };
     const { total, per_page, current_page, data } = this.props.data;
     return (
       <div>
@@ -100,12 +91,7 @@ class ListMeja extends Component {
             </div>
             <div className="col-2 col-xs-2 col-md-9">
               <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
+                <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                   <i className="fa fa-plus" />
                 </button>
               </div>
@@ -140,25 +126,15 @@ class ListMeja extends Component {
                 data.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td className="midde text-center">
-                        {generateNo(i, current_page)}
-                      </td>
+                      <td className="midde text-center">{generateNo(i, current_page)}</td>
                       <td className="middle">
                         {/* Example split danger button */}
                         <div className="btn-group">
                           <UncontrolledButtonDropdown>
                             <DropdownToggle caret>Aksi</DropdownToggle>
                             <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggleModal(e, i)}
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleDelete(e, v.id_meja)}
-                              >
-                                Delete
-                              </DropdownItem>
+                              <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
+                              <DropdownItem onClick={(e) => this.handleDelete(e, v.id_meja)}>Delete</DropdownItem>
                             </DropdownMenu>
                           </UncontrolledButtonDropdown>
                         </div>
@@ -180,20 +156,9 @@ class ListMeja extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
         </div>
-        {this.props.isOpen && (
-          <FormMeja
-            token={this.props.token}
-            detail={this.state.detail}
-            area={this.props.area}
-          />
-        )}
+        {this.props.isOpen && <FormMeja token={this.props.token} detail={this.state.detail} area={this.props.area} />}
       </div>
     );
   }

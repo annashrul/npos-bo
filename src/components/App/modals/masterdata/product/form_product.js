@@ -3,26 +3,13 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-// import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import {
-  setProductEdit,
-  createProduct,
-  updateProduct,
-} from "redux/actions/masterdata/product/product.action";
+import { setProductEdit, createProduct, updateProduct } from "redux/actions/masterdata/product/product.action";
 import { FetchCheck } from "redux/actions/site.action";
 import axios from "axios";
 import { HEADERS } from "redux/actions/_constants";
-import Select from "react-select";
 import moment from "moment";
-import {
-  handleError,
-  rmComma,
-  select2Group,
-  setFocus,
-  toCurrency,
-} from "../../../../../helper";
+import { handleError, rmComma, select2Group, setFocus, toCurrency } from "../../../../../helper";
 import { isNaN } from "lodash";
-import FormSubDepartment from "../../../../../components/App/modals/masterdata/department/form_sub_department";
 import FormGroupProduct from "../../../../../components/App/modals/masterdata/group_product/form_group_product";
 import FormSupplier from "../../../../../components/App/modals/masterdata/supplier/form_supplier";
 import Default from "../../../../../assets/default.png";
@@ -33,11 +20,7 @@ import Cookies from "js-cookie";
 import FormPrinter from "../printer/form_printer";
 import Preloader from "Preloader";
 
-const tenantBool =
-  Cookies.get("tnt=") !== undefined
-    ? atob(atob(Cookies.get("tnt="))) === "giandy-pusat" ||
-      atob(atob(Cookies.get("tnt="))) === "giandy-cabang01"
-    : false;
+const tenantBool = Cookies.get("tnt=") !== undefined ? atob(atob(Cookies.get("tnt="))) === "giandy-pusat" || atob(atob(Cookies.get("tnt="))) === "giandy-cabang01" : false;
 class FormProduct extends Component {
   constructor(props) {
     super(props);
@@ -579,9 +562,7 @@ class FormProduct extends Component {
   generateCode(e, action = "add") {
     // this.setState({ generateCode: e.target.checked });
     if (e === "generate") {
-      let genCode = `${moment(new Date()).format("YYMMDD")}${
-        Math.floor(Math.random() * (10000 - 0 + 1)) + 0
-      }`;
+      let genCode = `${moment(new Date()).format("YYMMDD")}${Math.floor(Math.random() * (10000 - 0 + 1)) + 0}`;
       let err = this.state.error;
       err = Object.assign({}, err, { kd_brg: "" });
       if (action === "add") {
@@ -614,16 +595,10 @@ class FormProduct extends Component {
         if (this.state.jenis === "0") {
           let brgSku = [];
           for (let i = 0; i < 3; i++) {
-            let brcd =
-              i === 0
-                ? `${genCode}`
-                : i === 1
-                ? `${genCode}02`
-                : `${genCode}03`;
+            let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : `${genCode}03`;
             let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
             brgSku.push({
-              barcode:
-                i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
+              barcode: i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
               qty: satuan,
               konversi: "0",
               satuan_jual: "1",
@@ -635,8 +610,7 @@ class FormProduct extends Component {
           for (let i = 0; i < 2; i++) {
             let brcd = i === 0 ? `${genCode}` : i === 1 ? `${genCode}02` : "";
             brgSku.push({
-              barcode:
-                i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
+              barcode: i !== idx && this.state.barangSku[i].barcode === "" ? "" : brcd,
               qty: "",
               konversi: "0",
               satuan_jual: "1",
@@ -646,12 +620,7 @@ class FormProduct extends Component {
         } else {
           let brgSku = [];
           for (let i = 0; i < 1; i++) {
-            let satuan =
-              this.state.jenis === "1"
-                ? "Pcs"
-                : this.state.jenis === "1"
-                ? "Pcs"
-                : "Pack";
+            let satuan = this.state.jenis === "1" ? "Pcs" : this.state.jenis === "1" ? "Pcs" : "Pack";
             brgSku.push({
               barcode: `${genCode}`,
               qty: satuan,
@@ -663,9 +632,7 @@ class FormProduct extends Component {
         }
       } else {
         this.setState({
-          barangSku: [
-            { barcode: "adsdasdasd", qty: "", konversi: "", satuan_jual: "1" },
-          ],
+          barangSku: [{ barcode: "adsdasdasd", qty: "", konversi: "", satuan_jual: "1" }],
         });
       }
     } else {
@@ -692,6 +659,7 @@ class FormProduct extends Component {
     this.clearState();
   };
   toggleModal(e, param) {
+    console.log(param);
     e.preventDefault();
     this.setState({
       detail: { kel_brg: "", id: "" },
@@ -716,10 +684,7 @@ class FormProduct extends Component {
     const fileSize = event.target.files[0].size / 1024 / 1024; // in MiB
     if (fileSize > 2) {
       // alert('File size exceeds 2 MiB');
-      Swal.fire(
-        "Error",
-        "Ukuran gambar yang diperbolehkan harus dibawah 2MB!!"
-      );
+      Swal.fire("Error", "Ukuran gambar yang diperbolehkan harus dibawah 2MB!!");
       // $(file).val(''); //for clearing with Jquery
     } else {
       // Proceed further
@@ -749,14 +714,8 @@ class FormProduct extends Component {
       codeServer: param.productCode,
     });
     if (param.dataEdit !== undefined && param.dataEdit !== []) {
-      let barang_sku =
-        typeof param.dataEdit.barang_sku === "object"
-          ? param.dataEdit.barang_sku
-          : this.state.barangSku;
-      let barang_hrg =
-        typeof param.dataEdit.barang_hrg === "object"
-          ? param.dataEdit.barang_hrg
-          : this.state.barangHarga;
+      let barang_sku = typeof param.dataEdit.barang_sku === "object" ? param.dataEdit.barang_sku : this.state.barangSku;
+      let barang_hrg = typeof param.dataEdit.barang_hrg === "object" ? param.dataEdit.barang_hrg : this.state.barangHarga;
       let barangSku = [];
       let barangHrg = [];
       let konversi = [];
@@ -780,31 +739,19 @@ class FormProduct extends Component {
               margin1PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin2PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin3PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin4PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               hrgJual1PCS: barang_hrg[x][0].harga,
               hrgJual2PCS: barang_hrg[x][0].harga2,
               hrgJual3PCS: barang_hrg[x][0].harga3,
@@ -817,26 +764,10 @@ class FormProduct extends Component {
               lokasi: barang_hrg[x][1].lokasi,
               isCheckedPACK: false,
               hrgBeliPACK: barang_hrg[x][1].harga_beli,
-              margin1PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
-              margin2PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga2), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
-              margin3PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga3), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
-              margin4PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga4), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
+              margin1PACK: ((parseInt(rmComma(barang_hrg[x][1].harga), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
+              margin2PACK: ((parseInt(rmComma(barang_hrg[x][1].harga2), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
+              margin3PACK: ((parseInt(rmComma(barang_hrg[x][1].harga3), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
+              margin4PACK: ((parseInt(rmComma(barang_hrg[x][1].harga4), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
               hrgJual1PACK: barang_hrg[x][1].harga,
               hrgJual2PACK: barang_hrg[x][1].harga2,
               hrgJual3PACK: barang_hrg[x][1].harga3,
@@ -849,26 +780,10 @@ class FormProduct extends Component {
               lokasi: barang_hrg[x][2].lokasi,
               isCheckedKARTON: false,
               hrgBeliKARTON: barang_hrg[x][2].harga_beli,
-              margin1KARTON:
-                ((parseInt(rmComma(barang_hrg[x][2].harga), 10) -
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) *
-                100,
-              margin2KARTON:
-                ((parseInt(rmComma(barang_hrg[x][2].harga2), 10) -
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) *
-                100,
-              margin3KARTON:
-                ((parseInt(rmComma(barang_hrg[x][2].harga3), 10) -
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) *
-                100,
-              margin4KARTON:
-                ((parseInt(rmComma(barang_hrg[x][2].harga4), 10) -
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) *
-                100,
+              margin1KARTON: ((parseInt(rmComma(barang_hrg[x][2].harga), 10) - parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) * 100,
+              margin2KARTON: ((parseInt(rmComma(barang_hrg[x][2].harga2), 10) - parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) * 100,
+              margin3KARTON: ((parseInt(rmComma(barang_hrg[x][2].harga3), 10) - parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) * 100,
+              margin4KARTON: ((parseInt(rmComma(barang_hrg[x][2].harga4), 10) - parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][2].harga_beli), 10)) * 100,
               hrgJual1KARTON: barang_hrg[x][2].harga,
               hrgJual2KARTON: barang_hrg[x][2].harga2,
               hrgJual3KARTON: barang_hrg[x][2].harga3,
@@ -887,31 +802,19 @@ class FormProduct extends Component {
               margin1PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin2PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin3PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin4PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               hrgJual1PCS: barang_hrg[x][0].harga,
               hrgJual2PCS: barang_hrg[x][0].harga2,
               hrgJual3PCS: barang_hrg[x][0].harga3,
@@ -924,26 +827,10 @@ class FormProduct extends Component {
               lokasi: barang_hrg[x][1].lokasi,
               isCheckedPACK: true,
               hrgBeliPACK: barang_hrg[x][1].harga_beli,
-              margin1PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
-              margin2PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga2), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
-              margin3PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga3), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
-              margin4PACK:
-                ((parseInt(rmComma(barang_hrg[x][1].harga4), 10) -
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) /
-                  parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) *
-                100,
+              margin1PACK: ((parseInt(rmComma(barang_hrg[x][1].harga), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
+              margin2PACK: ((parseInt(rmComma(barang_hrg[x][1].harga2), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
+              margin3PACK: ((parseInt(rmComma(barang_hrg[x][1].harga3), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
+              margin4PACK: ((parseInt(rmComma(barang_hrg[x][1].harga4), 10) - parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][1].harga_beli), 10)) * 100,
               hrgJual1PACK: barang_hrg[x][1].harga,
               hrgJual2PACK: barang_hrg[x][1].harga2,
               hrgJual3PACK: barang_hrg[x][1].harga3,
@@ -962,31 +849,19 @@ class FormProduct extends Component {
               margin1PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin2PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga2), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin3PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga3), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               margin4PCS:
                 param.dataEdit.kategori === "4"
                   ? "0"
-                  : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) -
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) /
-                      parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) *
-                    100,
+                  : ((parseInt(rmComma(barang_hrg[x][0].harga4), 10) - parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) / parseInt(rmComma(barang_hrg[x][0].harga_beli), 10)) * 100,
               hrgJual1PCS: barang_hrg[x][0].harga,
               hrgJual2PCS: barang_hrg[x][0].harga2,
               hrgJual3PCS: barang_hrg[x][0].harga3,
@@ -1316,24 +1191,12 @@ class FormProduct extends Component {
         [event.target.name]: event.target.value,
       };
       if (this.state.barangSku.length > 1) {
-        barangHarga[i][1].hrgBeliPACK = parseInt(
-          rmComma(event.target.value * qty_konversi[1]),
-          10
-        );
-        barangHarga[i][2].hrgBeliKARTON = parseInt(
-          rmComma(event.target.value * qty_konversi[2]),
-          10
-        );
+        barangHarga[i][1].hrgBeliPACK = parseInt(rmComma(event.target.value * qty_konversi[1]), 10);
+        barangHarga[i][2].hrgBeliKARTON = parseInt(rmComma(event.target.value * qty_konversi[2]), 10);
       }
       this.setState({
-        hrgBeliPACK: parseInt(
-          rmComma(event.target.value * qty_konversi[1]),
-          10
-        ),
-        hrgBeliKARTON: parseInt(
-          rmComma(event.target.value * qty_konversi[2]),
-          10
-        ),
+        hrgBeliPACK: parseInt(rmComma(event.target.value * qty_konversi[1]), 10),
+        hrgBeliKARTON: parseInt(rmComma(event.target.value * qty_konversi[2]), 10),
       });
     }
     if (event.target.name === "margin1PCS") {
@@ -1341,84 +1204,56 @@ class FormProduct extends Component {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].hrgJual1PCS =
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) *
-          (parseInt(rmComma(event.target.value), 10) / 100) +
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
+      barangHarga[i][0].hrgJual1PCS = parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) * (parseInt(rmComma(event.target.value), 10) / 100) + parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
     }
     if (event.target.name === "margin2PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].hrgJual2PCS =
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) *
-          (parseInt(rmComma(event.target.value), 10) / 100) +
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
+      barangHarga[i][0].hrgJual2PCS = parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) * (parseInt(rmComma(event.target.value), 10) / 100) + parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
     }
     if (event.target.name === "margin3PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].hrgJual3PCS =
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) *
-          (parseInt(rmComma(event.target.value), 10) / 100) +
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
+      barangHarga[i][0].hrgJual3PCS = parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) * (parseInt(rmComma(event.target.value), 10) / 100) + parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
     }
     if (event.target.name === "margin4PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].hrgJual4PCS =
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) *
-          (parseInt(rmComma(event.target.value), 10) / 100) +
-        parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
+      barangHarga[i][0].hrgJual4PCS = parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) * (parseInt(rmComma(event.target.value), 10) / 100) + parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
     }
     if (event.target.name === "hrgJual1PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].margin1PCS =
-        ((parseInt(rmComma(event.target.value), 10) -
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) /
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) *
-        100;
+      barangHarga[i][0].margin1PCS = ((parseInt(rmComma(event.target.value), 10) - parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) * 100;
     }
     if (event.target.name === "hrgJual2PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].margin2PCS =
-        ((parseInt(rmComma(event.target.value), 10) -
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) /
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) *
-        100;
+      barangHarga[i][0].margin2PCS = ((parseInt(rmComma(event.target.value), 10) - parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) * 100;
     }
     if (event.target.name === "hrgJual3PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].margin3PCS =
-        ((parseInt(rmComma(event.target.value), 10) -
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) /
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) *
-        100;
+      barangHarga[i][0].margin3PCS = ((parseInt(rmComma(event.target.value), 10) - parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) * 100;
     }
     if (event.target.name === "hrgJual4PCS") {
       barangHarga[i][0] = {
         ...barangHarga[i][0],
         [event.target.name]: event.target.value,
       };
-      barangHarga[i][0].margin4PCS =
-        ((parseInt(rmComma(event.target.value), 10) -
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) /
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) *
-        100;
+      barangHarga[i][0].margin4PCS = ((parseInt(rmComma(event.target.value), 10) - parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10)) * 100;
     }
     if (event.target.name === "servicePCS") {
       barangHarga[i][0] = {
@@ -1439,11 +1274,7 @@ class FormProduct extends Component {
     let value = event.target.value;
     this.setState({ [column]: value });
     let barangHarga = [...this.state.barangHarga];
-    if (
-      column === "hrgBeliPCS" ||
-      column === "hrgBeliPACK" ||
-      column === "hrgBeliKARTON"
-    ) {
+    if (column === "hrgBeliPCS" || column === "hrgBeliPACK" || column === "hrgBeliKARTON") {
       barangHarga[i][x] = { ...barangHarga[i][x], [column]: value };
       if (column === "hrgBeliPCS") {
         this.setState({
@@ -1455,14 +1286,8 @@ class FormProduct extends Component {
           if (this.state.barangSku[x].konversi !== undefined) {
             qty_konversi.push(this.state.barangSku[x].konversi);
           }
-          barangHarga[i][1].hrgBeliPACK = parseInt(
-            rmComma(value * qty_konversi[1]),
-            10
-          );
-          barangHarga[i][2].hrgBeliKARTON = parseInt(
-            rmComma(value * qty_konversi[2]),
-            10
-          );
+          barangHarga[i][1].hrgBeliPACK = parseInt(rmComma(value * qty_konversi[1]), 10);
+          barangHarga[i][2].hrgBeliKARTON = parseInt(rmComma(value * qty_konversi[2]), 10);
           this.setState({
             hrgBeliPACK: parseInt(rmComma(value * qty_konversi[1]), 10),
             hrgBeliKARTON: parseInt(rmComma(value * qty_konversi[2]), 10),
@@ -1498,147 +1323,75 @@ class FormProduct extends Component {
     ) {
       barangHarga[i][x] = { ...barangHarga[i][x], [column]: value };
       if (column === "margin1PCS") {
-        barangHarga[i][x].hrgJual1PCS =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10);
+        barangHarga[i][x].hrgJual1PCS = parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10);
         this.setState({
-          hrgJual1PCS:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPCS), 10),
+          hrgJual1PCS: parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPCS), 10),
         });
       }
       if (column === "margin2PCS") {
-        barangHarga[i][x].hrgJual2PCS =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10);
+        barangHarga[i][x].hrgJual2PCS = parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10);
         this.setState({
-          hrgJual2PCS:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPCS), 10),
+          hrgJual2PCS: parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPCS), 10),
         });
       }
       if (column === "margin3PCS") {
-        barangHarga[i][x].hrgJual3PCS =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10);
+        barangHarga[i][x].hrgJual3PCS = parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10);
         this.setState({
-          hrgJual3PCS:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPCS), 10),
+          hrgJual3PCS: parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPCS), 10),
         });
       }
       if (column === "margin4PCS") {
-        barangHarga[i][0].hrgJual4PCS =
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
+        barangHarga[i][0].hrgJual4PCS = parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10);
         this.setState({
-          hrgJual4PCS:
-            parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[0].hrgBeliPCS), 10),
+          hrgJual4PCS: parseInt(rmComma(barangHarga[i][0].hrgBeliPCS), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[0].hrgBeliPCS), 10),
         });
       }
       if (column === "margin1PACK") {
-        barangHarga[i][x].hrgJual1PACK =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
+        barangHarga[i][x].hrgJual1PACK = parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
         this.setState({
-          hrgJual1PACK:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
+          hrgJual1PACK: parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
         });
       }
       if (column === "margin2PACK") {
-        barangHarga[i][x].hrgJual2PACK =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
+        barangHarga[i][x].hrgJual2PACK = parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
         this.setState({
-          hrgJual2PACK:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
+          hrgJual2PACK: parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
         });
       }
       if (column === "margin3PACK") {
-        barangHarga[i][x].hrgJual3PACK =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
+        barangHarga[i][x].hrgJual3PACK = parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
         this.setState({
-          hrgJual4PACK:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
+          hrgJual4PACK: parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
         });
       }
       if (column === "margin4PACK") {
-        barangHarga[i][x].hrgJual4PACK =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
+        barangHarga[i][x].hrgJual4PACK = parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10);
         this.setState({
-          hrgJual4PACK:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
+          hrgJual4PACK: parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliPACK), 10),
         });
       }
       if (column === "margin1KARTON") {
-        barangHarga[i][x].hrgJual1KARTON =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
+        barangHarga[i][x].hrgJual1KARTON = parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
         this.setState({
-          hrgJual1KARTON:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
+          hrgJual1KARTON: parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
         });
       }
       if (column === "margin2KARTON") {
-        barangHarga[i][x].hrgJual2KARTON =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
+        barangHarga[i][x].hrgJual2KARTON = parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
         this.setState({
-          hrgJual2KARTON:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
+          hrgJual2KARTON: parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
         });
       }
       if (column === "margin3KARTON") {
-        barangHarga[i][x].hrgJual3KARTON =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
+        barangHarga[i][x].hrgJual3KARTON = parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
         this.setState({
-          hrgJual3KARTON:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
+          hrgJual3KARTON: parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
         });
       }
       if (column === "margin4KARTON") {
-        barangHarga[i][x].hrgJual4KARTON =
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
+        barangHarga[i][x].hrgJual4KARTON = parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10);
         this.setState({
-          hrgJual4KARTON:
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
+          hrgJual4KARTON: parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(barangHarga[x].hrgBeliKARTON), 10),
         });
       }
     }
@@ -1658,180 +1411,80 @@ class FormProduct extends Component {
     ) {
       barangHarga[i][x] = { ...barangHarga[i][x], [column]: value };
       if (column === "hrgJual1PCS") {
-        barangHarga[i][x].margin1PCS =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-          100;
+        barangHarga[i][x].margin1PCS = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100;
         this.setState({
-          margin1PCS:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-            100,
+          margin1PCS: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100,
         });
       }
       if (column === "hrgJual2PCS") {
-        barangHarga[i][x].margin2PCS =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-          100;
+        barangHarga[i][x].margin2PCS = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100;
         this.setState({
-          margin2PCS:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-            100,
+          margin2PCS: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100,
         });
       }
       if (column === "hrgJual3PCS") {
-        barangHarga[i][x].margin3PCS =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-          100;
+        barangHarga[i][x].margin3PCS = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100;
         this.setState({
-          margin3PCS:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-            100,
+          margin3PCS: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100,
         });
       }
       if (column === "hrgJual4PCS") {
-        barangHarga[i][x].margin4PCS =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-          100;
+        barangHarga[i][x].margin4PCS = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100;
         this.setState({
-          margin4PCS:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) *
-            100,
+          margin4PCS: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPCS), 10)) * 100,
         });
       }
       if (column === "hrgJual1PACK") {
-        barangHarga[i][x].margin1PACK =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-          100;
+        barangHarga[i][x].margin1PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100;
         this.setState({
-          margin1PACK:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-            100,
+          margin1PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100,
         });
       }
       if (column === "hrgJual2PACK") {
-        barangHarga[i][x].margin2PACK =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-          100;
+        barangHarga[i][x].margin2PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100;
         this.setState({
-          margin2PACK:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-            100,
+          margin2PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100,
         });
       }
       if (column === "hrgJual3PACK") {
-        barangHarga[i][x].margin3PACK =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-          100;
+        barangHarga[i][x].margin3PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100;
         this.setState({
-          margin3PACK:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-            100,
+          margin3PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100,
         });
       }
       if (column === "hrgJual4PACK") {
-        barangHarga[i][x].margin4PACK =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-          100;
+        barangHarga[i][x].margin4PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100;
         this.setState({
-          margin4PACK:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) *
-            100,
+          margin4PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliPACK), 10)) * 100,
         });
       }
       if (column === "hrgJual1KARTON") {
-        barangHarga[i][x].margin1KARTON =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-          100;
+        barangHarga[i][x].margin1KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100;
         this.setState({
-          margin1KARTON:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-            100,
+          margin1KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100,
         });
       }
       if (column === "hrgJual2KARTON") {
-        barangHarga[i][x].margin2KARTON =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-          100;
+        barangHarga[i][x].margin2KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100;
         this.setState({
-          margin2KARTON:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-            100,
+          margin2KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100,
         });
       }
       if (column === "hrgJual3KARTON") {
-        barangHarga[i][x].margin3KARTON =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-          100;
+        barangHarga[i][x].margin3KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100;
         this.setState({
-          margin3KARTON:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-            100,
+          margin3KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100,
         });
       }
       if (column === "hrgJual4KARTON") {
-        barangHarga[i][x].margin4KARTON =
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-            parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-          100;
+        barangHarga[i][x].margin4KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100;
         this.setState({
-          margin4KARTON:
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) /
-              parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) *
-            100,
+          margin4KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) / parseInt(rmComma(barangHarga[i][x].hrgBeliKARTON), 10)) * 100,
         });
       }
     }
 
-    if (
-      column === "servicePCS" ||
-      column === "servicePACK" ||
-      column === "serviceKARTON"
-    ) {
+    if (column === "servicePCS" || column === "servicePACK" || column === "serviceKARTON") {
       barangHarga[i][x] = { ...barangHarga[i][x], [column]: value };
       if (column === "servicePCS") {
         this.setState({
@@ -1873,12 +1526,8 @@ class FormProduct extends Component {
     // let checked = event.target.checked;
     let checked = event.target.value !== "";
     if (lbl === "PCS") {
-      checked === true
-        ? localStorage.setItem("isReadonly", "true")
-        : localStorage.setItem("isReadonly", "false");
-      checked === true
-        ? localStorage.setItem("samarata", "true")
-        : localStorage.setItem("samarata", "false");
+      checked === true ? localStorage.setItem("isReadonly", "true") : localStorage.setItem("isReadonly", "false");
+      checked === true ? localStorage.setItem("samarata", "true") : localStorage.setItem("samarata", "false");
       let data = this.state.barangHarga;
       data.map((v, i) => {
         Object.assign(v[0], { isCheckedPCS: checked });
@@ -1887,15 +1536,9 @@ class FormProduct extends Component {
       this.setState({ barangHarga: data });
     }
     if (lbl === "PACK") {
-      checked === true
-        ? localStorage.setItem("isReadonlySamaPack", "true")
-        : localStorage.setItem("isReadonlySamaPack", "false");
-      checked === true
-        ? localStorage.setItem("isReadonlyPack", "true")
-        : localStorage.setItem("isReadonlyPack", "false");
-      checked === true
-        ? localStorage.setItem("samarata_pack", "true")
-        : localStorage.setItem("samarata_pack", "false");
+      checked === true ? localStorage.setItem("isReadonlySamaPack", "true") : localStorage.setItem("isReadonlySamaPack", "false");
+      checked === true ? localStorage.setItem("isReadonlyPack", "true") : localStorage.setItem("isReadonlyPack", "false");
+      checked === true ? localStorage.setItem("samarata_pack", "true") : localStorage.setItem("samarata_pack", "false");
       let data = this.state.barangHarga;
       data.map((v, i) => {
         Object.assign(v[1], { isCheckedPACK: checked });
@@ -1904,15 +1547,9 @@ class FormProduct extends Component {
       this.setState({ barangHarga: data });
     }
     if (lbl === "KARTON") {
-      checked === true
-        ? localStorage.setItem("isReadonlySamaKarton", "true")
-        : localStorage.setItem("isReadonlySamaKarton", "false");
-      checked === true
-        ? localStorage.setItem("isReadonlyKarton", "true")
-        : localStorage.setItem("isReadonlyKarton", "false");
-      checked === true
-        ? localStorage.setItem("samarata_karton", "true")
-        : localStorage.setItem("samarata_karton", "false");
+      checked === true ? localStorage.setItem("isReadonlySamaKarton", "true") : localStorage.setItem("isReadonlySamaKarton", "false");
+      checked === true ? localStorage.setItem("isReadonlyKarton", "true") : localStorage.setItem("isReadonlyKarton", "false");
+      checked === true ? localStorage.setItem("samarata_karton", "true") : localStorage.setItem("samarata_karton", "false");
       let data = this.state.barangHarga;
       data.map((v, i) => {
         Object.assign(v[2], { isCheckedKARTON: checked });
@@ -1923,8 +1560,7 @@ class FormProduct extends Component {
   }
   handleCheckChieldElementSku(e, i) {
     this.setState((state, props) => {
-      state.barangHarga[i][1].isCheckedPACK =
-        !state.barangHarga[i][1].isCheckedPACK;
+      state.barangHarga[i][1].isCheckedPACK = !state.barangHarga[i][1].isCheckedPACK;
       return {
         barangHarga: state.barangHarga,
       };
@@ -1943,10 +1579,7 @@ class FormProduct extends Component {
     let margin4_pcs = 0;
 
     this.setState({
-      [event.target.name]:
-        !tenantBool && name === "kd_brg"
-          ? String(event.target.value).replace(/[^a-z0-9]/gi, "")
-          : event.target.value,
+      [event.target.name]: !tenantBool && name === "kd_brg" ? String(event.target.value).replace(/[^a-z0-9]/gi, "") : event.target.value,
     });
 
     let err = Object.assign({}, this.state.error, {
@@ -1973,10 +1606,7 @@ class FormProduct extends Component {
       let barangSku = [...this.state.barangSku];
       barangSku[i] = {
         ...barangSku[i],
-        [event.target.name]:
-          !tenantBool && name === "barcode"
-            ? String(event.target.value).replace(/[^a-z0-9]/gi, "")
-            : event.target.value,
+        [event.target.name]: !tenantBool && name === "barcode" ? String(event.target.value).replace(/[^a-z0-9]/gi, "") : event.target.value,
       };
       this.setState({ barangSku });
     }
@@ -1984,12 +1614,7 @@ class FormProduct extends Component {
       if (event.target.value === "0") {
         let brgSku = [];
         for (let i = 0; i < 3; i++) {
-          let brcd =
-            i === 0
-              ? `${this.state.kd_brg}`
-              : i === 1
-              ? `${this.state.kd_brg}02`
-              : `${this.state.kd_brg}03`;
+          let brcd = i === 0 ? `${this.state.kd_brg}` : i === 1 ? `${this.state.kd_brg}02` : `${this.state.kd_brg}03`;
           let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
           brgSku.push({
             barcode: brcd,
@@ -2002,12 +1627,7 @@ class FormProduct extends Component {
       } else if (event.target.value === "2") {
         let brgSku = [];
         for (let i = 0; i < 2; i++) {
-          let brcd =
-            i === 0
-              ? `${this.state.kd_brg}`
-              : i === 1
-              ? `${this.state.kd_brg}02`
-              : "";
+          let brcd = i === 0 ? `${this.state.kd_brg}` : i === 1 ? `${this.state.kd_brg}02` : "";
           brgSku.push({
             barcode: brcd,
             qty: "",
@@ -2042,107 +1662,51 @@ class FormProduct extends Component {
     }
     if (name === "hrgjual1") {
       this.setState({
-        margin1:
-          ((parseInt(rmComma(val), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin1: ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin1_pcs =
-        ((parseInt(rmComma(val), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin1_pcs = ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (name === "hrgjual2") {
       this.setState({
-        margin2:
-          ((parseInt(rmComma(val), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin2: ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin2_pcs =
-        ((parseInt(rmComma(val), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin2_pcs = ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (name === "hrgjual3") {
       this.setState({
-        margin3:
-          ((parseInt(rmComma(val), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin3: ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin3_pcs =
-        ((parseInt(rmComma(val), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin3_pcs = ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (name === "hrgjual4") {
       this.setState({
-        margin4:
-          ((parseInt(rmComma(val), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin4: ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin4_pcs =
-        ((parseInt(rmComma(val), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin4_pcs = ((parseInt(rmComma(val), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (name === "margin1") {
       this.setState({
-        hrgjual1:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(val), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual1: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_1_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(val), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_1_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (name === "margin2") {
       this.setState({
-        hrgjual2:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(val), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual2: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_2_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(val), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_2_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (name === "margin3") {
       this.setState({
-        hrgjual3:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(val), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual3: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_3_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(val), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_3_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (name === "margin4") {
       this.setState({
-        hrgjual4:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(val), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual4: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_4_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(val), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_4_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(val), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (localStorage.getItem("samarata") === "true") {
       for (let i = 0; i < this.state.barangHarga.length; i++) {
@@ -2152,14 +1716,8 @@ class FormProduct extends Component {
           this.setState({ barangHarga: barangHarga });
           if (1 === 2) {
             let barangHarga = this.state.barangHarga;
-            barangHarga[i][1].hrgBeliPACK = parseInt(
-              rmComma(val * qty_konversi[1]),
-              10
-            );
-            barangHarga[i][2].hrgBeliKARTON = parseInt(
-              rmComma(val * qty_konversi[2]),
-              10
-            );
+            barangHarga[i][1].hrgBeliPACK = parseInt(rmComma(val * qty_konversi[1]), 10);
+            barangHarga[i][2].hrgBeliKARTON = parseInt(rmComma(val * qty_konversi[2]), 10);
             this.setState({ barangHarga: barangHarga });
           }
         }
@@ -2256,107 +1814,51 @@ class FormProduct extends Component {
     }
     if (column === "margin1") {
       this.setState({
-        hrgjual1:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual1: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_1_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(value), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_1_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (column === "margin2") {
       this.setState({
-        hrgjual2:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual2: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_2_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(value), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_2_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (column === "margin3") {
       this.setState({
-        hrgjual3:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual3: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_3_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(value), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_3_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (column === "margin4") {
       this.setState({
-        hrgjual4:
-          parseInt(rmComma(this.state.hrg_beli), 10) *
-            (parseInt(rmComma(value), 10) / 100) +
-          parseInt(rmComma(this.state.hrg_beli), 10),
+        hrgjual4: parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10),
       });
-      hrg_jual_4_pcs =
-        parseInt(rmComma(this.state.hrg_beli), 10) *
-          (parseInt(rmComma(value), 10) / 100) +
-        parseInt(rmComma(this.state.hrg_beli), 10);
+      hrg_jual_4_pcs = parseInt(rmComma(this.state.hrg_beli), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli), 10);
     }
     if (column === "hrgjual1") {
       this.setState({
-        margin1:
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin1: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin1_pcs =
-        ((parseInt(rmComma(value), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin1_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (column === "hrgjual2") {
       this.setState({
-        margin2:
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin2: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin2_pcs =
-        ((parseInt(rmComma(value), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin2_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (column === "hrgjual3") {
       this.setState({
-        margin3:
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin3: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin3_pcs =
-        ((parseInt(rmComma(value), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin3_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
     if (column === "hrgjual4") {
       this.setState({
-        margin4:
-          ((parseInt(rmComma(value), 10) -
-            parseInt(rmComma(this.state.hrg_beli), 10)) /
-            parseInt(rmComma(this.state.hrg_beli), 10)) *
-          100,
+        margin4: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100,
       });
-      margin4_pcs =
-        ((parseInt(rmComma(value), 10) -
-          parseInt(rmComma(this.state.hrg_beli), 10)) /
-          parseInt(rmComma(this.state.hrg_beli), 10)) *
-        100;
+      margin4_pcs = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli), 10)) / parseInt(rmComma(this.state.hrg_beli), 10)) * 100;
     }
 
     let service_val = 0;
@@ -2398,14 +1900,8 @@ class FormProduct extends Component {
           this.setState({ barangHarga: barangHarga });
           if (this.state.barangSku.length === 3) {
             let barangHarga = this.state.barangHarga;
-            barangHarga[i][1].hrgBeliPACK = parseInt(
-              rmComma(value * qty_konversi[1]),
-              10
-            );
-            barangHarga[i][2].hrgBeliKARTON = parseInt(
-              rmComma(value * qty_konversi[2]),
-              10
-            );
+            barangHarga[i][1].hrgBeliPACK = parseInt(rmComma(value * qty_konversi[1]), 10);
+            barangHarga[i][2].hrgBeliKARTON = parseInt(rmComma(value * qty_konversi[2]), 10);
             this.setState({ barangHarga: barangHarga });
           }
         }
@@ -2481,173 +1977,89 @@ class FormProduct extends Component {
         }
         if (column === "margin1_pack") {
           this.setState({
-            hrgjual1_pack:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
-            hrgJual1PACK:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgjual1_pack: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgJual1PACK: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
             margin1PACK: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][1].margin1PACK = value;
-          barangHarga[i][1].hrgJual1PACK =
-            parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_pack), 10);
+          barangHarga[i][1].hrgJual1PACK = parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "margin2_pack") {
           this.setState({
-            hrgjual2_pack:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
-            hrgJual2PACK:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgjual2_pack: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgJual2PACK: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
             margin2PACK: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][1].margin2PACK = value;
-          barangHarga[i][1].hrgJual2PACK =
-            parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_pack), 10);
+          barangHarga[i][1].hrgJual2PACK = parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "margin3_pack") {
           this.setState({
-            hrgjual3_pack:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
-            hrgJual3PACK:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgjual3_pack: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgJual3PACK: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
             margin3PACK: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][1].margin3PACK = value;
-          barangHarga[i][1].hrgJual3PACK =
-            parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_pack), 10);
+          barangHarga[i][1].hrgJual3PACK = parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "margin4_pack") {
           this.setState({
-            hrgjual4_pack:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
-            hrgJual4PACK:
-              parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgjual4_pack: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
+            hrgJual4PACK: parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10),
             margin4PACK: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][1].margin4PACK = value;
-          barangHarga[i][1].hrgJual4PACK =
-            parseInt(rmComma(this.state.hrg_beli_pack), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_pack), 10);
+          barangHarga[i][1].hrgJual4PACK = parseInt(rmComma(this.state.hrg_beli_pack), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_pack), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual1_pack") {
           this.setState({
-            margin1_pack:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
-            margin1PACK:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
+            margin1_pack: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
+            margin1PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
             hrgJual1PACK: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][1].margin1PACK =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-            100;
+          barangHarga[i][1].margin1PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100;
           barangHarga[i][1].hrgJual1PACK = value;
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual2_pack") {
           this.setState({
-            margin2_pack:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
-            margin2PACK:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
+            margin2_pack: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
+            margin2PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
             hrgJual2PACK: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][1].margin2PACK =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-            100;
+          barangHarga[i][1].margin2PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100;
           barangHarga[i][1].hrgJual2PACK = value;
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual3_pack") {
           this.setState({
-            margin3_pack:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
-            margin3PACK:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
+            margin3_pack: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
+            margin3PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
             hrgJual3PACK: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][1].margin3PACK =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-            100;
+          barangHarga[i][1].margin3PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100;
           barangHarga[i][1].hrgJual3PACK = value;
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual4_pack") {
           this.setState({
-            margin4_pack:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
-            margin4PACK:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-              100,
+            margin4_pack: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
+            margin4PACK: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100,
             hrgJual4PACK: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][1].margin4PACK =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_pack), 10)) *
-            100;
+          barangHarga[i][1].margin4PACK = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_pack), 10)) / parseInt(rmComma(this.state.hrg_beli_pack), 10)) * 100;
           barangHarga[i][1].hrgJual4PACK = value;
           this.setState({ barangHarga: barangHarga });
         }
@@ -2678,173 +2090,89 @@ class FormProduct extends Component {
         }
         if (column === "margin1_karton") {
           this.setState({
-            hrgjual1_karton:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
-            hrgJual1KARTON:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgjual1_karton: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgJual1KARTON: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
             margin1KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][2].margin1KARTON = value;
-          barangHarga[i][2].hrgJual1KARTON =
-            parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_karton), 10);
+          barangHarga[i][2].hrgJual1KARTON = parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "margin2_karton") {
           this.setState({
-            hrgjual2_karton:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
-            hrgJual2KARTON:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgjual2_karton: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgJual2KARTON: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
             margin2KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][2].margin2KARTON = value;
-          barangHarga[i][2].hrgJual2KARTON =
-            parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_karton), 10);
+          barangHarga[i][2].hrgJual2KARTON = parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "margin3_karton") {
           this.setState({
-            hrgjual3_karton:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
-            hrgJual3KARTON:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgjual3_karton: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgJual3KARTON: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
             margin3KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][2].margin3KARTON = value;
-          barangHarga[i][2].hrgJual3KARTON =
-            parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_karton), 10);
+          barangHarga[i][2].hrgJual3KARTON = parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "margin4_karton") {
           this.setState({
-            hrgjual4_karton:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
-            hrgJual4KARTON:
-              parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-                (parseInt(rmComma(value), 10) / 100) +
-              parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgjual4_karton: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
+            hrgJual4KARTON: parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10),
             margin4KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
           barangHarga[i][2].margin4KARTON = value;
-          barangHarga[i][2].hrgJual4KARTON =
-            parseInt(rmComma(this.state.hrg_beli_karton), 10) *
-              (parseInt(rmComma(value), 10) / 100) +
-            parseInt(rmComma(this.state.hrg_beli_karton), 10);
+          barangHarga[i][2].hrgJual4KARTON = parseInt(rmComma(this.state.hrg_beli_karton), 10) * (parseInt(rmComma(value), 10) / 100) + parseInt(rmComma(this.state.hrg_beli_karton), 10);
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual1_karton") {
           this.setState({
-            margin1_karton:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
-            margin1KARTON:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
+            margin1_karton: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
+            margin1KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
             hrgJual1KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][2].margin1KARTON =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-            100;
+          barangHarga[i][2].margin1KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100;
           barangHarga[i][2].hrgJual1KARTON = value;
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual2_karton") {
           this.setState({
-            margin2_karton:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
-            margin2KARTON:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
+            margin2_karton: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
+            margin2KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
             hrgJual2KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][2].margin2KARTON =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-            100;
+          barangHarga[i][2].margin2KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100;
           barangHarga[i][2].hrgJual2KARTON = value;
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual3_karton") {
           this.setState({
-            margin3_karton:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
-            margin3KARTON:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
+            margin3_karton: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
+            margin3KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
             hrgJual3KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][2].margin3KARTON =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-            100;
+          barangHarga[i][2].margin3KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100;
           barangHarga[i][2].hrgJual3KARTON = value;
           this.setState({ barangHarga: barangHarga });
         }
         if (column === "hrgjual4_karton") {
           this.setState({
-            margin4_karton:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
-            margin4KARTON:
-              ((parseInt(rmComma(value), 10) -
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-                parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-              100,
+            margin4_karton: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
+            margin4KARTON: ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100,
             hrgJual4KARTON: value,
           });
           let barangHarga = this.state.barangHarga;
-          barangHarga[i][2].margin4KARTON =
-            ((parseInt(rmComma(value), 10) -
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) /
-              parseInt(rmComma(this.state.hrg_beli_karton), 10)) *
-            100;
+          barangHarga[i][2].margin4KARTON = ((parseInt(rmComma(value), 10) - parseInt(rmComma(this.state.hrg_beli_karton), 10)) / parseInt(rmComma(this.state.hrg_beli_karton), 10)) * 100;
           barangHarga[i][2].hrgJual4KARTON = value;
           this.setState({ barangHarga: barangHarga });
         }
@@ -2898,8 +2226,7 @@ class FormProduct extends Component {
     parseData["poin"] = this.state.poin;
     parseData["online"] = this.state.online;
     parseData["berat"] = this.state.berat;
-    parseData["gambar"] =
-      parseData["gambar"] === "" ? "-" : this.state.gambar.base64;
+    parseData["gambar"] = parseData["gambar"] === "" ? "-" : this.state.gambar.base64;
     console.log(this.state.kcp);
     let err = this.state.error;
     if (this.props.checkKodeBarang !== false) {
@@ -2910,8 +2237,7 @@ class FormProduct extends Component {
     }
     if (!this.handleEmptyOrUndefined("kd_brg", "kode barang")) return;
     if (!this.handleEmptyOrUndefined("nm_brg", "nama barang")) return;
-    if (!this.handleEmptyOrUndefined("kel_brg", "kelompok barang", false))
-      return;
+    if (!this.handleEmptyOrUndefined("kel_brg", "kelompok barang", false)) return;
     if (!this.handleEmptyOrUndefined("group1", "supplier", false)) return;
     if (this.props.auth.user.is_resto === 1 && this.state.jenis === "5") {
       if (!this.handleEmptyOrUndefined("kcp", "printer", false)) return;
@@ -2947,10 +2273,7 @@ class FormProduct extends Component {
         let hrgJual2 = `hrgJual2${satuan}`;
         let hrgJual3 = `hrgJual3${satuan}`;
         let hrgJual4 = `hrgJual4${satuan}`;
-        if (
-          stateBrgHrg[hrgbeli] === undefined ||
-          parseInt(rmComma(stateBrgHrg[hrgbeli]), 10) < 1
-        ) {
+        if (stateBrgHrg[hrgbeli] === undefined || parseInt(rmComma(stateBrgHrg[hrgbeli]), 10) < 1) {
           handleError("harga beli");
           return;
         }
@@ -2968,17 +2291,11 @@ class FormProduct extends Component {
               handleError("harga jual");
               return false;
             }
-            if (
-              parseInt(rmComma(stateBrgHrg[service]), 10) < 0 ||
-              stateBrgHrg[service] === ""
-            ) {
+            if (parseInt(rmComma(stateBrgHrg[service]), 10) < 0 || stateBrgHrg[service] === "") {
               alert(`service tidak boleh atau kurang dari 0`);
               return false;
             }
-            if (
-              parseInt(rmComma(stateBrgHrg[ppn]), 10) < 0 ||
-              stateBrgHrg[hrgbeli] === ""
-            ) {
+            if (parseInt(rmComma(stateBrgHrg[ppn]), 10) < 0 || stateBrgHrg[hrgbeli] === "") {
               alert(`ppn tidak boleh atau kurang dari 0`);
               return false;
             }
@@ -2988,38 +2305,13 @@ class FormProduct extends Component {
         barangHarga.push({
           lokasi: stateBrgHrg.lokasi,
           barcode: barcode[sku],
-          harga_beli: parseInt(
-            isNaN(rmComma(stateBrgHrg[hrgbeli]))
-              ? 0
-              : rmComma(stateBrgHrg[hrgbeli]),
-            10
-          ),
+          harga_beli: parseInt(isNaN(rmComma(stateBrgHrg[hrgbeli])) ? 0 : rmComma(stateBrgHrg[hrgbeli]), 10),
           ppn: stateBrgHrg[ppn],
           service: stateBrgHrg[service],
-          harga: parseInt(
-            isNaN(rmComma(stateBrgHrg[hrgJual1]))
-              ? 0
-              : rmComma(stateBrgHrg[hrgJual1]),
-            10
-          ),
-          harga2: parseInt(
-            isNaN(rmComma(stateBrgHrg[hrgJual2]))
-              ? 0
-              : rmComma(stateBrgHrg[hrgJual2]),
-            10
-          ),
-          harga3: parseInt(
-            isNaN(rmComma(stateBrgHrg[hrgJual3]))
-              ? 0
-              : rmComma(stateBrgHrg[hrgJual3]),
-            10
-          ),
-          harga4: parseInt(
-            isNaN(rmComma(stateBrgHrg[hrgJual4]))
-              ? 0
-              : rmComma(stateBrgHrg[hrgJual4]),
-            10
-          ),
+          harga: parseInt(isNaN(rmComma(stateBrgHrg[hrgJual1])) ? 0 : rmComma(stateBrgHrg[hrgJual1]), 10),
+          harga2: parseInt(isNaN(rmComma(stateBrgHrg[hrgJual2])) ? 0 : rmComma(stateBrgHrg[hrgJual2]), 10),
+          harga3: parseInt(isNaN(rmComma(stateBrgHrg[hrgJual3])) ? 0 : rmComma(stateBrgHrg[hrgJual3]), 10),
+          harga4: parseInt(isNaN(rmComma(stateBrgHrg[hrgJual4])) ? 0 : rmComma(stateBrgHrg[hrgJual4]), 10),
         });
       }
     }
@@ -3055,14 +2347,8 @@ class FormProduct extends Component {
   render() {
     let showPricing = false;
     for (let i = 0; i < this.state.barangSku.length; i++) {
-      if (
-        this.state.barangSku.length > 0 &&
-        (this.state.jenis === "2" || this.state.jenis === "0")
-      ) {
-        if (
-          parseInt(this.state.barangSku[i].konversi, 10) > 0 &&
-          this.state.barangSku[i].qty !== ""
-        ) {
+      if (this.state.barangSku.length > 0 && (this.state.jenis === "2" || this.state.jenis === "0")) {
+        if (parseInt(this.state.barangSku[i].konversi, 10) > 0 && this.state.barangSku[i].qty !== "") {
           showPricing = true;
         } else {
           if (i === 0) {
@@ -3090,9 +2376,7 @@ class FormProduct extends Component {
         >
           {this.state.isLoadingGenerateBarcode && <Preloader />}
           <ModalHeader toggle={this.toggle}>
-            {this.props.dataEdit === undefined
-              ? "Tambah Barang"
-              : "Ubah Barang"}
+            {this.props.dataEdit === undefined ? "Tambah Barang" : "Ubah Barang"}
             <br />
             {/* {this.state.selectedIndex === 0 ? (
               <small>
@@ -3135,9 +2419,7 @@ class FormProduct extends Component {
                     onMouseEnter={this.mouseEnter}
                     onMouseLeave={this.mouseLeave}
                     style={{
-                      backgroundImage: `url('${this.state.gambar}'),url('${
-                        this.state.gambar === "" ? Default : this.state.gambar
-                      }')`,
+                      backgroundImage: `url('${this.state.gambar}'),url('${this.state.gambar === "" ? Default : this.state.gambar}')`,
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
@@ -3159,13 +2441,7 @@ class FormProduct extends Component {
                       </p>
                     </label>
                   </div>
-                  <input
-                    hidden
-                    id="fileUpload"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => this.handleFileRead(e)}
-                  />
+                  <input hidden id="fileUpload" type="file" accept="image/*" onChange={(e) => this.handleFileRead(e)} />
                 </div>
                 <div className="col-md-7">
                   <div className="h-100">
@@ -3173,9 +2449,7 @@ class FormProduct extends Component {
                       <div className="input-group">
                         <input
                           ref={(input) => (this[`kd_brg`] = input)}
-                          readOnly={
-                            this.props.dataEdit === undefined ? false : true
-                          }
+                          readOnly={this.props.dataEdit === undefined ? false : true}
                           type="text"
                           maxLength={20}
                           className="form-control"
@@ -3188,32 +2462,12 @@ class FormProduct extends Component {
                         <div className="input-group-append">
                           {this.props.dataEdit === undefined ? (
                             this.state.kd_brg === "" ? (
-                              <button
-                                className="btn btn-primary"
-                                name="generate"
-                                type="button"
-                                onClick={(e) => this.generateCode("generate")}
-                              >
-                                <i
-                                  onClick={(e) => this.generateCode("generate")}
-                                  className="fa fa-refresh"
-                                />
+                              <button className="btn btn-primary" name="generate" type="button" onClick={(e) => this.generateCode("generate")}>
+                                <i onClick={(e) => this.generateCode("generate")} className="fa fa-refresh" />
                               </button>
                             ) : (
-                              <button
-                                name="generate"
-                                className="btn btn-danger"
-                                type="button"
-                                onClick={(e) =>
-                                  this.generateCode("generate", "delete")
-                                }
-                              >
-                                <i
-                                  onClick={(e) =>
-                                    this.generateCode("generate", "delete")
-                                  }
-                                  className="fa fa-close"
-                                />
+                              <button name="generate" className="btn btn-danger" type="button" onClick={(e) => this.generateCode("generate", "delete")}>
+                                <i onClick={(e) => this.generateCode("generate", "delete")} className="fa fa-close" />
                               </button>
                             )
                           ) : (
@@ -3265,31 +2519,17 @@ class FormProduct extends Component {
                           <label>Jenis Barang</label>
                           <div className="d-flex align-items-center">
                             <label className="switch mr-2">
-                              <input
-                                type="checkbox"
-                                checked={this.state.kategori === "1"}
-                                onChange={(e) => this.handleKateBrg(e)}
-                              />
+                              <input type="checkbox" checked={this.state.kategori === "1"} onChange={(e) => this.handleKateBrg(e)} />
                               <span className="slider round"></span>
                             </label>
-                            <label>
-                              {this.state.kategori === "1"
-                                ? "Dijual"
-                                : "Tidak dijual"}
-                            </label>
+                            <label>{this.state.kategori === "1" ? "Dijual" : "Tidak dijual"}</label>
                           </div>
                         </div>
                       </div>
                       <div className="col-md-7 offset-md-1">
                         <div className="form-group">
                           <label>Kategori Barang</label>
-                          <select
-                            name="jenis"
-                            id="jenis"
-                            className="form-control form-control-lg"
-                            value={this.state.jenis}
-                            onChange={(e) => this.handleChange(e, null)}
-                          >
+                          <select name="jenis" id="jenis" className="form-control form-control-lg" value={this.state.jenis} onChange={(e) => this.handleChange(e, null)}>
                             <option value="1">Satuan</option>
                             <option value="2">Paket</option>
                             <option value="3">Servis</option>
@@ -3300,20 +2540,19 @@ class FormProduct extends Component {
                         </div>
                       </div>
                     </div>
-                    {this.props.auth.user.is_resto === 1 &&
-                      this.state.jenis === "5" && (
-                        <div className="form-group">
-                          {select2Group(
-                            this.state.kcp_data.find((op) => {
-                              return op.value === this.state.kcp;
-                            }),
-                            (any, action) => this.handleKcp(any, action),
-                            this.state.kcp_data,
-                            (e) => this.toggleModal(e, "formPrinter"),
-                            "printer"
-                          )}
-                        </div>
-                      )}
+                    {this.props.auth.user.is_resto === 1 && this.state.jenis === "5" && (
+                      <div className="form-group">
+                        {select2Group(
+                          this.state.kcp_data.find((op) => {
+                            return op.value === this.state.kcp;
+                          }),
+                          (any, action) => this.handleKcp(any, action),
+                          this.state.kcp_data,
+                          (e) => this.toggleModal(e, "formPrinter"),
+                          "printer"
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -3330,11 +2569,7 @@ class FormProduct extends Component {
                         <th style={{ whiteSpace: "no-wrap" }}>Satuan</th>
                         <th
                           style={{
-                            display:
-                              this.state.jenis === "2" ||
-                              this.state.jenis === "0"
-                                ? ""
-                                : "none",
+                            display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",
                             whiteSpace: "no-wrap",
                           }}
                         >
@@ -3342,11 +2577,7 @@ class FormProduct extends Component {
                         </th>
                         <th
                           style={{
-                            display:
-                              this.state.jenis === "2" ||
-                              this.state.jenis === "0"
-                                ? ""
-                                : "none",
+                            display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",
                             whiteSpace: "no-wrap",
                           }}
                         >
@@ -3364,51 +2595,25 @@ class FormProduct extends Component {
                               <td>
                                 <div className="input-group">
                                   <input
-                                    readOnly={
-                                      this.props.dataEdit === undefined
-                                        ? false
-                                        : true
-                                    }
+                                    readOnly={this.props.dataEdit === undefined ? false : true}
                                     type="text"
                                     className="form-control"
                                     placeholder="Input barcode"
                                     name="barcode"
-                                    id={`${
-                                      x === 0
-                                        ? "barcode1"
-                                        : x === 1
-                                        ? "barcode2"
-                                        : "barcode3"
-                                    }`}
+                                    id={`${x === 0 ? "barcode1" : x === 1 ? "barcode2" : "barcode3"}`}
                                     maxLength={20}
                                     value={this.state.barangSku[x].barcode}
                                     onChange={(e) => this.handleChange(e, x)}
                                     onBlur={(e) => this.checkData(e, x)}
                                   />
-                                  <div
-                                    className="input-group-append"
-                                    style={{ zIndex: 0 }}
-                                  >
+                                  <div className="input-group-append" style={{ zIndex: 0 }}>
                                     {this.props.dataEdit === undefined ? (
                                       this.state.barangSku[x].barcode === "" ? (
-                                        <button
-                                          className="btn btn-primary"
-                                          name="generate"
-                                          type="button"
-                                          onClick={(e) =>
-                                            this.generateBrcd(e, x)
-                                          }
-                                        >
+                                        <button className="btn btn-primary" name="generate" type="button" onClick={(e) => this.generateBrcd(e, x)}>
                                           <i className="fa fa-refresh" />
                                         </button>
                                       ) : (
-                                        <button
-                                          className="btn btn-danger"
-                                          type="button"
-                                          onClick={(e) =>
-                                            this.generateBrcd(e, x)
-                                          }
-                                        >
+                                        <button className="btn btn-danger" type="button" onClick={(e) => this.generateBrcd(e, x)}>
                                           <i className="fa fa-close" />
                                         </button>
                                       )
@@ -3419,22 +2624,11 @@ class FormProduct extends Component {
                                 </div>
                               </td>
                               <td>
-                                <input
-                                  type="text"
-                                  placeholder="ex. PCS"
-                                  className="form-control"
-                                  name="qty"
-                                  value={this.state.barangSku[x].qty}
-                                  onChange={(e) => this.handleChange(e, x)}
-                                />
+                                <input type="text" placeholder="ex. PCS" className="form-control" name="qty" value={this.state.barangSku[x].qty} onChange={(e) => this.handleChange(e, x)} />
                               </td>
                               <td
                                 style={{
-                                  display:
-                                    this.state.jenis === "2" ||
-                                    this.state.jenis === "0"
-                                      ? ""
-                                      : "none",
+                                  display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",
                                 }}
                               >
                                 <input
@@ -3448,11 +2642,7 @@ class FormProduct extends Component {
                               </td>
                               <td
                                 style={{
-                                  display:
-                                    this.state.jenis === "2" ||
-                                    this.state.jenis === "0"
-                                      ? ""
-                                      : "none",
+                                  display: this.state.jenis === "2" || this.state.jenis === "0" ? "" : "none",
                                 }}
                               >
                                 <select
@@ -3460,9 +2650,7 @@ class FormProduct extends Component {
                                   id="satuan_jual"
                                   className="form-control"
                                   value={this.state.barangSku[x].satuan_jual}
-                                  defaultValue={
-                                    this.state.barangSku[x].satuan_jual
-                                  }
+                                  defaultValue={this.state.barangSku[x].satuan_jual}
                                   onChange={(e) => this.handleChange(e, x)}
                                 >
                                   <option value="">Pilih Opsi</option>
@@ -3487,31 +2675,17 @@ class FormProduct extends Component {
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="new-checkbox">
                       <div className="d-flex align-items-center">
-                        <label className="mb-0">
-                          {this.props.dataEdit === undefined ? "Set" : "Ubah"}{" "}
-                          Harga Semua Lokasi
-                        </label>
+                        <label className="mb-0">{this.props.dataEdit === undefined ? "Set" : "Ubah"} Harga Semua Lokasi</label>
                         <label className="switch ml-2 mb-0">
-                          <input
-                            type="checkbox"
-                            checked={this.state.swPrice === "1"}
-                            onChange={(e) => this.switchPrice(e)}
-                          />
+                          <input type="checkbox" checked={this.state.swPrice === "1"} onChange={(e) => this.switchPrice(e)} />
                           <span className="slider round"></span>
                         </label>
                       </div>
                     </div>
                     {/* <p className="mb-0">Set Harga Semua Lokasi</p> */}
                     {this.props.dataEdit === undefined ? (
-                      <button
-                        type="button"
-                        className="btn btn-info"
-                        onClick={(e) =>
-                          this.toggleModal(e, "formProductPricing")
-                        }
-                      >
-                        <i className="fa fa-pencil" /> Atur{" "}
-                        {this.state.summary ? "kembali" : ""} harga per lokasi
+                      <button type="button" className="btn btn-info" onClick={(e) => this.toggleModal(e, "formProductPricing")}>
+                        <i className="fa fa-pencil" /> Atur {this.state.summary ? "kembali" : ""} harga per lokasi
                       </button>
                     ) : (
                       ""
@@ -3532,22 +2706,10 @@ class FormProduct extends Component {
                       let container = [];
                       for (let i = 0; i < this.state.barangSku.length; i++) {
                         let lbl = this.state.barangSku[i].qty;
-                        let stateHargaBeli =
-                          i === 0
-                            ? "hrg_beli"
-                            : i === 1
-                            ? "hrg_beli_pack"
-                            : "hrg_beli_karton";
-                        let stateService =
-                          i === 0
-                            ? "service"
-                            : i === 1
-                            ? "service_pack"
-                            : "service_karton";
-                        let statePpn =
-                          i === 0 ? "ppn" : i === 1 ? "ppn_pack" : "ppn_karton";
-                        let satuan =
-                          i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
+                        let stateHargaBeli = i === 0 ? "hrg_beli" : i === 1 ? "hrg_beli_pack" : "hrg_beli_karton";
+                        let stateService = i === 0 ? "service" : i === 1 ? "service_pack" : "service_karton";
+                        let statePpn = i === 0 ? "ppn" : i === 1 ? "ppn_pack" : "ppn_karton";
+                        let satuan = i === 0 ? "Pcs" : i === 1 ? "Pack" : "Karton";
 
                         container.push(
                           <div className="col-md-12" key={i}>
@@ -3574,13 +2736,7 @@ class FormProduct extends Component {
                                       </div>
                                     </div>
                                   </div> */}
-                                  <div
-                                    className={
-                                      this.props.auth.user.is_resto !== 1
-                                        ? "col-md-12"
-                                        : "col-md-8"
-                                    }
-                                  >
+                                  <div className={this.props.auth.user.is_resto !== 1 ? "col-md-12" : "col-md-8"}>
                                     <div className="row">
                                       <div className="col-md-4">
                                         <div className="form-group">
@@ -3592,71 +2748,35 @@ class FormProduct extends Component {
                                             placeholder={`hrg beli ${lbl}`}
                                             className={`form-control`}
                                             name={stateHargaBeli}
-                                            value={toCurrency(
-                                              this.state[stateHargaBeli]
-                                            )}
-                                            onChange={(e) =>
-                                              this.handleChangeMore(
-                                                e,
-                                                i,
-                                                satuan.toUpperCase()
-                                              )
-                                            }
+                                            value={toCurrency(this.state[stateHargaBeli])}
+                                            onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
                                           />
                                         </div>
                                       </div>
                                       <div className="col-md-4">
                                         {(() => {
                                           let containers = [];
-                                          for (
-                                            let z = 0;
-                                            z < this.state.set_harga;
-                                            z++
-                                          ) {
-                                            let stateMargin =
-                                              i === 0
-                                                ? `margin${z + 1}`
-                                                : i === 1
-                                                ? `margin${z + 1}_pack`
-                                                : `margin${z + 1}_karton`;
+                                          for (let z = 0; z < this.state.set_harga; z++) {
+                                            let stateMargin = i === 0 ? `margin${z + 1}` : i === 1 ? `margin${z + 1}_pack` : `margin${z + 1}_karton`;
                                             let place = `nm_harga${z + 1}`;
                                             containers.push(
-                                              <div
-                                                className="form-group"
-                                                key={z}
-                                              >
+                                              <div className="form-group" key={z}>
                                                 <label>
                                                   Margin
-                                                  {this.state.set_harga > 1
-                                                    ? ` ${this.state[place]}`
-                                                    : ""}
+                                                  {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}
                                                 </label>
                                                 <div className="input-group">
                                                   <input
-                                                    readOnly={
-                                                      this.state.jenis === "4"
-                                                    }
+                                                    readOnly={this.state.jenis === "4"}
                                                     type="text"
-                                                    placeholder={`margin ${
-                                                      z + 1
-                                                    } ${lbl}`}
+                                                    placeholder={`margin ${z + 1} ${lbl}`}
                                                     className="form-control"
                                                     name={stateMargin}
-                                                    value={
-                                                      this.state[stateMargin]
-                                                    }
-                                                    onChange={(e) =>
-                                                      this.handleChangeMore(
-                                                        e,
-                                                        i,
-                                                        satuan.toUpperCase()
-                                                      )
-                                                    }
+                                                    value={this.state[stateMargin]}
+                                                    onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
                                                   />
                                                   <div className="input-group-append">
-                                                    <span className="input-group-text">
-                                                      %
-                                                    </span>
+                                                    <span className="input-group-text">%</span>
                                                   </div>
                                                 </div>
                                               </div>
@@ -3668,47 +2788,23 @@ class FormProduct extends Component {
                                       <div className="col-md-4">
                                         {(() => {
                                           let containers = [];
-                                          for (
-                                            let z = 0;
-                                            z < this.state.set_harga;
-                                            z++
-                                          ) {
+                                          for (let z = 0; z < this.state.set_harga; z++) {
                                             let place = `nm_harga${z + 1}`;
-                                            let stateHargaJual =
-                                              i === 0
-                                                ? `hrgjual${z + 1}`
-                                                : i === 1
-                                                ? `hrgjual${z + 1}_pack`
-                                                : `hrgjual${z + 1}_karton`;
+                                            let stateHargaJual = i === 0 ? `hrgjual${z + 1}` : i === 1 ? `hrgjual${z + 1}_pack` : `hrgjual${z + 1}_karton`;
                                             containers.push(
-                                              <div
-                                                className="form-group"
-                                                key={z}
-                                              >
+                                              <div className="form-group" key={z}>
                                                 <label>
                                                   Harga Jual
-                                                  {this.state.set_harga > 1
-                                                    ? ` ${this.state[place]}`
-                                                    : ""}
+                                                  {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""}
                                                 </label>
                                                 <input
-                                                  readOnly={
-                                                    this.state.jenis === "4"
-                                                  }
+                                                  readOnly={this.state.jenis === "4"}
                                                   type="text"
                                                   placeholder={`hrg jual ${this.state[place]} ${lbl}`}
                                                   className="form-control"
                                                   name={stateHargaJual}
-                                                  value={toCurrency(
-                                                    this.state[stateHargaJual]
-                                                  )}
-                                                  onChange={(e) =>
-                                                    this.handleChangeMore(
-                                                      e,
-                                                      i,
-                                                      satuan.toUpperCase()
-                                                    )
-                                                  }
+                                                  value={toCurrency(this.state[stateHargaJual])}
+                                                  onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
                                                 />
                                               </div>
                                             );
@@ -3719,39 +2815,23 @@ class FormProduct extends Component {
                                     </div>
                                   </div>
                                   {/*service,ppn,stock min,stock max */}
-                                  <div
-                                    className={
-                                      this.props.auth.user.is_resto !== 1
-                                        ? "d-none"
-                                        : "col-md-4"
-                                    }
-                                  >
+                                  <div className={this.props.auth.user.is_resto !== 1 ? "d-none" : "col-md-4"}>
                                     <div className="row">
                                       <div className="col-md-6">
                                         <div className="form-group">
                                           <label>Service</label>
                                           <div className="input-group">
                                             <input
-                                              readOnly={
-                                                this.state.jenis === "4"
-                                              }
+                                              readOnly={this.state.jenis === "4"}
                                               type="text"
                                               placeholder={`service ${lbl}`}
                                               className="form-control"
                                               name={stateService}
                                               value={this.state[stateService]}
-                                              onChange={(e) =>
-                                                this.handleChangeMore(
-                                                  e,
-                                                  i,
-                                                  satuan.toUpperCase()
-                                                )
-                                              }
+                                              onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
                                             />
                                             <div className="input-group-append">
-                                              <span className="input-group-text">
-                                                %
-                                              </span>
+                                              <span className="input-group-text">%</span>
                                             </div>
                                           </div>
                                         </div>
@@ -3761,26 +2841,16 @@ class FormProduct extends Component {
                                           <label>PPN</label>
                                           <div className="input-group">
                                             <input
-                                              readOnly={
-                                                this.state.jenis === "4"
-                                              }
+                                              readOnly={this.state.jenis === "4"}
                                               type="text"
                                               placeholder={`ppn ${lbl}`}
                                               className="form-control"
                                               name={statePpn}
                                               value={this.state[statePpn]}
-                                              onChange={(e) =>
-                                                this.handleChangeMore(
-                                                  e,
-                                                  i,
-                                                  satuan.toUpperCase()
-                                                )
-                                              }
+                                              onChange={(e) => this.handleChangeMore(e, i, satuan.toUpperCase())}
                                             />
                                             <div className="input-group-append">
-                                              <span className="input-group-text">
-                                                %
-                                              </span>
+                                              <span className="input-group-text">%</span>
                                             </div>
                                           </div>
                                         </div>
@@ -3797,38 +2867,23 @@ class FormProduct extends Component {
                     })()}
                     {/*END ATUR SEMUA*/}
                     <strong className="text-secondary ml-3">
-                      <i>Note : </i>Harga untuk setiap lokasi otomatis akan sama
-                      dengan yang telah di input pada kolom-kolom tersebut.
+                      <i>Note : </i>Harga untuk setiap lokasi otomatis akan sama dengan yang telah di input pada kolom-kolom tersebut.
                     </strong>
                   </div>
                 </div>
 
-                <div
-                  className="col-md-12 mt-3"
-                  style={{ display: this.state.summary ? "block" : "none" }}
-                >
+                <div className="col-md-12 mt-3" style={{ display: this.state.summary ? "block" : "none" }}>
                   <h4>
                     <strong>Harga per lokasi</strong>
                   </h4>
-                  <div
-                    className="row"
-                    style={{ height: "200px", overflow: "auto" }}
-                  >
+                  <div className="row" style={{ height: "200px", overflow: "auto" }}>
                     {this.state.barangHarga.map((v, i) => {
                       return (
                         <div className="col-md-12" key={i}>
-                          <div
-                            className={`border border-1 mx-0 p-2 rounded-lg mb-2 ${
-                              i % 2 === 0 ? "bg-light" : ""
-                            }`}
-                          >
+                          <div className={`border border-1 mx-0 p-2 rounded-lg mb-2 ${i % 2 === 0 ? "bg-light" : ""}`}>
                             {(() => {
                               let containers = [];
-                              for (
-                                let x = 0;
-                                x < this.state.barangSku.length;
-                                x++
-                              ) {
+                              for (let x = 0; x < this.state.barangSku.length; x++) {
                                 let satuan = "",
                                   checked;
                                 let lbl = this.state.barangSku[x].qty;
@@ -3898,55 +2953,26 @@ class FormProduct extends Component {
                                     </div>
                                     <div className="col-md-12">
                                       <div className="row">
-                                        <div
-                                          className={
-                                            this.props.auth.user.is_resto !== 1
-                                              ? "col-md-12"
-                                              : "col-md-8"
-                                          }
-                                        >
+                                        <div className={this.props.auth.user.is_resto !== 1 ? "col-md-12" : "col-md-8"}>
                                           <div className="row">
                                             <div className="col-md-4">
                                               <div className="">
                                                 <label>
-                                                  Harga Beli :{" "}
-                                                  <strong>
-                                                    {toCurrency(hargaBeli)}
-                                                  </strong>
+                                                  Harga Beli : <strong>{toCurrency(hargaBeli)}</strong>
                                                 </label>
                                               </div>
                                             </div>
                                             <div className="col-md-4">
                                               {(() => {
                                                 let container = [];
-                                                for (
-                                                  let z = 0;
-                                                  z < this.state.set_harga;
-                                                  z++
-                                                ) {
-                                                  let marginName =
-                                                    x === 0
-                                                      ? `margin${z + 1}PCS`
-                                                      : x === 1
-                                                      ? `margin${z + 1}PACK`
-                                                      : `margin${z + 1}KARTON`;
-                                                  let place = `nm_harga${
-                                                    z + 1
-                                                  }`;
-                                                  let marginValue =
-                                                    v[x][marginName];
+                                                for (let z = 0; z < this.state.set_harga; z++) {
+                                                  let marginName = x === 0 ? `margin${z + 1}PCS` : x === 1 ? `margin${z + 1}PACK` : `margin${z + 1}KARTON`;
+                                                  let place = `nm_harga${z + 1}`;
+                                                  let marginValue = v[x][marginName];
                                                   container.push(
                                                     <div className="" key={z}>
                                                       <label>
-                                                        Margin{" "}
-                                                        {this.state.set_harga >
-                                                        1
-                                                          ? ` ${this.state[place]}`
-                                                          : ""}{" "}
-                                                        :{" "}
-                                                        <strong>
-                                                          {marginValue}%
-                                                        </strong>
+                                                        Margin {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""} : <strong>{marginValue}%</strong>
                                                       </label>
                                                     </div>
                                                   );
@@ -3957,39 +2983,16 @@ class FormProduct extends Component {
                                             <div className="col-md-4">
                                               {(() => {
                                                 let container = [];
-                                                for (
-                                                  let z = 0;
-                                                  z < this.state.set_harga;
-                                                  z++
-                                                ) {
-                                                  let place = `nm_harga${
-                                                    z + 1
-                                                  }`;
-                                                  let hrgName = `hrgJual${
-                                                    z + 1
-                                                  }${
-                                                    satuan !== undefined
-                                                      ? satuan.toUpperCase()
-                                                      : ""
-                                                  }`;
-                                                  let hrg = `hrgJual${z + 1}${
-                                                    satuan !== undefined
-                                                      ? satuan.toUpperCase()
-                                                      : ""
-                                                  }`;
+                                                for (let z = 0; z < this.state.set_harga; z++) {
+                                                  let place = `nm_harga${z + 1}`;
+                                                  let hrgName = `hrgJual${z + 1}${satuan !== undefined ? satuan.toUpperCase() : ""}`;
+                                                  let hrg = `hrgJual${z + 1}${satuan !== undefined ? satuan.toUpperCase() : ""}`;
                                                   let hrgValue = v[x][hrg];
                                                   container.push(
                                                     <div className="" key={z}>
                                                       <label>
                                                         Harga Jual
-                                                        {this.state.set_harga >
-                                                        1
-                                                          ? ` ${this.state[place]}`
-                                                          : ""}{" "}
-                                                        :{" "}
-                                                        <strong>
-                                                          {toCurrency(hrgValue)}
-                                                        </strong>
+                                                        {this.state.set_harga > 1 ? ` ${this.state[place]}` : ""} : <strong>{toCurrency(hrgValue)}</strong>
                                                       </label>
                                                     </div>
                                                   );
@@ -4000,19 +3003,12 @@ class FormProduct extends Component {
                                           </div>
                                         </div>
                                         {/*service,ppn,stock min,stock max */}
-                                        <div
-                                          className={
-                                            this.props.auth.user.is_resto !== 1
-                                              ? "d-none"
-                                              : "col-md-4"
-                                          }
-                                        >
+                                        <div className={this.props.auth.user.is_resto !== 1 ? "d-none" : "col-md-4"}>
                                           <div className="row">
                                             <div className="col-md-6">
                                               <div className="form-group">
                                                 <label>
-                                                  Service :{" "}
-                                                  <strong>{service}%</strong>
+                                                  Service : <strong>{service}%</strong>
                                                 </label>
                                               </div>
                                             </div>
@@ -4045,11 +3041,7 @@ class FormProduct extends Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mt-2" style={{ textAlign: "right" }}>
-                    <button
-                      type="button"
-                      className="btn btn-warning mr-2"
-                      onClick={this.toggle}
-                    >
+                    <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                       <i className="ti-close" /> Batal
                     </button>
 
@@ -4058,14 +3050,7 @@ class FormProduct extends Component {
                         <i className="ti-save" /> Simpan
                       </button>
                     ) : (
-                      <button
-                        type="submit"
-                        className="btn btn-primary mr-1"
-                        disabled={
-                          this.props.dataEdit === undefined &&
-                          this.state.summary === false
-                        }
-                      >
+                      <button type="submit" className="btn btn-primary mr-1" disabled={this.props.dataEdit === undefined && this.state.summary === false}>
                         <i className="ti-save" /> Simpan
                       </button>
                     )}
@@ -4078,14 +3063,7 @@ class FormProduct extends Component {
           </form>
         </WrapperModal>
         <FormSupplier fastAdd={true} detail={this.state.detail} />
-        <FormSubDepartment fastAdd={true} />
-        {this.state.isModalFormGroupProduct && this.props.isOpen ? (
-          <FormGroupProduct
-            detail={this.state.detail}
-            group2={this.props.group2}
-            fastAdd={true}
-          />
-        ) : null}
+        {this.state.isModalFormGroupProduct && this.props.isOpen ? <FormGroupProduct detail={this.state.detail} group2={this.props.group2} fastAdd={true} /> : null}
         <FormProductPricing
           allState={this.state}
           handler={this.handler}
@@ -4097,9 +3075,7 @@ class FormProduct extends Component {
           dataEdit={this.props.dataEdit}
           productCode={this.props.productCode}
         />
-        {this.props.auth.user.is_resto === 1 && (
-          <FormPrinter detail={{ id_printer: "" }} fastAdd={true} />
-        )}
+        {this.props.auth.user.is_resto === 1 && <FormPrinter detail={{ id_printer: "" }} fastAdd={true} />}
       </div>
     );
   }

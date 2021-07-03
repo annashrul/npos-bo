@@ -1,187 +1,76 @@
-import React,{Component} from 'react';
-import {ModalToggle} from "redux/actions/modal.action";
+import React, { Component } from "react";
+import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import WrapperModal from "../../../_wrapper.modal";
-import {ModalBody} from "reactstrap";
-import moment from "moment";
-import {to_pdf,statusQ} from "helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-// import jsPDF from 'jspdf';
-import imgExcel from 'assets/xls.png';
-import imgPdf from 'assets/pdf.png';
 import "jspdf-autotable";
+import ExportCommon from "../../../../common/ExportCommon";
+import { to_pdf, headerPdf, toExcel, rmSpaceToStrip, toDate, headerExcel } from "../../../../../../helper";
+import { statusMutasi } from "../../../../../../helperStatus";
+import { EXTENSION } from "../../../../../../redux/actions/_constants";
 
-class MutationReportExcel extends Component{
-    constructor(props){
-        super(props);
-        this.toggle = this.toggle.bind(this);
-        this.handleView = this.handleView.bind(this);
-        this.printDocument = this.printDocument.bind(this);
-        this.state = {
-            title:'',
-            jenis: '',
-            type:'',
-            view:false,
-            error:{
-                title:'',
-                jenis: '',
-                type:'',
-            }
-        };
+class MutationReportExcel extends Component {
+  constructor(props) {
+    super(props);
+    this.printExcel = this.printExcel.bind(this);
+    this.printPdf = this.printPdf.bind(this);
+  }
 
-    }
-    handleView = (e) => {
-        e.preventDefault();
-        this.setState({
-            view:!this.state.view
-        })
-    }
-    toggle = (e) => {
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-    };
-    printDocument = (e) => {
-        e.preventDefault();
-        let stringHtml = '';
-        stringHtml+=
-        '<div style="text-align:center>'+
-        '<h3 align="center"><center>PERIODE : '+this.props.startDate + ' - ' + this.props.endDate+'</center></h3>'+
-        '<h3 align="center"><center>&nbsp;</center></h3>'+
-        '<h3 style="text-align:center"><center>LAPORAN MUTASI</center></h3>'+
-        '</div>';
-        
-        const headers = [[
-            "Kode Faktur",
-            "Tanggal Mutasi",
-            "Lokasi Asal",
-            "Lokasi Tujuan",
-            "No. Faktur Beli",
-            "Status",
-            "Keterangan",
-        ]];
-        let data = typeof this.props.mutationReportExcel.data === 'object'?this.props.mutationReportExcel.data.map(v=> [
-           v.no_faktur_mutasi,
-           moment(v.tgl_mutasi).format("DD-MM-YYYY"),
-           v.lokasi_asal,
-           v.lokasi_tujuan,
-           v.no_faktur_beli,
-           v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):""),
-           v.keterangan,
-        ]):'';
-        // data +=["TOTAL","","","","","","","","",tprice];
-        to_pdf(
-            "mutation_",
-            stringHtml,
-            headers,
-            data,
-            // footer
-        );
-        this.toggle(e);
+  handleHeader() {
+    return ["NO", "NO.MUTASI", "LOK.ASAL", "LOK.TUJUAN", "NO.BELI", "STATUS", "KET", "TGL"];
+  }
+
+  handleContent(cek = "excel") {
+    let data = this.props.mutationReportExcel.data;
+    let props = [];
+    if (data !== undefined) {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          props.push([
+            i + 1,
+            data[i].no_faktur_mutasi,
+            data[i].lokasi_asal,
+            data[i].lokasi_tujuan,
+            rmSpaceToStrip(data[i].no_faktur_beli),
+            statusMutasi(data[i].status),
+            data[i].keterangan,
+            toDate(data[i].tgl_mutasi),
+          ]);
+          cek === "excel" && props[i].shift();
+        }
       }
-    render(){
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "formMutationExcel"} size={this.state.view === false?'md':'xl'} aria-labelledby="contained-modal-title-vcenter" centered keyboard>
-                {/* <ModalHeader toggle={this.toggle}>{this.props.detail===undefined?"Manage Export":"Update MutationExcel"}</ModalHeader> */}
-                <form onSubmit={this.handleSubmit}>
-                    <ModalBody>
-                        <button type="button" className="close"><span className="text-dark" aria-hidden="true" onClick={(e => this.toggle(e))}>×</span><span className="sr-only">Close</span></button>
-                        <h3 className="text-center">Manage Export</h3>
-                        <div className="row mb-4">
-                            {/* <div className="col-4">
-                                <button type="button" className="btn btn-info btn-block" onClick={(e => this.handleView(e))}>VIEW</button>
-                            </div> */}
-                            <div className="col-6">
-                                <div className="single-gallery--item">
-                                    <div className="gallery-thumb">
-                                        <img src={imgPdf} alt=""></img>
-                                    </div>
-                                    <div className="gallery-text-area">
-                                        <div className="gallery-icon">
-                                            <button type="button" className="btn btn-circle btn-lg btn-danger" onClick={(e => this.printDocument(e))}><i className="fa fa-print"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <div className="single-gallery--item">
-                                    <div className="gallery-thumb">
-                                        <img src={imgExcel} alt=""></img>
-                                    </div>
-                                    <div className="gallery-text-area">
-                                        <div className="gallery-icon" onClick={(e => this.toggle(e))}>
-                                            <ReactHTMLTableToExcel
-                                                className="btn btn-circle btn-lg btn-success"
-                                                table={'laporan_mutation'}
-                                                filename={'laporan_mutation'}
-                                                sheet="kas"
-                                                buttonText={<i className="fa fa-print"></i>}>
-                                            </ReactHTMLTableToExcel>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* <div className="row mt-4">
-                            <div className="col-12">
-                                <button type="button" className="btn btn-info float-right">CLOSE</button>
-                            </div>
-                        </div> */}
-                        {/* <hr></hr> */}
-                        <table className="table table-hover table-bordered table-responsive"  id="laporan_mutation" style={{display:this.state.view === false?'none':'inline-table'}}>
-                        <thead className="bg-light">
-                                <tr>
-                                    <th className="text-black" colSpan={7}>{this.props.startDate} - {this.props.startDate}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" colSpan={7}>LAPORAN ALOKASI MUTASI</th>
-                                </tr>
-
-                                <tr>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Kode Faktur</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Tanggal Mutasi</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Asal</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Lokasi Tujuan</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>No. Faktur Beli</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Status</th>
-                                    <th className="text-black" rowSpan="2" style={columnStyle}>Keterangan</th>
-                                </tr>
-                                <tr></tr>
-                                </thead>
-                                {
-                                    <tbody>
-                                    {
-                                        typeof this.props.mutationReportExcel.data==='object'? this.props.mutationReportExcel.data.length>0?
-                                            this.props.mutationReportExcel.data.map((v,i)=>{
-                                                return (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{v.no_faktur_mutasi}</td>
-                                                        <td style={columnStyle}>{moment(v.tgl_mutasi).format("DD-MM-YYYY")}</td>
-                                                        <td style={columnStyle}>{v.lokasi_asal}</td>
-                                                        <td style={columnStyle}>{v.lokasi_tujuan}</td>
-                                                        <td style={columnStyle}>{v.no_faktur_beli}</td>
-                                                        <td style={columnStyle}>{v.status==='0'?statusQ('info','Dikirim'):(v.status==='1'?statusQ('success','Diterima'):"")}</td>
-                                                        <td style={columnStyle}>{v.keterangan}</td>
-                                                    </tr>
-                                                );
-                                            }) : "No data." : "No data."
-                                    }
-                                    </tbody>
-                                }
-                            </table>
-                    </ModalBody>
-                </form>
-            </WrapperModal>
-        );
     }
+    return props;
+  }
+
+  printPdf() {
+    const headers = [this.handleHeader()];
+    to_pdf(
+      "MUTASI",
+      headerPdf({
+        title: "MUTASI",
+        dateFrom: this.props.startDate,
+        dateTo: this.props.endDate,
+      }),
+      headers,
+      this.handleContent("pdf")
+    );
+    this.props.dispatch(ModalToggle(false));
+  }
+  printExcel() {
+    let header = this.handleHeader();
+    header.shift();
+    toExcel("LAPORAN MUTASI", headerExcel(this.props.startDate, this.props.endDate), header, this.handleContent(), [], EXTENSION.XLXS);
+    this.props.dispatch(ModalToggle(false));
+  }
+  render() {
+    return <ExportCommon modalType="formMutationExcel" isPdf={true} callbackPdf={() => this.printPdf()} isExcel={true} callbackExcel={() => this.printExcel()} />;
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        mutationReportExcel:state.mutationReducer.report_excel,
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-    }
-}
+  return {
+    mutationReportExcel: state.mutationReducer.report_excel,
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+  };
+};
 export default connect(mapStateToProps)(MutationReportExcel);

@@ -4,11 +4,7 @@ import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
-import {
-  createCustomer,
-  setCustomerEdit,
-  updateCustomer,
-} from "redux/actions/masterdata/customer/customer.action";
+import { createCustomer, setCustomerEdit, updateCustomer } from "redux/actions/masterdata/customer/customer.action";
 import FileBase64 from "react-file-base64";
 import moment from "moment";
 import LokasiCommon from "../../../common/LokasiCommon";
@@ -52,12 +48,12 @@ class FormCustomer extends Component {
     let state = {};
     let cust = [];
     if (typeof param.dataCustomerTypeAll.data === "object") {
-      param.dataCustomerTypeAll.data.map((v) => {
+      param.dataCustomerTypeAll.data.map((v) =>
         cust.push({
           value: v.kode,
           label: v.nama,
-        });
-      });
+        })
+      );
       Object.assign(state, { cust_type_data: cust });
     }
     if (detail.id !== "") {
@@ -71,7 +67,6 @@ class FormCustomer extends Component {
         cust_type: detail.kd_type,
         password: "",
         register: detail.register,
-        foto: detail.foto,
         email: detail.email,
         biografi: detail.biografi,
         special_price: detail.special_price,
@@ -143,12 +138,10 @@ class FormCustomer extends Component {
     if (!isEmptyOrUndefined(parseData["nama"], "nama")) return;
     if (!isEmptyOrUndefined(parseData["lokasi"], "lokasi")) return;
     if (!isEmptyOrUndefined(parseData["cust_type"], "tipe Customer")) return;
-    if (!isEmptyOrUndefined(parseData["jenis_kelamin"], "jenis kelamin"))
-      return;
+    if (!isEmptyOrUndefined(parseData["jenis_kelamin"], "jenis kelamin")) return;
     if (!isEmptyOrUndefined(parseData["tlp"], "telepon")) return;
     if (!isEmptyOrUndefined(parseData["email"], "email")) return;
-    if (!isEmptyOrUndefined(parseData["tgl_ultah"], "tanggal ulang tahun"))
-      return;
+    if (!isEmptyOrUndefined(parseData["tgl_ultah"], "tanggal ulang tahun")) return;
     if (!isEmptyOrUndefined(parseData["status"], "status")) return;
     if (!isEmptyOrUndefined(parseData["alamat"], "alamat")) return;
 
@@ -166,13 +159,8 @@ class FormCustomer extends Component {
   }
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formCustomer"}
-        size="lg"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id !== "" ? "Ubah Customer" : "Tambah Customer"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formCustomer"} size="lg">
+        <ModalHeader toggle={this.toggle}>{this.props.detail.id !== "" ? "Ubah Customer" : "Tambah Customer"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="row">
@@ -181,19 +169,9 @@ class FormCustomer extends Component {
                   <label>
                     Nama <span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="nama"
-                    value={this.state.nama}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={this.handleChange} />
                 </div>
-                <LokasiCommon
-                  callback={(res) => this.setState({ location: res.value })}
-                  isRequired={true}
-                  dataEdit={this.state.location}
-                />
+                <LokasiCommon callback={(res) => this.setState({ location: res.value })} isRequired={true} dataEdit={this.state.location} />
                 <SelectCommon
                   label="Tipe Customer"
                   options={this.state.cust_type_data}
@@ -202,14 +180,11 @@ class FormCustomer extends Component {
                   }}
                   dataEdit={this.state.cust_type}
                   isRequired={true}
-                  dataEdit={this.state.cust_type}
                 />
                 <SelectCommon
                   label="Jenis kelamin"
                   options={this.state.jenis_kelamin_data}
-                  callback={(res) =>
-                    this.setState({ jenis_kelamin: res.value })
-                  }
+                  callback={(res) => this.setState({ jenis_kelamin: res.value })}
                   dataEdit={this.state.jenis_kelamin}
                   isRequired={true}
                 />
@@ -220,42 +195,17 @@ class FormCustomer extends Component {
                   <label>
                     Telepon <span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="tlp"
-                    value={this.state.tlp}
-                    onChange={this.handleChange}
-                  />
+                  <input type="number" className="form-control" name="tlp" value={this.state.tlp} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
                     Email <span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                  />
+                  <input type="email" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
-                  <label>
-                    Password{" "}
-                    {this.props.detail.id !== "" ? (
-                      <small>(kosongkan jika tidak diubah)</small>
-                    ) : (
-                      <span className="text-danger">*</span>
-                    )}
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                  />
+                  <label>Password {this.props.detail.id !== "" ? <small>(kosongkan jika tidak diubah)</small> : <span className="text-danger">*</span>}</label>
+                  <input type="password" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>
@@ -274,57 +224,28 @@ class FormCustomer extends Component {
                 </div>
               </div>
               <div className="col-md-4">
-                <IsActiveCommon
-                  callback={(res) => this.setState({ status: res.value })}
-                  isRequired={true}
-                  dataEdit={this.state.status}
-                />
+                <IsActiveCommon callback={(res) => this.setState({ status: res.value })} isRequired={true} dataEdit={this.state.status} />
                 <div className="form-group">
                   <label>
                     Alamat <span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="alamat"
-                    value={this.state.alamat}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Keterangan</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="biografi"
-                    value={this.state.biografi}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" className="form-control" name="biografi" value={this.state.biografi} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
-                  <label>
-                    Foto{" "}
-                    {this.props.detail.id !== "" && (
-                      <small>(kosongkan jika tidak diubah)</small>
-                    )}
-                  </label>
+                  <label>Foto {this.props.detail.id !== "" && <small>(kosongkan jika tidak diubah)</small>}</label>
                   <br />
-                  <FileBase64
-                    multiple={false}
-                    className="form-control "
-                    onDone={this.getFiles.bind(this)}
-                  />
+                  <FileBase64 multiple={false} className="form-control " onDone={this.getFiles.bind(this)} />
                 </div>
               </div>
             </div>
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mr-2">

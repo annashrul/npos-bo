@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {
-  createCash,
-  FetchCash,
-  updateCash,
-} from "redux/actions/masterdata/cash/cash.action";
+import { createCash, updateCash } from "redux/actions/masterdata/cash/cash.action";
 import { stringifyFormData } from "helper";
 import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalHeader, ModalFooter } from "reactstrap";
@@ -68,13 +64,9 @@ class FormCash extends Component {
     if (!isEmptyOrUndefined(parseData["title"], "catatan kas")) return;
 
     if (this.props.detail.id === "") {
-      this.props.dispatch(
-        createCash(parseData, `page=1&type=${this.state.type}`)
-      );
+      this.props.dispatch(createCash(parseData, `page=1&type=${this.state.type}`));
     } else {
-      this.props.dispatch(
-        updateCash(this.props.detail.id, parseData, this.props.detail.where)
-      );
+      this.props.dispatch(updateCash(this.props.detail.id, parseData, this.props.detail.where));
     }
   }
   toggle = (e) => {
@@ -84,52 +76,25 @@ class FormCash extends Component {
   };
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formCash"}
-        size="md"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail.id === "" ? "Tambah" : "Ubah"} kas
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formCash"} size="md">
+        <ModalHeader toggle={this.toggle}>{this.props.detail.id === "" ? "Tambah" : "Ubah"} kas</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
               <label>Tipe kas</label>
-              <input
-                type="text"
-                className="form-control"
-                name="type"
-                value={this.state.type}
-                disabled={true}
-              />
+              <input type="text" className="form-control" name="type" value={this.state.type} disabled={true} />
             </div>
-            <SelectCommon
-              label="Jenis"
-              options={this.state.jenis_data}
-              callback={(res) => this.setState({ jenis: res.value })}
-              isRequired={true}
-              dataEdit={this.state.jenis}
-            />
+            <SelectCommon label="Jenis" options={this.state.jenis_data} callback={(res) => this.setState({ jenis: res.value })} isRequired={true} dataEdit={this.state.jenis} />
             <div className="form-group">
               <label>
                 Catatan <span className="text-danger">*</span>
               </label>
-              <input
-                type="text"
-                className="form-control"
-                name="title"
-                value={this.state.title}
-                onChange={this.handleChange}
-              />
+              <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleChange} />
             </div>
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary">

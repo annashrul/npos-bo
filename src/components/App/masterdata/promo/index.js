@@ -1,30 +1,17 @@
 import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  FetchPromo,
-  FetchPromoKategori,
-} from "redux/actions/masterdata/promo/promo.action";
+import { FetchPromo, FetchPromoKategori } from "redux/actions/masterdata/promo/promo.action";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import moment from "moment";
 import Paginationq from "helper";
 import FormPromo from "components/App/modals/masterdata/promo/form_promo";
 import { HEADERS } from "redux/actions/_constants";
-import {
-  deletePromo,
-  FetchPromoDetail,
-} from "redux/actions/masterdata/promo/promo.action";
+import { deletePromo, FetchPromoDetail } from "redux/actions/masterdata/promo/promo.action";
 import { FetchGroupProduct } from "redux/actions/masterdata/group_product/group_product.action";
 import { FetchSupplierAll } from "redux/actions/masterdata/supplier/supplier.action";
 import { FetchAllLocation } from "redux/actions/masterdata/location/location.action";
-import Swal from "sweetalert2";
-import { setPromoDetail } from "../../../../redux/actions/masterdata/promo/promo.action";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import Noimage from "assets/default.png";
 
 class Promo extends Component {
@@ -133,11 +120,7 @@ class Promo extends Component {
             </div>
             <div className="col-4 col-xs-2 col-md-1 text-right">
               <div className="form-group">
-                <button
-                  type="button"
-                  onClick={(e) => this.toggleModal(e)}
-                  className="btn btn-primary"
-                >
+                <button type="button" onClick={(e) => this.toggleModal(e)} className="btn btn-primary">
                   <i className="fa fa-plus"></i>
                 </button>
               </div>
@@ -203,20 +186,8 @@ class Promo extends Component {
                   <div className="col-xl-3 col-md-6 mb-4" key={i}>
                     <div className="card">
                       <div className="social-widget">
-                        <div
-                          className={
-                            "bg-light p-3 text-center text-white font-30"
-                          }
-                        >
-                          <img
-                            src={
-                              v.gambar === "-"
-                                ? Noimage
-                                : `${HEADERS.URL + v.gambar}`
-                            }
-                            style={{ height: "120px" }}
-                            alt=""
-                          />
+                        <div className={"bg-light p-3 text-center text-white font-30"}>
+                          <img src={v.gambar === "-" ? Noimage : `${HEADERS.URL + v.gambar}`} style={{ height: "120px" }} alt="" />
                         </div>
                         <div className="row">
                           <div className="col-8 text-left">
@@ -238,16 +209,10 @@ class Promo extends Component {
                                     <i className="zmdi zmdi-more-vert" />
                                   </DropdownToggle>
                                   <DropdownMenu>
-                                    <DropdownItem
-                                      onClick={(e) => this.toggleModal(e, v)}
-                                    >
+                                    <DropdownItem onClick={(e) => this.toggleModal(e, v)}>
                                       <i className="ti-pencil-alt" /> Edit
                                     </DropdownItem>
-                                    <DropdownItem
-                                      onClick={(e) =>
-                                        this.handleDelete(e, v.id_promo)
-                                      }
-                                    >
+                                    <DropdownItem onClick={(e) => this.handleDelete(e, v.id_promo)}>
                                       <i className="ti-trash" /> Delete
                                     </DropdownItem>
                                   </DropdownMenu>
@@ -259,10 +224,7 @@ class Promo extends Component {
                         <div className="row">
                           <div className="col-12 text-left">
                             <div className="p-2">
-                              <table
-                                className="table"
-                                style={{ padding: 0, border: "none" }}
-                              >
+                              <table className="table" style={{ padding: 0, border: "none" }}>
                                 <thead>
                                   <tr>
                                     <td
@@ -345,11 +307,7 @@ class Promo extends Component {
                                       }}
                                     >
                                       {" "}
-                                      {v.periode === "1"
-                                        ? "-"
-                                        : moment(v.daritgl).format(
-                                            "YYYY-MM-DD HH:mm:ss"
-                                          )}
+                                      {v.periode === "1" ? "-" : moment(v.daritgl).format("YYYY-MM-DD HH:mm:ss")}
                                     </th>
                                   </tr>
                                   <tr>
@@ -374,11 +332,7 @@ class Promo extends Component {
                                       }}
                                     >
                                       {" "}
-                                      {v.periode === "1"
-                                        ? "-"
-                                        : moment(v.sampaitgl).format(
-                                            "YYYY-MM-DD HH:mm:ss"
-                                          )}
+                                      {v.periode === "1" ? "-" : moment(v.sampaitgl).format("YYYY-MM-DD HH:mm:ss")}
                                     </th>
                                   </tr>
                                   <tr>
@@ -428,9 +382,7 @@ class Promo extends Component {
                                       }}
                                     >
                                       {" "}
-                                      {v.periode === "1"
-                                        ? "Tanpa Periode"
-                                        : "-"}
+                                      {v.periode === "1" ? "Tanpa Periode" : "-"}
                                     </th>
                                   </tr>
                                   <tr>
@@ -455,9 +407,7 @@ class Promo extends Component {
                                       }}
                                     >
                                       {" "}
-                                      {v.keterangan.length > 20
-                                        ? `${v.keterangan.substring(0, 20)} ...`
-                                        : v.keterangan}
+                                      {v.keterangan.length > 20 ? `${v.keterangan.substring(0, 20)} ...` : v.keterangan}
                                     </th>
                                   </tr>
                                 </thead>
@@ -478,21 +428,10 @@ class Promo extends Component {
           )}
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePagin.bind(this)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePagin.bind(this)} />
         </div>
         {this.props.isOpen && this.state.isModalForm ? (
-          <FormPromo
-            detail={this.props.promo_detail}
-            kategori={this.props.promo_kategori}
-            kel_barang={this.props.kel_barang}
-            supplier={this.props.supplier}
-            lokasi={this.props.lokasi}
-          />
+          <FormPromo detail={this.props.promo_detail} kategori={this.props.promo_kategori} kel_barang={this.props.kel_barang} supplier={this.props.supplier} lokasi={this.props.lokasi} />
         ) : null}
       </Layout>
     );

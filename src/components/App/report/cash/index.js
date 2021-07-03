@@ -1,33 +1,15 @@
 import React, { Component } from "react";
 import Layout from "../../Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  FetchCashReportExcel,
-  FetchCashReport,
-  setUpdate,
-  deleteCashTransaksi,
-} from "redux/actions/masterdata/cash/cash.action";
+import { FetchCashReportExcel, FetchCashReport, setUpdate, deleteCashTransaksi } from "redux/actions/masterdata/cash/cash.action";
 import moment from "moment";
-import DateRangePicker from "react-bootstrap-daterangepicker";
 import Select from "react-select";
 import Paginationq from "helper";
-import {
-  dateRange,
-  generateNo,
-  kassa,
-  rangeDate,
-  toCurrency,
-  toRp,
-} from "../../../../helper";
+import { dateRange, generateNo, kassa, toRp } from "../../../../helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import CashReportExcel from "components/App/modals/report/cash/form_cash_excel";
 import Updates from "components/App/modals/report/cash/update";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import Otorisasi from "../../modals/otorisasi.modal";
 import Swal from "sweetalert2";
 import LokasiCommon from "../../common/LokasiCommon";
@@ -88,42 +70,27 @@ class ReportCash extends Component {
     }
   }
   componentDidMount() {
-    if (
-      localStorage.location_cash_report !== undefined &&
-      localStorage.location_cash_report !== ""
-    ) {
+    if (localStorage.location_cash_report !== undefined && localStorage.location_cash_report !== "") {
       this.setState({
         location: localStorage.location_cash_report,
       });
     }
-    if (
-      localStorage.kassa_cash_report !== undefined &&
-      localStorage.kassa_cash_report !== ""
-    ) {
+    if (localStorage.kassa_cash_report !== undefined && localStorage.kassa_cash_report !== "") {
       this.setState({
         kassa: localStorage.kassa_cash_report,
       });
     }
-    if (
-      localStorage.type_cash_report !== undefined &&
-      localStorage.type_cash_report !== ""
-    ) {
+    if (localStorage.type_cash_report !== undefined && localStorage.type_cash_report !== "") {
       this.setState({
         type: localStorage.type_cash_report,
       });
     }
-    if (
-      localStorage.date_from_cash_report !== undefined &&
-      localStorage.date_from_cash_report !== null
-    ) {
+    if (localStorage.date_from_cash_report !== undefined && localStorage.date_from_cash_report !== null) {
       this.setState({
         startDate: localStorage.date_from_cash_report,
       });
     }
-    if (
-      localStorage.date_to_cash_report !== undefined &&
-      localStorage.date_to_cash_report !== null
-    ) {
+    if (localStorage.date_to_cash_report !== undefined && localStorage.date_to_cash_report !== null) {
       this.setState({
         endDate: localStorage.date_to_cash_report,
       });
@@ -259,17 +226,9 @@ class ReportCash extends Component {
         <div className="row">
           <div className="col-md-10">
             <div className="row">
+              <div className="col-6 col-xs-6 col-md-3">{dateRange((first, last) => this.handleEvent(first, last), `${this.state.startDate} to ${this.state.endDate}`)}</div>
               <div className="col-6 col-xs-6 col-md-3">
-                {dateRange(
-                  (first, last) => this.handleEvent(first, last),
-                  `${this.state.startDate} to ${this.state.endDate}`
-                )}
-              </div>
-              <div className="col-6 col-xs-6 col-md-3">
-                <LokasiCommon
-                  callback={(res) => this.HandleChangeLokasi(res)}
-                  isAll={true}
-                />
+                <LokasiCommon callback={(res) => this.HandleChangeLokasi(res)} isAll={true} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
@@ -301,20 +260,10 @@ class ReportCash extends Component {
           </div>
           <div className="col-12 col-xs-12 col-md-2 text-right">
             <div className="form-group">
-              <button
-                style={{ marginTop: "28px", marginRight: "5px" }}
-                className="btn btn-primary"
-                onClick={this.handleSearch}
-              >
+              <button style={{ marginTop: "28px", marginRight: "5px" }} className="btn btn-primary" onClick={this.handleSearch}>
                 <i className="fa fa-search"></i>
               </button>
-              <button
-                style={{ marginTop: "28px" }}
-                className="btn btn-primary"
-                onClick={(e) =>
-                  this.toggleModal(e, last_page * per_page, per_page)
-                }
-              >
+              <button style={{ marginTop: "28px" }} className="btn btn-primary" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
                 <i className="fa fa-print"></i>
               </button>
             </div>
@@ -364,9 +313,7 @@ class ReportCash extends Component {
                       total_perpage += parseInt(v.jumlah, 10);
                       return (
                         <tr key={i}>
-                          <td className="middle text-center nowrap">
-                            {generateNo(i, current_page)}
-                          </td>
+                          <td className="middle text-center nowrap">{generateNo(i, current_page)}</td>
                           <td className="middle nowrap text-center">
                             <UncontrolledButtonDropdown>
                               <DropdownToggle caret></DropdownToggle>
@@ -383,13 +330,7 @@ class ReportCash extends Component {
                                 >
                                   Edit
                                 </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) =>
-                                    this.handleDelete(e, v.kd_trx)
-                                  }
-                                >
-                                  Delete
-                                </DropdownItem>
+                                <DropdownItem onClick={(e) => this.handleDelete(e, v.kd_trx)}>Delete</DropdownItem>
                               </DropdownMenu>
                             </UncontrolledButtonDropdown>
                           </td>
@@ -400,13 +341,9 @@ class ReportCash extends Component {
                             {v.lokasi} ({v.kassa})
                           </td>
                           <td className="middle nowrap">{v.kasir}</td>
-                          <td className="middle nowrap text-right">
-                            {toRp(parseFloat(v.jumlah))}
-                          </td>
+                          <td className="middle nowrap text-right">{toRp(parseFloat(v.jumlah))}</td>
                           <td className="middle nowrap">{v.keterangan}</td>
-                          <td className="middle nowrap">
-                            {moment(v.tgl).format("yyyy-MM-DD")}
-                          </td>
+                          <td className="middle nowrap">{moment(v.tgl).format("yyyy-MM-DD")}</td>
                         </tr>
                       );
                     })
@@ -433,9 +370,7 @@ class ReportCash extends Component {
               <tr style={{ backgroundColor: "rgb(238, 238, 238)" }}>
                 <td colSpan="7">Total keseluruhan</td>
                 <td className="middle text-right" colSpan="">
-                  {total_kas === undefined
-                    ? 0
-                    : toRp(parseFloat(total_kas.jumlah))}
+                  {total_kas === undefined ? 0 : toRp(parseFloat(total_kas.jumlah))}
                 </td>
                 <td colSpan="2" />
               </tr>
@@ -443,21 +378,10 @@ class ReportCash extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={parseInt(current_page, 10)}
-            per_page={parseInt(per_page, 10)}
-            total={parseInt(per_page * last_page, 10)}
-            callback={this.handlePageChange.bind(this)}
-          />
+          <Paginationq current_page={parseInt(current_page, 10)} per_page={parseInt(per_page, 10)} total={parseInt(per_page * last_page, 10)} callback={this.handlePageChange.bind(this)} />
         </div>
         {this.state.isModalExport ? (
-          <CashReportExcel
-            tipe={this.state.type}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            location={this.state.location}
-            kassa={this.state.kassa}
-          />
+          <CashReportExcel tipe={this.state.type} startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} kassa={this.state.kassa} />
         ) : null}
 
         {this.state.isModalUpdate ? <Updates /> : null}

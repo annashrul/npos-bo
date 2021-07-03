@@ -2,8 +2,15 @@ import { SALE_BY_CUST, HEADERS } from "../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import moment from "moment";
-import { handleGet } from "../handleHttp";
+import { handleDelete, handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle } from "../modal.action";
+
+export function setDownload(load) {
+  return {
+    type: SALE_BY_CUST.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: SALE_BY_CUST.LOADING,
@@ -116,8 +123,7 @@ export const storeSaleByCust = (data) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -136,26 +142,22 @@ export const FetchReportSaleByCust = (where = "") => {
     });
   };
 };
-export const FetchReportSaleByCustExcel = (
-  page = 1,
-  where = "",
-  perpage = 10000
-) => {
+export const FetchReportSaleByCustExcel = (page = 1, where = "", perpage = 10000) => {
   return (dispatch) => {
     let url = `report/penjualan/by_cust?page=${page}&perpage=${perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setReportExcel(data));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setReportExcel(res.data));
+        dispatch(ModalToggle(true));
+      },
+      (res) => {
+        dispatch(setDownload(res));
+      }
+    );
   };
 };
 
@@ -179,59 +181,9 @@ export const FetchReportDetailSaleByCust = (kd_trx) => {
 
 export const deleteReportSaleByCust = (kd_trx) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `pos/remove_penjualan/${kd_trx}`;
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoadingReport(false));
-        let dateFrom = localStorage.getItem("date_from_sale_by_cust_report");
-        let dateTo = localStorage.getItem("date_to_sale_by_cust_report");
-        let where = "";
-        if (dateFrom !== undefined && dateFrom !== null) {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `datefrom=${dateFrom}&dateto=${dateTo}`;
-        } else {
-          if (where !== "") {
-            where += "&";
-          }
-          where += `datefrom=${moment(new Date()).format(
-            "yyyy-MM-DD"
-          )}&dateto=${moment(new Date()).format("yyyy-MM-DD")}`;
-        }
-        dispatch(FetchReportSaleByCust(1, where));
-      })
-      .catch(function (error) {
-        dispatch(setLoadingReport(false));
-
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    const url = `pos/remove_penjualan/${kd_trx}`;
+    handleDelete(url, () => {
+      dispatch(FetchReportSaleByCust("page=1"));
+    });
   };
 };

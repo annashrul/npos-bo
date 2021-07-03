@@ -7,10 +7,51 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import { isError } from "lodash";
+import XLSX from "xlsx";
+import { EXTENSION, HEADERS } from "./redux/actions/_constants";
+import Default from "assets/default.png";
 
-export const generateNo = (i, current_page) => {
-  return i + 1 + 10 * (parseInt(current_page, 10) - 1);
+export const CURRENT_DATE = moment(new Date()).format("yyyy-MM-DD");
+
+export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`;
+
+export const getWhere = (res) => {
+  let resToArray = res.split("&");
+  return `&${resToArray[1]}&${resToArray[2]}`;
+};
+
+export const parseToRp = (val) => {
+  return toRp(parseFloat(parseInt(val, 10)));
+};
+
+export const toDate = (val, type = "/") => {
+  return type === "/" ? moment(val).format("yyyy/MM/DD") : moment(val).format("yyyy-MM-DD");
+};
+
+export const isImage = (img = "", className = "img-in-table pointer") => {
+  return (
+    <img
+      src={img}
+      onClick={() => {
+        Swal.fire({
+          imageUrl: img,
+          imageAlt: "gambar tidak tersedia",
+          showClass: { popup: "animate__animated animate__fadeInDown" },
+          hideClass: { popup: "animate__animated animate__fadeOutUp" },
+        });
+      }}
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = `${Default}`;
+      }}
+      className={className}
+      alt={img}
+    />
+  );
+};
+
+export const generateNo = (i, current_page, perpage = HEADERS.PERPAGE) => {
+  return i + 1 + perpage * (parseInt(current_page, 10) - 1);
 };
 
 export const groupByArray = (list, keyGetter) => {
@@ -35,21 +76,57 @@ export const stringifyFormData = (fd) => {
   return data;
 };
 
-export const myPdf = (
-  filename,
-  title = "",
-  header = [],
-  body = [],
-  footer = [],
-  orientation = "portrait",
-  unit = "in",
-  format = [],
-  fontSize = 10,
-  ml = 10,
-  mt = 10,
-  mr = 10,
-  mb = 10
-) => {
+export const headerExcel = (from, to) => {
+  return `${toDate(from, "/")} - ${toDate(to, "/")}`;
+};
+
+export const toExcel = (title = "", periode = "", head = [], content = [], foot = [], ext = EXTENSION.XLSX) => {
+  let header = [[title.toUpperCase()], [`PERIODE : ${periode}`], [""], head];
+  let footer = foot;
+  let body = header.concat(content);
+  let data = footer === undefined || footer === [] ? body : body.concat(footer);
+  let ws = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+  let merge = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: head.length } },
+    { s: { r: 1, c: 0 }, e: { r: 1, c: head.length } },
+  ];
+  if (!ws["!merges"]) ws["!merges"] = [];
+  ws["!merges"] = merge;
+  ws["!ref"] = XLSX.utils.encode_range({
+    s: { c: 0, r: 0 },
+    e: { c: head.length, r: data.length },
+  });
+  ws["A1"].s = {
+    alignment: {
+      vertical: "middle",
+    },
+  };
+
+  let wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, title.toUpperCase());
+  let exportFileName = `${title.replaceAll(" ", "_").toUpperCase()}_${moment(new Date()).format("YYYYMMDDHHMMss")}.${ext}`;
+  XLSX.writeFile(wb, exportFileName, { type: "file", bookType: ext });
+  return;
+};
+
+export const headerPdf = (master) => {
+  let stringHtml = "";
+  stringHtml +=
+    '<div style="text-align:center>' +
+    '<h3 style="text-align:center"><center>LAPORAN ' +
+    master.title +
+    "</center></h3>" +
+    '<h3 align="center"><center>PERIODE : ' +
+    `${master.dateFrom}`.replaceAll("-", "/") +
+    " - " +
+    `${master.dateTo}`.replaceAll("-", "/") +
+    "</center></h3>" +
+    '<h3 align="center"><center>&nbsp;</center></h3>' +
+    "</div>";
+  return stringHtml;
+};
+
+export const myPdf = (filename, title = "", header = [], body = [], footer = [], orientation = "portrait", unit = "in", format = [], fontSize = 10, ml = 10, mt = 10, mr = 10, mb = 10) => {
   const doc = jsPDF(orientation, unit, format);
   doc.setFontSize(fontSize);
   let content = {
@@ -69,40 +146,35 @@ export const myPdf = (
   addFooters(doc);
   return doc.save(filename + "report.pdf");
 };
-export const to_pdf = (
-  filename,
-  title = "",
-  header = [],
-  body = [],
-  footer = []
-) => {
+export const to_pdf = (filename, title = "", header = [], body = [], footer = []) => {
   const doc = jsPDF("portrait", "pt", "A4");
-  const marginLeft = 40;
-  doc.setFontSize(15);
+  const marginLeft = 10;
+  doc.setFontSize(10);
   let content = {
-    headStyles: { backgroundColor: [0, 0, 0, 0] },
-    footStyles: {},
-    bodyStyles: { lineWidth: 1, lineColor: [33, 33, 33], marginBottom: 20 },
+    pageBreak: "auto",
+    rowPageBreak: "avoid",
+    headStyles: {
+      backgroundColor: [33, 33, 33],
+      lineWidth: 1,
+      marginBottom: 0,
+    },
+    bodyStyles: { lineWidth: 1, marginBottom: 20 },
     theme: "grid",
-    startY: 100,
+    startY: 50,
     head: header,
     body: body,
     foot: footer,
-    margin: { bottom: 60, top: 40 },
+    margin: { bottom: 10, top: 10, left: 10, right: 10 },
+    autoSize: true,
   };
-  doc.fromHTML(title, marginLeft, 40, { align: "center" });
-  // doc.text(title, marginLeft, 40);
+  doc.fromHTML(title, marginLeft, 10, { align: "center" });
   doc.autoTable(content);
-  addFooters(doc);
-  return doc.save(filename + "_report.pdf");
+  // addFooters(doc);
+  // return doc.save("LAPORAN_" + filename + `_${moment(new Date()).format("YYYYMMDDHHMMss")}` + ".pdf");
+  return doc.save(`LAPORAN ${filename}_${moment(new Date()).format("YYYYMMDDHHMMss")}.pdf`);
 };
-export const to_pdf_l = (
-  filename,
-  title = "",
-  header = [],
-  body = [],
-  footer = []
-) => {
+
+export const to_pdf_l = (filename, title = "", header = [], body = [], footer = []) => {
   const doc = jsPDF("landscape", "pt", "A4");
   const marginLeft = 10;
   doc.setFontSize(10);
@@ -144,20 +216,11 @@ export const rangeDate = {
   "7 Hari Terakhir": [moment().subtract(7, "days"), moment()],
   "30 Hari Terakhir": [moment().subtract(30, "days"), moment()],
   "Minggu Ini": [moment().startOf("isoWeek"), moment().endOf("isoWeek")],
-  "Minggu Lalu": [
-    moment().subtract(1, "weeks").startOf("isoWeek"),
-    moment().subtract(1, "weeks").endOf("isoWeek"),
-  ],
+  "Minggu Lalu": [moment().subtract(1, "weeks").startOf("isoWeek"), moment().subtract(1, "weeks").endOf("isoWeek")],
   "Bulan Ini": [moment().startOf("month"), moment().endOf("month")],
-  "Bulan Lalu": [
-    moment().subtract(1, "month").startOf("month"),
-    moment().subtract(1, "month").endOf("month"),
-  ],
+  "Bulan Lalu": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
   "Tahun Ini": [moment().startOf("year"), moment().endOf("year")],
-  "Tahun Lalu": [
-    moment().subtract(1, "year").startOf("year"),
-    moment().subtract(1, "year").endOf("year"),
-  ],
+  "Tahun Lalu": [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")],
 };
 
 export const toMoney = (angka) => {
@@ -171,10 +234,7 @@ export const toCurrency = (angka) => {
   } else {
     numbers = angka;
   }
-  var number_string =
-      numbers === "" || numbers === undefined
-        ? String(0.0)
-        : numbers.toString().replace(/,|\D/g, ""),
+  var number_string = numbers === "" || numbers === undefined ? String(0.0) : numbers.toString().replace(/,|\D/g, ""),
     split = number_string.split("."),
     sisa = split[0].length % 3,
     rupiah = split[0].substr(0, sisa),
@@ -187,10 +247,7 @@ export const toCurrency = (angka) => {
   }
 
   rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
-  rupiah =
-    parseFloat(angka) < 0
-      ? "-" + rupiah.replace(/^0+/, "")
-      : rupiah.replace(/^0+/, "");
+  rupiah = parseFloat(angka) < 0 ? "-" + rupiah.replace(/^0+/, "") : rupiah.replace(/^0+/, "");
   return rupiah;
 };
 export const rmComma = (angka) => {
@@ -201,10 +258,7 @@ export const rmComma = (angka) => {
   } else {
     numbers = angka;
   }
-  var number_string =
-      numbers === "" || numbers === undefined
-        ? String(0.0)
-        : numbers.toString().replace(/,|\D/g, ""),
+  var number_string = numbers === "" || numbers === undefined ? String(0.0) : numbers.toString().replace(/,|\D/g, ""),
     split = number_string.split("."),
     sisa = split[0].length % 3,
     rupiah = split[0].substr(0, sisa),
@@ -215,10 +269,7 @@ export const rmComma = (angka) => {
   }
 
   rupiah = split[1] !== undefined ? rupiah + "" + split[1] : rupiah;
-  rupiah =
-    parseFloat(angka) < 0
-      ? "-" + rupiah.replace(/^0+/, "")
-      : rupiah.replace(/^0+/, "");
+  rupiah = parseFloat(angka) < 0 ? "-" + rupiah.replace(/^0+/, "") : rupiah.replace(/^0+/, "");
   return parseInt(rupiah, 10);
 };
 // export const rmComma = (angka) => {
@@ -243,10 +294,7 @@ export const toRp = (angka) => {
   } else {
     numbers = angka;
   }
-  var number_string =
-      numbers === "" || numbers === undefined || numbers === null
-        ? String(0.0)
-        : numbers.toString(),
+  var number_string = numbers === "" || numbers === undefined || numbers === null ? String(0.0) : numbers.toString(),
     split = number_string.split("."),
     sisa = split[0].length % 3,
     rupiah = split[0].substr(0, sisa),
@@ -275,41 +323,19 @@ export const ToastQ = Swal.mixin({
 });
 export const statusQ = (lbl, txt) => {
   if (lbl === "success") {
-    return (
-      <button
-        className="btn btn-success btn-sm btn-status"
-        style={{ fontSize: "8px" }}
-      >
-        {txt}
-      </button>
-    );
+    return <button className="btn btn-success btn-sm">{txt}</button>;
   } else if (lbl === "danger") {
-    return (
-      <button
-        className="btn btn-danger btn-sm btn-status"
-        style={{ fontSize: "8px" }}
-      >
-        {txt}
-      </button>
-    );
+    return <button className="btn btn-danger btn-sm">{txt}</button>;
   } else if (lbl === "warning") {
     return (
-      <button
-        className="btn btn-warning btn-sm btn-status"
-        style={{ fontSize: "8px", color: "white" }}
-      >
+      <button className="btn btn-warning btn-sm" style={{ color: "white" }}>
         {txt}
       </button>
     );
   } else if (lbl === "info") {
-    return (
-      <button
-        className="btn btn-info btn-sm btn-status"
-        style={{ fontSize: "8px" }}
-      >
-        {txt}
-      </button>
-    );
+    return <button className="btn btn-info btn-sm">{txt}</button>;
+  } else if (lbl === "primary") {
+    return <button className="btn btn-primary btn-sm">{txt}</button>;
   }
 };
 
@@ -368,8 +394,7 @@ export const lengthBrg = (str) => {
 export const CapitalizeEachWord = (str) => {
   let splitStr = str.toLowerCase().split(" ");
   for (let i = 0; i < splitStr.length; i++) {
-    splitStr[i] =
-      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
   return splitStr.join(" ");
 };
@@ -433,10 +458,7 @@ export const swal = (msg) => {
 
 export const btnSave = (className = "", callback, title = "") => {
   return (
-    <button
-      onClick={(e) => callback(e)}
-      className={`btn btn-save ${className}`}
-    >
+    <button onClick={(e) => callback(e)} className={`btn btn-save ${className}`}>
       <i className="fa fa-save"></i>
       {title}
     </button>
@@ -444,34 +466,18 @@ export const btnSave = (className = "", callback, title = "") => {
 };
 export const btnSCancel = (className = "", callback, title = "") => {
   return (
-    <button
-      onClick={(e) => callback(e)}
-      className={`btn btn-cancel ${className}`}
-    >
+    <button onClick={(e) => callback(e)} className={`btn btn-cancel ${className}`}>
       <i className="fa fa-close"></i>
       {title}
     </button>
   );
 };
 
-export const select2Group = (
-  value,
-  onChange,
-  options,
-  onClick,
-  placeholder = "",
-  icon = "fa-plus"
-) => {
+export const select2Group = (value, onChange, options, onClick, placeholder = "", icon = "fa-plus") => {
   return (
     <div className="d-flex align-items-center">
       <div style={{ width: "-webkit-fill-available" }}>
-        <Select
-          autoFocus={true}
-          options={options}
-          placeholder={`Pilih ${placeholder}`}
-          onChange={(value, actionMeta) => onChange(value, actionMeta)}
-          value={value}
-        />
+        <Select autoFocus={true} options={options} placeholder={`Pilih ${placeholder}`} onChange={(value, actionMeta) => onChange(value, actionMeta)} value={value} />
       </div>
       <div style={{ width: "auto", marginLeft: "-2px", zIndex: "99" }}>
         <button
@@ -489,34 +495,29 @@ export const select2Group = (
   );
 };
 
-export const dateRange = (onApply, value, isShow = true, isLabel = true) => {
+export const dateRange = (onApply, value, isActive = "", isShow = true, isLabel = true) => {
   return (
     <div className={`form-group ${!isShow && "none"}`}>
-      <label
-        style={{ display: isLabel || isLabel === undefined ? "block" : "none" }}
-      >
-        {" "}
-        Periode{" "}
-      </label>
+      <label style={{ display: isLabel || isLabel === undefined ? "block" : "none" }}> Periode </label>
       <DateRangePicker
-        style={{ display: "unset" }}
         ranges={rangeDate}
         alwaysShowCalendars={true}
-        onEvent={(event, picker) => {}}
+        autoUpdateInput={true}
+        onShow={(event, picker) => {
+          if (isEmptyOrUndefined(isActive)) {
+            let rmActiveDefault = document.querySelector(`.ranges>ul>li[data-range-key="Hari Ini"]`);
+            rmActiveDefault.classList.remove("active");
+            let setActive = document.querySelector(`.ranges>ul>li[data-range-key="` + isActive + `"]`);
+            setActive.classList.add("active");
+          }
+        }}
         onApply={(event, picker) => {
           const firstDate = moment(picker.startDate._d).format("YYYY-MM-DD");
           const lastDate = moment(picker.endDate._d).format("YYYY-MM-DD");
-          onApply(firstDate, lastDate);
+          onApply(firstDate, lastDate, picker.chosenLabel || "");
         }}
       >
-        <input
-          // style={{ fontSize: "12px" }}
-          readOnly={true}
-          type="text"
-          className={`form-control`}
-          name="date"
-          value={value}
-        />
+        <input readOnly={true} type="text" className={`form-control`} name="date" value={value} />
       </DateRangePicker>
     </div>
   );
@@ -567,13 +568,7 @@ export const onHandleKeyboardChar = function (key, callback) {
 };
 
 export const isEmptyOrUndefined = (val, col, isShowError = true) => {
-  if (
-    val === "" ||
-    val === undefined ||
-    val === null ||
-    val === "null" ||
-    val === "undefined"
-  ) {
+  if (val === "" || val === undefined || val === null || val === "null" || val === "undefined") {
     if (col !== undefined && isShowError === true) {
       handleError(col);
     }
@@ -603,7 +598,8 @@ export const noData = (colSpan) => {
 
 export const handleDataSelect = (props, value, label) => {
   let data = [];
-  if (value == "kd_cust") {
+
+  if (value === "kd_cust") {
     data.push({
       value: "1000001",
       label: "UMUM",
@@ -615,10 +611,38 @@ export const handleDataSelect = (props, value, label) => {
       label: "UMUM",
     });
   }
-  props.map((val) => {
-    data.push({ value: val[value], label: val[label] });
-  });
+
+  props.map((val) => data.push({ value: val[value], label: val[label] }));
+
   return data;
+};
+
+export const dataStatus = (isAll = false) => {
+  let data = [];
+  if (isAll) {
+    data.push({ value: "semua", label: "Semua status" });
+  }
+  data.push({ value: "1", label: "Aktif" });
+  data.push({ value: "0", label: "Tidak aktif" });
+
+  return data;
+};
+
+export const isProgress = (props) => {
+  let loading;
+  if (props === "loading") {
+    loading = (
+      <div>
+        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+        <span className="sr-only">Loading...</span>
+      </div>
+    );
+  } else if (props > 0 && props < 100) {
+    loading = props + "%";
+  } else {
+    loading = <i className="fa fa-print"></i>;
+  }
+  return loading;
 };
 
 class Paginationq extends Component {

@@ -4,11 +4,7 @@ import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
-import {
-  createSales,
-  updateSales,
-} from "redux/actions/masterdata/sales/sales.action";
-import Select from "react-select";
+import { createSales, updateSales } from "redux/actions/masterdata/sales/sales.action";
 
 import LokasiCommon from "../../../common/LokasiCommon";
 import IsActiveStatus from "../../../common/IsActiveCommon";
@@ -78,45 +74,21 @@ class FormSales extends Component {
   }
 
   render() {
-    const lok_val = this.state.location;
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formSales"}
-        size="md"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined ? "Tambah Sales" : "Ubah Sales"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSales"} size="md">
+        <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah Sales" : "Ubah Sales"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
               <label>Nama</label>
-              <input
-                type="text"
-                className="form-control"
-                name="nama"
-                value={this.state.nama}
-                onChange={(e) => this.setState({ nama: e.target.value })}
-              />
+              <input type="text" className="form-control" name="nama" value={this.state.nama} onChange={(e) => this.setState({ nama: e.target.value })} />
             </div>
-            <LokasiCommon
-              callback={(res) => this.setState({ location: res.value })}
-              isRequired={true}
-              dataEdit={this.state.location}
-            />
-            <IsActiveStatus
-              callback={(res) => this.setState({ status: res.value })}
-              isRequired={true}
-              dataEdit={this.state.status}
-            />
+            <LokasiCommon callback={(res) => this.setState({ location: res.value })} isRequired={true} dataEdit={this.state.location} />
+            <IsActiveStatus callback={(res) => this.setState({ status: res.value })} isRequired={true} dataEdit={this.state.status} />
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary">

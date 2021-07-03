@@ -3,7 +3,6 @@ import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
 import { FetchMeja } from "redux/actions/masterdata/meja/meja.action";
 import { FetchAreaAll } from "redux/actions/masterdata/area/area.action";
-import Preloader from "Preloader";
 import ListMeja from "./src/list";
 
 class Meja extends Component {
@@ -33,17 +32,7 @@ class Meja extends Component {
   render() {
     return (
       <Layout page="Meja">
-        <div className="col-12 box-margin">
-          {
-            <ListMeja
-              data={this.props.meja}
-              area={this.props.area}
-              pagin={this.handlePagin}
-              search={this.handleSearch}
-              token={this.state.token}
-            />
-          }
-        </div>
+        <div className="col-12 box-margin">{<ListMeja data={this.props.meja} area={this.props.area} pagin={this.handlePagin} search={this.handleSearch} token={this.state.token} />}</div>
       </Layout>
     );
   }

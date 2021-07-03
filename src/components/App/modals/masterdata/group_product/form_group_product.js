@@ -3,17 +3,9 @@ import WrapperModal from "../../_wrapper.modal";
 import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
-import {
-  createGroupProduct,
-  updateGroupProduct,
-  FetchGroupProduct,
-} from "redux/actions/masterdata/group_product/group_product.action";
+import { createGroupProduct, updateGroupProduct, FetchGroupProduct } from "redux/actions/masterdata/group_product/group_product.action";
 import FileBase64 from "react-file-base64";
-import {
-  isEmptyOrUndefined,
-  setFocus,
-  stringifyFormData,
-} from "../../../../../helper";
+import { isEmptyOrUndefined, setFocus, stringifyFormData } from "../../../../../helper";
 import SelectCommon from "../../../common/SelectCommon";
 
 const kel_brg = "kel_brg";
@@ -52,12 +44,12 @@ class FormGroupProduct extends Component {
 
     if (propsGroup.data !== undefined) {
       if (typeof propsGroup.data === "object") {
-        propsGroup.data.map((v, i) => {
+        propsGroup.data.map((v, i) =>
           stateGroup.push({
             value: v.kode,
             label: v.nama,
-          });
-        });
+          })
+        );
       }
     }
 
@@ -97,7 +89,7 @@ class FormGroupProduct extends Component {
     }
     if (this.props.fastAdd === true) {
       this.props.dispatch(ModalType("formProduct"));
-      this.props.dispatch(FetchGroupProduct(1, "", "1000"));
+      this.props.dispatch(FetchGroupProduct("page=1&perpage=1000"));
     }
   }
 
@@ -127,18 +119,10 @@ class FormGroupProduct extends Component {
       return;
     }
 
-    if (this.props.detail.kel_brg !== "") {
-      this.props.dispatch(
-        updateGroupProduct(
-          this.props.detail.kel_brg,
-          parseData,
-          this.props.detail.where
-        )
-      );
+    if (this.props.detail !== undefined && this.props.detail[nm_kel_brg] !== "") {
+      this.props.dispatch(updateGroupProduct(this.props.detail.kel_brg, parseData, this.props.detail.where));
     } else {
-      this.props.dispatch(
-        createGroupProduct(parseData, this.props.fastAdd !== undefined)
-      );
+      this.props.dispatch(createGroupProduct(parseData, this.props.fastAdd !== undefined));
     }
 
     if (this.props.fastAdd === undefined) {
@@ -156,17 +140,8 @@ class FormGroupProduct extends Component {
   render() {
     console.log("state", this.state.group2);
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formGroupProduct"}
-        size="md"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail
-            ? this.props.detail.kel_brg === ""
-              ? "Tambah kelompok barang"
-              : "Ubah kelompok barang"
-            : "Tambah kelompok barang"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formGroupProduct"} size="md">
+        <ModalHeader toggle={this.toggle}>{this.props.detail ? (this.props.detail.kel_brg === "" ? "Tambah kelompok barang" : "Ubah kelompok barang") : "Tambah kelompok barang"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="form-group">
@@ -204,31 +179,15 @@ class FormGroupProduct extends Component {
 
             <div className="form-group">
               <label htmlFor="inputState" className="col-form-label">
-                Foto{" "}
-                {this.props.detail !== undefined &&
-                this.props.detail.kel_brg !== "" ? (
-                  <small className="text-right text-danger">
-                    kosongkan apabila tidak akan diubah
-                  </small>
-                ) : (
-                  ""
-                )}
+                Foto {this.props.detail !== undefined && this.props.detail.kel_brg !== "" ? <small className="text-right text-danger">kosongkan apabila tidak akan diubah</small> : ""}
               </label>
               <br />
-              <FileBase64
-                multiple={false}
-                className="mr-3 form-control-file"
-                onDone={this.handleChangeImage}
-              />
+              <FileBase64 multiple={false} className="mr-3 form-control-file" onDone={this.handleChangeImage} />
             </div>
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary">

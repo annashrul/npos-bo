@@ -2,23 +2,13 @@ import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import Paginationq, { statusQ } from "helper";
-import {
-  deleteCustomer,
-  FetchCustomer,
-  FetchCustomerEdit,
-  setCustomerEdit,
-} from "redux/actions/masterdata/customer/customer.action";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { deleteCustomer, FetchCustomer, setCustomerEdit } from "redux/actions/masterdata/customer/customer.action";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import FormCustomer from "components/App/modals/masterdata/customer/form_customer";
 import { FetchCustomerTypeAll } from "redux/actions/masterdata/customer_type/customer_type.action";
-import Swal from "sweetalert2";
 import { generateNo } from "../../../../../../helper";
-
+import HeaderGeneralCommon from "../../../../common/HeaderGeneralCommon";
+import TableCommon from "../../../../common/TableCommon";
 class ListCustomer extends Component {
   constructor(props) {
     super(props);
@@ -52,8 +42,7 @@ class ListCustomer extends Component {
     this.handleGet(any, 1);
   }
 
-  toggleModal(e, i) {
-    e.preventDefault();
+  toggleModal(i) {
     if (i === null) {
       this.setState({ detail: { where: this.state.where, id: "" } });
     } else {
@@ -65,17 +54,14 @@ class ListCustomer extends Component {
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formCustomer"));
     this.props.dispatch(FetchCustomerTypeAll());
-    this.props.dispatch(setCustomerEdit([]));
   }
 
-  handleDelete(e, id) {
-    e.preventDefault();
+  handleDelete(id) {
     let detail = {};
     Object.assign(detail, {
       where: this.state.where,
       total: this.props.data.total,
     });
-    console.log(detail);
     this.props.dispatch(deleteCustomer(id, detail));
   }
   render() {
@@ -83,7 +69,7 @@ class ListCustomer extends Component {
 
     return (
       <div>
-        <form onSubmit={this.handlesearch} noValidate>
+        {/* <form onSubmit={this.handlesearch} noValidate>
           <div className="row">
             <div className="col-10 col-xs-10 col-md-3">
               <div className="input-group input-group-sm">
@@ -104,12 +90,7 @@ class ListCustomer extends Component {
             </div>
             <div className="col-2 col-xs-2 col-md-9">
               <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
+                <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                   <i className="fa fa-plus" />
                 </button>
               </div>
@@ -142,23 +123,13 @@ class ListCustomer extends Component {
                 data.map((v, i) => {
                   return (
                     <tr key={i}>
-                      <td className="middle nowrap text-center">
-                        {generateNo(i, current_page)}
-                      </td>
+                      <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
                       <td className="middle nowrap text-center">
                         <UncontrolledButtonDropdown>
                           <DropdownToggle caret></DropdownToggle>
                           <DropdownMenu>
-                            <DropdownItem
-                              onClick={(e) => this.toggleModal(e, i)}
-                            >
-                              Edit
-                            </DropdownItem>
-                            <DropdownItem
-                              onClick={(e) => this.handleDelete(e, v.kd_cust)}
-                            >
-                              Delete
-                            </DropdownItem>
+                            <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
+                            <DropdownItem onClick={(e) => this.handleDelete(e, v.kd_cust)}>Delete</DropdownItem>
                           </DropdownMenu>
                         </UncontrolledButtonDropdown>
                       </td>
@@ -170,11 +141,7 @@ class ListCustomer extends Component {
                       <td className="middle nowrap">{v.lokasi}</td>
                       <td className="middle nowrap">{v.keterangan}</td>
                       <td className="middle nowrap">{v.alamat}</td>
-                      <td className="middle nowrap">
-                        {v.status === "1"
-                          ? statusQ("success", "Aktif")
-                          : statusQ("danger", "Tidak Aktif")}
-                      </td>
+                      <td className="middle nowrap">{v.status === "1" ? statusQ("success", "Aktif") : statusQ("danger", "Tidak Aktif")}</td>
                     </tr>
                   );
                 })
@@ -187,22 +154,58 @@ class ListCustomer extends Component {
           </table>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={this.handlePageChange.bind(this)}
-          />
-        </div>
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
+        </div> */}
+
+        <HeaderGeneralCommon
+          callbackGet={(res) => {
+            this.setState({ any: res });
+            this.handleGet(res, 1);
+          }}
+          callbackAdd={() => this.toggleModal(null)}
+        />
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "#", className: "text-center", width: "1%" },
+            { label: "Kode" },
+            { label: "Nama" },
+            { label: "Telepon" },
+            { label: "Tipe Customer" },
+            { label: "Email" },
+            { label: "Lokasi" },
+            { label: "Keterangan" },
+            { label: "Alamat" },
+            { label: "Status" },
+          ]}
+          meta={{
+            total: total,
+            current_page: current_page,
+            per_page: per_page,
+          }}
+          body={typeof data === "object" && data}
+          label={[
+            { label: "kd_cust" },
+            { label: "nama" },
+            { label: "tlp" },
+            { label: "cust_type" },
+            { label: "email" },
+            { label: "lokasi" },
+            { label: "keterangan" },
+            { label: "alamat" },
+            { label: "status", isStatus: true },
+          ]}
+          current_page={current_page}
+          action={[{ label: "Edit" }, { label: "Hapus" }]}
+          callback={(e, index) => {
+            if (e === 0) this.toggleModal(index);
+            if (e === 1) this.handleDelete(index);
+          }}
+          callbackPage={this.handlePageChange.bind(this)}
+        />
         {
           // this.props.dataCustomerEdit!==undefined?
-          this.props.isOpen && (
-            <FormCustomer
-              detail={this.state.detail}
-              dataCustomerEdit={this.props.dataCustomerEdit}
-              dataCustomerTypeAll={this.props.dataCustomerTypeAll}
-            />
-          )
+          this.props.isOpen && <FormCustomer detail={this.state.detail} dataCustomerEdit={this.props.dataCustomerEdit} dataCustomerTypeAll={this.props.dataCustomerTypeAll} />
           // : <Preloader/>
         }
       </div>

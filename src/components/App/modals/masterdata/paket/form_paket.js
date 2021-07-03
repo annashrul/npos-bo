@@ -4,11 +4,6 @@ import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
-import {
-  createPrinter,
-  updatePrinter,
-} from "redux/actions/masterdata/printer/printer.action";
-import Select from "react-select";
 import { getMargin, rmComma, toCurrency } from "../../../../../helper";
 
 class FormPaket extends Component {
@@ -61,7 +56,6 @@ class FormPaket extends Component {
     let name = event.target.name;
     let value = event.target.value;
     let margin = 0;
-    let hrgBeli = parseInt(rmComma(this.state.harga_beli));
     this.setState({ [name]: value });
     if (name === "harga_jual") {
       margin = getMargin(value, this.state.harga_beli);
@@ -131,34 +125,16 @@ class FormPaket extends Component {
 
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formPaket"}
-        size="md"
-      >
-        <ModalHeader toggle={this.toggle}>
-          Ubah HPP {this.props.detail.nama}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formPaket"} size="md">
+        <ModalHeader toggle={this.toggle}>Ubah HPP {this.props.detail.nama}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="row">
               <div className="col-md-4">
                 <div className="form-group">
                   <label>Harga beli</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="harga_beli"
-                    value={toCurrency(this.state.harga_beli)}
-                    onChange={this.handleChange}
-                  />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.harga_beli !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
+                  <input type="text" className="form-control" name="harga_beli" value={toCurrency(this.state.harga_beli)} onChange={this.handleChange} />
+                  <div className="invalid-feedback" style={this.state.error.harga_beli !== "" ? { display: "block" } : { display: "none" }}>
                     {this.state.error.harga_beli}
                   </div>
                 </div>
@@ -166,21 +142,8 @@ class FormPaket extends Component {
               <div className="col-md-4">
                 <div className="form-group">
                   <label>Margin</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="margin"
-                    value={toCurrency(this.state.margin)}
-                    onChange={this.handleChange}
-                  />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.margin !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
+                  <input type="text" className="form-control" name="margin" value={toCurrency(this.state.margin)} onChange={this.handleChange} />
+                  <div className="invalid-feedback" style={this.state.error.margin !== "" ? { display: "block" } : { display: "none" }}>
                     {this.state.error.margin}
                   </div>
                 </div>
@@ -188,21 +151,8 @@ class FormPaket extends Component {
               <div className="col-md-4">
                 <div className="form-group">
                   <label>Harga jual</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="harga_jual"
-                    value={toCurrency(this.state.harga_jual)}
-                    onChange={this.handleChange}
-                  />
-                  <div
-                    className="invalid-feedback"
-                    style={
-                      this.state.error.harga_jual !== ""
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
+                  <input type="text" className="form-control" name="harga_jual" value={toCurrency(this.state.harga_jual)} onChange={this.handleChange} />
+                  <div className="invalid-feedback" style={this.state.error.harga_jual !== "" ? { display: "block" } : { display: "none" }}>
                     {this.state.error.harga_jual}
                   </div>
                 </div>
@@ -211,11 +161,7 @@ class FormPaket extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mb-2 mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Cancel
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">

@@ -1,17 +1,9 @@
 import React, { Component } from "react";
 import Layout from "components/App/Layout";
 import connect from "react-redux/es/connect/connect";
-import {
-  readPrinter,
-  deletePrinter,
-} from "redux/actions/masterdata/printer/printer.action";
+import { readPrinter, deletePrinter } from "redux/actions/masterdata/printer/printer.action";
 import FormPrinter from "../../modals/masterdata/printer/form_printer";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import { generateNo, rmSpaceToStrip } from "../../../../helper";
@@ -40,8 +32,7 @@ class Printer extends Component {
   componentWillMount() {
     this.checkingParam("", 1);
   }
-  toggleModal(e, i) {
-    e.preventDefault();
+  toggleModal(i) {
     const bool = !this.props.isOpen;
     this.props.dispatch(ModalToggle(bool));
     this.props.dispatch(ModalType("formPrinter"));
@@ -71,16 +62,15 @@ class Printer extends Component {
       [e.target.name]: e.target.value,
     });
   }
-  handleDelete(e, id) {
-    e.preventDefault();
+  handleDelete(id) {
     this.props.dispatch(deletePrinter(id, this.state.where));
   }
-  handleTestPrint(e, i) {
-    e.preventDefault();
+  handleTestPrint(i) {
     this.props.dispatch(testPrinter(this.props.data.data[i].id_printer));
   }
   render() {
     const { total, per_page, current_page, data } = this.props.data;
+
     return (
       <Layout page="Printer">
         <div className="col-12 box-margin">
@@ -107,18 +97,65 @@ class Printer extends Component {
               </div>
               <div className="col-2 col-xs-2 col-md-9">
                 <div className="form-group text-right">
-                  <button
-                    style={{ height: "38px" }}
-                    type="button"
-                    onClick={(e) => this.toggleModal(e, null)}
-                    className="btn btn-primary"
-                  >
+                  <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                     <i className="fa fa-plus" />
                   </button>
                 </div>
               </div>
             </div>
           </form>
+          {/* <TableCommon
+            head={head}
+            body={
+              typeof data === "object"
+                ? data.length > 0
+                  ? data.map((res, index) => {
+                      return (
+                        <tr key={index}>
+                          <td className="middle text-center nowrap">
+                            {generateNo(index, current_page)}
+                          </td>
+                          <td className="text-center middle nowrap">
+                            <ButtonActionCommon
+                              action={[
+                                { label: "Edit" },
+                                { label: "Test print" },
+                                { label: "Hapus" },
+                              ]}
+                              callback={(e) => {
+                                if (e === 0) this.toggleModal(index);
+                                if (e === 0) this.handleTestPrint(index);
+                                if (e === 0) this.handleDelete(res.id_printer);
+                              }}
+                            />
+                          </td>
+                          <td className="middle nowrap">{res.nama} </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.lokasi)}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.paper_size)}
+                          </td>
+
+                          <td className="middle nowrap">
+                            {`${res.konektor}`.toLowerCase()}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.ip)}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.vid)}
+                          </td>
+                          <td className="middle nowrap">
+                            {rmSpaceToStrip(res.pid)}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  : noData(head.length)
+                : noData(head.length)
+            }
+          /> */}
           <div style={{ overflowX: "auto" }}>
             <table className="table table-hover table-noborder">
               <thead className="bg-light">
@@ -156,53 +193,25 @@ class Printer extends Component {
                   data.map((v, i) => {
                     return (
                       <tr key={i}>
-                        <td className="middle text-center nowrap">
-                          {generateNo(i, current_page)}
-                        </td>
+                        <td className="middle text-center nowrap">{generateNo(i, current_page)}</td>
                         <td className="text-center middle nowrap">
                           <UncontrolledButtonDropdown>
                             <DropdownToggle caret></DropdownToggle>
                             <DropdownMenu>
-                              <DropdownItem
-                                onClick={(e) => this.toggleModal(e, i)}
-                              >
-                                Edit
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) => this.handleTestPrint(e, i)}
-                              >
-                                Test print
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(e) =>
-                                  this.handleDelete(e, v.id_printer)
-                                }
-                              >
-                                Delete
-                              </DropdownItem>
+                              <DropdownItem onClick={(e) => this.toggleModal(e, i)}>Edit</DropdownItem>
+                              <DropdownItem onClick={(e) => this.handleTestPrint(e, i)}>Test print</DropdownItem>
+                              <DropdownItem onClick={(e) => this.handleDelete(e, v.id_printer)}>Delete</DropdownItem>
                             </DropdownMenu>
                           </UncontrolledButtonDropdown>
                         </td>
                         <td className="middle nowrap">{v.nama} </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.lokasi)}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.paper_size)}
-                        </td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.lokasi)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.paper_size)}</td>
 
-                        <td className="middle nowrap">
-                          {`${v.konektor}`.toLowerCase()}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.ip)}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.vid)}
-                        </td>
-                        <td className="middle nowrap">
-                          {rmSpaceToStrip(v.pid)}
-                        </td>
+                        <td className="middle nowrap">{`${v.konektor}`.toLowerCase()}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.ip)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.vid)}</td>
+                        <td className="middle nowrap">{rmSpaceToStrip(v.pid)}</td>
                       </tr>
                     );
                   })
@@ -215,12 +224,7 @@ class Printer extends Component {
             </table>
           </div>
           <div style={{ marginTop: "20px", float: "right" }}>
-            <Paginationq
-              current_page={current_page}
-              per_page={per_page}
-              total={total}
-              callback={this.handlePageChange.bind(this)}
-            />
+            <Paginationq current_page={current_page} per_page={per_page} total={total} callback={this.handlePageChange.bind(this)} />
           </div>
           {this.props.isOpen && <FormPrinter detail={this.state.detail} />}
         </div>

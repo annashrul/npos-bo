@@ -6,12 +6,13 @@ import { FetchCustomer } from "redux/actions/masterdata/customer/customer.action
 import ListCustomer from "./src/master_customer/list";
 import { FetchCustomerType } from "redux/actions/masterdata/customer_type/customer_type.action";
 import ListCustomerType from "./src/master_customer_type/list";
+import TabCommon from "../../common/TabCommon";
 
 class Customer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: "",
+      isShow: true,
     };
   }
   componentWillReceiveProps = (nextProps) => {
@@ -33,34 +34,42 @@ class Customer extends Component {
     this.props.dispatch(FetchCustomer("page=1"));
     this.props.dispatch(FetchCustomerType("page=1"));
   }
-  handleSelect = (index) => {
-    this.setState({ selectedIndex: index }, () => {});
-  };
+  // handleSelect = (index) => {
+  //   this.setState({ selectedIndex: index }, () => {});
+  // };
 
   render() {
     return (
-      <Layout page="Customer">
-        <div className="col-12 box-margin">
-          <Tabs>
-            <TabList>
-              <Tab onClick={() => this.handleSelect(0)}>Customer</Tab>
-              <Tab onClick={() => this.handleSelect(1)}>Tipe Customer</Tab>
-            </TabList>
-            <TabPanel>
-              <ListCustomer
-                token={this.state.token}
-                data={this.props.customer}
-              />
-            </TabPanel>
-            <TabPanel>
-              <ListCustomerType
-                token={this.state.token}
-                data={this.props.customerType}
-              />
-            </TabPanel>
-          </Tabs>
-        </div>
-      </Layout>
+      <TabCommon
+        path="barang"
+        tabHead={["Daftar Customer", "Tipe customer"]}
+        tabBody={[<ListCustomer data={this.props.customer} />, <ListCustomerType data={this.props.customerType} />]}
+        callbackActive={(res) => {
+          this.setState({ isShow: res === 0 });
+        }}
+      />
+      // <Layout page="Customer">
+      //   <div className="col-12 box-margin">
+      //     <Tabs>
+      //       <TabList>
+      //         <Tab onClick={() => this.handleSelect(0)}>Customer</Tab>
+      //         <Tab onClick={() => this.handleSelect(1)}>Tipe Customer</Tab>
+      //       </TabList>
+      //       <TabPanel>
+      //         <ListCustomer
+      //           token={this.state.token}
+      //           data={this.props.customer}
+      //         />
+      //       </TabPanel>
+      //       <TabPanel>
+      //         <ListCustomerType
+      //           token={this.state.token}
+      //           data={this.props.customerType}
+      //         />
+      //       </TabPanel>
+      //     </Tabs>
+      //   </div>
+      // </Layout>
     );
   }
 }

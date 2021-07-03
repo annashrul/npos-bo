@@ -13,8 +13,24 @@ class SelectSortCommon extends Component {
         { value: "desc", label: "DESCENDING" },
         { value: "asc", label: "ASCENDING" },
       ],
-      dataObject: "",
+      dataObject: "desc",
     };
+  }
+
+  getProps(props) {
+    if (props.dataEdit !== undefined || props.dataEdit !== "") {
+      const state = this.state.dataArray.filter((res) => res.value === props.dataEdit);
+      this.setState({ dataObject: state[0] });
+    }
+  }
+  componentDidMount() {
+    this.getProps(this.props);
+  }
+  componentWillMount() {
+    this.getProps(this.props);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.getProps(nextProps);
   }
 
   onChange(value) {
@@ -26,12 +42,7 @@ class SelectSortCommon extends Component {
     return (
       <div className="form-group">
         <label>Sort</label>
-        <Select
-          options={this.state.dataArray}
-          placeholder={`Pilih sort`}
-          onChange={(value, actionMeta) => this.onChange(value)}
-          value={this.state.dataObject}
-        />
+        <Select options={this.state.dataArray} placeholder={`Pilih sort`} onChange={(value, actionMeta) => this.onChange(value)} value={this.state.dataObject} />
       </div>
     );
   }

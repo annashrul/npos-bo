@@ -1,16 +1,9 @@
 import React, { Component } from "react";
 import connect from "react-redux/es/connect/connect";
 import FormCash from "components/App/modals/masterdata/cash/form_cash";
-import Swal from "sweetalert2";
 import Paginationq from "helper";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
-import { FetchCash } from "redux/actions/masterdata/cash/cash.action";
-import {
-  UncontrolledButtonDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-} from "reactstrap";
+import { UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import { generateNo } from "../../../../../helper";
 
 class ListCash extends Component {
@@ -84,12 +77,7 @@ class ListCash extends Component {
             </div>
             <div className="col-2 col-xs-2 col-md-9">
               <div className="form-group text-right">
-                <button
-                  style={{ height: "38px" }}
-                  type="button"
-                  onClick={(e) => this.toggleModal(e, null)}
-                  className="btn btn-primary"
-                >
+                <button style={{ height: "38px" }} type="button" onClick={(e) => this.toggleModal(e, null)} className="btn btn-primary">
                   <i className="fa fa-plus" />
                 </button>
               </div>
@@ -103,16 +91,10 @@ class ListCash extends Component {
               <table className="table table-hover table-noborder">
                 <thead className="bg-light">
                   <tr>
-                    <th
-                      className="text-black text-center middle nowrap"
-                      width="1%"
-                    >
+                    <th className="text-black text-center middle nowrap" width="1%">
                       No
                     </th>
-                    <th
-                      className="text-black text-center middle nowrap"
-                      width="1%"
-                    >
+                    <th className="text-black text-center middle nowrap" width="1%">
                       #
                     </th>
                     <th className="text-black middle nowrap" width="5%">
@@ -129,32 +111,18 @@ class ListCash extends Component {
                     data.map((v, i) => {
                       return (
                         <tr key={i}>
-                          <td className="text-center middle nowrap">
-                            {generateNo(i, current_page)}
-                          </td>
+                          <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
                           <td className="text-center middle nowrap">
                             <UncontrolledButtonDropdown>
                               <DropdownToggle caret></DropdownToggle>
                               <DropdownMenu>
-                                <DropdownItem
-                                  onClick={(e) => toggleModal(e, i)}
-                                >
-                                  Edit
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={(e) => handleDelete(e, v.id)}
-                                >
-                                  Delete
-                                </DropdownItem>
+                                <DropdownItem onClick={(e) => toggleModal(e, i)}>Edit</DropdownItem>
+                                <DropdownItem onClick={(e) => handleDelete(e, v.id)}>Delete</DropdownItem>
                               </DropdownMenu>
                             </UncontrolledButtonDropdown>
                           </td>
-                          <td className="middle nowrap">
-                            {v.jenis === 0 ? "KAS KECIL" : "KAS BESAR"}
-                          </td>
-                          <td className="middle nowrap">
-                            {v.type === 0 ? "KAS MASUK" : "KAS KELUAR"}
-                          </td>
+                          <td className="middle nowrap">{v.jenis === 0 ? "KAS KECIL" : "KAS BESAR"}</td>
+                          <td className="middle nowrap">{v.type === 0 ? "KAS MASUK" : "KAS KELUAR"}</td>
                           <td className="middle nowrap">{v.title}</td>
                         </tr>
                       );
@@ -170,12 +138,7 @@ class ListCash extends Component {
           </div>
         </div>
         <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq
-            current_page={current_page}
-            per_page={per_page}
-            total={total}
-            callback={(page) => this.handlePageChange(page)}
-          />
+          <Paginationq current_page={current_page} per_page={per_page} total={total} callback={(page) => this.handlePageChange(page)} />
         </div>
         {this.props.isOpen && <FormCash detail={this.state.detail} />}
       </div>

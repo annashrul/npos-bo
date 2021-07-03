@@ -5,10 +5,8 @@ import { store, destroy } from "components/model/app.model";
 import setAuthToken from "../../utils/setAuthToken";
 import { HEADERS } from "./_constants";
 import Cookies from "js-cookie";
-import { ModalToggle } from "./modal.action";
 import { handlePost } from "./handleHttp";
-import { swal } from "../../helper";
-
+import { FetchAllLocation } from "./masterdata/location/location.action";
 // Login user -- get token
 export const loginUser =
   (userData, expire = 1) =>
@@ -29,6 +27,7 @@ export const loginUser =
         headers: { username: atob(Cookies.get("tnt=")) },
       })
       .then((res) => {
+        // dispatch(FetchAllLocation(1));
         setTimeout(function () {
           Swal.close();
           // save token to localStorage
@@ -75,18 +74,10 @@ export const loginUser =
       .catch((err) => {
         Swal.close();
         if (err.message === "Network Error") {
-          Swal.fire(
-            "Server tidak tersambung!.",
-            "Periksa koneksi internet anda.",
-            "error"
-          );
+          Swal.fire("Server tidak tersambung!.", "Periksa koneksi internet anda.", "error");
         } else {
           if (err.response.data.message === "No access.") {
-            Swal.fire(
-              "No access.",
-              "You cannot access this page. Please call customer service for more info.",
-              "error"
-            );
+            Swal.fire("No access.", "You cannot access this page. Please call customer service for more info.", "error");
           } else {
             Swal.fire(err.response.data.msg, "", "error");
           }

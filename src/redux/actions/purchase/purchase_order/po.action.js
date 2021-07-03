@@ -2,7 +2,8 @@ import { PO, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../../handleHttp";
+import { handleGet, handleGetExport } from "../../handleHttp";
+import { ModalToggle } from "../../modal.action";
 
 export function setLoading(load) {
   return {
@@ -66,10 +67,12 @@ export function setPoReportDetail(data = []) {
   return { type: PO.PO_REPORT_DETAIL, data };
 }
 
-export const FetchPoReport = (page = 1, perpage = 10) => {
+export const FetchPoReport = (where = "") => {
   return (dispatch) => {
+    let url = "purchaseorder/report?status=0";
+    if (where !== "") url += `&${where}`;
     handleGet(
-      `purchaseorder/report?page=${page}&perpage=${perpage}&status=0`,
+      url,
       (res) => {
         let data = res.data;
         dispatch(setPoReport(data));
@@ -192,66 +195,50 @@ export const storePo = (data, param) => {
       });
   };
 };
-export const fetchPoReport = (page = 1, where = "") => {
+export const fetchPoReport = (where = "") => {
   return (dispatch) => {
-    let url = `purchaseorder/report?page=${page}`;
+    let url = `purchaseorder/report?perpage=${HEADERS.PERPAGE}`;
     if (where !== "") {
-      url += `${where}`;
+      url += `&${where}`;
     }
-    handleGet(
-      url,
-      (res) => {
-        let data = res.data;
-        dispatch(setPoReport(data));
-      },
-      true
-    );
+    handleGet(url, (res) => dispatch(setPoReport(res.data)), true);
   };
 };
 
 export const fetchPoReportExcel = (page = 1, where = "", perpage = 99999) => {
   return (dispatch) => {
     let url = `purchaseorder/report?page=${page}&perpage=${perpage}`;
-    if (where !== "") {
-      url += `${where}`;
-    }
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setPoReportExcel(res.data));
+        dispatch(ModalToggle(true));
+      },
+      (percent) => dispatch(setLoading(percent))
+      // (percent) => callback(percent)
+    );
+  };
+};
+
+export const poReportDetail = (page = 1, code) => {
+  return (dispatch) => {
+    let url = `purchaseorder/report/${code}?page=${page}&perpage=${HEADERS.PERPAGE}`;
     handleGet(
       url,
       (res) => {
-        let data = res.data;
-        dispatch(setPoReportExcel(data));
+        dispatch(setPoReportDetail(res.data));
+        dispatch(ModalToggle(true));
       },
       true
     );
   };
 };
-export const poReportDetail = (page = 1, code) => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `purchaseorder/report/${code}?page=${page}`)
-      .then(function (response) {
-        const data = response.data;
 
-        dispatch(setPoReportDetail(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {});
-  };
-};
-
-export const FetchPurchaseBySupplierReport = (page = 1, where = "") => {
+export const FetchPurchaseBySupplierReport = (where = "") => {
   return (dispatch) => {
-    let que = `report/pembelian/by_supplier?perpage=5&page=${page}`;
-    if (where !== "") que += `${where}`;
-    handleGet(
-      que,
-      (res) => {
-        let data = res.data;
-        dispatch(setPBSupplierReport(data));
-      },
-      true
-    );
+    let url = "report/pembelian/by_supplier";
+    if (where !== "") url += `?${where}`;
+    handleGet(url, (res) => dispatch(setPBSupplierReport(res.data)), true);
   };
 };
 

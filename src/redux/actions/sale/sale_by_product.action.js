@@ -1,12 +1,12 @@
-import { SALE_BY_PRODUCT, HEADERS } from "../_constants";
-import axios from "axios";
-import { handleGet } from "../handleHttp";
-// export function setLoading(load) {
-//     return {
-//         type: SALE_BY_PRODUCT.LOADING,
-//         load
-//     }
-// }
+import { SALE_BY_PRODUCT } from "../_constants";
+import { handleGet, handleGetExport } from "../handleHttp";
+import { ModalToggle } from "../modal.action";
+export function setDownload(load) {
+  return {
+    type: SALE_BY_PRODUCT.DOWNLOAD,
+    load,
+  };
+}
 export function setLoadingDetail(load) {
   return {
     type: SALE_BY_PRODUCT.LOADING_DETAIL,
@@ -74,55 +74,32 @@ export const FetchReportSaleByProduct = (where = "") => {
     });
   };
 };
-export const FetchReportSaleByProductExcel = (
-  page = 1,
-  where = "",
-  perpage = 10000
-) => {
+export const FetchReportSaleByProductExcel = (page = 1, where = "", perpage = 10000) => {
   return (dispatch) => {
     let url = `report/penjualan/barang?page=${page}&perpage=${perpage}`;
-    if (where !== "") {
-      url += `&${where}`;
-    }
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setReportExcel(data));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+    if (where !== "") url += `&${where}`;
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(setReportExcel(res.data));
+        dispatch(ModalToggle(true));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
 
-export const FetchReportDetailSaleByProduct = (
-  kd,
-  page,
-  datefrom,
-  dateto,
-  perpage
-) => {
+export const FetchReportDetailSaleByProduct = (kd, where = "") => {
   return (dispatch) => {
-    dispatch(setLoadingDetail(true));
-    let url = `report/penjualan/barang/${kd}?page=${page}`;
-    if (datefrom !== "" && dateto !== "") {
-      url += `&datefrom=${datefrom}&dateto=${dateto}`;
-    }
-    if (perpage !== undefined) {
-      url += `&perpage=${perpage}`;
-    }
-    axios
-      .get(HEADERS.URL + url)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setSaleByProductReportData(data));
-        dispatch(setLoadingDetail(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+    let url = `report/penjualan/barang/${kd}`;
+    if (where !== "") url += `?${where}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setSaleByProductReportData(res.data));
+        dispatch(ModalToggle(true));
+      },
+      true
+    );
   };
 };

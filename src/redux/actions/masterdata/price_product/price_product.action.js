@@ -1,13 +1,7 @@
-import { PRICE_PRODUCT, HEADERS } from "../../_constants";
-import axios from "axios";
-import Swal from "sweetalert2";
-import {
-  handleDelete,
-  handleGet,
-  handlePost,
-  handlePut,
-} from "../../handleHttp";
+import { PRICE_PRODUCT } from "../../_constants";
+import { handleGet, handlePut } from "../../handleHttp";
 import { swal } from "../../../../helper";
+import { ModalToggle } from "../../modal.action";
 
 export function setLoading(load) {
   return { type: PRICE_PRODUCT.LOADING, load };
@@ -40,7 +34,10 @@ export const updatePriceProduct = (id, data, where) => {
   return (dispatch) => {
     handlePut(`barangHarga/${id}`, data, (data, msg, status) => {
       swal(msg);
-      dispatch(FetchPriceProduct(where));
+      if (status) {
+        dispatch(ModalToggle(true));
+        dispatch(FetchPriceProduct(where));
+      }
     });
   };
 };

@@ -1,271 +1,203 @@
-import React,{Component} from 'react';
-import {ModalBody, ModalHeader} from "reactstrap";
+import React, { Component } from "react";
+import { ModalBody, ModalHeader } from "reactstrap";
 import connect from "react-redux/es/connect/connect";
-import {
-    HEADERS
-} from "redux/actions/_constants"
 import WrapperModal from "../../../_wrapper.modal";
-import {ModalToggle, ModalType} from "redux/actions/modal.action";
-import {toRp} from "helper";
+import { ModalToggle } from "redux/actions/modal.action";
+import { toRp } from "helper";
 import DetailStockReportTransaction from "./detail_stock_report_transaction";
-import {FetchStockReportDetailTransaction} from "redux/actions/report/inventory/stock_report.action";
-import Cookies from 'js-cookie'
+import { FetchStockReportDetailTransaction } from "redux/actions/report/inventory/stock_report.action";
+import Cookies from "js-cookie";
+import HeaderDetailCommon from "../../../../common/HeaderDetailCommon";
+import TableCommon from "../../../../common/TableCommon";
+import { generateNo, noData } from "../../../../../../helper";
+import { FetchStockReportDetailSatuan } from "redux/actions/report/inventory/stock_report.action";
 
-class DetailStockReportSatuan extends Component{
-    constructor(props){
-        super(props);
-        this.toggle = this.toggle.bind(this);
-        this.state = ({
-            data_lok:[]
-        })
-    }
-    toggle(e){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-        localStorage.removeItem("code");
-        localStorage.removeItem("barcode");
-        localStorage.removeItem("name");
+class DetailStockReportSatuan extends Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      detail: "",
+      isModal: false,
     };
-    handelDetailTrx(e,code,location,barcode,name){
-        e.preventDefault();
-        localStorage.setItem("codeDetailTrx",code);
-        localStorage.setItem("locationDetailTrx",location);
-        localStorage.setItem("barcodeDetailTrx",barcode);
-        localStorage.setItem("nameDetailTrx",name);
-        this.props.dispatch(ModalType("detailStockReportTransaction"));
-        this.props.dispatch(FetchStockReportDetailTransaction(1, code, this.props.startDate, this.props.endDate, localStorage.getItem("locationDetailTrx")))
-    };
-    componentDidMount(){
-            this.setState({
-                data_lok:this.props.lokasi
-            }
-        )
-    }
-    getLok = async () => {
-        let response = await fetch(HEADERS.URL+"lokasi?perpage=99",{method:'post', headers : {tenant:'YmlhbnQ='}});
-        let data = await response.json()
-        return data;
-    };
+  }
+  componentWillUnmount() {
+    this.setState({ isModal: false });
+  }
+  toggle(e) {
+    e.preventDefault();
+    this.setState({ isModal: false });
+    this.props.dispatch(ModalToggle(false));
+  }
 
-    render(){
-        const tenant = atob(atob(Cookies.get('tnt='))) === 'giandy-pusat' || atob(atob(Cookies.get('tnt='))) === 'giandy-cabang01';
+  handelDetailTrx(e, obj) {
+    e.preventDefault();
+    Object.assign(obj, { where: this.props.detail.where_data });
+    this.setState({ isModal: true, detail: obj });
+    this.props.dispatch(FetchStockReportDetailTransaction(obj.kd_brg, this.props.detail.where_data, true));
+  }
 
-        const {data} = this.props.stockReportDetailSatuan;
-        const columnStyle = {verticalAlign: "middle", textAlign: "center",};
-        let totPrice1=0;
-        let totPrice2=0;
-        let totPrice3=0;
-        let totPrice4=0;
-        let totFirstStock=0;
-        let totLastStock=0;
-        let totStockIn=0;
-        let totStockOut=0;
-        let totHpp=0;
-        let totProfitPrice1=0;
-        let totProfitPrice2=0;
-        let totProfitPrice3=0;
-        let totProfitPrice4=0;
-        let sumTotPrice1=0;
-        let sumTotPrice2=0;
-        let sumTotPrice3=0;
-        let sumTotPrice4=0;
-        return (
-            <div>
-                <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailStockReportSatuan"} size="lg" className="custom-map-modal">
-                    <ModalHeader toggle={this.toggle}>Detail Stock Report Satuan</ModalHeader>
-                    <ModalBody>
-                        <table className="table">
-                            <tbody>
-                            <tr>
-                                <td className="text-black">Code</td>
-                                <td className="text-black">: {localStorage.getItem("code")}</td>
-                            </tr>
-                            <tr>
-                                <td className="text-black">Barcode</td>
-                                <td className="text-black">: {localStorage.getItem("barcode")}</td>
-                            </tr>
-                            <tr>
-                                <td className="text-black">Product name</td>
-                                <td className="text-black">: {localStorage.getItem("name")}</td>
-                            </tr>
+  handlePageChange(page) {
+    let where = this.props.detail.where.split("&");
+    where.shift();
+    let whereToString = `${where}`.replaceAll(",", "&");
+    this.props.dispatch(FetchStockReportDetailSatuan(this.props.detail.kd_brg, `page=${page}&${whereToString}`, false));
+  }
 
-                            </tbody>
-                        </table>
-                        <div className="table-responsive" style={{overflowX: "auto"}}>
-                            <table className="table table-hover table-bordered">
-                                {
-                                    tenant?
-                                         <thead className="bg-light">
-                                            <tr>
-                                                <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                                <th className="text-black" style={columnStyle} rowSpan="2">LOKASI</th>
-                                                <th className="text-black" style={columnStyle} colSpan="4">STOCK</th>
-                                            </tr>
-                                            <tr>
-                                                <td className="text-black" style={columnStyle}>First Stock</td>
-                                                <td className="text-black" style={columnStyle}>Stock In</td>
-                                                <td className="text-black" style={columnStyle}>Stock Out</td>
-                                                <td className="text-black" style={columnStyle}>Last Stock</td>
-                                            </tr>
-                                        </thead>
-                                        :
-                                    <thead className="bg-light">
-                                    <tr>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">#</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">LOKASI</th>
-                                        <th className="text-black" style={columnStyle} colSpan="4">HARGA</th>
-                                        <th className="text-black" style={columnStyle} colSpan="4">STOCK</th>
-                                        <th className="text-black" style={columnStyle} rowSpan="2">HPP</th>
-                                        <th className="text-black" style={columnStyle} colSpan="4">PROFIT</th>
-                                        <th className="text-black" style={columnStyle} colSpan="4">TOTAL HARGA</th>
-                                    </tr>
-                                    <tr>
-                                        <td className="text-black" style={columnStyle}>1</td>
-                                        <td className="text-black" style={columnStyle}>2</td>
-                                        <td className="text-black" style={columnStyle}>3</td>
-                                        <td className="text-black" style={columnStyle}>4</td>
+  render() {
+    let tenant = atob(atob(Cookies.get("tnt="))) === "giandy-pusat" || atob(atob(Cookies.get("tnt="))) === "giandy-cabang01";
+    const { data, total, current_page, per_page } = this.props.stockReportDetailSatuan;
+    let totPrice1 = 0;
+    let totPrice2 = 0;
+    let totPrice3 = 0;
+    let totPrice4 = 0;
+    let totFirstStock = 0;
+    let totLastStock = 0;
+    let totStockIn = 0;
+    let totStockOut = 0;
+    let totHpp = 0;
+    let totProfitPrice1 = 0;
+    let totProfitPrice2 = 0;
+    let totProfitPrice3 = 0;
+    let totProfitPrice4 = 0;
+    let sumTotPrice1 = 0;
+    let sumTotPrice2 = 0;
+    let sumTotPrice3 = 0;
+    let sumTotPrice4 = 0;
+    let head = [
+      { rowSpan: 2, label: "No", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "#", className: "text-center", width: "1%" },
+      { rowSpan: 2, label: "Lokasi" },
+    ];
+    !tenant && head.push({ colSpan: 4, label: "Harga" });
+    head.push({ colSpan: 4, label: "Stok" });
+    !tenant && head.push({ rowSpan: 2, label: "Hpp" }, { colSpan: 4, label: "Profit" }, { colSpan: 4, label: "Total harga" });
 
-                                        <td className="text-black" style={columnStyle}>First Stock</td>
-                                        <td className="text-black" style={columnStyle}>Stock In</td>
-                                        <td className="text-black" style={columnStyle}>Stock Out</td>
-                                        <td className="text-black" style={columnStyle}>Last Stock</td>
+    let rowSpan = [];
+    !tenant && rowSpan.push({ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" });
+    rowSpan.push({ label: "Awal" }, { label: "Masuk" }, { label: "Keluar" }, { label: "Akhir" });
+    !tenant && rowSpan.push({ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" });
+    !tenant && rowSpan.push({ label: "1" }, { label: "2" }, { label: "3" }, { label: "4" });
 
-                                        <td className="text-black" style={columnStyle}>1</td>
-                                        <td className="text-black" style={columnStyle}>2</td>
-                                        <td className="text-black" style={columnStyle}>3</td>
-                                        <td className="text-black" style={columnStyle}>4</td>
-                                        <td className="text-black" style={columnStyle}>1</td>
-                                        <td className="text-black" style={columnStyle}>2</td>
-                                        <td className="text-black" style={columnStyle}>3</td>
-                                        <td className="text-black" style={columnStyle}>4</td>
-                                    </tr>
-                                    </thead>
-                                }
-                                <tbody>
-                                {
-                                    (
-                                        typeof data === 'object' ? data.length > 0 ?
-                                            data.map((v,i)=>{
-                                                totPrice1=totPrice1+v.harga;
-                                                totPrice2=totPrice2+v.harga2;
-                                                totPrice3=totPrice3+v.harga3;
-                                                totPrice4=totPrice4+v.harga4;
-                                                totFirstStock=totFirstStock+v.stock_awal;
-                                                totLastStock=totLastStock+v.stock_akhir;
-                                                totStockIn=totStockIn+v.stock_masuk;
-                                                totStockOut=totStockOut+v.stock_keluar;
-                                                totHpp=totHpp+v.harga_beli;
-                                                totProfitPrice1=totProfitPrice1+v.profit_hrg1;
-                                                totProfitPrice2=totProfitPrice2+v.profit_hrg2;
-                                                totProfitPrice3=totProfitPrice3+v.profit_hrg3;
-                                                totProfitPrice4=totProfitPrice4+v.profit_hrg4;
-                                                sumTotPrice1=sumTotPrice1+v.total_hrg1;
-                                                sumTotPrice2=sumTotPrice2+v.total_hrg2;
-                                                sumTotPrice3=sumTotPrice3+v.total_hrg3;
-                                                sumTotPrice4=sumTotPrice4+v.total_hrg4;
-                                                let lok = (this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
-                                                    filteredCat.nama
-                                                ))
-                                                return tenant ?
-                                                 (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{/* Example split danger button */}
-                                                            <button className="btn btn-sm btn-primary"  onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</button>
-                                                        </td>
-                                                        {/* {(this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
-                                                        <td>{filteredCat.nama}</td>
-                                                        ))} */}
-                                                        <td style={{textAlign:"right"}}>{lok}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_awal}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_akhir}</td>
-                                                    </tr>
-                                                ):
-                                                (
-                                                    <tr key={i}>
-                                                        <td style={columnStyle}>{/* Example split danger button */}
-                                                            <button className="btn btn-sm btn-primary"  onClick={(e)=>this.handelDetailTrx(e,v.kd_brg,v.lokasi,v.barcode,v.nm_brg)}>Detail</button>
-                                                        </td>
-                                                        {/* {(this.props.lokasi===undefined?[]:this.props.lokasi).filter(cat => cat.kode===v.lokasi).map(filteredCat => (
-                                                        <td>{filteredCat.nama}</td>
-                                                        ))} */}
-                                                        <td style={{textAlign:"right"}}>{lok}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga2)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga3)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga4)}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_awal}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_masuk}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_keluar}</td>
-                                                        <td style={{textAlign:"right"}}>{v.stock_akhir}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.harga_beli)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg1)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg2)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg3)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.profit_hrg4)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg1)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg2)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg3)}</td>
-                                                        <td style={{textAlign:"right"}}>{toRp(v.total_hrg4)}</td>
-                                                    </tr>
-                                                )
-                                            }) : <tr><td colSpan="17">Data Not Available</td></tr> : <tr><td colSpan="17">Data Not Available</td></tr>)
-                                }
-                                </tbody>
-                                <tfoot>
-                                    {
-                                        tenant ?
-                                        <tr style={{backgroundColor:"#EEEEEE"}}>
-                                            <td colSpan="2">TOTAL</td>
-                                            <td colSpan="1" style={{textAlign:"right"}}>{totFirstStock}</td>
-                                            <td colSpan="1" style={{textAlign:"right"}}>{totStockIn}</td>
-                                            <td colSpan="1" style={{textAlign:"right"}}>{totStockOut}</td>
-                                            <td colSpan="1" style={{textAlign:"right"}}>{totLastStock}</td>
-                                        </tr>
-                                            :
-                                    <tr style={{backgroundColor:"#EEEEEE"}}>
-                                        <td colSpan="2">TOTAL</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice1)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice2)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice3)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totPrice4)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{totFirstStock}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{totStockIn}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{totStockOut}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{totLastStock}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totHpp)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice1)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice2)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice3)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(totProfitPrice4)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice1)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice2)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice3)}</td>
-                                        <td colSpan="1" style={{textAlign:"right"}}>{toRp(sumTotPrice4)}</td>
-                                    </tr>
-                                    }
-                                
-                                </tfoot>
-                            </table>
-                        </div>
-                    </ModalBody>
+    return (
+      <div>
+        <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailStockReportSatuan"} size="lg">
+          <ModalHeader toggle={this.toggle}>Detail laporan stok per-item</ModalHeader>
+          <ModalBody>
+            <HeaderDetailCommon
+              md="col-md-12"
+              data={[
+                { title: "Kode barang", desc: this.props.detail.kd_brg },
+                { title: "Barcode", desc: this.props.detail.barcode },
+                { title: "Nama barang", desc: this.props.detail.nm_brg },
+              ]}
+            />
+            <TableCommon
+              head={head}
+              rowSpan={rowSpan}
+              meta={{
+                total: total,
+                current_page: current_page,
+                per_page: per_page,
+              }}
+              current_page={current_page}
+              callbackPage={this.handlePageChange.bind(this)}
+              renderRow={
+                typeof data === "object"
+                  ? data.map((v, i) => {
+                      totPrice1 = totPrice1 + v.harga;
+                      totPrice2 = totPrice2 + v.harga2;
+                      totPrice3 = totPrice3 + v.harga3;
+                      totPrice4 = totPrice4 + v.harga4;
+                      totFirstStock = totFirstStock + v.stock_awal;
+                      totLastStock = totLastStock + v.stock_akhir;
+                      totStockIn = totStockIn + v.stock_masuk;
+                      totStockOut = totStockOut + v.stock_keluar;
+                      totHpp = totHpp + v.harga_beli;
+                      totProfitPrice1 = totProfitPrice1 + v.profit_hrg1;
+                      totProfitPrice2 = totProfitPrice2 + v.profit_hrg2;
+                      totProfitPrice3 = totProfitPrice3 + v.profit_hrg3;
+                      totProfitPrice4 = totProfitPrice4 + v.profit_hrg4;
+                      sumTotPrice1 = sumTotPrice1 + v.total_hrg1;
+                      sumTotPrice2 = sumTotPrice2 + v.total_hrg2;
+                      sumTotPrice3 = sumTotPrice3 + v.total_hrg3;
+                      sumTotPrice4 = sumTotPrice4 + v.total_hrg4;
 
-                </WrapperModal>
-                <DetailStockReportTransaction lok={this.props.lokasi} startDate={this.props.startDate} endDate={this.props.endDate} code={localStorage.getItem('codeDetailTrx')} />
-            </div>
-        );
-    }
+                      return (
+                        <tr key={i}>
+                          <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                          <td className="middle nowrap">
+                            {/* <button style={{ fontSize: "10px" }} className="btn btn-sm btn-primary" onClick={(e) => this.handelDetailTrx(e, v.kd_brg, v.lokasi, v.barcode, v.nm_brg)}> */}
+                            <button style={{ fontSize: "10px" }} className="btn btn-sm btn-primary" onClick={(e) => this.handelDetailTrx(e, v)}>
+                              Detail
+                            </button>
+                          </td>
+                          <td className={`middle nowrap`}>{v.nama_toko}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga4)}</td>
+                          <td className={`middle nowrap text-right`}>{v.stock_awal}</td>
+                          <td className={`middle nowrap text-right`}>{v.stock_masuk}</td>
+                          <td className={`middle nowrap text-right`}>{v.stock_keluar}</td>
+                          <td className={`middle nowrap text-right`}>{v.stock_akhir}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.harga_beli)}</td>
+
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg1)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.profit_hrg4)}</td>
+
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg1)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg2)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg3)}</td>
+                          <td className={`middle nowrap text-right ${!tenant ? "" : "dNone"}`}>{toRp(v.total_hrg4)}</td>
+                        </tr>
+                      );
+                    })
+                  : noData(head.length)
+              }
+              footer={[
+                {
+                  data: [
+                    { colSpan: 3, label: "Total", className: "text-left" },
+                    { colSpan: 1, label: toRp(totPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: totFirstStock },
+                    { colSpan: 1, label: totStockIn },
+                    { colSpan: 1, label: totStockOut },
+                    { colSpan: 1, label: totLastStock },
+                    { colSpan: 1, label: toRp(totHpp), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totProfitPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totProfitPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totProfitPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(totProfitPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(sumTotPrice1), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(sumTotPrice2), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(sumTotPrice3), className: `text-right ${!tenant ? "" : "dNone"}` },
+                    { colSpan: 1, label: toRp(sumTotPrice4), className: `text-right ${!tenant ? "" : "dNone"}` },
+                  ],
+                },
+              ]}
+            />
+          </ModalBody>
+        </WrapperModal>
+        {this.props.isOpen && this.state.isModal ? (
+          // <DetailStockReportTransaction lok={this.props.lokasi} startDate={this.props.startDate} endDate={this.props.endDate} code={localStorage.getItem("codeDetailTrx")} />
+          <DetailStockReportTransaction detail={this.state.detail} />
+        ) : null}
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-        auth:state.auth,
-        isLoading: state.stockReportReducer.isLoading,
-    }
-}
-// const mapDispatch
+  return {
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+    auth: state.auth,
+  };
+};
 export default connect(mapStateToProps)(DetailStockReportSatuan);

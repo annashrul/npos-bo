@@ -4,11 +4,7 @@ import { ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { ModalToggle, ModalType } from "redux/actions/modal.action";
 import connect from "react-redux/es/connect/connect";
 import { stringifyFormData } from "helper";
-import {
-  createSupplier,
-  updateSupplier,
-  FetchSupplierAll,
-} from "redux/actions/masterdata/supplier/supplier.action";
+import { createSupplier, updateSupplier, FetchSupplierAll } from "redux/actions/masterdata/supplier/supplier.action";
 import { isEmptyOrUndefined, setFocus } from "../../../../../helper";
 import SelectCommon from "../../../common/SelectCommon";
 
@@ -47,7 +43,6 @@ class FormSupplier extends Component {
   getProps(param) {
     if (param.detail !== undefined) {
       if (param.detail.id !== "") {
-        console.log(param.detail);
         this.setState({
           kode: param.detail.kode,
           nama: param.detail.nama,
@@ -121,12 +116,7 @@ class FormSupplier extends Component {
       setFocus(this, "penanggung_jawab");
       return;
     }
-    if (
-      !isEmptyOrUndefined(
-        parseData["no_penanggung_jawab"],
-        "no penanggun jawab"
-      )
-    ) {
+    if (!isEmptyOrUndefined(parseData["no_penanggung_jawab"], "no penanggun jawab")) {
       setFocus(this, "no_penanggung_jawab");
       return;
     }
@@ -138,13 +128,11 @@ class FormSupplier extends Component {
     } else {
       where = "page=1";
     }
-    if (this.props.detail.id !== "") {
+    if (this.props.detail !== undefined && this.props.detail.id !== "") {
       this.props.dispatch(updateSupplier(this.state.kode, parseData, where));
       this.props.dispatch(ModalToggle(false));
     } else {
-      this.props.dispatch(
-        createSupplier(parseData, this.props.fastAdd !== undefined, where)
-      );
+      this.props.dispatch(createSupplier(parseData, this.props.fastAdd !== undefined, where));
       if (this.props.fastAdd === undefined) {
         this.props.dispatch(ModalToggle(false));
       }
@@ -157,15 +145,8 @@ class FormSupplier extends Component {
 
   render() {
     return (
-      <WrapperModal
-        isOpen={this.props.isOpen && this.props.type === "formSupplier"}
-        size="lg"
-      >
-        <ModalHeader toggle={this.toggle}>
-          {this.props.detail === undefined
-            ? "Tambah Supplier"
-            : "Ubah Supplier"}
-        </ModalHeader>
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "formSupplier"} size="lg">
+        <ModalHeader toggle={this.toggle}>{this.props.detail === undefined ? "Tambah Supplier" : "Ubah Supplier"}</ModalHeader>
         <form onSubmit={this.handleSubmit}>
           <ModalBody>
             <div className="row">
@@ -186,36 +167,15 @@ class FormSupplier extends Component {
                 </div>
                 <div className="form-group">
                   <label>Alamat</label>
-                  <input
-                    type="text"
-                    placeholder="Isi alamat lengkap"
-                    className="form-control"
-                    name="alamat"
-                    value={this.state.alamat}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" placeholder="Isi alamat lengkap" className="form-control" name="alamat" value={this.state.alamat} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Kota</label>
-                  <input
-                    type="text"
-                    placeholder="Isi nama kota"
-                    className="form-control"
-                    name="kota"
-                    value={this.state.kota}
-                    onChange={this.handleChange}
-                  />
+                  <input type="text" placeholder="Isi nama kota" className="form-control" name="kota" value={this.state.kota} onChange={this.handleChange} />
                 </div>
                 <div className="form-group">
                   <label>Telepon</label>
-                  <input
-                    type="number"
-                    placeholder="ex. 6281324654665"
-                    className="form-control"
-                    name="telp"
-                    value={this.state.telp}
-                    onChange={this.handleChange}
-                  />
+                  <input type="number" placeholder="ex. 6281324654665" className="form-control" name="telp" value={this.state.telp} onChange={this.handleChange} />
                 </div>
               </div>
               <div className="col-6 col-md-6">
@@ -249,14 +209,7 @@ class FormSupplier extends Component {
                 </div>
                 <div className="form-group">
                   <label>Email</label>
-                  <input
-                    type="email"
-                    placeholder="ex. example@mail.com"
-                    className="form-control"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                  />
+                  <input type="email" placeholder="ex. example@mail.com" className="form-control" name="email" value={this.state.email} onChange={this.handleChange} />
                 </div>
                 <SelectCommon
                   label="status"
@@ -272,11 +225,7 @@ class FormSupplier extends Component {
           </ModalBody>
           <ModalFooter>
             <div className="form-group" style={{ textAlign: "right" }}>
-              <button
-                type="button"
-                className="btn btn-warning mb-2 mr-2"
-                onClick={this.toggle}
-              >
+              <button type="button" className="btn btn-warning mb-2 mr-2" onClick={this.toggle}>
                 <i className="ti-close" /> Batal
               </button>
               <button type="submit" className="btn btn-primary mb-2 mr-2">
