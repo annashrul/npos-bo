@@ -19,7 +19,7 @@ const dateToStorage = "dateToReportReceive";
 const columnStorage = "columnReportReveive";
 const sortStorage = "sortReportReveive";
 const anyStorage = "anyReportReveive";
-
+const activeDateRangePickerStorage = "activeDateRangeReportReveive";
 class TransactionReport extends Component {
   constructor(props) {
     super(props);
@@ -132,8 +132,6 @@ class TransactionReport extends Component {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.value) {
-        // del(table,id);
-        // this.getData()
         this.props.dispatch(DeleteTransaction(id));
       }
     });
@@ -162,11 +160,16 @@ class TransactionReport extends Component {
       <Layout page="Laporan Alokasi Transaksi">
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
-            {dateRange((first, last) => {
-              setStorage(dateFromStorage, first);
-              setStorage(dateToStorage, last);
-              this.handleService();
-            }, `${toDate(startDate)} - ${toDate(endDate)}`)}
+            {dateRange(
+              (first, last, isActive) => {
+                setStorage(activeDateRangePickerStorage, isActive);
+                setStorage(dateFromStorage, first);
+                setStorage(dateToStorage, last);
+                this.handleService();
+              },
+              `${toDate(startDate)} - ${toDate(endDate)}`,
+              getStorage(activeDateRangePickerStorage)
+            )}
           </div>
           <div className="col-6 col-xs-6 col-md-2">
             <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleSelect("column", res)} dataEdit={column} />

@@ -12,10 +12,14 @@ import { deleteReceiveReport, FetchReceiveData, FetchReportExcel, FetchReportDet
 import { toRp } from "helper";
 import FormReturReceive from "../../../modals/report/purchase/receive/form_retur_receive";
 import Swal from "sweetalert2";
-import { dataStatus, dateRange, generateNo, getStorage, isEmptyOrUndefined, noData, setStorage } from "../../../../../helper";
+import { CURRENT_DATE, dateRange, DEFAULT_WHERE, generateNo, getStorage, getWhere, isEmptyOrUndefined, isProgress, noData, parseToRp, setStorage, toDate } from "../../../../../helper";
+import { STATUS_ARSIP_PENJUALAN } from "../../../../../helperStatus";
+
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
+import TableCommon from "../../../common/TableCommon";
+import ButtonActionCommon from "../../../common/ButtonActionCommon";
 
 const dateFromStorage = "dateFromReportReceive";
 const dateToStorage = "dateToReportReceive";
@@ -25,22 +29,21 @@ const columnStorage = "columnReportReveive";
 const sortStorage = "sortReportReveive";
 const statusStorage = "statusReportReveive";
 const anyStorage = "anyReportReveive";
+const activeDateRangePickerStorage = "activeDateRangeReportReceive";
 
 class ReceiveReport extends Component {
   constructor(props) {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.handleModal = this.handleModal.bind(this);
     this.handleChangeSelect = this.handleChangeSelect.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleRetur = this.handleRetur.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
     this.state = {
-      where_data: "",
+      where_data: DEFAULT_WHERE,
       detail: {},
-      dateFrom: moment(new Date()).format("yyyy-MM-DD"),
-      dateTo: moment(new Date()).format("yyyy-MM-DD"),
+      dateFrom: CURRENT_DATE,
+      dateTo: CURRENT_DATE,
       location: "",
       type: "",
       any: "",
@@ -48,18 +51,13 @@ class ReceiveReport extends Component {
       column: "no_faktur_beli",
       status: "",
       type_data: [
-        { value: "", label: "Semua Tipe" },
+        { value: "", label: "Semua" },
         { value: "Tunai", label: "Tunai" },
         { value: "Kredit", label: "Kredit" },
       ],
       column_data: [
         { value: "no_faktur_beli", label: "No. Faktur" },
         { value: "nama_penerima", label: "Penerima" },
-      ],
-      status_data: [
-        { value: "", label: "Semua Status" },
-        { value: "0", label: "Belum Lunas" },
-        { value: "1", label: "Lunas" },
       ],
       isModalDetail: false,
       isModalForm: false,
@@ -106,9 +104,11 @@ class ReceiveReport extends Component {
       Object.assign(state, { type: tipe });
     }
     if (isEmptyOrUndefined(kolom)) {
+      where += `&sort=${kolom}`;
+      Object.assign(state, { column: kolom });
       if (isEmptyOrUndefined(urutan)) {
-        where += `&sort=${kolom}|${urutan}`;
-        Object.assign(state, { sort: urutan, column: kolom });
+        where += `|${urutan}`;
+        Object.assign(state, { sort: urutan });
       }
     }
     if (isEmptyOrUndefined(stts)) {
@@ -124,227 +124,200 @@ class ReceiveReport extends Component {
     this.props.dispatch(FetchReport(where));
   }
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
   handlePageChange(pageNumber) {
     this.handleService(pageNumber);
   }
   handleSearch(e) {
     e.preventDefault();
     setStorage(anyStorage, this.state.any);
-    setTimeout(() => this.handleService(1), 500);
+    this.handleService();
   }
-  toggle(e, kdTrx, tgl, lokasi, penerima, pelunasan, operator) {
-    e.preventDefault();
-    this.setState({ isModalDetail: true });
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("receiveReportDetail"));
-    let que = `detail_receive_report`;
-    localStorage.setItem(`kd_trx_${que}`, kdTrx);
-    localStorage.setItem(`tgl_${que}`, tgl);
-    localStorage.setItem(`lokasi_${que}`, lokasi);
-    localStorage.setItem(`penerima_${que}`, penerima);
-    localStorage.setItem(`pelunasan_${que}`, pelunasan);
-    localStorage.setItem(`operator_${que}`, operator);
-    this.props.dispatch(FetchReportDetail(1, kdTrx));
-  }
-  handleRetur(e, kode) {
-    e.preventDefault();
-    this.setState({ isModalForm: true });
 
-    const bool = !this.props.isOpen;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formReturReceive"));
-    this.props.dispatch(FetchReceiveData(kode, ""));
+  handleDelete(kode) {
+    this.props.dispatch(deleteReceiveReport({ id: kode, where: this.state.where_data }));
   }
-  handleDelete(e, kode) {
-    e.preventDefault();
-    Swal.fire({
-      allowOutsideClick: false,
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.value) {
-        this.props.dispatch(deleteReceiveReport(kode));
-      }
-    });
-  }
-  handleChangePage(e, kode, lokasi, catatan, kode_supplier, penerima, nonota, type) {
-    e.preventDefault();
-    localStorage.setItem("kode_edit", kode);
-    localStorage.setItem("lokasi_edit", lokasi);
-    localStorage.setItem("catatan_edit", catatan);
-    localStorage.setItem("kode_supplier_edit", kode_supplier);
-    localStorage.setItem("nama_penerima_edit", penerima);
-    localStorage.setItem("nonota_edit", nonota);
-    localStorage.setItem("type_edit", type);
-    // window.location.href = `/receive/${kode}`;
-    this.props.history.push(`/receive/${kode}`);
-    // this.props.dispatch(FetchReceiveData(kode,'edit'));
-  }
-  toggleModal(e, total, perpage) {
-    e.preventDefault();
-    this.setState({ isModalExport: true });
 
-    const bool = !this.props.isOpen;
-    // let range = total*perpage;
-    this.props.dispatch(ModalToggle(bool));
-    this.props.dispatch(ModalType("formReceiveExcel"));
-    this.props.dispatch(FetchReportExcel(1, this.state.where_data, total));
+  handleEdit(obj) {
+    localStorage.setItem("kode_edit", obj.no_faktur_beli);
+    localStorage.setItem("lokasi_edit", obj.lokasi);
+    localStorage.setItem("catatan_edit", "-");
+    localStorage.setItem("kode_supplier_edit", obj.kode_supplier);
+    localStorage.setItem("nama_penerima_edit", obj.nama_penerima);
+    localStorage.setItem("nonota_edit", obj.nonota);
+    localStorage.setItem("type_edit", obj.type);
+    this.props.history.push(`/receive/${obj.no_faktur_beli}`);
+  }
+
+  handleModal(type, obj) {
+    let whereState = getWhere(this.state.where_data);
+    let where = `page=1${whereState}`;
+    let state = { where_data: where };
+    if (type === "excel") {
+      Object.assign(state, { isModalExport: true });
+      this.props.dispatch(FetchReportExcel(where, obj.total));
+    } else if (type === "detail") {
+      Object.assign(state, { isModalDetail: true });
+      this.props.dispatch(FetchReportDetail(obj.no_faktur_beli, where, true));
+    } else {
+      Object.assign(state, { isModalForm: true });
+      this.props.dispatch(FetchReceiveData(obj.no_faktur_beli, true));
+    }
+    this.setState(state);
   }
   handleChangeSelect(state, res) {
+    this.setState({ [state]: res.value });
     if (state === "location") setStorage(locationStorage, res.value);
     if (state === "type") setStorage(typeStorage, res.value);
     if (state === "column") setStorage(columnStorage, res.value);
     if (state === "sort") setStorage(sortStorage, res.value);
     if (state === "status") setStorage(statusStorage, res.value);
-    setTimeout(() => this.handleService(1), 500);
+    this.handleService(1);
   }
   render() {
-    const {
-      // total,
-      last_page,
-      per_page,
-      current_page,
-      // from,
-      // to,
-      data,
-    } = this.props.data;
+    const { total, last_page, per_page, current_page, data } = this.props.data;
+    const { dateFrom, dateTo, any, location, column, column_data, sort, type_data, type, status, isModalDetail, isModalExport, isModalForm } = this.state;
     let tot_beli = 0;
+
     return (
       <Layout page="Laporan Pembelian">
         <div className="row">
           <div className="col-md-12">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3" style={{ paddingRight: "0px" }}>
-                {dateRange((first, last) => {
-                  setStorage(dateFromStorage, first);
-                  setStorage(dateToStorage, last);
-                  setTimeout(() => this.handleService(1), 500);
-                }, `${this.state.dateFrom} to ${this.state.dateTo}`)}
+                {dateRange(
+                  (first, last, isActive) => {
+                    setStorage(activeDateRangePickerStorage, isActive);
+                    setStorage(dateFromStorage, first);
+                    setStorage(dateToStorage, last);
+                    this.handleService();
+                  },
+                  `${toDate(dateFrom)} - ${toDate(dateTo)}`,
+                  getStorage(activeDateRangePickerStorage)
+                )}
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <LokasiCommon callback={(res) => this.handleChangeSelect("location", res)} isAll={true} dataEdit={this.state.location} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon label="Tipe transaksi" options={this.state.type_data} callback={(res) => this.handleChangeSelect("type", res)} dataEdit={this.state.type} />
+                <SelectCommon label="Tipe transaksi" options={type_data} callback={(res) => this.handleChangeSelect("type", res)} dataEdit={type} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon label="Kolom" options={this.state.column_data} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={this.state.column} />
+                <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={this.state.sort} />
+                <SelectSortCommon callback={(res) => this.handleChangeSelect("sort", res)} dataEdit={sort} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon label="Status" options={dataStatus(true)} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={this.state.status} />
+                <SelectCommon label="Status" options={STATUS_ARSIP_PENJUALAN} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={status} />
               </div>
-              <div className="col-12 col-xs-12 col-md-3">
-                <div className="form-group">
-                  <label htmlFor="">Cari</label>
-                  <input type="text" name="any" className="form-control" style={{ width: "100%" }} value={this.state.any} onChange={(e) => this.handleChange(e)} />
+              <div className="col-6 col-xs-6 col-md-3">
+                <label>Cari</label>
+                <div className="input-group">
+                  <input
+                    type="search"
+                    name="any"
+                    className="form-control"
+                    placeholder="tulis sesuatu disini"
+                    value={any}
+                    onChange={(e) => this.setState({ any: e.target.value })}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") this.handleSearch(e);
+                    }}
+                  />
+                  <span className="input-group-append">
+                    <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
+                      <i className="fa fa-search" />
+                    </button>
+                    <button
+                      className="btn btn-primary ml-1"
+                      onClick={(e) => {
+                        this.handleModal("excel", {
+                          total: last_page * per_page,
+                        });
+                      }}
+                    >
+                      {isProgress(this.props.download)}
+                    </button>
+                  </span>
                 </div>
-              </div>
-              <div className="col-md-3">
-                <button style={{ marginTop: "27px", marginRight: "2px" }} className="btn btn-primary" onClick={this.handleSearch}>
-                  <i className="fa fa-search" />
-                </button>
-                <button style={{ marginTop: "27px" }} className="btn btn-primary" onClick={(e) => this.toggleModal(e, last_page * per_page, per_page)}>
-                  <i className="fa fa-print"></i>
-                </button>
               </div>
             </div>
           </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table table-hover table-noborder">
-            <thead className="bg-light">
-              <tr>
-                <th className="text-black text-center middle nowrap">No</th>
-                <th className="text-black text-center middle nowrap">#</th>
-                <th className="text-black middle nowrap">No Faktur</th>
-                <th className="text-black middle nowrap">Tanggal</th>
-                <th className="text-black middle nowrap">Penerima</th>
-                <th className="text-black middle nowrap">Tipe</th>
-                <th className="text-black middle nowrap">Pelunasan</th>
-                <th className="text-black middle nowrap">Diskon</th>
-                <th className="text-black middle nowrap">PPN</th>
-                <th className="text-black middle nowrap">Supplier</th>
-                <th className="text-black middle nowrap">Operator</th>
-                <th className="text-black middle nowrap">Lokasi</th>
-                <th className="text-black middle nowrap">Serial</th>
-                <th className="text-black middle nowrap">Pembayaran ke-</th>
-                <th className="text-black middle nowrap">Sisa Pembayaran</th>
-                <th className="text-black middle nowrap">Qty Beli</th>
-                <th className="text-black middle nowrap">Total Beli</th>
-              </tr>
-            </thead>
-            <tbody>
-              {typeof data === "object"
-                ? data.length > 0
-                  ? data.map((v, i) => {
-                      tot_beli = tot_beli + parseInt(v.total_beli, 10);
-                      return (
-                        <tr key={i}>
-                          <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
+        <TableCommon
+          head={[
+            { label: "No", className: "text-center", width: "1%" },
+            { label: "#", className: "text-center", width: "1%" },
+            { label: "Faktur receive" },
+            { label: "Tanggal" },
+            { label: "Penerima" },
+            { label: "Tipe" },
+            { label: "Pelunasan" },
+            { label: "Diskon (%)" },
+            { label: "Ppn (%)" },
+            { label: "Supplier" },
+            { label: "Operator" },
+            { label: "Lokasi" },
+            { label: "Pembayaran-ke" },
+            { label: "Sisa pembayaran" },
+            { label: "Qty beli" },
+            { label: "Total beli" },
+          ]}
+          meta={{ total: total, current_page: current_page, per_page: per_page }}
+          current_page={current_page}
+          callbackPage={this.handlePageChange.bind(this)}
+          renderRow={
+            typeof data === "object"
+              ? data.length > 0
+                ? data.map((v, i) => {
+                    tot_beli = tot_beli + parseInt(v.total_beli, 10);
+                    return (
+                      <tr key={i}>
+                        <td className="text-center middle nowrap">{generateNo(i, current_page)}</td>
+                        <td className="text-center middle nowrap">
+                          <ButtonActionCommon
+                            action={[{ label: "Detail" }, { label: "Retur" }, { label: "Hapus" }, { label: "Edit" }]}
+                            callback={(e) => {
+                              if (e === 0) this.handleModal("detail", v);
+                              if (e === 1) this.handleModal("retur", v);
+                              if (e === 2) this.handleDelete(v.no_faktur_beli);
+                              if (e === 3) this.handleEdit(v);
+                            }}
+                          />
+                        </td>
+                        <td className="middle nowrap">{v.no_faktur_beli}</td>
+                        <td className="middle nowrap">{toDate(v.tgl_beli)}</td>
+                        <td className="middle nowrap">{v.nama_penerima}</td>
+                        <td className="middle nowrap">{v.type}</td>
+                        <td className="middle nowrap">{v.pelunasan}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.disc)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.ppn)}</td>
+                        <td className="middle nowrap">{v.supplier}</td>
+                        <td className="middle nowrap">{v.operator}</td>
+                        <td className="middle nowrap">{v.lokasi}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.jumlah_pembayaran)}</td>
+                        <td className="middle nowrap text-right">{v.pelunasan.toLowerCase() === "lunas" ? 0 : parseToRp(parseFloat(v.total_beli) - parseFloat(v.jumlah_bayar))}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.qty_beli)}</td>
+                        <td className="middle nowrap text-right">{parseToRp(v.total_beli)}</td>
+                      </tr>
+                    );
+                  })
+                : noData(17)
+              : noData(17)
+          }
+          footer={[
+            {
+              data: [
+                { colSpan: 15, label: "Total perhalaman", className: "text-left" },
+                { label: parseToRp(tot_beli), className: "text-right" },
+              ],
+            },
+          ]}
+        />
 
-                          <td className="text-center middle nowrap">
-                            <UncontrolledButtonDropdown>
-                              <DropdownToggle caret></DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem onClick={(e) => this.toggle(e, v.no_faktur_beli, moment(v.tgl_beli).format("YYYY-MM-DD"), v.lokasi, v.nama_penerima, v.pelunasan, v.operator)}>
-                                  Detail
-                                </DropdownItem>
-                                <DropdownItem onClick={(e) => this.handleRetur(e, v.no_faktur_beli)}>Retur</DropdownItem>
-                                <DropdownItem onClick={(e) => this.handleDelete(e, v.no_faktur_beli)}>Delete</DropdownItem>
-                                <DropdownItem onClick={(e) => this.handleChangePage(e, v.no_faktur_beli, v.kd_lokasi, "-", v.kode_supplier, v.nama_penerima, v.nonota, v.type)}>Edit</DropdownItem>
-                              </DropdownMenu>
-                            </UncontrolledButtonDropdown>
-                          </td>
-                          <td className="middle nowrap">{v.no_faktur_beli}</td>
-                          <td className="middle nowrap">{moment(v.tgl_beli).format("YYYY-MM-DD")}</td>
-                          <td className="middle nowrap">{v.nama_penerima}</td>
-                          <td className="middle nowrap">{v.type}</td>
-                          <td className="middle nowrap">{v.pelunasan}</td>
-                          <td className="middle nowrap">{v.disc}</td>
-                          <td className="middle nowrap">{v.ppn}</td>
-                          <td className="middle nowrap">{v.supplier}</td>
-                          <td className="middle nowrap">{v.operator}</td>
-                          <td className="middle nowrap">{v.lokasi}</td>
-                          <td className="middle nowrap">{v.serial}</td>
-                          <td className="middle nowrap">{v.jumlah_pembayaran}</td>
-                          <td className="middle nowrap">{v.pelunasan.toLowerCase() === "lunas" ? 0 : toRp(parseFloat(v.total_beli) - parseFloat(v.jumlah_bayar))}</td>
-                          <td className="middle nowrap">{v.qty_beli}</td>
-                          <td className="middle nowrap">{toRp(parseInt(v.total_beli, 10))}</td>
-                        </tr>
-                      );
-                    })
-                  : noData(17)
-                : noData(17)}
-            </tbody>
-
-            <tfoot>
-              <tr style={{ backgroundColor: "#EEEEEE" }}>
-                <td colSpan="16">Total perhalaman</td>
-                <td style={{ textAlign: "right" }}>{toRp(tot_beli)}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div style={{ marginTop: "20px", float: "right" }}>
-          <Paginationq current_page={parseInt(current_page, 10)} per_page={parseInt(per_page, 10)} total={parseInt(last_page * per_page, 10)} callback={this.handlePageChange.bind(this)} />
-        </div>
-        {this.state.isModalDetail ? <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail} /> : null}
-
-        {this.state.isModalForm ? <FormReturReceive dataRetur={this.props.dataRetur} /> : null}
-        {this.state.isModalExport ? <ReceiveReportExcel startDate={this.state.startDate} endDate={this.state.endDate} location={this.state.location} /> : null}
+        {this.props.isOpen && isModalDetail ? <DetailReceiveReport receiveReportDetail={this.props.receiveReportDetail} /> : null}
+        {this.props.isOpen && isModalForm ? <FormReturReceive dataRetur={this.props.dataRetur} /> : null}
+        {this.props.isOpen && isModalExport ? <ReceiveReportExcel startDate={dateFrom} endDate={dateTo} location={location} /> : null}
       </Layout>
     );
   }
@@ -353,8 +326,7 @@ class ReceiveReport extends Component {
 const mapStateToProps = (state) => {
   return {
     data: state.receiveReducer.data,
-    isLoading: state.receiveReducer.isLoading,
-    // isLoadingReportDetail: state.receiveReducer.isLoadingReportDetail,
+    download: state.receiveReducer.download,
     receiveReportDetail: state.receiveReducer.dataReceiveReportDetail,
     dataRetur: state.receiveReducer.receive_data,
     isOpen: state.modalReducer,

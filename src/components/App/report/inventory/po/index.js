@@ -5,11 +5,11 @@ import { fetchPoReport, fetchPoReportExcel } from "redux/actions/purchase/purcha
 import { ModalType } from "redux/actions/modal.action";
 import { poReportDetail } from "redux/actions/purchase/purchase_order/po.action";
 import moment from "moment";
-import { statusQ } from "helper";
 import DetailPoReport from "components/App/modals/report/purchase/purchase_order/detail_po_report";
 import PoReportExcel from "components/App/modals/report/purchase/purchase_order/form_po_excel";
 
-import { dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate } from "../../../../../helper";
+import { CURRENT_DATE, dateRange, generateNo, getStorage, isEmptyOrUndefined, isProgress, noData, setStorage, toDate } from "../../../../../helper";
+import { STATUS_PURCHASE_ORDER, statusPurchaseOrder } from "../../../../../helperStatus";
 import LokasiCommon from "../../../common/LokasiCommon";
 import SelectCommon from "../../../common/SelectCommon";
 import SelectSortCommon from "../../../common/SelectSortCommon";
@@ -23,6 +23,7 @@ const columnStorage = "columnReportPo";
 const sortStorage = "sortReportPo";
 const statusStorage = "statusReportPo";
 const anyStorage = "anyReportPo";
+const activeDateRangePickerStorage = "activeDateRangeReportPo";
 
 class PoReport extends Component {
   constructor(props) {
@@ -33,11 +34,11 @@ class PoReport extends Component {
     this.handleChangeSelect = this.handleChangeSelect.bind(this);
     this.state = {
       master: {},
-      where_data: "",
+      where_data: CURRENT_DATE,
       any: "",
       location: "",
-      dateFrom: moment(new Date()).format("yyyy-MM-DD"),
-      dateTo: moment(new Date()).format("yyyy-MM-DD"),
+      dateFrom: CURRENT_DATE,
+      dateTo: CURRENT_DATE,
       sort: "",
       column: "",
       status: "",
@@ -48,12 +49,6 @@ class PoReport extends Component {
         { value: "nama_supplier", label: "Nama Supplier" },
         { value: "status", label: "Status" },
         { value: "kode_supplier", label: "Kode Supplier" },
-      ],
-      status_data: [
-        { value: "", label: "Semua" },
-        { value: "0", label: "Proses" },
-        { value: "1", label: "Order" },
-        { value: "2", label: "Receive" },
       ],
       isModalDetail: false,
       isModalExport: false,
@@ -146,7 +141,7 @@ class PoReport extends Component {
 
   render() {
     const { total, last_page, per_page, current_page, data } = this.props.poReport;
-    const { status_data, status, column, column_data, location, sort, any, dateFrom, dateTo, isModalDetail, isModalExport, master } = this.state;
+    const { status, column, column_data, location, sort, any, dateFrom, dateTo, isModalDetail, isModalExport, master } = this.state;
 
     const head = [
       { label: "No", className: "text-center", width: "1%" },
@@ -167,12 +162,16 @@ class PoReport extends Component {
           <div className="col-md-12">
             <div className="row">
               <div className="col-6 col-xs-6 col-md-3">
-                {dateRange((first, last) => {
-                  this.setState({ dateFrom: first, dateTo: last });
-                  setStorage(dateFromStorage, first);
-                  setStorage(dateToStorage, last);
-                  setTimeout(() => this.handleService(1), 500);
-                }, `${dateFrom} to ${dateTo}`)}
+                {dateRange(
+                  (first, last, isActive) => {
+                    setStorage(activeDateRangePickerStorage, isActive);
+                    setStorage(dateFromStorage, first);
+                    setStorage(dateToStorage, last);
+                    this.handleService();
+                  },
+                  `${toDate(dateFrom)} - ${toDate(dateTo)}`,
+                  getStorage(activeDateRangePickerStorage)
+                )}
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <div className="form-group">
@@ -180,7 +179,7 @@ class PoReport extends Component {
                 </div>
               </div>
               <div className="col-6 col-xs-6 col-md-3">
-                <SelectCommon label="Status" options={status_data} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={status} />
+                <SelectCommon label="Status" options={STATUS_PURCHASE_ORDER} callback={(res) => this.handleChangeSelect("status", res)} dataEdit={status} />
               </div>
               <div className="col-6 col-xs-6 col-md-3">
                 <SelectCommon label="Kolom" options={column_data} callback={(res) => this.handleChangeSelect("column", res)} dataEdit={column} />
@@ -219,19 +218,6 @@ class PoReport extends Component {
             typeof data === "object"
               ? data.length > 0
                 ? data.map((v, i) => {
-                    let title, desc;
-                    if (v.status === "0") {
-                      title = "warning";
-                      desc = "Proses";
-                    }
-                    if (v.status === "1") {
-                      title = "info";
-                      desc = "Order";
-                    }
-                    if (v.status === "2") {
-                      title = "success";
-                      desc = "Receive";
-                    }
                     return (
                       <tr key={i}>
                         <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
@@ -245,7 +231,7 @@ class PoReport extends Component {
                         <td className="middle nowrap">{v.lokasi}</td>
                         <td className="middle nowrap">{v.jenis}</td>
                         <td className="middle nowrap">{v.kd_kasir}</td>
-                        <td className="middle nowrap">{statusQ(title, desc)}</td>
+                        <td className="middle nowrap">{statusPurchaseOrder(v.status)}</td>
                       </tr>
                     );
                   })

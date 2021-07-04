@@ -15,6 +15,28 @@ export const CURRENT_DATE = moment(new Date()).format("yyyy-MM-DD");
 
 export const DEFAULT_WHERE = `page=1&datefrom=${CURRENT_DATE}&dateto=${CURRENT_DATE}`;
 
+export const getFetchWhere = (res, page = 1) => {
+  let where = res;
+  let toArray = where.split("&");
+  toArray.shift();
+  if (page && page !== 1) {
+    where = `page=${page}&${toArray.join("&")}`;
+  } else {
+    where = `page=${1}&${toArray.join("&")}`;
+  }
+  return where;
+};
+
+export const getPeriode = (val) => {
+  let newVal = [];
+  let getPeriode = val.splice(1, 2);
+  getPeriode.forEach((res) => {
+    let anyinh = res.split("=");
+    newVal.push(anyinh[1]);
+  });
+  return `${toDate(newVal[0])} - ${toDate(newVal[1])}`;
+};
+
 export const getWhere = (res) => {
   let resToArray = res.split("&");
   return `&${resToArray[1]}&${resToArray[2]}`;
@@ -628,9 +650,11 @@ export const dataStatus = (isAll = false) => {
   return data;
 };
 
-export const isProgress = (props) => {
+export const isProgress = (props, callback) => {
   let loading;
+  let isDisabled = false;
   if (props === "loading") {
+    isDisabled = true;
     loading = (
       <div>
         <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
@@ -638,11 +662,29 @@ export const isProgress = (props) => {
       </div>
     );
   } else if (props > 0 && props < 100) {
+    isDisabled = true;
     loading = props + "%";
   } else {
+    isDisabled = false;
     loading = <i className="fa fa-print"></i>;
   }
-  return loading;
+
+  if (callback === undefined) {
+    return loading;
+  } else {
+    return (
+      <button
+        disabled={isDisabled}
+        className="btn btn-primary ml-1"
+        onClick={(e) => {
+          e.preventDefault();
+          callback();
+        }}
+      >
+        {loading}
+      </button>
+    );
+  }
 };
 
 class Paginationq extends Component {

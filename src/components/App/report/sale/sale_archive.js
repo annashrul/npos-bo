@@ -220,6 +220,7 @@ class SaleArchive extends Component {
     ];
     return (
       <Layout page="Laporan Arsip Penjualan">
+        {/* <HeaderReportCommon /> */}
         <div className="row">
           <div className="col-6 col-xs-6 col-md-2">
             {dateRange(
@@ -265,16 +266,7 @@ class SaleArchive extends Component {
                 <button type="button" className="btn btn-primary" onClick={this.handleSearch}>
                   <i className="fa fa-search" />
                 </button>
-                <button
-                  className="btn btn-primary ml-1"
-                  onClick={(e) => {
-                    this.handleModal("formSaleExcel", {
-                      total: last_page * per_page,
-                    });
-                  }}
-                >
-                  {isProgress(this.props.percent)}
-                </button>
+                {isProgress(this.props.percent, () => this.handleModal("formSaleExcel", { total: last_page * per_page }))}
               </span>
             </div>
           </div>

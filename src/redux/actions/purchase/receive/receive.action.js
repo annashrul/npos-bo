@@ -2,7 +2,14 @@ import { RECEIVE, HEADERS } from "../../_constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { destroy } from "components/model/app.model";
-import { handleGet } from "../../handleHttp";
+import { handleDelete, handleGet, handleGetExport } from "../../handleHttp";
+import { ModalToggle, ModalType } from "../../modal.action";
+export function setDownload(load) {
+  return {
+    type: RECEIVE.DOWNLOAD,
+    load,
+  };
+}
 export function setLoading(load) {
   return {
     type: RECEIVE.LOADING,
@@ -66,18 +73,8 @@ export function setReportExcel(data = []) {
 }
 export const FetchNota = (lokasi) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `receive/getcode?lokasi=${lokasi}`)
-      .then(function (response) {
-        const data = response.data;
-
-        dispatch(setCode(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
+    let url = `receive/getcode?lokasi=${lokasi}`;
+    handleGet(url, (res) => dispatch(setCode(res.data)), true);
   };
 };
 export const storeReceive = (data, param) => {
@@ -153,8 +150,7 @@ export const storeReceive = (data, param) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -205,8 +201,7 @@ export const updateReceive = (data, kode) => {
           allowOutsideClick: false,
           title: "Failed",
           type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
+          text: error.response === undefined ? "error!" : error.response.data.msg,
         });
 
         if (error.response) {
@@ -217,8 +212,8 @@ export const updateReceive = (data, kode) => {
 
 export const FetchReport = (where = "") => {
   return (dispatch) => {
-    let url = `receive/report`;
-    if (where !== "") url += `?${where}`;
+    let url = `receive/report?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
     handleGet(
       url,
       (res) => {
@@ -230,100 +225,64 @@ export const FetchReport = (where = "") => {
   };
 };
 
-export const FetchReceiveData = (nota, param = "") => {
+export const FetchReceiveData = (nota, isModal = false) => {
   return (dispatch) => {
+    let url = `receive/ambil_data/${nota}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setPoData(res.data));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("formReturReceive"));
+        }
+      },
+      true
+    );
     dispatch(setLoading(true));
-    axios
-      .get(HEADERS.URL + `receive/ambil_data/${nota}`)
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setPoData(data));
-        dispatch(setLoading(false));
-      })
-      .catch(function (error) {
-        // handle error
-      });
   };
 };
-export const FetchReportDetail = (page = 1, code) => {
+export const FetchReportDetail = (code, where = "", isModal = false) => {
   return (dispatch) => {
-    dispatch(setLoadingReportDetail(true));
-    axios
-      .get(HEADERS.URL + `receive/report/${code}?page=${page}`)
-      .then(function (response) {
-        const data = response.data;
+    let url = `receive/report/${code}?perpage=${HEADERS.PERPAGE}`;
+    if (where !== "") url += `&${where}`;
+    handleGet(
+      url,
+      (res) => {
+        dispatch(setReportDetail(res.data));
+        if (isModal) {
+          dispatch(ModalToggle(true));
+          dispatch(ModalType("receiveReportDetail"));
+        }
+      },
+      true
+    );
+  };
+};
+export const FetchReportExcel = (where = "", perpage = 9999) => {
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    let url = `receive/report?perpage=${perpage}`;
 
-        dispatch(setReportDetail(data));
-        dispatch(setLoadingReportDetail(false));
-      })
-      .catch(function (error) {});
-  };
-};
-export const FetchReportExcel = (page = 1, where = "", perpage = "") => {
-  return (dispatch) => {
-    dispatch(setLoading(true));
-    let url = `receive/report?page=${
-      isNaN(page) || page === "NaN" ? 1 : page
-    }&perpage=${isNaN(perpage) || perpage === "NaN" ? 99999 : perpage}`;
     if (where !== "") {
       url += `&${where}`;
     }
 
-    axios
-      .get(HEADERS.URL + `${url}`, {
-        onDownloadProgress: (progressEvent) => {
-          const total = parseFloat(progressEvent.total);
-          const current = parseFloat(progressEvent.loaded);
-          let percentCompleted = Math.floor((current / total) * 100);
-          dispatch(setPersen(percentCompleted));
-        },
-      })
-      .then(function (response) {
-        const data = response.data;
-        dispatch(setReportExcel(data));
-        dispatch(setLoading(false));
-        dispatch(setPersen(0));
-      })
-      .catch(function (error) {});
+    handleGetExport(
+      url,
+      (res) => {
+        dispatch(ModalToggle(true));
+        dispatch(ModalType("formReceiveExcel"));
+        dispatch(setReportExcel(res.data));
+      },
+      (res) => dispatch(setDownload(res))
+    );
   };
 };
-export const deleteReceiveReport = (id) => {
+export const deleteReceiveReport = (data) => {
   return (dispatch) => {
-    dispatch(setLoading(true));
-    const url = HEADERS.URL + `receive/${id}`;
-    axios
-      .delete(url)
-      .then(function (response) {
-        const data = response.data;
-        if (data.status === "success") {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "Success",
-            type: "success",
-            text: data.msg,
-          });
-        } else {
-          Swal.fire({
-            allowOutsideClick: false,
-            title: "failed",
-            type: "error",
-            text: data.msg,
-          });
-        }
-        dispatch(setLoading(false));
-        dispatch(FetchReport(1, ""));
-      })
-      .catch(function (error) {
-        dispatch(setLoading(false));
-        Swal.fire({
-          allowOutsideClick: false,
-          title: "failed",
-          type: "error",
-          text:
-            error.response === undefined ? "error!" : error.response.data.msg,
-        });
-        if (error.response) {
-        }
-      });
+    handleDelete(`receive/${data.id}`, () => {
+      dispatch(FetchReport(data.where));
+    });
   };
 };
