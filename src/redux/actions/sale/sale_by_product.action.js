@@ -1,6 +1,13 @@
 import { SALE_BY_PRODUCT } from "../_constants";
 import { handleGet, handleGetExport } from "../handleHttp";
-import { ModalToggle } from "../modal.action";
+import { ModalToggle, ModalType } from "../modal.action";
+
+export function setDownloadDetail(load) {
+  return {
+    type: SALE_BY_PRODUCT.DOWNLOAD_DETAIL,
+    load,
+  };
+}
 export function setDownload(load) {
   return {
     type: SALE_BY_PRODUCT.DOWNLOAD,
@@ -13,26 +20,6 @@ export function setLoadingDetail(load) {
     load,
   };
 }
-// export function setSaleByProduct(data = []) {
-//     return {
-//         type: SALE_BY_PRODUCT.SUCCESS,
-//         data
-//     }
-// }
-
-// export function setSaleByProductData(data = []) {
-//     return {
-//         type: SALE_BY_PRODUCT.SALE_BY_PRODUCT_DATA,
-//         data
-//     }
-// }
-
-// export function setSaleByProductFailed(data = []) {
-//     return {
-//         type: SALE_BY_PRODUCT.FAILED,
-//         data
-//     }
-// }
 export function setSaleByProductReportData(data = []) {
   return {
     type: SALE_BY_PRODUCT.REPORT_DETAIL_SUCCESS,
@@ -48,6 +35,12 @@ export function setReport(data = []) {
 export function setReportExcel(data = []) {
   return {
     type: SALE_BY_PRODUCT.REPORT_SUCCESS_EXCEL,
+    data,
+  };
+}
+export function setReportDetailExcel(data = []) {
+  return {
+    type: SALE_BY_PRODUCT.REPORT_DETAIL_EXCEL,
     data,
   };
 }
@@ -74,14 +67,15 @@ export const FetchReportSaleByProduct = (where = "") => {
     });
   };
 };
-export const FetchReportSaleByProductExcel = (page = 1, where = "", perpage = 10000) => {
+export const FetchReportSaleByProductExcel = (where = "", perpage = 10000) => {
   return (dispatch) => {
-    let url = `report/penjualan/barang?page=${page}&perpage=${perpage}`;
+    let url = `report/penjualan/barang?perpage=${perpage}`;
     if (where !== "") url += `&${where}`;
     handleGetExport(
       url,
       (res) => {
         dispatch(setReportExcel(res.data));
+        dispatch(ModalType("formSaleByProductExcel"));
         dispatch(ModalToggle(true));
       },
       (res) => dispatch(setDownload(res))
@@ -89,17 +83,25 @@ export const FetchReportSaleByProductExcel = (page = 1, where = "", perpage = 10
   };
 };
 
-export const FetchReportDetailSaleByProduct = (kd, where = "") => {
+export const FetchReportDetailSaleByProduct = (kd, where = "", isExcel = false) => {
   return (dispatch) => {
     let url = `report/penjualan/barang/${kd}`;
     if (where !== "") url += `?${where}`;
-    handleGet(
+    handleGetExport(
       url,
       (res) => {
-        dispatch(setSaleByProductReportData(res.data));
-        dispatch(ModalToggle(true));
+        if (!isExcel) {
+          dispatch(setSaleByProductReportData(res.data));
+          dispatch(ModalToggle(true));
+        } else {
+          dispatch(setReportDetailExcel(res.data));
+        }
       },
-      true
+      (res) => {
+        if (isExcel) {
+          dispatch(setDownloadDetail(res));
+        }
+      }
     );
   };
 };

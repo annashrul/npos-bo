@@ -29,11 +29,16 @@ export const getFetchWhere = (res, page = 1) => {
 
 export const getPeriode = (val) => {
   let newVal = [];
+  console.log("1", val);
   let getPeriode = val.splice(1, 2);
+  console.log("2", getPeriode);
+
   getPeriode.forEach((res) => {
     let anyinh = res.split("=");
     newVal.push(anyinh[1]);
   });
+  console.log("3", newVal);
+
   return `${toDate(newVal[0])} - ${toDate(newVal[1])}`;
 };
 
@@ -43,11 +48,12 @@ export const getWhere = (res) => {
 };
 
 export const parseToRp = (val) => {
-  return toRp(parseFloat(parseInt(val, 10)));
+  return toRp(parseFloat(rmToZero(val)));
 };
 
 export const toDate = (val, type = "/") => {
-  return type === "/" ? moment(val).format("yyyy/MM/DD") : moment(val).format("yyyy-MM-DD");
+  moment.locale("id");
+  return type === "/" ? moment(val).format("DD/MM/YYYY") : moment(val).format("YYYY-MM-DD");
 };
 
 export const isImage = (img = "", className = "img-in-table pointer") => {
@@ -125,7 +131,7 @@ export const toExcel = (title = "", periode = "", head = [], content = [], foot 
   };
 
   let wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, title.toUpperCase());
+  XLSX.utils.book_append_sheet(wb, ws, title.length > 31 ? title.toUpperCase().substr(0, 31) : title.toUpperCase());
   let exportFileName = `${title.replaceAll(" ", "_").toUpperCase()}_${moment(new Date()).format("YYYYMMDDHHMMss")}.${ext}`;
   XLSX.writeFile(wb, exportFileName, { type: "file", bookType: ext });
   return;
@@ -176,11 +182,14 @@ export const to_pdf = (filename, title = "", header = [], body = [], footer = []
     pageBreak: "auto",
     rowPageBreak: "avoid",
     headStyles: {
-      backgroundColor: [33, 33, 33],
-      lineWidth: 1,
+      backgroundColor: [0, 0, 0, 0.2],
+      lineWidth: 0.5,
       marginBottom: 0,
+      fontSize: 7,
+      alignment: "center",
+      align: "center",
     },
-    bodyStyles: { lineWidth: 1, marginBottom: 20 },
+    bodyStyles: { lineWidth: 1, marginBottom: 20, fontSize: 7 },
     theme: "grid",
     startY: 50,
     head: header,
@@ -550,13 +559,10 @@ export const handleError = (val, msg = "tidak boleh kosong") => {
 };
 
 export const rmSpaceToStrip = (val) => {
-  return val === "" ? "-" : val;
+  return val === "" || val === null || val === undefined ? "-" : val;
 };
-export const rmSpace = (val) => {
-  if (val === "" || val === "0" || val === undefined) {
-    return false;
-  }
-  return true;
+export const rmToZero = (val) => {
+  return val === "" || val === "0" || val === null || val === undefined || isNaN(val) ? "0" : val;
 };
 
 export const setFocus = (thist, column) => {

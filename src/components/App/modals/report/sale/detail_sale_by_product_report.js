@@ -1,265 +1,171 @@
-import React,{Component} from 'react';
+import React, { Component } from "react";
 import WrapperModal from "../../_wrapper.modal";
-import {ModalBody, ModalHeader} from "reactstrap";
-import {ModalToggle} from "redux/actions/modal.action";
-// import DateRangePicker from "react-bootstrap-daterangepicker";
-import {
-    FetchReportDetailSaleByProduct
-} from "redux/actions/sale/sale_by_product.action";
+import { ModalBody, ModalHeader } from "reactstrap";
+import { ModalToggle } from "redux/actions/modal.action";
+import { FetchReportDetailSaleByProduct } from "redux/actions/sale/sale_by_product.action";
 import connect from "react-redux/es/connect/connect";
-// import {rangeDate} from "helper";
-import Paginationq from "helper";
-import moment from "moment";
-import {toRp} from "../../../../../helper";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import imgExcel from 'assets/xls.png';
-class DetailSaleByProductReport extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-            startDate:'',
-            endDate:'',
-            isExport:false,
+import { generateNo, getFetchWhere, isProgress, noData, parseToRp, toDate, toExcel, toRp } from "../../../../../helper";
+import HeaderDetailCommon from "../../../common/HeaderDetailCommon";
+import TableCommon from "../../../common/TableCommon";
+import { EXTENSION } from "../../../../../redux/actions/_constants";
+
+class DetailSaleByProductReport extends Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+    this.handleExcel = this.handleExcel.bind(this);
+  }
+
+  toggle(e) {
+    e.preventDefault();
+    const bool = !this.props.isOpen;
+    this.props.dispatch(ModalToggle(bool));
+  }
+
+  handleService(pageNumber = 1, type = "page") {
+    let master = this.props.detail;
+    let where = getFetchWhere(master.where, pageNumber);
+    if (type !== "page") {
+      where += `&perpage=${type}`;
+    }
+    this.props.dispatch(FetchReportDetailSaleByProduct(btoa(master.barcode), where, type !== "page"));
+  }
+  handlePageChange(pageNumber) {
+    this.handleService(pageNumber);
+  }
+
+  handleExcel(e, total) {
+    e.preventDefault();
+    this.handleService(1, total);
+  }
+  printExcel() {
+    let master = this.props.detail;
+    let header = ["KODE TRANSAKSI", "SKU", "DISKON", "QTY", "NET SALE", "GROSS SALE"];
+    let content = this.handleContent();
+    let footer = [[""], [""], ["TOTAL", "", content.footer.diskon, content.footer.qty, content.footer.netSale, content.footer.grossSale]];
+    toExcel(`LAPORAN PENJUALAN ${master.nm_brg}`, `${toDate(master.tgl)}`, header, content.props, footer, EXTENSION.XLXS);
+  }
+  handleContent() {
+    let content = {};
+    let props = [];
+    let totalDiskonPerHalaman = 0;
+    let totalQtyPerHalaman = 0;
+    let totalGrossSalePerHalaman = 0;
+    let totalNetSalePerHalaman = 0;
+    let data = this.props.excel.data;
+    if (data !== undefined) {
+      if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          let v = data[i];
+          totalDiskonPerHalaman += parseFloat(v.diskon);
+          totalQtyPerHalaman += parseFloat(v.qty);
+          totalGrossSalePerHalaman += parseFloat(v.net_sales);
+          totalNetSalePerHalaman += parseFloat(v.gross_sales);
+          props.push([v.kd_trx, v.sku, parseFloat(v.diskon), parseFloat(v.qty), parseFloat(v.net_sales), parseFloat(v.gross_sales)]);
         }
-        this.toggle = this.toggle.bind(this);
-
-
+        Object.assign(content, { props: props, footer: { diskon: totalDiskonPerHalaman, qty: totalQtyPerHalaman, grossSale: totalGrossSalePerHalaman, netSale: totalNetSalePerHalaman } });
+      }
     }
-    componentDidMount(){
-        
-    }
-    componentWillMount(){
-        
-        this.setState({
-            startDate:this.props.startDate,
-            endDate:this.props.endDate,
-        })
-    }
-    // componentWillReceiveProps(nextprops){
-    //     
-    //     this.setState({
-    //         startDate:nextprops.startDate,
-    //         endDate:nextprops.endDate,
-    //     })
-        
-    // }
-    toggle(e){
-        e.preventDefault();
-        const bool = !this.props.isOpen;
-        this.props.dispatch(ModalToggle(bool));
-    };
-    toggleExport(e){
-        e.preventDefault();
-        if(this.state.isExport===true){
-            this.checkingParameter(1)
-        }
-        this.setState({
-            isExport:!this.state.isExport
-        })
-    };
-    handlePageChange(pageNumber){
-        localStorage.setItem("pageNumber_sale_by_product_report_detail",pageNumber);
-        this.checkingParameter(pageNumber);
-    }    
-    handleEvent = (event, picker) => {
-        const awal = moment(picker.startDate._d).format('YYYY-MM-DD');
-        const akhir = moment(picker.endDate._d).format('YYYY-MM-DD');
-        localStorage.setItem("date_from_sale_by_product_report_detail",`${awal}`);
-        localStorage.setItem("date_to_sale_by_product_report_detail",`${akhir}`);
-        this.setState({
-            startDate:awal,
-            endDate:akhir
-        });
-        
-        let kode=localStorage.getItem("kode_sale_by_product_report");
-        this.props.dispatch(FetchReportDetailSaleByProduct(kode,1,awal,akhir));
-    }
-    handleExport(e,total){
-        e.preventDefault();
-        this.setState({isExport:true});
-        let dateFrom=localStorage.getItem("date_from_sale_by_product_report_detail");
-        let dateTo=localStorage.getItem("date_to_sale_by_product_report_detail");
-        let kode=localStorage.getItem("kode_sale_by_product_report");
+    return content;
+  }
 
-        this.props.dispatch(FetchReportDetailSaleByProduct(kode,1,dateFrom===null?this.props.startDate:dateFrom,dateTo===null?this.props.endDate:dateTo,total));
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.excel !== prevProps.excel) {
+      this.printExcel();
+      return;
     }
-    checkingParameter(pageNumber){
-        let dateFrom=localStorage.getItem("date_from_sale_by_product_report_detail");
-        let dateTo=localStorage.getItem("date_to_sale_by_product_report_detail");
-        let kode=localStorage.getItem("kode_sale_by_product_report");
+  }
+  render() {
+    const { data, total, last_page, per_page, current_page } = this.props.detailSaleByProduct;
+    let master = this.props.detail;
+    let totalDiskonPerHalaman = 0;
+    let totalQtyPerHalaman = 0;
+    let totalGrossSalePerHalaman = 0;
+    let totalNetSalePerHalaman = 0;
+    const head = [
+      { label: "No", className: "text-center", width: "1%" },
+      { label: "Kode transaksi" },
+      { label: "Sku" },
+      { label: "Diskon", width: "1%" },
+      { label: "Qty", width: "1%" },
+      { label: "Net sale" },
+      { label: "Gross sale" },
+    ];
 
-        this.props.dispatch(FetchReportDetailSaleByProduct(kode,pageNumber,dateFrom===null?this.props.startDate:dateFrom,dateTo===null?this.props.endDate:dateTo));
-    }
-
-    render(){
-        
-        const {data,last_page, per_page,current_page} = this.props.detailSaleByProduct;
-        const columnStyle = {verticalAlign: "middle", textAlign: "left",};
-        return (
-            <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailSaleByProductReport"} size={this.state.isExport===false?'lg':'sm'}>
-                <ModalHeader toggle={this.toggle}>{this.state.isExport===false?`Detail Penjualan By Barang (${this.props.detail.kd_brg})`:'Export Data'}</ModalHeader>
-                <ModalBody hidden={this.state.isExport===true}>
-                    <div className="row">
-                        <div className="col-6 col-xs-6 col-md-6">
-                            <table className="table no-border" >
-                                <tbody className="bg-transparent no-border" style={{border:"none"}}>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Nama Barang</th>
-                                    <th className="text-black" style={columnStyle}>: {this.props.detail.nm_brg}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Qty</th>
-                                    <th className="text-black" style={columnStyle}>: {parseInt(this.props.detail.qty_jual,10)+" "+this.props.detail.satuan}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Gross Sale</th>
-                                    <th className="text-black" style={columnStyle}>: {toRp(parseInt(this.props.detail.gross_sales,10))}</th>
-                                </tr>
-                                <tr>
-                                    <th className="text-black" style={columnStyle}>Nama Toko</th>
-                                    <th className="text-black" style={columnStyle}>: {this.props.detail.toko}</th>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                        <div className="col-6 col-xs-6 col-md-6">
-                            <div className="form-group text-right">
-                                <button style={{marginRight:"5px"}} className="btn btn-primary" onClick={(e => this.handleExport(e,(last_page*per_page)))}>
-                                    <i className="fa fa-print"/> Export
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style={{overflowX: "auto"}}>
-                        <table className="table table-hover table-bordered">
-                            <thead className="bg-light">
-                            <tr>
-                                <th className="text-black" style={columnStyle}>Kd Trx</th>
-                                <th className="text-black" style={columnStyle}>Tanggal</th>
-                                <th className="text-black" style={columnStyle}>Lokasi</th>
-                                <th className="text-black" style={columnStyle}>SKU</th>
-                                <th className="text-black" style={columnStyle}>Diskon</th>
-                                <th className="text-black" style={columnStyle}>Qty</th>
-                                <th className="text-black" style={columnStyle}>Net Sales</th>
-                                <th className="text-black" style={columnStyle}>Gross Sales</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                typeof data === 'object' ? data.length>0?
-                                    data.map((v,i)=>{
-                                        return (
-                                            <tr key={i}>
-                                                <td style={columnStyle}>{v.kd_trx}</td>
-                                                <td style={columnStyle}>{moment(v.tgl).format('YYYY-MM-DD')}</td>
-                                                <td style={columnStyle}>{v.lokasi}</td>
-                                                <td style={columnStyle}>{v.sku}</td>
-                                                <td style={{textAlign:"right"}}>{v.diskon}</td>
-                                                <td style={{textAlign:"right"}}>{parseInt(v.qty,10)}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.net_sales,10))}</td>
-                                                <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>
-                                            </tr>
-                                        );
-                                    }) : "No data." : "No data."
-                            }
-                            </tbody>
-                        </table>
-                        
-                        <div style={{"marginTop":"20px","float":"right"}}>
-                                    <Paginationq
-                                        current_page={parseInt(current_page,10)}
-                                        per_page={parseInt(per_page,10)}
-                                        total={parseInt(last_page*per_page,10)}
-                                        callback={this.handlePageChange.bind(this)}
-                                    />
-                                </div>
-                    </div>
-                </ModalBody>
-                <ModalBody hidden={this.state.isExport===false}>
-                    {/* <div className="row">
-                        <div className="col-6 offset-3"> */}
-                            <button type="button" className="btn btn-link" onClick={(e => this.toggleExport(e))}><i className="fa fa fa-angle-left"></i> Back</button>
-                            <div className="single-gallery--item mb-4">
-                                <div className="gallery-thumb">
-                                    <img src={imgExcel} alt=""></img>
-                                </div>
-                                <div className="gallery-text-area">
-                                    <div className="gallery-icon" onClick={(e => this.toggleExport(e))}>
-                                        <ReactHTMLTableToExcel
-                                            className="btn btn-circle btn-lg btn-success"
-                                            table={'laporan_product_detail'}
-                                            filename={'laporan_product_detail'}
-                                            sheet="laporan_product_detail"
-                                            buttonText={<i className="fa fa-print"></i>}>
-                                        </ReactHTMLTableToExcel>
-                                    </div>
-                                </div>
-                            </div>
-                            <table className="table table-hover table-bordered" id="laporan_product_detail" style={{display:'none'}}>
-                                <thead className="bg-light">
-                                    <tr>
-                                        <th colSpan={8} className="text-center">Laporan Product Detail</th>
-                                    </tr>
-                                    <tr>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>Nama Barang</th>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>Qty</th>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>Gross Sale</th>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>Store</th>
-                                    </tr>
-                                    <tr>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>{this.props.detail.nm_brg}</th>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>{parseInt(this.props.detail.qty_jual,10)+" "+this.props.detail.satuan}</th>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>{toRp(parseInt(this.props.detail.gross_sales,10))}</th>
-                                        <th colSpan={2} className="text-black" style={columnStyle}>{this.props.detail.toko}</th>
-                                    </tr>
-                                    <tr>
-                                        <th colSpan={8}></th>
-                                    </tr>
-                                    <tr>
-                                        <th className="text-black" style={columnStyle}>Kd Trx</th>
-                                        <th className="text-black" style={columnStyle}>Tanggal</th>
-                                        <th className="text-black" style={columnStyle}>Lokasi</th>
-                                        <th className="text-black" style={columnStyle}>SKU</th>
-                                        <th className="text-black" style={columnStyle}>Diskon</th>
-                                        <th className="text-black" style={columnStyle}>Qty</th>
-                                        <th className="text-black" style={columnStyle}>Net Sales</th>
-                                        <th className="text-black" style={columnStyle}>Gross Sales</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    typeof data === 'object' ? data.length>0?
-                                        data.map((v,i)=>{
-                                            return (
-                                                <tr key={i}>
-                                                    <td style={columnStyle}>{v.kd_trx}</td>
-                                                    <td style={columnStyle}>{moment(v.tgl).format('YYYY-MM-DD')}</td>
-                                                    <td style={columnStyle}>{v.lokasi}</td>
-                                                    <td style={columnStyle}>{v.sku}</td>
-                                                    <td style={{textAlign:"right"}}>{v.diskon}</td>
-                                                    <td style={{textAlign:"right"}}>{parseInt(v.qty,10)}</td>
-                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.net_sales,10))}</td>
-                                                    <td style={{textAlign:"right"}}>{toRp(parseInt(v.gross_sales,10))}</td>
-                                                </tr>
-                                            );
-                                        }) : "No data." : "No data."
-                                }
-                                </tbody>
-                            </table>
-                        {/* </div>
-                    </div> */}
-                </ModalBody>
-            </WrapperModal>
-        );
-    }
+    return (
+      <WrapperModal isOpen={this.props.isOpen && this.props.type === "detailSaleByProductReport"} size={"lg"}>
+        <ModalHeader toggle={this.toggle}>
+          Laporan detail penjualan by barang{" "}
+          <button onClick={(e) => this.handleExcel(e, last_page * per_page)} className="btn btn-default btn-sm">
+            {isProgress(this.props.download)}
+          </button>
+        </ModalHeader>
+        <ModalBody>
+          <HeaderDetailCommon
+            md="col-md-6"
+            data={[
+              { title: "Nama", desc: master.nm_brg },
+              { title: "Gross Sale", desc: parseToRp(master.gross_sales) },
+              { title: "Kode", desc: master.barcode },
+              { title: "Lokasi", desc: master.toko },
+              { title: "Barcode", desc: master.barcode },
+              { title: "Deskripsi", desc: master.deskripsi },
+              { title: "Qty", desc: parseToRp(master.qty_jual) + " " + master.satuan },
+              { title: "Tanggal", desc: toDate(master.tgl) },
+            ]}
+          />
+          <TableCommon
+            head={head}
+            meta={{ total: total, current_page: current_page, per_page: per_page }}
+            current_page={current_page}
+            callbackPage={this.handlePageChange.bind(this)}
+            renderRow={
+              typeof data === "object"
+                ? data.length > 0
+                  ? data.map((v, i) => {
+                      totalDiskonPerHalaman += parseFloat(v.diskon);
+                      totalQtyPerHalaman += parseFloat(v.qty);
+                      totalGrossSalePerHalaman += parseFloat(v.net_sales);
+                      totalNetSalePerHalaman += parseFloat(v.gross_sales);
+                      return (
+                        <tr key={i}>
+                          <td className="middle nowrap text-center">{generateNo(i, current_page)}</td>
+                          <td className="middle nowrap">{v.kd_trx}</td>
+                          <td className="middle nowrap">{v.sku}</td>
+                          <td className="middle nowrap text-right">{parseToRp(v.diskon)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(v.qty)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(v.net_sales)}</td>
+                          <td className="middle nowrap text-right">{parseToRp(v.gross_sales)}</td>
+                        </tr>
+                      );
+                    })
+                  : noData(head.length)
+                : noData(head.length)
+            }
+            footer={[
+              {
+                data: [
+                  { colSpan: 3, label: "Total perhalaman", className: "text-left" },
+                  { colSpan: 1, label: parseToRp(totalDiskonPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalQtyPerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalNetSalePerHalaman) },
+                  { colSpan: 1, label: parseToRp(totalGrossSalePerHalaman) },
+                ],
+              },
+            ]}
+          />
+        </ModalBody>
+      </WrapperModal>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        isOpen: state.modalReducer,
-        type: state.modalTypeReducer,
-    }
-}
+  return {
+    isOpen: state.modalReducer,
+    type: state.modalTypeReducer,
+    download: state.sale_by_productReducer.download_detail,
+    excel: state.sale_by_productReducer.report_detail_excel,
+  };
+};
 export default connect(mapStateToProps)(DetailSaleByProductReport);

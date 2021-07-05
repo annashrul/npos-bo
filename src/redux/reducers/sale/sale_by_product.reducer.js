@@ -2,6 +2,7 @@ import { SALE_BY_PRODUCT } from "../../actions/_constants";
 
 const initialState = {
   download: 0,
+  download_detail: 0,
   isLoading: false,
   isLoadingDetail: false,
   isLoadingReport: false,
@@ -29,6 +30,7 @@ const initialState = {
     rounding: 0,
   },
   report_excel: [],
+  report_detail_excel: [],
   total_penjualan_excel: {
     omset: 0,
     dis_item: 0,
@@ -58,6 +60,10 @@ export const sale_by_productReducer = (state = initialState, action) => {
         msg: action.data.msg,
         data: action.data.result,
         total: action.data.result.total,
+      });
+    case SALE_BY_PRODUCT.REPORT_DETAIL_EXCEL:
+      return Object.assign({}, state, {
+        report_detail_excel: action.data.result,
       });
     case SALE_BY_PRODUCT.REPORT_SUCCESS_EXCEL:
       return Object.assign({}, state, {
@@ -98,7 +104,11 @@ export const sale_by_productReducer = (state = initialState, action) => {
       });
     case SALE_BY_PRODUCT.DOWNLOAD:
       return Object.assign({}, state, {
-        isLoadingReport: action.load,
+        download: action.load,
+      });
+    case SALE_BY_PRODUCT.DOWNLOAD_DETAIL:
+      return Object.assign({}, state, {
+        download_detail: action.load,
       });
     default:
       return state;
